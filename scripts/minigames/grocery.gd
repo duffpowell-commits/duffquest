@@ -227,7 +227,7 @@ func _tick_shop(d: float) -> void:
 	if not coupons_done and COUPON.grow(6).has_point(pos):
 		coupon_t = 7.0
 		vel = Vector2.ZERO
-		say = "Then I hit the coupon kiosk. Clip the ones on my list before it times out (7s)."
+		say = "Coupon kiosk! Clip the ones on my list before it times out (7s)."
 		go("coupons")
 		return
 	if KIOSK.grow(6).has_point(pos) and not cart.is_empty():
@@ -288,7 +288,7 @@ func begin_scan() -> void:
 	scan_list = cart.keys()
 	scan_i = 0
 	scan_t = 0.0
-	say = "So I hit self-checkout. \"Please scan your first item.\" Hit SCAN when the marker is in the green."
+	say = "Self-checkout: \"Please scan your first item.\" Hit SCAN when the marker is in the green."
 	go("scan")
 
 func scan_marker() -> float:
@@ -388,7 +388,7 @@ func pay() -> void:
 func _on_button(id: String) -> void:
 	match id:
 		"leave":
-			say = "So I abandon the cart in aisle 2. Sorry, man. I know that's your night now."
+			say = "Abandoned the cart in aisle 2. Sorry, man. I know that's your night now."
 			finish(0.0)
 		"skip":
 			skipped.append(sub_item)
@@ -402,7 +402,7 @@ func _on_button(id: String) -> void:
 			begin_scan()
 		"no":
 			pos = KIOSK.get_center() + Vector2(14, -16)
-			say = "Back to the aisles I go."
+			say = "Back to the aisles."
 			go("shop")
 		"scan":
 			if scan_i >= scan_list.size():

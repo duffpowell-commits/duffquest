@@ -175,7 +175,7 @@ func _crowd(delta: float) -> void:
 		return
 	if f > 0.25 and not rush_announced:
 		rush_announced = true
-		m._toast("So it's 2 AM, right? Bars just closed. Here they come.")
+		m._toast("So it's 2 AM. Bars just closed. Here they come.")
 		next_spawn = 1.0
 	var cap: = 1
 	var every: = 22.0

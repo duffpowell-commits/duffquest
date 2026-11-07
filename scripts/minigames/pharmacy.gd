@@ -240,7 +240,7 @@ func _on_button(id: String) -> void:
 				say = "{pharmacist}: Here you go! That's $%d." % copay
 				go("pay")
 		"stay":
-			say = "So the saxophone hits a note that should be illegal. I'm still holding. Twenty-three minutes. This is fine."
+			say = "(The saxophone hits a note that should be illegal.) Still holding. Twenty-three minutes. This is fine."
 		"hangup":
 			tree_i = 0
 			minutes += 3.0

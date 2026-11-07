@@ -39,8 +39,8 @@ func call_it(violation: bool) -> void:
 		correct += 1
 		flash("The inspector nods. Writes something down. Ominous.", Color("#c0d890"), 1.0)
 	else:
-		notes.append("Inspector disagrees with me: \"%s\"" % o[0])
-		flash("The inspector frowns at me and writes a LOT.", Color("#e06a4a"), 1.0)
+		notes.append("Inspector disagrees: \"%s\"" % o[0])
+		flash("Inspector frowns and writes a LOT.", Color("#e06a4a"), 1.0)
 	idx += 1
 	if idx >= picks.size():
 		finish(float(correct) / picks.size())

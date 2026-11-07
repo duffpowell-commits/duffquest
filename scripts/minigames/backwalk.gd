@@ -23,7 +23,7 @@ func _setup() -> void:
 		judged.append("")
 	add_button("step", Rect2(6, 154, 200, 22), "STEP  (Space)", KEY_SPACE, Color("#2e5aa8"))
 	add_button("quit", Rect2(262, 154, 54, 22), "Stop", KEY_ESCAPE, Color("#a43a2c"))
-	say = "So {partner} climbs on. \"Tell me if I'm too heavy.\" (Never say yes.)"
+	say = "{partner} climbs on. \"Tell me if I'm too heavy.\" (Never say yes.)"
 
 func beat_time(i: int) -> float:
 	return LEAD_IN + BEAT * float(i + 1)

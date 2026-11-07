@@ -100,7 +100,7 @@ func _special(delta: float) -> void:
 				if p and not used and absf(global_position.distance_to(p.global_position) - radius) < 5.0:
 					used = true
 					if not p.rolling():
-						m.stun_player(0.9, "The bass DROPS. So do I. Damn.")
+						m.stun_player(0.9, "The bass DROPPED. So did I. Damn.")
 						m.hurt_player(dmg, global_position, 120.0, "bass")
 				if radius > 220.0:
 					life = 0.0

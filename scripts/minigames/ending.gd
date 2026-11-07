@@ -1,12 +1,12 @@
 extends "res://scripts/minigames/minigame.gd"
 
 const SCENE_LINES: = [
-	"So later that night: no sirens, no vents. Just the couch.",
+	"Later that night. No sirens. No vents. Just the couch.",
 	"{partner}: You fought a guy in a tank top in a burning tower... for us?",
 	"{hero}: I fought him for the leftovers. You guys were a close second.",
 	"{partner}: Liar. ...Come here.",
 	"And {baby}? Out cold on {hero}'s chest. Nobody moves. Ever again.",
-	"Then {cat1} and {cat2} pile on. {cat3} sits one cushion away. That's love, for {cat3}.",
+	"{cat1} and {cat2} pile on. {cat3} sits one cushion away. That's love, for {cat3}.",
 	"{partner}: Same time tomorrow?",
 	"{hero}: Every day. Honey buns included.",
 ]
