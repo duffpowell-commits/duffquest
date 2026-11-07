@@ -1,0 +1,112 @@
+name: build
+
+# Every push: parse all scripts, run the rule tests, then export a web build (for iPhone
+# testers via Safari / itch) and a debug APK (for Android). Download both from the run's
+# "Artifacts" box on GitHub; the phone can open them straight from the GitHub app/site.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  GODOT_VERSION: 4.5-stable
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot
+        run: |
+          curl -sSL -o godot.zip https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip
+          unzip -q godot.zip && sudo mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
+      - name: Import
+        run: godot --headless --path . --import || true
+      - name: Parse every script
+        # A parse error makes a scene hang instead of failing, so check them all.
+        run: |
+          fail=0
+          for f in $(git ls-files '*.gd' | grep -v '^tools/recovery/'); do
+            if godot --headless --path . --check-only --script "$f" 2>&1 | grep -E "Parse Error|SCRIPT ERROR"; then
+              echo "::error file=$f::parse error"; fail=1
+            fi
+          done
+          exit $fail
+      - name: Smoke test (boot, new game, walk, phone)
+        run: |
+          sudo apt-get install -y -qq xvfb >/dev/null
+          xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 --quit-after 600 2>&1 | tee smoke.log
+          ! grep -E "SCRIPT ERROR|Parse Error" smoke.log
+
+  export:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - name: Install Godot + export templates
+        run: |
+          curl -sSL -o godot.zip https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip
+          unzip -q godot.zip && sudo mv Godot_v${GODOT_VERSION}_linux.x86_64 /usr/local/bin/godot
+          curl -sSL -o tpl.tpz https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_export_templates.tpz
+          mkdir -p ~/.local/share/godot/export_templates
+          unzip -q tpl.tpz -d /tmp/tpl
+          mv /tmp/tpl/templates ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+      - name: Android SDK paths + debug keystore
+        run: |
+          keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey \
+            -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+          mkdir -p ~/.config/godot
+          cat > ~/.config/godot/editor_settings-4.5.tres <<TRES
+          [gd_resource type="EditorSettings" format=3]
+          [resource]
+          export/android/android_sdk_path = "$ANDROID_HOME"
+          export/android/java_sdk_path = "$JAVA_HOME"
+          export/android/debug_keystore = "$PWD/debug.keystore"
+          export/android/debug_keystore_user = "androiddebugkey"
+          export/android/debug_keystore_pass = "android"
+          TRES
+          cp ~/.config/godot/editor_settings-4.5.tres ~/.config/godot/editor_settings-4.tres
+      - name: Import
+        run: godot --headless --path . --import || true
+      - name: Export web
+        run: |
+          mkdir -p build/web && touch build/.gdignore
+          godot --headless --path . --export-release "Web" build/web/index.html
+          ls -la build/web
+      - name: Export Android (debug APK)
+        env:
+          GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ github.workspace }}/debug.keystore
+          GODOT_ANDROID_KEYSTORE_DEBUG_USER: androiddebugkey
+          GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
+        run: |
+          mkdir -p build/android
+          godot --headless --path . --export-debug "Android" build/android/duffquest.apk 2>&1 | tee export.log
+          grep -A8 "configuration errors" export.log || true
+          test -f build/android/duffquest.apk
+          ls -la build/android
+      - uses: actions/upload-artifact@v4
+        with:
+          name: duffquest-web
+          path: build/web
+      - uses: actions/upload-artifact@v4
+        with:
+          name: duffquest-apk
+          path: build/android/duffquest.apk
+      - name: Publish to the "dev" release (main only)
+        # One fixed release Duff can open on his phone: Releases -> dev -> tap the APK.
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          (cd build/web && zip -qr ../duffquest-web.zip .)
+          gh release view dev >/dev/null 2>&1 || gh release create dev --prerelease --title "Latest dev build" --notes "Rebuilt on every push to main."
+          gh release upload dev build/android/duffquest.apk build/duffquest-web.zip --clobber
+          gh release edit dev --notes "Rebuilt on every push to main. Last: ${GITHUB_SHA::7}"
