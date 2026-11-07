@@ -94,7 +94,7 @@ func go(s: String) -> void:
 				say = "So we head downtown to {symphony_hall}. Minivan's got a full tank and a car seat full of crumbs."
 				add_button("bus", Rect2(6, 154, 150, 22), "Take the minivan (free)", KEY_1, Color("#2e5aa8"))
 			else:
-				say = "So we gotta get downtown to {symphony_hall}. The #18 leaves the corner in one minute. Or a rideshare (surge pricing)."
+				say = "Downtown to {symphony_hall}. The #18 leaves the corner in one minute. Or a rideshare (surge pricing)."
 				add_button("bus", Rect2(6, 154, 150, 22), "Run for the #18 (%s)" % ("$%d" % fares() if fares() > 0 else "pass"), KEY_1, Color("#2e5aa8"))
 			add_button("rideshare", Rect2(160, 154, 156, 22), "Rideshare ($%d)" % Dates.RIDESHARE, KEY_2)
 		"busrun":
@@ -109,10 +109,10 @@ func go(s: String) -> void:
 			add_button("tap", Rect2(6, 154, 200, 22), "NOD ON THE BEAT  (Space)", KEY_SPACE, Color("#2e5aa8"))
 			add_button("clap", Rect2(210, 154, 106, 22), "Clap (C)", KEY_C, Color("#6e5236"))
 		"between":
-			say = "Then silence between movements. A man in row F starts clapping. Alone. Everyone stares at him..."
+			say = "Silence between movements. A man in row F starts clapping. Alone. Everyone stares at him..."
 			add_button("clap", Rect2(110, 154, 100, 22), "Clap (C)", KEY_C, Color("#6e5236"))
 		"intermission":
-			say = "Intermission. {partner} goes, \"I'm starving. Surprise me.\""
+			say = "INTERMISSION. {partner}: \"I'm starving. Surprise me.\""
 			for i in SNACKS.size():
 				var sn: Array = SNACKS[i]
 				var b: = add_button("snack_" + str(sn[0]), Rect2(6 + (i % 2) * 156, 112 + (i / 2) * 22, 152, 20), str(sn[1]), [KEY_1, KEY_2, KEY_3, KEY_4][i])
@@ -174,7 +174,7 @@ func _on_button(id: String) -> void:
 			_finish_dress()
 		"bus":
 			if m != null and bool(m.has_car):
-				flash("So we take the minivan. I use my blinker. {partner} does her makeup at a red light.", Color("#c0d890"), 1.8)
+				flash("The minivan. I use my blinker. {partner} does her makeup at a red light.", Color("#c0d890"), 1.8)
 				_seat()
 			else:
 				go("busrun")
@@ -274,7 +274,7 @@ func clap() -> void:
 			if not clapped_between:
 				clapped_between = true
 				_sound_noise()
-				flash("I clap between movements. 1,800 people turn around. {partner} just goes, \"Babe.\"", Color("#e06a4a"), 2.2)
+				flash("I clap between movements. 1,800 people turn around. {partner}: \"Babe.\"", Color("#e06a4a"), 2.2)
 		"bravo":
 			if not bravo:
 				bravo = true
@@ -298,7 +298,7 @@ func pick_snack(id: String) -> void:
 			spent += int(sn[2])
 	snack = id
 	match id:
-		"wine": flash("So {partner} gets her wine. In a sippy-lid cup. Very classy. Very Omaha.", Color("#e88aa8"), 1.8)
+		"wine": flash("{partner} gets her wine. In a sippy-lid cup. Very classy. Very Omaha.", Color("#e88aa8"), 1.8)
 		"pretzels": flash("I get chocolate pretzels. She eats 80% of them. As agreed.", Color("#e88aa8"), 1.8)
 		"bun":
 			m.inventory["honey buns"] = int(m.inventory["honey buns"]) - 1

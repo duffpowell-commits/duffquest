@@ -28,7 +28,7 @@ const UPSET: = {
 	"fryer": {"text": "", "line": "{partner} cracks a window and kisses my cheek anyway. (I come home smelling like the fryer.)" },
 	"rent": {"text": "Late notice on the door, babe. I took it down before the neighbors saw. We'll fix it.", "line": "{partner}'s up doing the budget app at midnight. Again. (Rent's late.)" },
 	"promise": {"text": "hey. you said you'd bring it this morning. you ok?", "line": "{partner}: \"It's okay. I know you're running on fumes. Tomorrow?\" (I forgot what you promised.)", "hit": 10.0 },
-	"bill": {"text": "collections called me at work lol. we gotta open the mail babe. together tonight?", "line": "{partner} sets a collections letter on the counter and goes, 'Let's open the mail together, okay?' (I ignored a bill.)" },
+	"bill": {"text": "collections called me at work lol. we gotta open the mail babe. together tonight?", "line": "{partner} sets a collections letter on the counter. 'Let's open the mail together, okay?' (I ignored a bill.)" },
 }
 const MAKEUP: = "{partner}: \"...Okay. We're okay. Don't do it again.\" (Made up.)"
 
@@ -38,8 +38,8 @@ const MAKEUP_LINES: = [
 	"{partner}: \"C'mere. We're a team. Teams fight about dumb stuff.\" (Made up.)",
 	"{partner}: \"I missed you. Even while I was mad. ESPECIALLY while I was mad.\" (Made up.)",
 ]
-const COUCH_LINE: = "{partner} points at the couch. Then she brings me her good pillow. {cat1} sleeps on my face."
-const COUCH_WAKE: = "So I wake up on the couch. My back's a question mark. (Energy capped at 70.) She makes me coffee anyway. We're okay."
+const COUCH_LINE: = "{partner} points at the couch, then brings me her good pillow. {cat1} sleeps on my face."
+const COUCH_WAKE: = "Couch night. My back's a question mark. (Energy capped at 70.) She makes me coffee anyway. We're okay."
 
 const SHORT_REPLIES: = ["tired babe. love you tho", "long day. hug later?", "brain's fried. you're not", "ok. love you", "mhm. come home soon"]
 

@@ -111,7 +111,7 @@ func send() -> void:
 	var s: = maxf(0.0, 1.0 - float(dist) / expected.size())
 	for m in mods:
 		if not _mod_ok(m):
-			notes.append("Ticket says %s. I miss it. Table 7 is furious." % m)
+			notes.append("Ticket said %s. Table 7 is furious." % m)
 	if eighty_six != "" and built.has(eighty_six):
 		notes.append("I serve an 86'd item? Where did I even get that?")
 	if t > time_limit * 0.8:

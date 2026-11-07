@@ -30,10 +30,21 @@
 - Keep the joke. If the original punchline already lands, change only the framing.
 - Light profanity is fine where the original already has it; don't add new slurs or meanness.
 
+## Tic budget (Nov 7 polish pass)
+The first rewrite overdid the storyteller tics ("So..." x68, "Then..." x23, "goes," x16,
+", right?" x10). Read in a row, a few popups a minute, it turned into a gimmick. Rules now:
+- **"So..." only opens a scene or a story**: the intro, loading a save, arriving somewhere new
+  (Waffle Haus, the gala tower, downtown), a time jump ("So it's 2 AM."). About 10 in the game.
+- **Quick popups are Duff's thoughts, not a story**: results, pickups, bills, cat stuff. Short,
+  first person, punchline last. "Fridge is 86'd. One sad pickle. Even he looks tired."
+- Quotes use `Name: '...'`, not `Name goes, '...'`. ", right?" at most once in a while.
+- If the original line was punchier, keep the original words and only fix person/tense.
+- Card titles match their body (no "Your ..." title over a first-person body).
+
 ## Examples
 | Before | After |
 |---|---|
-| Fryer smell: gone. I smell like Irish Spring and regret. Good enough. | So I scrub the fryer off me. Now I smell like Irish Spring and regret. Upgrade. |
+| You dropped the {phone}. It landed screen-first, like toast. | I drop the {phone}. Screen-first, like toast. |
 | You and {partner} veg out on the couch. She steals the blanket. {cat1} sits on the remote. | So me and {partner} veg out on the couch. She steals the blanket. {cat1} sits on the remote like he pays the cable bill. |
-| Fridge is 86'd. One sad pickle. Even he looks tired. | I open the fridge. Eighty-sixed. One sad pickle, and even he looks tired. |
+| Fridge is 86'd. One sad pickle. Even he looks tired. | (unchanged: already lands) |
 | CRIT! The Cleaver hungers. | (unchanged: combat bark) |
