@@ -95,22 +95,22 @@ func serve() -> void:
 	var s: = float(hit) / float(expected.size() + extras)
 	for id in expected:
 		if not built.has(id):
-			notes.append("Forgot the %s." % String(ING[id][0]).to_lower())
+			notes.append("I forget the %s." % String(ING[id][0]).to_lower())
 	if allergy != "" and gloves_late:
 		s -= 0.15
-		notes.append("Allergy ticket: change gloves + sanitize BEFORE you build.")
+		notes.append("Allergy ticket, and I build first. Gloves + sanitize BEFORE, chef.")
 	if allergy != "":
 		for ing in ALLERGENS[allergy]:
 			if built.has(ing):
 				s = minf(s, 0.2)
-				notes.append("%s on a %s allergy ticket. That's an ambulance, chef." % [String(ING[ing][0]), allergy.to_lower()])
+				notes.append("%s, on a %s allergy ticket. I did that. That's an ambulance, chef." % [String(ING[ing][0]), allergy.to_lower()])
 				break
 	if eighty_six != "" and built.has(eighty_six):
-		notes.append("Served an 86'd item.")
+		notes.append("I serve an 86'd item.")
 	finish(s)
 
 func _timeout() -> void:
-	notes.append("Salad timed out. Wilted, like my 401(k).")
+	notes.append("The salad times out. Wilted, like my 401(k).")
 	serve()
 
 func _on_button(id: String) -> void:
@@ -121,7 +121,7 @@ func _on_button(id: String) -> void:
 			get_button("gloves")["enabled"] = false
 		"serve": serve()
 		"comp":
-			notes.append("Comped the salad after the 86.")
+			notes.append("I comp the salad after the 86.")
 			finish(0.7)
 		_: add_ing(id)
 

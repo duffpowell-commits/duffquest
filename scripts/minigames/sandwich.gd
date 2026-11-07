@@ -111,15 +111,15 @@ func send() -> void:
 	var s: = maxf(0.0, 1.0 - float(dist) / expected.size())
 	for m in mods:
 		if not _mod_ok(m):
-			notes.append("Ticket said %s. Table 7 is furious." % m)
+			notes.append("Ticket says %s. I miss it. Table 7 is furious." % m)
 	if eighty_six != "" and built.has(eighty_six):
-		notes.append("Served an 86'd item? Where did you even get that?")
+		notes.append("I serve an 86'd item? Where did I even get that?")
 	if t > time_limit * 0.8:
 		s *= 0.9
-		notes.append("Slow ticket. Expo is glaring. Owner's on his third vacation.")
+		notes.append("My ticket's slow. Expo is glaring. Owner's on his third vacation.")
 	if stolen and recovered and s >= 0.8:
 		bonus = 5
-		notes.append("Got the ticket back from Brayden and nailed it: +$5")
+		notes.append("I get the ticket back from Brayden and nail it: +$5")
 	finish(s)
 
 func _mod_ok(m: String) -> bool:
@@ -143,21 +143,21 @@ static func _edit_distance(a: Array, b: Array) -> int:
 	return int(prev[b.size()])
 
 func _timeout() -> void:
-	notes.append("Ticket timed out.")
+	notes.append("My ticket times out.")
 	send()
 
 func _tick(_d: float) -> void:
 	if steal_armed and not stolen and t > 4.0:
 		stolen = true
 		get_button("grab")["enabled"] = true
-		flash("Grill-Boy Brayden swiped your ticket! (G to grab it back)", Color("#e6a640"), 2.0)
+		flash("Grill-Boy Brayden swipes my ticket! (G to grab it back)", Color("#e6a640"), 2.0)
 
 func grab() -> void:
 	if stolen and not recovered:
 		recovered = true
 		t += 3.0
 		get_button("grab")["enabled"] = false
-		flash("Ticket recovered. Brayden pretends nothing happened. Heard, buddy.", Color.WHITE, 1.4)
+		flash("I get the ticket back. Brayden pretends nothing happened. Heard, buddy.", Color.WHITE, 1.4)
 
 func _on_button(id: String) -> void:
 	match id:
@@ -165,7 +165,7 @@ func _on_button(id: String) -> void:
 			if not built.is_empty(): built.pop_back()
 		"send": send()
 		"comp":
-			notes.append("Comped it after the 86. Manager sighs like it's his money. It's the owner's. He has four boats.")
+			notes.append("I comp it after the 86. Manager sighs like it's his money. It's the owner's. He has four boats.")
 			finish(0.7)
 		"grab": grab()
 		_: add_ing(id)

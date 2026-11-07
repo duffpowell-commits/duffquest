@@ -20,13 +20,14 @@ landscape, pixel art. Owner: Duff. Read this first; it is the handoff between se
 - Original Windows-build version history is not in git (only the final state).
 - Lethemoor is Duff's active game; Duff Quest is the side project. Chaos is paused.
 
+- **Dialogue voice done (Nov 7):** 436 narration lines across 31 scripts rewritten as Duff telling
+  the story at the bar, **present tense** (Duff's call). Guide: `docs/voice.md`. Left alone on
+  purpose: other characters' lines (Madison, bosses, NPCs), combat barks, texts, UI, quiz/word lists,
+  Madison's show-and-tell. Applied with `tools/apply_rewrites.py` (rejects changed `{tokens}` /
+  `%d` codes, raw quotes, >1.5x length, literals used elsewhere). Render: `docs/renders/dialogue_voice_smoke.png`.
+  Unverified: whether any longer toast lines clip on narrow screens. Look for it when playing.
+
 ## Next (Duff's asks)
-- **Dialogue rewrite: "as if Duff were telling a story"**, i.e. Duff at the bar after a shift
-  ("so I walk in, right, and..."). Narration, home, errands and quest setups get the story voice;
-  **combat barks stay short and punchy** (Claude's pushback, Nov 7). Open: present tense
-  ("so I walk in") vs past ("so I walked in"). ~900 lines, mostly in `scripts/main.gd`, then
-  `boss.gd`, `enemy.gd`, `errands.gd`, `life.gd`, `shift.gd`, `moods.gd`, `data/*.json`.
-  Keep `{partner}`, `{baby}`, `{cat1}` etc. tokens: names live in `data/cast.json`.
 - Graphics update, flesh out the world, possible Google Play release (from Duff's plans).
 - Combat goal: action RPG like the GBA Dragon Ball Z games.
 

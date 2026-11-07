@@ -8,14 +8,14 @@ const FULL_COPAY: = 10
 const INSURED_COPAY: = 5
 const AISLE: = [["formula", "Formula", 12], ["ensure", "Ensure (vanilla)", 4], ["diapers", "Diapers", 10], ["honey buns", "Honey buns (impulse rack)", 3], ["treats", "Cat treats", 2], ["cologne", "{cologne} (3 sprays)", 12]]
 const HOLDUPS: = [
-	"On hold with his insurance. In line. Simultaneously.",
-	"Asking why his inhaler costs $400. Pharmacist: 'Innovation.'",
-	"Showing {pharmacist} 40 photos of a grandkid. Only good thing in this building.",
-	"Coupon says 'up to 80% off.' It is 0% off.",
+	"Guy ahead of me is on hold with his insurance. In line. Simultaneously.",
+	"Guy up front asks why his inhaler costs $400. Pharmacist: 'Innovation.'",
+	"Old guy's showing {pharmacist} 40 photos of a grandkid. Only good thing in this building.",
+	"His coupon says 'up to 80% off.' It is 0% off.",
 	"His prior authorization needs a prior authorization.",
 	"Insurance wants the generic. The generic is backordered. Until 2031.",
-	"Self-checkout is asking HIM for a tip.",
-	"Rewards card is asking for his blood type.",
+	"Now self-checkout is asking HIM for a tip.",
+	"His rewards card wants his blood type.",
 ]
 const CUTTERS: = ["\"I just have a QUICK question...\"", "\"Oh, are you in line? I'm just picking up.\"", "\"I was here earlier, I just went to the car.\"", "\"Is this the line? Doesn't matter.\""]
 
@@ -76,7 +76,7 @@ func _setup() -> void:
 	cut_t = rng.randf_range(2.0, 3.5)
 	var st: = str(ctx.get("start", ""))
 	if not has_errand:
-		say = "Nothing to pick up today. The line is %d people deep anyway. The aisle's open." % ahead
+		say = "Nothing to pick up today. Good, 'cause the line's %d people deep. The aisle's open." % ahead
 		go("aisle")
 		prev_state = "browse"
 	elif st != "":
@@ -165,7 +165,7 @@ func _tick_line(d: float) -> void:
 		if cut_on <= 0.0:
 			ahead += 1
 			let_cut += 1
-			say = "He cut. Line-skip pass, $9.99/month. Of course that's a thing now."
+			say = "He cuts. Line-skip pass, $9.99/month. Of course that's a thing now."
 			cut_t = rng.randf_range(2.5, 4.5)
 	else:
 		cut_t -= d
@@ -181,7 +181,7 @@ func _tick_wait(d: float) -> void:
 		if ding_t <= 0.0:
 			wait_fill = 0.7
 			minutes += 3.0
-			say = "Too slow. A guy with a 'Premium Line' app badge got there first. Back to waiting. Damn."
+			say = "I'm too slow. A guy with a 'Premium Line' app badge gets there first. Back to waiting. Damn."
 			_set_pickup(false)
 		return
 	wait_fill = minf(1.0, wait_fill + d / WAIT_T)
@@ -201,7 +201,7 @@ func _phone_next() -> void:
 		phone_tree_beaten = true
 		insured = true
 		copay = INSURED_COPAY
-		say = "Approved! The robot says \"Have a blessed day.\" {pharmacist} runs it again: insurance covers more now. Copay $%d." % copay
+		say = "Approved! The robot goes \"Have a blessed day.\" {pharmacist} runs it again: insurance covers more now. Copay $%d." % copay
 		go("pay")
 		return
 	_phone_buttons()
@@ -240,13 +240,13 @@ func _on_button(id: String) -> void:
 				say = "{pharmacist}: Here you go! That's $%d." % copay
 				go("pay")
 		"stay":
-			say = "(The saxophone hits a note that should be illegal.) Still holding. Twenty-three minutes. This is fine."
+			say = "So the saxophone hits a note that should be illegal. I'm still holding. Twenty-three minutes. This is fine."
 		"hangup":
 			tree_i = 0
 			minutes += 3.0
-			say = "Hung up out of spite. Called back. Start of the damn menu."
+			say = "I hang up out of spite. Call back. Start of the damn menu."
 			_phone_buttons()
-			say = "Called back. " + say
+			say = "I call back. " + say
 		"pay":
 			_pay()
 		"aisle":
@@ -290,12 +290,12 @@ func _outcome() -> void:
 			say = "{pharmacist}: Ope. Insurance put a hold on it. Their algorithm denies first, asks never. Gotta call them, hon."
 			tree_i = 0
 			go("phone")
-			say = "{pharmacist}: Insurance hold. Call them. (You dial.) " + say
+			say = "{pharmacist}: Insurance hold. Call them. (So I dial.) " + say
 
 func _pay() -> void:
 	say = "Got {partner}'s prescription bag. Receipt's longer than my arm and it's 90% coupons for stuff we can't afford."
 	if m and m.money < copay:
-		say = "Card declined. {pharmacist} covers it from the 'kindness jar'. Only working safety net in America. Pay it forward."
+		say = "My card gets declined. {pharmacist} covers it from the 'kindness jar'. Only working safety net in America. Pay it forward."
 		copay = 0
 	elif m:
 		m.money -= copay
@@ -314,7 +314,7 @@ func _buy(id: String) -> void:
 		if it[0] == id:
 			price = aisle_price(it)
 	if m == null or m.money < price:
-		flash("Not enough cash. The gum rack judges you.", Color("#e06a4a"))
+		flash("Not enough cash. The gum rack judges me.", Color("#e06a4a"))
 		return
 	m.money -= price
 	m.inventory[id] = int(m.inventory.get(id, 0)) + (3 if id == "cologne" else 1)

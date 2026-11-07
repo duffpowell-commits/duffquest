@@ -57,7 +57,7 @@ func end_drizzle() -> void:
 		return
 	drizzle_score = _coverage() * maxf(0.0, 1.0 - stray / 150.0)
 	if stray > 60.0:
-		notes.append("Chocolate on the rim. And the plate. And the ticket.")
+		notes.append("I get chocolate on the rim. And the plate. And the ticket.")
 	phase = "cream"
 	ink.append(Vector2.INF)
 	flash("Now pipe 3 whipped-cream rosettes on the dots.", Color.WHITE, 1.2)
@@ -97,7 +97,7 @@ func _avg(a: Array) -> float:
 func _done() -> void:
 	var sc: = drizzle_score * 0.4 + _avg(cream_scores) * 0.3 + _avg(cherry_scores) * 0.3
 	if sc < 0.5:
-		notes.append("That slice looks like it lost a fight. Hell, plate it anyway? No. Redo.")
+		notes.append("I look at the slice. Looks like it lost a fight. Plate it anyway? Hell no. Redo.")
 	finish(sc)
 
 func _timeout() -> void:

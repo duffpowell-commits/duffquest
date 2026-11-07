@@ -79,8 +79,8 @@ func _timeout() -> void:
 
 func chop() -> void:
 	if t - last_chop < 0.18:
-		hurt(5, "Rushed the knife. Nicked your finger. Band-aid + glove. -5 Energy")
-		notes.append("Cut yourself rushing the chop.")
+		hurt(5, "I rush the knife. Nick my finger. Band-aid + glove. -5 Energy")
+		notes.append("I cut myself rushing the chop.")
 		last_chop = t
 		chops += 1
 	else:
@@ -119,7 +119,7 @@ func _stock_score() -> float:
 	var c: = 0
 	for p in pans:
 		if p["act"] == _correct_act(p): c += 1
-		elif _correct_act(p) == "toss": notes.append("%s was at %d°F. Above 41°F for who-knows-how-long = toss it." % [p["n"], p["temp"]])
+		elif _correct_act(p) == "toss": notes.append("%s's at %d°F and I keep it. Above 41°F for who-knows-how-long = toss." % [p["n"], p["temp"]])
 	return c / 5.0
 
 func _make_shelf() -> void:
@@ -160,13 +160,13 @@ func _fifo_score() -> float:
 	var right: = 0
 	for it in tossed:
 		if int(it["off"]) < 0: right += 1
-		else: notes.append("Tossed perfectly good milk (%s). Food cost cries. Owner docks the line, not himself." % it["label"])
+		else: notes.append("I toss perfectly good milk (%s). Food cost cries. Owner docks the line, not himself." % it["label"])
 	var kept_expired: = false
 	for it in shelf:
 		if int(it["off"]) >= 0: right += 1
 		else: kept_expired = true
 	if kept_expired:
-		notes.append("Expired milk still on the shelf. Toss anything past its date.")
+		notes.append("I leave expired milk on the shelf. Toss anything past its date.")
 	var inv: = 0
 	var pairs: = 0
 	for i in shelf.size():
@@ -175,7 +175,7 @@ func _fifo_score() -> float:
 			if int(shelf[i]["off"]) > int(shelf[j]["off"]): inv += 1
 	var order_s: = 1.0 - (float(inv) / pairs if pairs > 0 else 0.0)
 	if inv > 0:
-		notes.append("FIFO: oldest in front. You've got newer stuff in front of older.")
+		notes.append("FIFO: oldest in front. I've got newer stuff in front of older.")
 	return 0.5 * float(right) / total + 0.5 * order_s
 
 func _slot_rect(i: int) -> Rect2:
@@ -203,7 +203,7 @@ func _wipe_score() -> float:
 	for v in cells:
 		if v == 2: c += 1
 	if warned:
-		notes.append("Tried to sanitize before cleaning. Clean, rinse, THEN sanitize.")
+		notes.append("I try to sanitize before cleaning. Clean, rinse, THEN sanitize.")
 	return float(c) / cells.size()
 
 func _pointer_down(p: Vector2) -> void:

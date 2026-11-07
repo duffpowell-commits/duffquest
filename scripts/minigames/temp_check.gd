@@ -56,7 +56,7 @@ func _probe(d: float) -> void:
 	get_button("pull")["enabled"] = true
 	get_button("pull")["label"] = "PULL IT"
 	if d > 0.6:
-		flash("Probing the thin edge? It reads hot. The center is what counts.", Color("#e6a640"))
+		flash("I probe the thin edge. Reads hot. Liar. The center is what counts.", Color("#e6a640"))
 
 func _pull() -> void:
 	if phase != "cooking":
@@ -66,7 +66,7 @@ func _pull() -> void:
 	var s: = 0.0
 	if diff < 0.0:
 		s = 0.0
-		notes.append("%s pulled at %d°F, needs %d°F. %s" % [protein["n"], int(core), target, protein["raw"]])
+		notes.append("%s: I pull it at %d°F, it needs %d°F. %s" % [protein["n"], int(core), target, protein["raw"]])
 		flash("UNDERCOOKED! %s" % protein["raw"], Color("#e06a4a"), 1.4)
 	elif diff <= 5.0:
 		s = 1.0
@@ -82,7 +82,7 @@ func _pull() -> void:
 		flash("Dry. Safe, but dry.", Color("#e6a640"), 1.4)
 	else:
 		s = 0.2
-		notes.append("%s cooked to shoe leather (%d°F)." % [protein["n"], int(core)])
+		notes.append("%s: I cook it to shoe leather (%d°F)." % [protein["n"], int(core)])
 		flash("Shoe leather.", Color("#e06a4a"), 1.4)
 	scores.append(s)
 	phase = "result"
@@ -103,7 +103,7 @@ func _done() -> void:
 	var sc: = total / rounds
 	if ctx.get("fixit", false) and sc >= 0.65:
 		bonus = 5
-		notes.append("Fixed Brayden's burnt burger: +$5")
+		notes.append("I fix Brayden's burnt burger: +$5")
 	finish(sc)
 
 func _timeout() -> void:
@@ -127,7 +127,7 @@ func _pointer_down(p: Vector2) -> void:
 		return
 	var d: = ((p - CENTER) / RADII).length()
 	if d > 1.0:
-		flash("You probed the air. Aim for the meat.", Color("#e6a640"), 1.0)
+		flash("I probe the air. Aim for the meat, chef.", Color("#e6a640"), 1.0)
 		return
 	probe_pos = p
 	_probe(d)
