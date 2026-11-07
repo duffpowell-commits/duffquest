@@ -92,8 +92,25 @@ func dialog_open() -> bool:
 	return m != null and m.get("dialog") != null and not (m.dialog as Array).is_empty()
 
 func _process(_d: float) -> void:
+	# Menus/overlays turn off input here (main.open_overlay), so a finger lifted while
+	# one is open never sends its release. Drop any held stick/special so the player
+	# doesn't keep walking after the menu closes (Brittany's "Never mind" bug).
+	if not is_processing_input():
+		release_all()
 	if visible:
 		queue_redraw()
+
+
+func release_all() -> void:
+	if s_idx != -1:
+		s_idx = -1
+		s_released.emit()
+	if joy_idx != -1 or joy_knob != Vector2.ZERO:
+		joy_idx = -1
+		joy_knob = Vector2.ZERO
+		joy_center = JOY_HOME
+	if player and player.joy_vec != Vector2.ZERO:
+		player.joy_vec = Vector2.ZERO
 
 static func rects() -> Dictionary:
 
