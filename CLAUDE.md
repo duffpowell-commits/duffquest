@@ -44,6 +44,20 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   options (A/B/C) each: 00 Style board (pick first), 01 Storefronts (13 buildings, one folder
   each), 02 Trees, 03 Street clutter. Duff marks winners with a star in the filename or says so.
 
+- **Grok capability test (Nov 7):** Doc "DuffQuest — Grok capability test" in Drive folder
+  DuffQuest Art Inbox (https://docs.google.com/document/d/1ay5y-iWh__M8sJx4JbcHVWp0WvOMgoi8g2gFnHzAtC4/edit).
+  Tests D1–D7 (4×4 sheet in the game's exact format, Duff upgrade, DBZ combo, hurt, portraits,
+  sign spelling, show-off). Results go in Drive subfolder **99 Grok capability test**
+  (`d1_try1.png`...). Attach `reference_duff_sheet.png` (inbox) = `assets/art/duff_home.png` on
+  magenta. When Duff says it's in: pull, score (rubric in the doc), make GIFs, fill the doc's
+  results table, then write the real design prompts around what passed.
+- **Sheet format:** humanoid sheets are 256×256, 4×4 cells of 64; rows down/up/right/left;
+  cols stand, step A, step B, attack (`art.gd`: `WALK = [1,0,2,0]`, col 3 = attack).
+- **PR #2 (`cursor/add-duffquesthd-7d71`, Cursor):** adds `duffquesthd/` = the HD zip as a
+  separate Godot 4.4.1 project + 42 MB web build. Its art is byte-identical to main (131/131);
+  its dialogue is the OLD pre-voice text (40/40 sampled lines) and it lacks the walking fix.
+  Claude recommends closing it unmerged; Duff said "not yet" (Nov 7). Don't merge without asking.
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
