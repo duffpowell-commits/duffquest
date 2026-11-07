@@ -208,7 +208,7 @@ var audio: Node = null
 var combat: Node = null
 var cam: Camera2D
 
-const UI_SCALE: = 1.5
+const UI_SCALE: = 2.0
 var cats: Array = []
 
 var in_title: = false
@@ -331,6 +331,7 @@ var finale_t: = 0.0
 var t: = 0.0
 
 func _ready() -> void:
+	add_child(preload("res://scripts/hd_presentation.gd").new())
 	_setup_input()
 	for b in buildings:
 		_add_wall(b["r"])
@@ -364,7 +365,7 @@ func _ready() -> void:
 	player.attacked.connect(_on_player_attack)
 	add_child(player)
 	cam = Camera2D.new()
-	cam.position_smoothing_enabled = true
+	cam.position_smoothing_enabled = false
 	cam.zoom = Vector2(UI_SCALE, UI_SCALE)
 	player.add_child(cam)
 	_set_camera()
