@@ -2,9 +2,9 @@ extends "res://scripts/minigames/minigame.gd"
 
 const BEAT: = 0.8
 const CUES: = {
-	"hungry": "She's gnawing on her fist and rooting around. (hungry)",
-	"wet": "That smell. THAT SMELL. (diaper)",
-	"fussy": "Fed, dry, still mad. Rock her on the beat until she's out.",
+	"hungry": "So she's gnawing her fist, rooting around, right? (hungry)",
+	"wet": "Then I smell it. THAT SMELL. (diaper)",
+	"fussy": "Fed, dry, still mad. So I rock her on the beat till she's out.",
 }
 
 var needs: Array = []
@@ -48,13 +48,13 @@ func _fail_wrong(msg: String) -> void:
 
 func feed() -> void:
 	if need() != "hungry":
-		_fail_wrong("She's not hungry. She spits the bottle at you.")
+		_fail_wrong("She's not hungry. She spits the bottle right at me.")
 		return
 	if formula - used_formula <= 0:
 		no_formula = true
 		meter += 15.0
-		notes.append("No formula in the house. {partner} did a 3 AM gas station run. Brought you back a hot dog anyway.")
-		flash("NO FORMULA. {partner} grabs her keys. \"I got it, babe. Go back to sleep.\"", Color("#e06a4a"), 1.6)
+		notes.append("No formula in the house. So {partner} does a 3 AM gas station run. Brings me back a hot dog anyway.")
+		flash("NO FORMULA. {partner} grabs her keys and goes, \"I got it, babe. Go back to sleep.\"", Color("#e06a4a"), 1.6)
 	else:
 		used_formula += 1
 		meter -= 35.0
@@ -63,12 +63,12 @@ func feed() -> void:
 
 func change() -> void:
 	if need() != "wet":
-		_fail_wrong("Clean diaper, still screaming. Wrong call, dad.")
+		_fail_wrong("I change her. Clean diaper, still screaming. Wrong call, dad.")
 		return
 	if diapers - used_diapers <= 0:
 		no_diaper = true
 		meter += 15.0
-		notes.append("Out of diapers. Improvised with a dish towel and duct tape.")
+		notes.append("We're out of diapers. So I improvise: dish towel and duct tape.")
 		flash("NO DIAPERS. Dish towel it is.", Color("#e06a4a"), 1.6)
 	else:
 		used_diapers += 1
@@ -78,7 +78,7 @@ func change() -> void:
 
 func rock() -> void:
 	if need() != "fussy":
-		_fail_wrong("Rocking a %s baby just makes her madder." % ("hungry" if need() == "hungry" else "stinky"))
+		_fail_wrong("I rock a %s baby. Turns out that just makes her madder." % ("hungry" if need() == "hungry" else "stinky"))
 		return
 	var off: = fmod(t, BEAT)
 	off = minf(off, BEAT - off)
@@ -89,7 +89,7 @@ func rock() -> void:
 func _done(ok: bool) -> void:
 	success = ok
 	if not ok:
-		notes.append("{partner} woke up to the screaming, took over, and told you to sleep. Hero.")
+		notes.append("{partner} wakes up to the screaming, takes over, and tells me to sleep. Hero.")
 	var s: = 0.2
 	if ok:
 		s = maxf(0.3, 1.0 - wrong * 0.12 - (0.25 if no_formula else 0.0) - (0.2 if no_diaper else 0.0))

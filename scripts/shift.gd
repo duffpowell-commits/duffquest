@@ -83,11 +83,11 @@ static func grade_color(g: String) -> Color:
 
 static func quip(g: String) -> String:
 	match g:
-		"S": return "Chef's kiss. Corporate takes the credit."
-		"A": return "Clean. Chef nods. That's the whole bonus."
-		"B": return "Solid. Nobody got sick. Legally."
-		"C": return "Eh. Expo sighed loud enough to bill for it."
-	return "Disaster. Some influencer's filming a 14-part TikTok about it."
+		"S": return "Chef's kiss. And then corporate takes the credit."
+		"A": return "Clean. Chef nods at me. That nod is the whole bonus."
+		"B": return "Solid. Nobody gets sick. Legally."
+		"C": return "Eh. Expo sighs loud enough to bill me for it."
+	return "Disaster. Some influencer's out there filming a 14-part TikTok about it."
 
 static func compute_pay(md: String, n_stations: int, grade: String, bonus: int, rpay: float, walked: int) -> Dictionary:
 	var base: = int(round(rpay)) if md == "rush" else BASE_PER_STATION * n_stations
@@ -164,7 +164,7 @@ func begin(md: String) -> void:
 		for q in queue:
 			if q["key"] in ["sandwich", "salad"]:
 				q["ctx"]["eighty_six"] = true
-				events.append("86 board grew mid-shift. Management calls it 'menu agility.'")
+				events.append("The 86 board grows mid-shift. Management calls it 'menu agility.'")
 				break
 	if _roll("grill_boy", 0.55):
 		var kind: String = force.get("grill_kind", ["steal", "burger", "wings"][randi() % 3])
@@ -201,11 +201,11 @@ func _next(prev: Dictionary) -> void:
 	var k: String = nxt["key"]
 	lines.append(" ")
 	match k:
-		"inspector": lines.append("!! Tiny health inspector just walked in. Clipboard out. Everybody look sanitary.")
-		"fix_temp": lines.append("!! Grill-Boy Brayden burned a burger. Again. Fix it for +$5.")
-		"fix_fryer": lines.append("!! Brayden left the wings in to film a 'day in the life.' Fix it for +$5.")
+		"inspector": lines.append("!! And who walks in? Tiny, the health inspector. Clipboard out. Everybody look sanitary.")
+		"fix_temp": lines.append("!! Grill-Boy Brayden burns a burger. Again. Fix it for +$5.")
+		"fix_fryer": lines.append("!! Brayden leaves the wings in to film a 'day in the life.' Fix it for +$5.")
 	if nxt["ctx"].get("steal", false):
-		lines.append("!! Brayden is eyeing my sandwich tickets. Not on my line, bud.")
+		lines.append("!! I catch Brayden eyeing my sandwich tickets. Not on my line, bud.")
 	if nxt["ctx"].get("eighty_six", false):
 		lines.append("!! Something's about to get 86'd. Leave it off or comp the ticket.")
 	lines.append("NEXT: %s. %s" % [NAMES[k], HELP[k]])
@@ -238,7 +238,7 @@ func _on_game_done(item: Dictionary, g: Node, score: float, notes: Array) -> voi
 			(res["notes"] as Array).push_front("PASSED inspection: +$15 bonus.")
 		else:
 			inspector_result = "fail"
-			(res["notes"] as Array).push_front("FAILED. The inspector's following me around today. Swell.")
+			(res["notes"] as Array).push_front("FAILED. So now the inspector's following me around all day. Swell.")
 	results.append(res)
 	if mode == "rush":
 		_rush_done(res)
@@ -371,6 +371,6 @@ func _finish_shift() -> void:
 	if not lo.is_empty(): right.append("Take home: " + ", ".join(lo.map(func (x: String) -> String: return "cake" if x == "cake slice" else "honey buns")))
 	if mode == "rush": right.append("Best combo: %d in a row" % best_combo)
 	if report["achievement"] != "": right.append("ACHIEVEMENT: Chef's Kiss!")
-	if inspector_result == "fail": right.append("Inspector is tailing you.")
+	if inspector_result == "fail": right.append("Inspector's tailing me now.")
 	_card("REPORT CARD  -  %s" % ("FRIDAY NIGHT RUSH" if mode == "rush" else ("FULL SHIFT" if mode == "full" else "QUICK SHIFT")),
 		left, right, grade, [["out", "Clock out", KEY_SPACE]], func (_id: String) -> void: shift_over.emit(report))

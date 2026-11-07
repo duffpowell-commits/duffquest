@@ -87,7 +87,7 @@ func _setup() -> void:
 	price_check = bool(ctx.get("price_check", rng.randf() < 0.5))
 	gag_at = mini(1, maxi(0, items.size() - 1))
 	_make_coupons()
-	say = "{GROCERY}: %s. Cart has a wonky wheel. Prices have a wonky 'dynamic pricing algorithm.'" % Cast.T("{grocery_slogan}")
+	say = "{GROCERY}: %s. My cart's got a wonky wheel. Prices got a wonky 'dynamic pricing algorithm.'" % Cast.T("{grocery_slogan}")
 	if str(ctx.get("start", "")) in ["checkout", "bagging"]:
 		for id in items:
 			cart[id] = int(Errands.PRICES.get(id, 2))
@@ -181,13 +181,13 @@ func _tick(d: float) -> void:
 		"coupons":
 			coupon_t -= d
 			if coupon_t <= 0.0:
-				_end_coupons("Time's up. The kiosk prints a 3-foot receipt of ads and sells your data. Twice.")
+				_end_coupons("Time's up. The kiosk prints me a 3-foot receipt of ads and sells my data. Twice.")
 		"scan": scan_t += d
 		"bagging":
 			if attendant_t > 0.0:
 				attendant_t -= d
 				if attendant_t <= 0.0:
-					_gag_resolved("The one attendant covering 14 self-checkouts taps a code. \"You're good.\" Corporate calls her a 'team of one.'")
+					_gag_resolved("Finally the one attendant covering 14 self-checkouts taps a code. \"You're good.\" Corporate calls her a 'team of one.'")
 
 func _tick_shop(d: float) -> void:
 	shop_t += d
@@ -219,7 +219,7 @@ func _tick_shop(d: float) -> void:
 			if id == oos:
 				sub_item = id
 				vel = Vector2.ZERO
-				say = "OUT OF STOCK: %s. Shelf has one (1) price tag, a lot of dust and a sign about record profits. Swap it?" % str(Errands.LABELS.get(id, id)).to_lower()
+				say = "OUT OF STOCK: %s. The shelf's got one (1) price tag, a lot of dust and a sign about record profits. Swap it?" % str(Errands.LABELS.get(id, id)).to_lower()
 				go("sub")
 				return
 			cart[id] = int(Errands.PRICES.get(id, 2))
@@ -227,7 +227,7 @@ func _tick_shop(d: float) -> void:
 	if not coupons_done and COUPON.grow(6).has_point(pos):
 		coupon_t = 7.0
 		vel = Vector2.ZERO
-		say = "Coupon kiosk! Clip the ones that match your list before it times out (7s)."
+		say = "Then I hit the coupon kiosk. Clip the ones on my list before it times out (7s)."
 		go("coupons")
 		return
 	if KIOSK.grow(6).has_point(pos) and not cart.is_empty():
@@ -235,7 +235,7 @@ func _tick_shop(d: float) -> void:
 		if list_done():
 			begin_scan()
 		else:
-			say = "List isn't done. Missing: %s. Check out anyway?" % ", ".join(missing_items().map(func (x): return str(Errands.LABELS.get(x, x)).to_lower()))
+			say = "My list isn't done. Missing: %s. Check out anyway?" % ", ".join(missing_items().map(func (x): return str(Errands.LABELS.get(x, x)).to_lower()))
 			go("confirm")
 
 func _blocked(p: Vector2) -> bool:
@@ -288,7 +288,7 @@ func begin_scan() -> void:
 	scan_list = cart.keys()
 	scan_i = 0
 	scan_t = 0.0
-	say = "Self-checkout: \"Please scan your first item.\" Hit SCAN when the marker is in the green."
+	say = "So I hit self-checkout. \"Please scan your first item.\" Hit SCAN when the marker is in the green."
 	go("scan")
 
 func scan_marker() -> float:
@@ -337,11 +337,11 @@ func buy_cologne() -> bool:
 
 	var p: = cologne_price()
 	if m == null or m.money < p:
-		flash("Not enough cash. The cologne rack sneers at you.", Color("#e06a4a"))
+		flash("Not enough cash. The cologne rack sneers at me.", Color("#e06a4a"))
 		return false
 	m.money -= p
 	m.inventory["cologne"] = int(m.inventory.get("cologne", 0)) + Buffs.COLOGNE_SPRAYS
-	flash("Bought {cologne}. -$%d. You already feel 4%% more handsome." % p, Color("#e88aa8"), 1.4)
+	flash("I buy {cologne}. -$%d. I already feel 4%% more handsome." % p, Color("#e88aa8"), 1.4)
 	return true
 
 func charm_total(x: int) -> int:
@@ -377,32 +377,32 @@ func pay() -> void:
 	if charm_total(100) < 100:
 		lines += " Self-checkout: SCENT DETECTED. CUSTOMER IS... ALLURING. 10% OFF. (We're selling this data too.)"
 	if has_errand:
-		lines += " Budget $%d: %s" % [budget, ("$%d under. {partner}'s card, so you keep the change when you drop it off." % change) if change > 0 else (("$%d over, out of your wallet." % overage) if overage > 0 else "dead on.")]
+		lines += " Budget $%d: %s" % [budget, ("$%d under. {partner}'s card, so I keep the change when I drop it off." % change) if change > 0 else (("$%d over, out of my wallet." % overage) if overage > 0 else "dead on.")]
 		if card_strain:
-			lines += " Your wallet ran dry; her card took the rest. She'll notice."
+			lines += " My wallet runs dry; her card takes the rest. She'll notice."
 	if not put_back.is_empty():
-		lines += " Card declined. Put back the %s with dignity. What's left of it." % ", ".join(put_back)
+		lines += " Card declined. I put back the %s with dignity. What's left of it." % ", ".join(put_back)
 	say = lines
 	go("receipt")
 
 func _on_button(id: String) -> void:
 	match id:
 		"leave":
-			say = "Abandoned the cart in aisle 2. Sorry, man. I know that's your night now."
+			say = "So I abandon the cart in aisle 2. Sorry, man. I know that's your night now."
 			finish(0.0)
 		"skip":
 			skipped.append(sub_item)
-			say = "Skipped %s. 86'd. She'll live." % str(Errands.LABELS.get(sub_item, sub_item)).to_lower()
+			say = "I skip the %s. 86'd. She'll live." % str(Errands.LABELS.get(sub_item, sub_item)).to_lower()
 			go("shop")
 		"cp_done":
-			_end_coupons("Coupons clipped: saving $%d at the register." % coupon_savings_potential())
+			_end_coupons("Coupons clipped. I'm saving $%d at the register." % coupon_savings_potential())
 		"yes":
 			for x in missing_items():
 				skipped.append(x)
 			begin_scan()
 		"no":
 			pos = KIOSK.get_center() + Vector2(14, -16)
-			say = "Back to the aisles."
+			say = "Back to the aisles I go."
 			go("shop")
 		"scan":
 			if scan_i >= scan_list.size():
@@ -425,7 +425,7 @@ func _on_button(id: String) -> void:
 			if lift_tries >= 2:
 				_gag_resolved("I lift the bag and set it down like it's a sleeping {baby}. The machine accepts this. Dad skills.")
 			else:
-				say = "You lift the bag. \"UNEXPECTED ITEM IN BAGGING AREA.\" You put it back. \"UNEXPECTED ITEM IN BAGGING AREA.\""
+				say = "I lift the bag. \"UNEXPECTED ITEM IN BAGGING AREA.\" I put it back. \"UNEXPECTED ITEM IN BAGGING AREA.\""
 		"wave":
 			if attendant_t <= 0.0:
 				attendant_t = 2.5
@@ -443,7 +443,7 @@ func _on_button(id: String) -> void:
 				cart[sub_item] = maxi(0, int(Errands.PRICES.get(sub_item, 2)) + int(o[1]))
 				subs += 1
 				sub_notes.append(Cast.T("{partner}: " + str(o[2])))
-				say = "Swapped in: %s." % str(o[0])
+				say = "I grab %s instead." % str(o[0])
 				go("shop")
 			elif id.begins_with("cp_"):
 				var c: Array = coupons[int(id.substr(3))]
@@ -452,15 +452,15 @@ func _on_button(id: String) -> void:
 					get_button(id)["enabled"] = false
 					flash("Clipped! -$%d" % int(c[2]), Color("#c0d890"), 0.7)
 					if coupon_savings_potential() >= _max_coupon():
-						_end_coupons("All the good coupons, clipped. Beat the algorithm at its own game. Heard.")
+						_end_coupons("I clip all the good coupons. Beat the algorithm at its own game. Heard.")
 				else:
 					flash(str(c[4]) if c.size() > 4 else "Nope.", Color("#e6a640"), 1.4)
 			elif id.begins_with("pc_"):
 				var v: = int(pc_opts[int(id.substr(3))])
-				var pc_msg: = "Correct! Manager fixes it. The scanner does not apologize. Neither does corporate."
+				var pc_msg: = "Called it! Manager fixes it. The scanner does not apologize. Neither does corporate."
 				if v != int(cart[pc_item]):
 					overcharge = 5
-					pc_msg = "Wrong tag. Pay the scanner's price (+$5). Damn robot wins again."
+					pc_msg = "Wrong tag. I pay the scanner's price (+$5). Damn robot wins again."
 				pay()
 				say = pc_msg + " " + say
 

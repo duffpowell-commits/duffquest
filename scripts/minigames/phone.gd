@@ -142,12 +142,12 @@ func _on_button(id: String) -> void:
 			if got > 0.0:
 				flash("Sold for $%s.%s" % [_money(got), " Paper hands?" if not Market.is_steady(sel_t) else ""], Color.WHITE, 1.2)
 			else:
-				flash("You don't own any %s here." % sel_t, C_DOWN, 1.0)
+				flash("I don't own any %s here." % sel_t, C_DOWN, 1.0)
 		"d20", "d100", "d500", "dall":
 			var want: int = {"d20": 20, "d100": 100, "d500": 500, "dall": -1 }[id]
 			var got2: int = m.fund_deposit(want)
 			if got2 > 0:
-				flash("Deposited $%d. {partner} smiles." % got2, C_UP, 1.2)
+				flash("I deposit $%d. {partner} smiles." % got2, C_UP, 1.2)
 			else:
 				flash("Wallet's empty, chef.", C_DOWN, 1.0)
 		_:

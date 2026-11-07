@@ -16,11 +16,11 @@ const STOPS: = {
 }
 const ORDER: = ["home", "kwik", "fork", "market"]
 const RIDE_LINES: = [
-	"Guy next to me has a lizard in a tiny hat. Lizard's doing better than me.",
-	"Driver waves me on: \"Just get in, chef.\" Only kind thing the city's done all week.",
-	"Dude on speakerphone is pitching 'Uber for dogs' to an investor. The investor says yes.",
-	"Grandma offers me a butterscotch. I take it. I'm not an animal.",
-	"Ad above my seat: 'Feeling broke? Try our app! 39% APR.' Cool. Cool cool cool.",
+	"So the guy next to me's got a lizard in a tiny hat. Lizard's doing better than me.",
+	"Driver waves me on, goes 'Just get in, chef.' Only kind thing the city's done all week.",
+	"Dude on speakerphone's pitching 'Uber for dogs' to an investor, right? And the investor says yes.",
+	"This grandma offers me a butterscotch. Of course I take it. I'm not an animal.",
+	"There's an ad over my seat: 'Feeling broke? Try our app! 39% APR.' Cool. Cool cool cool.",
 ]
 
 static func wait_minutes(clock: float) -> float:

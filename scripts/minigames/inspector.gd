@@ -37,16 +37,16 @@ func call_it(violation: bool) -> void:
 	var o: Array = OBS[picks[idx]]
 	if bool(o[1]) == violation:
 		correct += 1
-		flash("Inspector nods. Writes something. Ominous.", Color("#c0d890"), 1.0)
+		flash("The inspector nods. Writes something down. Ominous.", Color("#c0d890"), 1.0)
 	else:
-		notes.append("Inspector disagreed: \"%s\"" % o[0])
-		flash("Inspector frowns and writes a LOT.", Color("#e06a4a"), 1.0)
+		notes.append("Inspector disagrees with me: \"%s\"" % o[0])
+		flash("The inspector frowns at me and writes a LOT.", Color("#e06a4a"), 1.0)
 	idx += 1
 	if idx >= picks.size():
 		finish(float(correct) / picks.size())
 
 func _timeout() -> void:
-	finish(float(correct) / picks.size(), "Took too long. The inspector has a quota and a parking meter.")
+	finish(float(correct) / picks.size(), "I take too long. The inspector has a quota and a parking meter.")
 
 func _on_button(id: String) -> void:
 	call_it(id == "bad")
