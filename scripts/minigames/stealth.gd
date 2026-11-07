@@ -4,7 +4,7 @@ const COLS: = 10
 const ROWS: = 5
 const TILE: = 26.0
 const ORIGIN: = Vector2(30, 30)
-const KNOCKS: = ["{cat1} knocks a cup off the nightstand. Eye contact maintained.", "Then {cat2} launches the baby monitor off the dresser.", "A cat yowls because I exist.", "{cat1} body-slams the laundry basket."]
+const KNOCKS: = ["{cat1} knocks a cup off the nightstand. Eye contact maintained.", "{cat2} launches the baby monitor off the dresser.", "A cat yowls because I exist.", "{cat1} body-slams the laundry basket."]
 
 var creaky: = {}
 var pos: = Vector2i(0, 2)

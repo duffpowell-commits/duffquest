@@ -84,7 +84,7 @@ static func grade_color(g: String) -> Color:
 static func quip(g: String) -> String:
 	match g:
 		"S": return "Chef's kiss. And then corporate takes the credit."
-		"A": return "Clean. Chef nods at me. That nod is the whole bonus."
+		"A": return "Clean. Chef nods. That's the whole bonus."
 		"B": return "Solid. Nobody gets sick. Legally."
 		"C": return "Eh. Expo sighs loud enough to bill me for it."
 	return "Disaster. Some influencer's out there filming a 14-part TikTok about it."
@@ -238,7 +238,7 @@ func _on_game_done(item: Dictionary, g: Node, score: float, notes: Array) -> voi
 			(res["notes"] as Array).push_front("PASSED inspection: +$15 bonus.")
 		else:
 			inspector_result = "fail"
-			(res["notes"] as Array).push_front("FAILED. So now the inspector's following me around all day. Swell.")
+			(res["notes"] as Array).push_front("FAILED. The inspector's following me around today. Swell.")
 	results.append(res)
 	if mode == "rush":
 		_rush_done(res)

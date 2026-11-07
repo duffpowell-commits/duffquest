@@ -74,7 +74,7 @@ func pull() -> void:
 
 func _done() -> void:
 	if errors > 0:
-		notes.append("I mess up the breading order %d time(s)." % errors)
+		notes.append("%d breading order mistake(s)." % errors)
 	if clumps > 0:
 		notes.append("I get club hands %d time(s). Dry hand for dry, wet hand for wet." % clumps)
 	var bread_score: = float(battered) / total * maxf(0.0, 1.0 - 0.12 * errors - 0.08 * clumps)
