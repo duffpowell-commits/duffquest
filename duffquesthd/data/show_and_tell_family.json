@@ -1,0 +1,25 @@
+{
+  "_readme": "FAMILY VERSION ONLY. Real shows she loves (text-only, no character art). Merged into Show & Tell when this file exists. Delete it (or exclude it from the export) for any public / store build.",
+  "openers": [
+    "Okay, new merch dropped. Don't be mad.",
+    "Babe, the hellhound stuff is back in stock."
+  ],
+  "items": [
+    { "kind": "plush", "title": "Alastor plush, tiny microphone cane included", "line": "Our cat Alastor is going to be SO jealous.", "react": "aww" },
+    { "kind": "plush", "title": "Angel Dust plush with all six arms out for a hug", "line": "Six arms means six hugs. That's science.", "react": "aww" },
+    { "kind": "plush", "title": "Charlie plush in the red suit", "line": "She's just trying her best. Like us.", "react": "aww" },
+    { "kind": "plush", "title": "Lucifer plush holding a rubber duck", "line": "Our cat Lucifer could never. He'd eat the duck.", "react": "haha" },
+    { "kind": "plush", "title": "Niffty plush, smaller than your hand", "line": "She would clean this whole house in four seconds.", "react": "haha" },
+    { "kind": "plush", "title": "Sir Pentious plush, hat and all", "line": "He's so dramatic. I love him.", "react": "aww" },
+    { "kind": "plush", "title": "Stolas plush, extremely fluffy", "line": "Look how fluffy. LOOK how fluffy.", "react": "aww" },
+    { "kind": "plush", "title": "Octavia plush with her little headphones", "line": "Two Octavias. One house. We're outnumbered.", "react": "aww" },
+    { "kind": "plush", "title": "Loona plush, scrolling her phone", "line": "This is me ignoring you when you snore.", "react": "haha" },
+    { "kind": "plush", "title": "Moxxie and Millie matching plush set", "line": "That's us. That's literally us.", "react": "aww" },
+    { "kind": "plush", "title": "Blitzo plush, limited run, 300 dollars resale", "line": "Three HUNDRED. ...Is that a lot? That's a lot.", "react": "omg" },
+    { "kind": "reel", "title": "Hazbin cast surprises fans singing at a con", "line": "I'm crying. Don't look at me. Look at them.", "react": "aww" },
+    { "kind": "reel", "title": "Forty seconds of Stolas being dramatic, nonstop", "line": "This is my love language.", "react": "haha" },
+    { "kind": "reel", "title": "Fan edit: Hazbin songs but it's line cooks", "line": "Babe. Babe this is your kitchen.", "react": "haha" },
+    { "kind": "wild", "title": "New Helluva Boss episode drops Friday", "line": "Friday is date night. Couch. You, me, snacks.", "react": "omg" },
+    { "kind": "shopping", "title": "Hazbin Hotel soundtrack vinyl restock", "line": "For the record player we don't own yet. Yet.", "react": "omg" }
+  ]
+}

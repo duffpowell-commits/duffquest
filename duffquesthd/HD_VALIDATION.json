@@ -1,0 +1,315 @@
+{
+  "engine": "Godot 4.4.1 stable",
+  "recovery": {
+    "scripts_decompiled": 61,
+    "scripts_failed": 0,
+    "resources_converted": 250,
+    "files_verified": 514
+  },
+  "changed_assets": 110,
+  "catalog_assets": 131,
+  "humanoid_sheets": 57,
+  "humanoid_cell": [
+    64,
+    64
+  ],
+  "humanoid_frames": 912,
+  "humanoid_sheet_color_counts": {
+    "ch_brittany": 26,
+    "ch_regular": 28,
+    "ch_drunk": 28,
+    "ch_heckler": 28,
+    "ch_waitress": 26,
+    "ch_sendback": 28,
+    "ch_coupon": 26,
+    "ch_allergy": 26,
+    "ch_camper": 28,
+    "ch_bdaydad": 28,
+    "ch_dasher": 28,
+    "ch_kid": 28,
+    "ch_baron": 28,
+    "ch_bozos": 28,
+    "ch_butler": 28,
+    "ch_cashier": 28,
+    "ch_chef": 29,
+    "ch_crypto": 28,
+    "ch_djvape": 28,
+    "ch_donald": 28,
+    "ch_duff_suit": 29,
+    "ch_fences": 28,
+    "ch_ghoster": 28,
+    "ch_grillboy": 28,
+    "ch_gymbro": 28,
+    "ch_hoa": 27,
+    "ch_husk": 28,
+    "ch_hustler": 28,
+    "ch_inspector": 28,
+    "ch_jen": 26,
+    "ch_karen": 26,
+    "ch_karen_buddy": 26,
+    "ch_madison": 26,
+    "ch_madison_dress": 26,
+    "ch_pete": 28,
+    "ch_pharmacist": 26,
+    "ch_phlebotomist": 28,
+    "ch_pirate0": 27,
+    "ch_pirate1": 27,
+    "ch_pirate2": 27,
+    "ch_pirate3": 27,
+    "ch_scammer": 28,
+    "ch_sitter": 26,
+    "ch_sushi_chef": 29,
+    "ch_usher": 28,
+    "ch_willnot": 28,
+    "duff_apron_black": 30,
+    "duff_apron_red": 30,
+    "duff_clogs_black": 28,
+    "duff_clogs_red": 28,
+    "duff_coat_black": 28,
+    "duff_coat_red": 28,
+    "duff_dad_black": 28,
+    "duff_dad_red": 28,
+    "duff_home": 28,
+    "duff_sleeves_black": 28,
+    "duff_sleeves_red": 28
+  },
+  "approved_duff_idle_pixel_identical": true,
+  "rejected_tall_art_used": false,
+  "gameplay_data_unchanged": true,
+  "original_zip_sha256": "6c83fb327217e8af6a62c5d8007e0391416033f6a9585356f94150eb930cf406",
+  "browser_cases": [
+    {
+      "target": "title",
+      "errors": [],
+      "logs": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        }
+      ],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "home",
+      "errors": [],
+      "logs": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        }
+      ],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "enemies",
+      "errors": [],
+      "logs": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        }
+      ],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "pharmacy",
+      "errors": [],
+      "logs": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        }
+      ],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "grocery",
+      "errors": [],
+      "logs": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        }
+      ],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "gear",
+      "errors": [],
+      "logs": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        }
+      ],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "phone",
+      "errors": [],
+      "logs": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        }
+      ],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "symphony_concert",
+      "errors": [],
+      "logs": [
+        {
+          "type": "log",
+          "text": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org"
+        },
+        {
+          "type": "log",
+          "text": "OpenGL API OpenGL ES 3.0 (WebGL 2.0 (OpenGL ES 3.0 Chromium)) - Compatibility - Using Device: WebKit - WebKit WebGL"
+        }
+      ],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "outside",
+      "errors": [],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "story_ghoster",
+      "errors": [],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "gala",
+      "errors": [],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "baby",
+      "errors": [],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "stealth",
+      "errors": [],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "kitchen",
+      "errors": [],
+      "canvas": {
+        "width": 1280,
+        "height": 720
+      }
+    },
+    {
+      "target": "mobile_landscape",
+      "errors": [],
+      "canvas": {
+        "width": 844,
+        "height": 390
+      }
+    },
+    {
+      "target": "mobile_portrait",
+      "errors": [],
+      "canvas": {
+        "width": 390,
+        "height": 844
+      }
+    }
+  ],
+  "touch_cases": [
+    {
+      "mode": "landscape",
+      "errors": [],
+      "action": "tap phone HUD icon"
+    },
+    {
+      "mode": "portrait",
+      "errors": [],
+      "action": "tap phone HUD icon"
+    }
+  ],
+  "native_smoke_test": "Godot Engine v4.4.1.stable.official.49a5bc7b6 - https://godotengine.org\n\nHD_RUNTIME_PASS: movement, attack, roll, home transition, phone, save/load and all 131 textures\n",
+  "modified_recovered_scripts": [
+    "scripts/art_manifest.gd",
+    "scripts/art.gd",
+    "scripts/main.gd"
+  ],
+  "known_limitations": [
+    "No physical-phone/Safari test or full campaign playthrough.",
+    "21 legacy catalog images and 22 optional iso textures retained.",
+    "Shader-based LDR bloom on web, not native HDR 2D glow.",
+    "Portrait screens below 640px use nearest fractional downscaling to avoid cropping.",
+    "NPC art uses a shared original chibi base with palette/role variants."
+  ]
+}
