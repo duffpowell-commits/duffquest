@@ -110,3 +110,21 @@ jobs:
           gh release view dev >/dev/null 2>&1 || gh release create dev --prerelease --title "Latest dev build" --notes "Rebuilt on every push to main."
           gh release upload dev build/android/duffquest.apk build/duffquest-web.zip --clobber
           gh release edit dev --notes "Rebuilt on every push to main. Last: ${GITHUB_SHA::7}"
+      - name: Upload web build to itch.io (main only)
+        # Finds the itch project by title ("duff"), so no URL has to live in this file.
+        # The project must exist on itch first (kind HTML). Needs repo secret BUTLER_API_KEY.
+        if: github.ref == 'refs/heads/main'
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          if [ -z "$BUTLER_API_KEY" ]; then echo "::warning::BUTLER_API_KEY secret not set, skipping itch upload"; exit 0; fi
+          games=$(curl -sf "https://itch.io/api/1/$BUTLER_API_KEY/my-games") || { echo "::error::itch API rejected the key"; exit 1; }
+          echo "$games" | jq -r '.games[] | "itch project: \(.title) -> \(.url)"'
+          url=$(echo "$games" | jq -r '[.games[] | select(.title | test("duff"; "i"))][0].url // empty')
+          if [ -z "$url" ]; then echo "::error::No itch project with 'duff' in the title. Create it on itch (kind: HTML) first."; exit 1; fi
+          target=$(echo "$url" | sed -E 's#https?://([^.]+)\.itch\.io/([^/]+).*#\1/\2#')
+          echo "Pushing to $target:html"
+          curl -sSL -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+          unzip -qo butler.zip -d butler && chmod +x butler/butler
+          ./butler/butler push build/web "$target:html" --userversion "${GITHUB_SHA::7}"
+          ./butler/butler status "$target:html"
