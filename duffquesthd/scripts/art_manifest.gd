@@ -1,0 +1,1839 @@
+extends RefCounted
+
+# ORIGINAL Style A HD art; generated metadata. Logical coordinates unchanged.
+const ASSETS = {
+  "ch_brittany": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "arena_waffle": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "arena_alley": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "ch_regular": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_drunk": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_heckler": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_waitress": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_sendback": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_coupon": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_allergy": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_camper": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_bdaydad": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_dasher": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_kid": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "arena_crypto": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "arena_djvape": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "arena_ghoster": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "arena_gymbro": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "arena_willnot": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "av_bank": {
+    "w": 48,
+    "h": 48,
+    "cell": [
+      48,
+      48
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 2
+  },
+  "av_chef": {
+    "w": 48,
+    "h": 48,
+    "cell": [
+      48,
+      48
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 2
+  },
+  "av_duff": {
+    "w": 48,
+    "h": 48,
+    "cell": [
+      48,
+      48
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 2
+  },
+  "av_gala": {
+    "w": 48,
+    "h": 48,
+    "cell": [
+      48,
+      48
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 2
+  },
+  "av_jen": {
+    "w": 48,
+    "h": 48,
+    "cell": [
+      48,
+      48
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 2
+  },
+  "av_madison": {
+    "w": 48,
+    "h": 48,
+    "cell": [
+      48,
+      48
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 2
+  },
+  "av_pharmacist": {
+    "w": 48,
+    "h": 48,
+    "cell": [
+      48,
+      48
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 2
+  },
+  "av_sitter": {
+    "w": 48,
+    "h": 48,
+    "cell": [
+      48,
+      48
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 2
+  },
+  "baby": {
+    "w": 128,
+    "h": 32,
+    "cell": [
+      32,
+      32
+    ],
+    "origin": [
+      16,
+      16
+    ],
+    "kind": "anim",
+    "s": 2
+  },
+  "bench": {
+    "w": 32,
+    "h": 32,
+    "cell": [
+      32,
+      32
+    ],
+    "origin": [
+      16,
+      29
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "bg_akarui": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_bedroom": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_grocery": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_holland": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_kitchen": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_kwik": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_living_night": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_nursery": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_pharmacy": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "bg_plasma": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "buff_CHA": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "buff_DEF": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "buff_DRN": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "buff_LUV": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "buff_PASS": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "buff_SPD": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "buff_STR": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "bus_sign": {
+    "w": 32,
+    "h": 40,
+    "cell": [
+      32,
+      40
+    ],
+    "origin": [
+      16,
+      38
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "cat_alastor": {
+    "w": 192,
+    "h": 64,
+    "cell": [
+      48,
+      32
+    ],
+    "origin": [
+      24,
+      28
+    ],
+    "kind": "critter",
+    "s": 2
+  },
+  "cat_freya": {
+    "w": 192,
+    "h": 64,
+    "cell": [
+      48,
+      32
+    ],
+    "origin": [
+      24,
+      28
+    ],
+    "kind": "critter",
+    "s": 2
+  },
+  "cat_lucifer": {
+    "w": 192,
+    "h": 64,
+    "cell": [
+      48,
+      32
+    ],
+    "origin": [
+      24,
+      28
+    ],
+    "kind": "critter",
+    "s": 2
+  },
+  "ch_baron": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_bozos": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_butler": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_cashier": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_chef": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_crypto": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_djvape": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_donald": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_duff_suit": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_fences": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_ghoster": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_grillboy": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_gymbro": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_hoa": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_husk": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_hustler": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_inspector": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_jen": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_karen": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_karen_buddy": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_madison": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_madison_dress": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_pete": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_pharmacist": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_phlebotomist": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_pirate0": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_pirate1": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_pirate2": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_pirate3": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_scammer": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_sitter": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_sushi_chef": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_usher": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_willnot": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "drone": {
+    "w": 80,
+    "h": 32,
+    "cell": [
+      40,
+      32
+    ],
+    "origin": [
+      20,
+      16
+    ],
+    "kind": "anim",
+    "s": 2
+  },
+  "duff_apron_black": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_apron_red": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_clogs_black": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_clogs_red": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_coat_black": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_coat_red": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_dad_black": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_dad_red": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_dress": {
+    "w": 384,
+    "h": 192,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "pose",
+    "s": 2
+  },
+  "duff_home": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_roll_black": {
+    "w": 256,
+    "h": 64,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      44
+    ],
+    "kind": "anim",
+    "s": 2
+  },
+  "duff_roll_red": {
+    "w": 256,
+    "h": 64,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      44
+    ],
+    "kind": "anim",
+    "s": 2
+  },
+  "duff_shades": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "overlay",
+    "s": 2
+  },
+  "duff_sleeves_black": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "duff_sleeves_red": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ensure": {
+    "w": 16,
+    "h": 20,
+    "cell": [
+      16,
+      20
+    ],
+    "origin": [
+      8,
+      18
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "face_fussy": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      8,
+      8
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "face_happy": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      8,
+      8
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "face_meh": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      8,
+      8
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "face_pissed": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      8,
+      8
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "face_restless": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      8,
+      8
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "face_short": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      8,
+      8
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "face_upset": {
+    "w": 17,
+    "h": 17,
+    "cell": [
+      17,
+      17
+    ],
+    "origin": [
+      8,
+      8
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "freya_peek": {
+    "w": 24,
+    "h": 22,
+    "cell": [
+      24,
+      22
+    ],
+    "origin": [
+      12,
+      12
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "gala": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "home_interior": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "honeybun": {
+    "w": 16,
+    "h": 16,
+    "cell": [
+      16,
+      16
+    ],
+    "origin": [
+      8,
+      14
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "ic_bolt": {
+    "w": 14,
+    "h": 14,
+    "cell": [
+      14,
+      14
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "ic_bus": {
+    "w": 14,
+    "h": 14,
+    "cell": [
+      14,
+      14
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "ic_coin": {
+    "w": 14,
+    "h": 14,
+    "cell": [
+      14,
+      14
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "ic_heart": {
+    "w": 14,
+    "h": 14,
+    "cell": [
+      14,
+      14
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "ic_piggy": {
+    "w": 14,
+    "h": 14,
+    "cell": [
+      14,
+      14
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "map_outside": {
+    "w": 1280,
+    "h": 720,
+    "cell": [
+      1280,
+      720
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
+  "nft": {
+    "w": 28,
+    "h": 28,
+    "cell": [
+      28,
+      28
+    ],
+    "origin": [
+      14,
+      26
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "package": {
+    "w": 20,
+    "h": 19,
+    "cell": [
+      20,
+      19
+    ],
+    "origin": [
+      10,
+      17
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "palette": {
+    "w": 618,
+    "h": 6,
+    "cell": [
+      618,
+      6
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "doc",
+    "s": 1.5
+  },
+  "phone": {
+    "w": 18,
+    "h": 30,
+    "cell": [
+      18,
+      30
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "icon",
+    "s": 1.5
+  },
+  "portrait_duff": {
+    "w": 288,
+    "h": 192,
+    "cell": [
+      96,
+      96
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "portrait",
+    "s": 2
+  },
+  "portrait_madison": {
+    "w": 288,
+    "h": 96,
+    "cell": [
+      96,
+      96
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "portrait",
+    "s": 2
+  },
+  "portrait_octavia": {
+    "w": 288,
+    "h": 96,
+    "cell": [
+      96,
+      96
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "portrait",
+    "s": 2
+  },
+  "raccoon": {
+    "w": 192,
+    "h": 64,
+    "cell": [
+      48,
+      32
+    ],
+    "origin": [
+      24,
+      28
+    ],
+    "kind": "critter",
+    "s": 2
+  },
+  "tiles": {
+    "w": 192,
+    "h": 96,
+    "cell": [
+      32,
+      32
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "tileset",
+    "s": 2
+  },
+  "trash_can": {
+    "w": 32,
+    "h": 40,
+    "cell": [
+      32,
+      40
+    ],
+    "origin": [
+      16,
+      38
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "tree": {
+    "w": 64,
+    "h": 64,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      61
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "truck_h": {
+    "w": 64,
+    "h": 40,
+    "cell": [
+      64,
+      40
+    ],
+    "origin": [
+      32,
+      20
+    ],
+    "kind": "prop",
+    "s": 2
+  },
+  "truck_v": {
+    "w": 40,
+    "h": 64,
+    "cell": [
+      40,
+      64
+    ],
+    "origin": [
+      20,
+      32
+    ],
+    "kind": "prop",
+    "s": 2
+  }
+}

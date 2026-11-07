@@ -1,0 +1,42 @@
+{
+ "sfx": [
+  "achievement",
+  "baby_cry",
+  "back",
+  "bonk",
+  "bus",
+  "cash",
+  "chitter",
+  "coin",
+  "door",
+  "explosion",
+  "fail",
+  "fryer",
+  "gun",
+  "hiss",
+  "hit",
+  "honk",
+  "hurt",
+  "laser",
+  "meow",
+  "pickup",
+  "roll",
+  "select",
+  "swing",
+  "tele",
+  "text",
+  "whoosh",
+  "win"
+ ],
+ "music": {
+  "neighborhood": 29.09,
+  "home": 43.64,
+  "kitchen": 22.86,
+  "boss": 25.6,
+  "willnot": 23.42,
+  "gala": 27.27,
+  "date": 30.0,
+  "credits": 36.93
+ },
+ "credits": "All SFX/music synthesized by tools/audio/gen_audio.py. Date theme: Brahms' Lullaby (1868, public domain). Everything else original."
+}
