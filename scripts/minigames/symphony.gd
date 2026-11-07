@@ -91,14 +91,14 @@ func go(s: String) -> void:
 			_relabel()
 		"ride":
 			if m != null and bool(m.has_car):
-				say = "Downtown to {symphony_hall}. The minivan has a full tank and a car seat full of crumbs."
+				say = "So we head downtown to {symphony_hall}. Minivan's got a full tank and a car seat full of crumbs."
 				add_button("bus", Rect2(6, 154, 150, 22), "Take the minivan (free)", KEY_1, Color("#2e5aa8"))
 			else:
-				say = "Downtown to {symphony_hall}. The #18 leaves the corner in one minute. Or a rideshare (surge pricing)."
+				say = "So we gotta get downtown to {symphony_hall}. The #18 leaves the corner in one minute. Or a rideshare (surge pricing)."
 				add_button("bus", Rect2(6, 154, 150, 22), "Run for the #18 (%s)" % ("$%d" % fares() if fares() > 0 else "pass"), KEY_1, Color("#2e5aa8"))
 			add_button("rideshare", Rect2(160, 154, 156, 22), "Rideshare ($%d)" % Dates.RIDESHARE, KEY_2)
 		"busrun":
-			say = "RUN! The #18 is pulling away. Mash RUN. %s" % ("(Dress shoes slip if you mash too fast.)" if int(dress["shoes"]) == 0 else ("(Work clogs: slow but steady.)" if int(dress["shoes"]) == 1 else "(Crocs in sport mode. Respect.)"))
+			say = "RUN! The #18's pulling away on me. Mash RUN. %s" % ("(Dress shoes slip if you mash too fast.)" if int(dress["shoes"]) == 0 else ("(Work clogs: slow but steady.)" if int(dress["shoes"]) == 1 else "(Crocs in sport mode. Respect.)"))
 			run_t = 0.0
 			dist = 0.0
 			add_button("run", Rect2(6, 154, 200, 22), "RUN  (Space)", KEY_SPACE, Color("#4e7a3a"))
@@ -109,17 +109,17 @@ func go(s: String) -> void:
 			add_button("tap", Rect2(6, 154, 200, 22), "NOD ON THE BEAT  (Space)", KEY_SPACE, Color("#2e5aa8"))
 			add_button("clap", Rect2(210, 154, 106, 22), "Clap (C)", KEY_C, Color("#6e5236"))
 		"between":
-			say = "Silence between movements. A man in row F starts clapping. Alone. Everyone stares at him..."
+			say = "Then silence between movements. A man in row F starts clapping. Alone. Everyone stares at him..."
 			add_button("clap", Rect2(110, 154, 100, 22), "Clap (C)", KEY_C, Color("#6e5236"))
 		"intermission":
-			say = "INTERMISSION. {partner}: \"I'm starving. Surprise me.\""
+			say = "Intermission. {partner} goes, \"I'm starving. Surprise me.\""
 			for i in SNACKS.size():
 				var sn: Array = SNACKS[i]
 				var b: = add_button("snack_" + str(sn[0]), Rect2(6 + (i % 2) * 156, 112 + (i / 2) * 22, 152, 20), str(sn[1]), [KEY_1, KEY_2, KEY_3, KEY_4][i])
 				if sn[0] == "bun":
 					b["enabled"] = m != null and int(m.inventory.get("honey buns", 0)) > 0
 		"bravo":
-			say = "The last chord rings out. NOW is when you clap."
+			say = "The last chord rings out. NOW is when I clap."
 			add_button("clap", Rect2(60, 154, 200, 22), "BRAVO! Clap! (C / Space)", KEY_SPACE, Color("#4e7a3a"))
 		"done":
 			say = summary()
@@ -174,14 +174,14 @@ func _on_button(id: String) -> void:
 			_finish_dress()
 		"bus":
 			if m != null and bool(m.has_car):
-				flash("The minivan. You use your blinker. {partner} does her makeup at a red light.", Color("#c0d890"), 1.8)
+				flash("So we take the minivan. I use my blinker. {partner} does her makeup at a red light.", Color("#c0d890"), 1.8)
 				_seat()
 			else:
 				go("busrun")
 		"rideshare":
 			rideshare = true
 			spent += Dates.RIDESHARE
-			flash("Your rideshare driver, Kyle, plays EDM and offers you a vape. -$%d" % Dates.RIDESHARE, Color("#f2c66a"), 1.8)
+			flash("Our rideshare driver, Kyle, plays EDM and offers me a vape. -$%d" % Dates.RIDESHARE, Color("#f2c66a"), 1.8)
 			_seat()
 		"run":
 			run()
@@ -204,7 +204,7 @@ func _on_button(id: String) -> void:
 func _seat() -> void:
 	mv = 1 if late else 0
 	if late:
-		flash("You missed movement I. You watched it on a lobby TV with an usher named Gary.", Color("#e06a4a"), 2.2)
+		flash("I miss movement I. Watch it on a lobby TV with an usher named Gary.", Color("#e06a4a"), 2.2)
 		go("between")
 	else:
 		go("concert")
@@ -222,19 +222,19 @@ func run() -> void:
 	if shoes == 0 and gap < SLIP_GAP:
 		slips += 1
 		dist = maxf(0.0, dist - 0.12)
-		flash("Dress shoes + wet pavement. You moonwalk backwards. Smooth.", Color("#f2c66a"), 0.9)
+		flash("Dress shoes + wet pavement. I moonwalk backwards. Smooth.", Color("#f2c66a"), 0.9)
 		return
 	dist += RUN_STEP * (1.25 if shoes == 2 else (0.85 if shoes == 1 else 1.0))
 	if dist >= 1.0:
 		bus_caught = true
 		spent += fares()
-		flash("You catch the #18! {partner} is already on, saving you a seat. The driver claps.", Color("#c0d890"), 1.8)
+		flash("I catch the #18! {partner}'s already on, saving me a seat. The driver claps.", Color("#c0d890"), 1.8)
 		_seat()
 
 func _missed_bus() -> void:
 	late = true
 	spent += fares()
-	flash("The #18 pulls away. You catch the next one. Fifteen minutes. You're late.", Color("#e06a4a"), 1.8)
+	flash("The #18 pulls away. I catch the next one. Fifteen minutes. I'm late.", Color("#e06a4a"), 1.8)
 	_seat()
 
 func _sound(midi: int) -> void:
@@ -266,7 +266,7 @@ func tap() -> void:
 			perfects += 1
 		awake = minf(1.0, awake + 0.07)
 	else:
-		say = "You nodded at nothing. The cellist noticed."
+		say = "I nod at nothing. The cellist notices."
 
 func clap() -> void:
 	match state:
@@ -274,16 +274,16 @@ func clap() -> void:
 			if not clapped_between:
 				clapped_between = true
 				_sound_noise()
-				flash("You clapped between movements. 1,800 people turn around. {partner}: \"Babe.\"", Color("#e06a4a"), 2.2)
+				flash("I clap between movements. 1,800 people turn around. {partner} just goes, \"Babe.\"", Color("#e06a4a"), 2.2)
 		"bravo":
 			if not bravo:
 				bravo = true
 				_sound_noise()
-				flash("BRAVO! Standing ovation. {partner} squeezes your hand.", Color("#c0d890"), 1.6)
+				flash("BRAVO! Standing ovation. {partner} squeezes my hand.", Color("#c0d890"), 1.6)
 				go("done")
 		"concert":
 			clapped_mid += 1
-			flash("You clapped mid-music. Bold. Wrong, but bold.", Color("#e06a4a"), 1.4)
+			flash("I clap mid-music. Bold. Wrong, but bold.", Color("#e06a4a"), 1.4)
 
 func _sound_noise() -> void:
 	if audio and not players.is_empty():
@@ -298,12 +298,12 @@ func pick_snack(id: String) -> void:
 			spent += int(sn[2])
 	snack = id
 	match id:
-		"wine": flash("{partner} gets her wine. In a sippy-lid cup. Very classy. Very Omaha.", Color("#e88aa8"), 1.8)
-		"pretzels": flash("Chocolate pretzels. She eats 80% of them. As agreed.", Color("#e88aa8"), 1.8)
+		"wine": flash("So {partner} gets her wine. In a sippy-lid cup. Very classy. Very Omaha.", Color("#e88aa8"), 1.8)
+		"pretzels": flash("I get chocolate pretzels. She eats 80% of them. As agreed.", Color("#e88aa8"), 1.8)
 		"bun":
 			m.inventory["honey buns"] = int(m.inventory["honey buns"]) - 1
-			flash("A honey bun. From your COAT. She has never loved you more.", Color("#e88aa8"), 2.0)
-		_: flash("You stood in line for 14 minutes. She got bored and made friends with an usher.", Color("#f2c66a"), 1.8)
+			flash("I pull out a honey bun. From my COAT. She has never loved me more.", Color("#e88aa8"), 2.0)
+		_: flash("I stand in line for 14 minutes. She gets bored and makes friends with an usher.", Color("#f2c66a"), 1.8)
 	mv = 2
 	go("concert")
 
@@ -323,12 +323,12 @@ func _tick(d: float) -> void:
 		"between":
 			if phase_t >= BETWEEN_T:
 				if not clapped_between:
-					flash("You sat in reverent silence. (You were thinking about the fryer.) Classy.", Color("#c0d890"), 1.6)
+					flash("I sit in reverent silence. (I'm thinking about the fryer.) Classy.", Color("#c0d890"), 1.6)
 				mv = 1
 				go("concert")
 		"bravo":
 			if phase_t >= BRAVO_T:
-				flash("You forgot to clap. The man in row F claps for you. He's redeemed.", Color("#f2c66a"), 1.8)
+				flash("I forget to clap. The man in row F claps for me. He's redeemed.", Color("#f2c66a"), 1.8)
 				go("done")
 
 func _tick_concert(d: float) -> void:
@@ -347,7 +347,7 @@ func _tick_concert(d: float) -> void:
 	if awake <= 0.0:
 		snores += 1
 		awake = 0.55
-		flash("SNNNRRRK. {partner} elbows you awake. The flautist heard that.", Color("#e06a4a"), 1.8)
+		flash("SNNNRRRK. {partner} elbows me awake. The flautist heard that.", Color("#e06a4a"), 1.8)
 	if mt >= LEAD + Dates.piece_len(piece) + 0.8:
 		_end_movement()
 

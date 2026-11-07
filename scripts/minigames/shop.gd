@@ -37,7 +37,7 @@ func _relabel() -> void:
 func buy(id: String) -> bool:
 	var p: = price(id)
 	if m == null or m.money < p:
-		flash("Card declined. The cashier finally looks up. Embarrassing.", Color("#e06a4a"))
+		flash("My card gets declined. The cashier finally looks up. Embarrassing.", Color("#e06a4a"))
 		return false
 	m.money -= p
 	m.inventory[id] = int(m.inventory.get(id, 0)) + 1

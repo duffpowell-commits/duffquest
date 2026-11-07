@@ -100,7 +100,7 @@ func _orders(delta: float) -> void:
 				tk["left"] = float(tk["left"]) - delta
 				if float(tk["left"]) <= 0.0:
 					walked += 1
-					m._toast("Booth %d walked out. Left a one-star review written in syrup. -$%d" % [randi_range(1, 6), WALKOUT_PEN])
+					m._toast("Booth %d walks out. Leaves a one-star review written in syrup. -$%d" % [randi_range(1, 6), WALKOUT_PEN])
 					_remove(i)
 			"cook":
 				tk["cook"] = float(tk["cook"]) + delta
@@ -113,7 +113,7 @@ func _orders(delta: float) -> void:
 				if float(tk["cook"]) >= READY_T:
 					burnt += 1
 					smoke[int(tk["grill"])] = 2.0
-					m._toast("BURNT. %s is charcoal now. The smoke alarm has opinions." % str(tk["code"]))
+					m._toast("BURNT. The %s is charcoal. And the smoke alarm has opinions." % str(tk["code"]))
 					AudioScript.sfx("fail")
 					_remove(i)
 
@@ -157,7 +157,7 @@ func use_grill(g: int) -> void:
 			grills[g] = i
 			AudioScript.sfx("fryer", 1.2)
 			return
-	m._toast("No tickets. Enjoy the 4 seconds of peace.")
+	m._toast("No tickets. I enjoy my 4 seconds of peace.")
 
 func grill_label(g: int) -> String:
 	var idx: int = grills[g]
@@ -175,7 +175,7 @@ func _crowd(delta: float) -> void:
 		return
 	if f > 0.25 and not rush_announced:
 		rush_announced = true
-		m._toast("2 AM. The bars just closed. Here they come.")
+		m._toast("So it's 2 AM, right? Bars just closed. Here they come.")
 		next_spawn = 1.0
 	var cap: = 1
 	var every: = 22.0

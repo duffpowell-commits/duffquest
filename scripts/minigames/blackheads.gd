@@ -1,7 +1,7 @@
 extends "res://scripts/minigames/minigame.gd"
 
 const COUNT: = 8
-const LINES: = ["POP! That one had a mortgage.", "{partner}: OHHH that's a good one.", "*squelch* It hit the mirror.", "{partner}: Hold STILL.", "That one was older than {baby}.", "{partner} is making the happiest noise you've ever heard.", "POP! You felt that in your soul.", "{partner}: I could do this all day."]
+const LINES: = ["POP! That one had a mortgage.", "{partner}: OHHH that's a good one.", "*squelch* It hits the mirror.", "{partner}: Hold STILL.", "That one was older than {baby}.", "{partner} makes the happiest noise I've ever heard.", "POP! I felt that in my soul.", "{partner}: I could do this all day."]
 
 var heads: Array = []
 var popped: = 0
@@ -18,7 +18,7 @@ func _setup() -> void:
 	for i in COUNT:
 		heads.append([Vector2(rng.randf_range(90, 230), rng.randf_range(34, 112)), false, 0.0])
 	add_button("quit", Rect2(262, 154, 54, 22), "Done", KEY_ESCAPE, Color("#a43a2c"))
-	say = "{partner} snaps on imaginary gloves. \"Turn around. Into the light.\""
+	say = "So {partner} snaps on imaginary gloves. \"Turn around. Into the light.\""
 
 func score() -> float:
 	return float(popped) / float(COUNT)
@@ -33,7 +33,7 @@ func pop_at(p: Vector2) -> bool:
 			if popped >= COUNT:
 				finish(1.0)
 			return true
-	say = "You poked a freckle. {partner}: \"That's a freckle, babe.\""
+	say = "I poke a freckle. {partner}: \"That's a freckle, babe.\""
 	return false
 
 func _pointer_down(p: Vector2) -> void:

@@ -4,7 +4,7 @@ const COLS: = 10
 const ROWS: = 5
 const TILE: = 26.0
 const ORIGIN: = Vector2(30, 30)
-const KNOCKS: = ["{cat1} knocked a cup off the nightstand. Eye contact maintained.", "{cat2} launched the baby monitor off the dresser.", "A cat yowled because you exist.", "{cat1} body-slammed the laundry basket."]
+const KNOCKS: = ["{cat1} knocks a cup off the nightstand. Eye contact maintained.", "Then {cat2} launches the baby monitor off the dresser.", "A cat yowls because I exist.", "{cat1} body-slams the laundry basket."]
 
 var creaky: = {}
 var pos: = Vector2i(0, 2)
@@ -74,7 +74,7 @@ func _make_noise(amount: float, msg: String = "") -> void:
 	if msg != "":
 		flash(msg, Color("#e6a640"), 1.3)
 	if noise >= 100.0:
-		notes.append("She woke up. You're sleeping on the floor next to the crib tonight.")
+		notes.append("She wakes up. Guess who's sleeping on the floor by the crib tonight.")
 		finish(0.0)
 
 func step(d: Vector2i) -> void:
@@ -93,13 +93,13 @@ func step(d: Vector2i) -> void:
 	if done: return
 	var c: = _cat_at(pos)
 	if c != "":
-		_make_noise(40.0, "You stepped on %s. He screamed like a car alarm." % c)
+		_make_noise(40.0, "I step on %s. He screams like a car alarm." % c)
 	if done: return
 	if pos == goal:
 		finish(clampf(1.0 - maxf(0.0, peak - 30.0) / 120.0, 0.3, 1.0))
 
 func _timeout() -> void:
-	notes.append("Took so long she woke up for round two.")
+	notes.append("I take so long she wakes up for round two.")
 	finish(0.0)
 
 func _tick(delta: float) -> void:

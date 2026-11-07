@@ -40,7 +40,7 @@ func dip(bin: String) -> void:
 		return
 	if NEEDS[bin] != hand:
 		clumps += 1
-		flash("Wrong hand. Club hands! You're breading your own fingers.", Color("#e6a640"))
+		flash("Wrong hand. Club hands! I'm breading my own fingers.", Color("#e6a640"))
 	step += 1
 
 func to_basket() -> void:
@@ -69,14 +69,14 @@ func pull() -> void:
 		fry_score = 0.6
 	else:
 		fry_score = 0.15
-		notes.append("Pickles came out %s." % ("raw and soggy" if fry_p < 0.65 else "burnt"))
+		notes.append("The pickles come out %s." % ("raw and soggy" if fry_p < 0.65 else "burnt"))
 	_done()
 
 func _done() -> void:
 	if errors > 0:
-		notes.append("%d breading order mistake(s)." % errors)
+		notes.append("I mess up the breading order %d time(s)." % errors)
 	if clumps > 0:
-		notes.append("%d club-hand moment(s). Dry hand for dry, wet hand for wet." % clumps)
+		notes.append("I get club hands %d time(s). Dry hand for dry, wet hand for wet." % clumps)
 	var bread_score: = float(battered) / total * maxf(0.0, 1.0 - 0.12 * errors - 0.08 * clumps)
 	finish(bread_score * 0.7 + fry_score * 0.3)
 

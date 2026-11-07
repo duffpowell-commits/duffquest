@@ -33,7 +33,7 @@ func toggle(i: int) -> void:
 	var b: Dictionary = baskets[i]
 	if b["state"] == "ready":
 		if oil >= 390.0:
-			hurt(5, "Oil's at %d°F and you dropped a basket. Splatter burn! -5 Energy" % int(oil))
+			hurt(5, "Oil's at %d°F and I drop a basket in. Splatter burn! -5 Energy" % int(oil))
 		b["state"] = "in"
 		AudioScript.sfx("fryer")
 		oil -= float(b["drop"])
@@ -56,12 +56,12 @@ func _pull(i: int) -> void:
 		flash("%s: dark but servable." % b["n"], Color("#e6a640"))
 	elif p < 0.8:
 		s = 0.25
-		var msg: = "Wings must hit 165°F. Those are raw." if b["n"] == "Wings" else "Limp, raw fries. Sad as a gig worker's pension."
+		var msg: = "I pull the wings raw. They gotta hit 165°F." if b["n"] == "Wings" else "I pull limp, raw fries. Sad as a gig worker's pension."
 		notes.append(msg)
 		flash(msg, Color("#e06a4a"))
 	else:
 		s = 0.05
-		notes.append("%s burnt to a crisp." % b["n"])
+		notes.append("%s? I burn 'em to a crisp." % b["n"])
 		flash("%s: charcoal." % b["n"], Color("#e06a4a"))
 	b["score"] = s
 	b["state"] = "out"
@@ -81,11 +81,11 @@ func _done() -> void:
 		total += float(b["score"])
 	var oil_score: = oil_good / oil_total if oil_total > 0.0 else 1.0
 	if oil_score < 0.6:
-		notes.append("Oil temp was all over the place (keep it 350-375°F).")
+		notes.append("My oil temp's all over the place (keep it 350-375°F).")
 	var sc: = (total / baskets.size()) * 0.75 + oil_score * 0.25
 	if ctx.get("fixit", false) and sc >= 0.65:
 		bonus = 5
-		notes.append("Saved Brayden's wings: +$5")
+		notes.append("I save Brayden's wings: +$5")
 	finish(sc)
 
 func _timeout() -> void:

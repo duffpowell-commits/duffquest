@@ -4,8 +4,8 @@ const BEAT: = 0.8
 const STEPS: = 8
 const WINDOW: = 0.17
 const LEAD_IN: = 1.2
-const GOOD: = ["CRACK. Vertebra 4 says thank you.", "*pop* That one was from 2019.", "{partner}: Ooh, I felt that one.", "CRUNCH. You can see colors now.", "Your spine sounds like bubble wrap. Good bubble wrap."]
-const BAD: = ["Ow. That was a kidney.", "{partner}: Sorry! Was that your ribs?", "She wobbled. You saw your life flash.", "Off-beat. She's standing on your elbow now."]
+const GOOD: = ["CRACK. Vertebra 4 says thank you.", "*pop* That one was from 2019.", "{partner}: Ooh, I felt that one.", "CRUNCH. I can see colors now.", "My spine sounds like bubble wrap. Good bubble wrap."]
+const BAD: = ["Ow. That was a kidney.", "{partner}: Sorry! Was that your ribs?", "She wobbles. I see my life flash.", "Off-beat. Now she's standing on my elbow."]
 
 var hits: = 0
 var misses: = 0
@@ -23,7 +23,7 @@ func _setup() -> void:
 		judged.append("")
 	add_button("step", Rect2(6, 154, 200, 22), "STEP  (Space)", KEY_SPACE, Color("#2e5aa8"))
 	add_button("quit", Rect2(262, 154, 54, 22), "Stop", KEY_ESCAPE, Color("#a43a2c"))
-	say = "{partner} climbs on. \"Tell me if I'm too heavy.\" (Never say yes.)"
+	say = "So {partner} climbs on. \"Tell me if I'm too heavy.\" (Never say yes.)"
 
 func beat_time(i: int) -> float:
 	return LEAD_IN + BEAT * float(i + 1)
@@ -61,7 +61,7 @@ func _on_button(id: String) -> void:
 		say = GOOD[hits % GOOD.size()]
 		flash("CRACK!", Color("#c0d890"), 0.4)
 	else:
-		say = "Too early. She's balancing on one foot now."
+		say = "I go too early. Now she's balancing on one foot."
 
 func _draw_game() -> void:
 	draw_rect(Rect2(40, 98, 240, 22), Color("#4a3a6a"))

@@ -277,7 +277,7 @@ func _level_up() -> void:
 			msg += " NEW MOVE: %s." % s["name"]
 	if level == DEMON_UNLOCK_LEVEL and not demon_unlocked:
 		demon_unlocked = true
-		msg += " Something wakes up at 2am... DEMON TIME unlocked (full Heat, press R / D)."
+		msg += " Something in me wakes up at 2am... DEMON TIME unlocked (full Heat, press R / D)."
 	m._toast(msg)
 	m.cheer_level_up()
 	if ui:
@@ -378,7 +378,7 @@ func special_released() -> void:
 
 func demon_pressed() -> void:
 	if not demon_unlocked:
-		m._toast("Not yet. Something in you is still asleep. (Reach Seniority Lv %d or beat a story boss.)" % DEMON_UNLOCK_LEVEL)
+		m._toast("Not yet. Something in me is still asleep. (Reach Seniority Lv %d or beat a story boss.)" % DEMON_UNLOCK_LEVEL)
 		return
 	if demon_t > 0.0 or crash_t > 0.0:
 		return
@@ -396,7 +396,7 @@ func _end_demon() -> void:
 	demon_t = 0.0
 	crash_t = CRASH_TIME
 	m.player.demon = false
-	m._toast("The Crash. 2am energy, 6am consequences.")
+	m._toast("Then the crash hits. 2am energy, 6am consequences.")
 	m.apply_gear()
 
 func _find(id: String) -> Dictionary:
@@ -522,7 +522,7 @@ func _finish_feast() -> void:
 	fed_t = 8.0
 	if fx:
 		fx.text(m.player.global_position + Vector2(0, -26), "+%d Energy" % int(heal), Color("#a0ff90"))
-	m._toast("Family meal. Somebody's grandma's recipe. +%d Energy, hitting harder for 8s." % int(heal))
+	m._toast("I wolf down family meal. Somebody's grandma's recipe. +%d Energy, hitting harder for 8s." % int(heal))
 
 func _salamander(sp: Dictionary, power: float) -> void:
 	_pay(sp)
