@@ -1,8 +1,8 @@
 # Duff Quest
 
 EarthBound-style comedy RPG about Duff's real life in Omaha: keep Madison happy, pay the rent,
-work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDScript, 480×270
-landscape, pixel art. Owner: Duff. Read this first; it is the handoff between sessions.
+work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDScript, 640×360
+landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
 - **Source recovered Nov 7, 2026.** The game was built elsewhere (Grok) and only builds survived
@@ -26,8 +26,28 @@ landscape, pixel art. Owner: Duff. Read this first; it is the handoff between se
   Madison's show-and-tell. Applied with `tools/apply_rewrites.py` (rejects changed `{tokens}` /
   `%d` codes, raw quotes, >1.5x length, literals used elsewhere). Render: `docs/renders/dialogue_voice_smoke.png`.
   Unverified: whether any longer toast lines clip on narrow screens. Look for it when playing.
+- **Dialogue polish (Nov 7, later):** 117 lines reworked to cut the storyteller tics ("So..."
+  68x -> ~10, "goes," / ", right?" / "Then" mostly gone), punchier originals restored for quick
+  popups. Rules added to `docs/voice.md` ("Tic budget"). Keep to them.
+- **HD art merged (Nov 7):** `duffquest_hd_project.zip` (Duff's Drive; made outside this repo
+  from the v0.10 pck) ported onto main without touching gameplay: 110/131 sprites and backdrops
+  replaced (chibi Style A), viewport 640×360, `UI_SCALE` 2.0, camera smoothing off, pixel snap,
+  `scripts/hd_presentation.gd` + `shaders/hd2d.gdshader` (LDR bloom/vignette, warm tint, window
+  and lamp lights), soft contact shadows in `art.gd`. Its notes: `docs/hd/`. Renders:
+  `docs/renders/hd_art_merged_smoke.png`, `hd_vs_original_neighborhood.png`.
+  Claude's review: much cleaner than the old art but generic. Same cream houses, lollipop trees,
+  empty grass, pale low-contrast palette, Seen Cafe reads as a clinic. Smoke only covers
+  outdoors + phone; interiors, combat and bosses not eyeballed yet.
+- **Art personality pass in progress:** Duff makes art with Grok. Brief + prompts:
+  `docs/art_brief.md` (also a Google Doc "READ ME FIRST - Grok prompts" in Drive folder
+  **DuffQuest Art Inbox**, with `reference_current_HD.png`). One Drive folder per design, three
+  options (A/B/C) each: 00 Style board (pick first), 01 Storefronts (13 buildings, one folder
+  each), 02 Trees, 03 Street clutter. Duff marks winners with a star in the filename or says so.
 
 ## Next (Duff's asks)
+- When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
+  to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
+  `assets/art/map_outside.png` at the `buildings` footprints, swap trees/props, render before/after.
 - Graphics update, flesh out the world, possible Google Play release (from Duff's plans).
 - Combat goal: action RPG like the GBA Dragon Ball Z games.
 
