@@ -1,12 +1,12 @@
 extends "res://scripts/minigames/minigame.gd"
 
 const SCENE_LINES: = [
-	"Later that night. No sirens. No vents. Just the couch.",
+	"So later that night: no sirens, no vents. Just the couch.",
 	"{partner}: You fought a guy in a tank top in a burning tower... for us?",
 	"{hero}: I fought him for the leftovers. You guys were a close second.",
 	"{partner}: Liar. ...Come here.",
-	"{baby} falls asleep on {hero}'s chest. Nobody moves. Ever again.",
-	"{cat1} and {cat2} pile on. {cat3} sits one cushion away. That's love, for {cat3}.",
+	"And {baby}? Out cold on {hero}'s chest. Nobody moves. Ever again.",
+	"Then {cat1} and {cat2} pile on. {cat3} sits one cushion away. That's love, for {cat3}.",
 	"{partner}: Same time tomorrow?",
 	"{hero}: Every day. Honey buns included.",
 ]
@@ -88,7 +88,7 @@ func _draw_game() -> void:
 	else:
 		_draw_couch()
 		txt(Vector2(0, 40), "THE END", 16, Color("#e6a640"), HORIZONTAL_ALIGNMENT_CENTER, W)
-		txt(Vector2(0, 60), Cast.T("{partner} is happy. Not just for now."), 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
+		txt(Vector2(0, 60), Cast.T("And {partner}'s happy. Not just for now."), 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
 		txt(Vector2(0, 74), "Achievement: Happily Ever After", 7, Color("#a0ffa0"), HORIZONTAL_ALIGNMENT_CENTER, W)
 
 func _draw_couch(a: float = 1.0) -> void:

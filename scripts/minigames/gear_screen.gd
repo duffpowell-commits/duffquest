@@ -67,11 +67,11 @@ func _on_button(id: String) -> void:
 					m.apply_gear()
 		"upgrade":
 			if Gear.upgrade(g, sel):
-				flash("%s is now +%d. {sister} would still roast it." % [Gear.find(sel)["name"], Gear.level(g, sel)], Color("#c0d890"), 1.2)
+				flash("So I upgrade it. %s, +%d. {sister} would still roast it." % [Gear.find(sel)["name"], Gear.level(g, sel)], Color("#c0d890"), 1.2)
 				if m:
 					m.apply_gear()
 			else:
-				flash("Not enough scrap. {sister}'s Wordle pays the best.", Color("#e06a4a"))
+				flash("I don't have enough scrap. {sister}'s Wordle pays the best.", Color("#e06a4a"))
 		_:
 			sel = id
 	_relabel()

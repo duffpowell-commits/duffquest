@@ -50,7 +50,7 @@ func go(s: String) -> void:
 	phase_t = 0.0
 	match s:
 		"listen":
-			say = ("(You drove the minivan downtown.) " if m != null and bool(m.has_car) else "(You took the #18 downtown.) ") + "{partner}: \"I'm gonna run to the bathroom. Order for me? I want the %s And if salmon... no, if %s or %s come by on the belt, GRAB THEM.\"" % [Dates.order_text(her), _plate_name(her["plates"][0]).to_lower(), _plate_name(her["plates"][1]).to_lower()]
+			say = ("So I drive the minivan downtown, right. " if m != null and bool(m.has_car) else "So I take the #18 downtown, right. ") + "{partner}: \"I'm gonna run to the bathroom. Order for me? I want the %s And if salmon... no, if %s or %s come by on the belt, GRAB THEM.\"" % [Dates.order_text(her), _plate_name(her["plates"][0]).to_lower(), _plate_name(her["plates"][1]).to_lower()]
 			add_button("gotit", Rect2(206, 154, 110, 22), "Got it (Space)", KEY_SPACE, Color("#4e7a3a"))
 		"order":
 			say = "Server: \"And for her?\" (Tap each line to change it.)"
@@ -59,11 +59,11 @@ func go(s: String) -> void:
 			add_button("place", Rect2(206, 154, 110, 22), "Place order", KEY_SPACE, Color("#4e7a3a"))
 			_relabel()
 		"conveyor":
-			say = "Conveyor time. GRAB her favorites when they pass the chopsticks: %s, %s." % [_plate_name(her["plates"][0]).to_lower(), _plate_name(her["plates"][1]).to_lower()]
+			say = "Then the conveyor starts. I gotta GRAB her favorites at the chopsticks: %s, %s." % [_plate_name(her["plates"][0]).to_lower(), _plate_name(her["plates"][1]).to_lower()]
 			add_button("grab", Rect2(6, 154, 200, 22), "GRAB  (Space)", KEY_SPACE, Color("#2e5aa8"))
 		"bill":
 			bill = Dates.order_cost(her) + Dates.DUFF_MEAL + plate_cost
-			say = "The bill: $%d (her order $%d, your ramen $%d, plates $%d). {partner} looks at it. Then at you." % [bill, Dates.order_cost(her), Dates.DUFF_MEAL, plate_cost]
+			say = "Then the bill comes: $%d (her order $%d, my ramen $%d, plates $%d). {partner} looks at it. Then at me." % [bill, Dates.order_cost(her), Dates.DUFF_MEAL, plate_cost]
 			add_button("pay", Rect2(6, 112, 152, 20), "I got this ($%d)" % bill, KEY_1, Color("#4e7a3a"))
 			add_button("split", Rect2(162, 112, 152, 20), "Split it ($%d each)" % int(ceil(bill / 2.0)), KEY_2)
 			var c: = add_button("charm", Rect2(6, 134, 152, 18), "Charm the server ($%d)" % charm_price() if charming() else "Charm the server (needs CHARISMA)", KEY_3, Color("#a8406a"))
@@ -94,16 +94,16 @@ func place_order() -> void:
 		if opts[int(picks[s])] == her[s]:
 			order_right += 1
 	if order_right == Dates.SLOTS.size():
-		flash("{partner} comes back: \"You remembered EVERYTHING? Even the ice?\"", Color("#c0d890"), 2.0)
+		flash("{partner} comes back and goes, \"You remembered EVERYTHING? Even the ice?\"", Color("#c0d890"), 2.0)
 	elif order_right >= 3:
-		flash("Close! She gets a %s she didn't ask for. She drinks it anyway." % str(Dates.SLOT_OPTS["tea"][int(picks["tea"])]).to_lower(), Color("#f2c66a"), 2.0)
+		flash("Close! She gets a %s she never asked for. Drinks it anyway, bless her." % str(Dates.SLOT_OPTS["tea"][int(picks["tea"])]).to_lower(), Color("#f2c66a"), 2.0)
 	else:
-		flash("She stares at her drink. \"Who is this for? Is this for your OTHER girlfriend?\"", Color("#e06a4a"), 2.0)
+		flash("She stares at the drink, then at me. \"Who is this for? Your OTHER girlfriend?\"", Color("#e06a4a"), 2.0)
 	go("conveyor")
 
 func grab() -> void:
 	if grab_cd > 0.0:
-		flash("Chopstick fumble. The tamago escapes. Probably for the best.", Color("#f2c66a"), 0.9)
+		flash("I fumble the chopsticks. The tamago escapes. Probably for the best.", Color("#f2c66a"), 0.9)
 		return
 	grab_cd = 0.35
 	for p in plates:
@@ -115,13 +115,13 @@ func grab() -> void:
 			plate_cost += int(Dates.PLATES[k][1])
 			if k in her["plates"]:
 				good += 1
-				flash("Got the %s! She does a little chair dance." % _plate_name(k).to_lower(), Color("#c0d890"), 1.0)
+				flash("I snag the %s! She does a little chair dance." % _plate_name(k).to_lower(), Color("#c0d890"), 1.0)
 			else:
 				wrong += 1
-				var why: = "She makes you eat it." if k == "uni" else ("It's one ginger slice on a whole plate. $1." if k == "ginger" else "Not her favorite. You eat it. Sacrifices.")
+				var why: = "She makes me eat it." if k == "uni" else ("It's one ginger slice on a whole plate. $1." if k == "ginger" else "Not her favorite. So I eat it. Sacrifices.")
 				flash("%s. %s" % [_plate_name(k), why], Color("#f2c66a"), 1.2)
 			return
-	flash("You clack your chopsticks at the air. Very intimidating.", Color(1, 1, 1, 0.8), 0.8)
+	flash("I clack my chopsticks at the air. Very intimidating.", Color(1, 1, 1, 0.8), 0.8)
 
 func pay_bill(choice: String) -> void:
 	var wallet: int = int(m.money) if m else 999
@@ -134,15 +134,15 @@ func pay_bill(choice: String) -> void:
 	if amt > wallet:
 		bill_choice = "declined"
 		spent = 0
-		flash("Card declined. {partner} pays. She's nice about it. That's worse.", Color("#e06a4a"), 2.0)
+		flash("My card gets declined. {partner} pays. She's nice about it. That's worse.", Color("#e06a4a"), 2.0)
 	else:
 		bill_choice = choice
 		spent = amt
 		match choice:
-			"pay": flash("You pay. She calls you \"provider\" in a voice. It's a good voice.", Color("#c0d890"), 1.8)
-			"split": flash("Split down the middle. Modern couple. She's fine with it. Mostly.", Color(1, 1, 1), 1.8)
-			"charm": flash("You smell incredible. The server comps the boba AND takes 15% off. She's impressed.", Color("#e88aa8"), 2.0)
-			"slow": flash("You reach for your wallet... sloooowly... She sighs and pays. Noted.", Color("#e06a4a"), 2.0)
+			"pay": flash("I pay. She calls me \"provider\" in a voice. It's a good voice.", Color("#c0d890"), 1.8)
+			"split": flash("We split it down the middle. Modern couple. She's fine with it. Mostly.", Color(1, 1, 1), 1.8)
+			"charm": flash("I smell incredible, right? Server comps the boba AND takes 15% off. She's impressed.", Color("#e88aa8"), 2.0)
+			"slow": flash("I reach for my wallet... sloooowly... She sighs and pays. Noted.", Color("#e06a4a"), 2.0)
 	go("done")
 
 func _on_button(id: String) -> void:
@@ -184,7 +184,7 @@ func score() -> float:
 	return clampf(s, 0.0, 1.0)
 
 func summary() -> String:
-	return "Order: %d/5 right. Her favorites grabbed: %d. Bill: %s." % [order_right, good, {"pay": "you paid", "charm": "charmed the server", "split": "split it", "slow": "she paid (you were slow)", "declined": "card declined" }.get(bill_choice, "?")]
+	return "Order: %d/5 right. Her favorites grabbed: %d. Bill: %s." % [order_right, good, {"pay": "you paid", "charm": "charmed the server", "split": "split it", "slow": "she paid (I was slow)", "declined": "card declined" }.get(bill_choice, "?")]
 
 func _draw_game() -> void:
 	txt(Vector2(0, 22), "{date_spot_sushi} . sushi . poke . boba", 7, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)

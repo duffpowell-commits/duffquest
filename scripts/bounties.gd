@@ -1,12 +1,12 @@
 extends RefCounted
 
 const LIST: = [
-	{"id": "sendback", "lvl": 2, "cash": 40, "scrap": 2, "crime": "Sent back 11 steaks in one night. Ate all 11." },
-	{"id": "coupon", "lvl": 4, "cash": 55, "scrap": 2, "crime": "Tried to pay with a Blockbuster coupon. Twice." },
-	{"id": "allergy", "lvl": 5, "cash": 65, "scrap": 3, "crime": "'Deathly allergic' to onions. Ordered the onion rings." },
-	{"id": "camper", "lvl": 6, "cash": 75, "scrap": 3, "crime": "One coffee. Four hours. Unplugged the walk-in for his laptop." },
-	{"id": "bdaydad", "lvl": 8, "cash": 100, "scrap": 4, "crime": "Party of 19. No reservation. Separate checks. Bit a busser (his kid did)." },
-	{"id": "dasher", "lvl": 10, "cash": 180, "scrap": 6, "crime": "Steak, lobster, 3 shakes, pie to go. Paid with footsteps.", "needs_all": true },
+	{"id": "sendback", "lvl": 2, "cash": 40, "scrap": 2, "crime": "This guy sends back 11 steaks in one night. Eats all 11." },
+	{"id": "coupon", "lvl": 4, "cash": 55, "scrap": 2, "crime": "Tries to pay with a Blockbuster coupon. Twice." },
+	{"id": "allergy", "lvl": 5, "cash": 65, "scrap": 3, "crime": "Says he's 'deathly allergic' to onions. Orders the onion rings." },
+	{"id": "camper", "lvl": 6, "cash": 75, "scrap": 3, "crime": "One coffee. Four hours. Unplugs the walk-in to charge his laptop." },
+	{"id": "bdaydad", "lvl": 8, "cash": 100, "scrap": 4, "crime": "Party of 19. No reservation. Separate checks. Bites a busser (okay, his kid does)." },
+	{"id": "dasher", "lvl": 10, "cash": 180, "scrap": 6, "crime": "Steak, lobster, 3 shakes, pie to go. Pays with footsteps.", "needs_all": true },
 ]
 const REMATCH_CUT: = 0.25
 const ACH_ALL: = "86'd Them All"
