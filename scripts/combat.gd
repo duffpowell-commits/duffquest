@@ -396,7 +396,7 @@ func _end_demon() -> void:
 	demon_t = 0.0
 	crash_t = CRASH_TIME
 	m.player.demon = false
-	m._toast("Then the crash hits. 2am energy, 6am consequences.")
+	m._toast("The crash. 2am energy, 6am consequences.")
 	m.apply_gear()
 
 func _find(id: String) -> Dictionary:

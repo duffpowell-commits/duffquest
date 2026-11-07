@@ -18,7 +18,7 @@ func _setup() -> void:
 	for i in COUNT:
 		heads.append([Vector2(rng.randf_range(90, 230), rng.randf_range(34, 112)), false, 0.0])
 	add_button("quit", Rect2(262, 154, 54, 22), "Done", KEY_ESCAPE, Color("#a43a2c"))
-	say = "So {partner} snaps on imaginary gloves. \"Turn around. Into the light.\""
+	say = "{partner} snaps on imaginary gloves. \"Turn around. Into the light.\""
 
 func score() -> float:
 	return float(popped) / float(COUNT)

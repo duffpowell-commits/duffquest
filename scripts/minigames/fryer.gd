@@ -61,7 +61,7 @@ func _pull(i: int) -> void:
 		flash(msg, Color("#e06a4a"))
 	else:
 		s = 0.05
-		notes.append("%s? I burn 'em to a crisp." % b["n"])
+		notes.append("%s, burnt to a crisp." % b["n"])
 		flash("%s: charcoal." % b["n"], Color("#e06a4a"))
 	b["score"] = s
 	b["state"] = "out"

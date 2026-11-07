@@ -115,7 +115,7 @@ static func migrate(d: Dictionary) -> Dictionary:
 					if typeof(x) == TYPE_DICTIONARY and swap.has(str(x.get("id", ""))):
 						x["id"] = swap[str(x["id"])]
 						if key == "owed":
-							x["text"] = "So that old bill comes due: $%d."
+							x["text"] = "That old bill came due: $%d."
 		d["has_car"] = false
 		d["bus_pass_until"] = -1
 		d["bus_rides"] = 0
