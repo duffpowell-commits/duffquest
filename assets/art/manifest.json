@@ -1,0 +1,1926 @@
+{
+ "assets": {
+  "arena_crypto": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "arena_djvape": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "arena_ghoster": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "arena_gymbro": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "arena_willnot": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "av_bank": {
+   "cell": [
+    36,
+    36
+   ],
+   "h": 36,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "av_chef": {
+   "cell": [
+    36,
+    36
+   ],
+   "h": 36,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "av_duff": {
+   "cell": [
+    36,
+    36
+   ],
+   "h": 36,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "av_gala": {
+   "cell": [
+    36,
+    36
+   ],
+   "h": 36,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "av_jen": {
+   "cell": [
+    36,
+    36
+   ],
+   "h": 36,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "av_madison": {
+   "cell": [
+    36,
+    36
+   ],
+   "h": 36,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "av_pharmacist": {
+   "cell": [
+    36,
+    36
+   ],
+   "h": 36,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "av_sitter": {
+   "cell": [
+    36,
+    36
+   ],
+   "h": 36,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "baby": {
+   "cell": [
+    18,
+    18
+   ],
+   "h": 18,
+   "kind": "anim",
+   "origin": [
+    9,
+    9
+   ],
+   "s": 1.5,
+   "w": 72
+  },
+  "bench": {
+   "cell": [
+    27,
+    14
+   ],
+   "h": 14,
+   "kind": "prop",
+   "origin": [
+    13,
+    13
+   ],
+   "s": 1.5,
+   "w": 27
+  },
+  "bg_akarui": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_bedroom": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_grocery": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_holland": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_kitchen": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_kwik": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_living_night": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_nursery": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_pharmacy": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "bg_plasma": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "buff_CHA": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "buff_DEF": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "buff_DRN": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "buff_LUV": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "buff_PASS": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "buff_SPD": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "buff_STR": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "bus_sign": {
+   "cell": [
+    18,
+    36
+   ],
+   "h": 36,
+   "kind": "prop",
+   "origin": [
+    9,
+    35
+   ],
+   "s": 1.5,
+   "w": 18
+  },
+  "cat_alastor": {
+   "cell": [
+    24,
+    18
+   ],
+   "h": 36,
+   "kind": "critter",
+   "origin": [
+    12,
+    17
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "cat_freya": {
+   "cell": [
+    24,
+    18
+   ],
+   "h": 36,
+   "kind": "critter",
+   "origin": [
+    12,
+    17
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "cat_lucifer": {
+   "cell": [
+    24,
+    18
+   ],
+   "h": 36,
+   "kind": "critter",
+   "origin": [
+    12,
+    17
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_baron": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_bozos": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_butler": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_cashier": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_chef": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_crypto": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_djvape": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_donald": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_duff_suit": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_fences": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_ghoster": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_grillboy": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_gymbro": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_hoa": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_husk": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_hustler": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_inspector": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_jen": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_karen": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_karen_buddy": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_madison": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_madison_dress": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_pete": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_pharmacist": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_phlebotomist": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_pirate0": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_pirate1": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_pirate2": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_pirate3": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_scammer": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_sitter": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_sushi_chef": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_usher": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ch_willnot": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "drone": {
+   "cell": [
+    21,
+    15
+   ],
+   "h": 15,
+   "kind": "anim",
+   "origin": [
+    11,
+    8
+   ],
+   "s": 1.5,
+   "w": 42
+  },
+  "duff_apron_black": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_apron_red": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_clogs_black": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_clogs_red": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_coat_black": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_coat_red": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_dad_black": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_dad_red": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_dress": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 108,
+   "kind": "pose",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 144
+  },
+  "duff_home": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_roll_black": {
+   "cell": [
+    24,
+    24
+   ],
+   "h": 24,
+   "kind": "anim",
+   "origin": [
+    12,
+    17
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_roll_red": {
+   "cell": [
+    24,
+    24
+   ],
+   "h": 24,
+   "kind": "anim",
+   "origin": [
+    12,
+    17
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_shades": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "overlay",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_sleeves_black": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "duff_sleeves_red": {
+   "cell": [
+    24,
+    36
+   ],
+   "h": 144,
+   "kind": "humanoid",
+   "origin": [
+    12,
+    35
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "ensure": {
+   "cell": [
+    9,
+    15
+   ],
+   "h": 15,
+   "kind": "prop",
+   "origin": [
+    4,
+    14
+   ],
+   "s": 1.5,
+   "w": 9
+  },
+  "face_fussy": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    8,
+    8
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "face_happy": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    8,
+    8
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "face_meh": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    8,
+    8
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "face_pissed": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    8,
+    8
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "face_restless": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    8,
+    8
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "face_short": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    8,
+    8
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "face_upset": {
+   "cell": [
+    17,
+    17
+   ],
+   "h": 17,
+   "kind": "icon",
+   "origin": [
+    8,
+    8
+   ],
+   "s": 1.5,
+   "w": 17
+  },
+  "freya_peek": {
+   "cell": [
+    15,
+    11
+   ],
+   "h": 11,
+   "kind": "prop",
+   "origin": [
+    8,
+    6
+   ],
+   "s": 1.5,
+   "w": 15
+  },
+  "gala": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "home_interior": {
+   "cell": [
+    480,
+    270
+   ],
+   "h": 270,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 480
+  },
+  "honeybun": {
+   "cell": [
+    12,
+    9
+   ],
+   "h": 9,
+   "kind": "prop",
+   "origin": [
+    6,
+    8
+   ],
+   "s": 1.5,
+   "w": 12
+  },
+  "ic_bolt": {
+   "cell": [
+    14,
+    14
+   ],
+   "h": 14,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 14
+  },
+  "ic_bus": {
+   "cell": [
+    14,
+    14
+   ],
+   "h": 14,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 14
+  },
+  "ic_coin": {
+   "cell": [
+    14,
+    14
+   ],
+   "h": 14,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 14
+  },
+  "ic_heart": {
+   "cell": [
+    14,
+    14
+   ],
+   "h": 14,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 14
+  },
+  "ic_piggy": {
+   "cell": [
+    14,
+    14
+   ],
+   "h": 14,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 14
+  },
+  "map_outside": {
+   "cell": [
+    960,
+    540
+   ],
+   "h": 540,
+   "kind": "backdrop",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 960
+  },
+  "nft": {
+   "cell": [
+    21,
+    21
+   ],
+   "h": 21,
+   "kind": "prop",
+   "origin": [
+    11,
+    11
+   ],
+   "s": 1.5,
+   "w": 21
+  },
+  "package": {
+   "cell": [
+    15,
+    14
+   ],
+   "h": 14,
+   "kind": "prop",
+   "origin": [
+    7,
+    13
+   ],
+   "s": 1.5,
+   "w": 15
+  },
+  "palette": {
+   "cell": [
+    618,
+    6
+   ],
+   "h": 6,
+   "kind": "doc",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 618
+  },
+  "phone": {
+   "cell": [
+    18,
+    30
+   ],
+   "h": 30,
+   "kind": "icon",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 18
+  },
+  "portrait_duff": {
+   "cell": [
+    72,
+    72
+   ],
+   "h": 144,
+   "kind": "portrait",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 216
+  },
+  "portrait_madison": {
+   "cell": [
+    72,
+    72
+   ],
+   "h": 72,
+   "kind": "portrait",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 216
+  },
+  "portrait_octavia": {
+   "cell": [
+    72,
+    72
+   ],
+   "h": 72,
+   "kind": "portrait",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 216
+  },
+  "raccoon": {
+   "cell": [
+    24,
+    18
+   ],
+   "h": 36,
+   "kind": "critter",
+   "origin": [
+    12,
+    17
+   ],
+   "s": 1.5,
+   "w": 96
+  },
+  "tiles": {
+   "cell": [
+    24,
+    24
+   ],
+   "h": 72,
+   "kind": "tileset",
+   "origin": [
+    0,
+    0
+   ],
+   "s": 1.5,
+   "w": 144
+  },
+  "trash_can": {
+   "cell": [
+    15,
+    18
+   ],
+   "h": 18,
+   "kind": "prop",
+   "origin": [
+    7,
+    17
+   ],
+   "s": 1.5,
+   "w": 15
+  },
+  "tree": {
+   "cell": [
+    36,
+    45
+   ],
+   "h": 45,
+   "kind": "prop",
+   "origin": [
+    18,
+    44
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "truck_h": {
+   "cell": [
+    36,
+    21
+   ],
+   "h": 21,
+   "kind": "prop",
+   "origin": [
+    18,
+    11
+   ],
+   "s": 1.5,
+   "w": 36
+  },
+  "truck_v": {
+   "cell": [
+    21,
+    36
+   ],
+   "h": 36,
+   "kind": "prop",
+   "origin": [
+    11,
+    18
+   ],
+   "s": 1.5,
+   "w": 21
+  }
+ },
+ "layout": {
+  "buildings": [
+   [
+    "HOME",
+    [
+     40.0,
+     40.0,
+     110.0,
+     70.0
+    ]
+   ],
+   [
+    "NEIGHBOR",
+    [
+     190.0,
+     40.0,
+     80.0,
+     60.0
+    ]
+   ],
+   [
+    "KWIK-N-GO",
+    [
+     470.0,
+     40.0,
+     130.0,
+     70.0
+    ]
+   ],
+   [
+    "THE TWISTED FORK",
+    [
+     460.0,
+     240.0,
+     150.0,
+     70.0
+    ]
+   ],
+   [
+    "HOA HQ",
+    [
+     40.0,
+     240.0,
+     120.0,
+     70.0
+    ]
+   ],
+   [
+    "SEEN CAFE",
+    [
+     205.0,
+     108.0,
+     60.0,
+     40.0
+    ]
+   ],
+   [
+    "IRON TEMPLE",
+    [
+     400.0,
+     40.0,
+     55.0,
+     50.0
+    ]
+   ],
+   [
+    "CLUB CLOUD 9",
+    [
+     350.0,
+     232.0,
+     80.0,
+     52.0
+    ]
+   ],
+   [
+    "MINING RIG",
+    [
+     200.0,
+     228.0,
+     58.0,
+     42.0
+    ]
+   ],
+   [
+    "{FINAL_TOWER}",
+    [
+     340.0,
+     6.0,
+     52.0,
+     80.0
+    ]
+   ],
+   [
+    "{PHARMACY}",
+    [
+     345.0,
+     306.0,
+     76.0,
+     38.0
+    ]
+   ],
+   [
+    "{GROCERY}",
+    [
+     176.0,
+     290.0,
+     110.0,
+     48.0
+    ]
+   ],
+   [
+    "{PLASMA_SIGN}",
+    [
+     392.0,
+     100.0,
+     72.0,
+     40.0
+    ]
+   ]
+  ],
+  "stops": [
+   [
+    132.0,
+    150.0
+   ],
+   [
+    560.0,
+    150.0
+   ],
+   [
+    600.0,
+    202.0
+   ],
+   [
+    250.0,
+    202.0
+   ]
+  ],
+  "trees": [
+   [
+    180.0,
+    140.0
+   ],
+   [
+    20.0,
+    340.0
+   ],
+   [
+    445.0,
+    340.0
+   ],
+   [
+    605.0,
+    150.0
+   ],
+   [
+    25.0,
+    205.0
+   ]
+  ],
+  "vents": [
+   [
+    40.0,
+    52.0
+   ],
+   [
+    280.0,
+    52.0
+   ],
+   [
+    40.0,
+    152.0
+   ],
+   [
+    280.0,
+    152.0
+   ]
+  ]
+ },
+ "palette": [
+  "#1c1712",
+  "#2b2218",
+  "#3e2d19",
+  "#5a3f24",
+  "#7d5a36",
+  "#a07a4c",
+  "#c29a6a",
+  "#dcc08e",
+  "#26301a",
+  "#36431f",
+  "#4c5a26",
+  "#66702f",
+  "#848a3c",
+  "#a5a24f",
+  "#5a2412",
+  "#863a16",
+  "#ae5a1e",
+  "#cf7f2c",
+  "#e6a640",
+  "#f2c66a",
+  "#4a1a16",
+  "#7a2a22",
+  "#a43a2c",
+  "#c8573a",
+  "#4a4440",
+  "#6a625a",
+  "#8c8478",
+  "#b0a796",
+  "#cfc6b2",
+  "#2a2a2e",
+  "#3a3a40",
+  "#4e4d52",
+  "#f0e4c4",
+  "#d6c49e",
+  "#a8977a",
+  "#8a96a0",
+  "#6a7480",
+  "#4e5662",
+  "#9aa080",
+  "#767c60",
+  "#3e3a3c",
+  "#57504e",
+  "#6e6460",
+  "#f2d2b4",
+  "#dcae8e",
+  "#b47e60",
+  "#82523c",
+  "#e6b874",
+  "#c88c4c",
+  "#9a6232",
+  "#b8662e",
+  "#8a4622",
+  "#5aa0d8",
+  "#2e4a6e",
+  "#43668e",
+  "#6688aa",
+  "#284868",
+  "#3cc4b4",
+  "#d8982e",
+  "#b8e4f0",
+  "#d8d4cc",
+  "#8a6e58",
+  "#6a5242",
+  "#ae9680",
+  "#b8d8cc",
+  "#86aca4",
+  "#f0ead8",
+  "#221c1c",
+  "#2e5aa8",
+  "#4a7ad0",
+  "#d86a8a",
+  "#e0ae96",
+  "#2e1e48",
+  "#45306a",
+  "#e09040",
+  "#f4c07a",
+  "#6e5236",
+  "#4a3624",
+  "#9a7a52",
+  "#c4a47a",
+  "#2e3440",
+  "#e8c47a",
+  "#ffe6a0",
+  "#f6d2b8",
+  "#e0ad92",
+  "#d9a463",
+  "#f0c886",
+  "#c8783c",
+  "#9c5a2c",
+  "#5a4636",
+  "#a9c3c8",
+  "#fbf6ec",
+  "#e88aa8",
+  "#a8406a",
+  "#6a4a96",
+  "#9a78c0",
+  "#8cc4e8",
+  "#2a7a74",
+  "#4e7a3a",
+  "#7aa05a",
+  "#e06a4a",
+  "#3a5a2c",
+  "#c0d890"
+ ]
+}
