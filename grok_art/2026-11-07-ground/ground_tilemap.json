@@ -1,0 +1,1294 @@
+{
+  "version": 2,
+  "coordinates": "1-based row and col; pixel rects x,y,width,height are 0-based",
+  "key": "#FF00FF designated; no visible key in fully opaque terrain",
+  "sheets": {
+    "new_ground_textures": {
+      "file": "new_ground_textures.png",
+      "size": [
+        1536,
+        1024
+      ],
+      "grid": [
+        3,
+        2
+      ],
+      "cell": [
+        512,
+        512
+      ]
+    },
+    "new_ground_edges": {
+      "file": "new_ground_edges.png",
+      "size": [
+        1024,
+        1024
+      ],
+      "grid": [
+        4,
+        4
+      ],
+      "cell": [
+        256,
+        256
+      ]
+    },
+    "new_ground_corners": {
+      "file": "new_ground_corners.png",
+      "size": [
+        2048,
+        1280
+      ],
+      "grid": [
+        8,
+        5
+      ],
+      "cell": [
+        256,
+        256
+      ]
+    }
+  },
+  "materials": [
+    {
+      "name": "grass",
+      "sheet": "new_ground_textures",
+      "row": 1,
+      "col": 1,
+      "cell_size": [
+        512,
+        512
+      ],
+      "variants": [
+        {
+          "variant": 0,
+          "rect": [
+            0,
+            0,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 1,
+          "rect": [
+            256,
+            0,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 2,
+          "rect": [
+            0,
+            256,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 3,
+          "rect": [
+            256,
+            256,
+            256,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "name": "sidewalk",
+      "sheet": "new_ground_textures",
+      "row": 1,
+      "col": 2,
+      "cell_size": [
+        512,
+        512
+      ],
+      "variants": [
+        {
+          "variant": 0,
+          "rect": [
+            512,
+            0,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 1,
+          "rect": [
+            768,
+            0,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 2,
+          "rect": [
+            512,
+            256,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 3,
+          "rect": [
+            768,
+            256,
+            256,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "name": "asphalt",
+      "sheet": "new_ground_textures",
+      "row": 1,
+      "col": 3,
+      "cell_size": [
+        512,
+        512
+      ],
+      "variants": [
+        {
+          "variant": 0,
+          "rect": [
+            1024,
+            0,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 1,
+          "rect": [
+            1280,
+            0,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 2,
+          "rect": [
+            1024,
+            256,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 3,
+          "rect": [
+            1280,
+            256,
+            256,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "name": "brick",
+      "sheet": "new_ground_textures",
+      "row": 2,
+      "col": 1,
+      "cell_size": [
+        512,
+        512
+      ],
+      "variants": [
+        {
+          "variant": 0,
+          "rect": [
+            0,
+            512,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 1,
+          "rect": [
+            256,
+            512,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 2,
+          "rect": [
+            0,
+            768,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 3,
+          "rect": [
+            256,
+            768,
+            256,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dirt",
+      "sheet": "new_ground_textures",
+      "row": 2,
+      "col": 2,
+      "cell_size": [
+        512,
+        512
+      ],
+      "variants": [
+        {
+          "variant": 0,
+          "rect": [
+            512,
+            512,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 1,
+          "rect": [
+            768,
+            512,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 2,
+          "rect": [
+            512,
+            768,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 3,
+          "rect": [
+            768,
+            768,
+            256,
+            256
+          ]
+        }
+      ]
+    },
+    {
+      "name": "gravel",
+      "sheet": "new_ground_textures",
+      "row": 2,
+      "col": 3,
+      "cell_size": [
+        512,
+        512
+      ],
+      "variants": [
+        {
+          "variant": 0,
+          "rect": [
+            1024,
+            512,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 1,
+          "rect": [
+            1280,
+            512,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 2,
+          "rect": [
+            1024,
+            768,
+            256,
+            256
+          ]
+        },
+        {
+          "variant": 3,
+          "rect": [
+            1280,
+            768,
+            256,
+            256
+          ]
+        }
+      ]
+    }
+  ],
+  "tiles": [
+    {
+      "name": "line_H",
+      "sheet": "new_ground_edges",
+      "row": 1,
+      "col": 1,
+      "category": "marking"
+    },
+    {
+      "name": "line_V",
+      "sheet": "new_ground_edges",
+      "row": 1,
+      "col": 2,
+      "category": "marking"
+    },
+    {
+      "name": "crosswalk",
+      "sheet": "new_ground_edges",
+      "row": 1,
+      "col": 3,
+      "category": "marking"
+    },
+    {
+      "name": "storm_drain",
+      "sheet": "new_ground_edges",
+      "row": 1,
+      "col": 4,
+      "category": "fixture"
+    },
+    {
+      "name": "manhole",
+      "sheet": "new_ground_edges",
+      "row": 4,
+      "col": 2,
+      "category": "fixture"
+    },
+    {
+      "name": "oil_stain",
+      "sheet": "new_ground_edges",
+      "row": 4,
+      "col": 3,
+      "category": "fixture"
+    },
+    {
+      "name": "puddle",
+      "sheet": "new_ground_edges",
+      "row": 4,
+      "col": 4,
+      "category": "fixture"
+    },
+    {
+      "name": "sidewalk_asphalt_straight_N",
+      "sheet": "new_ground_edges",
+      "row": 2,
+      "col": 1,
+      "pair": "sidewalk_asphalt",
+      "shape": "straight",
+      "orientation": "N",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_straight_S",
+      "sheet": "new_ground_edges",
+      "row": 2,
+      "col": 2,
+      "pair": "sidewalk_asphalt",
+      "shape": "straight",
+      "orientation": "S",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_straight_W",
+      "sheet": "new_ground_edges",
+      "row": 2,
+      "col": 3,
+      "pair": "sidewalk_asphalt",
+      "shape": "straight",
+      "orientation": "W",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_straight_E",
+      "sheet": "new_ground_edges",
+      "row": 2,
+      "col": 4,
+      "pair": "sidewalk_asphalt",
+      "shape": "straight",
+      "orientation": "E",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_sidewalk_straight_N",
+      "sheet": "new_ground_edges",
+      "row": 3,
+      "col": 1,
+      "pair": "grass_sidewalk",
+      "shape": "straight",
+      "orientation": "N",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_straight_S",
+      "sheet": "new_ground_edges",
+      "row": 3,
+      "col": 2,
+      "pair": "grass_sidewalk",
+      "shape": "straight",
+      "orientation": "S",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_straight_W",
+      "sheet": "new_ground_edges",
+      "row": 3,
+      "col": 3,
+      "pair": "grass_sidewalk",
+      "shape": "straight",
+      "orientation": "W",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_straight_E",
+      "sheet": "new_ground_edges",
+      "row": 3,
+      "col": 4,
+      "pair": "grass_sidewalk",
+      "shape": "straight",
+      "orientation": "E",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "sidewalk_asphalt_outer_NW",
+      "sheet": "new_ground_corners",
+      "row": 1,
+      "col": 1,
+      "pair": "sidewalk_asphalt",
+      "shape": "outer",
+      "orientation": "NW",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_outer_NE",
+      "sheet": "new_ground_corners",
+      "row": 1,
+      "col": 2,
+      "pair": "sidewalk_asphalt",
+      "shape": "outer",
+      "orientation": "NE",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_outer_SE",
+      "sheet": "new_ground_corners",
+      "row": 1,
+      "col": 3,
+      "pair": "sidewalk_asphalt",
+      "shape": "outer",
+      "orientation": "SE",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_outer_SW",
+      "sheet": "new_ground_corners",
+      "row": 1,
+      "col": 4,
+      "pair": "sidewalk_asphalt",
+      "shape": "outer",
+      "orientation": "SW",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_inner_NW",
+      "sheet": "new_ground_corners",
+      "row": 1,
+      "col": 5,
+      "pair": "sidewalk_asphalt",
+      "shape": "inner",
+      "orientation": "NW",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_inner_NE",
+      "sheet": "new_ground_corners",
+      "row": 1,
+      "col": 6,
+      "pair": "sidewalk_asphalt",
+      "shape": "inner",
+      "orientation": "NE",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_inner_SE",
+      "sheet": "new_ground_corners",
+      "row": 1,
+      "col": 7,
+      "pair": "sidewalk_asphalt",
+      "shape": "inner",
+      "orientation": "SE",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "sidewalk_asphalt_inner_SW",
+      "sheet": "new_ground_corners",
+      "row": 1,
+      "col": 8,
+      "pair": "sidewalk_asphalt",
+      "shape": "inner",
+      "orientation": "SW",
+      "A": "sidewalk",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_sidewalk_outer_NW",
+      "sheet": "new_ground_corners",
+      "row": 2,
+      "col": 1,
+      "pair": "grass_sidewalk",
+      "shape": "outer",
+      "orientation": "NW",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_outer_NE",
+      "sheet": "new_ground_corners",
+      "row": 2,
+      "col": 2,
+      "pair": "grass_sidewalk",
+      "shape": "outer",
+      "orientation": "NE",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_outer_SE",
+      "sheet": "new_ground_corners",
+      "row": 2,
+      "col": 3,
+      "pair": "grass_sidewalk",
+      "shape": "outer",
+      "orientation": "SE",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_outer_SW",
+      "sheet": "new_ground_corners",
+      "row": 2,
+      "col": 4,
+      "pair": "grass_sidewalk",
+      "shape": "outer",
+      "orientation": "SW",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_inner_NW",
+      "sheet": "new_ground_corners",
+      "row": 2,
+      "col": 5,
+      "pair": "grass_sidewalk",
+      "shape": "inner",
+      "orientation": "NW",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_inner_NE",
+      "sheet": "new_ground_corners",
+      "row": 2,
+      "col": 6,
+      "pair": "grass_sidewalk",
+      "shape": "inner",
+      "orientation": "NE",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_inner_SE",
+      "sheet": "new_ground_corners",
+      "row": 2,
+      "col": 7,
+      "pair": "grass_sidewalk",
+      "shape": "inner",
+      "orientation": "SE",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_sidewalk_inner_SW",
+      "sheet": "new_ground_corners",
+      "row": 2,
+      "col": 8,
+      "pair": "grass_sidewalk",
+      "shape": "inner",
+      "orientation": "SW",
+      "A": "grass",
+      "B": "sidewalk"
+    },
+    {
+      "name": "grass_asphalt_outer_NW",
+      "sheet": "new_ground_corners",
+      "row": 4,
+      "col": 1,
+      "pair": "grass_asphalt",
+      "shape": "outer",
+      "orientation": "NW",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_outer_NE",
+      "sheet": "new_ground_corners",
+      "row": 4,
+      "col": 2,
+      "pair": "grass_asphalt",
+      "shape": "outer",
+      "orientation": "NE",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_outer_SE",
+      "sheet": "new_ground_corners",
+      "row": 4,
+      "col": 3,
+      "pair": "grass_asphalt",
+      "shape": "outer",
+      "orientation": "SE",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_outer_SW",
+      "sheet": "new_ground_corners",
+      "row": 4,
+      "col": 4,
+      "pair": "grass_asphalt",
+      "shape": "outer",
+      "orientation": "SW",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_inner_NW",
+      "sheet": "new_ground_corners",
+      "row": 4,
+      "col": 5,
+      "pair": "grass_asphalt",
+      "shape": "inner",
+      "orientation": "NW",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_inner_NE",
+      "sheet": "new_ground_corners",
+      "row": 4,
+      "col": 6,
+      "pair": "grass_asphalt",
+      "shape": "inner",
+      "orientation": "NE",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_inner_SE",
+      "sheet": "new_ground_corners",
+      "row": 4,
+      "col": 7,
+      "pair": "grass_asphalt",
+      "shape": "inner",
+      "orientation": "SE",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_inner_SW",
+      "sheet": "new_ground_corners",
+      "row": 4,
+      "col": 8,
+      "pair": "grass_asphalt",
+      "shape": "inner",
+      "orientation": "SW",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_straight_N",
+      "sheet": "new_ground_corners",
+      "row": 3,
+      "col": 1,
+      "pair": "grass_asphalt",
+      "shape": "straight",
+      "orientation": "N",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_straight_E",
+      "sheet": "new_ground_corners",
+      "row": 3,
+      "col": 2,
+      "pair": "grass_asphalt",
+      "shape": "straight",
+      "orientation": "E",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_straight_S",
+      "sheet": "new_ground_corners",
+      "row": 3,
+      "col": 3,
+      "pair": "grass_asphalt",
+      "shape": "straight",
+      "orientation": "S",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "grass_asphalt_straight_W",
+      "sheet": "new_ground_corners",
+      "row": 3,
+      "col": 4,
+      "pair": "grass_asphalt",
+      "shape": "straight",
+      "orientation": "W",
+      "A": "grass",
+      "B": "asphalt"
+    },
+    {
+      "name": "dirt_grass_outer_NW",
+      "sheet": "new_ground_corners",
+      "row": 5,
+      "col": 1,
+      "pair": "dirt_grass",
+      "shape": "outer",
+      "orientation": "NW",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_outer_NE",
+      "sheet": "new_ground_corners",
+      "row": 5,
+      "col": 2,
+      "pair": "dirt_grass",
+      "shape": "outer",
+      "orientation": "NE",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_outer_SE",
+      "sheet": "new_ground_corners",
+      "row": 5,
+      "col": 3,
+      "pair": "dirt_grass",
+      "shape": "outer",
+      "orientation": "SE",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_outer_SW",
+      "sheet": "new_ground_corners",
+      "row": 5,
+      "col": 4,
+      "pair": "dirt_grass",
+      "shape": "outer",
+      "orientation": "SW",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_inner_NW",
+      "sheet": "new_ground_corners",
+      "row": 5,
+      "col": 5,
+      "pair": "dirt_grass",
+      "shape": "inner",
+      "orientation": "NW",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_inner_NE",
+      "sheet": "new_ground_corners",
+      "row": 5,
+      "col": 6,
+      "pair": "dirt_grass",
+      "shape": "inner",
+      "orientation": "NE",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_inner_SE",
+      "sheet": "new_ground_corners",
+      "row": 5,
+      "col": 7,
+      "pair": "dirt_grass",
+      "shape": "inner",
+      "orientation": "SE",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_inner_SW",
+      "sheet": "new_ground_corners",
+      "row": 5,
+      "col": 8,
+      "pair": "dirt_grass",
+      "shape": "inner",
+      "orientation": "SW",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_straight_N",
+      "sheet": "new_ground_corners",
+      "row": 3,
+      "col": 5,
+      "pair": "dirt_grass",
+      "shape": "straight",
+      "orientation": "N",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_straight_E",
+      "sheet": "new_ground_corners",
+      "row": 3,
+      "col": 6,
+      "pair": "dirt_grass",
+      "shape": "straight",
+      "orientation": "E",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_straight_S",
+      "sheet": "new_ground_corners",
+      "row": 3,
+      "col": 7,
+      "pair": "dirt_grass",
+      "shape": "straight",
+      "orientation": "S",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "dirt_grass_straight_W",
+      "sheet": "new_ground_corners",
+      "row": 3,
+      "col": 8,
+      "pair": "dirt_grass",
+      "shape": "straight",
+      "orientation": "W",
+      "A": "dirt",
+      "B": "grass"
+    },
+    {
+      "name": "driveway_apron",
+      "sheet": "new_ground_edges",
+      "row": 4,
+      "col": 1,
+      "category": "driveway"
+    }
+  ],
+  "autotile": {
+    "pairs": [
+      {
+        "id": "sidewalk_asphalt",
+        "A": "sidewalk",
+        "B": "asphalt",
+        "curb": true,
+        "count": 12
+      },
+      {
+        "id": "grass_sidewalk",
+        "A": "grass",
+        "B": "sidewalk",
+        "curb": false,
+        "count": 12
+      },
+      {
+        "id": "grass_asphalt",
+        "A": "grass",
+        "B": "asphalt",
+        "curb": false,
+        "count": 12
+      },
+      {
+        "id": "dirt_grass",
+        "A": "dirt",
+        "B": "grass",
+        "curb": false,
+        "count": 12
+      }
+    ],
+    "straight_orientation": "N/E/S/W names the half occupied by A. N=top half, E=right, S=bottom, W=left.",
+    "outer_orientation": "Convex corner of A. outer_NW is a quarter-disc of A anchored SE; B outside NW. NE/SE/SW rotate this convention.",
+    "inner_orientation": "Concave notch in A: inner_NW is all A except a quarter-disc of B anchored NW. NE/SE/SW rotate.",
+    "radius_native_art_px": 127,
+    "sampling": "Artwork uses 2x pixel clusters. Material variants and transition backgrounds share exact border pixels. Tile size 256 art px; all 4 material variants can be used interchangeably at this size.",
+    "scope": "Complete requested 4 straight + 4 outer + 4 inner per pair, plus full A/B materials. This is NOT an engine-specific 47-tile blob bank, and contains no three-material junction tile.",
+    "cutting": "For 32px slices preserve coordinates/phase, or configure the full 256px cells as terrain tiles. Arbitrarily shuffled 32px subtiles are not guaranteed seamless."
+  },
+  "layout_decisions": [
+    "New six-material order: grass, sidewalk, asphalt / brick, dirt, gravel. Separate dirt and gravel replace the old combined dirt/gravel and parking slots, per current brief.",
+    "No gutters: exact C leaves no space for the old 8px gutter request.",
+    "Four distinct 256px variants per 512px material swatch, shared borders; not four repeats of one interior.",
+    "Curved curb lip and organic contour shading are local AO/material detail, never a shadow on key."
+  ],
+  "town_mock": {
+    "file": "batch1_v2_town_mock.png",
+    "size": [
+      640,
+      360
+    ],
+    "art_to_game_scale": 0.5,
+    "tile_display_size": 128,
+    "assembled_only_from_sheets": true,
+    "overlay_note": "Road paint and fixture pixels are extracted from their existing terrain tile by comparison with its asphalt base; underlying material is untouched. No new art is painted into the mock.",
+    "placements": [
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 3,
+        "x": 0,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 0,
+        "x": 128,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 1,
+        "x": 256,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 2,
+        "x": 384,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 3,
+        "x": 512,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 1,
+        "x": 0,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 2,
+        "x": 128,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 3,
+        "x": 256,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 0,
+        "x": 384,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk",
+        "variant": 1,
+        "x": 512,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 3,
+        "x": 0,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 0,
+        "x": 128,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 1,
+        "x": 256,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 2,
+        "x": 384,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 3,
+        "x": 512,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 1,
+        "x": 0,
+        "y": 320,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 2,
+        "x": 128,
+        "y": 320,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 3,
+        "x": 256,
+        "y": 320,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 0,
+        "x": 384,
+        "y": 320,
+        "size": 128
+      },
+      {
+        "tile_or_material": "asphalt",
+        "variant": 1,
+        "x": 512,
+        "y": 320,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk_asphalt_straight_N",
+        "variant": 0,
+        "x": 0,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk_asphalt_straight_N",
+        "variant": 0,
+        "x": 128,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk_asphalt_straight_N",
+        "variant": 0,
+        "x": 256,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk_asphalt_straight_N",
+        "variant": 0,
+        "x": 384,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "sidewalk_asphalt_straight_N",
+        "variant": 0,
+        "x": 512,
+        "y": 192,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_outer_NW",
+        "variant": 0,
+        "x": 0,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_straight_S",
+        "variant": 0,
+        "x": 128,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_outer_NE",
+        "variant": 0,
+        "x": 256,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_outer_SW",
+        "variant": 0,
+        "x": 0,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_straight_N",
+        "variant": 0,
+        "x": 128,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_outer_SE",
+        "variant": 0,
+        "x": 256,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_outer_NW",
+        "variant": 0,
+        "x": 384,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_outer_NE",
+        "variant": 0,
+        "x": 512,
+        "y": -64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_outer_SW",
+        "variant": 0,
+        "x": 384,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "tile_or_material": "grass_sidewalk_outer_SE",
+        "variant": 0,
+        "x": 512,
+        "y": 64,
+        "size": 128
+      },
+      {
+        "derived_overlay_from": "line_H",
+        "x": 0,
+        "y": 256,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      },
+      {
+        "derived_overlay_from": "line_H",
+        "x": 128,
+        "y": 256,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      },
+      {
+        "derived_overlay_from": "line_H",
+        "x": 256,
+        "y": 256,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      },
+      {
+        "derived_overlay_from": "line_H",
+        "x": 384,
+        "y": 256,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      },
+      {
+        "derived_overlay_from": "line_H",
+        "x": 512,
+        "y": 256,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      },
+      {
+        "derived_overlay_from": "crosswalk",
+        "x": 384,
+        "y": 256,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      },
+      {
+        "derived_overlay_from": "manhole",
+        "x": 0,
+        "y": 238,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      },
+      {
+        "derived_overlay_from": "storm_drain",
+        "x": 512,
+        "y": 224,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      },
+      {
+        "derived_overlay_from": "puddle",
+        "x": 210,
+        "y": 242,
+        "size": 128,
+        "extraction": "pixels differing from same tile asphalt base; no new pixels drawn"
+      }
+    ]
+  }
+}
