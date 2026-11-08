@@ -32,7 +32,7 @@ static func credits_lines() -> Array:
 		"THE EXES (parody nicknames)", "{ex_1}", "{ex_2}", "{ex_3}", "{ex_4}", "",
 		"FINAL BOSS", "{ex_final} ... an affectionate parody of every 80s action hero", "",
 		"ALSO FEATURING", "Grill-Boy Brayden, Palm Beach Pete, the porch pirates,", "the raccoons (friends now), every Karen in {city},", "and The Elite Gala", "",
-		"Filmed on location in {city} and {nearby_town}", "", "Made with love.", "", "THE END", "(The day goes on. It always does.)",
+		"Filmed on location in {city} and {nearby_town}", "", "Made with love.", "", "THE END", "(Rent is due. Rent is always due. Tonight, nobody checks.)",
 	]
 	return c.map(func (x): return Cast.T(str(x)))
 
