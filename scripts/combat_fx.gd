@@ -10,7 +10,7 @@ func _ready() -> void:
 
 func number(pos: Vector2, amount: float, big: bool = false) -> void:
 	var s: = str(int(round(amount))) if amount >= 1.0 else "%.1f" % amount
-	text(pos + Vector2(randf_range(-4, 4), 0), s, Color("#ffe040") if big else Color("#ffffff"), 0.7, 9 if big else 7)
+	text(pos + Vector2(randf_range(-4, 4), 0), s, Color("#ffe040") if big else Color("#ffffff"), 0.7, 12 if big else 9)
 
 func text(pos: Vector2, s: String, col: Color, dur: float = 0.9, size: int = 7) -> void:
 	items.append({"type": "text", "pos": pos, "s": s, "col": col, "t": 0.0, "dur": dur, "size": size })

@@ -883,13 +883,16 @@ func _on_player_attack(pos: Vector2, dir: Vector2) -> void:
 		AudioScript.sfx("bonk")
 	for e in targets:
 		var dmg: = atk
+		var e_sp: = hit_sp
 		if (sp == "execute" or sp == "golden") and randf() < 0.25:
 			dmg *= 2.0
+			if not e_sp in ["flip", "stun", "pierce"]:
+				e_sp = "crit"
 			_toast("CRIT! The Cleaver hungers." if sp == "execute" else "CRIT! Generational damage. Like their wealth, but useful.")
 		if sp == "golden":
 			money += 1
 		var hd: Vector2 = (e.global_position - player.global_position).normalized() if sweep else dir
-		combat.hit(e, hd, dmg, hit_sp, combat.finisher_heat() if fin else combat.HEAT_PER_HIT)
+		combat.hit(e, hd, dmg, e_sp, combat.finisher_heat() if fin else combat.HEAT_PER_HIT)
 		if sp == "execute":
 			energy = minf(energy_cap(), energy + energy_gain(2.0))
 	for pr in get_tree().get_nodes_in_group("projectile"):
