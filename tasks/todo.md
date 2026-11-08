@@ -11,7 +11,10 @@
 - [x] Review fixes: bench by the bus sign, cones on the road, bin at the curb, props at Fork/Kwik/Walgrumps, stray picket removed
 
 ## Leftovers from the M2 review
-- [ ] Fade trees for NPCs/enemies/cats behind them too (only Duff now)
+- [x] Fade trees for NPCs/enemies/cats behind them too (M4, Nov 8: `see_through_actors.png`)
+- [ ] Depth order for non-Duff actors: front-layer items are picked by DUFF's feet, so an enemy standing
+      in FRONT of such a tree still draws under it (now faded, so visible, but wrong layering). Real fix =
+      y-sort actors + dressing together (bigger refactor; only if it shows in play)
 - [ ] Grok redraws: Waffle Haus pole sign, bus-stop sign, cats (old flat art)
 - [ ] Right-hand lawns still big and empty; more props / a second yard once art allows
 
