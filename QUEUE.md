@@ -2,12 +2,12 @@
 Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into NOW.
 
 ## NOW
-- M6: re-import Duff outfits v2 (11 sheets, `grok_art/2026-11-08-outfits-v2-and-boss-attacks/outfits/`).
+- M7: old flat-art screens (home interior, shops, minigames) to the Sea of Stars look. Needs Place to draw them first (no drop yet).
 
 ## NEXT
-- M7: old flat-art screens (home interior, shops, minigames) to the Sea of Stars look.
 
 ## DONE
+- M6 (Nov 8): Duff outfits v2 (11 sheets: real stride + head bob, frying-pan attack, rim light, new clogs) + shades follow the head.
 - M5 (Nov 8): all 17 bosses: new sheets with unique attacks, HD dialogue portraits (smug/shocked/enraged), lettered intro splash.
 - M4 (Nov 8): see-through trees for enemies, bosses, raccoons, cats, Brittany, the inspector (Duff already had it).
 - M3 (Nov 8): combat feel: hit-stop, screen shake, impact sparks, popping damage numbers (Duff picked this before bosses).
