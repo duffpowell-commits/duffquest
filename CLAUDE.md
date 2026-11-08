@@ -5,6 +5,8 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
+- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M2 street dressing: trees/clutter/fences from
+  `grok_art/2026-11-08-street-dressing/`, Cursor PR #7, onto the town).
 - **Source recovered Nov 7, 2026.** The game was built elsewhere (Grok) and only builds survived
   (Windows zips v0.2–v0.10.1 in Duff's Drive; web build at
   https://lighthearted-custard-a79ec2.netlify.app). This repo was rebuilt from that web build's
@@ -111,9 +113,7 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
 
 - **Done (Nov 7, late): new character sheets in.** `tools/import_sheet.py` keyed Grok's
   `grok_art/2026-11-07/*_sheet_sos_256.png` into `duff_home`, `ch_madison`, `ch_brittany`, `ch_jen`
-  (feet dropped 3 px to the y=60 origin). **Gap:** outdoors Duff wears an outfit sheet
-  (`duff_<armor>_<shoes>`, 12 of them + suit/shades/dress, `player.gd` line ~138), still the OLD art,
-  so the new look only shows at home. Grok needs the outfit variants (sheet rows `duff_*`).
+  (feet dropped 3 px to the y=60 origin). Outdoor outfits followed Nov 8 (below).
 - **Done (Nov 7, late): tile ground for the town.** `tools/import_ground.py` cuts Grok's ground
   sheets into `assets/art/ground/ground_atlas.{png,json}` (64 px tiles = 32 world units; transition
   tiles classified by their corner pixels: all 4 pairs × 12 masks). Layout = `data/town_ground.txt`
@@ -155,6 +155,18 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   regular, sendback) = breaks Duff's "every boss unique" rule until Grok's boss sheets land; Duff in
   arenas/outdoors is still the old outfit art; home interior + all shop/minigame screens are the old
   flat art; enemy barks overlap when 3+ enemies bunch up; grocery aisle labels sit on the shelves.
+
+- **Done (Nov 8): Duff's outfits outdoors (M1).** Cursor PR #8 dropped Grok's outfit sheets in
+  `grok_art/2026-11-08-duff-outfits/`; the 10 `duff_<apron|clogs|sleeves|coat|dad>_<red|black>` sheets
+  were keyed in with `tools/import_sheet.py` (drop 3). `duff_shades.png` redrawn by
+  `tools/make_shades.py` (the old overlay sat on the new hair; positions measured from the eye whites).
+  Check tool: `tools/outfit_shot.tscn` -> `python3 tools/outfit_sheet.py [old_dir]` ->
+  `docs/renders/duff_outfits_ingame.png`. Still old art: `duff_dress`, `duff_roll_*`, `ch_duff_suit`.
+  Review (fresh agent) top issues, all Grok art, logged in `tasks/todo.md`: step frames messy (side
+  legs mush, no head bob); attack col is a walk pose + pan, no wind-up; clogs ≈ home outfit and the
+  dark outfits melt into asphalt; speckled dark outline around the hair is in Grok's source, not the keying.
+- **Repo rules docs (Nov 8):** `docs/PITCH.md` (pillars, not-in-game, kill criteria), `QUEUE.md`
+  (work only on NOW), `tasks/todo.md`, `tasks/lessons.md`. Read QUEUE first.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
