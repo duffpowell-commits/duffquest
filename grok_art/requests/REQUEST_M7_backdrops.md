@@ -29,6 +29,10 @@ HANDOFF.md, and Claude wires them in. Partial drops are fine; send them in prior
 - The HUD covers the **top-left (stats), top-right (time/errand), bottom-left (joystick) and
   bottom-right (buttons)**. Keep the important detail in the middle.
 - Lettering: only real in-world signs, spelled exactly as given below. No other text.
+- Signs sit LOW (Duff, Nov 8): the top HUD bar covers the top ~20% of the screen in fights, so every sign's
+  top edge must be at least 25% down from the top of the image (on the lower half of the back wall, or a
+  stand-up sign on the floor near the back). Gemini prompt line: "Put the sign low on the back wall, with its
+  top edge at least a quarter of the way down the image; nothing important in the top fifth."
 
 ## The list, in priority order
 
