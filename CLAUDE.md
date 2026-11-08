@@ -217,7 +217,7 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   `--keyed` = the old cut-outs). `hd_portrait_overlay.gd` shows it while the boss's exact intro line is up
   (`Art.boss_intro_for`): full-bleed, slides in from the right 0.28 s, lifted `CARD_LIFT` 0.13 so every
   name (lettering runs to 70% of the card) clears the dialogue box (starts at 60%), ink letterbox bar
-  underneath; drawn around the box, never over it. Renders: `docs/renders/qa_boss_intro.png`,
+  underneath; card AND bar are drawn only in the strips around the box, never over it. Renders: `docs/renders/qa_boss_intro.png`,
   `qa_boss_fight.png`, `bosses_before_after.png` (old / new / new attack, facing right).
   **Gotcha:** after replacing PNGs run `godot --headless --path . --import` before any render, or Godot
   serves the old cached textures (and new files don't exist to it).
