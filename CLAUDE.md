@@ -5,7 +5,7 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
-- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M7 backgrounds; request for Place is `grok_art/requests/REQUEST_M7_backdrops.md`, guides via `tools/make_m7_guides.py`).
+- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M7 backgrounds waiting on Place: `grok_art/requests/REQUEST_M7_backdrops.md`; M8 menu style done).
 - **Other agent: "Place"** (Duff's art agent, Cursor/Grok side) owns art: it is redrawing the outfit
   sheets, Waffle Haus sign, bus-stop sign, cats, extra lawn props, and making all 17 bosses. It hands
   drops over in `grok_art/<date>-<name>/` with a HANDOFF.md; Claude wires them in. Code is Claude's.
@@ -231,6 +231,22 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   Renders: `docs/renders/duff_outfits_ingame.png` (old sheet stand frame beside each),
   `duff_outfits_v2_frames.png` (facing right, 4 frames, old vs new). Still old art: `duff_dress`, `duff_roll_*`,
   `ch_duff_suit`. One key attack pose, no recovery frame.
+
+- **Done (Nov 8): menu style (M8).** Duff: "menus need looked at, unless you can copy the style" -> copied
+  Place's boss-card look in code. `scripts/ui_style.gd` (autoload **UiFonts** installs fonts; scripts use
+  `const UiStyle := preload(...)` statics): palette INK/CREAM/PANEL/GOLD/PINK/TEAL; `panel()` (hard ink shadow,
+  flat plum fill, thick ink border), `label()` (cream display text, ink outline via draw_string_outline),
+  `button()` (saturated fill, top highlight, ink border, hard shadow; old grey default -> teal), `round_button()`
+  (touch A/B/S/G), `burst()` (sunburst rays). Fonts (OFL, `assets/fonts/`): **Baloo 2 ExtraBold** = display
+  (closest to the cards' lettering), **Nunito ExtraBold** = body and `ThemeDB.fallback_font` (every
+  `draw_string` in the game picks it up). Static weights cut from Google's variable fonts with fontTools
+  instancer (name table still says ExtraLight; glyphs are 800). Applied: HUD panels/bars/dialogue box,
+  every minigame/shop button + header (gold caption tab, ink title) + flash box, touch buttons, `card.gd`
+  (all menu cards: title, bus stop, results): pink heading band, burst background when no backdrop,
+  panel behind text, line heights from the real wrapped size (fixed 10/line overlapped with Nunito).
+  `tools/text_fit.gd` now measures with the new font (0 overflow). Renders: `docs/renders/qa_ui.png`,
+  `menu_style_before_after.png`, `menu_style_title.png`. Not restyled yet: phone screen, gear/settings
+  screens' own art, combat UI numbers, per-minigame custom panels (they draw their own rects).
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean

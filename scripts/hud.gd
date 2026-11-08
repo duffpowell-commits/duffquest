@@ -1,4 +1,5 @@
 extends Node2D
+const UiStyle: = preload("res://scripts/ui_style.gd")
 const Buffs: = preload("res://scripts/buffs.gd")
 
 const SHORT: = {"honey buns": "buns", "formula": "formula", "diapers": "diapers", "cherries": "cherries", "chocolate": "choc", "cream": "cream", "flour": "flour", "eggs": "eggs", "treats": "treats", "ensure": "Ensure", "cake": "CAKE", "rolecks": "Rolecks", "meds": "Rx bag", "package": "her package", "cologne": "cologne" }
@@ -30,21 +31,15 @@ static func layout() -> Dictionary:
 	}
 
 func _panel(r: Rect2, a: float = 0.82) -> void:
-
-	draw_rect(Rect2(r.position + Vector2(PX * 2, PX * 2), r.size), Color(0, 0, 0, 0.25 * a))
-	draw_rect(r, Color(PANEL.r, PANEL.g, PANEL.b, a))
-	draw_rect(Rect2(r.position, Vector2(r.size.x, PX)), Color(RIM_LIT.r, RIM_LIT.g, RIM_LIT.b, 0.55 * a))
-	draw_rect(Rect2(r.position, Vector2(PX, r.size.y)), Color(RIM_LIT.r, RIM_LIT.g, RIM_LIT.b, 0.4 * a))
-	draw_rect(Rect2(r.position + Vector2(0, r.size.y - PX), Vector2(r.size.x, PX)), Color(RIM_DARK.r, RIM_DARK.g, RIM_DARK.b, a))
-	draw_rect(Rect2(r.position + Vector2(r.size.x - PX, 0), Vector2(PX, r.size.y)), Color(RIM_DARK.r, RIM_DARK.g, RIM_DARK.b, a))
+	UiStyle.panel(self, r, UiStyle.PANEL, minf(1.0, a + 0.1), PX)
 
 func _bar(pos: Vector2, w: float, frac: float, col: Color) -> void:
 	var h: = 4.0
-	draw_rect(Rect2(pos, Vector2(w, h)), Color(0, 0, 0, 0.65))
-	draw_rect(Rect2(pos, Vector2(w * clampf(frac, 0, 1), h)), col)
-	draw_rect(Rect2(pos, Vector2(w * clampf(frac, 0, 1), PX)), col.lightened(0.35))
-	draw_rect(Rect2(pos + Vector2(0, h - PX), Vector2(w * clampf(frac, 0, 1), PX)), col.darkened(0.35))
-	draw_rect(Rect2(pos, Vector2(w, h)), Color(1, 0.94, 0.8, 0.35), false, PX)
+	var f: = clampf(frac, 0, 1)
+	draw_rect(Rect2(pos, Vector2(w, h)), Color(UiStyle.INK, 0.85))
+	draw_rect(Rect2(pos, Vector2(w * f, h)), col)
+	draw_rect(Rect2(pos, Vector2(w * f, h * 0.4)), col.lightened(0.3))
+	draw_rect(Rect2(pos, Vector2(w, h)), UiStyle.INK, false, PX * 1.2)
 
 func _t(f: Font, p: Vector2, s: String, size: int, col: Color, width: float = -1.0, align: int = HORIZONTAL_ALIGNMENT_LEFT) -> void:
 	draw_string(f, p + Vector2(PX, PX), s, align as HorizontalAlignment, width, size, Color(INK.r, INK.g, INK.b, 0.8 * col.a))
@@ -124,7 +119,6 @@ func _draw() -> void:
 		var duff: = who != ""
 		var r: Rect2 = L["dialog"]
 		_panel(r, 0.95)
-		draw_rect(r.grow(-PX * 2), Color("#e88aa8"), false, PX)
 		if duff:
 
 			var pr: = Rect2(r.position + Vector2(6, 9), Vector2(48, 48))
@@ -137,11 +131,11 @@ func _draw() -> void:
 				mood = Art.octavia_mood(line)
 			if not Art.hd_enabled:
 				Art.family_portrait(self, who, pr.position, mood, bool(m.shades))
-			draw_rect(pr, Color("#e88aa8"), false, PX)
+			draw_rect(pr, UiStyle.INK, false, PX * 1.4)
 			_mt(f, r.position + Vector2(59, 13), line, r.size.x - 64, 7, 6, w)
 		else:
 			_mt(f, r.position + Vector2(7, 13), line, r.size.x - 14, 7, 6, w)
-		_t(f, r.position + Vector2(r.size.x - 34, r.size.y - 3), "E / A >", 6, Color(1, 1, 1, 0.6))
+		UiStyle.label(self, r.position + Vector2(r.size.x - 30, r.size.y - 3), "E / A >", 6, Color(UiStyle.GOLD, 0.9), -1.0, HORIZONTAL_ALIGNMENT_LEFT, 2)
 
 func _draw_phone(f: Font) -> void:
 
