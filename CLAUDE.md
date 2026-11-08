@@ -298,7 +298,8 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   removed. `tools/make_m7_guides.py` EXTRA draws them. Checks: `godot --headless --path . res://tools/arena_wall_check.tscn`
   (where Duff stops in each arena), `tools/arena_shot.tscn -- <id>` (in-game shot). Render: `docs/renders/m7_gym_gemini.png`.
   Known: the top HUD covers the arena's top ~35 units, so lettered wall signs (IRON TEMPLE) sit under the HUD panels
-  in a fight. Also `qa_shot`'s boss_*_fight shots are broken (kitchen overlay from `kitchen_sandwich` stays up).
+  in a fight. **Duff (Nov 8): Gemini drops signs low** (rule in `grok_art/requests/REQUEST_M7_backdrops.md`); gym
+  sign edit-prompt pending. Also `qa_shot`'s boss_*_fight shots are broken (kitchen overlay from `kitchen_sandwich` stays up).
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
