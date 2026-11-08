@@ -1,0 +1,41 @@
+{
+  "_doc": "Street dressing on the town map (scripts/dressing.gd). p = ground contact point in world units (bottom centre; fences: left end of the run). s = scale. wall = blocks walking. Fence runs: n segments of 39 units, then an end post. Art: sd_* from tools/import_dressing.py.",
+  "objects": [
+    {"a": "sd_maple", "p": [28, 120], "tree": true},
+    {"a": "sd_oak", "p": [170, 112], "tree": true},
+    {"a": "sd_pine", "p": [468, 72], "tree": true},
+    {"a": "sd_pine", "p": [620, 58], "tree": true},
+    {"a": "sd_scraggly_ash", "p": [24, 350], "tree": true},
+    {"a": "sd_maple", "p": [437, 352], "tree": true},
+    {"a": "sd_pine", "p": [176, 290], "tree": true},
+    {"a": "sd_lilac", "p": [622, 336], "s": 0.7},
+    {"a": "sd_hedge", "p": [78, 332], "s": 0.6, "wall": [30, 5]},
+    {"a": "sd_hedge", "p": [124, 332], "s": 0.6, "wall": [30, 5]},
+    {"a": "sd_scattered_leaves", "p": [42, 126]},
+    {"a": "sd_scattered_leaves", "p": [450, 357]},
+    {"a": "sd_mailbox", "p": [112, 150], "wall": [8, 4]},
+    {"a": "sd_football_fan_flag", "p": [140, 104]},
+    {"a": "sd_little_free_library", "p": [272, 112], "wall": [8, 4]},
+    {"a": "sd_bike_rack", "p": [212, 152], "wall": [8, 3]},
+    {"a": "sd_newspaper_box", "p": [258, 152], "wall": [8, 4]},
+    {"a": "sd_fire_hydrant", "p": [152, 153], "wall": [6, 4]},
+    {"a": "sd_fire_hydrant", "p": [352, 224], "wall": [6, 4]},
+    {"a": "sd_fire_hydrant", "p": [458, 224], "wall": [6, 4]},
+    {"a": "sd_recycling_bin", "p": [500, 136], "wall": [10, 4]},
+    {"a": "sd_bus_bench", "p": [128, 214], "wall": [16, 4]},
+    {"a": "sd_pothole_cone", "p": [312, 236]},
+    {"a": "sd_pothole_cone", "p": [322, 240]},
+    {"a": "sd_shopping_cart", "p": [291, 338], "wall": [10, 4]},
+    {"a": "sd_bus_bench", "p": [612, 322], "wall": [16, 4]},
+    {"a": "sd_newspaper_box", "p": [478, 320], "wall": [8, 4]},
+    {"a": "sd_bike_rack", "p": [578, 120], "wall": [8, 3]},
+    {"a": "sd_mailbox", "p": [412, 330], "wall": [8, 4]},
+    {"a": "sd_bike_rack", "p": [395, 146], "wall": [8, 3]}
+  ],
+  "fences": [
+    {"kind": "privacy_wood", "p": [0, 30], "n": 6},
+    {"kind": "chain_link", "p": [392, 30], "n": 6},
+    {"kind": "red_brick", "p": [50, 359], "n": 2},
+    {"kind": "red_brick", "p": [480, 359], "n": 4}
+  ]
+}

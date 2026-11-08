@@ -1,0 +1,622 @@
+{
+  "new_tree_sheet": {
+    "size": [
+      384,
+      384
+    ],
+    "grid": [
+      3,
+      3
+    ],
+    "cell": [
+      128,
+      128
+    ],
+    "key": "#00FF00",
+    "row": 221,
+    "baseline": 120,
+    "names": [
+      "maple",
+      "oak",
+      "scraggly_ash",
+      "pine",
+      "lilac",
+      "hedge",
+      "unused",
+      "unused",
+      "unused"
+    ],
+    "occupied": 6,
+    "fixes": [
+      "Selected summer treatment only; rebuilt equal-cell atlas from source ROIs because first-row roots crossed the model grid.",
+      "Bottom row completely empty. Lilac requires green key. All source-key shading replaced."
+    ],
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "name": "maple",
+        "rect": [
+          0,
+          0,
+          128,
+          128
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "name": "oak",
+        "rect": [
+          128,
+          0,
+          128,
+          128
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "name": "scraggly_ash",
+        "rect": [
+          256,
+          0,
+          128,
+          128
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "name": "pine",
+        "rect": [
+          0,
+          128,
+          128,
+          128
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "name": "lilac",
+        "rect": [
+          128,
+          128,
+          128,
+          128
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "name": "hedge",
+        "rect": [
+          256,
+          128,
+          128,
+          128
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "name": "unused",
+        "rect": [
+          0,
+          256,
+          128,
+          128
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "name": "unused",
+        "rect": [
+          128,
+          256,
+          128,
+          128
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "name": "unused",
+        "rect": [
+          256,
+          256,
+          128,
+          128
+        ]
+      }
+    ],
+    "path": "/workspace/duffquest/art/new_tree_sheet.png",
+    "sha256": "8d56e2a9d87a5fa32c03c60034d2f06521da69ab729a743056e2e6b757eaec0c"
+  },
+  "new_clutter_sheet": {
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "key": "#FF00FF",
+    "row": 222,
+    "baseline": 56,
+    "names": [
+      "recycling_bin",
+      "fire_hydrant",
+      "newspaper_box",
+      "bus_bench",
+      "political_sun_sign",
+      "football_fan_flag",
+      "pothole_cone",
+      "little_free_library",
+      "mailbox",
+      "bike_rack",
+      "shopping_cart",
+      "scattered_leaves",
+      "unused",
+      "unused",
+      "unused",
+      "unused"
+    ],
+    "occupied": 12,
+    "fixes": [
+      "Rejected first isometric prop set; regenerated directly frontal boxes, horizontal bench and front-facing cart.",
+      "Reassembled twelve equal cells and empty fourth row; individual relative object scales retained.",
+      "Added an original corncob pictogram to the otherwise blank football flag; no copied logo or letters."
+    ],
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "name": "recycling_bin",
+        "rect": [
+          0,
+          0,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "name": "fire_hydrant",
+        "rect": [
+          64,
+          0,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "name": "newspaper_box",
+        "rect": [
+          128,
+          0,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "name": "bus_bench",
+        "rect": [
+          192,
+          0,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "name": "political_sun_sign",
+        "rect": [
+          0,
+          64,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "name": "football_fan_flag",
+        "rect": [
+          64,
+          64,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "name": "pothole_cone",
+        "rect": [
+          128,
+          64,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "name": "little_free_library",
+        "rect": [
+          192,
+          64,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "name": "mailbox",
+        "rect": [
+          0,
+          128,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "name": "bike_rack",
+        "rect": [
+          64,
+          128,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "name": "shopping_cart",
+        "rect": [
+          128,
+          128,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "name": "scattered_leaves",
+        "rect": [
+          192,
+          128,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "name": "unused",
+        "rect": [
+          0,
+          192,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "name": "unused",
+        "rect": [
+          64,
+          192,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "name": "unused",
+        "rect": [
+          128,
+          192,
+          64,
+          64
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "name": "unused",
+        "rect": [
+          192,
+          192,
+          64,
+          64
+        ]
+      }
+    ],
+    "path": "/workspace/duffquest/art/new_clutter_sheet.png",
+    "sha256": "8d1eb3929609ebc4b122c8b2017c48a16e0c8c0c7831c22dd17bc92d42412c37"
+  },
+  "new_fences_walls": {
+    "size": [
+      1024,
+      1024
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      256,
+      256
+    ],
+    "key": "#FF00FF",
+    "row": 227,
+    "baseline": 232,
+    "names": [
+      "chain_link_straight",
+      "chain_link_gate",
+      "chain_link_end",
+      "chain_link_corner_NE",
+      "white_picket_straight",
+      "white_picket_gate",
+      "white_picket_end",
+      "white_picket_corner_NE",
+      "privacy_wood_straight",
+      "privacy_wood_gate",
+      "privacy_wood_end",
+      "privacy_wood_corner_NE",
+      "red_brick_straight",
+      "red_brick_pillar",
+      "red_brick_end",
+      "red_brick_corner_NE"
+    ],
+    "occupied": 16,
+    "joins": [
+      {
+        "family": "chain_link",
+        "left_connector_x": 16,
+        "right_connector_x": 224,
+        "connector_width": 16,
+        "placement_stride_x": 208,
+        "baseline_y": 232,
+        "corner_return": "north from east endpoint; edge-on, screen vertical",
+        "end_anchor_x": 128
+      },
+      {
+        "family": "white_picket",
+        "left_connector_x": 16,
+        "right_connector_x": 224,
+        "connector_width": 16,
+        "placement_stride_x": 208,
+        "baseline_y": 232,
+        "corner_return": "north from east endpoint; edge-on, screen vertical",
+        "end_anchor_x": 128
+      },
+      {
+        "family": "privacy_wood",
+        "left_connector_x": 16,
+        "right_connector_x": 224,
+        "connector_width": 16,
+        "placement_stride_x": 208,
+        "baseline_y": 232,
+        "corner_return": "north from east endpoint; edge-on, screen vertical",
+        "end_anchor_x": 128
+      },
+      {
+        "family": "red_brick",
+        "left_connector_x": 16,
+        "right_connector_x": 224,
+        "connector_width": 16,
+        "placement_stride_x": 208,
+        "baseline_y": 232,
+        "corner_return": "north from east endpoint; edge-on, screen vertical",
+        "end_anchor_x": 128
+      }
+    ],
+    "fixes": [
+      "Source model failed the grid and corner geometry; rebuilt all cells and orthographic edge-on north returns from matching material samples; corners have slim vertical cap bands, not diagonal V geometry.",
+      "End-only cells cropped to true posts/wall ends. Removed extraneous source turf. Restored chain-link mesh lost in key extraction with crisp physical diamond-wire clusters; decontaminated JPEG magenta matte pixels.",
+      "To reconcile clear cell margins with seamless joins, shared connector strips overlap by16px: placement stride208, not full cell256. Art remains inside16px padding. Gates use the same connector strips."
+    ],
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "name": "chain_link_straight",
+        "rect": [
+          0,
+          0,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "name": "chain_link_gate",
+        "rect": [
+          256,
+          0,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "name": "chain_link_end",
+        "rect": [
+          512,
+          0,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "name": "chain_link_corner_NE",
+        "rect": [
+          768,
+          0,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "name": "white_picket_straight",
+        "rect": [
+          0,
+          256,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "name": "white_picket_gate",
+        "rect": [
+          256,
+          256,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "name": "white_picket_end",
+        "rect": [
+          512,
+          256,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "name": "white_picket_corner_NE",
+        "rect": [
+          768,
+          256,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "name": "privacy_wood_straight",
+        "rect": [
+          0,
+          512,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "name": "privacy_wood_gate",
+        "rect": [
+          256,
+          512,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "name": "privacy_wood_end",
+        "rect": [
+          512,
+          512,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "name": "privacy_wood_corner_NE",
+        "rect": [
+          768,
+          512,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "name": "red_brick_straight",
+        "rect": [
+          0,
+          768,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "name": "red_brick_pillar",
+        "rect": [
+          256,
+          768,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "name": "red_brick_end",
+        "rect": [
+          512,
+          768,
+          256,
+          256
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "name": "red_brick_corner_NE",
+        "rect": [
+          768,
+          768,
+          256,
+          256
+        ]
+      }
+    ],
+    "path": "/workspace/duffquest/art/new_fences_walls.png",
+    "sha256": "ec7b1e2213075c996a5cdfe0d61c275316b80274b181d32cf7aa184111e68ba2"
+  }
+}

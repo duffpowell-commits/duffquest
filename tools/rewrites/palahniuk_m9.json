@@ -1,0 +1,135 @@
+[
+ {
+  "file": "scripts/combat.gd",
+  "line": 531,
+  "old": "I wolf down family meal. Somebody's grandma's recipe. +%d Energy, hitting harder for 8s.",
+  "new": "I wolf down family meal. Somebody's grandma made this once, for love. Now it's a line item. +%d Energy, hitting harder for 8s."
+ },
+ {
+  "file": "scripts/life.gd",
+  "line": 75,
+  "old": "My left red sneaker's sole is flapping like it's giving a TED talk. I walk everywhere. Need shoes. $55.",
+  "new": "My left red sneaker's sole flaps like a mouth when I walk. It only knows one word. The word is $55."
+ },
+ {
+  "file": "scripts/life.gd",
+  "line": 78,
+  "old": "I slide across the whole line in bald work shoes. Urgent care + new non-slips: $%d. Workers' comp: 'pending.'",
+  "new": "I slide the whole length of the line on bald shoes. The body keeps the receipts. Urgent care + non-slips: $%d. Workers' comp: 'pending.'"
+ },
+ {
+  "file": "scripts/life.gd",
+  "line": 80,
+  "old": "I walk to the Fork in the snow. Toes file a grievance. HR loses it. -25 Energy.",
+  "new": "I walk to the Fork in the snow. Toes go numb, then white, then quiet. The body keeps the receipts. -25 Energy."
+ },
+ {
+  "file": "scripts/life.gd",
+  "line": 96,
+  "old": "I skip the vet. The cats know. -5 Happiness, {cat3} trust -1.",
+  "new": "I skip the vet. The cats know. Cats keep ledgers. -5 Happiness, {cat3} trust -1."
+ },
+ {
+  "file": "scripts/life.gd",
+  "line": 101,
+  "old": "I go to buy formula and it's $4 more everywhere. 'Shortage.' Record profits, though. Weird.",
+  "new": "Formula's $4 more everywhere. 'Shortage.' Record profits, though. A shortage is just a price with a press release."
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 549,
+  "old": "So here's the deal. Keep {partner} happy, pay the damn rent, don't let some porch pirate jack our stuff. Heard.",
+  "new": "So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Heard."
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 551,
+  "old": "Every Monday, rent and bills ($%d) hit like a truck. The Twisted Fork (bottom-right) needs a cook. They always need a cook.",
+  "new": "Every Monday, rent and bills: $%d. Rent is due. Rent is always due. The Twisted Fork (bottom-right) needs a cook. They always need a cook."
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 1022,
+  "old": "So I scrub the fryer off me. Now I smell like Irish Spring and regret. Upgrade.",
+  "new": "So I scrub the fryer off me. Water burns at 160. Fryer oil runs at 350. My forearms do the math."
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 1086,
+  "old": "I eat {partner}'s Black Forest cake. Cherries, chocolate, love. +60 Energy",
+  "new": "I eat {partner}'s Black Forest cake. Cherries. Chocolate. Love. Hell of a girl. +60 Energy"
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 1151,
+  "old": "I pass out at 2 AM like a damn rookie. {partner} drags me to bed. -5 Happiness",
+  "new": "I pass out at 2 AM. Floor. Fully dressed. My body quit without notice. {partner} drags me to bed. -5 Happiness"
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 1259,
+  "old": "I find a sticky note on the mirror: \\\"You're doing great, babe. The landlord is a goblin.\\\" +5 Energy",
+  "new": "I find a sticky note on the mirror: \\\"You're doing great, babe. The landlord is a goblin.\\\" Hell of a girl. +5 Energy"
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 1691,
+  "old": "Rent hasn't gone up (yet). I gotta invest the raise before the landlord smells it.",
+  "new": "Rent hasn't gone up. Yet. Landlords smell a raise the way sharks smell blood. I gotta invest it fast."
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 2908,
+  "old": "I get knocked out. {partner} picks me up from the curb. Again. Hell of a girl.",
+  "new": "I get knocked out. Me and the sidewalk get acquainted. {partner} scrapes me off the curb. Again. Hell of a girl."
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 4019,
+  "old": "I never open the '%s' mail, so it decides for me. Mail does that now.",
+  "new": "I never open the '%s' mail. Unopened, it's a rumor. Opened, it's a verdict. It decides anyway."
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 4048,
+  "old": "I check the mail. Pizza coupon and a pre-approved credit card at 34% APR. I keep the coupon.",
+  "new": "I check the mail. A pizza coupon. A credit card at 34% APR that already loves me. I keep the coupon. It wants nothing back."
+ },
+ {
+  "file": "scripts/main.gd",
+  "line": 1325,
+  "old": "Monday. I pay $%d (%s%s). $%d left. Landlord's third boat thanks me.",
+  "new": "Monday. Rent is due. Rent is always due. I pay $%d (%s%s). $%d left. Landlord's third boat thanks me.",
+  "note": "later split by hand: chorus is its own dialogue line (pay_rent)"
+ },
+ {
+  "file": "scripts/minigames/prep.gd",
+  "line": 82,
+  "old": "I rush the knife. Nick my finger. Band-aid + glove. -5 Energy",
+  "new": "I rush the knife. Nick my finger. Band-aid. Glove. The body keeps the receipts. -5 Energy"
+ },
+ {
+  "file": "scripts/minigames/shop.gd",
+  "line": 40,
+  "old": "My card gets declined. The cashier finally looks up. Embarrassing.",
+  "new": "My card gets declined. Now the cashier looks up. Broke is the only way to get seen in here."
+ },
+ {
+  "file": "scripts/shift.gd",
+  "line": 89,
+  "old": "Eh. Expo sighs loud enough to bill me for it.",
+  "new": "Eh. Expo sighs loud enough to bill me. Nobody tips the fry cook."
+ },
+ {
+  "file": "scripts/shift.gd",
+  "line": 90,
+  "old": "Disaster. Some influencer's out there filming a 14-part TikTok about it.",
+  "new": "Disaster. Some influencer's filming a 14-part TikTok about it. Nobody tips the fry cook."
+ },
+ {
+  "file": "scripts/minigames/ending.gd",
+  "line": 35,
+  "old": "(The day goes on. It always does.)",
+  "new": "(Rent is due. Rent is always due. Tonight, nobody checks.)"
+ }
+]
