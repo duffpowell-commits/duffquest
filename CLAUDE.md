@@ -280,6 +280,17 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   wall bands), QA shot, before/after, merge. Arenas: when Place letters a sign into the art, delete the matching
   `draw_string` in `main._draw_arena` (ghoster/gymbro/crypto).
 
+- **Grok is out of usage for the week (Nov 8); Gemini is the art department now.** Duff runs the Gemini app by
+  hand (no API: free tier has 0 image quota, Duff declined billing). Drops land in Drive **DuffQuest Art Inbox /
+  97 Gemini art drops** (filenames = ids); refs there: `ref_done_home/kitchen/boss_card`. Claude pulls, grades, wires.
+  `tools/gemini_art.py` exists for the API if billing is ever turned on (key in `~/.gemini_key`, never commit).
+- **Done (Nov 8): Gemini apartment swapped in.** Gemini's G1 (`grok_art/2026-11-08-gemini-test/g1_try1.jpg`, ~9/12)
+  replaced Grok's `home_interior`. Its furniture moved, so the CODE moved to match: `main.gd` FRIDGE_R, COUNTER_R,
+  MIRROR_R (now a wall), new SIDE_TABLE_R / DRESSER_R / CAT_TREE_R walls; KITCHEN_PT, MAT_PT (back walk = big rug),
+  MAIL_R/PT (side table), MIRROR_PT, BOWLS_R/PT. `tools/make_m7_guides.py` HOME boxes updated. Render:
+  `docs/renders/m7_home_gemini_ingame.png`, `gemini_g1_vs_grok.png`. Lesson: when new art moves furniture, moving
+  the collision boxes is cheaper than a redraw.
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
