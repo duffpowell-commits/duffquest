@@ -7,3 +7,10 @@
 
 ## M2: street dressing
 - [ ] Trees, clutter, fences from `grok_art/2026-11-08-street-dressing/` onto the town
+
+## Art follow-ups from the M1 review (Grok redraws, not code)
+- [ ] Step frames (cols 1-2): clean legs on side rows, add a 1 px head bob
+- [ ] Attack frame (col 3): real wind-up / extended swing + a smear frame (GBA DBZ pillar)
+- [ ] Make outfits readable at a glance: real clogs, a light apron or coloured jacket; dark outfits vanish on asphalt
+- [ ] Clean the speckled dark outline around hair/ponytail (in Grok's source)
+- [ ] Hair: move from ginger toward the approved portrait's dirty blond
