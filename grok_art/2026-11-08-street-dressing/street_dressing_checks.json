@@ -1,0 +1,1158 @@
+{
+  "passed": 169,
+  "total": 169,
+  "checks": [
+    {
+      "check": "new_tree_sheet exact RGB PNG dimensions",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet equal integer cell grid",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet maple all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet maple exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet maple baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet oak all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet oak exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet oak baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet scraggly_ash all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet scraggly_ash exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet scraggly_ash baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet pine all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet pine exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet pine baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet lilac all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet lilac exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet lilac baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet hedge all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet hedge exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet hedge baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet cell7 completely empty exact key",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet cell8 completely empty exact key",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet cell9 completely empty exact key",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet correct occupied count",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet green key for pink/magenta artwork",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet preview PNG exact contact grid",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet exact RGB PNG dimensions",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet equal integer cell grid",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet recycling_bin all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet recycling_bin exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet recycling_bin baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet fire_hydrant all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet fire_hydrant exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet fire_hydrant baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet newspaper_box all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet newspaper_box exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet newspaper_box baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet bus_bench all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet bus_bench exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet bus_bench baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet political_sun_sign all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet political_sun_sign exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet political_sun_sign baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet football_fan_flag all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet football_fan_flag exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet football_fan_flag baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet pothole_cone all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet pothole_cone exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet pothole_cone baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet little_free_library all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet little_free_library exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet little_free_library baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet mailbox all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet mailbox exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet mailbox baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet bike_rack all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet bike_rack exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet bike_rack baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet shopping_cart all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet shopping_cart exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet shopping_cart baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet scattered_leaves all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet scattered_leaves exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet scattered_leaves baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet cell13 completely empty exact key",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet cell14 completely empty exact key",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet cell15 completely empty exact key",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet cell16 completely empty exact key",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet correct occupied count",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet green key for pink/magenta artwork",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet preview PNG exact contact grid",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls exact RGB PNG dimensions",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls equal integer cell grid",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_straight all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_straight exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_straight baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_gate all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_gate exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_gate baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_end all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_end exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_end baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_corner_NE all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_corner_NE exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls chain_link_corner_NE baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_straight all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_straight exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_straight baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_gate all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_gate exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_gate baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_end all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_end exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_end baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_corner_NE all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_corner_NE exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls white_picket_corner_NE baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_straight all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_straight exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_straight baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_gate all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_gate exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_gate baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_end all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_end exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_end baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_corner_NE all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_corner_NE exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls privacy_wood_corner_NE baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_straight all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_straight exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_straight baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_pillar all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_pillar exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_pillar baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_end all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_end exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_end baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_corner_NE all eight-pixel margins clear",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_corner_NE exact flat-key outer border",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls red_brick_corner_NE baseline aligned",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls correct occupied count",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls green key for pink/magenta artwork",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls preview PNG exact contact grid",
+      "pass": true
+    },
+    {
+      "check": "chain_link straight endpoints identical over 16px connector",
+      "pass": true
+    },
+    {
+      "check": "chain_link gate left/right joins exact",
+      "pass": true
+    },
+    {
+      "check": "chain_link corner horizontal left join exact",
+      "pass": true
+    },
+    {
+      "check": "chain_link straight-straight 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "chain_link straight-gate 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "chain_link gate-straight 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "white_picket straight endpoints identical over 16px connector",
+      "pass": true
+    },
+    {
+      "check": "white_picket gate left/right joins exact",
+      "pass": true
+    },
+    {
+      "check": "white_picket corner horizontal left join exact",
+      "pass": true
+    },
+    {
+      "check": "white_picket straight-straight 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "white_picket straight-gate 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "white_picket gate-straight 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "privacy_wood straight endpoints identical over 16px connector",
+      "pass": true
+    },
+    {
+      "check": "privacy_wood gate left/right joins exact",
+      "pass": true
+    },
+    {
+      "check": "privacy_wood corner horizontal left join exact",
+      "pass": true
+    },
+    {
+      "check": "privacy_wood straight-straight 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "privacy_wood straight-gate 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "privacy_wood gate-straight 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "red_brick straight endpoints identical over 16px connector",
+      "pass": true
+    },
+    {
+      "check": "red_brick gate left/right joins exact",
+      "pass": true
+    },
+    {
+      "check": "red_brick corner horizontal left join exact",
+      "pass": true
+    },
+    {
+      "check": "red_brick straight-straight 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "red_brick straight-gate 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "red_brick gate-straight 208px placement overlap exact",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_neighbor unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_fork unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_hoa unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_seen unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_iron unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_club unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_mining unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_plaza unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_walgrumps unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_hywhee unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_plazmart unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_kwik.png unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_kwik_preview.png unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_home.png unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved new_storefront_home_preview.png unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved storefronts_board2_compare.png unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved v2 new_ground_textures.png unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved v2 new_ground_edges.png unchanged",
+      "pass": true
+    },
+    {
+      "check": "approved v2 new_ground_corners.png unchanged",
+      "pass": true
+    },
+    {
+      "check": "fences_join_preview.png PNG exact size",
+      "pass": true
+    },
+    {
+      "check": "street_dressing_street_mock.png PNG exact size",
+      "pass": true
+    }
+  ],
+  "assets": {
+    "new_tree_sheet": {
+      "size": [
+        384,
+        384
+      ],
+      "cell": [
+        128,
+        128
+      ],
+      "grid": [
+        3,
+        3
+      ],
+      "key": "#00FF00",
+      "occupied": 6,
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "name": "maple",
+          "margin_px": [
+            16,
+            8,
+            16,
+            8
+          ],
+          "bottom_y": 119
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "name": "oak",
+          "margin_px": [
+            10,
+            12,
+            10,
+            8
+          ],
+          "bottom_y": 119
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "name": "scraggly_ash",
+          "margin_px": [
+            14,
+            8,
+            15,
+            8
+          ],
+          "bottom_y": 119
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "name": "pine",
+          "margin_px": [
+            32,
+            8,
+            32,
+            8
+          ],
+          "bottom_y": 119
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "name": "lilac",
+          "margin_px": [
+            22,
+            44,
+            23,
+            8
+          ],
+          "bottom_y": 119
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "name": "hedge",
+          "margin_px": [
+            8,
+            73,
+            8,
+            8
+          ],
+          "bottom_y": 119
+        }
+      ]
+    },
+    "new_clutter_sheet": {
+      "size": [
+        256,
+        256
+      ],
+      "cell": [
+        64,
+        64
+      ],
+      "grid": [
+        4,
+        4
+      ],
+      "key": "#FF00FF",
+      "occupied": 12,
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "name": "recycling_bin",
+          "margin_px": [
+            18,
+            18,
+            18,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "name": "fire_hydrant",
+          "margin_px": [
+            23,
+            28,
+            24,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "name": "newspaper_box",
+          "margin_px": [
+            20,
+            18,
+            21,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "name": "bus_bench",
+          "margin_px": [
+            12,
+            32,
+            13,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "name": "political_sun_sign",
+          "margin_px": [
+            16,
+            26,
+            17,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "name": "football_fan_flag",
+          "margin_px": [
+            20,
+            14,
+            20,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "name": "pothole_cone",
+          "margin_px": [
+            23,
+            32,
+            24,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "name": "little_free_library",
+          "margin_px": [
+            21,
+            14,
+            21,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "name": "mailbox",
+          "margin_px": [
+            20,
+            18,
+            21,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "name": "bike_rack",
+          "margin_px": [
+            22,
+            31,
+            23,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "name": "shopping_cart",
+          "margin_px": [
+            21,
+            24,
+            21,
+            8
+          ],
+          "bottom_y": 55
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "name": "scattered_leaves",
+          "margin_px": [
+            10,
+            43,
+            10,
+            8
+          ],
+          "bottom_y": 55
+        }
+      ]
+    },
+    "new_fences_walls": {
+      "size": [
+        1024,
+        1024
+      ],
+      "cell": [
+        256,
+        256
+      ],
+      "grid": [
+        4,
+        4
+      ],
+      "key": "#FF00FF",
+      "occupied": 16,
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "name": "chain_link_straight",
+          "margin_px": [
+            16,
+            80,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "name": "chain_link_gate",
+          "margin_px": [
+            16,
+            80,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "name": "chain_link_end",
+          "margin_px": [
+            116,
+            80,
+            116,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "name": "chain_link_corner_NE",
+          "margin_px": [
+            16,
+            16,
+            15,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "name": "white_picket_straight",
+          "margin_px": [
+            16,
+            80,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "name": "white_picket_gate",
+          "margin_px": [
+            16,
+            80,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "name": "white_picket_end",
+          "margin_px": [
+            116,
+            80,
+            116,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "name": "white_picket_corner_NE",
+          "margin_px": [
+            16,
+            20,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "name": "privacy_wood_straight",
+          "margin_px": [
+            16,
+            80,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "name": "privacy_wood_gate",
+          "margin_px": [
+            16,
+            80,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "name": "privacy_wood_end",
+          "margin_px": [
+            116,
+            80,
+            116,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "name": "privacy_wood_corner_NE",
+          "margin_px": [
+            16,
+            16,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "name": "red_brick_straight",
+          "margin_px": [
+            16,
+            128,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "name": "red_brick_pillar",
+          "margin_px": [
+            16,
+            72,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "name": "red_brick_end",
+          "margin_px": [
+            96,
+            128,
+            96,
+            24
+          ],
+          "bottom_y": 231
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "name": "red_brick_corner_NE",
+          "margin_px": [
+            16,
+            16,
+            16,
+            24
+          ],
+          "bottom_y": 231
+        }
+      ]
+    }
+  },
+  "visual_checks": {
+    "all": "Inspected all three contact sheets and the dressed street mock against Board2 and approved storefronts. Original textured sprites; directly frontal/slightly above; bright warm midday; no game-atlas text/grid; all key backgrounds flat.",
+    "fences": "Diagonal wire diamonds and gate braces are real construction detail, not camera recession. Corner returns are narrow north-going cap/rail bands, exactly screen-vertical."
+  },
+  "limitations": [
+    "Padded fence cells require connector placement stride208px with16px overlap, not a256px TileMap stride. This reconciles no cell-edge contact with seamless joined sections.",
+    "Only one NE/north-return corner orientation per fence family is included, as the Sheet asks; no unrequested complete wall autotile set.",
+    "Edge-on corner returns are deliberately narrow and less immediately readable than diagonal/isometric corners.",
+    "The ash reads as a sparse, slightly drooping urban tree; species identity is stylized.",
+    "Fine library books, flag emblem, cart wire and scattered leaves compress at64px cells.",
+    "Mock fence sprites displayed at quarter native size; trees/clutter native, with two shrubs at half size. Preview is not engine placement/collision verification."
+  ]
+}
