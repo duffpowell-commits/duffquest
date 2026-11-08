@@ -1,6 +1,6 @@
 # Duff Quest
 
-EarthBound-style comedy RPG about Duff's real life in Omaha: keep Madison happy, pay the rent,
+Comedy RPG about Duff's real life in Omaha: keep Madison happy, pay the rent,
 work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDScript, 640×360
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
@@ -38,7 +38,17 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   Claude's review: much cleaner than the old art but generic. Same cream houses, lollipop trees,
   empty grass, pale low-contrast palette, Seen Cafe reads as a clinic. Smoke only covers
   outdoors + phone; interiors, combat and bosses not eyeballed yet.
-- **Art personality pass in progress:** Duff makes art with Grok. Brief + prompts:
+- **ART DIRECTION CHANGED (Nov 7, evening): no longer EarthBound.** World + character sprites:
+  modern high-detail pixel art like **Sea of Stars** (saturated, warm sun, soft coloured shadows,
+  lush detail), same 64 px 4×4 sheet format. Dialogue portraits + boss intros: bold cartoon like
+  **Hazbin Hotel** (thick tapered ink lines, angular shapes, exaggerated faces, flat cel shading;
+  humans, not demons). Keep it bright and sunny, opposite of Lethemoor. Prompts: Drive doc
+  "DuffQuest — Style bible + Grok prompts" (https://docs.google.com/document/d/1lmADUpw6NO0A_rvmwdox_t2oJoh8yZVLc1AXliRUwnE/edit); capability test doc updated to match.
+  **Open tech issue:** the game renders at 640×360 (viewport stretch), so cartoon portraits get
+  downsampled to ~192 px and lose line quality. Fix options: render the dialogue layer at native
+  resolution (stretch mode canvas_items + pixel world in a SubViewport), or bake portraits at the
+  displayed size with thick lines. Decide when the first portraits land.
+- **Art personality pass (EarthBound-era brief, partly superseded):** Duff makes art with Grok. Brief + prompts:
   `docs/art_brief.md` (also a Google Doc "READ ME FIRST - Grok prompts" in Drive folder
   **DuffQuest Art Inbox**, with `reference_current_HD.png`). One Drive folder per design, three
   options (A/B/C) each: 00 Style board (pick first), 01 Storefronts (13 buildings, one folder
