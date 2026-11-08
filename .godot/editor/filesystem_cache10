@@ -1,13 +1,13 @@
 72322a848ab928aa5c89f0cb78209805
 ::res://::1794163859
-CLAUDE.md::TextFile::-1::1794177230::0::1::::<><><>0<>0<><>::
+CLAUDE.md::TextFile::-1::1794180308::0::1::::<><><>0<>0<><>::
 export_presets.cfg::TextFile::-1::1794163858::0::1::::<><><>0<>0<><>::
 game.tscn::PackedScene::-1::1794163858::0::1::::<><><>0<>0<><>::res://scripts/game.gd
 icon.svg::CompressedTexture2D::8095849722990087210::1794163859::1794163859::1::::<><><>0<>0<>eb4d2d835c084f004c49a8b4a3301594<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 main.tscn::PackedScene::-1::1794163859::0::1::::<><><>0<>0<><>::res://scripts/main.gd
 QUEUE.md::TextFile::-1::1794164172::0::1::::<><><>0<>0<><>::
 ::res://assets/::1794163858
-::res://assets/art/::1794177209
+::res://assets/art/::1794180278
 arena_alley.png::CompressedTexture2D::5583501881711354390::1794163858::1794163858::1::::<><><>0<>0<>9339017803300d55de99698ae8c293b5<>res://.godot/imported/arena_alley.png-2a9280d49b11203c57f1c3e9755a86da.ctex::
 arena_crypto.png::CompressedTexture2D::2665339272424285334::1794163858::1794163858::1::::<><><>0<>0<>8e03237e3d93a421435afea96d10243b<>res://.godot/imported/arena_crypto.png-302ce2d28c0cb8d827de7a650c0722ab.ctex::
 arena_djvape.png::CompressedTexture2D::6477308840653239564::1794163858::1794163858::1::::<><><>0<>0<>85b737677a091b153f2bfb3da000cb30<>res://.godot/imported/arena_djvape.png-7445486548d75a792e5af7af6272cef4.ctex::
@@ -226,7 +226,7 @@ willnot.png::CompressedTexture2D::4150960132487068820::1794163858::1794163858::1
 ::res://assets/art/ground/::1794163858
 ground_atlas.json::JSON::-1::1794163858::0::1::::<><><>0<>0<><>::
 ground_atlas.png::CompressedTexture2D::9178419450116656645::1794163858::1794163858::1::::<><><>0<>0<>1d018483112fedbe4e2ea25dfdd0837a<>res://.godot/imported/ground_atlas.png-687ee4b494a820f7c27c8a44fa0f1f0b.ctex::
-::res://assets/art/portraits_hd/::1794163858
+::res://assets/art/portraits_hd/::1794181443
 allergy.png::CompressedTexture2D::6921697925648705456::1794163858::1794163858::1::::<><><>0<>0<>82470099e11a36f10a3289428410bc1a<>res://.godot/imported/allergy.png-1861512d34c3e906f391446434e6eed2.ctex::
 baron.png::CompressedTexture2D::5630560525266715583::1794163858::1794163858::1::::<><><>0<>0<>163f61724721cf787922aaa748731a20<>res://.godot/imported/baron.png-0ea95e2bf5b69eb9d82b30288b597198.ctex::
 bdaydad.png::CompressedTexture2D::4045774838366905802::1794163858::1794163858::1::::<><><>0<>0<>9184c83b03f4f69c7068cb67d6ca5e62<>res://.godot/imported/bdaydad.png-6087a8489ff516ff56d7df56d93c4a40.ctex::
@@ -237,6 +237,7 @@ coupon.png::CompressedTexture2D::2482277683926646309::1794163858::1794163858::1:
 crypto.png::CompressedTexture2D::1334682429974281962::1794163858::1794163858::1::::<><><>0<>0<>25860a24f62c54ab2672ebd0cd008ae8<>res://.godot/imported/crypto.png-39c59c5f2c2ca55e064f800e3b925d95.ctex::
 dasher.png::CompressedTexture2D::4398029900987106761::1794163858::1794163858::1::::<><><>0<>0<>665e4ff4d0eaa526311da85f338de612<>res://.godot/imported/dasher.png-bafad3940f853ca9563907d8c4aea9e6.ctex::
 djvape.png::CompressedTexture2D::763528965742329680::1794163858::1794163858::1::::<><><>0<>0<>0108a2a9046d3f3d90493a5fa6a8c687<>res://.godot/imported/djvape.png-772161a5cef49a005f6510666642e08e.ctex::
+dolores.png::CompressedTexture2D::465578355470863552::1794181443::1794181448::1::::<><><>0<>0<>ac70f9d83ee8a39f992790ebae9b3510<>res://.godot/imported/dolores.png-6f8f32f5014a2bc5049cf999e70f11f2.ctex::
 donald.png::CompressedTexture2D::6161879180849176286::1794163858::1794163858::1::::<><><>0<>0<>21bfbb48e2982ae67882ce1b9e91b7db<>res://.godot/imported/donald.png-5062a3460f0fa29d2afc7fbebd02d268.ctex::
 duff.png::CompressedTexture2D::5668138832524862207::1794163858::1794163858::1::::<><><>0<>0<>0ab763e094920fadb7a44e588faee5fb<>res://.godot/imported/duff.png-37493d1f5e8b6e9b28c746366eea0ab6.ctex::
 fences.png::CompressedTexture2D::8580036281333162966::1794163858::1794163858::1::::<><><>0<>0<>afbe99d38477f92d21a3430becf27291<>res://.godot/imported/fences.png-93ced8e3bc4ce8eceb3c24fb7b040607.ctex::
@@ -324,7 +325,7 @@ town_dressing.json::JSON::-1::1794163858::0::1::::<><><>0<>0<><>::
 town_ground.txt::TextFile::-1::1794163858::0::1::::<><><>0<>0<><>::
 words5.txt::TextFile::-1::1794163858::0::1::::<><><>0<>0<><>::
 ::res://scripts/::1794163934
-art.gd::GDScript::2550548600385224652::1794163859::0::1::::<>RefCounted<><>0<>0<><>::
+art.gd::GDScript::2550548600385224652::1794181443::0::1::::<>RefCounted<><>0<>0<><>::
 art_manifest.gd::GDScript::5961543388782625655::1794172331::0::1::::<>RefCounted<><>0<>0<><>::
 audio.gd::GDScript::3225730722935409287::1794163859::0::1::::<>Node<><>0<>0<><>::
 boss.gd::GDScript::87246086387039507::1794163859::0::1::::<>CharacterBody2D<><>0<>0<><>::
@@ -404,7 +405,7 @@ todo.md::TextFile::-1::1794163859::0::1::::<><><>0<>0<><>::
 ::res://tools/::1794180263
 actor_fade_shot.gd::GDScript::7916786354093214199::1794163859::0::1::::<>Node<><>0<>0<><>::
 actor_fade_shot.tscn::PackedScene::-1::1794163859::0::1::::<><><>0<>0<><>::res://tools/actor_fade_shot.gd
-arena_shot.gd::GDScript::8767486246906617003::1794177204::0::1::::<>Node<><>0<>0<><>::
+arena_shot.gd::GDScript::8767486246906617003::1794181443::0::1::::<>Node<><>0<>0<><>::
 arena_shot.tscn::PackedScene::-1::1794164062::0::1::::<><><>0<>0<><>::res://tools/arena_shot.gd
 arena_wall_check.gd::GDScript::2491365676108263264::1794163974::0::1::::<>Node<><>0<>0<><>::
 arena_wall_check.tscn::PackedScene::-1::1794163946::0::1::::<><><>0<>0<><>::res://tools/arena_wall_check.gd
