@@ -535,10 +535,13 @@ func _spawn_raccoons() -> void:
 		rc.set_physics_process(location == "outside")
 		raccoons.append(rc)
 
+const TITLE_HELP: = ["Move: WASD / arrows / joystick.  Use: E or A.  Bonk: Space (or A), mash for a 3-hit combo.  Dodge roll: Shift or B.  Gear: I or G.  Phone: P or the phone icon.", " ", "Special: F or S (hold to charge).  Swap special: Q or <>.  Demon Time: R or D.  Spend stat points: T."]
+
 func show_title() -> void:
 	in_title = true
 	var opts: Array = []
-	var lines: Array = ["Keep {partner} happy. Pay the rent. Survive 3 AM. Don't let the landlord win.", " ", "Move: WASD / arrows / joystick.  Use: E or A.  Bonk: Space (or A), mash for a 3-hit combo.  Dodge roll: Shift or B.  Gear: I or G.  Phone: P or the phone icon.", "Special: F or S (hold to charge).  Swap special: Q or <>.  Demon Time: R or D.  Spend stat points: T."]
+	# Title art (bg_title) carries the screen, so only the tagline sits on it; controls live behind "How to play".
+	var lines: Array = ["Keep {partner} happy. Pay the rent. Survive 3 AM. Don't let the landlord win."]
 	var d: = SaveGame.read(save_path)
 	if not d.is_empty():
 		opts.append(["continue", "Continue: Day %d (%s), $%d" % [int(d.get("day_count", 1)), DAY_NAMES[int(d.get("day_i", 4)) % 7].substr(0, 3), int(d.get("money", 0))], KEY_1])
@@ -546,9 +549,12 @@ func show_title() -> void:
 	else:
 		opts.append(["new", "New Game", KEY_1])
 	opts.append(["settings", "Settings (sound)", KEY_3 if opts.size() > 1 else KEY_2])
+	opts.append(["help", "How to play", KEY_4 if opts.size() > 2 else KEY_3])
 	_menu("{GAME_TITLE}", lines, opts, func (id: String) -> void:
 		if id == "settings":
 			open_settings()
+		elif id == "help":
+			_menu("How to play", TITLE_HELP, [["back", "Back", KEY_1]], func (_b: String) -> void: show_title())
 		elif id == "continue":
 			in_title = false
 			load_game()
@@ -562,7 +568,7 @@ func show_title() -> void:
 						show_title())
 		else:
 			in_title = false
-			new_game(true))
+			new_game(true), "title")
 
 func new_game(write_save: bool = true) -> void:
 	from_dict({})
@@ -789,8 +795,9 @@ func close_overlay() -> void:
 		touch.visible = DisplayServer.is_touchscreen_available() or OS.has_feature("web_ios") or OS.has_feature("web_android") or bool(touch.get("used"))
 	_sync_world()
 
-func _menu(heading: String, lines: Array, opts: Array, cb: Callable) -> void:
+func _menu(heading: String, lines: Array, opts: Array, cb: Callable, backdrop: String = "") -> void:
 	var c: = Card.new()
+	c.backdrop = backdrop
 	c.heading = Cast.N(heading)
 	c.lines = lines.map(func (l): return Cast.N(str(l)))
 	var o2: Array = []
