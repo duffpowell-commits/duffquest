@@ -2,6 +2,19 @@ extends RefCounted
 
 # ORIGINAL Style A HD art; generated metadata. Logical coordinates unchanged.
 const ASSETS = {
+  "sf_home": {"w": 220, "h": 140, "cell": [220, 140], "origin": [0, 0], "s": 2},
+  "sf_neighbor": {"w": 160, "h": 120, "cell": [160, 120], "origin": [0, 0], "s": 2},
+  "sf_kwik": {"w": 260, "h": 140, "cell": [260, 140], "origin": [0, 0], "s": 2},
+  "sf_fork": {"w": 300, "h": 140, "cell": [300, 140], "origin": [0, 0], "s": 2},
+  "sf_hoa": {"w": 240, "h": 140, "cell": [240, 140], "origin": [0, 0], "s": 2},
+  "sf_seen": {"w": 120, "h": 80, "cell": [120, 80], "origin": [0, 0], "s": 2},
+  "sf_iron": {"w": 110, "h": 100, "cell": [110, 100], "origin": [0, 0], "s": 2},
+  "sf_club": {"w": 160, "h": 104, "cell": [160, 104], "origin": [0, 0], "s": 2},
+  "sf_mining": {"w": 116, "h": 84, "cell": [116, 84], "origin": [0, 0], "s": 2},
+  "sf_plaza": {"w": 104, "h": 160, "cell": [104, 160], "origin": [0, 0], "s": 2},
+  "sf_walgrumps": {"w": 152, "h": 76, "cell": [152, 76], "origin": [0, 0], "s": 2},
+  "sf_hywhee": {"w": 220, "h": 96, "cell": [220, 96], "origin": [0, 0], "s": 2},
+  "sf_plazmart": {"w": 144, "h": 80, "cell": [144, 80], "origin": [0, 0], "s": 2},
   "ch_brittany": {
     "w": 256,
     "h": 256,
