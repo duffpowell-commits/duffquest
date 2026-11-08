@@ -5,7 +5,7 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
-- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M7 backgrounds waiting on Place: `grok_art/requests/REQUEST_M7_backdrops.md`; M8 menu style done).
+- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M7 backgrounds IN PROGRESS, 2/19 in: home + kitchen. Place's next drops: `arena_alley`, `arena_waffle`, `gala`).
 - **Other agent: "Place"** (Duff's art agent, Cursor/Grok side) owns art: it is redrawing the outfit
   sheets, Waffle Haus sign, bus-stop sign, cats, extra lawn props, and making all 17 bosses. It hands
   drops over in `grok_art/<date>-<name>/` with a HANDOFF.md; Claude wires them in. Code is Claude's.
@@ -268,6 +268,17 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   `scripts/fun_facts.gd` (40 real facts, each checked; "legend says" for shaky ones) via `main.next_fact()`
   on 35% of bus/minivan rides and after "So where was I." on load. text_fit 0 overflow (1428). Render:
   `docs/renders/palahniuk_voice.png` (`tools/voice_shot.tscn` + `tools/voice_sheet.py`).
+
+- **M7 backgrounds, drop 1 (Nov 8):** Place PR #25 -> `grok_art/2026-11-08-backdrops/` (`home_interior`,
+  `bg_kitchen`, opaque 640×360, same ids). Wiring = copy over `assets/art/<id>.png` (same size, no code), then
+  `godot --headless --path . --import`, then check: `python3 tools/make_m7_guides.py` (red collision boxes over the
+  NEW art; `git checkout grok_art/requests/m7/` after, the guides should stay on the old art) and
+  `tools/qa_shot.tscn` (now also shoots `kitchen_fryer` + `kitchen_sandwich`). Home layout matches every box; the
+  exit is the drawn door at the bottom middle (Duff gets "Go outside" there). Laptop on couch, baby bath, rugs
+  are art, not overlays; rugs aren't walls. Renders: `docs/renders/m7_backdrops_drop1.png` (before/after),
+  `m7_backdrops_drop1_ingame.png`. **Next drops** land the same way: copy, import, guide overlay (arenas/gala:
+  wall bands), QA shot, before/after, merge. Arenas: when Place letters a sign into the art, delete the matching
+  `draw_string` in `main._draw_arena` (ghoster/gymbro/crypto).
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
