@@ -92,6 +92,15 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   every boss (16 sprite rows, 17 splashes) must look unlike all other bosses and regular enemies
   (Duff's one requirement); legacy 96 px portrait rows marked skip.
 
+- **Map decision (Nov 7): Option A + tiles.** Keep the straight-on camera (Sea of Stars itself is
+  straight-on; board 2's diagonal is NOT the target, only its palette/detail). Rebuild the outdoor
+  map as a TileMap from reusable tiles instead of the single `map_outside` painting, so the world
+  can grow; keep the `buildings` footprints, doors and collisions working. Isometric (`scripts/iso/`)
+  rejected: it would need diagonal facings on every character sheet. Sheet updated: all pixel rows
+  say "style_board_2 look, NOT its diagonal camera"; storefront/tree/clutter rows say straight-on,
+  midday sun; new rows `new_ground_textures` (6 seamless 512 swatches), `new_ground_edges`
+  (curbs, lines, transitions), `new_fences_walls`.
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
