@@ -5,7 +5,7 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
-- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M6 Duff outfits v2 re-import; then old flat-art screens).
+- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M7 old flat-art screens; needs Place art for interiors/shops first).
 - **Other agent: "Place"** (Duff's art agent, Cursor/Grok side) owns art: it is redrawing the outfit
   sheets, Waffle Haus sign, bus-stop sign, cats, extra lawn props, and making all 17 bosses. It hands
   drops over in `grok_art/<date>-<name>/` with a HANDOFF.md; Claude wires them in. Code is Claude's.
@@ -221,6 +221,14 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   serves the old cached textures (and new files don't exist to it).
   Not done: attack poses are single key frames (no wind-up/recovery); hitboxes and projectile anchors not
   re-tuned to the new silhouettes; burst-preview splashes unused (keyed versions shipped).
+
+- **Done (Nov 8): Duff outfits v2 (M6).** 11 sheets from `grok_art/2026-11-08-outfits-v2-and-boss-attacks/outfits/`
+  keyed with `tools/import_sheet.py ... --drop 1` (v2 stands on y59; NOT the old drop 3). Stand frames are pixel-
+  aligned with v1; steps bob the head 1 px; attack = frying-pan swing that lunges the head (front -2, right +3,
+  left -3 px). `tools/make_shades.py` now applies BOB/LUNGE per column; verified 0 uncovered eye-white px.
+  Renders: `docs/renders/duff_outfits_ingame.png` (old sheet stand frame beside each),
+  `duff_outfits_v2_frames.png` (facing right, 4 frames, old vs new). Still old art: `duff_dress`, `duff_roll_*`,
+  `ch_duff_suit`. One key attack pose, no recovery frame.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
