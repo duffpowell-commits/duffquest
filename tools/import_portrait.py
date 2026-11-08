@@ -6,7 +6,7 @@ transparent, equal-cell PNG sheet for the dialogue box.
 - background colour is read from the image corners (works for magenta, purple, green...)
 - JPG fringe: pixels close to the background become transparent; edge pixels get the background
   tint pulled out (despill)
-- panels are found by empty background columns, trimmed, and centred into equal square cells
+- panels are found by empty background columns (equal slices if they touch), trimmed, and centred into equal square cells
   sharing one scale (so every expression has the same head size)
 Output: assets/art/portraits_hd/<name>.png  (N cells wide, 1 cell tall)
 """
@@ -17,7 +17,35 @@ from PIL import Image
 OUT = Path(__file__).resolve().parent.parent / "assets" / "art" / "portraits_hd"
 
 
-def run(src, name, cell, margin):
+def keep_largest(img):
+    """Drop alpha islands other than the biggest one (stray hair from a neighbouring panel)."""
+    w, h = img.size
+    a = img.getchannel("A").load()
+    seen = [[False] * w for _ in range(h)]
+    best = []
+    for sy in range(h):
+        for sx in range(w):
+            if seen[sy][sx] or a[sx, sy] == 0:
+                continue
+            stack, comp = [(sx, sy)], []
+            seen[sy][sx] = True
+            while stack:
+                x, y = stack.pop()
+                comp.append((x, y))
+                for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if 0 <= nx < w and 0 <= ny < h and not seen[ny][nx] and a[nx, ny] > 0:
+                        seen[ny][nx] = True
+                        stack.append((nx, ny))
+            if len(comp) > len(best):
+                best = comp
+    out = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    src, dst = img.load(), out.load()
+    for x, y in best:
+        dst[x, y] = src[x, y]
+    return out
+
+
+def run(src, name, cell, margin, count=3):
     im = Image.open(src).convert("RGB")
     W, H = im.size
     px = im.load()
@@ -54,9 +82,12 @@ def run(src, name, cell, margin):
             if x - start > 40:
                 panels.append((start, x))
             start = None
+    if len(panels) != count:
+        # panels touch (hair overlapping): fall back to equal slices
+        panels = [(round(i * W / count), round((i + 1) * W / count)) for i in range(count)]
     crops = []
     for x0, x1 in panels:
-        c = rgba.crop((x0, 0, x1, H))
+        c = keep_largest(rgba.crop((x0, 0, x1, H)))
         crops.append(c.crop(c.getchannel("A").getbbox()))
     biggest = max(max(c.width, c.height) for c in crops)
     scale = (cell - 2 * margin) / biggest
@@ -76,5 +107,6 @@ if __name__ == "__main__":
     ap.add_argument("name")
     ap.add_argument("--cell", type=int, default=512)
     ap.add_argument("--margin", type=int, default=16)
+    ap.add_argument("--count", type=int, default=3, help="expressions in the strip")
     a = ap.parse_args()
-    run(a.src, a.name, a.cell, a.margin)
+    run(a.src, a.name, a.cell, a.margin, a.count)

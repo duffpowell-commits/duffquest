@@ -75,6 +75,20 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   **Next:** native-res dialogue layer so these keep their lines, then swap them in for `portrait_duff`.
   The walking sprite should be updated to match (undercut/ponytail, black tee).
 
+- **Production list (Nov 7, made by another agent):** Google Sheet "DuffQuest — Full sprite list
+  (Sea of Stars + Hazbin)" https://docs.google.com/spreadsheets/d/1nQ9h_KqccoSbITQw3A6a8Oh5zX7YyHh33gvkr1L62Aw/edit
+  223 rows: all 131 manifest ids + 92 new (59 HD portraits, 17 boss splashes, 13 storefronts, trees,
+  clutter, style board), each with a ready-to-paste Grok prompt (column F), priority, status.
+  Tab 1 holds the approved likenesses (Duff, Madison, Brittany, Octavia) and open questions.
+  Style boards 1–3 generated, **awaiting Duff's pick**. Treat this sheet as the art to-do list.
+- **Approved cast portraits (Nov 7):** PR #3 (Cursor, merged) put 4 green-screen sheets in
+  `duffquesthd/portraits/` (Duff v3 with jacket, Madison, Octavia, Brittany). Cut with
+  `tools/import_portrait.py` (now: equal-slice fallback + keep-largest-island) ->
+  `assets/art/portraits_hd/{duff,madison,octavia,brittany}.png`, 3×512 cells each
+  (happy / deadpan / furious). Not wired in yet: needs the native-res dialogue layer.
+  Known nits: Brittany and Madison share one face template (hair/clothes swap); Octavia's furious
+  eyes go pink; check Madison's eye colour stays brown.
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
