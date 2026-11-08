@@ -5,7 +5,7 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
-- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M4 see-through trees for NPCs/enemies/cats).
+- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M5 bosses, blocked until Place hands over the boss art; M6 old flat-art screens is unblocked).
 - **Other agent: "Place"** (Duff's art agent, Cursor/Grok side) owns art: it is redrawing the outfit
   sheets, Waffle Haus sign, bus-stop sign, cats, extra lawn props, and making all 17 bosses. It hands
   drops over in `grok_art/<date>-<name>/` with a HANDOFF.md; Claude wires them in. Code is Claude's.
@@ -195,6 +195,15 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   `python3 tools/combat_sheet.py` -> `docs/renders/combat_feel.png/.gif`. Note: in movie-writer runs
   the hit-stop is real-time, so frozen frames don't show; judge it on a device.
   Not done: knockback/launch tuning, enemy hit poses (need art), shake toggle (IDEAS).
+
+- **Done (Nov 8): see-through trees for everyone (M4).** `dressing_front.gd actor_boxes(m)` = body boxes
+  for Duff, live enemies/bosses (x1.45, skipped while a boss is hidden so trees don't give it away),
+  raccoons, cats, Brittany (not at night), the inspector; `Dressing.draw_layer` fades any front-layer item
+  covering any box (`SEE_THROUGH_ALPHA` 0.45). `fade_others = false` restores old Duff-only behaviour.
+  Check: `tools/actor_fade_shot.tscn` -> `python3 tools/actor_fade_sheet.py` ->
+  `docs/renders/see_through_actors.png` (pirate behind oak + pine, raccoon + cat behind maple; before/after).
+  Known: the front layer is chosen by Duff's feet, so an enemy in FRONT of such a tree draws under it
+  (faded now, so visible). Proper fix = y-sort; logged in tasks/todo.md, only if it shows in play.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
