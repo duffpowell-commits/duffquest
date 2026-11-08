@@ -1,0 +1,2 @@
+We're making art for DuffQuest, a comedy RPG about a line cook in Omaha. World and sprites: modern high-detail pixel art like Sea of Stars (rich saturated colours, warm sunlight, soft coloured shadows, crisp pixel clusters, selective dark outlines, no blur, no anti-aliasing smear). Camera: straight-on top-down 3/4 view, like the attached references, never diagonal or isometric. No text, logos or watermarks unless I ask for a sign. When I ask for a flat background colour, make it exactly that one colour edge to edge with nothing else on it.
+
