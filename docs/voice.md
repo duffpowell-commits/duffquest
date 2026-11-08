@@ -48,3 +48,27 @@ The first rewrite overdid the storyteller tics ("So..." x68, "Then..." x23, "goe
 | You and {partner} veg out on the couch. She steals the blanket. {cat1} sits on the remote. | So me and {partner} veg out on the couch. She steals the blanket. {cat1} sits on the remote like he pays the cable bill. |
 | Fridge is 86'd. One sad pickle. Even he looks tired. | (unchanged: already lands) |
 | CRIT! The Cleaver hungers. | (unchanged: combat bark) |
+
+## Palahniuk layer (Nov 8, Duff's call)
+Still Duff at the bar, present tense. On top: Chuck Palahniuk's *tone*, never his text (no quotes,
+no lifted lines; everything is original). What we borrow:
+- **Fragments as rhythm.** "Floor. Fully dressed." Short sentences, then one that turns the knife.
+- **Choruses.** A few lines that come back word for word at the same kind of moment. They gain
+  weight by repeating, so they must stay EXACT and stay RARE. Current choruses and where they live:
+  | Chorus | Where | Budget |
+  |---|---|---|
+  | `Rent is due. Rent is always due.` | intro rent line, Monday rent payment, end credits | 3, don't add more |
+  | `Hell of a girl.` | Madison saves/loves him: knockout pickup, cake, mirror note | 3 + the ending if ever |
+  | `The body keeps the receipts.` | the job's toll: bald-shoe slide, snow walk, knife nick | 4 max |
+  | `Nobody tips the fry cook.` | bad shift grades (C, F) | 2 |
+- **Deadpan facts.** `scripts/fun_facts.gd`: 40 real facts, each with one turn back onto Duff's life.
+  Shown on 35% of bus/minivan rides and once after "So where was I." on load. Every fact must be
+  TRUE (or framed as "legend says"); check numbers before adding one. Keep ~120 chars.
+- **Aphorisms.** "A shortage is just a price with a press release." One per line at most.
+- **The body.** Burns, numb toes, bald shoes, plasma: the cost lands on Duff's body, said flatly.
+
+What we DON'T borrow: shock/gross-out content, cruelty, nihilism. The game stays bright and warm
+underneath; Madison, Octavia and the cats are never the joke's target. If a line already lands (most
+satire lines do: "Nobody needs a gnome. The economy needs you to need a gnome."), leave it alone.
+Budget: about one Palahniuk-flavoured line in five popups. Rewrites: `tools/rewrites/palahniuk_m9.json`
+(22 lines, applied with `tools/apply_rewrites.py`).

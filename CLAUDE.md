@@ -260,6 +260,15 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   middle face has brown irises; Octavia = giggling / curious / wailing (no adult teeth; pink wail eyes kept).
   Render: `docs/renders/portrait_touchups.png` (old vs new).
 
+- **Done (Nov 8): Palahniuk voice layer (M9).** Duff: keep the narration style, add Chuck Palahniuk's tone.
+  Rules + chorus budgets in `docs/voice.md` ("Palahniuk layer"): tone only, never his text; bright/warm
+  underneath, no shock content. 22 lines rewritten (`tools/rewrites/palahniuk_m9.json`); 4 choruses kept EXACT
+  and rare ("Rent is due. Rent is always due." / "Hell of a girl." / "The body keeps the receipts." /
+  "Nobody tips the fry cook."). Monday rent chorus is its own dialogue beat in `pay_rent()`. Fun facts:
+  `scripts/fun_facts.gd` (40 real facts, each checked; "legend says" for shaky ones) via `main.next_fact()`
+  on 35% of bus/minivan rides and after "So where was I." on load. text_fit 0 overflow (1428). Render:
+  `docs/renders/palahniuk_voice.png` (`tools/voice_shot.tscn` + `tools/voice_sheet.py`).
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
