@@ -12,9 +12,9 @@ S = 2  # world units -> backdrop px
 
 # home interior solids, world coords relative to INT_ORIGIN (0, 440); from main.gd
 HOME = {"bed": (12, 42, 56, 36), "crib": (76, 42, 30, 26), "shower": (272, 42, 36, 40),
-        "fridge": (176, 42, 18, 30), "counter": (196, 42, 70, 18), "couch": (20, 136, 72, 22),
-        "door mat": (206, 138, 44, 16), "mirror": (298, 106, 10, 22), "Madison spot": (106, 126, 8, 12),
-        "top wall": (0, 0, 320, 8)}
+        "fridge": (120, 42, 24, 36), "counter": (144, 42, 92, 37), "couch": (20, 136, 72, 22),
+        "mirror": (272, 92, 17, 40), "side table": (207, 134, 44, 26), "dresser": (290, 136, 22, 26),
+        "cat tree": (113, 160, 14, 12), "Madison spot": (106, 132, 8, 6), "top wall": (0, 0, 320, 8)}
 ROOM = {"top wall band (walkable starts below)": (0, 0, 320, 30), "left wall": (0, 0, 8, 180),
         "right wall": (312, 0, 8, 180), "bottom wall": (0, 172, 320, 8)}
 SHOTS = {"home_interior": "home", "bg_kwik": "shop", "bg_pharmacy": "pharmacy", "bg_grocery": "grocery",
