@@ -6,6 +6,8 @@ const Manifest: = preload("res://scripts/art_manifest.gd")
 const WALK: = [1, 0, 2, 0]
 
 static var _tex: = {}
+## Set by game.gd when the HD portrait overlay is running (full-resolution dialogue faces).
+static var hd_enabled: = false
 
 static func info(name: String) -> Dictionary:
 	return Manifest.ASSETS.get(name, {})
@@ -131,6 +133,8 @@ static func is_duff_line(text: String, hero: String) -> bool:
 
 
 static func portrait_for(text: String, hero: String, partner: String, baby: String) -> String:
+	if hd_enabled and text.begins_with("Brittany: "):
+		return "brittany"
 	if text.begins_with(partner + ": "):
 		return "madison"
 	if text.begins_with(baby + " ") or text.begins_with(baby + "'s ") or text.begins_with(baby + ": "):
@@ -155,8 +159,38 @@ static func octavia_mood(text: String) -> int:
 		return 1
 	return 0
 
+## HD cartoon portraits (assets/art/portraits_hd/<who>.png, 3 cells: happy, deadpan, furious).
+const HD_PORTRAITS: = ["duff", "madison", "octavia", "brittany"]
+const ANGRY_WORDS: = ["pissed", "furious", "stole", "steal", "stealing", "thief", "hate", "rage", "seriously", "unbelievable", "wtf", "screw"]
+const WAIL_WORDS: = ["cry", "cries", "crying", "wail", "wails", "scream", "screams", "screaming", "fuss", "fussy", "shriek", "shrieks", "meltdown"]
+
+## Which HD expression cell (0 happy, 1 deadpan, 2 furious) fits this line.
+static func hd_mood(who: String, line: String, energy: float, happiness: float, kind: String) -> int:
+	var l: = line.to_lower()
+	match who:
+		"madison":
+			return madison_mood(line, happiness, kind)          # same order: happy, meh, upset
+		"octavia":
+			for w in WAIL_WORDS:
+				if _has_word(l, w):
+					return 2
+			return 0 if octavia_mood(line) == 1 else 1
+		"brittany":
+			for w in ANGRY_WORDS:
+				if _has_word(l, w):
+					return 2
+			for w in HAPPY_WORDS:
+				if _has_word(l, w):
+					return 0
+			return 1
+	for w in ANGRY_WORDS:
+		if _has_word(l, w):
+			return 2
+	return 0 if duff_mood(line, energy) == 2 else 1             # old: 0 neutral, 1 tired, 2 happy
+
 static func family_portrait(ci: CanvasItem, who: String, pos: Vector2, mood: int, shades: bool = false) -> void :
 	match who:
+		"brittany": pass                                           # HD only
 		"madison": frame(ci, "portrait_madison", pos, clampi(mood, 0, 2), 0)
 		"octavia": frame(ci, "portrait_octavia", pos, clampi(mood, 0, 2), 0)
 		_: duff_portrait(ci, pos, mood, shades)

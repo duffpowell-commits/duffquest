@@ -10,7 +10,7 @@ const SCRIPT := {
 }
 
 func _ready() -> void:
-	add_child(load("res://main.tscn").instantiate())
+	add_child(load("res://game.tscn").instantiate())
 
 func _key(k: int, pressed: bool) -> void:
 	var e := InputEventKey.new()

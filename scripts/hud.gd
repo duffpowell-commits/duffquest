@@ -135,7 +135,8 @@ func _draw() -> void:
 				mood = Art.madison_mood(line, float(m.happiness), str(m.mood_kind()))
 			elif who == "octavia":
 				mood = Art.octavia_mood(line)
-			Art.family_portrait(self, who, pr.position, mood, bool(m.shades))
+			if not Art.hd_enabled:
+				Art.family_portrait(self, who, pr.position, mood, bool(m.shades))
 			draw_rect(pr, Color("#e88aa8"), false, PX)
 			_mt(f, r.position + Vector2(59, 13), line, r.size.x - 64, 7, 6, w)
 		else:

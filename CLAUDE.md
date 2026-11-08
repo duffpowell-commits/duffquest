@@ -44,10 +44,18 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   **Hazbin Hotel** (thick tapered ink lines, angular shapes, exaggerated faces, flat cel shading;
   humans, not demons). Keep it bright and sunny, opposite of Lethemoor. Prompts: Drive doc
   "DuffQuest — Style bible + Grok prompts" (https://docs.google.com/document/d/1lmADUpw6NO0A_rvmwdox_t2oJoh8yZVLc1AXliRUwnE/edit); capability test doc updated to match.
-  **Open tech issue:** the game renders at 640×360 (viewport stretch), so cartoon portraits get
-  downsampled to ~192 px and lose line quality. Fix options: render the dialogue layer at native
-  resolution (stretch mode canvas_items + pixel world in a SubViewport), or bake portraits at the
-  displayed size with thick lines. Decide when the first portraits land.
+  **Solved (Nov 8): HD dialogue portraits.** Root scene is now `game.tscn` (`scripts/game.gd`): the
+  pixel game (`main.tscn`, unchanged) renders at 640×360 in a SubViewport (nearest, snapped), and
+  `scripts/hd_portrait_overlay.gd` draws the cartoon portraits on a CanvasLayer at the screen's real
+  resolution over the HUD's portrait box (`project.godot`: main scene `game.tscn`, stretch
+  `canvas_items`). `Art.hd_enabled` switches the HUD's old pixel portrait off. Moods:
+  `Art.hd_mood()` maps to cells 0 happy / 1 deadpan / 2 furious (Duff: neutral+tired -> deadpan,
+  ANGRY_WORDS -> furious; Madison same order as before; Octavia: giggle -> happy, WAIL_WORDS ->
+  furious; Brittany lines `Brittany: ...` now get her portrait). Duff's shades gag = dark band drawn
+  over the HD eyes. Touch input verified through the SubViewport (simulated tap on A advanced
+  dialogue). Smoke now boots `game.tscn`. Check tool: `tools/portrait_shot.tscn` -> all 12 faces;
+  render `docs/renders/hd_portraits_dialogue.png`. Tools that need the raw world (`map_shot`) still
+  boot `main.tscn` directly.
 - **Grok art drop (Nov 7):** new files in `grok_art/2026-11-07/`; see `grok_art/NEXT_STEPS_FROM_GROK.md`. Duff is the only playable character. Board 2 is the world style reference.
 - **Art personality pass (EarthBound-era brief, partly superseded):** Duff makes art with Grok. Brief + prompts:
   `docs/art_brief.md` (also a Google Doc "READ ME FIRST - Grok prompts" in Drive folder
