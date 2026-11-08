@@ -41,12 +41,19 @@ func _draw_splash(boss: String, box: Rect2) -> void:
 	# at the bottom with an ink letterbox bar (comic panel look).
 	var card: = Rect2(Vector2((1.0 - e) * vp.x, -vp.y * CARD_LIFT), vp)
 	var bar_y: = card.end.y
-	for strip in [Rect2(0, bar_y, vp.x, vp.y - bar_y)]:
-		draw_rect(strip.intersection(Rect2(Vector2((1.0 - e) * vp.x, 0), vp)), Color(0.06, 0.04, 0.08))
-	draw_rect(Rect2(card.position.x, bar_y - 1.5, vp.x, 3.0), Color(0.02, 0.01, 0.03))
+	var slide: = Rect2(Vector2((1.0 - e) * vp.x, 0), vp)
+	var bar: = Rect2(0, bar_y, vp.x, vp.y - bar_y).intersection(slide)
+	var line: = Rect2(card.position.x, bar_y - 1.5, vp.x, 3.0)
+	# everything is drawn only in the four strips around the dialogue box, never over it
 	for strip in [Rect2(0, 0, vp.x, box.position.y), Rect2(0, box.end.y, vp.x, vp.y - box.end.y),
 			Rect2(0, box.position.y, box.position.x, box.size.y), Rect2(box.end.x, box.position.y, vp.x - box.end.x, box.size.y)]:
 		_blit(tex, card, strip)
+		_fill(bar.intersection(strip), Color(0.06, 0.04, 0.08))
+		_fill(line.intersection(strip), Color(0.02, 0.01, 0.03))
+
+func _fill(r: Rect2, c: Color) -> void:
+	if r.has_area():
+		draw_rect(r, c)
 
 ## Draw the part of `tex` (stretched over `card`) that falls inside `clip`.
 func _blit(tex: Texture2D, card: Rect2, clip: Rect2) -> void:
