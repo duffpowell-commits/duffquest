@@ -11,6 +11,7 @@ var _tex: = {}
 var _splash_boss: = ""                      # boss whose intro splash is up
 var _splash_t: = 0.0                        # seconds since it appeared (slide-in)
 const SPLASH_IN: = 0.28
+const CARD_LIFT: = 0.13                     # share of the screen the intro card is lifted
 
 func _process(d: float) -> void:
 	_splash_t += d
@@ -23,8 +24,8 @@ func _splash(boss: String) -> Texture2D:
 		_tex[key] = load(p) if ResourceLoader.exists(p) else null
 	return _tex[key]
 
-## Boss intro card (M5): the lettered splash fills the space above the dialogue box and slides in
-## from the right; everything but the dialogue box is dimmed so the card reads.
+## Boss intro card: Place's full-bleed "burst" card (Duff's pick, Nov 8) fills the screen and slides
+## in from the right; the dialogue box stays visible on top (the card is drawn around it, not over it).
 func _draw_splash(boss: String, box: Rect2) -> void:
 	var tex: = _splash(boss)
 	if tex == null:
@@ -35,16 +36,25 @@ func _draw_splash(boss: String, box: Rect2) -> void:
 	var k: = clampf(_splash_t / SPLASH_IN, 0.0, 1.0)
 	var e: = 1.0 - pow(1.0 - k, 3.0)                        # ease-out cubic
 	var vp: = get_viewport_rect().size
-	var dim: = Color(0.03, 0.02, 0.06, 0.62 * e)
-	draw_rect(Rect2(0, 0, vp.x, box.position.y), dim)
-	draw_rect(Rect2(0, box.end.y, vp.x, vp.y - box.end.y), dim)
-	draw_rect(Rect2(0, box.position.y, box.position.x, box.size.y), dim)
-	draw_rect(Rect2(box.end.x, box.position.y, vp.x - box.end.x, box.size.y), dim)
-	var area: = Rect2(0, 0, vp.x, box.position.y + box.size.y * 0.15)   # may tuck under the box top
-	var sc: = minf(area.size.x / tex.get_width(), area.size.y / tex.get_height())
-	var size: = tex.get_size() * sc * lerpf(1.08, 1.0, e)
-	var pos: = Vector2(area.get_center().x - size.x * 0.5 + (1.0 - e) * vp.x * 0.6, area.end.y - size.y)
-	draw_texture_rect(tex, Rect2(pos, size), false, Color(1, 1, 1, e))
+	# Names on the cards run down to 70% of the card height; the dialogue box starts at 60% of the
+	# screen. Lift the card by CARD_LIFT so every name clears the box, and fill the strip it leaves
+	# at the bottom with an ink letterbox bar (comic panel look).
+	var card: = Rect2(Vector2((1.0 - e) * vp.x, -vp.y * CARD_LIFT), vp)
+	var bar_y: = card.end.y
+	for strip in [Rect2(0, bar_y, vp.x, vp.y - bar_y)]:
+		draw_rect(strip.intersection(Rect2(Vector2((1.0 - e) * vp.x, 0), vp)), Color(0.06, 0.04, 0.08))
+	draw_rect(Rect2(card.position.x, bar_y - 1.5, vp.x, 3.0), Color(0.02, 0.01, 0.03))
+	for strip in [Rect2(0, 0, vp.x, box.position.y), Rect2(0, box.end.y, vp.x, vp.y - box.end.y),
+			Rect2(0, box.position.y, box.position.x, box.size.y), Rect2(box.end.x, box.position.y, vp.x - box.end.x, box.size.y)]:
+		_blit(tex, card, strip)
+
+## Draw the part of `tex` (stretched over `card`) that falls inside `clip`.
+func _blit(tex: Texture2D, card: Rect2, clip: Rect2) -> void:
+	var r: = card.intersection(clip)
+	if not r.has_area():
+		return
+	var sc: = tex.get_size() / card.size
+	draw_texture_rect_region(tex, r, Rect2((r.position - card.position) * sc, r.size * sc))
 
 func _portrait(who: String) -> Texture2D:
 	if not _tex.has(who):
