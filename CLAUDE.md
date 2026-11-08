@@ -5,7 +5,7 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
-- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M5 bosses, blocked until Place hands over the boss art; M6 old flat-art screens is unblocked).
+- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M6 Duff outfits v2 re-import; then old flat-art screens).
 - **Other agent: "Place"** (Duff's art agent, Cursor/Grok side) owns art: it is redrawing the outfit
   sheets, Waffle Haus sign, bus-stop sign, cats, extra lawn props, and making all 17 bosses. It hands
   drops over in `grok_art/<date>-<name>/` with a HANDOFF.md; Claude wires them in. Code is Claude's.
@@ -204,6 +204,23 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   `docs/renders/see_through_actors.png` (pirate behind oak + pine, raccoon + cat behind maple; before/after).
   Known: the front layer is chosen by Duff's feet, so an enemy in FRONT of such a tree draws under it
   (faded now, so visible). Proper fix = y-sort; logged in tasks/todo.md, only if it shows in play.
+
+- **Done (Nov 8): all 17 bosses wired (M5).** Sheets: `grok_art/2026-11-08-outfits-v2-and-boss-attacks/boss_attacks/`
+  (= PR #12 sheets with Place's unique attack column) -> `tools/import_sheet.py ... --drop 1` (Grok feet y59,
+  game y60). Portraits: `grok_art/2026-11-08-bosses/new_portrait_<b>.png` -> `tools/import_portrait.py` ->
+  `assets/art/portraits_hd/<b>.png` (cells 0 smug / 1 shocked / 2 enraged). `Art.boss_speaker(line)` maps a
+  "Name: ..." line to the boss kind; `portrait_for` returns it (HD only; no pixel boss portraits). Mood
+  (`Art.hd_mood`): defeat line -> shocked, rage line or a shouty line (`_shouty`: ALL-CAPS 4+ letters or two
+  `!`) -> enraged, else smug. Rage is a mid-fight bark, so enraged mostly shows on shouty intros.
+  Intro splash: `tools/import_boss_intro.py` keys the 1920×1080 lettered intros to 960×540
+  `assets/art/boss_intro/<b>.png` (~3.6 MB total; burst previews unused). `hd_portrait_overlay.gd` shows it
+  while the boss's exact intro line is up (`Art.boss_intro_for`): fills the space above the dialogue box,
+  slides in from the right 0.28 s, dims everything but the box. Renders: `docs/renders/qa_boss_intro.png`,
+  `qa_boss_fight.png`, `bosses_before_after.png` (old / new / new attack, facing right).
+  **Gotcha:** after replacing PNGs run `godot --headless --path . --import` before any render, or Godot
+  serves the old cached textures (and new files don't exist to it).
+  Not done: attack poses are single key frames (no wind-up/recovery); hitboxes and projectile anchors not
+  re-tuned to the new silhouettes; burst-preview splashes unused (keyed versions shipped).
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean

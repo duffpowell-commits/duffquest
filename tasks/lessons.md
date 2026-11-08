@@ -5,3 +5,8 @@
 - (Nov 8) Run tools/dressing_check.gd after moving props: first layout put a hydrant on Brittany, a bench on the Ensure and a wall on a raccoon spot.
 - (Nov 8) Don't infer 'heavy hit' from a special name: the starter spatula passes "flip" on every swing. Pass intent explicitly.
 - (Nov 8) Camera2D.offset ignores limits; clamp it yourself or a shake shows the void past the arena.
+
+## Nov 8 (M4/M5 session)
+- Said M5 was "blocked waiting on art" while the boss drop already sat in `grok_art/2026-11-08-bosses/`.
+  Rule: before calling anything blocked on art, `ls grok_art/` and check merged Place PRs (`gh api .../pulls?state=all`).
+- Replaced PNGs, rendered, got the old art. Rule: `godot --headless --path . --import` after any asset swap, before renders.

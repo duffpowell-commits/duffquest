@@ -144,9 +144,40 @@ static func is_duff_line(text: String, hero: String) -> bool:
 	return not (who in preload("res://scripts/cast.gd").names().values())
 
 
+static var _boss_by_name: Dictionary = {}
+
+## Boss kind ("husk", "willnot"...) if this dialogue line is spoken by a boss, else "".
+## A line that yells: an ALL-CAPS word of 4+ letters ("A WORKER?", "TARIFF!") or two '!'.
+static func _shouty(body: String) -> bool:
+	if body.count("!") >= 2:
+		return true
+	var rx: = RegEx.create_from_string("\\b[A-Z]{4,}\\b")
+	return rx.search(body) != null
+
+static func boss_speaker(text: String) -> String:
+	if _boss_by_name.is_empty():
+		var bosses: Dictionary = load("res://scripts/boss.gd").BOSSES
+		var cast: = preload("res://scripts/cast.gd")
+		for k in bosses:
+			_boss_by_name[cast.T(str(bosses[k]["name"]))] = k
+	var c: = text.find(": ")
+	return str(_boss_by_name.get(text.substr(0, c), "")) if c > 0 else ""
+
+## Boss kind if this line is that boss's intro (the line that gets the full-screen splash), else "".
+static func boss_intro_for(text: String) -> String:
+	var k: = boss_speaker(text)
+	if k == "":
+		return ""
+	var b: Dictionary = load("res://scripts/boss.gd").BOSSES[k]
+	return k if text == preload("res://scripts/cast.gd").T(str(b["intro"])) else ""
+
 static func portrait_for(text: String, hero: String, partner: String, baby: String) -> String:
 	if hd_enabled and text.begins_with("Brittany: "):
 		return "brittany"
+	if hd_enabled:
+		var boss: = boss_speaker(text)
+		if boss != "":
+			return boss                                    # HD only: no pixel boss portraits
 	if text.begins_with(partner + ": "):
 		return "madison"
 	if text.begins_with(baby + " ") or text.begins_with(baby + "'s ") or text.begins_with(baby + ": "):
@@ -179,6 +210,15 @@ const WAIL_WORDS: = ["cry", "cries", "crying", "wail", "wails", "scream", "screa
 ## Which HD expression cell (0 happy, 1 deadpan, 2 furious) fits this line.
 static func hd_mood(who: String, line: String, energy: float, happiness: float, kind: String) -> int:
 	var l: = line.to_lower()
+	if boss_speaker(line) == who and who != "":
+		# boss sheets: 0 smug, 1 shocked, 2 enraged
+		var b: Dictionary = load("res://scripts/boss.gd").BOSSES[who]
+		var cast: = preload("res://scripts/cast.gd")
+		if line == cast.T(str(b.get("rage", ""))):
+			return 2
+		if line == cast.T(str(b.get("defeat", ""))):
+			return 1
+		return 2 if _shouty(line.substr(line.find(": ") + 2)) else 0
 	match who:
 		"madison":
 			return madison_mood(line, happiness, kind)          # same order: happy, meh, upset
@@ -201,6 +241,8 @@ static func hd_mood(who: String, line: String, energy: float, happiness: float, 
 	return 0 if duff_mood(line, energy) == 2 else 1             # old: 0 neutral, 1 tired, 2 happy
 
 static func family_portrait(ci: CanvasItem, who: String, pos: Vector2, mood: int, shades: bool = false) -> void :
+	if who in load("res://scripts/boss.gd").BOSSES:
+		return                                                     # bosses: HD portraits only
 	match who:
 		"brittany": pass                                           # HD only
 		"madison": frame(ci, "portrait_madison", pos, clampi(mood, 0, 2), 0)
