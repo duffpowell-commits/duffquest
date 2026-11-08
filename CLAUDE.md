@@ -101,6 +101,25 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   midday sun; new rows `new_ground_textures` (6 seamless 512 swatches), `new_ground_edges`
   (curbs, lines, transitions), `new_fences_walls`.
 
+- **Done (Nov 7, late): new character sheets in.** `tools/import_sheet.py` keyed Grok's
+  `grok_art/2026-11-07/*_sheet_sos_256.png` into `duff_home`, `ch_madison`, `ch_brittany`, `ch_jen`
+  (feet dropped 3 px to the y=60 origin). **Gap:** outdoors Duff wears an outfit sheet
+  (`duff_<armor>_<shoes>`, 12 of them + suit/shades/dress, `player.gd` line ~138), still the OLD art,
+  so the new look only shows at home. Grok needs the outfit variants (sheet rows `duff_*`).
+- **Done (Nov 7, late): tile ground for the town.** `tools/import_ground.py` cuts Grok's ground
+  sheets into `assets/art/ground/ground_atlas.{png,json}` (64 px tiles = 32 world units; transition
+  tiles classified by their corner pixels: all 4 pairs × 12 masks). Layout = `data/town_ground.txt`
+  (one letter per grid corner, dual grid; first written by `tools/gen_town_ground.py` to match the old
+  roads; hand-edit from now on). `scripts/ground.gd` builds and caches the texture at runtime;
+  `main.gd _draw_outside` draws it, then `map_objects` (old buildings/trees/props cut out of
+  `map_outside` by `tools/extract_map_objects.py`; lamp posts + picket fence were too thin and are
+  gone until Grok's clutter sheet). Collisions, doors, NPC spots untouched. Renders:
+  `docs/renders/town_ground_before_after.png`, `town_ground_full.png`, `town_ground_closeup.png`.
+  Whole-map shot tool: `tools/map_shot.tscn` (zooms out, hides HUD). Layout rules: only pairs Grok
+  drew can touch (sidewalk/asphalt, grass/sidewalk, grass/asphalt, dirt/grass); no diagonal pairs;
+  that's why every road has sidewalks. Brick and gravel have no transitions yet (fills only).
+  Open for Duff: more grass / less pavement? grass is darker olive than the old bright lawn.
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto

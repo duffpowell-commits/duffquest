@@ -1,0 +1,16 @@
+# town ground. tile 64 origin -10 -32. g grass s sidewalk a asphalt d dirt b brick v gravel
+tile 64
+origin -10 -32
+gggggggggsasgggggggggg
+gggggggggsasgggggggggg
+gggggggggsasgggggggggg
+gggsgggsgsassggggsgggg
+gggsgggsgsassggggsgggg
+ssssssssssasssssssssss
+aaaaaaaaaaaaaaaaaaaaaa
+ssssssssssasssssssssss
+gggsgggsgsassggggsgggg
+gggsgggsgsassggggsgggg
+gggggggggsasgggggggggg
+gggggggggsasgggggggggg
+gggggggggsasgggggggggg

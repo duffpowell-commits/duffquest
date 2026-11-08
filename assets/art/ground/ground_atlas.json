@@ -1,0 +1,102 @@
+{
+ "tile": 64,
+ "cols": 16,
+ "materials": {
+  "grass": [
+   0,
+   1,
+   2,
+   3
+  ],
+  "sidewalk": [
+   4,
+   5,
+   6,
+   7
+  ],
+  "asphalt": [
+   8,
+   9,
+   10,
+   11
+  ],
+  "brick": [
+   12,
+   13,
+   14,
+   15
+  ],
+  "dirt": [
+   16,
+   17,
+   18,
+   19
+  ],
+  "gravel": [
+   20,
+   21,
+   22,
+   23
+  ]
+ },
+ "transitions": {
+  "sidewalk|asphalt|1100": 31,
+  "sidewalk|asphalt|0011": 32,
+  "sidewalk|asphalt|1010": 33,
+  "sidewalk|asphalt|0101": 34,
+  "grass|sidewalk|1100": 35,
+  "grass|sidewalk|0011": 36,
+  "grass|sidewalk|1010": 37,
+  "grass|sidewalk|0101": 38,
+  "sidewalk|asphalt|0001": 39,
+  "sidewalk|asphalt|0010": 40,
+  "sidewalk|asphalt|1000": 41,
+  "sidewalk|asphalt|0100": 42,
+  "sidewalk|asphalt|0111": 43,
+  "sidewalk|asphalt|1011": 44,
+  "sidewalk|asphalt|1110": 45,
+  "sidewalk|asphalt|1101": 46,
+  "grass|sidewalk|0001": 47,
+  "grass|sidewalk|0010": 48,
+  "grass|sidewalk|1000": 49,
+  "grass|sidewalk|0100": 50,
+  "grass|sidewalk|0111": 51,
+  "grass|sidewalk|1011": 52,
+  "grass|sidewalk|1110": 53,
+  "grass|sidewalk|1101": 54,
+  "grass|asphalt|0001": 55,
+  "grass|asphalt|0010": 56,
+  "grass|asphalt|1000": 57,
+  "grass|asphalt|0100": 58,
+  "grass|asphalt|0111": 59,
+  "grass|asphalt|1011": 60,
+  "grass|asphalt|1110": 61,
+  "grass|asphalt|1101": 62,
+  "grass|asphalt|1100": 63,
+  "grass|asphalt|0101": 64,
+  "grass|asphalt|0011": 65,
+  "grass|asphalt|1010": 66,
+  "dirt|grass|0001": 67,
+  "dirt|grass|0010": 68,
+  "dirt|grass|1000": 69,
+  "dirt|grass|0100": 70,
+  "dirt|grass|0111": 71,
+  "dirt|grass|1011": 72,
+  "dirt|grass|1110": 73,
+  "dirt|grass|1101": 74,
+  "dirt|grass|1100": 75,
+  "dirt|grass|0101": 76,
+  "dirt|grass|0011": 77,
+  "dirt|grass|1010": 78
+ },
+ "decals": {
+  "line_H": 24,
+  "line_V": 25,
+  "crosswalk": 26,
+  "storm_drain": 27,
+  "manhole": 28,
+  "oil_stain": 29,
+  "puddle": 30,
+  "driveway_apron": 79
+ }
+}
