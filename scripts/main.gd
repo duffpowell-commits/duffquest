@@ -32,6 +32,7 @@ const Errands: = preload("res://scripts/errands.gd")
 const Buffs: = preload("res://scripts/buffs.gd")
 const Dates: = preload("res://scripts/dates.gd")
 const Transit: = preload("res://scripts/transit.gd")
+const FunFacts: = preload("res://scripts/fun_facts.gd")
 const Art: = preload("res://scripts/art.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
 const CombatScript: = preload("res://scripts/combat.gd")
@@ -335,6 +336,7 @@ var arena_boss: Node = null
 var final_timer: = 0.0
 var finale_t: = 0.0
 var t: = 0.0
+var fact_i: = randi()   # next fun fact (Palahniuk layer, M9); random start, then in order, no repeats
 
 func _ready() -> void:
 	add_child(preload("res://scripts/hd_presentation.gd").new())
@@ -546,9 +548,9 @@ func new_game(write_save: bool = true) -> void:
 	market = Market.new_state(randi())
 	jen_text_daily()
 	errand_new_day()
-	_say(["So here's the deal. Keep {partner} happy, pay the damn rent, don't let some porch pirate jack our stuff. Heard.",
+	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Heard.",
 		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
-		"Every Monday, rent and bills ($%d) hit like a truck. The Twisted Fork (bottom-right) needs a cook. They always need a cook." % (RENT + BILLS)])
+		"Every Monday, rent and bills: $%d. Rent is due. Rent is always due. The Twisted Fork (bottom-right) needs a cook. They always need a cook." % (RENT + BILLS)])
 	if write_save:
 		save_game()
 
@@ -715,7 +717,7 @@ func load_game() -> bool:
 		new_game(true)
 		return false
 	from_dict(d)
-	_say(["So where was I. Day %d, %s, %s." % [day_count, DAY_NAMES[day_i % 7], clock_text()]])
+	_say(["So where was I. Day %d, %s, %s." % [day_count, DAY_NAMES[day_i % 7], clock_text()], next_fact()])
 	jen_text_daily()
 	_say(errand_new_day())
 	return true
@@ -1019,7 +1021,7 @@ func shower() -> void:
 	advance_clock(20.0)
 	if fryer_smell:
 		fryer_smell = false
-		_toast("So I scrub the fryer off me. Now I smell like Irish Spring and regret. Upgrade.")
+		_toast("So I scrub the fryer off me. Water burns at 160. Fryer oil runs at 350. My forearms do the math.")
 	else:
 		_toast("I'm already clean, man. Water bill's high enough.")
 
@@ -1083,7 +1085,7 @@ func use_item(id: String) -> void:
 	if id == "cake":
 		inventory["cake"] -= 1
 		energy = minf(energy_cap(), energy + energy_gain(60.0))
-		var msg: = "I eat {partner}'s Black Forest cake. Cherries, chocolate, love. +60 Energy"
+		var msg: = "I eat {partner}'s Black Forest cake. Cherries. Chocolate. Love. Hell of a girl. +60 Energy"
 		if grant_buff("strength", Buffs.STRENGTH_MINS):
 			msg += ". STRENGTH up: +25% damage for 5 hrs"
 		_toast(msg)
@@ -1148,7 +1150,7 @@ func bed_menu() -> void:
 func go_to_sleep(passed_out: bool) -> void:
 	night_report = []
 	if passed_out:
-		night_report.append("I pass out at 2 AM like a damn rookie. {partner} drags me to bed. -5 Happiness")
+		night_report.append("I pass out at 2 AM. Floor. Fully dressed. My body quit without notice. {partner} drags me to bed. -5 Happiness")
 		happiness = maxf(0.0, happiness - 5.0)
 	if cats_fed_day != day_count:
 		night_report.append("Nobody feeds the cats. They yowl till 1 AM. -5 Happiness")
@@ -1256,7 +1258,7 @@ func _wake(energy_penalty: int) -> void:
 const KINDNESS: = [
 	["lunch", "{partner} packed my lunch. Note on the bag: \"Don't let them 86 you. Love, {partner}\" +15 Energy"],
 	["coffee", "{partner} makes my coffee exactly how I like it. Doesn't even ask. +10 Energy"],
-	["mirror", "I find a sticky note on the mirror: \"You're doing great, babe. The landlord is a goblin.\" +5 Energy"],
+	["mirror", "I find a sticky note on the mirror: \"You're doing great, babe. The landlord is a goblin.\" Hell of a girl. +5 Energy"],
 	["kiss", "{partner} kisses me on the way out. \"Go get 'em, chef.\" (Heat starts full today.)"],
 	["proud", ""],
 ]
@@ -1322,7 +1324,8 @@ func pay_rent() -> Array:
 		money -= due
 		rent_debt = 0
 		weeks_paid += 1
-		return ["Monday. I pay $%d (%s%s). $%d left. Landlord's third boat thanks me." % [due, parts, (", back rent $%d" % (due - base)) if due > base else "", money]]
+		return ["Monday. Rent is due. Rent is always due.",
+			"I pay $%d (%s%s). $%d left. Landlord's third boat thanks me." % [due, parts, (", back rent $%d" % (due - base)) if due > base else "", money]]
 	var partial: = maxi(0, money)
 	money -= partial
 	rent_debt = due - partial + LATE_FEE
@@ -1688,7 +1691,7 @@ func apply_shift_result(r: Dictionary) -> void:
 	var old_title: = pay_title()
 	shifts_worked += 1
 	if pay_title() != old_title:
-		_say(["PROMOTED! I'm %s at the Fork now. Pay x%.1f. HR calls it 'a growth journey.' I call it a raise." % [pay_title(), pay_mult()], "Rent hasn't gone up (yet). I gotta invest the raise before the landlord smells it."])
+		_say(["PROMOTED! I'm %s at the Fork now. Pay x%.1f. HR calls it 'a growth journey.' I call it a raise." % [pay_title(), pay_mult()], "Rent hasn't gone up. Yet. Landlords smell a raise the way sharks smell blood. I gotta invest it fast."])
 	if r["achievement"] != "" and not achievements.has(r["achievement"]):
 		achievements.append(r["achievement"])
 	if r["inspector"] == "fail":
@@ -2905,7 +2908,7 @@ func _arena_process(delta: float) -> void:
 			_finish_final()
 		return
 	if energy <= 0.0:
-		story_lose("I get knocked out. {partner} picks me up from the curb. Again. Hell of a girl.")
+		story_lose("I get knocked out. Me and the sidewalk get acquainted. {partner} scrapes me off the curb. Again. Hell of a girl.")
 		return
 	if arena_id == "willnot" and final_timer > 0.0:
 		var before: = final_timer
@@ -4016,7 +4019,7 @@ func curveball_new_day() -> Array:
 	var keep: Array = []
 	for b in bills:
 		if int(b["due"]) < day_count:
-			out.append("I never open the '%s' mail, so it decides for me. Mail does that now." % str(Life.EVENTS[str(b["id"])]["title"]))
+			out.append("I never open the '%s' mail. Unopened, it's a rumor. Opened, it's a verdict. It decides anyway." % str(Life.EVENTS[str(b["id"])]["title"]))
 			out.append_array(resolve_bill(str(b["id"]), "auto"))
 		else:
 			keep.append(b)
@@ -4045,7 +4048,7 @@ func deliver_curveball(id: String) -> Array:
 
 func mail_menu() -> void:
 	if bills.is_empty():
-		_say(["I check the mail. Pizza coupon and a pre-approved credit card at 34% APR. I keep the coupon."])
+		_say(["I check the mail. A pizza coupon. A credit card at 34% APR that already loves me. I keep the coupon. It wants nothing back."])
 		return
 	var b: Dictionary = bills[0]
 	var id: = str(b["id"])
@@ -4195,6 +4198,10 @@ func buy_car() -> Array:
 		out.append(a)
 	return out
 
+func next_fact() -> String:
+	fact_i += 1
+	return FunFacts.pick(fact_i)
+
 func ride_bus(to: String) -> Array:
 	AudioScript.sfx("bus")
 	if not Transit.STOPS.has(to):
@@ -4218,6 +4225,8 @@ func ride_bus(to: String) -> Array:
 		out.append("I drive the minivan to %s. %d minutes. I use my blinker. Like a damn dad." % [Transit.STOPS[to]["name"], int(ride)])
 	else:
 		out.append("I wait %d min, ride %d min to %s%s. %s" % [int(wait), int(ride), Transit.STOPS[to]["name"], (" (-$%d)" % cost) if cost > 0 else " (pass)", Transit.RIDE_LINES[bus_rides % Transit.RIDE_LINES.size()]])
+	if randf() < 0.35:
+		out.append(next_fact())
 	if bus_rides >= 10:
 		var a: = _unlock("Transit Legend")
 		if a != "":

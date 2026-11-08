@@ -1,11 +1,11 @@
 72322a848ab928aa5c89f0cb78209805
-::res://::1794149935
-CLAUDE.md::TextFile::-1::1794149935::0::1::::<><><>0<>0<><>::
+::res://::1794150517
+CLAUDE.md::TextFile::-1::1794151403::0::1::::<><><>0<>0<><>::
 export_presets.cfg::TextFile::-1::1794123450::0::1::::<><><>0<>0<><>::
 game.tscn::PackedScene::-1::1794123450::0::1::::<><><>0<>0<><>::res://scripts/game.gd
 icon.svg::CompressedTexture2D::8095849722990087210::1794123450::1794123450::1::::<><><>0<>0<>eb4d2d835c084f004c49a8b4a3301594<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 main.tscn::PackedScene::-1::1794123450::0::1::::<><><>0<>0<><>::res://scripts/main.gd
-QUEUE.md::TextFile::-1::1794149935::0::1::::<><><>0<>0<><>::
+QUEUE.md::TextFile::-1::1794151403::0::1::::<><><>0<>0<><>::
 ::res://assets/::1794149935
 ::res://assets/art/::1794145455
 arena_alley.png::CompressedTexture2D::5583501881711354390::1794123450::1794123450::1::::<><><>0<>0<>9339017803300d55de99698ae8c293b5<>res://.godot/imported/arena_alley.png-2a9280d49b11203c57f1c3e9755a86da.ctex::
@@ -209,7 +209,7 @@ willnot.png::CompressedTexture2D::4150960132487068820::1794149935::1794148588::1
 ::res://assets/art/ground/::1794123450
 ground_atlas.json::JSON::-1::1794123450::0::1::::<><><>0<>0<><>::
 ground_atlas.png::CompressedTexture2D::9178419450116656645::1794123450::1794123450::1::::<><><>0<>0<>1d018483112fedbe4e2ea25dfdd0837a<>res://.godot/imported/ground_atlas.png-687ee4b494a820f7c27c8a44fa0f1f0b.ctex::
-::res://assets/art/portraits_hd/::1794145455
+::res://assets/art/portraits_hd/::1794150196
 allergy.png::CompressedTexture2D::6921697925648705456::1794145455::1794145455::1::::<><><>0<>0<>82470099e11a36f10a3289428410bc1a<>res://.godot/imported/allergy.png-1861512d34c3e906f391446434e6eed2.ctex::
 baron.png::CompressedTexture2D::5630560525266715583::1794145455::1794145455::1::::<><><>0<>0<>163f61724721cf787922aaa748731a20<>res://.godot/imported/baron.png-0ea95e2bf5b69eb9d82b30288b597198.ctex::
 bdaydad.png::CompressedTexture2D::4045774838366905802::1794145455::1794145455::1::::<><><>0<>0<>9184c83b03f4f69c7068cb67d6ca5e62<>res://.godot/imported/bdaydad.png-6087a8489ff516ff56d7df56d93c4a40.ctex::
@@ -226,8 +226,8 @@ fences.png::CompressedTexture2D::8580036281333162966::1794145455::1794145455::1:
 ghoster.png::CompressedTexture2D::7450956240557378118::1794145455::1794145455::1::::<><><>0<>0<>00ba7aae29b31018ea6fbf4fd17d4088<>res://.godot/imported/ghoster.png-3dc27bc523c121541ad1a7726e24c0c9.ctex::
 gymbro.png::CompressedTexture2D::727929142791158026::1794145455::1794145455::1::::<><><>0<>0<>c459c50500bf9e5ba0bfe8af0e21d8d8<>res://.godot/imported/gymbro.png-4ea46e175e5c0515afcf5305e1728932.ctex::
 husk.png::CompressedTexture2D::2516429038479495463::1794145455::1794145455::1::::<><><>0<>0<>fa6e83ed3d54870d6cb8d0051899f25e<>res://.godot/imported/husk.png-d38a21c7fd8ca5acf6e905b0be187cc8.ctex::
-madison.png::CompressedTexture2D::785255783790925722::1794149961::1794149982::1::::<><><>0<>0<>fa36edc8404292106db5a17032e86343<>res://.godot/imported/madison.png-ac393befd84c410c85402d5d4862b2dc.ctex::
-octavia.png::CompressedTexture2D::3001768000326774033::1794149962::1794149982::1::::<><><>0<>0<>59766e12f43518cf73358e737fde9a7a<>res://.godot/imported/octavia.png-a74603c5d2790bbb645622c29ab66622.ctex::
+madison.png::CompressedTexture2D::785255783790925722::1794150196::1794149982::1::::<><><>0<>0<>fa36edc8404292106db5a17032e86343<>res://.godot/imported/madison.png-ac393befd84c410c85402d5d4862b2dc.ctex::
+octavia.png::CompressedTexture2D::3001768000326774033::1794150196::1794149982::1::::<><><>0<>0<>59766e12f43518cf73358e737fde9a7a<>res://.godot/imported/octavia.png-a74603c5d2790bbb645622c29ab66622.ctex::
 regular.png::CompressedTexture2D::6788159079406213055::1794145455::1794145455::1::::<><><>0<>0<>4ab7dd4c6ee7de398abc395a9179c466<>res://.godot/imported/regular.png-4b9be5dd53304efd47c18e8833bc1a0f.ctex::
 sendback.png::CompressedTexture2D::2898469713855254000::1794145455::1794145455::1::::<><><>0<>0<>736ef8eb024aaa1f6da96d04a6d29c52<>res://.godot/imported/sendback.png-9104b919ae566f35870503387c8e3636.ctex::
 willnot.png::CompressedTexture2D::8842030974972145844::1794145455::1794145455::1::::<><><>0<>0<>d678deefb329d5f62ce1346cce198229<>res://.godot/imported/willnot.png-b67cbc52a55fb63afcde116af37d6553.ctex::
@@ -306,7 +306,7 @@ show_and_tell_family.json::JSON::-1::1794123450::0::1::::<><><>0<>0<><>::
 town_dressing.json::JSON::-1::1794123450::0::1::::<><><>0<>0<><>::
 town_ground.txt::TextFile::-1::1794123450::0::1::::<><><>0<>0<><>::
 words5.txt::TextFile::-1::1794123450::0::1::::<><><>0<>0<><>::
-::res://scripts/::1794149935
+::res://scripts/::1794151281
 art.gd::GDScript::2550548600385224652::1794145455::0::1::::<>RefCounted<><>0<>0<><>::
 art_manifest.gd::GDScript::5961543388782625655::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
 audio.gd::GDScript::3225730722935409287::1794123450::0::1::::<>Node<><>0<>0<><>::
@@ -315,7 +315,7 @@ bounties.gd::GDScript::4675071124680615419::1794123450::0::1::::<>RefCounted<><>
 buffs.gd::GDScript::544202506724112267::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
 cast.gd::GDScript::1460583327694310::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
 cat.gd::GDScript::3562368497095838188::1794123450::0::1::::<>Node2D<><>0<>0<><>::
-combat.gd::GDScript::8069590089882306159::1794123450::0::1::::<>Node<><>0<>0<><>::
+combat.gd::GDScript::8069590089882306159::1794151181::0::1::::<>Node<><>0<>0<><>::
 combat_fx.gd::GDScript::8251601134129205906::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 combat_ui.gd::GDScript::4464409635552427850::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 dates.gd::GDScript::5217618890488887100::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
@@ -323,6 +323,7 @@ dressing.gd::GDScript::6501178607425328129::1794124021::0::1::::<>RefCounted<><>
 dressing_front.gd::GDScript::3548493729117032304::1794124021::0::1::::<>Node2D<><>0<>0<><>::
 enemy.gd::GDScript::7587929866697220378::1794123450::0::1::::<>CharacterBody2D<><>0<>0<><>::
 errands.gd::GDScript::3633149626012422385::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
+fun_facts.gd::GDScript::2719777657080922771::1794151234::0::1::::<>RefCounted<><>0<>0<><>::
 game.gd::GDScript::7434523618496126373::1794123450::0::1::::<>Node<><>0<>0<><>::
 gear.gd::GDScript::5767642037958904639::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
 ground.gd::GDScript::6643937288334106555::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
@@ -330,8 +331,8 @@ hd_portrait_overlay.gd::GDScript::7707588158962157582::1794149935::0::1::::<>Nod
 hd_presentation.gd::GDScript::5556659835366505026::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 hud.gd::GDScript::3810798102636718842::1794149935::0::1::::<>Node2D<><>0<>0<><>::
 juice.gd::GDScript::468279882606452838::1794123450::0::1::::<>Node<><>0<>0<><>::
-life.gd::GDScript::1274800509780785053::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
-main.gd::GDScript::1399671364199983385::1794123450::0::1::::<>Node2D<><>0<>0<><>::
+life.gd::GDScript::1274800509780785053::1794151181::0::1::::<>RefCounted<><>0<>0<><>::
+main.gd::GDScript::1399671364199983385::1794151308::0::1::::<>Node2D<><>0<>0<><>::
 market.gd::GDScript::7416366156540767486::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
 moods.gd::GDScript::6337127773889927057::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
 player.gd::GDScript::2962987747485535624::1794123450::0::1::::<>CharacterBody2D<><>0<>0<><>::
@@ -339,7 +340,7 @@ player_shot.gd::GDScript::6448353216619372913::1794123450::0::1::::<>Node2D<><>0
 projectile.gd::GDScript::2642939825355094370::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 raccoon.gd::GDScript::9055406710845002116::1794123450::0::1::::<>CharacterBody2D<><>0<>0<><>::
 save_game.gd::GDScript::4327914828233837449::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
-shift.gd::GDScript::2670496410079115969::1794123450::0::1::::<>Node2D<><>0<>0<><>::
+shift.gd::GDScript::2670496410079115969::1794151181::0::1::::<>Node2D<><>0<>0<><>::
 tone.gd::GDScript::9156450939499320463::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
 touch_controls.gd::GDScript::1759517423240609614::1794149935::0::1::::<>Node2D<><>0<>0<><>::
 transit.gd::GDScript::252395163706373737::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
@@ -354,7 +355,7 @@ baby.gd::GDScript::8929982753906990675::1794123450::0::1::::<>Node2D<><>0<>0<><>
 backwalk.gd::GDScript::8821978181377273663::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 blackheads.gd::GDScript::8111791982547113644::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 card.gd::GDScript::5278627033578650719::1794149935::0::1::::<>Node2D<><>0<>0<><>::
-ending.gd::GDScript::4631878208949972427::1794123450::0::1::::<>Node2D<><>0<>0<><>::
+ending.gd::GDScript::4631878208949972427::1794151181::0::1::::<>Node2D<><>0<>0<><>::
 fryer.gd::GDScript::403711383170906003::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 garnish.gd::GDScript::3555368578908452448::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 gear_screen.gd::GDScript::7673513559594789581::1794123450::0::1::::<>Node2D<><>0<>0<><>::
@@ -366,13 +367,13 @@ pharmacy.gd::GDScript::4627970509233958204::1794123450::0::1::::<>Node2D<><>0<>0
 phone.gd::GDScript::8930918803096947043::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 pickles.gd::GDScript::255114966995884089::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 plasma.gd::GDScript::1266903321614270115::1794123450::0::1::::<>Node2D<><>0<>0<><>::
-prep.gd::GDScript::1726041108780152411::1794123450::0::1::::<>Node2D<><>0<>0<><>::
+prep.gd::GDScript::1726041108780152411::1794151181::0::1::::<>Node2D<><>0<>0<><>::
 quiz.gd::GDScript::2043356276816659250::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 quiz_bank.gd::GDScript::8606225984818459526::1794123450::0::1::::<>RefCounted<><>0<>0<><>::
 salad.gd::GDScript::8544932649720924434::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 sandwich.gd::GDScript::5812082176478532207::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 settings.gd::GDScript::8413168627914645762::1794123450::0::1::::<>Node2D<><>0<>0<><>::
-shop.gd::GDScript::2381201488787682641::1794123450::0::1::::<>Node2D<><>0<>0<><>::
+shop.gd::GDScript::2381201488787682641::1794151181::0::1::::<>Node2D<><>0<>0<><>::
 show_tell.gd::GDScript::1317600553372628724::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 stealth.gd::GDScript::233818392889361173::1794123450::0::1::::<>Node2D<><>0<>0<><>::
 symphony.gd::GDScript::5319919377770797616::1794123450::0::1::::<>Node2D<><>0<>0<><>::
@@ -383,7 +384,7 @@ hd2d.gdshader::Shader::7474509219637023304::1794123450::0::1::::<><><>0<>0<><>::
 ::res://tasks/::1794149935
 lessons.md::TextFile::-1::1794149935::0::1::::<><><>0<>0<><>::
 todo.md::TextFile::-1::1794124021::0::1::::<><><>0<>0<><>::
-::res://tools/::1794149935
+::res://tools/::1794151281
 actor_fade_shot.gd::GDScript::7916786354093214199::1794124021::0::1::::<>Node<><>0<>0<><>::
 actor_fade_shot.tscn::PackedScene::-1::1794124021::0::1::::<><><>0<>0<><>::res://tools/actor_fade_shot.gd
 combat_shot.gd::GDScript::7005095281313077551::1794123450::0::1::::<>Node<><>0<>0<><>::
@@ -402,3 +403,7 @@ qa_shot.tscn::PackedScene::-1::1794123450::0::1::::<><><>0<>0<><>::res://tools/q
 smoke.gd::GDScript::879066701685882942::1794123450::0::1::::<>Node<><>0<>0<><>::
 smoke.tscn::PackedScene::-1::1794123450::0::1::::<><><>0<>0<><>::res://tools/smoke.gd
 text_fit.gd::GDScript::146513478754910280::1794149935::0::1::::<>SceneTree<><>0<>0<><>::
+voice_shot.gd::GDScript::4707904547081266126::1794151308::0::1::::<>Node<><>0<>0<><>::
+voice_shot.tscn::PackedScene::-1::1794151276::0::1::::<><><>0<>0<><>::res://tools/voice_shot.gd
+::res://tools/rewrites/::1794151173
+palahniuk_m9.json::JSON::-1::1794151308::0::1::::<><><>0<>0<><>::

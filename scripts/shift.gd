@@ -86,8 +86,8 @@ static func quip(g: String) -> String:
 		"S": return "Chef's kiss. And then corporate takes the credit."
 		"A": return "Clean. Chef nods. That's the whole bonus."
 		"B": return "Solid. Nobody gets sick. Legally."
-		"C": return "Eh. Expo sighs loud enough to bill me for it."
-	return "Disaster. Some influencer's out there filming a 14-part TikTok about it."
+		"C": return "Eh. Expo sighs loud enough to bill me. Nobody tips the fry cook."
+	return "Disaster. Some influencer's filming a 14-part TikTok about it. Nobody tips the fry cook."
 
 static func compute_pay(md: String, n_stations: int, grade: String, bonus: int, rpay: float, walked: int) -> Dictionary:
 	var base: = int(round(rpay)) if md == "rush" else BASE_PER_STATION * n_stations

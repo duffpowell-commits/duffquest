@@ -79,7 +79,7 @@ func _timeout() -> void:
 
 func chop() -> void:
 	if t - last_chop < 0.18:
-		hurt(5, "I rush the knife. Nick my finger. Band-aid + glove. -5 Energy")
+		hurt(5, "I rush the knife. Nick my finger. Band-aid. Glove. The body keeps the receipts. -5 Energy")
 		notes.append("I cut myself rushing the chop.")
 		last_chop = t
 		chops += 1

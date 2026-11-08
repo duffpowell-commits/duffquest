@@ -72,12 +72,12 @@ const HOUSEHOLD: = 45
 const SPIKE_DAYS: = 7
 const SPIKE: = 4
 const EVENTS: = {
-	"sneakers": {"title": "Red sneakers gave out", "body": "My left red sneaker's sole is flapping like it's giving a TED talk. I walk everywhere. Need shoes. $55.", "cost": 55, "plan": [3, 22],
+	"sneakers": {"title": "Red sneakers gave out", "body": "My left red sneaker's sole flaps like a mouth when I walk. It only knows one word. The word is $55.", "cost": 55, "plan": [3, 22],
 		"ignore": {"days": 3, "fee": 85, "text": "Sole flaps clean off on Leavenworth. Emergency red sneakers at 'urgent' pricing, plus blister stuff: $%d.", "happy": 0.0, "cause": "" } },
 	"work_shoes": {"title": "Black work shoes worn bald", "body": "My black non-slip Fork shoes are bald. Chef: 'Shoes are a personal investment in OUR brand.' Not reimbursed. $70.", "cost": 70, "plan": [3, 27],
-		"ignore": {"days": 3, "fee": 110, "text": "I slide across the whole line in bald work shoes. Urgent care + new non-slips: $%d. Workers' comp: 'pending.'", "happy": 0.0, "cause": "" } },
+		"ignore": {"days": 3, "fee": 110, "text": "I slide the whole length of the line on bald shoes. The body keeps the receipts. Urgent care + non-slips: $%d. Workers' comp: 'pending.'", "happy": 0.0, "cause": "" } },
 	"snow_day": {"title": "Snow day: buses are crawling", "body": "I check the app: the #18 is 40 minutes late. Rideshare says 'surge: snow vibes.' $38. Or I walk.", "cost": 38, "plan": [],
-		"ignore": {"days": 0, "fee": 0, "text": "I walk to the Fork in the snow. Toes file a grievance. HR loses it. -25 Energy.", "happy": 0.0, "cause": "", "energy": 25.0 } },
+		"ignore": {"days": 0, "fee": 0, "text": "I walk to the Fork in the snow. Toes go numb, then white, then quiet. The body keeps the receipts. -25 Energy.", "happy": 0.0, "cause": "", "energy": 25.0 } },
 	"fare_fine": {"title": "Fare inspector ticket", "body": "My transfer expires four minutes before the inspector gets on. Guy's got a quota. $30.", "cost": 30, "plan": [],
 		"ignore": {"days": 7, "fee": 60, "text": "Now the fare ticket's doubled: $%d. Punishing poor people is a growth market.", "happy": 0.0, "cause": "" } },
 	"missed_bus": {"title": "Missed the bus", "body": "The 7:42 pulls away while I'm tying my shoe. Late to the Fork. Chef docks me $15 'for accountability.'", "loss": 15 },
@@ -93,12 +93,12 @@ const EVENTS: = {
 	"phone": {"title": "Cracked phone screen", "body": "I drop the {phone}. Screen-first, like toast.", "cost": 80, "plan": [],
 		"ignore": {"days": 0, "fee": 0, "text": "", "happy": 0.0, "cause": "" } },
 	"vet": {"title": "Vet visit for the cats", "body": "Checkups for all three cats: $75. Plus a $20 'behavioral surcharge' because {cat3} bites the vet. Worth it.", "cost": 95, "plan": [3, 36],
-		"ignore": {"days": 2, "fee": 0, "text": "I skip the vet. The cats know. -5 Happiness, {cat3} trust -1.", "happy": 5.0, "cause": "", "trust": 1 } },
+		"ignore": {"days": 2, "fee": 0, "text": "I skip the vet. The cats know. Cats keep ledgers. -5 Happiness, {cat3} trust -1.", "happy": 5.0, "cause": "", "trust": 1 } },
 	"parking": {"title": "Parking ticket (minivan)", "body": "I park in a loading zone for 'four minutes.' The city's ticket robot disagrees. $30.", "cost": 30, "plan": [],
 		"ignore": {"days": 7, "fee": 60, "text": "Parking ticket doubles: $%d. Robot gets a bonus.", "happy": 0.0, "cause": "" } },
 	"rent_hike": {"title": "Rent increase notice", "body": "Landlord's 'aligning with market synergies.' The market is three landlords in a group chat. Rent +$15/week next Monday.", "cost": 0, "plan": [], "hike": 15 },
 	"catering": {"title": "Side gig: catering", "body": "Chef corners me: his 'side hustle' needs a hand at a wedding tonight. $80 cash, 4 hours, -30 Energy. Exposure included.", "gig": 80 },
-	"formula_spike": {"title": "Formula prices spike", "body": "I go to buy formula and it's $4 more everywhere. 'Shortage.' Record profits, though. Weird.", "info": true },
+	"formula_spike": {"title": "Formula prices spike", "body": "Formula's $4 more everywhere. 'Shortage.' Record profits, though. A shortage is just a price with a press release.", "info": true },
 	"tax_refund": {"title": "Tax refund!", "body": "The IRS remembers I exist. In a GOOD way. Billionaires get this every day. +$120.", "gain": 120 },
 	"found20": {"title": "Found $20", "body": "A $20 bill in last winter's coat. Past me is a hero.", "gain": 20 },
 }

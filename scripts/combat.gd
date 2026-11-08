@@ -528,7 +528,7 @@ func _finish_feast() -> void:
 	fed_t = 8.0
 	if fx:
 		fx.text(m.player.global_position + Vector2(0, -26), "+%d Energy" % int(heal), Color("#a0ff90"))
-	m._toast("I wolf down family meal. Somebody's grandma's recipe. +%d Energy, hitting harder for 8s." % int(heal))
+	m._toast("I wolf down family meal. Somebody's grandma made this once, for love. Now it's a line item. +%d Energy, hitting harder for 8s." % int(heal))
 
 func _salamander(sp: Dictionary, power: float) -> void:
 	_pay(sp)
