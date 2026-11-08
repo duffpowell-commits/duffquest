@@ -6,6 +6,7 @@ const RaccoonScript: = preload("res://scripts/raccoon.gd")
 const HudScript: = preload("res://scripts/hud.gd")
 const TouchScript: = preload("res://scripts/touch_controls.gd")
 const IsoTest: = preload("res://scripts/iso/iso_test.gd")
+const Ground: = preload("res://scripts/ground.gd")
 const ShiftScript: = preload("res://scripts/shift.gd")
 const CatScript: = preload("res://scripts/cat.gd")
 const SaveGame: = preload("res://scripts/save_game.gd")
@@ -1952,7 +1953,11 @@ func _draw() -> void:
 func _draw_outside() -> void:
 	var f: = ThemeDB.fallback_font
 
-	Art.image(self, "map_outside", Vector2.ZERO)
+	# ground is built from Grok's tiles (data/town_ground.txt); objects are the old map's
+	# buildings/trees/props cut out by tools/extract_map_objects.py until their redraws land
+	var gt: = Ground.texture()
+	draw_texture_rect(gt, Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0), false)
+	Art.image(self, "map_objects", Vector2.ZERO)
 	for b in buildings:
 		var r: Rect2 = b["r"]
 		if (b.has("story") and not story_beaten(str(b["story"])) and not story_available(str(b["story"]))) or (b.has("errand") and not Errands.is_open(str(b["errand"]), clock)):

@@ -1654,6 +1654,20 @@ const ASSETS = {
     "kind": "backdrop",
     "s": 2
   },
+  "map_objects": {
+    "w": 1280,
+    "h": 720,
+    "cell": [
+      1280,
+      720
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
   "nft": {
     "w": 28,
     "h": 28,
