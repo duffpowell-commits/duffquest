@@ -86,8 +86,10 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   `tools/import_portrait.py` (now: equal-slice fallback + keep-largest-island) ->
   `assets/art/portraits_hd/{duff,madison,octavia,brittany}.png`, 3×512 cells each
   (happy / deadpan / furious). Not wired in yet: needs the native-res dialogue layer.
-  Known nits: Brittany and Madison share one face template (hair/clothes swap); Octavia's furious
-  eyes go pink; check Madison's eye colour stays brown.
+  Brittany is marked **redo** in the sheet (same face template as Madison). Octavia's pink furious
+  eyes are **intentional, keep them** (Duff). Sheet edited Nov 7: boss splash prompts reworded +
+  every boss (16 sprite rows, 17 splashes) must look unlike all other bosses and regular enemies
+  (Duff's one requirement); legacy 96 px portrait rows marked skip.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
