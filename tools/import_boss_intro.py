@@ -1,8 +1,10 @@
 """Key Place's 1920x1080 boss intro splashes (flat #FF00FF or #00FF00, name lettered on) into
 transparent 960x540 PNGs for the HD overlay.
 
-    python3 tools/import_boss_intro.py            # all 17
+    python3 tools/import_boss_intro.py            # all 17, burst cards (Duff's pick, Nov 8)
     python3 tools/import_boss_intro.py husk baron
+    python3 tools/import_boss_intro.py --keyed    # the cut-out versions instead
+Burst cards (`new_boss_intro_<b>_burst_preview.png`) are opaque full-bleed 16:9: just downscaled.
 
 - key read from the corner pixel; soft alpha ramp on the key distance (cartoon edges stay smooth)
 - key spill pulled out of the semi-transparent edge pixels
@@ -45,9 +47,11 @@ def key_out(im):
     return out
 
 
-def run(boss):
-    src = SRC / f"new_boss_intro_{boss}.png"
-    im = key_out(Image.open(src))
+def run(boss, keyed):
+    if keyed:
+        im = key_out(Image.open(SRC / f"new_boss_intro_{boss}.png"))
+    else:
+        im = Image.open(SRC / f"new_boss_intro_{boss}_burst_preview.png").convert("RGB")
     im = im.resize((im.width // 2, im.height // 2), Image.LANCZOS)
     OUT.mkdir(parents=True, exist_ok=True)
     dst = OUT / f"{boss}.png"
@@ -56,5 +60,7 @@ def run(boss):
 
 
 if __name__ == "__main__":
-    for b in (sys.argv[1:] or BOSSES):
-        run(b)
+    keyed = "--keyed" in sys.argv
+    names = [a for a in sys.argv[1:] if not a.startswith("--")]
+    for b in (names or BOSSES):
+        run(b, keyed)

@@ -66,5 +66,5 @@ These minigames are drawn as plain shapes in code: fryer, prep, salad, sandwich,
 temp check, card, quiz, wordle, stealth, inspector. Each would need small prop sprites (baskets, plates,
 tickets, ingredients). Claude will write a separate list once the backgrounds are in.
 
-## Questions for Duff (Place: skip anything he hasn't answered)
-- Burst-preview boss splashes: keep the keyed ones (in game now) or switch to the bursts?
+## Answered
+- Boss intro cards: Duff picked your burst versions (Nov 8); they're in the game now.
