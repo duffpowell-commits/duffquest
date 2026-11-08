@@ -48,6 +48,7 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   downsampled to ~192 px and lose line quality. Fix options: render the dialogue layer at native
   resolution (stretch mode canvas_items + pixel world in a SubViewport), or bake portraits at the
   displayed size with thick lines. Decide when the first portraits land.
+- **Grok art drop (Nov 7):** new files in `grok_art/2026-11-07/`; see `grok_art/NEXT_STEPS_FROM_GROK.md`. Duff is the only playable character. Board 2 is the world style reference.
 - **Art personality pass (EarthBound-era brief, partly superseded):** Duff makes art with Grok. Brief + prompts:
   `docs/art_brief.md` (also a Google Doc "READ ME FIRST - Grok prompts" in Drive folder
   **DuffQuest Art Inbox**, with `reference_current_HD.png`). One Drive folder per design, three
@@ -80,7 +81,7 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   223 rows: all 131 manifest ids + 92 new (59 HD portraits, 17 boss splashes, 13 storefronts, trees,
   clutter, style board), each with a ready-to-paste Grok prompt (column F), priority, status.
   Tab 1 holds the approved likenesses (Duff, Madison, Brittany, Octavia) and open questions.
-  Style boards 1–3 generated, **awaiting Duff's pick**. Treat this sheet as the art to-do list.
+  Style boards 1–3 are in `grok_art/2026-11-07/`; **Duff picked board 2**. Treat this sheet as the art to-do list.
 - **Approved cast portraits (Nov 7):** PR #3 (Cursor, merged) put 4 green-screen sheets in
   `duffquesthd/portraits/` (Duff v3 with jacket, Madison, Octavia, Brittany). Cut with
   `tools/import_portrait.py` (now: equal-slice fallback + keep-largest-island) ->
