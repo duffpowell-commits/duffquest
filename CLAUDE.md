@@ -212,10 +212,12 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   "Name: ..." line to the boss kind; `portrait_for` returns it (HD only; no pixel boss portraits). Mood
   (`Art.hd_mood`): defeat line -> shocked, rage line or a shouty line (`_shouty`: ALL-CAPS 4+ letters or two
   `!`) -> enraged, else smug. Rage is a mid-fight bark, so enraged mostly shows on shouty intros.
-  Intro splash: `tools/import_boss_intro.py` keys the 1920×1080 lettered intros to 960×540
-  `assets/art/boss_intro/<b>.png` (~3.6 MB total; burst previews unused). `hd_portrait_overlay.gd` shows it
-  while the boss's exact intro line is up (`Art.boss_intro_for`): fills the space above the dialogue box,
-  slides in from the right 0.28 s, dims everything but the box. Renders: `docs/renders/qa_boss_intro.png`,
+  Intro card: **Duff picked Place's burst cards** (Nov 8). `tools/import_boss_intro.py` downscales
+  `new_boss_intro_<b>_burst_preview.png` to opaque 960×540 `assets/art/boss_intro/<b>.png` (~4 MB;
+  `--keyed` = the old cut-outs). `hd_portrait_overlay.gd` shows it while the boss's exact intro line is up
+  (`Art.boss_intro_for`): full-bleed, slides in from the right 0.28 s, lifted `CARD_LIFT` 0.13 so every
+  name (lettering runs to 70% of the card) clears the dialogue box (starts at 60%), ink letterbox bar
+  underneath; drawn around the box, never over it. Renders: `docs/renders/qa_boss_intro.png`,
   `qa_boss_fight.png`, `bosses_before_after.png` (old / new / new attack, facing right).
   **Gotcha:** after replacing PNGs run `godot --headless --path . --import` before any render, or Godot
   serves the old cached textures (and new files don't exist to it).
