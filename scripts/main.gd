@@ -36,6 +36,7 @@ const Art: = preload("res://scripts/art.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
 const CombatScript: = preload("res://scripts/combat.gd")
 const CombatFX: = preload("res://scripts/combat_fx.gd")
+const JuiceScript: = preload("res://scripts/juice.gd")
 const CombatUI: = preload("res://scripts/combat_ui.gd")
 const Life: = preload("res://scripts/life.gd")
 const Moods: = preload("res://scripts/moods.gd")
@@ -211,6 +212,7 @@ var hud: Node2D
 var audio: Node = null
 var combat: Node = null
 var cam: Camera2D
+var juice: Node
 
 const UI_SCALE: = 2.0
 var cats: Array = []
@@ -404,6 +406,11 @@ func _ready() -> void:
 	cfx.c = combat
 	add_child(cfx)
 	combat.fx = cfx
+	juice = JuiceScript.new()
+	juice.name = "Juice"
+	juice.m = self
+	juice.fx = cfx
+	add_child(juice)
 	var layer: = ui_layer()
 	add_child(layer)
 	hud = HudScript.new()
@@ -2089,6 +2096,8 @@ func hurt_player(amount: float, from: Vector2, kb: float, kind: String) -> bool:
 	if arena_mode == "bet":
 		bet_hurt += 1
 	player.hurt()
+	if juice:
+		juice.hurt()
 	if not Gear.a_special(gear) in ["goalie", "trust"]:
 		player.take_knock(from, kb)
 	var l: String = HIT_LINES.get(kind, "")
