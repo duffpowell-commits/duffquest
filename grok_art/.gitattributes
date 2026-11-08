@@ -1,0 +1,4 @@
+# Sprite drops must stay byte-for-byte. Text conversion corrupts PNG and GIF.
+*.png binary
+*.gif binary
+*.jpg binary
