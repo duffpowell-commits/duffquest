@@ -1,4 +1,5 @@
 extends Node2D
+const UiStyle: = preload("res://scripts/ui_style.gd")
 
 signal a_pressed
 signal b_pressed
@@ -119,13 +120,8 @@ static func rects() -> Dictionary:
 		"b": Rect2(BTN_B - Vector2(BTN_R, BTN_R), Vector2(BTN_R, BTN_R) * 2.0),
 		"g": Rect2(BTN_G - Vector2(BTN_G_R, BTN_G_R), Vector2(BTN_G_R, BTN_G_R) * 2.0) }
 
-func _btn(c: Vector2, r: float, col: Color, label: String, f: Font) -> void:
-
-	draw_circle(c + Vector2(0.67, 0.67), r, Color(0.07, 0.05, 0.03, 0.35))
-	draw_circle(c, r, Color(col.r, col.g, col.b, 0.62))
-	draw_arc(c, r - 0.33, PI * 0.75, PI * 1.75, 16, Color(1, 0.94, 0.8, 0.55), 0.67)
-	draw_arc(c, r - 0.33, -PI * 0.25, PI * 0.75, 16, Color(0.1, 0.07, 0.05, 0.5), 0.67)
-	draw_string(f, c + Vector2(-2.7, 2.7), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#f0ead8"))
+func _btn(c: Vector2, r: float, col: Color, label: String, _f: Font) -> void:
+	UiStyle.round_button(self, c, r, col, label, 0.82)
 
 func _draw() -> void:
 	var f: = ThemeDB.fallback_font

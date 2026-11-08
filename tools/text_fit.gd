@@ -18,7 +18,7 @@ const SIZE: = 7
 var font: Font
 
 func _init() -> void:
-	font = ThemeDB.fallback_font
+	font = _font()
 	var files: = _scripts("res://scripts")
 	var re_lit: = RegEx.create_from_string("\"((?:[^\"\\\\]|\\\\.)*)\"")
 	var re_toast: = RegEx.create_from_string("(?:_toast|toast)\\(\\s*\"((?:[^\"\\\\]|\\\\.)*)\"")
@@ -83,3 +83,9 @@ func _scripts(dir: String) -> Array:
 	for d in DirAccess.get_directories_at(dir):
 		out.append_array(_scripts(dir + "/" + d))
 	return out
+
+
+## The game's real body font (M8): --script runs skip autoloads, so install it here.
+func _font() -> Font:
+	preload("res://scripts/ui_style.gd").install()
+	return ThemeDB.fallback_font
