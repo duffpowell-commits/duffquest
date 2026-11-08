@@ -208,9 +208,26 @@ func _draw_game() -> void:
 	draw_rect(Rect2(150, 108, 100, 4), Color("#cccccc"))
 	var by: = 106.0
 	for id in built:
-		var c: = Color(ING[id][1])
 		var h: = 6.0 if id in ["bun_b", "bun_t", "fried", "grilled"] else 3.0
-		var w: = 70.0 if id != "hot" else 60.0
-		draw_rect(Rect2(200 - w / 2, by - h, w, h), c)
+		if not _layer_sprite(id, by, h):
+			var w: = 50.0 if id != "hot" else 42.0
+			draw_rect(Rect2(200 - w / 2, by - h, w, h), Color(ING[id][1]))
 		by -= h + 0.5
 	txt(Vector2(150, 24), "%d layers" % built.size(), 8, Color(1, 1, 1, 0.6))
+
+## Gemini G6 kitchen props (tools/import_props.py) for the layers it drew; the rest stay flat bars.
+## Each sprite is squashed to the layer's slot height x2 so the stack still reads bottom-to-top.
+const LAYER_ART: = {"bun_b": ["kp_bun", 0.45, 1.0], "bun_t": ["kp_bun", 0.0, 0.55], "fried": ["kp_fried_chicken", 0.0, 1.0],
+	"grilled": ["kp_fried_chicken", 0.0, 1.0], "lettuce": ["kp_lettuce", 0.0, 1.0], "tomato": ["kp_tomato", 0.15, 0.85]}
+
+func _layer_sprite(id: String, by: float, h: float) -> bool:
+	if not LAYER_ART.has(id) or Art.tex(LAYER_ART[id][0]) == null:
+		return false
+	var tx: Texture2D = Art.tex(LAYER_ART[id][0])
+	var a: Array = LAYER_ART[id]
+	var src: = Rect2(0, tx.get_height() * float(a[1]), tx.get_width(), tx.get_height() * (float(a[2]) - float(a[1])))
+	var w: = src.size.x / 2.0
+	var dh: = maxf(h * 2.2, 7.0)
+	var mod: = Color("#b08868") if id == "grilled" else Color.WHITE
+	draw_texture_rect_region(tx, Rect2(200 - w / 2, by - dh + h * 0.5, w, dh), src, mod)
+	return true
