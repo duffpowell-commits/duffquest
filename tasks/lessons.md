@@ -10,3 +10,5 @@
 - Said M5 was "blocked waiting on art" while the boss drop already sat in `grok_art/2026-11-08-bosses/`.
   Rule: before calling anything blocked on art, `ls grok_art/` and check merged Place PRs (`gh api .../pulls?state=all`).
 - Replaced PNGs, rendered, got the old art. Rule: `godot --headless --path . --import` after any asset swap, before renders.
+- Burst intro card's letterbox bar covered the dialogue box's last line + prompt; missed because I judged a
+  shrunken contact sheet. Rule: for overlay/UI changes, look at one full-size frame per screen, not just the sheet.

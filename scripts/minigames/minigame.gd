@@ -1,4 +1,5 @@
 extends Node2D
+const UiStyle: = preload("res://scripts/ui_style.gd")
 const Cast: = preload("res://scripts/cast.gd")
 
 signal finished(score: float, notes: Array)
@@ -224,39 +225,25 @@ func _draw() -> void:
 	_draw_game()
 	for b in buttons:
 		var r: Rect2 = b["rect"]
-		var c: Color = b["col"]
-		if not b["enabled"]:
-			c = c.darkened(0.6)
-
-		var px: = 1.0 / 1.5
-		draw_rect(Rect2(r.position + Vector2(px * 2, px * 2), r.size), Color(0.07, 0.05, 0.03, 0.45))
-		draw_rect(r, c)
-		draw_rect(Rect2(r.position, Vector2(r.size.x, px * 2)), c.lightened(0.22))
-		draw_rect(Rect2(r.position, Vector2(px, r.size.y)), c.lightened(0.15))
-		draw_rect(Rect2(r.position + Vector2(0, r.size.y - px * 2), Vector2(r.size.x, px * 2)), c.darkened(0.35))
-		draw_rect(Rect2(r.position + Vector2(r.size.x - px, 0), Vector2(px, r.size.y)), c.darkened(0.3))
-		draw_rect(r, Color(0.07, 0.05, 0.04, 0.8), false, px)
-		var lbl: String = b["label"]
-		var lines: = lbl.split("\n")
-		var y0: = r.position.y + r.size.y * 0.5 + 3.0 - (lines.size() - 1) * 4.5
-		for i in lines.size():
-			txt(Vector2(r.position.x, y0 + i * 9.0), lines[i], 8, Color.WHITE if b["enabled"] else Color(1, 1, 1, 0.4), HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		UiStyle.button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
 		if int(b["key"]) != 0:
 			txt(r.position + Vector2(2, 7), OS.get_keycode_string(int(b["key"])), 6, Color(1, 1, 1, 0.45))
 	_draw_top()
 	if show_header:
-		draw_rect(Rect2(0, 0, W, 12), Color(0.11, 0.09, 0.07, 0.88))
-		draw_rect(Rect2(0, 12 - 1.0 / 1.5, W, 1.0 / 1.5), Color("#d8982e"))
-		txt(Vector2(4, 9), title, 8, Color("#f2c66a"))
+		draw_rect(Rect2(0, 0, W, 13), Color(UiStyle.PANEL, 0.95))
+		draw_rect(Rect2(0, 12, W, 1.5), UiStyle.INK)
+		var tw: = UiStyle.display.get_string_size(Cast.T(title), HORIZONTAL_ALIGNMENT_LEFT, -1, 9).x
+		draw_rect(Rect2(2, 1, minf(tw + 10, W - 50), 11), UiStyle.GOLD)
+		draw_rect(Rect2(2, 1, minf(tw + 10, W - 50), 11), UiStyle.INK, false, 1.0)
+		draw_string(UiStyle.display, Vector2(7, 10), Cast.T(title), HORIZONTAL_ALIGNMENT_LEFT, W - 60, 9, UiStyle.INK)
 		if time_limit > 0.0:
 			var left: = maxf(0.0, time_limit - t)
-			txt(Vector2(282, 9), "%4.1fs" % left, 8, Color("#e06a4a") if left < 5.0 else Color.WHITE)
+			UiStyle.label(self, Vector2(278, 10), "%4.1fs" % left, 9, UiStyle.PINK if left < 5.0 else UiStyle.CREAM, -1.0, HORIZONTAL_ALIGNMENT_LEFT, 3)
 	if show_cursor:
 		draw_arc(cursor, 4, 0, TAU, 12, Color(1, 1, 1, 0.8), 1.0)
 		draw_line(cursor - Vector2(6, 0), cursor + Vector2(6, 0), Color(1, 1, 1, 0.5))
 		draw_line(cursor - Vector2(0, 6), cursor + Vector2(0, 6), Color(1, 1, 1, 0.5))
 	if flash_t > 0.0:
 		var fr: = Rect2(20, 66, 280, 22)
-		draw_rect(fr, Color(0.11, 0.09, 0.07, 0.92))
-		draw_rect(fr, Color("#e88aa8"), false, 1.0 / 1.5)
+		UiStyle.panel(self, fr, UiStyle.PANEL, 0.96, 1.0 / 1.5)
 		mtxt(fr.position + Vector2(4, 9), flash_msg, fr.size.x - 8, 8, flash_col, 2)
