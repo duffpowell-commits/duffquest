@@ -118,7 +118,8 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   Whole-map shot tool: `tools/map_shot.tscn` (zooms out, hides HUD). Layout rules: only pairs Grok
   drew can touch (sidewalk/asphalt, grass/sidewalk, grass/asphalt, dirt/grass); no diagonal pairs;
   that's why every road has sidewalks. Brick and gravel have no transitions yet (fills only).
-  Open for Duff: more grass / less pavement? grass is darker olive than the old bright lawn.
+  **Decided (Duff): keep the sidewalks / pavement.** The real block is urban, not lawny; don't add
+  grass to "fix" it. Grass colour (darker olive vs old bright lawn) not raised as a problem.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
