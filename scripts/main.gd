@@ -177,19 +177,19 @@ const QUEST_NEEDS: = {
 }
 
 var buildings: = [
-	{"r": Rect2(40, 40, 110, 70), "c": Color("#8a5a44"), "n": "HOME" },
-	{"r": Rect2(190, 40, 80, 60), "c": Color("#6b6b6b"), "n": "NEIGHBOR" },
-	{"r": Rect2(470, 40, 130, 70), "c": Color("#3f6fb0"), "n": "KWIK-N-GO" },
-	{"r": Rect2(460, 240, 150, 70), "c": Color("#a03a3a"), "n": "THE TWISTED FORK" },
-	{"r": Rect2(40, 240, 120, 70), "c": Color("#5d4a7a"), "n": "HOA HQ" },
-	{"r": Rect2(205, 108, 60, 40), "c": Color("#5a6a8a"), "n": "SEEN CAFE", "story": "ghoster" },
-	{"r": Rect2(400, 40, 55, 50), "c": Color("#8a3a5a"), "n": "IRON TEMPLE", "story": "gymbro" },
-	{"r": Rect2(350, 232, 80, 52), "c": Color("#5a2a8a"), "n": "CLUB CLOUD 9", "story": "djvape" },
-	{"r": Rect2(200, 228, 58, 42), "c": Color("#3a5a3a"), "n": "MINING RIG", "story": "crypto" },
-	{"r": Rect2(340, 6, 52, 80), "c": Color("#4a4a5a"), "n": "{FINAL_TOWER}", "story": "willnot" },
-	{"r": PHARM_R, "c": Color("#d8d8e0"), "n": "{PHARMACY}", "errand": "pharmacy" },
-	{"r": GROC_R, "c": Color("#c8323a"), "n": "{GROCERY}", "errand": "grocery" },
-	{"r": PLASMA_R, "c": Color("#c05a6a"), "n": "{PLASMA_SIGN}", "small": true },
+	{"r": Rect2(40, 40, 110, 70), "c": Color("#8a5a44"), "n": "HOME", "art": "sf_home" },
+	{"r": Rect2(190, 40, 80, 60), "c": Color("#6b6b6b"), "n": "NEIGHBOR", "art": "sf_neighbor" },
+	{"r": Rect2(470, 40, 130, 70), "c": Color("#3f6fb0"), "n": "KWIK-N-GO", "art": "sf_kwik" },
+	{"r": Rect2(460, 240, 150, 70), "c": Color("#a03a3a"), "n": "THE TWISTED FORK", "art": "sf_fork" },
+	{"r": Rect2(40, 240, 120, 70), "c": Color("#5d4a7a"), "n": "HOA HQ", "art": "sf_hoa" },
+	{"r": Rect2(205, 108, 60, 40), "c": Color("#5a6a8a"), "n": "SEEN CAFE", "art": "sf_seen", "story": "ghoster" },
+	{"r": Rect2(400, 40, 55, 50), "c": Color("#8a3a5a"), "n": "IRON TEMPLE", "art": "sf_iron", "story": "gymbro" },
+	{"r": Rect2(350, 232, 80, 52), "c": Color("#5a2a8a"), "n": "CLUB CLOUD 9", "art": "sf_club", "story": "djvape" },
+	{"r": Rect2(200, 228, 58, 42), "c": Color("#3a5a3a"), "n": "MINING RIG", "art": "sf_mining", "story": "crypto" },
+	{"r": Rect2(340, 6, 52, 80), "c": Color("#4a4a5a"), "n": "{FINAL_TOWER}", "art": "sf_plaza", "story": "willnot" },
+	{"r": PHARM_R, "c": Color("#d8d8e0"), "n": "{PHARMACY}", "art": "sf_walgrumps", "errand": "pharmacy" },
+	{"r": GROC_R, "c": Color("#c8323a"), "n": "{GROCERY}", "art": "sf_hywhee", "errand": "grocery" },
+	{"r": PLASMA_R, "c": Color("#c05a6a"), "n": "{PLASMA_SIGN}", "art": "sf_plazmart", "small": true },
 ]
 var trees: = [Vector2(180, 140), Vector2(20, 340), Vector2(445, 340), Vector2(605, 150), Vector2(25, 205)]
 
@@ -335,7 +335,8 @@ func _ready() -> void:
 	add_child(preload("res://scripts/hd_presentation.gd").new())
 	_setup_input()
 	for b in buildings:
-		_add_wall(b["r"])
+		b["vis"] = _art_rect(b)
+		_add_wall(Rect2(b["vis"].position, Vector2(b["vis"].size.x, b["r"].end.y - b["vis"].position.y)))
 	for tr in trees:
 		_add_wall(Rect2(tr - Vector2(4, 0), Vector2(8, 6)))
 	_add_wall(Rect2(-10, -10, WORLD.x + 20, 10))
@@ -1953,15 +1954,16 @@ func _draw() -> void:
 func _draw_outside() -> void:
 	var f: = ThemeDB.fallback_font
 
-	# ground is built from Grok's tiles (data/town_ground.txt); objects are the old map's
-	# buildings/trees/props cut out by tools/extract_map_objects.py until their redraws land
+	# ground is built from Grok's tiles (data/town_ground.txt); map_objects = the old map's
+	# trees/props (tools/extract_map_objects.py); old buildings cleared by tools/import_storefronts.py
 	var gt: = Ground.texture()
 	draw_texture_rect(gt, Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0), false)
 	Art.image(self, "map_objects", Vector2.ZERO)
+	# storefronts (Grok, Nov 8): one sprite per footprint, drawn at the rect; shut places get dimmed
 	for b in buildings:
 		var r: Rect2 = b["r"]
-		if (b.has("story") and not story_beaten(str(b["story"])) and not story_available(str(b["story"]))) or (b.has("errand") and not Errands.is_open(str(b["errand"]), clock)):
-			draw_rect(r, Color(0, 0, 0, 0.22))
+		var shut: bool = (b.has("story") and not story_beaten(str(b["story"])) and not story_available(str(b["story"]))) or (b.has("errand") and not Errands.is_open(str(b["errand"]), clock))
+		Art.image(self, str(b.get("art", "")), r.position, Color(0.72, 0.72, 0.78) if shut else Color.WHITE)
 
 	_draw_porch_and_cans()
 	_draw_waffle_sign_and_board(f)
@@ -2188,6 +2190,18 @@ func _director(delta: float) -> void:
 			return
 		k = "scammer"
 	spawn_enemy(k, _random_spawn_point())
+
+## The part of a footprint its storefront sprite actually covers (opaque pixels, world units).
+## Walls, labels and plaques use this so you can't bump into empty grass.
+func _art_rect(b: Dictionary) -> Rect2:
+	var r: Rect2 = b["r"]
+	var tx: = Art.tex(str(b.get("art", "")))
+	if tx == null:
+		return r
+	var used: = tx.get_image().get_used_rect()
+	if used.size.x == 0:
+		return r
+	return Rect2(r.position + Vector2(used.position) / 2.0, Vector2(used.size) / 2.0)
 
 func _random_spawn_point() -> Vector2:
 	for _i in 40:
@@ -3268,8 +3282,11 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 func draw_world_labels(ci: CanvasItem) -> void:
 	var f: = ThemeDB.fallback_font
 	for b in buildings:
-		var r: Rect2 = b["r"]
-		_label(ci, f, Vector2(r.position.x, r.position.y + 9), Cast.T(b["n"]), r.size.x, 8 if not (b.has("story") or b.has("errand") or b.has("small")) else 6, Color.WHITE)
+		var r: Rect2 = b.get("vis", b["r"])
+		# storefronts carry their own sign; only the unsigned houses still get a floating name
+		if b.get("art", "") in ["", "sf_home", "sf_neighbor"]:
+			_label(ci, f, Vector2(r.position.x, r.position.y - 3), Cast.T(b["n"]), r.size.x, 8 if not (b.has("story") or b.has("errand") or b.has("small")) else 6, Color.WHITE)
+		r = Rect2(r.position - Vector2(0, 22), r.size)
 		if b.has("errand"):
 			_draw_errand_sign(ci, b, r, f)
 		if b.has("story"):
@@ -3281,19 +3298,14 @@ func draw_world_labels(ci: CanvasItem) -> void:
 				ci.draw_string(f, Vector2(r.get_center().x - 3, r.position.y - 2 + by), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("#e6a640"))
 			else:
 				_closed_plaque(ci, r, f)
-	_label(ci, f, Vector2(460, 236), "NOW HIRING (you)", 150, 8, Color(1, 1, 1, 0.7))
+	var fork: Rect2 = buildings[3].get("vis", buildings[3]["r"])
+	_label(ci, f, Vector2(fork.position.x, fork.position.y - 3), "NOW HIRING (you)", fork.size.x, 7, Color(1, 1, 1, 0.8))
 
 func _draw_errand_sign(ci: CanvasItem, b: Dictionary, r: Rect2, f: Font) -> void:
 	var kind: String = b["errand"]
 	var open: = Errands.is_open(kind, clock)
 	if not open:
 		_closed_plaque(ci, r, f)
-	elif kind == "pharmacy":
-		ci.draw_rect(Rect2(r.position.x + 4, r.position.y + 16, 9, 9), Color("#a43a2c"))
-		ci.draw_rect(Rect2(r.position.x + 7, r.position.y + 17, 3, 7), Color("#fbf6ec"))
-		ci.draw_rect(Rect2(r.position.x + 5, r.position.y + 19, 7, 3), Color("#fbf6ec"))
-	else:
-		_label(ci, f, Vector2(r.position.x, r.position.y + 21), Cast.T("{grocery_slogan}"), r.size.x, 5, Color(1, 1, 1, 0.85))
 	if open and errand["kind"] == kind and errand["status"] == "active":
 		var by: = sin(t * 5.0) * 2.0
 		ci.draw_string(f, Vector2(r.get_center().x - 3, r.position.y - 2 + by), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color("#8cc4e8"))

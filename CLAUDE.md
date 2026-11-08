@@ -129,6 +129,18 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   **Decided (Duff): keep the sidewalks / pavement.** The real block is urban, not lawny; don't add
   grass to "fix" it. Grass colour (darker olive vs old bright lawn) not raised as a problem.
 
+- **Done (Nov 8): Grok storefronts placed.** `tools/import_storefronts.py` keys the 13 PNGs in
+  `grok_art/2026-11-08-storefronts/` into `assets/art/sf_<name>.png` (size = footprint ×2, building
+  dropped so its lowest pixel sits on the footprint's bottom edge), registers them in both manifests
+  and clears the old painted buildings out of `map_objects.png`. `buildings` entries have an `"art"`
+  key; `_draw_outside` draws them (shut places tinted grey instead of a dark box). `_art_rect()` =
+  the sprite's opaque area: walls use it (top/sides; bottom stays the footprint edge so doors and
+  story triggers still work), labels too. Storefronts carry their own signs, so floating names only
+  remain on HOME / NEIGHBOR; CLOSED plaques float above the roof; pharmacy cross + grocery slogan
+  overlays removed. Renders: `docs/renders/town_storefronts_full.png`, `_closeup.png`, `_before_after.png`.
+  Known: some footpaths (Kwik, Mining Rig) don't line up perfectly with the new doors; trees,
+  clutter, lamps, fences are still the old art / missing until Grok's sheets.
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
