@@ -141,6 +141,21 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   Known: some footpaths (Kwik, Mining Rig) don't line up perfectly with the new doors; trees,
   clutter, lamps, fences are still the old art / missing until Grok's sheets.
 
+- **Done (Nov 8): visual QA pass.** Tools: `tools/qa_shot.tscn` (boots `game.tscn`, new game, then
+  long dialogue/toast, home, street combat, Kwik/pharmacy/grocery/plasma, all 17 bosses intro +
+  fight, gala; shots to `/tmp/qa`) -> `python3 tools/qa_sheet.py` -> `docs/renders/qa_ui.png`,
+  `qa_boss_intro.png`, `qa_boss_fight.png`. `godot --headless --path . --script tools/text_fit.gd`
+  wraps every 25+ char literal with the HUD's font/width and lists overflows in `docs/text_fit.txt`
+  (now 0 of 1387). "Clips on narrow screens" is not a thing: stretch is canvas_items + keep +
+  integer, so narrow phones letterbox, the boxes never shrink.
+  Fixed: bounty/gala boss lines ("The Allergy Liar: ...") showed DUFF's portrait (unknown speakers
+  default to Duff; `Art.boss_names()` now excludes every boss); cologne line ran into the
+  "E / A >" prompt (shortened); pharmacy buttons clipped (labels shortened).
+  Still open (art, not code): 5+ bosses share the same grey-haired sprite (bozos, fences, bdaydad,
+  regular, sendback) = breaks Duff's "every boss unique" rule until Grok's boss sheets land; Duff in
+  arenas/outdoors is still the old outfit art; home interior + all shop/minigame screens are the old
+  flat art; enemy barks overlap when 3+ enemies bunch up; grocery aisle labels sit on the shelves.
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto

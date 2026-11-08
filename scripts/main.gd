@@ -3570,7 +3570,7 @@ func spritz_cologne() -> void:
 	inventory["cologne"] -= 1
 	grant_buff("charisma", Buffs.CHARISMA_MINS)
 	advance_clock(1.0)
-	var lines: Array = ["*psst psst* I hit myself with {cologne}. Notes of leather, venture capital and an Applebee's parking lot. CHARISMA up for 6 hrs: 20% off at stores, bigger tips, +25% happiness from {partner}."]
+	var lines: Array = ["*psst psst* I hit myself with {cologne}. Notes of leather, venture capital and Applebee's parking lot. CHARISMA 6 hrs: 20% off stores, bigger tips, +25% {partner} happiness."]
 	text("madison", "madison", "Why does the whole house smell like a department store?? ...Not mad. Come here.")
 	unread["madison"] = true
 	ping_t = 2.0

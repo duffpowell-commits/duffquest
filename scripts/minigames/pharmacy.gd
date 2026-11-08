@@ -6,7 +6,7 @@ const WAIT_T: = 8.0
 const DING_T: = 3.5
 const FULL_COPAY: = 10
 const INSURED_COPAY: = 5
-const AISLE: = [["formula", "Formula", 12], ["ensure", "Ensure (vanilla)", 4], ["diapers", "Diapers", 10], ["honey buns", "Honey buns (impulse rack)", 3], ["treats", "Cat treats", 2], ["cologne", "{cologne} (3 sprays)", 12]]
+const AISLE: = [["formula", "Formula", 12], ["ensure", "Ensure (vanilla)", 4], ["diapers", "Diapers", 10], ["honey buns", "Honey buns (impulse)", 3], ["treats", "Cat treats", 2], ["cologne", "{cologne} x3", 12]]
 const HOLDUPS: = [
 	"Guy ahead of me is on hold with his insurance. In line. Simultaneously.",
 	"Guy up front asks why his inhaler costs $400. Pharmacist: 'Innovation.'",

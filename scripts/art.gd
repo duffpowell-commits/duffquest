@@ -119,6 +119,18 @@ static func duff_mood(text: String, energy: float = 100.0) -> int:
 const NPC_SPEAKERS: = ["Brittany", "Dolores", "Earl", "Karen", "Linda", "Scammer", "Inspector Tiny", "Brenda", "Palm Beach Pete", "Security", "Chef", "Landlord", 
 	"Server", "Grill-Boy", "Grill-Boy Brayden", "Brayden", "Jeeves", "Elon Husk", "Jeff Bozos", "Bill Fences", "The Donald", "Expo", "Butler", "Theo"]
 
+static var _boss_names: Array = []
+
+## Every boss's display name (cast tokens resolved). Bounty bosses ("The Allergy Liar: ...") used to
+## fall through to Duff's portrait. Loaded lazily: boss.gd preloads this script.
+static func boss_names() -> Array:
+	if _boss_names.is_empty():
+		var bosses: Dictionary = load("res://scripts/boss.gd").BOSSES
+		var cast: = preload("res://scripts/cast.gd")
+		for k in bosses:
+			_boss_names.append(cast.T(str(bosses[k]["name"])))
+	return _boss_names
+
 static func is_duff_line(text: String, hero: String) -> bool:
 
 	var c: = text.find(": ")
@@ -127,7 +139,7 @@ static func is_duff_line(text: String, hero: String) -> bool:
 	var who: = text.substr(0, c)
 	if who == hero or who == "You" or who.to_lower() == "me":
 		return true
-	if who in NPC_SPEAKERS:
+	if who in NPC_SPEAKERS or who in boss_names():
 		return false
 	return not (who in preload("res://scripts/cast.gd").names().values())
 
