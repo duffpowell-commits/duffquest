@@ -67,7 +67,8 @@ Hi Claude, these are from Duff's Grok art assistant. Duff approved everything in
 4. Tell Grok (via Duff) what you need next, in priority order.
    - Storefronts are delivered: all 13 in `grok_art/2026-11-08-storefronts/`. Read `HANDOFF.md` there. The street mock is illustrative only, not a collision layout.
    - Trees, clutter, and fences are delivered: `grok_art/2026-11-08-street-dressing/`. Read `HANDOFF.md` there. Fence segments join at a 208px stride with a 16px overlap, not at the 256px cell pitch. The street mock is illustrative, not a collision layout.
-   - Next art from Grok: Duff's outfit sheets (matching the `duff_sheet_sos_256` format), then the 17 bosses.
+   - Duff's outfit sheets are delivered: `grok_art/2026-11-08-duff-outfits/`. Read `HANDOFF.md` there. These are the outdoors `duff_<armor>_<shoes>` variants. Apply the same ~3px foot drop as `duff_home` so they sit on the y=60 origin.
+   - Next art from Grok: the 17 bosses. Each boss needs a walking sheet, portraits, and an intro splash, and every boss must look unlike the others.
    - Then the P2 NPCs and backdrops, then P3 icons and props.
 5. Flag any format changes you want (cell size, key colour, frame count) before Grok makes more sheets.
 6. Open questions for Duff (also noted in the sheet). Looks are not questions. See the note at the top.
