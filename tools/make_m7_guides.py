@@ -17,6 +17,9 @@ HOME = {"bed": (12, 42, 56, 36), "crib": (76, 42, 30, 26), "shower": (272, 42, 3
         "cat tree": (113, 160, 14, 12), "Madison spot": (106, 132, 8, 6), "top wall": (0, 0, 320, 8)}
 ROOM = {"top wall band (walkable starts below)": (0, 0, 320, 30), "left wall": (0, 0, 8, 180),
         "right wall": (312, 0, 8, 180), "bottom wall": (0, 172, 320, 8)}
+# per-arena extra walls (main.gd ARENA_EXTRA_WALLS), added on top of ROOM
+EXTRA = {"arena_gymbro": {"racks band": (0, 0, 320, 70), "bench": (8, 82, 18, 36), "plate rack": (286, 100, 26, 60),
+                          "tub shelves + bench": (10, 146, 110, 26), "bottom (room edge)": (0, 162, 320, 18)}}
 SHOTS = {"home_interior": "home", "bg_kwik": "shop", "bg_pharmacy": "pharmacy", "bg_grocery": "grocery",
          "bg_plasma": "plasma", "gala": "gala", "arena_crypto": "boss_crypto_fight",
          "arena_djvape": "boss_djvape_fight", "arena_ghoster": "boss_ghoster_fight",
@@ -31,6 +34,7 @@ def guide(i):
     over = Image.new("RGBA", art.size, (0, 0, 0, 0))
     d = ImageDraw.Draw(over)
     boxes = HOME if i == "home_interior" else (ROOM if i.startswith("arena_") or i == "gala" else {})
+    boxes = {**boxes, **EXTRA.get(i, {})}
     for name, (x, y, w, h) in boxes.items():
         r = (x * S, y * S, (x + w) * S - 1, (y + h) * S - 1)
         d.rectangle(r, fill=(255, 40, 40, 60), outline=(255, 40, 40, 255), width=2)
