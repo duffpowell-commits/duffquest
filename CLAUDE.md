@@ -291,6 +291,15 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   `docs/renders/m7_home_gemini_ingame.png`, `gemini_g1_vs_grok.png`. Lesson: when new art moves furniture, moving
   the collision boxes is cheaper than a redraw.
 
+- **Done (Nov 8): Gemini gym (`arena_gymbro`).** G2 try 2 (`grok_art/2026-11-08-gemini-test/g2_try2.jpg`, 10/12: sign
+  spelled right, warm light; racks still reach ~40% down, junk text on tubs, angled right wall) resized to 640×360.
+  Duff OK'd fixing layout in CODE: `main.gd ARENA_EXTRA_WALLS` = per-arena walls (switched on by the `arena_id` setter
+  -> `_sync_arena_walls`), gym = racks band 70, bench, plate rack, tub shelves, bottom 162. Gym's `draw_string` sign
+  removed. `tools/make_m7_guides.py` EXTRA draws them. Checks: `godot --headless --path . res://tools/arena_wall_check.tscn`
+  (where Duff stops in each arena), `tools/arena_shot.tscn -- <id>` (in-game shot). Render: `docs/renders/m7_gym_gemini.png`.
+  Known: the top HUD covers the arena's top ~35 units, so lettered wall signs (IRON TEMPLE) sit under the HUD panels
+  in a fight. Also `qa_shot`'s boss_*_fight shots are broken (kitchen overlay from `kitchen_sandwich` stays up).
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
