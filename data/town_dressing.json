@@ -21,15 +21,20 @@
     {"a": "sd_fire_hydrant", "p": [152, 153], "wall": [6, 4]},
     {"a": "sd_fire_hydrant", "p": [352, 224], "wall": [6, 4]},
     {"a": "sd_fire_hydrant", "p": [458, 224], "wall": [6, 4]},
-    {"a": "sd_recycling_bin", "p": [484, 116], "wall": [10, 4]},
-    {"a": "sd_bus_bench", "p": [204, 214], "wall": [16, 4]},
-    {"a": "sd_pothole_cone", "p": [256, 268]},
-    {"a": "sd_shopping_cart", "p": [291, 338], "wall": [10, 4]}
+    {"a": "sd_recycling_bin", "p": [500, 136], "wall": [10, 4]},
+    {"a": "sd_bus_bench", "p": [128, 214], "wall": [16, 4]},
+    {"a": "sd_pothole_cone", "p": [312, 236]},
+    {"a": "sd_pothole_cone", "p": [322, 240]},
+    {"a": "sd_shopping_cart", "p": [291, 338], "wall": [10, 4]},
+    {"a": "sd_bus_bench", "p": [612, 322], "wall": [16, 4]},
+    {"a": "sd_newspaper_box", "p": [478, 320], "wall": [8, 4]},
+    {"a": "sd_bike_rack", "p": [578, 120], "wall": [8, 3]},
+    {"a": "sd_mailbox", "p": [412, 330], "wall": [8, 4]},
+    {"a": "sd_bike_rack", "p": [395, 146], "wall": [8, 3]}
   ],
   "fences": [
     {"kind": "privacy_wood", "p": [0, 30], "n": 6},
     {"kind": "chain_link", "p": [392, 30], "n": 6},
-    {"kind": "white_picket", "p": [0, 237], "n": 1},
     {"kind": "red_brick", "p": [50, 359], "n": 2},
     {"kind": "red_brick", "p": [480, 359], "n": 4}
   ]
