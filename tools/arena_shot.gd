@@ -1,6 +1,6 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
-##   (ids: a boss arena, "title", or "fryer"/"sandwich" = the kitchen station with food in it)
+##   (ids: a boss arena, "title", "home", or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var game: Node
@@ -37,7 +37,7 @@ func _process(_d: float) -> void:
 		m = game.get_child(0).get_child(0).get_child(0)
 		m.close_overlay()
 		m.dialog.clear()
-		if id in ["fryer", "sandwich"]:
+		if id in ["fryer", "sandwich", "home"]:
 			m.debug_station(id)
 		else:
 			m.start_story_fight(id)
@@ -52,7 +52,9 @@ func _process(_d: float) -> void:
 			g.baskets[0]["prog"] = 0.8
 			g.baskets[1]["prog"] = 1.5
 
-	if frame == 230 and not id in ["fryer", "sandwich"]:
+	if frame == 230 and id == "home":
+		m.dialog.clear()
+	if frame == 230 and not id in ["fryer", "sandwich", "home"]:
 		m.dialog.clear()
 		m.player.position = m.ARENA_ORIGIN + Vector2(200, 140)
 	if frame == 280:
