@@ -23,4 +23,4 @@ with the GitHub app (duffquest → grok_art → Add file → Upload). Name it wh
 ## Log
 | file | what | status | notes |
 |---|---|---|---|
-| `duff_portraits.jpg` | Duff portraits: happy / deadpan / furious (1280×720, 3 panels) | **approved look** (Nov 7) | Great expressions + line work. Issues: JPG; panels touch the frame edges and the cells aren't equal (gaps at x≈407 and ≈822); hair is **brown** but the in-game sprite is **blond**, so pick one and match the other; magenta bandana keys fine with a tuned key but use green next time. Portraits need the native-res dialogue layer to keep their lines (see CLAUDE.md "Open tech issue"). |
+| `duff_portraits.jpg` | Duff portraits: happy / deadpan / furious (1280×720, 3 panels) | **approved look** (Nov 7) | Great expressions + line work. Issues: JPG; panels touch the frame edges and the cells aren't equal (gaps at x≈407 and ≈822); hair: Duff chose **blond** (Nov 7), redo from his photo; magenta bandana keys fine with a tuned key but use green next time. Portraits need the native-res dialogue layer to keep their lines (see CLAUDE.md "Open tech issue"). |
