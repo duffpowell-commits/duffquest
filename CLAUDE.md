@@ -334,7 +334,10 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   `ch_pirate1/3` (try 2) via `import_big_sheet.py`; render `docs/renders/porch_pirate_chatgpt.png`. X2 seamless tile:
   PASS by eye (3x3 tiling continues the checker; edge-diff numbers are high only because the edge is a grout line).
   Missing: X3. Next: ChatGPT vs Grok rematch, brief `grok_art/requests/CHATGPT_VS_GROK.txt` (Drive Doc "ChatGPT vs Grok
-  rematch (Nov 8)" in `geminiart`): R1 Kwik storefront, R2 trees, R3 clutter, R4 Gym Bro intro card, R5 Brittany
+  rematch (Nov 8)" in `geminiart`). Results: R1 Kwik: Grok wins (ChatGPT drew it isometric with a lot/car/trees; try-2 prompt
+  asks straight-on, building only; render `docs/renders/rematch_r1_kwik.png`). R2 trees: ChatGPT wins, maple/oak/ash/pine/lilac
+  swapped in by `tools/import_chatgpt_trees.py` (scaled to Grok's heights, placements unchanged; Grok's long hedge kept);
+  renders `rematch_r2_trees.png`, `rematch_r2_trees_ingame.png`. Also fixed: 'Madison texts: ...' lines showed Duff's portrait. List: R1 Kwik storefront, R2 trees, R3 clutter, R4 Gym Bro intro card, R5 Brittany
   portraits (redo), R6 Earl sheet, R7 Duff apron; Grok's original prompts, results `r1_chatgpt.png`...
 
 ## Next (Duff's asks)
