@@ -1,0 +1,1022 @@
+[
+  {
+    "boss": "husk",
+    "path": "/workspace/duffquest/art/ch_husk.png",
+    "filename": "ch_husk.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "a23cd88c42db2afe1cb93bd52418fd32308c5d6fb3847e8fe798795eeb80d285"
+  },
+  {
+    "boss": "husk",
+    "path": "/workspace/duffquest/art/new_portrait_husk.png",
+    "filename": "new_portrait_husk.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "f40bd3474e749ec1bf47961f7224326d7e599c2ab5fc3cd41c8638ed1d1cf1dc"
+  },
+  {
+    "boss": "husk",
+    "path": "/workspace/duffquest/art/new_boss_intro_husk.png",
+    "filename": "new_boss_intro_husk.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "3e2d10fa9e4781e57c7da9844827858d827409431bac0add378c74a08007274f"
+  },
+  {
+    "boss": "husk",
+    "path": "/workspace/duffquest/art/new_boss_intro_husk_burst_preview.png",
+    "filename": "new_boss_intro_husk_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "3bd3ee417094f347cde48ab6f990c2647889970ea25d2207e2e47fe1d7799569"
+  },
+  {
+    "boss": "husk",
+    "path": "/workspace/duffquest/art/ch_husk_walk.gif",
+    "filename": "ch_husk_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "004fc83d716f4461039ed6c45b91cd4bc25765bea2564bd4b5538aa504535adc"
+  },
+  {
+    "boss": "husk",
+    "path": "/workspace/duffquest/art/ch_husk_asphalt_test.png",
+    "filename": "ch_husk_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "27c82a1728bd6341b3007d8f3886ce099c4461e9f955f4c21814c902b99d19bd"
+  },
+  {
+    "boss": "bozos",
+    "path": "/workspace/duffquest/art/ch_bozos.png",
+    "filename": "ch_bozos.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "b288a6192c972f77565bd44e987cf9c8dc1322385f7460cf39bc4b09632dd8ac"
+  },
+  {
+    "boss": "bozos",
+    "path": "/workspace/duffquest/art/new_portrait_bozos.png",
+    "filename": "new_portrait_bozos.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "9bcfe1223110e24f365d616dba4cd1b32e35643b5e328e19911e5be1137afbe8"
+  },
+  {
+    "boss": "bozos",
+    "path": "/workspace/duffquest/art/new_boss_intro_bozos.png",
+    "filename": "new_boss_intro_bozos.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "d5edf5b1eb72ee2eb99a459f597eb6e1cf81bbb214d19b5422ac9936230c9e51"
+  },
+  {
+    "boss": "bozos",
+    "path": "/workspace/duffquest/art/new_boss_intro_bozos_burst_preview.png",
+    "filename": "new_boss_intro_bozos_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "f9e26263131559f182dde163737e5521cb1eb0cea1d25cb683b496cd8e30cde3"
+  },
+  {
+    "boss": "bozos",
+    "path": "/workspace/duffquest/art/ch_bozos_walk.gif",
+    "filename": "ch_bozos_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "47e5e02b38cf5014609a2d34da0ff0db6655f0a6da320372bd1fb48f56bf5bcf"
+  },
+  {
+    "boss": "bozos",
+    "path": "/workspace/duffquest/art/ch_bozos_asphalt_test.png",
+    "filename": "ch_bozos_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "960a45117f907122a7690c65df45e6ed22a20e65b74e015414d4f573b9a72ac0"
+  },
+  {
+    "boss": "fences",
+    "path": "/workspace/duffquest/art/ch_fences.png",
+    "filename": "ch_fences.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "dcc1f09034929a31408bf500257c8fb71df0bfa1e88053a1c06b36d97adef70b"
+  },
+  {
+    "boss": "fences",
+    "path": "/workspace/duffquest/art/new_portrait_fences.png",
+    "filename": "new_portrait_fences.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "9fc947dff792d22f6e9de704b67af7daa79889a78485842391f725b6179ff863"
+  },
+  {
+    "boss": "fences",
+    "path": "/workspace/duffquest/art/new_boss_intro_fences.png",
+    "filename": "new_boss_intro_fences.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "a8cc6beaf0aa10c61652c60fb6234849c959c88992d1fa6bcef77ec9c71dbdd3"
+  },
+  {
+    "boss": "fences",
+    "path": "/workspace/duffquest/art/new_boss_intro_fences_burst_preview.png",
+    "filename": "new_boss_intro_fences_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "90f8886fa9b65be8f9ec9996b4c14e673a5b9cadc10c0587d2d18951041caccf"
+  },
+  {
+    "boss": "fences",
+    "path": "/workspace/duffquest/art/ch_fences_walk.gif",
+    "filename": "ch_fences_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "ddd4a07fd0d021739cd5abd136090488d5674f2717ac4b769cf3d9997c07a7d5"
+  },
+  {
+    "boss": "fences",
+    "path": "/workspace/duffquest/art/ch_fences_asphalt_test.png",
+    "filename": "ch_fences_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "c3c3ebb809f11f78cb0937968c0eb5c540f1fc51fcf33bc6f82c48d8f98d22a4"
+  },
+  {
+    "boss": "baron",
+    "path": "/workspace/duffquest/art/ch_baron.png",
+    "filename": "ch_baron.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "336c6e9ad09530fc961f7529e3eafaaeea0dd234830202eb1d54ff064a6d830f"
+  },
+  {
+    "boss": "baron",
+    "path": "/workspace/duffquest/art/new_portrait_baron.png",
+    "filename": "new_portrait_baron.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "92399382769c3a5db77d07ee92a53338e38cb9d2dd55527f919d11e13782a965"
+  },
+  {
+    "boss": "baron",
+    "path": "/workspace/duffquest/art/new_boss_intro_baron.png",
+    "filename": "new_boss_intro_baron.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "9cef013bcb2e4a6caac91c525cab880ce4cb78104d4b727c395a577bdf1137a2"
+  },
+  {
+    "boss": "baron",
+    "path": "/workspace/duffquest/art/new_boss_intro_baron_burst_preview.png",
+    "filename": "new_boss_intro_baron_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "2150a87d546bef01aadd45b4f9340755ecf3077b6a67f84bb2362f95ad0124e8"
+  },
+  {
+    "boss": "baron",
+    "path": "/workspace/duffquest/art/ch_baron_walk.gif",
+    "filename": "ch_baron_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "51fbe0b7ef17e46e29220ccc4e76c759de81ce2d09853ab9ff44ec4ad3b2aa9c"
+  },
+  {
+    "boss": "baron",
+    "path": "/workspace/duffquest/art/ch_baron_asphalt_test.png",
+    "filename": "ch_baron_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "f3a08d5da6e7f28e4a390802ae551801c356ae04fa06e163947a031107c8adfb"
+  },
+  {
+    "boss": "donald",
+    "path": "/workspace/duffquest/art/ch_donald.png",
+    "filename": "ch_donald.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "13be5a7383c00b5017343309e0e3c8eaa8c973a85c0a1dc1cea5273998675907"
+  },
+  {
+    "boss": "donald",
+    "path": "/workspace/duffquest/art/new_portrait_donald.png",
+    "filename": "new_portrait_donald.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "e793f3bd50649ae1fcb3b835d58b6d40dbfbcd53aa07ec94bcf000237702c4d0"
+  },
+  {
+    "boss": "donald",
+    "path": "/workspace/duffquest/art/new_boss_intro_donald.png",
+    "filename": "new_boss_intro_donald.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "6b5b4e239e7f728c10ad107e3ff2a65c144125bf6221164ba0785c7cc25884fa"
+  },
+  {
+    "boss": "donald",
+    "path": "/workspace/duffquest/art/new_boss_intro_donald_burst_preview.png",
+    "filename": "new_boss_intro_donald_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "ac5610dd4342b5ed5c4b535e3f13a293a021868d45d770166358c4d8f97fd4b4"
+  },
+  {
+    "boss": "donald",
+    "path": "/workspace/duffquest/art/ch_donald_walk.gif",
+    "filename": "ch_donald_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "5ca66bb06155cde5cd755ae7709f2a81b25815535fc0a26935fead2199f47a00"
+  },
+  {
+    "boss": "donald",
+    "path": "/workspace/duffquest/art/ch_donald_asphalt_test.png",
+    "filename": "ch_donald_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "2eaad722a63923099b90d812c6279b0fe37e49be19c52b206412e27e36757065"
+  },
+  {
+    "boss": "ghoster",
+    "path": "/workspace/duffquest/art/ch_ghoster.png",
+    "filename": "ch_ghoster.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "93fb402a91c81adad859ad57e3187805f2195ce5900038f8ea9da90fb0a89b70"
+  },
+  {
+    "boss": "ghoster",
+    "path": "/workspace/duffquest/art/new_portrait_ghoster.png",
+    "filename": "new_portrait_ghoster.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "c10163920c669af2bd587685b0d1b0a769f3ed5135e79ab3754ebd9f8d12bc13"
+  },
+  {
+    "boss": "ghoster",
+    "path": "/workspace/duffquest/art/new_boss_intro_ghoster.png",
+    "filename": "new_boss_intro_ghoster.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "7b740798a9aaf6e5ee45d213469f1ebc3be8b07a64c4bae22a40e62535b9d21b"
+  },
+  {
+    "boss": "ghoster",
+    "path": "/workspace/duffquest/art/new_boss_intro_ghoster_burst_preview.png",
+    "filename": "new_boss_intro_ghoster_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "a6334cfb4ee45c2bfab069ebefb1d2d7056e181bdd890b3f0e7a9ed0d4bc7669"
+  },
+  {
+    "boss": "ghoster",
+    "path": "/workspace/duffquest/art/ch_ghoster_walk.gif",
+    "filename": "ch_ghoster_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "5e6dccf23cdfb421f60ab23760e5e082c0378728866ef22a840a8c70d95cc121"
+  },
+  {
+    "boss": "ghoster",
+    "path": "/workspace/duffquest/art/ch_ghoster_asphalt_test.png",
+    "filename": "ch_ghoster_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "f395bd9a39e19217350c6d9cdff49e2747ad3cc29b78964bdd1ef750212b6ec1"
+  },
+  {
+    "boss": "gymbro",
+    "path": "/workspace/duffquest/art/ch_gymbro.png",
+    "filename": "ch_gymbro.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "81aed21aac538fa7c25641620f2d7b07366fb584794237de1f8b94625a073f2a"
+  },
+  {
+    "boss": "gymbro",
+    "path": "/workspace/duffquest/art/new_portrait_gymbro.png",
+    "filename": "new_portrait_gymbro.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "147fc582256c4eca70ce8b819f34d61248bb04d0dde1fb71d352b50fdf6f58e1"
+  },
+  {
+    "boss": "gymbro",
+    "path": "/workspace/duffquest/art/new_boss_intro_gymbro.png",
+    "filename": "new_boss_intro_gymbro.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "719356bc1f241de68f3a3af0065779b9a6503740a1899b637cb89dd35d221655"
+  },
+  {
+    "boss": "gymbro",
+    "path": "/workspace/duffquest/art/new_boss_intro_gymbro_burst_preview.png",
+    "filename": "new_boss_intro_gymbro_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "9a81334b303f9ce7b7b21ccd1fb21d4c93b6e96b1381b5b779ce83e64ca85804"
+  },
+  {
+    "boss": "gymbro",
+    "path": "/workspace/duffquest/art/ch_gymbro_walk.gif",
+    "filename": "ch_gymbro_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "7c0bb7c1bbefae415c0ecfbf27d69e0a665de83beaf12e05880a43d6bb4a747e"
+  },
+  {
+    "boss": "gymbro",
+    "path": "/workspace/duffquest/art/ch_gymbro_asphalt_test.png",
+    "filename": "ch_gymbro_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "0dd8c22ac18247aeea8aa6db7d6b6d348c0da24a1b63cbc82728f020a792a8ce"
+  },
+  {
+    "boss": "djvape",
+    "path": "/workspace/duffquest/art/ch_djvape.png",
+    "filename": "ch_djvape.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "2ee3fe01b4f4b862be2e8a7f48899bc6f6889a85157db1c57bd0b55d0bd3da29"
+  },
+  {
+    "boss": "djvape",
+    "path": "/workspace/duffquest/art/new_portrait_djvape.png",
+    "filename": "new_portrait_djvape.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "a60099d3bf26205b56c636cfa880b8df2c550efe398cf49031e032d3dc4a34f2"
+  },
+  {
+    "boss": "djvape",
+    "path": "/workspace/duffquest/art/new_boss_intro_djvape.png",
+    "filename": "new_boss_intro_djvape.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "371e35e417633fc6234b21c339468aac3559bbb4f530dc6a3a5ea40394f7bf06"
+  },
+  {
+    "boss": "djvape",
+    "path": "/workspace/duffquest/art/new_boss_intro_djvape_burst_preview.png",
+    "filename": "new_boss_intro_djvape_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "c38412d8d650dda35fa970c712e40ed60bc4e7e959729fb8682f2e1e0b75c129"
+  },
+  {
+    "boss": "djvape",
+    "path": "/workspace/duffquest/art/ch_djvape_walk.gif",
+    "filename": "ch_djvape_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "3cee624571e8c48e5663863fa74f10fedfa32fbd6452d35d58c34651aa6bb7a2"
+  },
+  {
+    "boss": "djvape",
+    "path": "/workspace/duffquest/art/ch_djvape_asphalt_test.png",
+    "filename": "ch_djvape_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "2e89f73aae719aade66110243b379b8dab7b08e7a0e92e7ae7a326b555dc9e37"
+  },
+  {
+    "boss": "crypto",
+    "path": "/workspace/duffquest/art/ch_crypto.png",
+    "filename": "ch_crypto.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "fbcf0c1de08cd505265caaf3c92207334c49876d86ae48d5fedb3220f4ca95fc"
+  },
+  {
+    "boss": "crypto",
+    "path": "/workspace/duffquest/art/new_portrait_crypto.png",
+    "filename": "new_portrait_crypto.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "44bd8b00d62dfc4a0007c38d99387c3316466f399e0396be22ff5e7690f84b36"
+  },
+  {
+    "boss": "crypto",
+    "path": "/workspace/duffquest/art/new_boss_intro_crypto.png",
+    "filename": "new_boss_intro_crypto.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "cca32223385516aefa338ba4c5f32127b2421a25d401f37f06806f54993a428d"
+  },
+  {
+    "boss": "crypto",
+    "path": "/workspace/duffquest/art/new_boss_intro_crypto_burst_preview.png",
+    "filename": "new_boss_intro_crypto_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "8f0d1b5efaf25cb8cd470f826b63cb345e0e53af11f06cadc89a180f2467549a"
+  },
+  {
+    "boss": "crypto",
+    "path": "/workspace/duffquest/art/ch_crypto_walk.gif",
+    "filename": "ch_crypto_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "b5ceba5233dfa0d56248d5e9f94f0e8fc8f3251455b1dee6d8bfa4e211a74f54"
+  },
+  {
+    "boss": "crypto",
+    "path": "/workspace/duffquest/art/ch_crypto_asphalt_test.png",
+    "filename": "ch_crypto_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "3d37cdb2feb737a80233f932f844d5498a37973ed5571e6f80b685968e401cb3"
+  },
+  {
+    "boss": "willnot",
+    "path": "/workspace/duffquest/art/ch_willnot.png",
+    "filename": "ch_willnot.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "ba464a4424766292e2c6c255d5955bb3bbd5ea923ae7b1a4aaf78ffb9c3d6cbe"
+  },
+  {
+    "boss": "willnot",
+    "path": "/workspace/duffquest/art/new_portrait_willnot.png",
+    "filename": "new_portrait_willnot.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "9000cafbe2c5572c9ffdbe114f84c0380f59b3d28eedbf9796477d9b8218e212"
+  },
+  {
+    "boss": "willnot",
+    "path": "/workspace/duffquest/art/new_boss_intro_willnot.png",
+    "filename": "new_boss_intro_willnot.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "1b171f4fd37d47087beaf37d416ea424486a4bacb593042917c8a17f33aab7db"
+  },
+  {
+    "boss": "willnot",
+    "path": "/workspace/duffquest/art/new_boss_intro_willnot_burst_preview.png",
+    "filename": "new_boss_intro_willnot_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "f77e9be7c9d02d99e3baca2ad01e2bc980d8d9bf359399efc0d271254865e9da"
+  },
+  {
+    "boss": "willnot",
+    "path": "/workspace/duffquest/art/ch_willnot_walk.gif",
+    "filename": "ch_willnot_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "62d17ab69059fe0f62d3eb5be8be2ae78082e017c56a2ed6f71d5344df39aaf8"
+  },
+  {
+    "boss": "willnot",
+    "path": "/workspace/duffquest/art/ch_willnot_asphalt_test.png",
+    "filename": "ch_willnot_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "6a507fd688d8217f3c60bdb12a05e24b24a392552ce5f056748be94df87ba728"
+  },
+  {
+    "boss": "regular",
+    "path": "/workspace/duffquest/art/ch_regular.png",
+    "filename": "ch_regular.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "ba05b54044cebc926cc36298eb22223741262d8c18d93f6fd25389074498878c"
+  },
+  {
+    "boss": "regular",
+    "path": "/workspace/duffquest/art/new_portrait_regular.png",
+    "filename": "new_portrait_regular.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "7379029b2700ce0a29f67c859713010d89a4d3d3d440ea40d8dcaac2562d26c0"
+  },
+  {
+    "boss": "regular",
+    "path": "/workspace/duffquest/art/new_boss_intro_regular.png",
+    "filename": "new_boss_intro_regular.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "6418b20925bb7918f4a963dde458bc830d5d1625ade4b77e07d69e29d047bf1c"
+  },
+  {
+    "boss": "regular",
+    "path": "/workspace/duffquest/art/new_boss_intro_regular_burst_preview.png",
+    "filename": "new_boss_intro_regular_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "1fe9f92c73121999a8f3338ba5dfad3bcf5225d1d66ca46b805acb37d3de2230"
+  },
+  {
+    "boss": "regular",
+    "path": "/workspace/duffquest/art/ch_regular_walk.gif",
+    "filename": "ch_regular_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "754b2b504b300204759c6d194e57aea888db41ba8e258b09fd3d9e972481ae84"
+  },
+  {
+    "boss": "regular",
+    "path": "/workspace/duffquest/art/ch_regular_asphalt_test.png",
+    "filename": "ch_regular_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "4a2b783fa4e175cf1d7873a7dd522bd3b002abbe7c20545885f61df0320fc6d8"
+  },
+  {
+    "boss": "sendback",
+    "path": "/workspace/duffquest/art/ch_sendback.png",
+    "filename": "ch_sendback.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "75a66462922ca76101ded5e167daad985fad9aaf2d73c839c077f425985c24a5"
+  },
+  {
+    "boss": "sendback",
+    "path": "/workspace/duffquest/art/new_portrait_sendback.png",
+    "filename": "new_portrait_sendback.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "c39e314b5c64f26a22d18273da997890062eadb356f13de53a15cbb0ebb0514e"
+  },
+  {
+    "boss": "sendback",
+    "path": "/workspace/duffquest/art/new_boss_intro_sendback.png",
+    "filename": "new_boss_intro_sendback.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "5c996a992b613f61cfde4885a4753495f875f26662de3d970bd2b89ec1d45b96"
+  },
+  {
+    "boss": "sendback",
+    "path": "/workspace/duffquest/art/new_boss_intro_sendback_burst_preview.png",
+    "filename": "new_boss_intro_sendback_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "0d5ac721a9764d90bcc12841fa9f69ec6e221c1dcb00b995a28125e0512f6f4e"
+  },
+  {
+    "boss": "sendback",
+    "path": "/workspace/duffquest/art/ch_sendback_walk.gif",
+    "filename": "ch_sendback_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "1a6f925bb4a6feb0291eb77e0e92c3d850846af249ea5fee3beddc7f78a42a21"
+  },
+  {
+    "boss": "sendback",
+    "path": "/workspace/duffquest/art/ch_sendback_asphalt_test.png",
+    "filename": "ch_sendback_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "b4610865b63d937c1bf4682d6a91414772984429eb117448ecf2babf9b3bebd6"
+  },
+  {
+    "boss": "coupon",
+    "path": "/workspace/duffquest/art/ch_coupon.png",
+    "filename": "ch_coupon.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "e9c6df4b133c20d64ebb9a2faacb49b107c6b2d8566cbf74b012d08e7f92dd17"
+  },
+  {
+    "boss": "coupon",
+    "path": "/workspace/duffquest/art/new_portrait_coupon.png",
+    "filename": "new_portrait_coupon.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "ac933dc49bbaf759466fbaabca6ad4ec3f42086e1f50aafed754df051fb011f3"
+  },
+  {
+    "boss": "coupon",
+    "path": "/workspace/duffquest/art/new_boss_intro_coupon.png",
+    "filename": "new_boss_intro_coupon.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "562000da7a346626373d11bac339df17ea002582be0908bcd90c3fd5a050b47f"
+  },
+  {
+    "boss": "coupon",
+    "path": "/workspace/duffquest/art/new_boss_intro_coupon_burst_preview.png",
+    "filename": "new_boss_intro_coupon_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "3b7823661fb41b4676b2b72d7197a036f524fb2074be329bac3c534d24b903cd"
+  },
+  {
+    "boss": "coupon",
+    "path": "/workspace/duffquest/art/ch_coupon_walk.gif",
+    "filename": "ch_coupon_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "6308e21b408c101468be2455911e92f03cd9b05e44293a01343ed26198d22af1"
+  },
+  {
+    "boss": "coupon",
+    "path": "/workspace/duffquest/art/ch_coupon_asphalt_test.png",
+    "filename": "ch_coupon_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "8dc7859e0a68f45d56ed2e57c20aa27c57c1e072b941d072bd4000cc89dfe7a9"
+  },
+  {
+    "boss": "allergy",
+    "path": "/workspace/duffquest/art/ch_allergy.png",
+    "filename": "ch_allergy.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "73491b45bbb3331d90a81ed1160cb45da5796334afb8da7283c91d9ebd7f3f95"
+  },
+  {
+    "boss": "allergy",
+    "path": "/workspace/duffquest/art/new_portrait_allergy.png",
+    "filename": "new_portrait_allergy.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "bd21f70abde011a3fd8ba73920e5920c2f8a6eb79772e89ca352583027d20ad8"
+  },
+  {
+    "boss": "allergy",
+    "path": "/workspace/duffquest/art/new_boss_intro_allergy.png",
+    "filename": "new_boss_intro_allergy.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "d3339e85eb07212a382a533de04cebf6ea34f69c99e8f39222b43bb31d2d1cd8"
+  },
+  {
+    "boss": "allergy",
+    "path": "/workspace/duffquest/art/new_boss_intro_allergy_burst_preview.png",
+    "filename": "new_boss_intro_allergy_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "97fa0f95d631be920ff46de52d1949f1775f47fb449ce28c9813626828f654a1"
+  },
+  {
+    "boss": "allergy",
+    "path": "/workspace/duffquest/art/ch_allergy_walk.gif",
+    "filename": "ch_allergy_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "4e4419ed385c540556643e2bc642a1d57160b33f9adbb25c47f86a63caf0d228"
+  },
+  {
+    "boss": "allergy",
+    "path": "/workspace/duffquest/art/ch_allergy_asphalt_test.png",
+    "filename": "ch_allergy_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "1666994a1d172cb1630376d728afb8e6feea312a1ad966d33dc1e3afdbbecdd3"
+  },
+  {
+    "boss": "camper",
+    "path": "/workspace/duffquest/art/ch_camper.png",
+    "filename": "ch_camper.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "495395e6cd4306c6d32659da1f81efd1a094153789d0327bbc99256ee67a5134"
+  },
+  {
+    "boss": "camper",
+    "path": "/workspace/duffquest/art/new_portrait_camper.png",
+    "filename": "new_portrait_camper.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "03fafe68e8e2c2d22a755df65df54118da5aa2ba8d6b9e4a7665ea306bd15ba1"
+  },
+  {
+    "boss": "camper",
+    "path": "/workspace/duffquest/art/new_boss_intro_camper.png",
+    "filename": "new_boss_intro_camper.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "3231738c59eacc8bc6e88c26da625748bcc7d2962b4be65dd9d994e967c81d15"
+  },
+  {
+    "boss": "camper",
+    "path": "/workspace/duffquest/art/new_boss_intro_camper_burst_preview.png",
+    "filename": "new_boss_intro_camper_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "23d8786520bc229de19b6fe10ef471168a93495862152b218c5936747bbffa74"
+  },
+  {
+    "boss": "camper",
+    "path": "/workspace/duffquest/art/ch_camper_walk.gif",
+    "filename": "ch_camper_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "47bd6e9d023eedf03888e8da35ccf097cf88e68c64224016e6d3697fe44fe3e2"
+  },
+  {
+    "boss": "camper",
+    "path": "/workspace/duffquest/art/ch_camper_asphalt_test.png",
+    "filename": "ch_camper_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "0ac9df790088a0542b14232d0e536ea5c7c2620796538afede975a905f9496e9"
+  },
+  {
+    "boss": "bdaydad",
+    "path": "/workspace/duffquest/art/ch_bdaydad.png",
+    "filename": "ch_bdaydad.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "9522a7dc1a668c5f12d85ce6403502931578e12b38c4798b223124ca59014175"
+  },
+  {
+    "boss": "bdaydad",
+    "path": "/workspace/duffquest/art/new_portrait_bdaydad.png",
+    "filename": "new_portrait_bdaydad.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "41ea493d53f5060a1eb68ea13ceb75c3442eb5881b48fb5feace130952c7b871"
+  },
+  {
+    "boss": "bdaydad",
+    "path": "/workspace/duffquest/art/new_boss_intro_bdaydad.png",
+    "filename": "new_boss_intro_bdaydad.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "7c5ae71eb7c907d05575242ae9b5213a0517cde3816afcfdfd4d58a8e87441dc"
+  },
+  {
+    "boss": "bdaydad",
+    "path": "/workspace/duffquest/art/new_boss_intro_bdaydad_burst_preview.png",
+    "filename": "new_boss_intro_bdaydad_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "33afaf15c45af0b81bf701f5ccfafafbbf0b63c4813618f8c0b30e8aafd3c316"
+  },
+  {
+    "boss": "bdaydad",
+    "path": "/workspace/duffquest/art/ch_bdaydad_walk.gif",
+    "filename": "ch_bdaydad_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "efc1be71c56b235369612fa8279fc971f6243a82328b44723e30a20158e11b26"
+  },
+  {
+    "boss": "bdaydad",
+    "path": "/workspace/duffquest/art/ch_bdaydad_asphalt_test.png",
+    "filename": "ch_bdaydad_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "80f832862bba1b2e7b748a50d67a4cc0fef879d0de29836536c9944719467b7e"
+  },
+  {
+    "boss": "dasher",
+    "path": "/workspace/duffquest/art/ch_dasher.png",
+    "filename": "ch_dasher.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "3a04d99b80ae5b5406dfb51989ee0d133214aa5052f06c2148efef5d8ff1b85c"
+  },
+  {
+    "boss": "dasher",
+    "path": "/workspace/duffquest/art/new_portrait_dasher.png",
+    "filename": "new_portrait_dasher.png",
+    "size": [
+      1536,
+      512
+    ],
+    "sha256": "ccd4330d461115fd5d2631c0f0fe5c35d273f4fd148feeb3ce917c4ecdabc528"
+  },
+  {
+    "boss": "dasher",
+    "path": "/workspace/duffquest/art/new_boss_intro_dasher.png",
+    "filename": "new_boss_intro_dasher.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "6fd56342c8e0ab9f9493040854d96f0607237868f675eb8b718042b075655429"
+  },
+  {
+    "boss": "dasher",
+    "path": "/workspace/duffquest/art/new_boss_intro_dasher_burst_preview.png",
+    "filename": "new_boss_intro_dasher_burst_preview.png",
+    "size": [
+      1920,
+      1080
+    ],
+    "sha256": "9225b483d3b9937c84e520aad33f51b933c7ce909faebed089fe7ece0e80b4ec"
+  },
+  {
+    "boss": "dasher",
+    "path": "/workspace/duffquest/art/ch_dasher_walk.gif",
+    "filename": "ch_dasher_walk.gif",
+    "size": [
+      768,
+      224
+    ],
+    "sha256": "3e6afc4e7e353a4215f51e6d39dba64e8a2b049f76153af639ad4685cdd3677d"
+  },
+  {
+    "boss": "dasher",
+    "path": "/workspace/duffquest/art/ch_dasher_asphalt_test.png",
+    "filename": "ch_dasher_asphalt_test.png",
+    "size": [
+      3072,
+      220
+    ],
+    "sha256": "1c30fed6cf4613c63c488249fdf28d293236bc5ac07d708018e7bf9a13e916e4"
+  }
+]

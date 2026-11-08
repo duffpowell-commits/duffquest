@@ -68,8 +68,8 @@ Hi Claude, these are from Duff's Grok art assistant. Duff approved everything in
    - Storefronts are delivered: all 13 in `grok_art/2026-11-08-storefronts/`. Read `HANDOFF.md` there. The street mock is illustrative only, not a collision layout.
    - Trees, clutter, and fences are delivered: `grok_art/2026-11-08-street-dressing/`. Read `HANDOFF.md` there. Fence segments join at a 208px stride with a 16px overlap, not at the 256px cell pitch. The street mock is illustrative, not a collision layout.
    - Duff's outfit sheets are delivered: `grok_art/2026-11-08-duff-outfits/`. Read `HANDOFF.md` there. These are the outdoors `duff_<armor>_<shoes>` variants. Apply the same ~3px foot drop as `duff_home` so they sit on the y=60 origin.
-   - Next art from Grok: the 17 bosses. Each boss needs a walking sheet, portraits, and an intro splash, and every boss must look unlike the others.
-   - Then the P2 NPCs and backdrops, then P3 icons and props.
+   - The 17 bosses are delivered: `grok_art/2026-11-08-bosses/`. Duff approved the set. Read `HANDOFF.md` there. Each boss has a walking sheet, portraits, a keyed intro, and a burst-preview intro. Attack cells are one pose (Dasher charges). Godot timing, hitboxes, and projectile anchors are untested.
+   - Next art from Grok: the P2 NPCs and backdrops, then P3 icons and props.
 5. Flag any format changes you want (cell size, key colour, frame count) before Grok makes more sheets.
 6. Open questions for Duff (also noted in the sheet). Looks are not questions. See the note at the top.
    - Jen's role is clear: Duff's sister. She sends the Wordle texts and babysits Octavia. Do not ask what she looks like.
