@@ -21,3 +21,9 @@
 - [ ] Make outfits readable at a glance: real clogs, a light apron or coloured jacket; dark outfits vanish on asphalt
 - [ ] Clean the speckled dark outline around hair/ponytail (in Grok's source)
 - [ ] Hair: move from ginger toward the approved portrait's dirty blond
+
+## M3: combat feel (Nov 8) — done
+- [x] Hit-stop, shake (limit-clamped + zoom punch), sparks, popping numbers (`scripts/juice.gd`)
+- [x] Review fixes: brulee/tempura ticks no longer freeze; spatula "flip" no longer counts as heavy; crits do; no late shake after the 86 cinematic/pause
+- [ ] Try it on the phone: is 70 ms light hit-stop too sticky on fast combos?
+- [ ] Enemy speech bubbles still cover damage numbers when 3+ enemies bunch up
