@@ -1,0 +1,3739 @@
+{
+  "result": "PASS",
+  "failures": [],
+  "image_generations": 0,
+  "source": "Existing approved sheets only; native PIL cutouts/pixel geometry; ONE shared Duff transform rig,17 custom boss gestures.",
+  "verification": "One consolidated scripted and visual pass, with local arm-cutout and cool-indigo rug-palette corrections.",
+  "counts": {
+    "outfits": 11,
+    "bosses": 17,
+    "cells": 448,
+    "boss_walk_cells_preserved": 204,
+    "unique_attack_mask_pair_checks": 544,
+    "approved_portrait_intro_files_preserved": 51,
+    "repo_files_unchanged": 1660
+  },
+  "repo_changes": [],
+  "runtime_limitations": "Not tested in Godot. Single attack key pose, not a multi-frame attack animation. No timing, hitbox or projectile-anchor changes.",
+  "palette_correction": "Crypto rug outline cooled from pink to blue-indigo to retain the existing magenta key without touching walk pixels.",
+  "local_corrections": [
+    "Extended shared Duff arm cutout bounds to remove leftover hand pixels.",
+    "Retained bare Duff forearms on all short-sleeved/rolled outfits in attack frames.",
+    "Cooled Crypto rug highlights to keep the unchanged magenta key safe."
+  ],
+  "assets": {
+    "ch_husk": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            15,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            15,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            18,
+            5,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            15,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            15,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            12,
+            5,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            21,
+            8,
+            43,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            15,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            5,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            21,
+            8,
+            43,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            14,
+            5,
+            47,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Phone thrust overhead: posting/rocket command.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            38,
+            35
+          ],
+          [
+            46,
+            24
+          ],
+          [
+            44,
+            11
+          ]
+        ],
+        "back": [
+          [
+            26,
+            36
+          ],
+          [
+            20,
+            43
+          ],
+          [
+            24,
+            47
+          ]
+        ],
+        "feet": [
+          [
+            22,
+            58
+          ],
+          [
+            43,
+            59
+          ]
+        ],
+        "hx": -2,
+        "lean": 1,
+        "prop": "phone",
+        "target": [
+          44,
+          8
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_bozos": {
+      "format": "PASS",
+      "key": "#00FF00",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            10,
+            8,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            10,
+            9,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            10,
+            9,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            14,
+            8,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            11,
+            8,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            11,
+            9,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            11,
+            9,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            10,
+            7,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            19,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            14,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            8,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            19,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            4,
+            8,
+            47,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Released parcel toss and drone dispatch gesture (parcel is a visual motif; mechanics drones/shine).",
+      "pose_coordinates": {
+        "lead": [
+          [
+            38,
+            34
+          ],
+          [
+            45,
+            28
+          ],
+          [
+            51,
+            24
+          ]
+        ],
+        "back": [
+          [
+            25,
+            35
+          ],
+          [
+            20,
+            40
+          ],
+          [
+            28,
+            42
+          ]
+        ],
+        "feet": [
+          [
+            24,
+            59
+          ],
+          [
+            43,
+            57
+          ]
+        ],
+        "hx": 1,
+        "lean": 3,
+        "prop": "parcel",
+        "target": [
+          54,
+          18
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_fences": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            18,
+            8,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            16,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            19,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            15,
+            8,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            4,
+            8,
+            49,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Open-palm software wave push; other hand braces tablet.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            37,
+            34
+          ],
+          [
+            44,
+            35
+          ],
+          [
+            51,
+            33
+          ]
+        ],
+        "back": [
+          [
+            26,
+            35
+          ],
+          [
+            23,
+            42
+          ],
+          [
+            28,
+            43
+          ]
+        ],
+        "feet": [
+          [
+            20,
+            57
+          ],
+          [
+            42,
+            59
+          ]
+        ],
+        "hx": 1,
+        "lean": 2,
+        "prop": "palm",
+        "target": [
+          53,
+          31
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_baron": {
+      "format": "PASS",
+      "key": "#00FF00",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            16,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            16,
+            8,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            17,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            16,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            13,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            8,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            19,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            4,
+            8,
+            47,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Underhand aristocratic coin fan, other arm behind coat.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            37,
+            36
+          ],
+          [
+            44,
+            42
+          ],
+          [
+            51,
+            35
+          ]
+        ],
+        "back": [
+          [
+            26,
+            37
+          ],
+          [
+            21,
+            43
+          ],
+          [
+            25,
+            47
+          ]
+        ],
+        "feet": [
+          [
+            27,
+            59
+          ],
+          [
+            44,
+            56
+          ]
+        ],
+        "hx": -1,
+        "lean": -2,
+        "prop": "coins",
+        "target": [
+          53,
+          29
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_donald": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            17,
+            5,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            16,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            15,
+            8,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            21,
+            8,
+            43,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            12,
+            8,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            21,
+            8,
+            43,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            11,
+            8,
+            52,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Ruler-tariff boomerang wind-up with open wall-building hand.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            26,
+            35
+          ],
+          [
+            19,
+            28
+          ],
+          [
+            21,
+            20
+          ]
+        ],
+        "back": [
+          [
+            38,
+            36
+          ],
+          [
+            43,
+            41
+          ],
+          [
+            49,
+            39
+          ]
+        ],
+        "feet": [
+          [
+            19,
+            58
+          ],
+          [
+            42,
+            59
+          ]
+        ],
+        "hx": -3,
+        "lean": -4,
+        "prop": "ruler",
+        "target": [
+          18,
+          15
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_ghoster": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            19,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            12,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            17,
+            12,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            20,
+            12,
+            59,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            5,
+            12,
+            44,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Low guarded phone peek, message blips and evasive crouch.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            37,
+            39
+          ],
+          [
+            43,
+            43
+          ],
+          [
+            44,
+            36
+          ]
+        ],
+        "back": [
+          [
+            27,
+            40
+          ],
+          [
+            23,
+            47
+          ],
+          [
+            32,
+            48
+          ]
+        ],
+        "feet": [
+          [
+            26,
+            59
+          ],
+          [
+            44,
+            58
+          ]
+        ],
+        "hx": 3,
+        "hy": 4,
+        "lean": 5,
+        "prop": "messages",
+        "target": [
+          45,
+          35
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_gymbro": {
+      "format": "PASS",
+      "key": "#00FF00",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            14,
+            8,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            14,
+            9,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            14,
+            9,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            16,
+            10,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            14,
+            8,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            14,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            14,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            14,
+            10,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            16,
+            10,
+            54,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            19,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            10,
+            10,
+            48,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Two-fist down slam with broad grounded squat and impact pixels.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            38,
+            33
+          ],
+          [
+            46,
+            35
+          ],
+          [
+            45,
+            46
+          ]
+        ],
+        "back": [
+          [
+            26,
+            33
+          ],
+          [
+            30,
+            39
+          ],
+          [
+            37,
+            46
+          ]
+        ],
+        "feet": [
+          [
+            21,
+            59
+          ],
+          [
+            44,
+            59
+          ]
+        ],
+        "hx": 2,
+        "hy": 2,
+        "lean": 4,
+        "prop": "slam",
+        "target": [
+          44,
+          49
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_djvape": {
+      "format": "PASS",
+      "key": "#00FF00",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            14,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            17,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            15,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            15,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            8,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            4,
+            8,
+            47,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Lean-back vape exhalation with hard-cluster cloud.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            37,
+            35
+          ],
+          [
+            42,
+            39
+          ],
+          [
+            40,
+            31
+          ]
+        ],
+        "back": [
+          [
+            25,
+            36
+          ],
+          [
+            22,
+            43
+          ],
+          [
+            28,
+            46
+          ]
+        ],
+        "feet": [
+          [
+            28,
+            59
+          ],
+          [
+            43,
+            57
+          ]
+        ],
+        "hx": -3,
+        "lean": -4,
+        "prop": "vape",
+        "target": [
+          50,
+          28
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_crypto": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            17,
+            11,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            17,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            15,
+            11,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            21,
+            8,
+            43,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            14,
+            11,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            21,
+            8,
+            43,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            4,
+            11,
+            50,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Two-handed low rug yank and compact forward crouch.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            36,
+            38
+          ],
+          [
+            43,
+            43
+          ],
+          [
+            48,
+            46
+          ]
+        ],
+        "back": [
+          [
+            26,
+            39
+          ],
+          [
+            31,
+            48
+          ],
+          [
+            40,
+            48
+          ]
+        ],
+        "feet": [
+          [
+            19,
+            58
+          ],
+          [
+            42,
+            59
+          ]
+        ],
+        "hx": 4,
+        "hy": 3,
+        "lean": 5,
+        "prop": "rug",
+        "target": [
+          50,
+          49
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_willnot": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            15,
+            8,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            15,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            15,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            15,
+            9,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            15,
+            8,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            15,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            15,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            15,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            43,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            9,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            21,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            4,
+            9,
+            47,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Two-handed braced SMG spray, angular muzzle flash.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            37,
+            34
+          ],
+          [
+            43,
+            38
+          ],
+          [
+            49,
+            34
+          ]
+        ],
+        "back": [
+          [
+            26,
+            35
+          ],
+          [
+            32,
+            42
+          ],
+          [
+            43,
+            38
+          ]
+        ],
+        "feet": [
+          [
+            22,
+            59
+          ],
+          [
+            46,
+            57
+          ]
+        ],
+        "hx": 1,
+        "hy": 1,
+        "lean": 2,
+        "prop": "gun",
+        "target": [
+          53,
+          33
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_regular": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            12,
+            8,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            12,
+            9,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            12,
+            9,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            13,
+            8,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            13,
+            8,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            13,
+            9,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            13,
+            9,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            13,
+            5,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            14,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            16,
+            8,
+            56,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            8,
+            8,
+            48,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Angry high coffee-mug curl/toss, belly-braced off hand.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            39,
+            36
+          ],
+          [
+            45,
+            28
+          ],
+          [
+            44,
+            21
+          ]
+        ],
+        "back": [
+          [
+            25,
+            37
+          ],
+          [
+            20,
+            42
+          ],
+          [
+            29,
+            43
+          ]
+        ],
+        "feet": [
+          [
+            28,
+            59
+          ],
+          [
+            45,
+            58
+          ]
+        ],
+        "hx": -2,
+        "lean": -3,
+        "prop": "coffee",
+        "target": [
+          46,
+          19
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_sendback": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            17,
+            9,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            17,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            14,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            8,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            13,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            15,
+            9,
+            59,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            5,
+            9,
+            49,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Two-handed rejected-plate shove with offended backward lean.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            37,
+            36
+          ],
+          [
+            43,
+            42
+          ],
+          [
+            50,
+            40
+          ]
+        ],
+        "back": [
+          [
+            26,
+            37
+          ],
+          [
+            31,
+            44
+          ],
+          [
+            44,
+            42
+          ]
+        ],
+        "feet": [
+          [
+            25,
+            59
+          ],
+          [
+            43,
+            58
+          ]
+        ],
+        "hx": -3,
+        "hy": 1,
+        "lean": -3,
+        "prop": "plate",
+        "target": [
+          50,
+          39
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_coupon": {
+      "format": "PASS",
+      "key": "#00FF00",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            18,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            15,
+            7,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            12,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            8,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            52,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            4,
+            8,
+            47,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Overhead accordion-coupon whip, bag hand held low.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            38,
+            36
+          ],
+          [
+            43,
+            29
+          ],
+          [
+            43,
+            23
+          ]
+        ],
+        "back": [
+          [
+            25,
+            38
+          ],
+          [
+            20,
+            43
+          ],
+          [
+            24,
+            47
+          ]
+        ],
+        "feet": [
+          [
+            22,
+            59
+          ],
+          [
+            41,
+            56
+          ]
+        ],
+        "hx": 1,
+        "lean": 2,
+        "prop": "accordion",
+        "target": [
+          46,
+          24
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_allergy": {
+      "format": "PASS",
+      "key": "#00FF00",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            17,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            17,
+            8,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            17,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            17,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            17,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            19,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            13,
+            8,
+            55,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            9,
+            8,
+            51,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Indignant onion brandish and spread-arm menu protest.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            38,
+            35
+          ],
+          [
+            46,
+            30
+          ],
+          [
+            50,
+            24
+          ]
+        ],
+        "back": [
+          [
+            25,
+            36
+          ],
+          [
+            19,
+            42
+          ],
+          [
+            17,
+            38
+          ]
+        ],
+        "feet": [
+          [
+            21,
+            59
+          ],
+          [
+            44,
+            58
+          ]
+        ],
+        "hx": 0,
+        "lean": 1,
+        "prop": "onion",
+        "target": [
+          51,
+          19
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_camper": {
+      "format": "PASS",
+      "key": "#00FF00",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            16,
+            9,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            16,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            9,
+            55,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            44,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            9,
+            9,
+            47,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "Two-handed open-laptop shield flex, defensive lean.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            37,
+            36
+          ],
+          [
+            43,
+            43
+          ],
+          [
+            47,
+            38
+          ]
+        ],
+        "back": [
+          [
+            26,
+            37
+          ],
+          [
+            30,
+            44
+          ],
+          [
+            38,
+            44
+          ]
+        ],
+        "feet": [
+          [
+            27,
+            59
+          ],
+          [
+            42,
+            57
+          ]
+        ],
+        "hx": -4,
+        "hy": 1,
+        "lean": -4,
+        "prop": "laptop",
+        "target": [
+          44,
+          38
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_bdaydad": {
+      "format": "PASS",
+      "key": "#00FF00",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            17,
+            8,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            16,
+            8,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            16,
+            9,
+            47,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            16,
+            8,
+            48,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            15,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            19,
+            8,
+            60,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            8,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            18,
+            9,
+            49,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            18,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            4,
+            8,
+            45,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "High command-point/hire gesture, cake box protected, tiny coin fan.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            38,
+            36
+          ],
+          [
+            43,
+            27
+          ],
+          [
+            50,
+            22
+          ]
+        ],
+        "back": [
+          [
+            25,
+            37
+          ],
+          [
+            22,
+            44
+          ],
+          [
+            29,
+            44
+          ]
+        ],
+        "feet": [
+          [
+            26,
+            59
+          ],
+          [
+            43,
+            58
+          ]
+        ],
+        "hx": 2,
+        "lean": 2,
+        "prop": "point",
+        "target": [
+          54,
+          19
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    },
+    "ch_dasher": {
+      "format": "PASS",
+      "key": "#FF00FF",
+      "cells": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            18,
+            10,
+            51,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            20,
+            8,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            46,
+            60
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            18,
+            10,
+            50,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            22,
+            8,
+            42,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            6,
+            10,
+            53,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            22,
+            8,
+            42,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            19,
+            9,
+            45,
+            60
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            11,
+            10,
+            58,
+            60
+          ]
+        }
+      ],
+      "walk_columns_byte_pixels_unchanged": true,
+      "walk_gif_byte_identical": true,
+      "attack": "High-knee shoulder-first charge, tucked lead fist and trailing elbow.",
+      "pose_coordinates": {
+        "lead": [
+          [
+            39,
+            36
+          ],
+          [
+            46,
+            44
+          ],
+          [
+            46,
+            35
+          ]
+        ],
+        "back": [
+          [
+            26,
+            37
+          ],
+          [
+            15,
+            39
+          ],
+          [
+            22,
+            31
+          ]
+        ],
+        "feet": [
+          [
+            22,
+            59
+          ],
+          [
+            47,
+            53
+          ]
+        ],
+        "hx": 7,
+        "hy": 2,
+        "lean": 7,
+        "prop": "charge",
+        "target": [
+          48,
+          37
+        ]
+      },
+      "manual_review": "PASS: different skeleton gesture/stance/prop, correct cardinal head and torso; rim readable on #5A5A5A",
+      "weak_point": "Front/back projected gestures are foreshortened; props can overlap the face; one attack key pose, not a full multi-frame sequence."
+    }
+  }
+}

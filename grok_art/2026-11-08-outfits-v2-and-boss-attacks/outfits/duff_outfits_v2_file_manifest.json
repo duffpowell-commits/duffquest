@@ -1,0 +1,222 @@
+[
+  {
+    "job": "outfits",
+    "id": "duff_home",
+    "path": "/workspace/duffquest/art/duff_home.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "47b03014cd43cd2df0d8709c5f80acd7483dfdc5a9a4f536e2cd6c7eba15f435"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_home",
+    "path": "/workspace/duffquest/art/duff_home_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "5f426bac916c0c3be4469f962fe58c2836c7139b83c9fb79c704cec2e092e6c4"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_apron_black",
+    "path": "/workspace/duffquest/art/duff_apron_black.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "bb3e7d38d0f7e824d5a95fafc7d9ef5986d5b8dd86e0199f39029ba6b72a680a"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_apron_black",
+    "path": "/workspace/duffquest/art/duff_apron_black_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "7a1cea82313a0fa63ae7d82750b12a59ec495e88b71bfb6cbaa0f72bf1dc7683"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_apron_red",
+    "path": "/workspace/duffquest/art/duff_apron_red.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "203cf2fb33deffccb3c6efa7a6c34ef45d14ea8ea65bfd1a274bdd0885ae754f"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_apron_red",
+    "path": "/workspace/duffquest/art/duff_apron_red_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "e967a3ae771dbbb5c6b2fa0b558e226a73d16d9a47eb4c1dd4143ab493523a84"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_clogs_black",
+    "path": "/workspace/duffquest/art/duff_clogs_black.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "11ad3a5df047e91f289fb37800345a0e8ceb83ab726c248a0f7b8126c3a5e874"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_clogs_black",
+    "path": "/workspace/duffquest/art/duff_clogs_black_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "9da9de55b2adabe007ba522a08718d718f3799466bd0909fb4d5db89d6853fac"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_clogs_red",
+    "path": "/workspace/duffquest/art/duff_clogs_red.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "c4455799bdc0664d9566822103e62e70e0b4e315829474b6d63bb42c93456d5f"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_clogs_red",
+    "path": "/workspace/duffquest/art/duff_clogs_red_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "04863b7d3ec341905d7951b89ba253c0a41bab6a802ccc90a9194f3c5bd6a717"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_coat_black",
+    "path": "/workspace/duffquest/art/duff_coat_black.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "3b47d077642cfd8b77d40c8f84e15a70f7a2ecc575cb251fdc5c979df3b0a4a2"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_coat_black",
+    "path": "/workspace/duffquest/art/duff_coat_black_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "356e8b61879138a33ce4f8e8cd4ad60bb4695d77b00a4a966b0dac15ddfa8ff6"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_coat_red",
+    "path": "/workspace/duffquest/art/duff_coat_red.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "84bb96061a926c7e60868004a9b05439518637406ede42b325770900a21ba80f"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_coat_red",
+    "path": "/workspace/duffquest/art/duff_coat_red_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "856684278ed5513822aa4a4514715713c91f2af7085bdb2972d56d84caedafd2"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_dad_black",
+    "path": "/workspace/duffquest/art/duff_dad_black.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "1735f963687fda2edcc4aaff3f68fb7436d87c0680e54e747e3662b2113c8256"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_dad_black",
+    "path": "/workspace/duffquest/art/duff_dad_black_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "2a021178028dcc821a5ab7178114c761923a99196fb6f0d656e77d0d2a834567"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_dad_red",
+    "path": "/workspace/duffquest/art/duff_dad_red.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "b53c246e3608ffec8c1470d046d9163999a9864ad742a6e35c8d06247cd6a978"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_dad_red",
+    "path": "/workspace/duffquest/art/duff_dad_red_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "ce74fe1e93feea04fa01720d5b397a28ac7730e3d1f20541291947a544f33149"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_sleeves_black",
+    "path": "/workspace/duffquest/art/duff_sleeves_black.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "6023d5cce204a9754ba43f7c49478566d6b6a74b24cbba0f5077d55638826561"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_sleeves_black",
+    "path": "/workspace/duffquest/art/duff_sleeves_black_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "3d74d709d8d9466513194086441657a87c67aae03552d1a4ef75ab6c32e641fc"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_sleeves_red",
+    "path": "/workspace/duffquest/art/duff_sleeves_red.png",
+    "size": [
+      256,
+      256
+    ],
+    "sha256": "dc32cda309f26f2e72fd1fd5dd857b0521a2fa5e7928750771bc302a660d7160"
+  },
+  {
+    "job": "outfits",
+    "id": "duff_sleeves_red",
+    "path": "/workspace/duffquest/art/duff_sleeves_red_walk.gif",
+    "size": [
+      768,
+      192
+    ],
+    "sha256": "97e25f7861c49e10658b0fce3858477c5504a383def393e40d47da2532737088"
+  }
+]
