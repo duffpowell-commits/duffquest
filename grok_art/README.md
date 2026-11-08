@@ -9,6 +9,9 @@ https://docs.google.com/document/d/1lmADUpw6NO0A_rvmwdox_t2oJoh8yZVLc1AXliRUwnE/
 **Capability test:** https://docs.google.com/document/d/1ay5y-iWh__M8sJx4JbcHVWp0WvOMgoi8g2gFnHzAtC4/edit
 (results go in Drive: DuffQuest Art Inbox / 99 Grok capability test).
 
+## Open requests
+- **M7 backgrounds (Nov 8):** `requests/REQUEST_M7_backdrops.md`, 19 full-screen backgrounds with layout guides in `requests/m7/`.
+
 ## Getting art here
 Send it to Claude in chat, share a Drive link, drop it in the Drive Art Inbox, or upload it here
 with the GitHub app (duffquest → grok_art → Add file → Upload). Name it what it is.
