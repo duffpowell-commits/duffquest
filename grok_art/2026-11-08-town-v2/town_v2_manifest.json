@@ -1,0 +1,512 @@
+{
+  "image_generations": 0,
+  "assets": {
+    "waffle_sign": {
+      "file": "/workspace/duffquest/art/waffle_sign.png",
+      "size": [
+        48,
+        64
+      ],
+      "cell": [
+        48,
+        64
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        24,
+        60
+      ],
+      "key": "#FF00FF",
+      "text": "WAFFLE HAUS",
+      "note": "New48x64 single prop: legible native5x7 hand-lettering; compact double-line roadside pole sign, sized near the old procedural world footprint. No I-80 or extra text.",
+      "sha256": "8af1d06616f649cc3685423a1cf0c8af3b3a1e58da5354e9581ab147f845fc4d",
+      "bytes": 667
+    },
+    "bus_sign": {
+      "file": "/workspace/duffquest/art/bus_sign.png",
+      "size": [
+        32,
+        40
+      ],
+      "cell": [
+        32,
+        40
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        16,
+        38
+      ],
+      "key": "#FF00FF",
+      "text": "BUS",
+      "note": "Exact existing32x40; enamel teal bus pictogram and short native3x5 BUS lettering, silver rim/pole.",
+      "sha256": "382321d968836cb60ecd2361a39dfc666f8ea3abab31ceb32031525a322a6582",
+      "bytes": 431
+    },
+    "lawn_mailbox": {
+      "file": "/workspace/duffquest/art/lawn_mailbox.png",
+      "size": [
+        32,
+        40
+      ],
+      "cell": [
+        32,
+        40
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        16,
+        38
+      ],
+      "key": "#FF00FF",
+      "text": null,
+      "note": "Single32x40 residential curb mailbox; teal weathered enamel, vermilion flag, warm wood stake; no letters.",
+      "sha256": "807e928046baf280d96c1c2f4daadd66d97f0f84f147c3f4869a33da98824550",
+      "bytes": 489
+    },
+    "lawn_flamingo": {
+      "file": "/workspace/duffquest/art/lawn_flamingo.png",
+      "size": [
+        32,
+        40
+      ],
+      "cell": [
+        32,
+        40
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        16,
+        38
+      ],
+      "key": "#00FF00",
+      "text": null,
+      "note": "32x40 pink plastic flamingo, bent leg and curved neck; green key required by pink.",
+      "sha256": "a1c5ff55dbee69307b57139778beb0952f4fc756fb51dba8ec4fd763c0b73a17",
+      "bytes": 735
+    },
+    "lawn_sprinkler": {
+      "file": "/workspace/duffquest/art/lawn_sprinkler.png",
+      "size": [
+        32,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        16,
+        30
+      ],
+      "key": "#FF00FF",
+      "text": null,
+      "note": "32x32 oscillating sprinkler; crisp water droplets, metal highlights; no soft airbrush.",
+      "sha256": "e89bf389b24bfadb8a94c6c2993f7cfbe661bcf3a85059ae8f58d9a9f40170c4",
+      "bytes": 489
+    },
+    "lawn_bush": {
+      "file": "/workspace/duffquest/art/lawn_bush.png",
+      "size": [
+        32,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        16,
+        30
+      ],
+      "key": "#FF00FF",
+      "text": null,
+      "note": "32x32 dense garden shrub reused from approved tree foliage, preserving clustered golden-green detail; no ground scenery.",
+      "sha256": "1a554879c0db29220ab6cc186bf061e6240c4647fa834bfb881a7c4a721ecf97",
+      "bytes": 1428
+    },
+    "lawn_gnome": {
+      "file": "/workspace/duffquest/art/lawn_gnome.png",
+      "size": [
+        32,
+        32
+      ],
+      "cell": [
+        32,
+        32
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        16,
+        30
+      ],
+      "key": "#FF00FF",
+      "text": null,
+      "note": "32x32 chunky painted garden gnome statue: red cap, blue jacket, cream beard, lit stone base; original design.",
+      "sha256": "a7857f7a44de5300ad48cfe084ef1304572a32239e6053db371383ac01222e32",
+      "bytes": 614
+    },
+    "lawn_kiddie_pool": {
+      "file": "/workspace/duffquest/art/lawn_kiddie_pool.png",
+      "size": [
+        64,
+        40
+      ],
+      "cell": [
+        64,
+        40
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        32,
+        38
+      ],
+      "key": "#FF00FF",
+      "text": null,
+      "note": "Single64x40 (existing truck_h size convention): teal inflatable pool with structured water ripples and tiny yellow duck; own footprint only.",
+      "sha256": "9b8f09bb5970b21e114249fe001bc4e4794b2842345cfc055a38583b81b79c81",
+      "bytes": 1001
+    },
+    "lawn_trash_can": {
+      "file": "/workspace/duffquest/art/lawn_trash_can.png",
+      "size": [
+        32,
+        40
+      ],
+      "cell": [
+        32,
+        40
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "origin": [
+        16,
+        38
+      ],
+      "key": "#FF00FF",
+      "text": null,
+      "note": "32x40 bin reused from approved detailed clutter sheet; brighter metal rim so dark green reads on asphalt/grass. Recycle pictogram, no lettering.",
+      "sha256": "7d2d1de1efc7c559dbdb0f0f309c35f682aa940addd81b29310b419b9691f7a7",
+      "bytes": 1944
+    },
+    "cat_alastor": {
+      "file": "/workspace/duffquest/art/cat_alastor.png",
+      "size": [
+        192,
+        64
+      ],
+      "cell": [
+        48,
+        32
+      ],
+      "grid": [
+        4,
+        2
+      ],
+      "origin": [
+        24,
+        28
+      ],
+      "key": "#00FF00",
+      "text": null,
+      "note": "Exact legacy grid and row direction: top LEFT, bottom RIGHT. Cols walkA/walkB/hungry-alert/fed-settled, matching cat.gd frame indices. Native coat: ginger tabby / silver-grey / black. Pink ears/nose require green key. cat.gd velocity lookup is opposite the legacy row directions; see README.",
+      "sha256": "298898b039c35c550747d52e39404620b07270b53b2eca0ccf03902bfa569db6",
+      "bytes": 2560
+    },
+    "cat_freya": {
+      "file": "/workspace/duffquest/art/cat_freya.png",
+      "size": [
+        192,
+        64
+      ],
+      "cell": [
+        48,
+        32
+      ],
+      "grid": [
+        4,
+        2
+      ],
+      "origin": [
+        24,
+        28
+      ],
+      "key": "#00FF00",
+      "text": null,
+      "note": "Exact legacy grid and row direction: top LEFT, bottom RIGHT. Cols walkA/walkB/hungry-alert/fed-settled, matching cat.gd frame indices. Native coat: ginger tabby / silver-grey / black. Pink ears/nose require green key. cat.gd velocity lookup is opposite the legacy row directions; see README.",
+      "sha256": "d9b63b9624a7cd23ef8052b5fd5ac15c5c2630ee20b573f728fc57220cde4b05",
+      "bytes": 2553
+    },
+    "cat_lucifer": {
+      "file": "/workspace/duffquest/art/cat_lucifer.png",
+      "size": [
+        192,
+        64
+      ],
+      "cell": [
+        48,
+        32
+      ],
+      "grid": [
+        4,
+        2
+      ],
+      "origin": [
+        24,
+        28
+      ],
+      "key": "#00FF00",
+      "text": null,
+      "note": "Exact legacy grid and row direction: top LEFT, bottom RIGHT. Cols walkA/walkB/hungry-alert/fed-settled, matching cat.gd frame indices. Native coat: ginger tabby / silver-grey / black. Pink ears/nose require green key. cat.gd velocity lookup is opposite the legacy row directions; see README.",
+      "sha256": "7738fd7d1d36216ab7779ea2b62cacbbfe9589ace2b434fdca0ffc59296f8036",
+      "bytes": 2644
+    },
+    "town_tree_trunks": {
+      "file": "/workspace/duffquest/art/town_tree_trunks.png",
+      "size": [
+        384,
+        384
+      ],
+      "cell": [
+        128,
+        128
+      ],
+      "grid": [
+        3,
+        3
+      ],
+      "origin": [
+        64,
+        120
+      ],
+      "key": "#FF00FF",
+      "text": null,
+      "note": "Optional cheap mechanical split of unchanged approved3x3 tree atlas: exposed lower woody pixels / complementary canopy. Empty slots remain empty. Composite reconstructs approved source exactly. Import key first; fade only canopy dynamically. No hidden trunk invented.",
+      "sha256": "18df2a6bf12cfc99176c0b33256cd73e697aeec2a966317eedf142e197327e6d",
+      "bytes": 10478
+    },
+    "town_tree_canopies": {
+      "file": "/workspace/duffquest/art/town_tree_canopies.png",
+      "size": [
+        384,
+        384
+      ],
+      "cell": [
+        128,
+        128
+      ],
+      "grid": [
+        3,
+        3
+      ],
+      "origin": [
+        64,
+        120
+      ],
+      "key": "#00FF00",
+      "text": null,
+      "note": "Optional cheap mechanical split of unchanged approved3x3 tree atlas: exposed lower woody pixels / complementary canopy. Empty slots remain empty. Composite reconstructs approved source exactly. Import key first; fade only canopy dynamically. No hidden trunk invented.",
+      "sha256": "124364190b4174169ebf51f9eb56f9fae456241599b29021f2c4c407b6b08c7d",
+      "bytes": 89372
+    }
+  },
+  "files": [
+    {
+      "path": "/workspace/duffquest/art/waffle_sign.png",
+      "filename": "waffle_sign.png",
+      "bytes": 667,
+      "sha256": "8af1d06616f649cc3685423a1cf0c8af3b3a1e58da5354e9581ab147f845fc4d",
+      "size": [
+        48,
+        64
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/bus_sign.png",
+      "filename": "bus_sign.png",
+      "bytes": 431,
+      "sha256": "382321d968836cb60ecd2361a39dfc666f8ea3abab31ceb32031525a322a6582",
+      "size": [
+        32,
+        40
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/lawn_mailbox.png",
+      "filename": "lawn_mailbox.png",
+      "bytes": 489,
+      "sha256": "807e928046baf280d96c1c2f4daadd66d97f0f84f147c3f4869a33da98824550",
+      "size": [
+        32,
+        40
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/lawn_flamingo.png",
+      "filename": "lawn_flamingo.png",
+      "bytes": 735,
+      "sha256": "a1c5ff55dbee69307b57139778beb0952f4fc756fb51dba8ec4fd763c0b73a17",
+      "size": [
+        32,
+        40
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/lawn_sprinkler.png",
+      "filename": "lawn_sprinkler.png",
+      "bytes": 489,
+      "sha256": "e89bf389b24bfadb8a94c6c2993f7cfbe661bcf3a85059ae8f58d9a9f40170c4",
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/lawn_bush.png",
+      "filename": "lawn_bush.png",
+      "bytes": 1428,
+      "sha256": "1a554879c0db29220ab6cc186bf061e6240c4647fa834bfb881a7c4a721ecf97",
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/lawn_gnome.png",
+      "filename": "lawn_gnome.png",
+      "bytes": 614,
+      "sha256": "a7857f7a44de5300ad48cfe084ef1304572a32239e6053db371383ac01222e32",
+      "size": [
+        32,
+        32
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/lawn_kiddie_pool.png",
+      "filename": "lawn_kiddie_pool.png",
+      "bytes": 1001,
+      "sha256": "9b8f09bb5970b21e114249fe001bc4e4794b2842345cfc055a38583b81b79c81",
+      "size": [
+        64,
+        40
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/lawn_trash_can.png",
+      "filename": "lawn_trash_can.png",
+      "bytes": 1944,
+      "sha256": "7d2d1de1efc7c559dbdb0f0f309c35f682aa940addd81b29310b419b9691f7a7",
+      "size": [
+        32,
+        40
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/cat_alastor.png",
+      "filename": "cat_alastor.png",
+      "bytes": 2560,
+      "sha256": "298898b039c35c550747d52e39404620b07270b53b2eca0ccf03902bfa569db6",
+      "size": [
+        192,
+        64
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/cat_freya.png",
+      "filename": "cat_freya.png",
+      "bytes": 2553,
+      "sha256": "d9b63b9624a7cd23ef8052b5fd5ac15c5c2630ee20b573f728fc57220cde4b05",
+      "size": [
+        192,
+        64
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/cat_lucifer.png",
+      "filename": "cat_lucifer.png",
+      "bytes": 2644,
+      "sha256": "7738fd7d1d36216ab7779ea2b62cacbbfe9589ace2b434fdca0ffc59296f8036",
+      "size": [
+        192,
+        64
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/town_tree_trunks.png",
+      "filename": "town_tree_trunks.png",
+      "bytes": 10478,
+      "sha256": "18df2a6bf12cfc99176c0b33256cd73e697aeec2a966317eedf142e197327e6d",
+      "size": [
+        384,
+        384
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/town_tree_canopies.png",
+      "filename": "town_tree_canopies.png",
+      "bytes": 89372,
+      "sha256": "124364190b4174169ebf51f9eb56f9fae456241599b29021f2c4c407b6b08c7d",
+      "size": [
+        384,
+        384
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/town_v2_preview.png",
+      "filename": "town_v2_preview.png",
+      "bytes": 377672,
+      "sha256": "30021e2a311fd5aba8059cf21c03c1f23140c3e949a0c4c25e502f94258ed59c",
+      "size": [
+        1440,
+        1960
+      ]
+    },
+    {
+      "path": "/workspace/duffquest/art/town_v2_README.txt",
+      "filename": "town_v2_README.txt",
+      "bytes": 9892,
+      "sha256": "65b371599f06e5929bdbc2ca1009f8677b4dcf8b2f8fb622eaa4a0045ba599ac"
+    },
+    {
+      "path": "/workspace/duffquest/art/town_v2_checks.json",
+      "filename": "town_v2_checks.json",
+      "bytes": 14602,
+      "sha256": "a01a234c454d53a9b205c2fbad20a46bfef7af7d597f3757b4f0b12c6dbc560e"
+    },
+    {
+      "path": "/workspace/duffquest/art/town_v2_import_manifest.json",
+      "filename": "town_v2_import_manifest.json",
+      "bytes": 4903,
+      "sha256": "5acf5b5893d79a95ee97a8d19af9e54feb9473321fcb8c2f222762138bffff71"
+    }
+  ],
+  "manifest_file": "town_v2_manifest.json (self-hash intentionally omitted)"
+}
