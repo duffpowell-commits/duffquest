@@ -14,4 +14,5 @@ func _draw() -> void:
 	var mod: = Color.WHITE
 	if ph == "Night" or ph == "Evening":
 		mod = Color.WHITE.lerp(Color(0.05, 0.05, 0.2), 0.35 if ph == "Night" else 0.15)
-	Dressing.draw_layer(self, m.dressing, m.player.position.y + 10.0, true, mod)
+	var pp: Vector2 = m.player.position
+	Dressing.draw_layer(self, m.dressing, pp.y + 10.0, true, mod, Rect2(pp + Vector2(-6, -16), Vector2(12, 26)))

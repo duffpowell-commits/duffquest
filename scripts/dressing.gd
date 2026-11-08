@@ -49,7 +49,21 @@ static func draw_item(ci: CanvasItem, it: Dictionary, mod: Color = Color.WHITE) 
 	Art.image(ci, str(it["a"]), p, mod, float(it["s"]))
 
 ## Items whose ground point is at or above feet_y (behind Duff), or below it when front is true.
-static func draw_layer(ci: CanvasItem, items: Array, feet_y: float, front: bool, mod: Color = Color.WHITE) -> void:
+## see_through (front layer only): Duff's body box; a tall item covering it is drawn faded so he
+## never vanishes behind a tree.
+static func draw_layer(ci: CanvasItem, items: Array, feet_y: float, front: bool, mod: Color = Color.WHITE, see_through: Rect2 = Rect2()) -> void:
 	for it in items:
-		if (it["p"].y > feet_y) == front:
-			draw_item(ci, it, mod)
+		if (it["p"].y > feet_y) != front:
+			continue
+		var c: = mod
+		if front and see_through.has_area() and art_rect(it).intersects(see_through):
+			c.a *= 0.45
+		draw_item(ci, it, c)
+
+## Screen area an item's sprite covers, in world units.
+static func art_rect(it: Dictionary) -> Rect2:
+	var tx: = Art.tex(str(it["a"]))
+	if tx == null:
+		return Rect2()
+	var sz: = Vector2(tx.get_size()) * float(it["s"]) / 2.0
+	return Rect2(it["p"] - Vector2(sz.x / 2.0, sz.y), sz)
