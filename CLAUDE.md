@@ -5,8 +5,8 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
-- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M2 street dressing: trees/clutter/fences from
-  `grok_art/2026-11-08-street-dressing/`, Cursor PR #7, onto the town).
+- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M3 boss art is blocked until Grok's boss drop
+  lands in `grok_art/`; if it isn't there, do M4 combat feel instead).
 - **Source recovered Nov 7, 2026.** The game was built elsewhere (Grok) and only builds survived
   (Windows zips v0.2–v0.10.1 in Duff's Drive; web build at
   https://lighthearted-custard-a79ec2.netlify.app). This repo was rebuilt from that web build's
@@ -167,6 +167,20 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   dark outfits melt into asphalt; speckled dark outline around the hair is in Grok's source, not the keying.
 - **Repo rules docs (Nov 8):** `docs/PITCH.md` (pillars, not-in-game, kill criteria), `QUEUE.md`
   (work only on NOW), `tasks/todo.md`, `tasks/lessons.md`. Read QUEUE first.
+
+- **Done (Nov 8): street dressing (M2).** Cursor PR #7's drop (`grok_art/2026-11-08-street-dressing/`)
+  -> `tools/import_dressing.py` -> `assets/art/sd_*.png` (trees/props native; fences scaled 0.375, one
+  segment = 39 world units). Placements: `data/town_dressing.json` (hand-edit; `p` = ground point,
+  `s` scale, `wall` size, `tree`). `scripts/dressing.gd` loads/draws; `main._draw_outside` y-sorts
+  storefronts + dressing behind Duff; `scripts/dressing_front.gd` (z 1 child of main) draws what's in
+  front of him and fades it to 45% where it covers him. `trees` is now derived from the data.
+  `map_objects.png` only holds the old bus-stop sign now. After editing the data run
+  `godot --headless --path . --script tools/dressing_check.gd` (walls vs doors/NPC/bus/Ensure spots).
+  Renders: `docs/renders/street_dressing_before_after.png`, `_full.png`, `_depth.png`
+  (`tools/dressing_shot.tscn` + `tools/dressing_sheet.py`).
+  Review leftovers (logged in tasks/todo.md): NPCs/enemies/cats behind a tree aren't faded (only Duff);
+  old flat art next to the new (Waffle Haus pole sign, bus-stop sign, cats); right-side lawns still big
+  and empty; political_sun_sign unused on purpose.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean

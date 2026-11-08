@@ -5,8 +5,15 @@
 - [x] Redraw `duff_shades.png` for the new head (`tools/make_shades.py`); old overlay sat on the hair
 - [x] In-engine check: `tools/outfit_shot.tscn` + `tools/outfit_sheet.py` -> `docs/renders/duff_outfits_ingame.png`
 
-## M2: street dressing
-- [ ] Trees, clutter, fences from `grok_art/2026-11-08-street-dressing/` onto the town
+## M2: street dressing (Nov 8) — done
+- [x] Import trees/clutter/fences (`tools/import_dressing.py`), place via `data/town_dressing.json`
+- [x] Depth sort + see-through canopy for Duff; `tools/dressing_check.gd` for blocked spots
+- [x] Review fixes: bench by the bus sign, cones on the road, bin at the curb, props at Fork/Kwik/Walgrumps, stray picket removed
+
+## Leftovers from the M2 review
+- [ ] Fade trees for NPCs/enemies/cats behind them too (only Duff now)
+- [ ] Grok redraws: Waffle Haus pole sign, bus-stop sign, cats (old flat art)
+- [ ] Right-hand lawns still big and empty; more props / a second yard once art allows
 
 ## Art follow-ups from the M1 review (Grok redraws, not code)
 - [ ] Step frames (cols 1-2): clean legs on side rows, add a 1 px head bob
