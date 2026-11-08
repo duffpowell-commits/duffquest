@@ -1,3 +1,9 @@
+> **SUPERSEDED (Nov 7, 2026): art direction changed away from EarthBound.** New direction:
+> world + sprites in modern high-detail pixel art like *Sea of Stars*; dialogue portraits and boss
+> intros in a bold cartoon look like *Hazbin Hotel* (humans, not demons). Current prompts live in the
+> Drive doc "DuffQuest — Style bible + Grok prompts": https://docs.google.com/document/d/1lmADUpw6NO0A_rvmwdox_t2oJoh8yZVLc1AXliRUwnE/edit
+> The folder layout and workflow below still apply; the EarthBound base prompt does not.
+
 # DuffQuest art brief: personality pass (for Grok)
 
 **Where it goes:** Google Drive → `DuffQuest Art Inbox`. One folder per design. Save the best image
