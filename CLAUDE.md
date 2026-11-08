@@ -248,6 +248,11 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   `menu_style_before_after.png`, `menu_style_title.png`. Not restyled yet: phone screen, gear/settings
   screens' own art, combat UI numbers, per-minigame custom panels (they draw their own rects).
 
+- **Done (Nov 8): portrait touch-ups (Place PR #21).** Masters copied from `grok_art/2026-11-08-portrait-touchups/`
+  into `duffquesthd/portraits/`, re-cut with `tools/import_portrait.py ... --cell 512 --margin 16`: Madison's
+  middle face has brown irises; Octavia = giggling / curious / wailing (no adult teeth; pink wail eyes kept).
+  Render: `docs/renders/portrait_touchups.png` (old vs new).
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
