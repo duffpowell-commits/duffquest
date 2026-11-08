@@ -311,6 +311,11 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   sprites, mayo/cheese/bacon/sauce/pickles still bars. Unused so far: pickle jar, mash, thermometer, ticket, heat lamp,
   ketchup, spatula, skillet, plate, salt. `tools/arena_shot.tscn -- title|fryer|sandwich` shoots them.
   Render: `docs/renders/kitchen_props_g6.png`.
+- **Done (Nov 8): ChatGPT apartment swapped in (Duff's call).** ChatGPT C1 (`grok_art/2026-11-08-chatgpt-test/c1_try1.png`,
+  11/12) kept Gemini G1's layout almost exactly (Duff likely attached the finished room), so no collision changes; sharper
+  and warmer. Render: `docs/renders/m7_home_chatgpt.png`, `chatgpt_c1_vs_gemini_g1.png`. `arena_shot.tscn -- home` added.
+  Shootout brief: `grok_art/requests/AI_ART_SHOOTOUT.md`; Gemini's copy is a Google Doc in Drive `geminiart`.
+  Note: importing `tools/make_m7_guides.py` from Python runs it (no main guard) and rewrites the guides.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
