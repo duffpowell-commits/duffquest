@@ -227,11 +227,17 @@ func _tick(delta: float) -> void:
 		_alloc_check = 0.5
 		_maybe_allocate()
 
-func hit(e: Node, dir: Vector2, dmg: float, special: String = "", gain_heat: float = HEAT_PER_HIT) -> float:
+## feel = false for damage ticks (beams) so they don't hit-stop every 0.1 s.
+func hit(e: Node, dir: Vector2, dmg: float, special: String = "", gain_heat: float = HEAT_PER_HIT, feel: bool = true) -> float:
 	if not is_instance_valid(e) or e.is_queued_for_deletion():
 		return 0.0
 	var pos: Vector2 = e.global_position
 	var dealt: float = e.take_hit(dir, dmg, special)
+	if dealt > 0.0 and feel and m.get("juice") != null:
+		var dead: bool = e.get("hp") != null and float(e.get("hp")) <= 0.0
+		# heavy = finisher (finisher heat), crit, or a big number; "flip" is the spatula's every-swing special
+		var heavy: = special == "crit" or dmg >= 10.0 or gain_heat >= HEAT_PER_FINISHER
+		m.juice.impact(pos, dir, heavy, dead, e.is_in_group("boss"))
 	if dealt > 0.0:
 		if m.get("arena_mode") == "bet":
 			m.bet_hits += 1
@@ -609,7 +615,7 @@ func _tick_moves(delta: float) -> void:
 			brulee_tick = 0.25
 			for e in get_tree().get_nodes_in_group("enemy"):
 				if is_instance_valid(e) and e.global_position.distance_to(p.global_position) < 24.0 + (8.0 if e.is_in_group("boss") else 0.0):
-					hit(e, (e.global_position - p.global_position).normalized(), _atk() * 0.6, "", 1.0)
+					hit(e, (e.global_position - p.global_position).normalized(), _atk() * 0.6, "", 1.0, false)
 
 	if tempura_t > 0.0:
 		tempura_t -= delta
@@ -624,7 +630,7 @@ func _tick_moves(delta: float) -> void:
 			tempura_tick = 0.2
 			for e in get_tree().get_nodes_in_group("enemy"):
 				if is_instance_valid(e) and e.global_position.distance_to(p.global_position) < 26.0 + (8.0 if e.is_in_group("boss") else 0.0):
-					hit(e, (e.global_position - p.global_position).normalized(), _atk() * 0.5, "", 1.0)
+					hit(e, (e.global_position - p.global_position).normalized(), _atk() * 0.5, "", 1.0, false)
 		if tempura_t <= 0.0:
 			m.apply_gear()
 

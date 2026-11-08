@@ -10,10 +10,23 @@ func _ready() -> void:
 
 func number(pos: Vector2, amount: float, big: bool = false) -> void:
 	var s: = str(int(round(amount))) if amount >= 1.0 else "%.1f" % amount
-	text(pos + Vector2(randf_range(-4, 4), 0), s, Color("#ffe040") if big else Color("#ffffff"), 0.7, 9 if big else 7)
+	text(pos + Vector2(randf_range(-4, 4), 0), s, Color("#ffe040") if big else Color("#ffffff"), 0.7, 12 if big else 9)
 
 func text(pos: Vector2, s: String, col: Color, dur: float = 0.9, size: int = 7) -> void:
 	items.append({"type": "text", "pos": pos, "s": s, "col": col, "t": 0.0, "dur": dur, "size": size })
+
+## Impact burst: n short streaks thrown away from the hit (mostly along dir), white-hot to orange.
+func sparks(pos: Vector2, dir: Vector2, n: int, big: bool) -> void:
+	if n <= 0:
+		return
+	var base: = dir.normalized() if dir.length() > 0.01 else Vector2.RIGHT
+	var rays: Array = []
+	for i in n:
+		var spread: = PI * (0.9 if big else 0.6)
+		rays.append([base.rotated(randf_range(-spread, spread)), randf_range(0.6, 1.0)])
+	items.append({"type": "sparks", "pos": pos, "rays": rays, "big": big, "t": 0.0, "dur": 0.24 if big else 0.18 })
+	if big:
+		ring(pos, 14.0, Color(1.0, 0.85, 0.4))
 
 func ring(pos: Vector2, radius: float, col: Color) -> void:
 	items.append({"type": "ring", "pos": pos, "r": radius, "col": col, "t": 0.0, "dur": 0.35 })
@@ -57,7 +70,7 @@ func _beam_damage(b: Dictionary) -> void:
 		var across: = absf(rel.cross(d))
 		var pad: = 10.0 if e.is_in_group("boss") else 4.0
 		if along > 0.0 and along < b["len"] and across < b["w"] * 0.5 + pad:
-			c.hit(e, d, b["dmg"], "", 1.0)
+			c.hit(e, d, b["dmg"], "", 1.0, false)
 	for pr in get_tree().get_nodes_in_group("projectile"):
 		if is_instance_valid(pr):
 			var rel2: Vector2 = pr.global_position - o
@@ -84,13 +97,26 @@ func _draw() -> void:
 		match it["type"]:
 			"text":
 				var s: String = it["s"]
-				var sz: int = it["size"]
+				var pop: = maxf(0.0, 1.0 - float(it["t"]) / 0.12)
+				var sz: int = int(round(float(it["size"]) * (1.0 + 0.7 * pop)))
 				var wdt: = f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz).x
 				var p: Vector2 = it["pos"] - Vector2(wdt / 2.0, 0)
 				var col: Color = it["col"]
 				col.a = minf(1.0, k * 2.0)
 				draw_string(f, p + Vector2(0.7, 0.7), s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, Color(0, 0, 0, col.a * 0.8))
 				draw_string(f, p, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, col)
+			"sparks":
+				var e: float = 1.0 - k
+				var reach: = (16.0 if it["big"] else 10.0)
+				for ray in it["rays"]:
+					var dv: Vector2 = ray[0]
+					var ln: float = float(ray[1]) * reach
+					var a0: Vector2 = it["pos"] + dv * ln * (0.25 + e * 0.8)
+					var a1: Vector2 = it["pos"] + dv * ln * (0.6 + e * 0.9)
+					var hot: = Color(1.0, 1.0, 0.85, k).lerp(Color(1.0, 0.55, 0.15, k), e)
+					draw_line(a0, a1, hot, 1.5 if it["big"] else 1.0)
+				if e < 0.35:
+					draw_circle(it["pos"], (6.0 if it["big"] else 4.0) * (1.0 - e * 2.0), Color(1, 1, 0.9, 0.9))
 			"ring":
 				var r: float = it["r"] * (1.0 - k * k)
 				var col2: Color = it["col"]

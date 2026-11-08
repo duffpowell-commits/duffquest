@@ -5,8 +5,10 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
-- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M3 boss art is blocked until Grok's boss drop
-  lands in `grok_art/`; if it isn't there, do M4 combat feel instead).
+- **Next milestone: see `QUEUE.md` NOW** (Nov 8: M4 see-through trees for NPCs/enemies/cats).
+- **Other agent: "Place"** (Duff's art agent, Cursor/Grok side) owns art: it is redrawing the outfit
+  sheets, Waffle Haus sign, bus-stop sign, cats, extra lawn props, and making all 17 bosses. It hands
+  drops over in `grok_art/<date>-<name>/` with a HANDOFF.md; Claude wires them in. Code is Claude's.
 - **Source recovered Nov 7, 2026.** The game was built elsewhere (Grok) and only builds survived
   (Windows zips v0.2–v0.10.1 in Duff's Drive; web build at
   https://lighthearted-custard-a79ec2.netlify.app). This repo was rebuilt from that web build's
@@ -181,6 +183,18 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   Review leftovers (logged in tasks/todo.md): NPCs/enemies/cats behind a tree aren't faded (only Duff);
   old flat art next to the new (Waffle Haus pole sign, bus-stop sign, cats); right-side lawns still big
   and empty; political_sun_sign unused on purpose.
+
+- **Done (Nov 8): combat feel (M3).** `scripts/juice.gd` (node "Juice", child of main): hit-stop =
+  `Engine.time_scale` 0.05 for real-time ms (light 70 / heavy 85 / kill 120, +20 boss), trauma shake on
+  `cam.offset` clamped to the camera limits plus a small zoom punch (so the arena, which exactly fills
+  the screen, still kicks), skipped while paused or during `combat.cinematic`; resets time_scale on exit.
+  `combat.hit(..., feel=true)` calls `juice.impact`; beam / brulee / tempura ticks pass `feel=false`.
+  Heavy = finisher heat, `"crit"` (main now passes it for Cleaver/Golden crits) or dmg >= 10. NOT
+  `"flip"` (the starter spatula's every-swing special). `combat_fx`: spark bursts, ring on heavy,
+  bigger popping numbers (9/12 px). Check tool: `tools/combat_shot.tscn` (movie writer) ->
+  `python3 tools/combat_sheet.py` -> `docs/renders/combat_feel.png/.gif`. Note: in movie-writer runs
+  the hit-stop is real-time, so frozen frames don't show; judge it on a device.
+  Not done: knockback/launch tuning, enemy hit poses (need art), shake toggle (IDEAS).
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
