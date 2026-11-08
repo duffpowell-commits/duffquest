@@ -151,9 +151,17 @@ func _draw_game() -> void:
 			food = Color("#e0a030").lerp(Color("#2a1a0a"), clampf((p - 1.1) / 0.5, 0, 1))
 		var by: = 46.0 if b["state"] == "in" else 20.0
 		if b["state"] != "out":
-			draw_rect(Rect2(bx, by, 70, 30), Color(0.2, 0.2, 0.2, 0.6))
-			for k in 6:
-				draw_rect(Rect2(bx + 4 + k * 11, by + 6 + (k % 2) * 6, 8 if b["n"] == "Fries" else 9, 14 if b["n"] == "Fries" else 9), food)
+			if Art.tex("kp_fry_basket") != null:
+				# Gemini G6 props: basket, then the food in it tinted by doneness (pale -> golden -> burnt)
+				var tint: = Color(1.25, 1.2, 1.0).lerp(Color.WHITE, clampf(p, 0, 1))
+				if p > 1.1:
+					tint = Color.WHITE.lerp(Color(0.3, 0.2, 0.12), clampf((p - 1.1) / 0.5, 0, 1))
+				Art.image(self, "kp_fry_basket", Vector2(bx + 35, by + 14))
+				Art.image(self, "kp_fries" if b["n"] == "Fries" else "kp_fried_chicken", Vector2(bx + 31, by + 15), tint, 0.85 if b["n"] == "Fries" else 0.6)
+			else:
+				draw_rect(Rect2(bx, by, 70, 30), Color(0.2, 0.2, 0.2, 0.6))
+				for k in 6:
+					draw_rect(Rect2(bx + 4 + k * 11, by + 6 + (k % 2) * 6, 8 if b["n"] == "Fries" else 9, 14 if b["n"] == "Fries" else 9), food)
 		txt(Vector2(bx, 120), b["n"], 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 70)
 		if b["state"] == "in":
 			bar(Rect2(bx, 112, 70, 4), p / 1.4, food)
