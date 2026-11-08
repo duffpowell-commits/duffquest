@@ -1,0 +1,3249 @@
+{
+  "husk": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          15,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          15,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          16,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          15,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          15,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          21,
+          8,
+          43,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          15,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          21,
+          8,
+          43,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "bozos": {
+    "key": [
+      0,
+      255,
+      0
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          10,
+          8,
+          53,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          10,
+          9,
+          53,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          10,
+          9,
+          53,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          12,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          11,
+          8,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          11,
+          9,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          11,
+          9,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          14,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          19,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          14,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          19,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          50,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "fences": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          16,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          19,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "baron": {
+    "key": [
+      0,
+      255,
+      0
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          16,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          17,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          13,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          19,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "donald": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          16,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          16,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          21,
+          8,
+          43,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          21,
+          8,
+          43,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "ghoster": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          19,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          16,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          19,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "gymbro": {
+    "key": [
+      0,
+      255,
+      0
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          14,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          14,
+          9,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          14,
+          9,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          14,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          14,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          14,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          14,
+          8,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          19,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "djvape": {
+    "key": [
+      0,
+      255,
+      0
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          17,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          15,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "crypto": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          14,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          17,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          21,
+          8,
+          43,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          21,
+          8,
+          43,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "willnot": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          15,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          15,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          15,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          15,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          15,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          15,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          43,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          21,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "regular": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          12,
+          8,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          12,
+          9,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          12,
+          9,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          13,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          13,
+          9,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          13,
+          9,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          14,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          14,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          50,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "sendback": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          16,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          17,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          17,
+          8,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          13,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "coupon": {
+    "key": [
+      0,
+      255,
+      0
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          16,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          17,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          12,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "allergy": {
+    "key": [
+      0,
+      255,
+      0
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          17,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          17,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          17,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          19,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          48,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "camper": {
+    "key": [
+      0,
+      255,
+      0
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          16,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          17,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          44,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "bdaydad": {
+    "key": [
+      0,
+      255,
+      0
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          14,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          16,
+          8,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          16,
+          9,
+          47,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          52,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          15,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          13,
+          8,
+          61,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          18,
+          8,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          18,
+          9,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          18,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          3,
+          8,
+          51,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  },
+  "dasher": {
+    "key": [
+      255,
+      0,
+      255
+    ],
+    "size": [
+      256,
+      256
+    ],
+    "grid": [
+      4,
+      4
+    ],
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "stand_attack_height": 52,
+    "walk_contact_height": 51,
+    "contact_bob": 1,
+    "baseline": 60,
+    "cells": [
+      {
+        "row": 1,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "bbox": [
+          10,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "bbox": [
+          20,
+          8,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          46,
+          60
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "bbox": [
+          10,
+          8,
+          51,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "bbox": [
+          22,
+          8,
+          42,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "bbox": [
+          10,
+          8,
+          49,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "bbox": [
+          22,
+          8,
+          42,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "bbox": [
+          19,
+          9,
+          45,
+          60
+        ]
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "bbox": [
+          15,
+          8,
+          54,
+          60
+        ]
+      }
+    ],
+    "attack": "native full-extension limb rig, torso shear, opposed planted stance, role-specific prop, hard pixel motion arc",
+    "rim": "1px inside-silhouette highlight on upper-left-facing dark edges for #5a5a5a"
+  }
+}
