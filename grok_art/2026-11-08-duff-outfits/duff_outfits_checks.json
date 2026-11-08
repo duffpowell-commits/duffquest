@@ -1,0 +1,7352 @@
+{
+  "passed": 1363,
+  "total": 1363,
+  "checks": [
+    {
+      "check": "reference base file unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_black GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_apron_red GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_black GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_clogs_red GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_black GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_coat_red GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_black GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_dad_red GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_home RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_home grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_home origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_home all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_home only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_home face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_home frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_home left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_home left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_home left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_home left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "home is approved base byte-for-byte",
+      "pass": true
+    },
+    {
+      "check": "duff_home walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_home GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_black GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red RGB PNG256x256",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red grid4x4 64px equal cells",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red origin32,60 declared unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red exact reference foreground silhouette",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red all background pixels exactly base green",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red only outfit-mask pixels edited",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red face neck hands and weapon protected pixels identical",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame0,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing0 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing0 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing0 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing0 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing0 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing0 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame1,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing1 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing1 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing1 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing1 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing1 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing1 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame2,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing2 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing2 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing2 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing2 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing2 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing2 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,0 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,0 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,0 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,0 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,1 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,1 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,1 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,1 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,2 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,2 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,2 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,2 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,3 head face hair unchanged",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,3 52px height and same baseline",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,3 no cell edge touched",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red frame3,3 exact per-frame silhouette match",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing3 stand-stepA genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing3 stand-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing3 stepA-stepB genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing3 stand-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing3 stepA-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red facing3 stepB-attack genuinely different",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red left frame0 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red left frame1 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red left frame2 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red left frame3 mirrors correct right gait",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red actual costume/shoe pixels changed",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red walk GIF four140ms looping frames",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame0140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame0 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame0 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame0 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame0 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame1140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame1 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame1 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame1 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame1 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame2140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame2 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame2 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame2 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame2 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame3140ms",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame3 facing0 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame3 facing1 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame3 facing2 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF frame3 facing3 nearest2x pixel blocks",
+      "pass": true
+    },
+    {
+      "check": "duff_sleeves_red GIF actual walk A/stand/B/stand",
+      "pass": true
+    },
+    {
+      "check": "apron red/black pairs differ only in shoes",
+      "pass": true
+    },
+    {
+      "check": "clogs red/black pairs differ only in shoes",
+      "pass": true
+    },
+    {
+      "check": "coat red/black pairs differ only in shoes",
+      "pass": true
+    },
+    {
+      "check": "dad red/black pairs differ only in shoes",
+      "pass": true
+    },
+    {
+      "check": "sleeves red/black pairs differ only in shoes",
+      "pass": true
+    },
+    {
+      "check": "new_tree_sheet approved sheet unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_clutter_sheet approved sheet unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_fences_walls approved sheet unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_neighbor approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_fork approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_hoa approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_seen approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_iron approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_club approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_mining approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_plaza approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_walgrumps approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_hywhee approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_plazmart approved storefront unchanged",
+      "pass": true
+    },
+    {
+      "check": "comparison contact PNG2112x3360",
+      "pass": true
+    }
+  ],
+  "outfits": {
+    "duff_apron_black": {
+      "png": "/workspace/duffquest/art/duff_apron_black.png",
+      "gif": "/workspace/duffquest/art/duff_apron_black_walk.gif",
+      "changed_pixels": 1148,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Warm canvas bib/pocket on front, ties on back, black tee underneath."
+    },
+    "duff_apron_red": {
+      "png": "/workspace/duffquest/art/duff_apron_red.png",
+      "gif": "/workspace/duffquest/art/duff_apron_red_walk.gif",
+      "changed_pixels": 1645,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Warm canvas bib/pocket on front, ties on back, black tee underneath."
+    },
+    "duff_clogs_black": {
+      "png": "/workspace/duffquest/art/duff_clogs_black.png",
+      "gif": "/workspace/duffquest/art/duff_clogs_black_walk.gif",
+      "changed_pixels": 497,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Black tee/jeans retained; slip-on highlights/vents within the approved shoe silhouette."
+    },
+    "duff_clogs_red": {
+      "png": "/workspace/duffquest/art/duff_clogs_red.png",
+      "gif": "/workspace/duffquest/art/duff_clogs_red_walk.gif",
+      "changed_pixels": 497,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Black tee/jeans retained; slip-on highlights/vents within the approved shoe silhouette."
+    },
+    "duff_coat_black": {
+      "png": "/workspace/duffquest/art/duff_coat_black.png",
+      "gif": "/workspace/duffquest/art/duff_coat_black_walk.gif",
+      "changed_pixels": 2676,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Cream double-breasted short-sleeve chef coat, cool folds and dark buttons."
+    },
+    "duff_coat_red": {
+      "png": "/workspace/duffquest/art/duff_coat_red.png",
+      "gif": "/workspace/duffquest/art/duff_coat_red_walk.gif",
+      "changed_pixels": 3173,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Cream double-breasted short-sleeve chef coat, cool folds and dark buttons."
+    },
+    "duff_dad_black": {
+      "png": "/workspace/duffquest/art/duff_dad_black.png",
+      "gif": "/workspace/duffquest/art/duff_dad_black_walk.gif",
+      "changed_pixels": 2614,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Olive practical utility shirt with small pockets; design is a guess because Sheet supplies no precise costume."
+    },
+    "duff_dad_red": {
+      "png": "/workspace/duffquest/art/duff_dad_red.png",
+      "gif": "/workspace/duffquest/art/duff_dad_red_walk.gif",
+      "changed_pixels": 3111,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Olive practical utility shirt with small pockets; design is a guess because Sheet supplies no precise costume."
+    },
+    "duff_home": {
+      "png": "/workspace/duffquest/art/duff_home.png",
+      "gif": "/workspace/duffquest/art/duff_home_walk.gif",
+      "changed_pixels": 0,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Approved base copied byte-for-byte, not regenerated."
+    },
+    "duff_sleeves_black": {
+      "png": "/workspace/duffquest/art/duff_sleeves_black.png",
+      "gif": "/workspace/duffquest/art/duff_sleeves_black_walk.gif",
+      "changed_pixels": 2448,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Steel-teal open workshirt over black tee, rolled stone-coloured cuffs."
+    },
+    "duff_sleeves_red": {
+      "png": "/workspace/duffquest/art/duff_sleeves_red.png",
+      "gif": "/workspace/duffquest/art/duff_sleeves_red_walk.gif",
+      "changed_pixels": 2945,
+      "frames": [
+        {
+          "row": 1,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 2,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 3,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 1,
+          "col": 4,
+          "bbox": [
+            19,
+            6,
+            53,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 1,
+          "bbox": [
+            19,
+            6,
+            45,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 2,
+          "bbox": [
+            19,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 3,
+          "bbox": [
+            18,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 2,
+          "col": 4,
+          "bbox": [
+            7,
+            6,
+            51,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 1,
+          "bbox": [
+            17,
+            6,
+            46,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 2,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 3,
+          "bbox": [
+            17,
+            6,
+            48,
+            58
+          ]
+        },
+        {
+          "row": 3,
+          "col": 4,
+          "bbox": [
+            17,
+            6,
+            58,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 1,
+          "bbox": [
+            18,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 2,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 3,
+          "bbox": [
+            16,
+            6,
+            47,
+            58
+          ]
+        },
+        {
+          "row": 4,
+          "col": 4,
+          "bbox": [
+            6,
+            6,
+            47,
+            58
+          ]
+        }
+      ],
+      "all_rule_checks": "PASS",
+      "visual_notes": "Steel-teal open workshirt over black tee, rolled stone-coloured cuffs."
+    }
+  },
+  "base": {
+    "path": "/workspace/duffquest/sheets/duff_sheet_sos_256.png",
+    "sha256": "d28bf4eb3f9700dee37a70b102f268514ee0e9ea149c355f2204ffe8679af0a2",
+    "opaque_height": 52,
+    "opaque_y_extent": [
+      6,
+      57
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "minimum_cell_margin": 6
+  },
+  "visual_checks": [
+    "All outfit families inspected enlarged4x and in comparison contact; all clothing edits derived from the approved base instead of independently regenerating its identity or pose.",
+    "Walk poses and opposite arm/leg motion are inherited unchanged from approved reference; frying-pan lunge pixels are protected.",
+    "No bandana, text, new props, demons, or added silhouette extensions.",
+    "PNG sprites retain full RGB; GIF previews use one fixed256-color palette per outfit and therefore are not colour-exact masters."
+  ],
+  "limitations": [
+    "Coat is a compact short-sleeve chef coat; no long coat tails because reference silhouette must remain exact.",
+    "Clog distinction relies on tiny toe/vent pixels because reference shoe silhouette cannot expand.",
+    "Olive dad utility shirt and fabric colours are design interpretations: Sheet explicitly leaves costume details unspecified.",
+    "Down/up attacks retain the approved foreshortened pose and read less strongly than profile lunges; not redesigned.",
+    "No engine/importer test or repo changes. The reference opaque bottom is57, while declared origin is60; no3px import shift applied."
+  ],
+  "excluded": {
+    "duff_dress": "6x3 changing animation, not a 4x4 outfit",
+    "duff_roll_black/red": "4x1 dodge animations, not outfits",
+    "duff_shades": "sunglasses overlay, would alter the face; not an outfit",
+    "ch_duff_suit": "does not start duff_; separate suit asset, not included in this batch"
+  }
+}
