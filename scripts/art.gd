@@ -180,7 +180,7 @@ static func portrait_for(text: String, hero: String, partner: String, baby: Stri
 		var boss: = boss_speaker(text)
 		if boss != "":
 			return boss                                    # HD only: no pixel boss portraits
-	if text.begins_with(partner + ": "):
+	if text.begins_with(partner + ": ") or text.begins_with(partner + " texts"):
 		return "madison"
 	if text.begins_with(baby + " ") or text.begins_with(baby + "'s ") or text.begins_with(baby + ": "):
 		return "octavia"
