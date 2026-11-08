@@ -2,6 +2,22 @@ extends RefCounted
 
 # ORIGINAL Style A HD art; generated metadata. Logical coordinates unchanged.
 const ASSETS = {
+  "kp_bun": {"w": 98, "h": 93, "cell": [98, 93], "origin": [49, 46], "kind": "prop", "s": 2},
+  "kp_fried_chicken": {"w": 81, "h": 63, "cell": [81, 63], "origin": [40, 31], "kind": "prop", "s": 2},
+  "kp_fries": {"w": 72, "h": 51, "cell": [72, 51], "origin": [36, 25], "kind": "prop", "s": 2},
+  "kp_fry_basket": {"w": 84, "h": 86, "cell": [84, 86], "origin": [42, 43], "kind": "prop", "s": 2},
+  "kp_heat_lamp": {"w": 42, "h": 50, "cell": [42, 50], "origin": [21, 25], "kind": "prop", "s": 2},
+  "kp_ketchup": {"w": 19, "h": 50, "cell": [19, 50], "origin": [9, 25], "kind": "prop", "s": 2},
+  "kp_lettuce": {"w": 105, "h": 81, "cell": [105, 81], "origin": [52, 40], "kind": "prop", "s": 2},
+  "kp_mash": {"w": 42, "h": 36, "cell": [42, 36], "origin": [21, 18], "kind": "prop", "s": 2},
+  "kp_pickle_jar": {"w": 30, "h": 50, "cell": [30, 50], "origin": [15, 25], "kind": "prop", "s": 2},
+  "kp_plate": {"w": 53, "h": 34, "cell": [53, 34], "origin": [26, 17], "kind": "prop", "s": 2},
+  "kp_salt": {"w": 25, "h": 46, "cell": [25, 46], "origin": [12, 23], "kind": "prop", "s": 2},
+  "kp_skillet": {"w": 54, "h": 38, "cell": [54, 38], "origin": [27, 19], "kind": "prop", "s": 2},
+  "kp_spatula": {"w": 46, "h": 44, "cell": [46, 44], "origin": [23, 22], "kind": "prop", "s": 2},
+  "kp_thermometer": {"w": 28, "h": 43, "cell": [28, 43], "origin": [14, 21], "kind": "prop", "s": 2},
+  "kp_ticket": {"w": 38, "h": 26, "cell": [38, 26], "origin": [19, 13], "kind": "prop", "s": 2},
+  "kp_tomato": {"w": 92, "h": 75, "cell": [92, 75], "origin": [46, 37], "kind": "prop", "s": 2},
   "sd_bike_rack": {"w": 19, "h": 25, "cell": [19, 25], "origin": [9, 25], "s": 2},
   "sd_bus_bench": {"w": 39, "h": 24, "cell": [39, 24], "origin": [19, 24], "s": 2},
   "sd_chain_link_corner": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},

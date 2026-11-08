@@ -300,6 +300,17 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   Known: the top HUD covers the arena's top ~35 units, so lettered wall signs (IRON TEMPLE) sit under the HUD panels
   in a fight. **Duff (Nov 8): Gemini drops signs low** (rule in `grok_art/requests/REQUEST_M7_backdrops.md`); gym
   sign edit-prompt pending. Also `qa_shot`'s boss_*_fight shots are broken (kitchen overlay from `kitchen_sandwich` stays up).
+- **Done (Nov 8): Gemini G4–G7 graded (try 1).** G4 Porch Pirate 9/12 (row 2 not a back view; left row can be
+  the right row mirrored), G5 "Dolores" 8/12 (wrong character: curlers/robe/cigarette; keep for another NPC),
+  G6 props 9/12 (5/16 of the list, but clean), G7 show-off 11/12. No G3, no try 2s. Gemini (esp. Flash-Lite) ignores
+  lists/row orders: give it short one-job prompts and EDITS of existing images. Files: `grok_art/2026-11-08-gemini-test/`.
+- **Done (Nov 8): title screen = G7.** `assets/art/bg_title.png` (Duff at the fryer); `_menu(..., backdrop)` param;
+  title shows only the tagline, controls moved to a "How to play" button (`TITLE_HELP`). Render: `docs/renders/title_g7.png`.
+- **Done (Nov 8): G6 kitchen props in.** `tools/import_props.py` -> `assets/art/kp_*.png` (16 props; per-prop scale).
+  Fryer: basket + food sprite tinted by doneness. Sandwich: bun halves / chicken (grilled = tinted) / lettuce / tomato are
+  sprites, mayo/cheese/bacon/sauce/pickles still bars. Unused so far: pickle jar, mash, thermometer, ticket, heat lamp,
+  ketchup, spatula, skillet, plate, salt. `tools/arena_shot.tscn -- title|fryer|sandwich` shoots them.
+  Render: `docs/renders/kitchen_props_g6.png`.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
