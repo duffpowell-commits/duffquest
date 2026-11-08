@@ -7,6 +7,7 @@ const HudScript: = preload("res://scripts/hud.gd")
 const TouchScript: = preload("res://scripts/touch_controls.gd")
 const IsoTest: = preload("res://scripts/iso/iso_test.gd")
 const Ground: = preload("res://scripts/ground.gd")
+const Dressing: = preload("res://scripts/dressing.gd")
 const ShiftScript: = preload("res://scripts/shift.gd")
 const CatScript: = preload("res://scripts/cat.gd")
 const SaveGame: = preload("res://scripts/save_game.gd")
@@ -191,7 +192,9 @@ var buildings: = [
 	{"r": GROC_R, "c": Color("#c8323a"), "n": "{GROCERY}", "art": "sf_hywhee", "errand": "grocery" },
 	{"r": PLASMA_R, "c": Color("#c05a6a"), "n": "{PLASMA_SIGN}", "art": "sf_plazmart", "small": true },
 ]
-var trees: = [Vector2(180, 140), Vector2(20, 340), Vector2(445, 340), Vector2(605, 150), Vector2(25, 205)]
+## street dressing (data/town_dressing.json); trees = trunk points, used for spawn spacing
+var dressing: Array = Dressing.load_items()
+var trees: Array = Dressing.tree_points(dressing)
 
 var skip_title: = false
 var life_events: = true
@@ -337,8 +340,9 @@ func _ready() -> void:
 	for b in buildings:
 		b["vis"] = _art_rect(b)
 		_add_wall(Rect2(b["vis"].position, Vector2(b["vis"].size.x, b["r"].end.y - b["vis"].position.y)))
-	for tr in trees:
-		_add_wall(Rect2(tr - Vector2(4, 0), Vector2(8, 6)))
+	for it in dressing:
+		if it["wall"] != null:
+			_add_wall(it["wall"])
 	_add_wall(Rect2(-10, -10, WORLD.x + 20, 10))
 	_add_wall(Rect2(-10, WORLD.y, WORLD.x + 20, 10))
 	_add_wall(Rect2(-10, 0, 10, WORLD.y))
@@ -366,6 +370,10 @@ func _ready() -> void:
 	player.position = OUTSIDE_SPAWN
 	player.attacked.connect(_on_player_attack)
 	add_child(player)
+	var dfront: = preload("res://scripts/dressing_front.gd").new()
+	dfront.m = self
+	dfront.z_index = 1
+	add_child(dfront)
 	cam = Camera2D.new()
 	cam.position_smoothing_enabled = false
 	cam.zoom = Vector2(UI_SCALE, UI_SCALE)
@@ -1954,13 +1962,27 @@ func _draw() -> void:
 func _draw_outside() -> void:
 	var f: = ThemeDB.fallback_font
 
-	# ground is built from Grok's tiles (data/town_ground.txt); map_objects = the old map's
-	# trees/props (tools/extract_map_objects.py); old buildings cleared by tools/import_storefronts.py
+	# ground is built from Grok's tiles (data/town_ground.txt); map_objects now only holds the old
+	# bus-stop sign (trees/props replaced by street dressing, tools/import_dressing.py)
 	var gt: = Ground.texture()
 	draw_texture_rect(gt, Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0), false)
 	Art.image(self, "map_objects", Vector2.ZERO)
 	# storefronts (Grok, Nov 8): one sprite per footprint, drawn at the rect; shut places get dimmed
+	# street dressing (Grok, Nov 8) is depth-sorted with them; what stands in front of Duff is drawn
+	# by the DressingFront overlay instead (scripts/dressing_front.gd)
+	var feet: = player.position.y + 10.0 if player and location == "outside" else 1e9
+	var layer: Array = []
 	for b in buildings:
+		layer.append([(b["r"] as Rect2).end.y, b])
+	for it in dressing:
+		if it["p"].y <= feet:
+			layer.append([it["p"].y, it])
+	layer.sort_custom(func(x, y): return x[0] < y[0])
+	for e in layer:
+		var b: Dictionary = e[1]
+		if not b.has("r"):
+			Dressing.draw_item(self, b)
+			continue
 		var r: Rect2 = b["r"]
 		var shut: bool = (b.has("story") and not story_beaten(str(b["story"])) and not story_available(str(b["story"]))) or (b.has("errand") and not Errands.is_open(str(b["errand"]), clock))
 		Art.image(self, str(b.get("art", "")), r.position, Color(0.72, 0.72, 0.78) if shut else Color.WHITE)
