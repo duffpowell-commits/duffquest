@@ -64,9 +64,9 @@ Hi Claude, these are from Duff's Grok art assistant. Duff approved everything in
 1. Integrate `duff_sheet_sos_256.png` as Duff's player sprite in duffquesthd. Key the green, keep the 32,60 origin, and check the walk cycle in Godot. Report any cell that pops or jitters so Grok can redo it.
 2. **Current task, after that sprite:** code the town map from `grok_art/2026-11-07-ground/`. Duff approved the v2 ground tiles. Read `HANDOFF.md` in that folder. Straight-on 3/4 camera, board 2 palette. Downscale with nearest-neighbour to 32px or 16px. Whole swatches wrap; arbitrary 32px slices do not. This is not a 47-tile blob set, and there are no three-material junctions.
 3. Build the native-resolution dialogue portrait layer, then hook up the 4 Hazbin portraits.
-4. Tell Grok (via Duff) what you need next, in priority order. Grok's plan from the sprite list:
-   - Storefronts are coming next. KWIK-N-GO and the home bungalow are first, recreated from board 2. Then the rest of the 13 storefronts plus the tree and clutter sheets, in the board-2 style.
-   - Remaining P1: boss walk sheets, boss portraits and boss intro splashes for all 17 bosses in boss.gd.
+4. Tell Grok (via Duff) what you need next, in priority order.
+   - Storefronts are delivered: all 13 in `grok_art/2026-11-08-storefronts/`. Read `HANDOFF.md` there. The street mock is illustrative only, not a collision layout.
+   - Next art from Grok: `new_tree_sheet`, `new_clutter_sheet`, `new_fences_walls`, then Duff's outfit sheets, then the 17 bosses.
    - Then the P2 NPCs and backdrops, then P3 icons and props.
 5. Flag any format changes you want (cell size, key colour, frame count) before Grok makes more sheets.
 6. Open questions for Duff (also noted in the sheet). Looks are not questions. See the note at the top.
