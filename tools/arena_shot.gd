@@ -1,7 +1,7 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
-## -> /tmp/qa/arena_<id>.png
+## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var game: Node
 var m: Node
 var frame: = 0
@@ -25,6 +25,11 @@ func _key(k: int) -> void:
 
 func _process(_d: float) -> void:
 	frame += 1
+	if id == "title":
+		if frame == 30:
+			get_viewport().get_texture().get_image().save_png("/tmp/qa/title.png")
+			get_tree().quit()
+		return
 	if frame in [40, 80, 110, 140]:
 		_key(KEY_1 if frame == 40 else KEY_ENTER)
 	if frame == 200:

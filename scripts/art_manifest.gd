@@ -483,6 +483,20 @@ const ASSETS = {
     "kind": "backdrop",
     "s": 2
   },
+  "bg_title": {
+    "w": 640,
+    "h": 360,
+    "cell": [
+      640,
+      360
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 2
+  },
   "bg_grocery": {
     "w": 640,
     "h": 360,
