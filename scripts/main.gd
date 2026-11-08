@@ -319,7 +319,15 @@ var last_wordle: Node = null
 var gala_stage: = -1
 var gala_boss: Node = null
 var story: = {"beaten": [], "announced": [], "ending_seen": false, "attempts": 0 }
-var arena_id: = ""
+var arena_id: = "":
+	set(v):
+		arena_id = v
+		_sync_arena_walls()
+# Extra walls for arenas whose art has furniture past the shared bands (relative to ARENA_ORIGIN, world units).
+const ARENA_EXTRA_WALLS: = {
+	"gymbro": [Rect2(0, 0, 320, 70), Rect2(8, 82, 18, 36), Rect2(286, 100, 26, 60), Rect2(10, 146, 110, 26), Rect2(0, 162, 320, 18)],
+}
+var _arena_extra_bodies: = {}
 var arena_mode: = ""
 var bounty_id: = ""
 var bounties: = {"beaten": [], "day": -1 }
@@ -367,6 +375,11 @@ func _ready() -> void:
 	_add_wall(Rect2(ARENA_ORIGIN.x, ARENA_ORIGIN.y + ARENA_SIZE.y - 8, ARENA_SIZE.x, 10))
 	_add_wall(Rect2(ARENA_ORIGIN.x, ARENA_ORIGIN.y, 8, ARENA_SIZE.y))
 	_add_wall(Rect2(ARENA_ORIGIN.x + ARENA_SIZE.x - 8, ARENA_ORIGIN.y, 8, ARENA_SIZE.y))
+	for k in ARENA_EXTRA_WALLS:
+		_arena_extra_bodies[k] = []
+		for r in ARENA_EXTRA_WALLS[k]:
+			_arena_extra_bodies[k].append(_add_wall(Rect2(ARENA_ORIGIN + r.position, r.size)))
+	_sync_arena_walls()
 
 	_add_wall(Rect2(GALA_ORIGIN.x, GALA_ORIGIN.y, GALA_SIZE.x, 30))
 	_add_wall(Rect2(GALA_ORIGIN.x, GALA_ORIGIN.y + GALA_SIZE.y - 8, GALA_SIZE.x, 10))
@@ -473,7 +486,12 @@ func _setup_input() -> void:
 				ev.physical_keycode = k
 				InputMap.action_add_event(action, ev)
 
-func _add_wall(r: Rect2) -> void:
+func _sync_arena_walls() -> void:
+	for k in _arena_extra_bodies:
+		for b in _arena_extra_bodies[k]:
+			b.collision_layer = 1 if k == arena_id else 0
+
+func _add_wall(r: Rect2) -> StaticBody2D:
 	var body: = StaticBody2D.new()
 	body.collision_layer = 1
 	var cs: = CollisionShape2D.new()
@@ -483,6 +501,7 @@ func _add_wall(r: Rect2) -> void:
 	cs.position = r.get_center()
 	body.add_child(cs)
 	add_child(body)
+	return body
 
 func _set_camera() -> void:
 	if location == "arena":
@@ -3012,8 +3031,6 @@ func _draw_arena() -> void:
 			draw_string(f, o + Vector2(0, 40), "SEEN CAFE  -  open 24/7, never replies", HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 8, Color("#a0c0ff"))
 			for p in [Vector2(60, 70), Vector2(260, 70), Vector2(60, 140), Vector2(260, 140)]:
 				draw_string(f, o + p + Vector2(-8, 12), "seen", HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color(1, 1, 1, 0.4))
-		"gymbro":
-			draw_string(f, o + Vector2(0, 46), "IRON TEMPLE  -  NO LEG DAY ZONE", HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 7, Color("#ff7090"))
 		"djvape":
 			for y in range(30, 172, 16):
 				for x in range(8, 312, 16):
