@@ -316,6 +316,13 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   and warmer. Render: `docs/renders/m7_home_chatgpt.png`, `chatgpt_c1_vs_gemini_g1.png`. `arena_shot.tscn -- home` added.
   Shootout brief: `grok_art/requests/AI_ART_SHOOTOUT.md`; Gemini's copy is a Google Doc in Drive `geminiart`.
   Note: importing `tools/make_m7_guides.py` from Python runs it (no main guard) and rewrites the guides.
+- **Done (Nov 8): ChatGPT gym + tux.** C2 try 2 (straight-on, racks only along the back wall, sign spelled right) replaced
+  Gemini's `arena_gymbro`; its extra walls shrank to one racks band (`ARENA_EXTRA_WALLS gymbro = [Rect2(0,0,320,56)]`).
+  Sign top sits ~16% down, so the errand panel clips its last letter in fights. C3 (tux sheet, rows/poses match
+  `duff_home` exactly; back row shows a black tee, not the jacket) -> new `tools/import_big_sheet.py` (any-size 4x4 sheet ->
+  256 format, one scale from the stand frame) -> `ch_duff_suit` (symphony/gala). Renders: `docs/renders/m7_gym_chatgpt.png`,
+  `duff_tux_chatgpt.png`. **GitHub account suspended Nov 8 ~4:35 PM (appeal filed by Duff);** these commits were made
+  locally and pushed once access returned (or are still waiting: check `git log origin/main..`).
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean

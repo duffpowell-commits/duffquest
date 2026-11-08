@@ -325,7 +325,7 @@ var arena_id: = "":
 		_sync_arena_walls()
 # Extra walls for arenas whose art has furniture past the shared bands (relative to ARENA_ORIGIN, world units).
 const ARENA_EXTRA_WALLS: = {
-	"gymbro": [Rect2(0, 0, 320, 70), Rect2(8, 82, 18, 36), Rect2(286, 100, 26, 60), Rect2(10, 146, 110, 26), Rect2(0, 162, 320, 18)],
+	"gymbro": [Rect2(0, 0, 320, 56)],  # ChatGPT C2 gym: racks along the back wall only
 }
 var _arena_extra_bodies: = {}
 var arena_mode: = ""
