@@ -174,6 +174,8 @@ static func boss_intro_for(text: String) -> String:
 static func portrait_for(text: String, hero: String, partner: String, baby: String) -> String:
 	if hd_enabled and text.begins_with("Brittany: "):
 		return "brittany"
+	if hd_enabled and text.begins_with("Dolores"):      # 'Dolores leans in: "..."', 'Dolores (31 years in): ...'
+		return "dolores"
 	if hd_enabled:
 		var boss: = boss_speaker(text)
 		if boss != "":
@@ -203,7 +205,7 @@ static func octavia_mood(text: String) -> int:
 	return 0
 
 ## HD cartoon portraits (assets/art/portraits_hd/<who>.png, 3 cells: happy, deadpan, furious).
-const HD_PORTRAITS: = ["duff", "madison", "octavia", "brittany"]
+const HD_PORTRAITS: = ["duff", "madison", "octavia", "brittany", "dolores"]
 const ANGRY_WORDS: = ["pissed", "furious", "stole", "steal", "stealing", "thief", "hate", "rage", "seriously", "unbelievable", "wtf", "screw"]
 const WAIL_WORDS: = ["cry", "cries", "crying", "wail", "wails", "scream", "screams", "screaming", "fuss", "fussy", "shriek", "shrieks", "meltdown"]
 
@@ -227,7 +229,7 @@ static func hd_mood(who: String, line: String, energy: float, happiness: float, 
 				if _has_word(l, w):
 					return 2
 			return 0 if octavia_mood(line) == 1 else 1
-		"brittany":
+		"brittany", "dolores":
 			for w in ANGRY_WORDS:
 				if _has_word(l, w):
 					return 2

@@ -323,6 +323,14 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   256 format, one scale from the stand frame) -> `ch_duff_suit` (symphony/gala). Renders: `docs/renders/m7_gym_chatgpt.png`,
   `duff_tux_chatgpt.png`. **GitHub account suspended Nov 8 ~4:35 PM (appeal filed by Duff);** these commits were made
   locally and pushed once access returned (or are still waiting: check `git log origin/main..`).
+- **Done (Nov 8): Dolores HD portrait (ChatGPT C5).** `portraits_hd/dolores.png` (smug / deadpan / furious);
+  `Art.portrait_for` maps any line starting "Dolores" (her lines are narration-style: 'Dolores (31 years in): "..."');
+  mood = Brittany's word rules. `arena_shot.tscn -- dolores`. Render: `docs/renders/dolores_portrait_chatgpt.png`.
+  ChatGPT results so far (`grok_art/2026-11-08-chatgpt-test/`): C1 11, C2 11, C3 11, C5 11, C6 12 (all 16 props in order,
+  not wired: Gemini's kp_* still drive fryer/sandwich), C7 12 (Duff vs giant waffle; spare title/splash art).
+  X1 (add one tree, change nothing): FAIL strictly, the whole image is re-rendered (5.8% of pixels outside the corner
+  changed >60), but no furniture moved. Fix for edits: paste only the edited region back onto the original.
+  Missing: C4, X2, X3.
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
