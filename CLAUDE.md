@@ -69,8 +69,11 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   Claude recommends closing it unmerged; Duff said "not yet" (Nov 7). Don't merge without asking.
 
 - **`grok_art/` (Nov 7):** drop folder for Grok designs (never ships), README has rules + log.
-  First in: `duff_portraits.jpg` (Duff's cartoon portraits, approved look). Duff chose **blond** and is redoing
-  them from his own photo with a more Hazbin prompt (should look like him); portraits wait on the native-res dialogue layer decision.
+  First in: `duff_portraits.jpg` (Duff's cartoon portraits, approved look). **v2 approved** (`duff_portraits_v2.jpg`,
+  from his photo: dirty-blond undercut/ponytail, ear spikes, fox neck tattoo, black tee). Cut with
+  `tools/import_portrait.py` -> `assets/art/portraits_hd/duff.png` (3×512 cells, transparent).
+  **Next:** native-res dialogue layer so these keep their lines, then swap them in for `portrait_duff`.
+  The walking sprite should be updated to match (undercut/ponytail, black tee).
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
