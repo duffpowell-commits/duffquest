@@ -1,0 +1,657 @@
+{
+  "passed": 77,
+  "total": 77,
+  "checks": [
+    {
+      "check": "neighbor PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "neighbor 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "neighbor minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "neighbor all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "neighbor green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "neighbor unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "fork PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "fork 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "fork minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "fork all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "fork green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "fork unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "hoa PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "hoa 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "hoa minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "hoa all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "hoa green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "hoa unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "seen PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "seen 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "seen minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "seen all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "seen green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "seen unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "iron PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "iron 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "iron minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "iron all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "iron green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "iron unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "club PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "club 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "club minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "club all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "club green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "club unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "mining PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "mining 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "mining minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "mining all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "mining green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "mining unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "plaza PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "plaza 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "plaza minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "plaza all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "plaza green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "plaza unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "walgrumps PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "walgrumps 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "walgrumps minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "walgrumps all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "walgrumps green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "walgrumps unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "hywhee PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "hywhee 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "hywhee minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "hywhee all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "hywhee green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "hywhee unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "plazmart PNG RGB exact C dimensions",
+      "pass": true
+    },
+    {
+      "check": "plazmart 1x1 equal building cell",
+      "pass": true
+    },
+    {
+      "check": "plazmart minimum 8px clear margins",
+      "pass": true
+    },
+    {
+      "check": "plazmart all 8px border pixels exact key",
+      "pass": true
+    },
+    {
+      "check": "plazmart green key if any pink/lilac foreground",
+      "pass": true
+    },
+    {
+      "check": "plazmart unique nonempty artwork",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_kwik.png approved file byte-for-byte unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_kwik_preview.png approved file byte-for-byte unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_home.png approved file byte-for-byte unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_storefront_home_preview.png approved file byte-for-byte unchanged",
+      "pass": true
+    },
+    {
+      "check": "storefronts_board2_compare.png approved file byte-for-byte unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_ground_textures.png v2 atlas unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_ground_edges.png v2 atlas unchanged",
+      "pass": true
+    },
+    {
+      "check": "new_ground_corners.png v2 atlas unchanged",
+      "pass": true
+    },
+    {
+      "check": "storefronts_all13.png final PNG dimensions",
+      "pass": true
+    },
+    {
+      "check": "storefronts_street_mock.png final PNG dimensions",
+      "pass": true
+    },
+    {
+      "check": "exactly13 main storefront PNGs",
+      "pass": true
+    }
+  ],
+  "assets": {
+    "new_storefront_neighbor": {
+      "path": "/workspace/duffquest/art/new_storefront_neighbor.png",
+      "size": [
+        160,
+        120
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#00FF00",
+      "margin_px": [
+        8,
+        19,
+        8,
+        20
+      ],
+      "sign": "(none)",
+      "identity": "navy hipped roof / blue-grey cottage",
+      "fixes": [],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_fork": {
+      "path": "/workspace/duffquest/art/new_storefront_fork.png",
+      "size": [
+        300,
+        140
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#00FF00",
+      "margin_px": [
+        8,
+        9,
+        8,
+        10
+      ],
+      "sign": "THE TWISTED FORK",
+      "identity": "long rounded red/chrome diner",
+      "fixes": [
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_hoa": {
+      "path": "/workspace/duffquest/art/new_storefront_hoa.png",
+      "size": [
+        240,
+        140
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#FF00FF",
+      "margin_px": [
+        13,
+        8,
+        14,
+        8
+      ],
+      "sign": "HOA HQ",
+      "identity": "beige stepped parapet / clipboard office",
+      "fixes": [
+        "Orthographic roof/parapet side-edge correction; kept central frontal block unwarped.",
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_seen": {
+      "path": "/workspace/duffquest/art/new_storefront_seen.png",
+      "size": [
+        120,
+        80
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#FF00FF",
+      "margin_px": [
+        30,
+        8,
+        30,
+        8
+      ],
+      "sign": "SEEN CAFE",
+      "identity": "sage coffee shop / ochre striped awning",
+      "fixes": [
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_iron": {
+      "path": "/workspace/duffquest/art/new_storefront_iron.png",
+      "size": [
+        110,
+        100
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#00FF00",
+      "margin_px": [
+        17,
+        8,
+        18,
+        8
+      ],
+      "sign": "IRON TEMPLE",
+      "identity": "slate barrel-vault industrial gym",
+      "fixes": [
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_club": {
+      "path": "/workspace/duffquest/art/new_storefront_club.png",
+      "size": [
+        160,
+        104
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#00FF00",
+      "margin_px": [
+        30,
+        8,
+        31,
+        8
+      ],
+      "sign": "CLUB CLOUD 9",
+      "identity": "plum stepped warehouse / pink cloud neon",
+      "fixes": [
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type.",
+        "Added an actual pixel-art pink neon cloud above the club name, not just a rectangular neon frame."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_mining": {
+      "path": "/workspace/duffquest/art/new_storefront_mining.png",
+      "size": [
+        116,
+        84
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#FF00FF",
+      "margin_px": [
+        12,
+        8,
+        13,
+        8
+      ],
+      "sign": "MINING RIG",
+      "identity": "copper fan-topped corrugated GPU garage",
+      "fixes": [
+        "Orthographic shed roof correction; fans and front nameplate preserved.",
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_plaza": {
+      "path": "/workspace/duffquest/art/new_storefront_plaza.png",
+      "size": [
+        104,
+        160
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#FF00FF",
+      "margin_px": [
+        18,
+        8,
+        18,
+        8
+      ],
+      "sign": "NAKATOMEH PLAZA",
+      "identity": "slender gold-glass setback tower",
+      "fixes": [
+        "Removed unauthorized roof lettering; rejected alternate generation for isometric camera and gas fixtures.",
+        "Broadened tower to 68px facade footprint with nearest-neighbour, retaining full 144px height; compact corporate name now fits the tier rather than floating outside it.",
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; compact 5px type, two lines."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_walgrumps": {
+      "path": "/workspace/duffquest/art/new_storefront_walgrumps.png",
+      "size": [
+        152,
+        76
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#00FF00",
+      "margin_px": [
+        31,
+        8,
+        32,
+        8
+      ],
+      "sign": "WALGRUMPS",
+      "identity": "white/burgundy rounded drive-through canopy",
+      "fixes": [
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_hywhee": {
+      "path": "/workspace/duffquest/art/new_storefront_hywhee.png",
+      "size": [
+        220,
+        96
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#FF00FF",
+      "margin_px": [
+        8,
+        12,
+        8,
+        12
+      ],
+      "sign": "HY-WHEE MARKET",
+      "identity": "red/cream grocery / arched central entry",
+      "fixes": [
+        "Orthographic wing roof correction; central arch and sign preserved.",
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    },
+    "new_storefront_plazmart": {
+      "path": "/workspace/duffquest/art/new_storefront_plazmart.png",
+      "size": [
+        144,
+        80
+      ],
+      "grid": [
+        1,
+        1
+      ],
+      "key": "#FF00FF",
+      "margin_px": [
+        24,
+        8,
+        25,
+        8
+      ],
+      "sign": "PLAZMART PLASMA",
+      "identity": "ice blue/navy low donation clinic",
+      "fixes": [
+        "Native-resolution bitmap sign lettering to preserve exact text after reduction; 7px type, two lines."
+      ],
+      "manual_visual_checks": {
+        "camera": "PASS: directly frontal/slightly above; orthographic roof corrections applied where needed; physical hip/gable/vault curves remain",
+        "lighting": "PASS: bright warm midday",
+        "text": "PASS: exact bitmap-lettered requested sign, or no text",
+        "footprint": "PASS: building/attached fixtures only; neighbor and HOA tiny lawn strips explicitly in F",
+        "street_cohesion": "PASS: warm material palette, teal trim, worn surfaces; different silhouette/color identity"
+      }
+    }
+  },
+  "limitations": [
+    "Tiny C sizes necessarily simplify caf\u00e9 plants, gym weights, mining GPU racks, pharmacy queue and rooftop helipad.",
+    "Tower broadened with nearest-neighbour to keep the exact compact name inside its facade; it uses 5px two-line type instead of the other signs\u2019 7px type.",
+    "Contact is a neutral inspection composite; street uses unchanged v2 tile art, not an engine collision/map integration.",
+    "Source generators supplied JPEG; all shipped game assets and presentation files are verified PNG.",
+    "No repository writes."
+  ]
+}
