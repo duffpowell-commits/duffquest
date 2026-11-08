@@ -1,6 +1,6 @@
 72322a848ab928aa5c89f0cb78209805
 ::res://::1794163859
-CLAUDE.md::TextFile::-1::1794180308::0::1::::<><><>0<>0<><>::
+CLAUDE.md::TextFile::-1::1794181472::0::1::::<><><>0<>0<><>::
 export_presets.cfg::TextFile::-1::1794163858::0::1::::<><><>0<>0<><>::
 game.tscn::PackedScene::-1::1794163858::0::1::::<><><>0<>0<><>::res://scripts/game.gd
 icon.svg::CompressedTexture2D::8095849722990087210::1794163859::1794163859::1::::<><><>0<>0<>eb4d2d835c084f004c49a8b4a3301594<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
@@ -81,10 +81,10 @@ ch_madison_dress.png::CompressedTexture2D::5984151932875424854::1794163858::1794
 ch_pete.png::CompressedTexture2D::5928020425071762039::1794163858::1794163858::1::::<><><>0<>0<>fab688bdd8ae7b3d932ba90f03f22211<>res://.godot/imported/ch_pete.png-0f190ba915f1a7f39fbae55f197b306f.ctex::
 ch_pharmacist.png::CompressedTexture2D::7969898188846430587::1794163858::1794163858::1::::<><><>0<>0<>d18bfd84815c41d35e0f54e7b1902445<>res://.godot/imported/ch_pharmacist.png-6a99df3c1e94d5ce46788fe1bd6cade4.ctex::
 ch_phlebotomist.png::CompressedTexture2D::3203418027487572981::1794163858::1794163858::1::::<><><>0<>0<>e6d46de17e8476519226d0c12cc8da96<>res://.godot/imported/ch_phlebotomist.png-87f7f009924367519eb48153579e1afd.ctex::
-ch_pirate0.png::CompressedTexture2D::134350928743121545::1794163858::1794163858::1::::<><><>0<>0<>02cd908f9f8eafb90ddafed7e87a150c<>res://.godot/imported/ch_pirate0.png-578d0c313d344468793bd4f713a11edd.ctex::
-ch_pirate1.png::CompressedTexture2D::3489911394079874089::1794163858::1794163858::1::::<><><>0<>0<>deeea06abe138c7f178170ff44eb6387<>res://.godot/imported/ch_pirate1.png-5c39420e47e04e43705e9722cbacc685.ctex::
-ch_pirate2.png::CompressedTexture2D::6297310813981686123::1794163858::1794163858::1::::<><><>0<>0<>84300a362a981010a1873964378fc332<>res://.godot/imported/ch_pirate2.png-68ade89bd8b0925fe51f9263c0fad69b.ctex::
-ch_pirate3.png::CompressedTexture2D::1853704141700832348::1794163858::1794163858::1::::<><><>0<>0<>1d3ab05a121c00099c7d2fee4dec1883<>res://.godot/imported/ch_pirate3.png-1a372c813b607b7d985d06b9a5dd9cad.ctex::
+ch_pirate0.png::CompressedTexture2D::134350928743121545::1794181787::1794181807::1::::<><><>0<>0<>02cd908f9f8eafb90ddafed7e87a150c<>res://.godot/imported/ch_pirate0.png-578d0c313d344468793bd4f713a11edd.ctex::
+ch_pirate1.png::CompressedTexture2D::3489911394079874089::1794181803::1794181807::1::::<><><>0<>0<>deeea06abe138c7f178170ff44eb6387<>res://.godot/imported/ch_pirate1.png-5c39420e47e04e43705e9722cbacc685.ctex::
+ch_pirate2.png::CompressedTexture2D::6297310813981686123::1794181803::1794181807::1::::<><><>0<>0<>84300a362a981010a1873964378fc332<>res://.godot/imported/ch_pirate2.png-68ade89bd8b0925fe51f9263c0fad69b.ctex::
+ch_pirate3.png::CompressedTexture2D::1853704141700832348::1794181803::1794181807::1::::<><><>0<>0<>1d3ab05a121c00099c7d2fee4dec1883<>res://.godot/imported/ch_pirate3.png-1a372c813b607b7d985d06b9a5dd9cad.ctex::
 ch_regular.png::CompressedTexture2D::5693186039075477179::1794163858::1794163858::1::::<><><>0<>0<>0abcc6747f7079d898a05dd554e3ed88<>res://.godot/imported/ch_regular.png-02cc2f77cb572a353ea79ff96fa23ca0.ctex::
 ch_scammer.png::CompressedTexture2D::7171134223880026932::1794163858::1794163858::1::::<><><>0<>0<>7d8dec9eebaacf11a2b289c866ff0575<>res://.godot/imported/ch_scammer.png-474b115609be2d740bf4940b8eeac060.ctex::
 ch_sendback.png::CompressedTexture2D::4809460325300995635::1794163858::1794163858::1::::<><><>0<>0<>363debae3aa60923220c45f65ffcbf81<>res://.godot/imported/ch_sendback.png-f15a36f103e17cbcf58c70163bec1c41.ctex::
@@ -226,7 +226,7 @@ willnot.png::CompressedTexture2D::4150960132487068820::1794163858::1794163858::1
 ::res://assets/art/ground/::1794163858
 ground_atlas.json::JSON::-1::1794163858::0::1::::<><><>0<>0<><>::
 ground_atlas.png::CompressedTexture2D::9178419450116656645::1794163858::1794163858::1::::<><><>0<>0<>1d018483112fedbe4e2ea25dfdd0837a<>res://.godot/imported/ground_atlas.png-687ee4b494a820f7c27c8a44fa0f1f0b.ctex::
-::res://assets/art/portraits_hd/::1794181443
+::res://assets/art/portraits_hd/::1794181448
 allergy.png::CompressedTexture2D::6921697925648705456::1794163858::1794163858::1::::<><><>0<>0<>82470099e11a36f10a3289428410bc1a<>res://.godot/imported/allergy.png-1861512d34c3e906f391446434e6eed2.ctex::
 baron.png::CompressedTexture2D::5630560525266715583::1794163858::1794163858::1::::<><><>0<>0<>163f61724721cf787922aaa748731a20<>res://.godot/imported/baron.png-0ea95e2bf5b69eb9d82b30288b597198.ctex::
 bdaydad.png::CompressedTexture2D::4045774838366905802::1794163858::1794163858::1::::<><><>0<>0<>9184c83b03f4f69c7068cb67d6ca5e62<>res://.godot/imported/bdaydad.png-6087a8489ff516ff56d7df56d93c4a40.ctex::

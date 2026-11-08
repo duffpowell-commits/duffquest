@@ -330,7 +330,12 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   not wired: Gemini's kp_* still drive fryer/sandwich), C7 12 (Duff vs giant waffle; spare title/splash art).
   X1 (add one tree, change nothing): FAIL strictly, the whole image is re-rendered (5.8% of pixels outside the corner
   changed >60), but no furniture moved. Fix for edits: paste only the edited region back onto the original.
-  Missing: C4, X2, X3.
+  C4 Porch Pirate 12 (both tries: real back view, box hidden in front, throw column) -> `ch_pirate0/2` (try 1),
+  `ch_pirate1/3` (try 2) via `import_big_sheet.py`; render `docs/renders/porch_pirate_chatgpt.png`. X2 seamless tile:
+  PASS by eye (3x3 tiling continues the checker; edge-diff numbers are high only because the edge is a grout line).
+  Missing: X3. Next: ChatGPT vs Grok rematch, brief `grok_art/requests/CHATGPT_VS_GROK.txt` (Drive Doc "ChatGPT vs Grok
+  rematch (Nov 8)" in `geminiart`): R1 Kwik storefront, R2 trees, R3 clutter, R4 Gym Bro intro card, R5 Brittany
+  portraits (redo), R6 Earl sheet, R7 Duff apron; Grok's original prompts, results `r1_chatgpt.png`...
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
