@@ -74,6 +74,13 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   (`d1_try1.png`...). Attach `reference_duff_sheet.png` (inbox) = `assets/art/duff_home.png` on
   magenta. When Duff says it's in: pull, score (rubric in the doc), make GIFs, fill the doc's
   results table, then write the real design prompts around what passed.
+- **Gemini capability test (Nov 8): Grok is nearly out of usage.** Doc "DuffQuest — Gemini capability test"
+  (https://docs.google.com/document/d/13q2fog54B7WVbSIWjhQQzf9AOtz1NRHlV7Q8EThOh0s/edit) in DuffQuest Art Inbox;
+  refs + results in subfolder **98 Gemini capability test** (`ref_room_home`, `ref_sheet_duff`, `ref_sheet_boss`,
+  `ref_portrait_madison`, `ref_style_board_2`; results `g1_try1.png`...). Tests are real next assets: G1 home redraw
+  keeping layout (unlocks all M7 backgrounds), G2 IRON TEMPLE arena + sign, G3 Duff tux sheet edit, G4 Porch Pirate
+  sheet, G5 Dolores portraits, G6 kitchen props 4×4, G7 show-off. 2 tries each. When Duff says it's in: pull,
+  score (rubric in the doc; G1 = overlay `tools/make_m7_guides.py` boxes), GIFs, fill the results table.
 - **Sheet format:** humanoid sheets are 256×256, 4×4 cells of 64; rows down/up/right/left;
   cols stand, step A, step B, attack (`art.gd`: `WALK = [1,0,2,0]`, col 3 = attack).
 - **PR #2 (`cursor/add-duffquesthd-7d71`, Cursor):** adds `duffquesthd/` = the HD zip as a
