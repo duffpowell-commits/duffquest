@@ -1,0 +1,64 @@
+CHATGPT vs GROK REMATCH (Nov 8)
+
+Same briefs Grok got for art that's already in the game. Claude puts ChatGPT's version next to Grok's and keeps the winner.
+
+HOW
+- Same ChatGPT chat as before is fine. If it starts summarizing instead of drawing, paste: Generate the image now. Do not summarize or email.
+- Attach what each test says. ref_ images: Claude sent them in chat (style board, Duff sheet, boss sheet, Brittany).
+- Save each result to Drive folder geminiart with the exact name. Then tell Claude "rematch is in".
+- If ChatGPT says a prompt is too long, paste it anyway in two messages.
+
+=== R1 - Kwik-N-Go storefront ===
+Attach: ref_style_board_2
+Save as: r1_chatgpt.png
+Up against: sf_kwik (Grok storefront in town)
+Prompt:
+Modern high-detail pixel art for a comedy adventure RPG. Rich saturated colours, warm golden sunlight, soft coloured shadows (cool purple-blue shade, golden highlights), lush detailed surfaces: grass tufts, flowers, cracks, clutter and texture. Crisp pixel clusters with selective dark outlines; no blur, no anti-aliasing smear, no smooth gradients. Setting: present-day Omaha, Nebraska, a cozy, slightly run-down neighbourhood (chain-link fences, beat-up cars, couches on porches, gas-station neon) drawn like a beautiful fantasy adventure world. 3/4 top-down camera like a classic JRPG town. Tone: bright, warm, a little absurd. Complete isolated storefront exterior for KWIK-N-GO: 1990s gas station convenience store with red-yellow canopy, pumps and ice machine. PNG; aspect ratio 16:9; final pixel dimensions to fit unchanged map footprint. Whole building including roof inside frame, no clipping. Sign spelled exactly "KWIK-N-GO"; no other text. Keep same camera and scale. Attach the style board. No invented real-company logos. Flat solid #FF00FF magenta background; no grid lines, text, background shadows or spill. Attach the chosen style board and match this exact style, palette and camera. Output PNG. All art original; do not copy existing characters or game assets.
+
+=== R2 - Tree sheet ===
+Attach: ref_style_board_2
+Save as: r2_chatgpt.png
+Up against: sd_ trees (Grok street dressing)
+Prompt:
+Modern high-detail pixel art for a comedy adventure RPG. Rich saturated colours, warm golden sunlight, soft coloured shadows (cool purple-blue shade, golden highlights), lush detailed surfaces: grass tufts, flowers, cracks, clutter and texture. Crisp pixel clusters with selective dark outlines; no blur, no anti-aliasing smear, no smooth gradients. Setting: present-day Omaha, Nebraska, a cozy, slightly run-down neighbourhood (chain-link fences, beat-up cars, couches on porches, gas-station neon) drawn like a beautiful fantasy adventure world. 3/4 top-down camera like a classic JRPG town. Tone: bright, warm, a little absurd. A sprite sheet of six distinct Omaha trees and bushes: full leafy maple, shady oak, scraggly ash, pine, blooming lilac and clipped hedge. 384×384 square PNG; 3 columns × 3 rows of 128×128 cells; use first six cells only. Each separate and evenly spaced, no overlap. Two empty cells plus final empty cell in bottom row remain key background. Ground baselines aligned in occupied cells. Detailed organic silhouettes, no lollipop trees. Flat solid #FF00FF magenta background; no grid lines, text, background shadows or spill. Attach the chosen style board and match this exact style, palette and camera. Output PNG. All art original; do not copy existing characters or game assets.
+
+=== R3 - Street clutter sheet ===
+Attach: ref_style_board_2
+Save as: r3_chatgpt.png
+Up against: sd_ props (Grok street dressing)
+Prompt:
+Modern high-detail pixel art for a comedy adventure RPG. Rich saturated colours, warm golden sunlight, soft coloured shadows (cool purple-blue shade, golden highlights), lush detailed surfaces: grass tufts, flowers, cracks, clutter and texture. Crisp pixel clusters with selective dark outlines; no blur, no anti-aliasing smear, no smooth gradients. Setting: present-day Omaha, Nebraska, a cozy, slightly run-down neighbourhood (chain-link fences, beat-up cars, couches on porches, gas-station neon) drawn like a beautiful fantasy adventure world. 3/4 top-down camera like a classic JRPG town. Tone: bright, warm, a little absurd. A sprite sheet of 12 separate Omaha street objects: recycling bin, fire hydrant, newspaper box, bus bench, political yard sign, local football fan flag with original noncommercial emblem, pothole cone, Little Free Library, mailbox, bike rack, shopping cart, scattered leaves. 256×256 PNG, 4 columns × 4 rows of 64×64 cells; first three rows occupied, final row empty. Sized for a 32-world-unit tile at 2× art density. Center each object separately, do not overlap, same ground baseline. No readable text or copied team logos. Each image must contain exactly one selected set of 12. Flat solid #FF00FF magenta background; no grid lines, text, background shadows or spill. Attach the chosen style board and match this exact style, palette and camera. Output PNG. All art original; do not copy existing characters or game assets.
+
+=== R4 - Gym Bro boss intro card ===
+Attach: nothing
+Save as: r4_chatgpt.png
+Up against: boss_intro/gymbro (Grok burst card)
+Prompt:
+Character portrait for a comedy RPG dialogue box, in the look of an adult animated musical comedy: bold tapered black ink lines, sharp angular shapes and spiky silhouettes, exaggerated expressive faces (wide toothy grins, sharp arched eyebrows, big eyes), flat cel shading with hard-edged shadow shapes, a limited bold palette with one hot accent colour, theatrical attitude. Human, present-day, not a demon, no horns. Original character, not from any existing show. Full-body dramatic theatrical pose of Gym Bro Supreme, a muscular adult human fitness influencer in gym tank with shaker bottle. Villain energy, smug, dramatic lighting accent, exaggerated expression, original human character with no horns or demon traits. One subject, wide 16:9 frame. Boss name in big theatrical lettering spelled exactly "Gym Bro Supreme". Bold flat colour-burst background, not green-screen. Limited bold palette with one hot accent colour. Output PNG, 1920×1080. Leave safe margins around name and body. Lettering may be recreated in code; do not copy existing show characters.
+
+=== R5 - Brittany portraits (she is marked REDO) ===
+Attach: ref_brittany (attached in chat)
+Save as: r5_chatgpt.png
+Up against: portraits_hd/brittany (Grok; same face as Madison)
+Prompt:
+Character portrait for a comedy RPG dialogue box, in the look of an adult animated musical comedy: bold tapered black ink lines, sharp angular shapes and spiky silhouettes, exaggerated expressive faces (wide toothy grins, sharp arched eyebrows, big eyes), flat cel shading with hard-edged shadow shapes, a limited bold palette with one hot accent colour, theatrical attitude. Human, present-day, not a demon, no horns. Original character, not from any existing show. Head and shoulders, three-quarter view facing right. 3 expressions in one row of 3 equal square cells: happy, deadpan unimpressed, furious. Same framing, size and position in every cell. Flat solid #00FF00 green background, no text. Character: Brittany, present-day human with long wavy honey-brown hair, blue-green eyes, sharp winged eyeliner, choker and grey tee. Output PNG, 1536×512, three equal 512×512 cells. Flat solid exact #00FF00 green background, no grid lines. Attach the approved character portrait if available; preserve its likeness and push expression only. Original character, no copied show characters.
+
+=== R6 - Earl / The Regular boss sheet ===
+Attach: ref_sheet_boss + ref_style_board_2
+Save as: r6_chatgpt.png
+Up against: ch_regular (Grok)
+Prompt:
+Modern high-detail pixel art for a comedy adventure RPG. Rich saturated colours, warm golden sunlight, soft coloured shadows (cool purple-blue shade, golden highlights), lush detailed surfaces: grass tufts, flowers, cracks, clutter and texture. Crisp pixel clusters with selective dark outlines; no blur, no anti-aliasing smear, no smooth gradients. Setting: present-day Omaha, Nebraska, a cozy, slightly run-down neighbourhood (chain-link fences, beat-up cars, couches on porches, gas-station neon) drawn like a beautiful fantasy adventure world. 3/4 top-down camera like a classic JRPG town. Tone: bright, warm, a little absurd. A character sprite sheet for Earl, The Regular, an old diner veteran, coffee mug in hand and an immovable stubborn stance. 256×256 PNG; 4×4 cells of 64×64. Exact 4×4 equal 64×64 cells. Rows top to bottom: down toward camera, up away, right, left. Columns left to right: standing, left-foot step, right-foot step, action/attack. Chunky adventure-hero proportions, big readable head and expressive body, human anatomy, not lanky. Identical height and feet baseline in every cell; centered, no clipping. Attach reference_duff_sheet.png for layout and the approved matching portrait where available. No demons or horns. Flat solid #FF00FF magenta background; no grid lines, text, background shadows or spill. Attach the chosen style board and match this exact style, palette and camera. Output PNG. All art original; do not copy existing characters or game assets.
+
+=== R7 - Duff apron outfit sheet ===
+Attach: ref_sheet_duff + ref_style_board_2
+Save as: r7_chatgpt.png
+Up against: duff_apron_red (Grok)
+Prompt:
+Modern high-detail pixel art for a comedy adventure RPG. Rich saturated colours, warm golden sunlight, soft coloured shadows (cool purple-blue shade, golden highlights), lush detailed surfaces: grass tufts, flowers, cracks, clutter and texture. Crisp pixel clusters with selective dark outlines; no blur, no anti-aliasing smear, no smooth gradients. Setting: present-day Omaha, Nebraska, a cozy, slightly run-down neighbourhood (chain-link fences, beat-up cars, couches on porches, gas-station neon) drawn like a beautiful fantasy adventure world. 3/4 top-down camera like a classic JRPG town. Tone: bright, warm, a little absurd. A character sprite sheet for Duff, a present-day human line cook with dirty-blond undercut and hair tied back in a ponytail, blue eyes, ginger-blond stubble, ear spikes and gauges, fox neck tattoo and black tee; no bandana; work apron over black tee; red shoes. 256×256 PNG; 4×4 cells of 64×64. Exact 4×4 equal 64×64 cells. Rows top to bottom: down toward camera, up away, right, left. Columns left to right: standing, left-foot step, right-foot step, action/attack. Chunky adventure-hero proportions, big readable head and expressive body, human anatomy, not lanky. Identical height and feet baseline in every cell; centered, no clipping. Attach reference_duff_sheet.png for layout and the approved matching portrait where available. No demons or horns. Flat solid #FF00FF magenta background; no grid lines, text, background shadows or spill. Attach the chosen style board and match this exact style, palette and camera. Output PNG. All art original; do not copy existing characters or game assets.
+
+=== Still owed from the shootout ===
+C4 Porch Pirate sheet (attach ref_sheet_boss) -> c4_try1.png
+X2 seamless floor tile -> x2_chatgpt_try1.png
+X3 menu board -> x3_chatgpt_try1.png
+(prompts in the earlier chat message / repo file AI_ART_SHOOTOUT.md)
