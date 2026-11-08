@@ -2,7 +2,7 @@
 Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into NOW.
 
 ## NOW
-- M7: old flat-art screens (home interior, shops, minigames) to the Sea of Stars look. Request for Place written: `grok_art/requests/REQUEST_M7_backdrops.md` (19 backgrounds + layout guides). Wire in when the drop lands.
+- M7: 19 backgrounds from Place (`grok_art/requests/REQUEST_M7_backdrops.md`). Done 2/19: home_interior, bg_kitchen. Next from Place: arena_alley, arena_waffle, gala. Wire each drop as it lands (see CLAUDE.md M7 drop 1).
 
 ## NEXT
 

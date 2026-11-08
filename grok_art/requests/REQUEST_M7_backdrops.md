@@ -7,6 +7,9 @@ around in, the boss arenas, and the backgrounds behind the shop and minigame scr
 Duff asked for this list. Same deal as before: drop them in `grok_art/<date>-backdrops/` with a
 HANDOFF.md, and Claude wires them in. Partial drops are fine; send them in priority order.
 
+## Progress
+- Nov 8, drop 1 (PR #25): `home_interior`, `bg_kitchen` -> in the game. Layout checks passed. Thanks!
+
 ## Style
 - World style bible (Drive): "DuffQuest — Style bible + Grok prompts". **Sea of Stars** pixel art:
   saturated, warm midday sun (rooms: warm lamp light), soft coloured shadows, lots of lived-in detail.
