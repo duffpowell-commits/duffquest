@@ -2,7 +2,7 @@
 Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into NOW.
 
 ## NOW
-- M7: old flat-art screens (home interior, shops, minigames) to the Sea of Stars look. Needs Place to draw them first (no drop yet).
+- M7: old flat-art screens (home interior, shops, minigames) to the Sea of Stars look. Request for Place written: `grok_art/requests/REQUEST_M7_backdrops.md` (19 backgrounds + layout guides). Wire in when the drop lands.
 
 ## NEXT
 
