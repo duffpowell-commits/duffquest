@@ -32,6 +32,8 @@ func _ready() -> void:
 		["pharmacy", func(): _clean(); m.open_pharmacy()],
 		["grocery", func(): _clean(); m.open_grocery()],
 		["plasma", func(): _clean(); m.open_plasma()],
+		["kitchen_fryer", func(): _clean(); m.debug_station("fryer")],
+		["kitchen_sandwich", func(): _clean(); m.debug_station("sandwich")],
 	]
 	for k in BossScript.BOSSES.keys():
 		steps.append(["boss_%s_intro" % k, _boss.bind(k)])
