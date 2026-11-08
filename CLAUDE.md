@@ -68,6 +68,10 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   its dialogue is the OLD pre-voice text (40/40 sampled lines) and it lacks the walking fix.
   Claude recommends closing it unmerged; Duff said "not yet" (Nov 7). Don't merge without asking.
 
+- **`grok_art/` (Nov 7):** drop folder for Grok designs (never ships), README has rules + log.
+  First in: `duff_portraits.jpg` (Duff's cartoon portraits, approved look). Hair brown vs blond
+  sprite mismatch is open for Duff; portraits wait on the native-res dialogue layer decision.
+
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean
   to the grid (magenta key, nearest downscale, palette quantize), composite storefront facades onto
