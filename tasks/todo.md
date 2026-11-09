@@ -11,7 +11,7 @@
 ## Soak/perf findings (Nov 9, docs/qa/soak_report.md + perf_report.md) — DECISIONS FOR DUFF
 - [x] (DONE Nov 9: gala opens story day 24) **Gala is unreachable:** Octavia's fund can't hit $100k in 30 days, so all 5 gala bosses (incl. the new gala exes) are post-game in practice. Lower the gate (e.g. $10k or a story day) or move the gala into the 30 days.
 - [ ] **Happiness bars too strict:** a player who works every day but skips the evening shower + couch never meets the happiness gate for 4 of 5 story bosses and never sees Show & Tell. Teach the evening routine better or loosen the gates.
-- [ ] Untested by the soak bot: symphony date, bus pass / car purchase, stock trades.
+- [x] (DONE Nov 9 night, `_money_path_checks` in tools/test_daily.gd: 23 checks, no bugs found) Untested by the soak bot: symphony date, bus pass / car purchase, stock trades.
 - [ ] First boot on 4G ~60 s: the 38 MB index.wasm dominates. Check whether itch serves it brotli/gzip (would be ~9 MB); else consider a custom stripped engine build.
 - Done: soak test `tools/soak.sh` (30 days x 6 seeds clean), web boot check `ship_itch.sh --web-check`, perf (-23..53% frame cost), auto Lite graphics, KO texture leak fixed.
 
@@ -45,7 +45,7 @@ Score now ~6.5/10; target 7.5-8. Effort: S = hours (one agent), M = a day of age
 - [x] KO sfx + stat screen overflow fix (agent running Nov 9) — review, test, commit.
 - [ ] Title screen `bg_title.png`: Duff has bare arms, tattoo him (D1-D7).
 - [x] (DONE Nov 9 evening) Bug: new-game intro says Monday costs $150 (RENT+BILLS) but `weekly_base()` charges $195+ (adds HOUSEHOLD $45 + plans). Fix the intro text.
-- [ ] Doc drift found by reference.md (end of its section 9): stale .png names, M7 counts, voice.md 480x270, cast.gd DEFAULTS missing `stray`/`gala_baron`. Fix those docs/code.
+- [x] (DONE Nov 9 night; M7 counts + daily_life.md table still open) Doc drift found by reference.md (end of its section 9): stale .png names, M7 counts, voice.md 480x270, cast.gd DEFAULTS missing `stray`/`gala_baron`. Fix those docs/code.
 - [ ] In-engine cartoon blood/spit/teeth particles on KO x-ray + finisher hits (art rule H2).
 - [ ] KO stills for the last 6 bosses: coupon, allergy, camper, bdaydad, dasher, baron.
 - [ ] Restyle 21 old chibi sprite sheets (see `docs/reviews/loading_sprites.md`).

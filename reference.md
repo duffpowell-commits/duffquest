@@ -717,6 +717,8 @@ stay raw.
 | `words5.txt`, `answers_common.txt`, `answers_themed.txt` | `wordle_logic.gd` | Wordle valid guesses / answer pools |
 
 ### Contradictions between docs and code (found Nov 9; fix the docs when touching them)
+Fixed Nov 9 night: knockout still extension, knockouts.json pilot note, loading_screens.json `_doc`, voice.md screen size,
+the $150 intro, cast.gd DEFAULTS (now has `stray` + `gala_baron`). Still open below.
 - `docs/knockout_cutscenes.md` says stills are `ko/<boss>_a.png`; the code and files use `.jpg`. The knockouts.json `_doc` still
   says "pilot: gymbro" (11 are live).
 - `loading_screens.json _doc` says `.png` and "12 of 14 in". The code loads `.jpg`; 13 exist; `cat_sacrifice` has no art.

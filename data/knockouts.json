@@ -1,5 +1,5 @@
 {
-  "_doc": "Boss knockout cutscenes (Baki x Spike Spiegel, narrated Palahniuk). Beats run in order: stance -> slip -> xray -> finisher -> crowd -> closer. Narration is Duff at the bar, present tense (docs/voice.md). 'crowd' is a speaker-labelled line (gets that NPC's portrait). Boss defeat line from boss.gd plays after 'closer'. Keep {tokens}. See docs/knockout_cutscenes.md. \"live\": true = plays in game (pilot: gymbro).",
+  "_doc": "Boss knockout cutscenes (Baki x Spike Spiegel, narrated Palahniuk). Beats run in order: stance -> slip -> xray -> finisher -> crowd -> closer. Narration is Duff at the bar, present tense (docs/voice.md). 'crowd' is a speaker-labelled line (gets that NPC's portrait). Boss defeat line from boss.gd plays after 'closer'. Keep {tokens}. See docs/knockout_cutscenes.md. \"live\": true = plays in game (all 17 live). Optional \"b_anchor\" (0 top .. 0.5 middle) picks the slice of the x-ray still the wide stage keeps.",
   "husk": {
     "move": "END STREAM",
     "stance": "Viewers: 4,812. He's streaming the gala in a hoodie that costs more than my car. I'm in my one good shirt. Viewers: 4,813. That one's {partner}, hate-watching.",

@@ -25,7 +25,7 @@ If Duff attaches the video files, re-time the beats below against them.
 
 ## Art needed (57 stills, Hazbin cartoon style, match portraits; Baki crack-line rendering on impact frames)
 - Per boss x17: **A** wind-up close-up, **B** impact / x-ray panel (monochrome manga, muscle crack lines, teal
-  glow), **C** boss down. Files `assets/art/ko/<boss>_a.png` etc., 16:9.
+  glow), **C** boss down. Files `assets/art/ko/<boss>_a.jpg` etc. (1280x720 q88), 16:9.
 - Shared Duff x6: stance bounce, slip, finisher panels 1-3, walk-away. `assets/art/ko/duff_*.png`.
 - Pilot boss: **Gym Bro** (a muscle boss is the natural Baki test). Build the engine + his 3 stills + Duff's 6,
   get Duff's sign-off, then batch the other 16.
