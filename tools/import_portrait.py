@@ -5,7 +5,7 @@ transparent, equal-cell PNG sheet for the dialogue box.
 
 - background colour is read from the image corners (works for magenta, purple, green...)
 - JPG fringe: pixels close to the background become transparent; edge pixels get the background
-  tint pulled out (despill)
+  tint pulled out (despill); then tools/clean_halo.py clean() removes any green halo left on the edge
 - panels are found by empty background columns (equal slices if they touch), trimmed, and centred into equal square cells
   sharing one scale (so every expression has the same head size)
 Output: assets/art/portraits_hd/<name>.png  (N cells wide, 1 cell tall)
@@ -13,6 +13,8 @@ Output: assets/art/portraits_hd/<name>.png  (N cells wide, 1 cell tall)
 import argparse
 from pathlib import Path
 from PIL import Image
+
+from clean_halo import clean  # same folder: green-screen despill + 1 px fringe erode
 
 OUT = Path(__file__).resolve().parent.parent / "assets" / "art" / "portraits_hd"
 
@@ -100,8 +102,10 @@ def run(src, name, cell, margin, count=3, min_island=0):
         c = c.resize((round(c.width * scale), round(c.height * scale)), Image.LANCZOS)
         # bottom-align (shoulders sit on the box edge), centre horizontally
         sheet.alpha_composite(c, (i * cell + (cell - c.width) // 2, cell - margin - c.height))
+    sheet, n_band, n_erode = clean(sheet)  # strip the screen-colour halo the keyer leaves on the edge
     OUT.mkdir(parents=True, exist_ok=True)
     sheet.save(OUT / f"{name}.png")
+    print(f"halo: despilled {n_band} px, eroded {n_erode} px")
     print(f"bg={bg} panels={panels} -> {OUT / (name + '.png')} ({sheet.width}x{sheet.height})")
 
 
