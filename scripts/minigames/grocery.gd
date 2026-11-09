@@ -477,6 +477,20 @@ func _max_coupon() -> int:
 		s += int(c[2])
 	return s
 
+## Aisle sign: a dark tag in the lane's empty left end, just above its shelf (Nov 9 QA: the old
+## translucent text sat on the painted shelves/windows of the backdrop and was hard to read).
+func aisle_tag_rect(i: int) -> Rect2:
+	var s: Rect2 = SHELVES[i]
+	var w: = font.get_string_size(AISLE_NAMES[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x + 6.0
+	return Rect2(10, s.position.y - 11, w, 9)
+
+func _aisle_tag(i: int) -> void:
+	var r: = aisle_tag_rect(i)
+	draw_rect(Rect2(r.position + Vector2(1, 1), r.size), Color(0, 0, 0, 0.35))
+	draw_rect(r, Color("#2a2a3a"))
+	draw_rect(r, Color("#c0d890"), false, 1.0)
+	txt(r.position + Vector2(3, 7), AISLE_NAMES[i], 6, Color("#f4f0e0"))
+
 func _draw_game() -> void:
 
 	for i in SHELVES.size():
@@ -485,7 +499,8 @@ func _draw_game() -> void:
 		draw_rect(s, Color("#8a6a4a"))
 		for x in range(int(s.position.x) + 4, int(s.end.x) - 4, 9):
 			draw_rect(Rect2(x, s.position.y + 1, 6, 6), Color.from_hsv(fmod(x * 0.137 + i * 0.3, 1.0), 0.45, 0.85))
-		txt(Vector2(10, s.position.y - 2 - 18.0 + 4.0), AISLE_NAMES[i], 6, Color(0, 0, 0, 0.45))
+	for i in SHELVES.size():
+		_aisle_tag(i)
 	for id in items:
 		if not SPOTS.has(id):
 			continue

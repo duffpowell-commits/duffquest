@@ -106,6 +106,18 @@ func say(s: String, dur: float = 2.2) -> void:
 	line = preload("res://scripts/cast.gd").T(s)
 	line_t = dur
 
+## Ambient barks wait their turn when another enemy close by is already talking (Nov 9 QA: bubbles
+## piled up when 3+ enemies bunched). Telegraph / story lines still always show.
+const BARK_SPACE: = 70.0
+func bark_crowded() -> bool:
+	for e in get_tree().get_nodes_in_group("enemy"):
+		if e == self or not is_instance_valid(e) or not (e is Node2D):
+			continue
+		var lt: Variant = e.get("line_t")
+		if lt != null and float(lt) > 0.0 and (e as Node2D).global_position.distance_to(global_position) < BARK_SPACE:
+			return true
+	return false
+
 func telegraphing() -> bool:
 	return state.begins_with("tele")
 
@@ -129,7 +141,8 @@ func _physics_process(delta: float) -> void:
 	if line_cd <= 0.0 and dist < 150.0:
 		line_cd = randf_range(6.0, 10.0)
 		var key: = "karen_buddy" if buddy else kind
-		say(LINES[key][randi() % LINES[key].size()])
+		if not bark_crowded():
+			say(LINES[key][randi() % LINES[key].size()])
 	var v: = Vector2.ZERO
 	if stun > 0.0:
 		v = Vector2.ZERO
