@@ -12,6 +12,8 @@
 - [x] Duff sprite tattoos via `tools/tattoo_sprites.py` (pixel recolor agent running Nov 9).
 - [x] KO sfx + stat screen overflow fix (agent running Nov 9) — review, test, commit.
 - [ ] Title screen `bg_title.png`: Duff has bare arms, tattoo him (D1-D7).
+- [ ] Bug: new-game intro says Monday costs $150 (RENT+BILLS) but `weekly_base()` charges $195+ (adds HOUSEHOLD $45 + plans). Fix the intro text.
+- [ ] Doc drift found by reference.md (end of its section 9): stale .png names, M7 counts, voice.md 480x270, cast.gd DEFAULTS missing `stray`/`gala_baron`. Fix those docs/code.
 - [ ] In-engine cartoon blood/spit/teeth particles on KO x-ray + finisher hits (art rule H2).
 - [ ] KO stills for the last 6 bosses: coupon, allergy, camper, bdaydad, dasher, baron.
 - [ ] Restyle 21 old chibi sprite sheets (see `docs/reviews/loading_sprites.md`).
