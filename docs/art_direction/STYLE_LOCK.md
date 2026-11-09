@@ -57,6 +57,8 @@ a two-tone sunburst for cards, portraits and calm loading screens, and radiating
 | Duff KO frames (stance/slip/fin1-3/walk) | same | Duff alone, 3/4 or chest-on; close-up inset panels allowed; navy/amber palette. |
 | Loading screen | 1280x720 JPG q88 | One readable gag, 1-3 characters, flat simple set, a quiet area (lower third) for the caption the engine draws. |
 
+Cards: the engine lifts every card 13% (`CARD_LIFT`), so keep the top of the head (and props) below ~18% of the height; fix with `tools/letter_card.py --drop N`.
+
 Shared: no text in art (K5), nothing important cropped, faces at least 1/6 of image height on KO and loading so
 they read on a phone.
 

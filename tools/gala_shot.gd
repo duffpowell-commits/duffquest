@@ -1,6 +1,6 @@
 extends Node
-## Gala exes check (Nov 9): for each gala ex, shoots {partner}'s setup line, the boss intro (the retired
-## billionaire cards must NOT show), and the fight a moment later with an attack telegraph up.
+## Gala exes check (Nov 9): for each gala ex, shoots {partner}'s setup line, the boss intro (the new
+## style-C gala-ex cards, Nov 9), and the fight a moment later with an attack telegraph up.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/gala_shot.tscn
 ## -> /tmp/gala_shot/<stage>_<n>.png; sheet: python3 tools/gala_sheet.py -> docs/renders/gala_exes_intros.png
 

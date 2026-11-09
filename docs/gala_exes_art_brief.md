@@ -14,7 +14,10 @@ Internal ids stay (saves, assets, manifest). Names live in `data/cast.json`.
 | `baron` | `gala_baron` | Baron Von Trustfund (host, unchanged) | fight 4 |
 | `donald` | `gala_ex_4` | Chip Leverage | fight 5, FINAL |
 
-## What is placeholder right now (in game)
+**Status Nov 9 (style C):** portraits, lettered intro cards and KO a/b/c done for all four; cards unretired, KOs live.
+Review: `docs/reviews/gala_exes_style_c.md`. Still placeholder: sprite sheets `ch_<id>.png` only.
+
+## What was placeholder (before Nov 9 style-C pass)
 - **Intro cards** `assets/art/boss_intro/{husk,bozos,fences,donald}.png` still letter the OLD names. They are
   hidden in game: `Art.RETIRED_CARDS` in `scripts/art.gd`. Each intro falls back to the plain dialogue box.
   **When a new card lands:** replace the png, run `--import`, remove the id from `RETIRED_CARDS`.

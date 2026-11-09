@@ -1,10 +1,11 @@
 """Tile /tmp/gala_shot/*.png (tools/gala_shot.tscn) into docs/renders/gala_exes_intros.png:
-one row per gala ex (setup line, intro, fight).    python3 tools/gala_sheet.py"""
+one row per gala ex (setup line, intro, fight).    python3 tools/gala_sheet.py [out.png]"""
+import sys
 from pathlib import Path
 from PIL import Image, ImageDraw
 
 SRC = Path("/tmp/gala_shot")
-OUT = Path(__file__).resolve().parent.parent / "docs" / "renders" / "gala_exes_intros.png"
+OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).resolve().parent.parent / "docs" / "renders" / "gala_exes_intros.png"
 fs = sorted(SRC.glob("*.png"))
 w, h, cols = 640, 360, 3
 rows = (len(fs) + cols - 1) // cols

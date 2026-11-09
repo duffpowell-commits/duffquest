@@ -166,7 +166,7 @@ static func boss_speaker(text: String) -> String:
 ## Boss intro cards (boss_intro/<id>.png) that still show the OLD lettered names (the billionaire parodies,
 ## retired Nov 9 for the gala exes). Their intros fall back to the plain dialogue box until new cards land
 ## (docs/gala_exes_art_brief.md); then drop the id from this list.
-const RETIRED_CARDS: = ["husk"]
+const RETIRED_CARDS: = []
 
 static func has_intro_card(kind: String) -> bool:
 	return kind != "" and not (kind in RETIRED_CARDS) and ResourceLoader.exists("res://assets/art/boss_intro/%s.png" % kind)
