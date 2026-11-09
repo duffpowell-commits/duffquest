@@ -24,7 +24,7 @@
   `%.1f`, `%%`) exactly, same count and order.
 - Keep `+5 Energy`-style stat results at the end of the line, unchanged.
 - Length: aim for the same length; never more than ~1.4× the original. Text boxes are small
-  (480×270 screen). Cut words before adding them.
+  (640×360 screen). Cut words before adding them.
 - No double quotes inside a line unless they were already escaped (`\"`); use single quotes for
   quoted speech inside narration.
 - Keep the joke. If the original punchline already lands, change only the framing.
