@@ -15,6 +15,7 @@ var settings_path: = SETTINGS_PATH
 var music_vol: = 0.7
 var sfx_vol: = 0.8
 var muted: = false
+var gore: = true                             # "Cartoon gore" in the KO cutscenes (knockout.gd reads this)
 var current: = ""
 var played: Array = []
 var music_player: AudioStreamPlayer
@@ -88,10 +89,14 @@ func set_muted(on: bool) -> void:
 	save_settings()
 
 func to_dict() -> Dictionary:
-	return {"music": music_vol, "sfx": sfx_vol, "mute": muted, "clean": bool(CastScript.clean) }
+	return {"music": music_vol, "sfx": sfx_vol, "mute": muted, "clean": bool(CastScript.clean), "gore": gore }
 
 func set_clean(on: bool) -> void:
 	CastScript.clean = on
+	save_settings()
+
+func set_gore(on: bool) -> void:
+	gore = on
 	save_settings()
 
 func save_settings() -> void:
@@ -111,6 +116,7 @@ func load_settings() -> void:
 	sfx_vol = clampf(float(d.get("sfx", 0.8)), 0.0, 1.0)
 	muted = bool(d.get("mute", false))
 	CastScript.clean = bool(d.get("clean", false))
+	gore = bool(d.get("gore", true))
 	apply()
 
 func play_sfx(name: String, pitch: float = 1.0) -> void:

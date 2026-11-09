@@ -57,3 +57,14 @@ sendback, regular) generated, waiting on full-size downloads.
 
 Nov 9 (M13): husk, bozos, fences, donald, willnot live (11 of 17). Left: coupon, allergy, camper, bdaydad, dasher, baron.
 B-still prompt = ref `ghoster_b` + face sheet; it copies Ghoster's face into the bottom-middle panel unless fixed by an edit.
+
+## Cartoon gore (Nov 9, art rule H2)
+In-engine only (Canva blocks blood): `scripts/ko_gore.gd`, a child node of `knockout.gd` that exists only while a
+cutscene plays with Settings > "Cartoon gore" ON (default ON, saved as `"gore"` in `user://settings.json` by
+`audio.gd`). Hits fire on the KO SFX cue times: x-ray crack = red splat star + 20 ink-outlined teardrops + spit arc
+from the mouth + 2 tumbling molars; finisher snaps 1-3 = small sprays per panel (gone before the next cut); boom =
+a fountain + spit + 1 tooth. Pure function of (seed, beat, bt), so renders repeat. Per-boss placement, optional, in
+`data/knockouts.json`: `"impact": {"xray": {"at": [x, y], "mouth": [x, y], "dir": deg, "spit": deg}}` as shares of
+the stage rect (the x-ray crack lines use `at` too). Set for gymbro + ghoster; others use the defaults in
+`ko_gore.gd`. Render: `xvfb-run -a godot --path . --rendering-driver opengl3 --fixed-fps 30 --resolution 1280x720
+res://tools/ko_shot.tscn -- <boss> gore` then `python3 tools/ko_gore_sheet.py <boss>` -> `docs/renders/ko_gore_<boss>.png`.
