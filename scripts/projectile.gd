@@ -124,13 +124,13 @@ func _special(delta: float) -> void:
 				if p and not used and absf(global_position.distance_to(p.global_position) - radius) < 5.0:
 					used = true
 					if not p.rolling():
-						m.stun_player(1.0, "Your {hero} ran into a problem and needs to restart.")
+						m.stun_player(1.0, _thrower_line("stun_wave", "Your {hero} ran into a problem and needs to restart."))
 						m.hurt_player(dmg, global_position, 0.0, "bsod")
 				if radius > 220.0:
 					life = 0.0
 		"trap":
 			if fuse <= 0.0 and _hit_check(8.0) and not p.rolling():
-				m.stun_player(1.5, "Installing update 1 of 47... do not turn off your {hero}.")
+				m.stun_player(1.5, _thrower_line("stun_trap", "Installing update 1 of 47... do not turn off your {hero}."))
 				m.hurt_player(dmg, global_position, 0.0, "update")
 				life = 0.0
 		"wall":
@@ -149,6 +149,12 @@ func _special(delta: float) -> void:
 	if life <= 0.0:
 		queue_free()
 
+## The thrower boss's own line for this key (boss.gd opt_line), else the fallback.
+func _thrower_line(key: String, fallback: String) -> String:
+	if is_instance_valid(thrower) and thrower.has_method("opt_line"):
+		return str(thrower.opt_line(key, fallback))
+	return fallback
+
 func _draw() -> void:
 	var f: = ThemeDB.fallback_font
 	var blink: = int(spin * 1.5) % 2 == 0
@@ -163,7 +169,7 @@ func _draw() -> void:
 			draw_string(f, Vector2(-2, 2), label if label != "" else "$", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#a07010"))
 		"tariff":
 			draw_rect(Rect2(-8, -6, 16, 12), Color("#a07040"))
-			draw_string(f, Vector2(-8, 2), "TARIFF", HORIZONTAL_ALIGNMENT_LEFT, -1, 4, Color.WHITE)
+			draw_string(f, Vector2(-8, 2), label if label != "" else "CUTS", HORIZONTAL_ALIGNMENT_LEFT, -1, 4, Color.WHITE)
 		"tariff_bit":
 			draw_rect(Rect2(-3, -3, 6, 6), Color("#c08850"))
 		"strike":
@@ -232,6 +238,8 @@ func _draw() -> void:
 				draw_rect(rr, Color("#a8a090"))
 				for x in range(int(rr.position.x), int(rr.end.x), 6):
 					draw_line(Vector2(x, rr.position.y), Vector2(x, rr.end.y), Color("#807868"))
+				if label != "":
+					draw_string(f, rr.get_center() + Vector2(-6, 2), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#302820"))
 	match kind:
 		"seen":
 			var sl: = label if label != "" else "Seen"
