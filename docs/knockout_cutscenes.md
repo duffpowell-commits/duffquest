@@ -42,3 +42,13 @@ Describe traits, never name the shows (names pull models toward copying those sh
 STYLE: bold cartoon characters with thick tapered ink lines, angular shapes and flat cel shading (keep the faces from the attached portraits). Fight-impact rendering: hyper-detailed muscle anatomy drawn with dense black crack-line hatching on every muscle, popping veins, sweat beads flying; extreme low camera and foreshortening; manga-panel composition with diagonal borders and the subject breaking out of the panel edge; background replaced by radiating speed lines on one flat colour; a glowing teal rim-light outline around the figure. Duff moves like a relaxed martial artist: loose bouncing stance, weight on the back foot, lead hand low, half-lidded bored look and a slight smirk, one sudden snapping strike. Duff's frames use a smoky jazz-noir palette (navy, amber, cigarette grey); the boss is saturated neon. 1990s cel-anime film grain. No text, no letters.
 ```
 Status: engine built; Gym Bro live (stills a/b/c + shared Duff x6 in `assets/art/ko/`). Next: A/B/C stills for the other 16, flip `"live": true` per boss.
+
+## Parody bosses redesigned (Duff, Nov 8 23:10)
+Husk, Bozos, Fences, The Donald, Willnot keep their NAMES but get original faces (no real-person likeness;
+their old portraits/cards/sheets get replaced too). Designs: Husk = wiry, goggles, silver space-cowboy jacket,
+jetpack, a dozen phones taped to his chest. Bozos = tiny bald man in a cardboard-box mech, drone hat.
+Fences = cardigan, head is a blue computer screen with a cartoon face, loading wheel overhead.
+The Donald = giant orange rubber duck in a suit with a floor-length red tie. Willnot = barefoot, torn tank top,
+lightbulb head, handgun duct-taped to his back. Step 1: 3-expression face sheets (Canva, 2:1) -> Duff OK ->
+portraits_hd, boss_intro cards, ch_ sheets, then ko stills. Batch 1 ko stills (ghoster, djvape, crypto,
+sendback, regular) generated, waiting on full-size downloads.
