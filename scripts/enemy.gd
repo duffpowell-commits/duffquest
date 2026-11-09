@@ -105,6 +105,9 @@ func display_name() -> String:
 func say(s: String, dur: float = 2.2) -> void:
 	line = preload("res://scripts/cast.gd").T(s)
 	line_t = dur
+	var bk: Variant = m.get("barks") if m != null and is_instance_valid(m) else null
+	if bk != null and not bk.admit(self):
+		line_t = 0.0   # rate-limited (scripts/barks.gd)
 
 func telegraphing() -> bool:
 	return state.begins_with("tele")
@@ -490,11 +493,7 @@ func _draw() -> void:
 		var nm: = display_name()
 		var nw: = f.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 5).x
 		draw_string(f, Vector2(-nw / 2.0, 19), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#ffd0a0"))
-	if line_t > 0.0 and line != "":
-		var sw: = f.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x
-		var bp: = Vector2(-sw / 2.0 - 2.0, -26.0)
-		draw_rect(Rect2(bp, Vector2(sw + 4.0, 9)), Color(1, 1, 1, 0.92))
-		draw_string(f, bp + Vector2(2, 7), line, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#222222"))
+	# speech bubble: drawn by main's Barks node (scripts/barks.gd), laid out with everyone else's
 	if w.a > 0.0:
 		pass
 

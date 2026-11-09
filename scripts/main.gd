@@ -39,6 +39,7 @@ const Art: = preload("res://scripts/art.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
 const CombatScript: = preload("res://scripts/combat.gd")
 const CombatFX: = preload("res://scripts/combat_fx.gd")
+const BarksScript: = preload("res://scripts/barks.gd")
 const JuiceScript: = preload("res://scripts/juice.gd")
 const CombatUI: = preload("res://scripts/combat_ui.gd")
 const Life: = preload("res://scripts/life.gd")
@@ -305,6 +306,7 @@ var fund_happy_today: = 0.0
 
 var inspector_quip_t: = 0.0
 var inspector_pos: = Vector2.ZERO
+var barks: Node   # speech bubbles for enemies/bosses/raccoons (scripts/barks.gd)
 var dialog: Array[String] = []
 var ko_kind: = ""                           # boss knockout cutscene playing (knockout.gd, HD layer)
 var _ko_boss: Node = null                   # boss whose knockout already played
@@ -373,6 +375,11 @@ func _ready() -> void:
 	for it in dressing:
 		if it["wall"] != null:
 			_add_wall(it["wall"])
+		# tucked behind a storefront (art overlaps it, ground above its base): stays in main._draw
+		var ar: = Dressing.art_rect(it)
+		for b in buildings:
+			if ar.has_area() and ar.intersects(b["vis"]) and it["p"].y < (b["r"] as Rect2).end.y:
+				it["behind_building"] = true
 	_add_wall(Rect2(-10, -10, WORLD.x + 20, 10))
 	_add_wall(Rect2(-10, WORLD.y, WORLD.x + 20, 10))
 	_add_wall(Rect2(-10, 0, 10, WORLD.y))
@@ -407,7 +414,7 @@ func _ready() -> void:
 	add_child(player)
 	var dfront: = preload("res://scripts/dressing_front.gd").new()
 	dfront.m = self
-	dfront.z_index = 1
+	dfront.name = "DepthSort"   # y-sorts dressing + actors outdoors (z 0, see dressing_front.gd)
 	add_child(dfront)
 	cam = Camera2D.new()
 	cam.position_smoothing_enabled = false
@@ -439,6 +446,11 @@ func _ready() -> void:
 	cfx.c = combat
 	add_child(cfx)
 	combat.fx = cfx
+	barks = BarksScript.new()
+	barks.name = "Barks"
+	barks.m = self
+	barks.fx = cfx
+	add_child(barks)
 	juice = JuiceScript.new()
 	juice.name = "Juice"
 	juice.m = self
@@ -2099,14 +2111,13 @@ func _draw_outside() -> void:
 	draw_texture_rect(gt, Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0), false)
 	Art.image(self, "map_objects", Vector2.ZERO)
 	# storefronts (Grok, Nov 8): one sprite per footprint, drawn at the rect; shut places get dimmed
-	# street dressing (Grok, Nov 8) is depth-sorted with them; what stands in front of Duff is drawn
-	# by the DressingFront overlay instead (scripts/dressing_front.gd)
-	var feet: = player.position.y + 10.0 if player and location == "outside" else 1e9
+	# street dressing (Grok, Nov 8) is y-sorted WITH the actors by scripts/dressing_front.gd (Nov 9);
+	# only items tucked behind a storefront are drawn here, sorted with the storefronts
 	var layer: Array = []
 	for b in buildings:
 		layer.append([(b["r"] as Rect2).end.y, b])
 	for it in dressing:
-		if it["p"].y <= feet:
+		if it.get("behind_building", false):
 			layer.append([it["p"].y, it])
 	layer.sort_custom(func(x, y): return x[0] < y[0])
 	for e in layer:
@@ -2126,12 +2137,20 @@ func _draw_outside() -> void:
 	var ph: = phase()
 	if ph == "Night" or ph == "Evening":
 		draw_rect(Rect2(Vector2.ZERO, WORLD), Color(0.05, 0.05, 0.2, 0.35 if ph == "Night" else 0.15))
-	if inspector_follow and location == "outside":
-		_draw_inspector()
+	# the inspector and Brittany are drawn outdoors by y-sorted proxies (dressing_front.gd)
 
 func _draw_inspector() -> void:
+	draw_inspector_at(self, Vector2.ZERO)
+
+## ofs: world -> the canvas item's local space (proxies pass -their position)
+func draw_inspector_at(ci: CanvasItem, ofs: Vector2) -> void:
 	var to: = player.global_position - inspector_pos if player else Vector2.DOWN
-	Art.person(self, "ch_inspector", inspector_pos + Vector2(0, 6), to, t, to.length() > 26.0)
+	Art.person(ci, "ch_inspector", inspector_pos + Vector2(0, 6) + ofs, to, t, to.length() > 26.0)
+
+func draw_brittany(ci: CanvasItem, ofs: Vector2) -> void:
+	Art.person(ci, "ch_brittany", BRITT_POS + Vector2(0, 6) + ofs, player.position - BRITT_POS, t, false, int(t * 0.7) % 4 == 0)
+	if int(bet["day"]) != day_count:
+		ci.draw_string(ThemeDB.fallback_font, BRITT_POS + ofs + Vector2(-3, -24 + sin(t * 3.0) * 1.5), "$", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#60e060"))
 
 func _draw_inside() -> void:
 	var f: = ThemeDB.fallback_font
@@ -4588,10 +4607,7 @@ func _draw_waffle_sign_and_board(f: Font) -> void:
 			draw_line(pp + Vector2(5, 0), pp + Vector2(0, 4.4), Color("#d02020"), 1.0)
 	draw_string(f, bp + Vector2(-4, -1), "86 LIST", HORIZONTAL_ALIGNMENT_CENTER, 28, 4, Color("#ffd23f"))
 
-	if location == "outside" and phase() != "Night":
-		Art.person(self, "ch_brittany", BRITT_POS + Vector2(0, 6), player.position - BRITT_POS, t, false, int(t * 0.7) % 4 == 0)
-		if int(bet["day"]) != day_count:
-			draw_string(f, BRITT_POS + Vector2(-3, -24 + sin(t * 3.0) * 1.5), "$", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#60e060"))
+	# Brittany: drawn by a y-sorted proxy (dressing_front.gd -> draw_brittany)
 
 const BETS: = {
 	"nohit": {"name": "No-Hit Run", "goal": 8, "time": 0.0, "pitch": "Beat 8 of these goobers without getting touched ONCE. One hit and I win.",
