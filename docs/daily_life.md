@@ -2,7 +2,7 @@
 
 Goal: no day feels like filler. Spirit of Persona 5's calendar life, minus time slots
 (Duff, Nov 9: skip time slots in DuffQuest; concept saved for future games).
-Status: **SPEC. Waiting on Duff's go before code.**
+Status: Duff said go Nov 9 (M10-M12; bonds cut). M10 DONE. Calendar is a **fridge calendar** with notes Duff and Madison leave each other, cats included (Duff).
 
 ## What already exists (build on it, don't duplicate)
 - Day loop: wake 7:00 (`clock = 420`), sleep from 20:00, forced at 2:00. 2 game-min per real second.
@@ -80,15 +80,8 @@ Then a choice: **Stay with her** (+Madison, lose the morning) / **Give her some 
 Days 11-13: Madison gets 1-2 quiet lines a day (no fussy rolls those days). Text on day 11:
 "bowl's still on the porch. not ready to move it."
 
-## 5. Bonds (ranks 1-5)
-Madison, Octavia, Brittany, Earl, Dolores. Points from time spent together (dates, errands, hangouts
-from phone texts). Each rank: a short scene + a perk. Perk drafts:
-- Madison: rank 3 = errands give +energy; rank 5 = one free makeup per week.
-- Octavia: rank 3 = giggle buff lasts longer; rank 5 = her first word (not "86").
-- Brittany: rank 3 = she tags in on one boss fight; rank 5 = free playtest-themed item.
-- Earl: rank 3 = Waffle Haus coffee buff free; rank 5 = he teaches a frying-pan special.
-- Dolores: rank 3 = Waffle Haus discount; rank 5 = she 86's a boss's order mid-fight.
-Shown on the phone (new Bonds tab).
+## 5. Bonds
+Cut (Duff, Nov 9).
 
 ## 6. Shift changes
 - FULL: same 8 stations, **shuffled** each shift.
@@ -101,8 +94,6 @@ Shown on the phone (new Bonds tab).
 - M10: shift shuffle + muscle memory.
 - M11: calendar + one-headline rule + daily curveball (data files, wake splash card) + weekends + weather.
 - M12: Falcor thread.
-- M13: bonds + phone tab.
 
-## Open for Duff
-- Falcor's day 10 text above: keep, change, or write it yourself?
-- Bond list: right five people?
+## Decisions
+- Falcor day 10 text approved as drafted (Duff, Nov 9).
