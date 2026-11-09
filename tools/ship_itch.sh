@@ -27,7 +27,7 @@ echo "== import"; godot --headless --path . --import >/tmp/ship_import.log 2>&1
 python3 tools/set_lossy_imports.py | tee -a /tmp/ship_import.log | grep -q " 0 .import" \
   || godot --headless --path . --import >>/tmp/ship_import.log 2>&1
 echo "== test_daily"; godot --headless --path . --script tools/test_daily.gd 2>&1 | tee /tmp/ship_test.log | tail -1
-grep -q "ALL PASS" /tmp/ship_test.log || { echo "TESTS FAILED"; exit 1; }
+grep -q "ALL PASS" /tmp/ship_test.log && ! grep -qE "SCRIPT ERROR|Parse Error" /tmp/ship_test.log || { echo "TESTS FAILED"; exit 1; }
 echo "== smoke (600 frames)"; rm -rf /tmp/ship_smoke && mkdir -p /tmp/ship_smoke
 xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 \
   --write-movie /tmp/ship_smoke/f.png --quit-after 600 >/tmp/ship_smoke.log 2>&1
