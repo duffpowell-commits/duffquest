@@ -108,7 +108,7 @@ const STORY: = [
 		"tip": "{partner}: {ex_2} keeps posting gym selfies tagged 'thinking of what I lost'. He's at Iron Temple. Don't hit him while he flexes, it doesn't work." },
 	{"id": "djvape", "name": "{ex_3}", "day": 6, "happy": 65.0, "place": "CLUB CLOUD 9", "r": Rect2(350, 232, 80, 52), "c": "#5a2a8a",
 		"cash": 120, "scrap": 12, "ach": "Dropped The Beat", "where": "Club Cloud 9 (south of the crossroads)",
-		"tip": "{partner}: {ex_3} dedicated a SoundCloud track to me. It's called 'Her Loss (Mango Ice Remix)'. He's spinning at Club Cloud 9. Roll through the bass drop." },
+		"tip": "{partner}: {ex_3} dedicated a SoundCloud track to me. It's called 'Her Loss (Mango Ice Remix)'. She's spinning at Club Cloud 9. Roll through the bass drop." },
 	{"id": "crypto", "name": "{ex_4}", "day": 9, "happy": 70.0, "place": "THE MINING RIG", "r": Rect2(200, 228, 58, 42), "c": "#3a5a3a",
 		"cash": 160, "scrap": 15, "ach": "Rug Pulled The Rug Puller", "where": "The Mining Rig (garage by HOA HQ)",
 		"tip": "{partner}: {ex_4} DMed me a 'business opportunity'. Again. His garage 'mining rig' is by HOA HQ. Don't stand on any rugs." },
