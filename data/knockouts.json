@@ -103,7 +103,8 @@
     "finisher": "Yippee. Whatever. Just fall down.",
     "crowd": "{partner}: \"Is it over? Can we go home? I left the baby with Brittany.\"",
     "closer": "The tower goes quiet. Every ex, defeated. Every elevator, out of order. I take the stairs. Forty floors. It's still easier than brunch.",
-    "impact": {"xray": {"at": [0.52, 0.05], "mouth": [0.56, 0.02], "dir": -30}},
+    "b_anchor": 0.0,
+    "impact": {"xray": {"at": [0.52, 0.33], "mouth": [0.56, 0.30], "dir": -30}},
     "live": true
   },
   "regular": {
@@ -180,7 +181,8 @@
     "finisher": "Your total comes to: everything.",
     "crowd": "Earl: \"Should've paid for the pie, son. Pie's worth paying for.\"",
     "closer": "He pays. In cash. And the pie. I eat a slice on my break. It tastes like justice and margarine.",
-    "impact": {"xray": {"at": [0.60, 0.16], "mouth": [0.58, 0.03], "dir": -30}},
+    "b_anchor": 0.0,
+    "impact": {"xray": {"at": [0.60, 0.44], "mouth": [0.58, 0.31], "dir": -30}},
     "live": true
   }
 }

@@ -253,13 +253,13 @@ func _grey(who: String, i: int) -> Array:
 	var g: Texture2D = _tex[key]
 	return [g, Rect2(Vector2.ZERO, g.get_size()) if g else Rect2()]
 
-func _cover(t: Texture2D, src: Rect2, dst: Rect2, mod: = Color.WHITE) -> void:
-	## draw src scaled to COVER dst (crop the overflow), centred
+func _cover(t: Texture2D, src: Rect2, dst: Rect2, mod: = Color.WHITE, anchor_y: = 0.5) -> void:
+	## draw src scaled to COVER dst (crop the overflow), centred across; anchor_y picks the vertical slice
 	if t == null:
 		return
 	var s: = maxf(dst.size.x / src.size.x, dst.size.y / src.size.y)
 	var need: = dst.size / s
-	var r: = Rect2(src.position + (src.size - need) * 0.5, need)
+	var r: = Rect2(src.position + (src.size - need) * Vector2(0.5, clampf(anchor_y, 0.0, 1.0)), need)
 	draw_texture_rect_region(t, dst, r, mod)
 
 func _fit(t: Texture2D, src: Rect2, dst: Rect2, mod: = Color.WHITE) -> void:
@@ -401,7 +401,10 @@ func _beat_xray(vp: Vector2, stage: Rect2) -> void:
 	var b: = _still("%s_b" % kind)
 	var r: = stage.grow(-stage.size.y * 0.02)
 	if b:
-		_cover(b, Rect2(Vector2.ZERO, b.get_size()), r)
+		# "b_anchor" (data/knockouts.json): which slice of the 16:9 still the wide stage keeps,
+		# 0 = top, 0.5 = middle (default). Stills with the x-ray on a face at the top edge need 0.
+		_cover(b, Rect2(Vector2.ZERO, b.get_size()), r, Color.WHITE,
+			float((data.get(kind, {}) as Dictionary).get("b_anchor", 0.5)))
 	else:
 		var g: = _grey(kind, 2)
 		var rr: = Rect2(r.position + Vector2(r.size.x * 0.25, 0), Vector2(r.size.x * 0.5, r.size.y))
