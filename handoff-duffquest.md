@@ -1,6 +1,6 @@
-# active-memory handoff: DuffQuest art pipeline (Gemini vs ChatGPT vs Grok, M7 backgrounds)
+# active-memory handoff: DuffQuest art pipeline (Gemini vs ChatGPT vs Grok vs Canva, M7 backgrounds)
 
-**Handoff #3 (full data)** · 2026-11-08 · Lineage: #1 (2026-11-08): M4–M9 merged, M7 backdrops started, Grok ran out, Gemini app became the art department; #2 (2026-11-08): Gemini G1–G7 graded, ChatGPT C1–C7 + X1–X2 won and most went into the game, ChatGPT-vs-Grok rematch started (R1, R2 done), GitHub account suspended; #3 (2026-11-08 19:40): Kwik swapped, 10 commits backed up in a git bundle, every project doc/brief/prompt embedded verbatim (appendices A–N)
+**Handoff #4** · 2026-11-08 · Lineage: #1 (2026-11-08): M4–M9 merged, M7 backdrops started, Grok ran out, Gemini app became the art department; #2 (2026-11-08): Gemini G1–G7 graded, ChatGPT C1–C7 + X1–X2 won and most went into the game, ChatGPT-vs-Grok rematch started (R1, R2 done), GitHub account suspended; #3 (2026-11-08 19:40): Kwik swapped, 10 commits backed up in a git bundle, every project doc/brief/prompt embedded verbatim (appendices A–N); #4 (2026-11-08 22:05): old sandbox died; repo restored from Duff's full-history bundle, moved to GitLab; Canva connector added as an art source; R3 (3 Canva props in) and R6 (Grok kept) graded; 3 Canva character sheets (Dolores, Brittany, Gym Bro) generated, not yet graded at full size
 
 ## 0. Instructions for Claude (read first)
 
@@ -8,28 +8,28 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 
 1. Read this whole file before replying.
 2. Follow sections 3 (Style), 4 (Hard rules) and 5 (Corrections) in every reply, for the rest of this chat. They override your defaults.
-3. Use the values in section 8 and the appendices exactly. The appendices are verbatim copies of the repo files as of commit `cc7f1c0`; if a live repo is available, the repo wins. Never round, re-estimate, or "correct" them.
+3. Use the values in section 8 exactly. Never round, re-estimate, or "correct" them.
 4. Do not suggest anything listed in section 7 (Changed / rejected) again unless the user brings it up.
 5. Code word: None active. If the user types /amcodeword, start every reply with the phrase they choose (default "Yes Boss!").
 6. Your first reply: at most 5 lines covering the goal, the current state, and the next step (section 11). Mention any files from section 13 that were not attached. Ask the questions in section 12 if there are any. End with "Ready to continue with <next step>?" Then wait for the user's go.
 
 ## 1. Mission
-- **Goal:** Upgrade DuffQuest's art to the Sea of Stars look using the free AI image apps (ChatGPT, Gemini; Grok out for the week), find out which app is best, and wire the winners into the game. Main backlog: the 19 M7 full-screen backgrounds (`grok_art/requests/REQUEST_M7_backdrops.md`).
-- **Done looks like:** each asset graded, the best version in the game, collision checked, smoke test clean, merged to `main`, `dev` build updated.
-- **Context:** DuffQuest = comedy RPG about Duff's real life in Omaha (Godot 4.5, GDScript, 640×360). Repo `duffpowell-commits/duffquest`. Its `CLAUDE.md` is the full project handoff; read it first in any repo session.
+- **Goal:** Upgrade DuffQuest's art to the Sea of Stars look using free AI image apps (ChatGPT app, Canva connector, Gemini app; Grok out for the week), keep the best version of each asset, and wire the winners into the game. Main backlog: the 19 M7 full-screen backgrounds (`grok_art/requests/REQUEST_M7_backdrops.md`; 3/19 done).
+- **Done looks like:** each asset graded, the best version in the game, collision checked, smoke test clean, merged to `main`, pushed.
+- **Context:** DuffQuest = comedy RPG about Duff's real life in Omaha (Godot 4.5, GDScript, 640×360). Its repo `CLAUDE.md` is the full project handoff; read it first in any repo session. Appendices A–N below are verbatim project docs as of `cc7f1c0`; the live repo wins.
 
 ## 2. About the user
 - Duff Powell, Omaha. Line cook. Partner Madison, baby daughter Octavia (both in the game).
 - Phone only (Godot Android editor). No desktop tools, ever.
-- Busy; wants maximum automation, but broke: will not pay for image APIs.
-- Runs ChatGPT app, Gemini app, Grok (out for the week), Cursor agent "Place", Google Drive, Gmail.
+- Busy; wants maximum automation. Broke: will not pay for image APIs. Trying Canva's free Pro trial (Nov 8).
+- Runs ChatGPT app, Gemini app, Grok (out for the week), Cursor agent "Place", Google Drive, Gmail, Canva (connected to Claude Nov 8), GitLab.
 
 ## 3. Style & communication
 - **Language:** English.
 - **Tone:** informal, direct, blunt, sharp humour; light profanity OK. Push back when a better way exists. Game narration follows `docs/voice.md` (Duff at the bar, present tense, Palahniuk layer).
 - **Reply length:** short; lead with the answer; phone screen.
 - **Formatting:** short bullets; score tables for grading; prompts for AI apps in copyable code blocks; long prompt sets go in a Google Doc in Drive `geminiart` (easier to copy on phone).
-- **Working style:** do the work, don't hand him manual steps unless unavoidable; send renders as files (SendUserFile), not many inline images; grade every AI image with the 12-point rubric and say what's wrong.
+- **Working style:** do the work, don't hand him manual steps unless unavoidable; send renders as files (SendUserFile), not many inline images; grade every AI image with the 12-point rubric and say what's wrong; generate with Canva directly when possible.
 - **Avoid:** corporate fluff, recapping steps, nagging about the hour.
 
 ## 4. Hard rules (word for word)
@@ -38,12 +38,14 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 3. "Save renders to `docs/renders/`, don't paste lots of images into chat."
 4. "Smoke test (before every push)": `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 --write-movie /tmp/smoke/f.png --quit-after 600`
 5. "Duff is phone-only (Godot Android editor). GDScript only, no desktop-only tools."
-6. `gh` GraphQL is blocked: use `gh api repos/...` REST and `gh run ...`.
+6. `gh` GraphQL is blocked: use `gh api repos/...` REST and `gh run ...` (applies once GitHub is back).
 7. After replacing PNGs run `godot --headless --path . --import` before any render.
 8. If Duff interrupts a command, stop and wait; don't merge until he says so.
 9. PR #2 (`cursor/add-duffquesthd-7d71`): don't merge without asking.
 10. Signs in new background art sit LOW: "top edge at least a quarter of the way down the image; nothing important in the top fifth" (Duff: "let's have gemini drop those signs down").
 11. Storefronts must be "STRAIGHT-ON from the front like a 2D JRPG town ... Building only: no parking lot, no car, no trees, no fences, no dumpster" (map decision Nov 7: straight-on camera, never isometric).
+12. Every result goes to Drive `geminiart` (never only in chat: the Nov 8 sandbox died and took chat-only images with it).
+13. Character art must match the character's existing HD portrait / boss card; put the look in the prompt and attach the portrait.
 
 ## 5. Corrections log
 | # | Claude did | The user wanted |
@@ -53,38 +55,40 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | 3 | Gave Gemini prompts needing manual file carrying | Automated loop wanted; then he chose the manual app route ("im too broke to worry about automation") |
 | 4 | Called the Gemini G1 image a portrait | It was the apartment room |
 | 5 | Kept going after he interrupted | Stop and wait for his go |
-| 6 | Merged PR #32 while its CI run showed failure (the failure was likely the GitHub suspension itself) | Check CI result before merging |
+| 6 | Merged PR #32 while its CI run showed failure (likely the GitHub suspension itself) | Check CI result before merging |
 | 7 | Kept running the Kwik swap after Duff interrupted (18:18) | Stop and wait; he finished it later with "finish switching kwik" |
 | 8 | Wrote a summary handoff | Duff: "include all relevant data for the project instead of a summary" → appendices with full file contents |
+| 9 | Said Claude can't generate images | Duff: Canva connector can ("look into your connector list again"); use `mcp__Canva__generate-image` |
+| 10 | Graded R6 from the 200 px preview ("row 2 faces camera") | Wrong at full size (row 2 was the back). Grade only full-size files |
 
 ## 6. Decisions
 | Decision | Why |
 |---|---|
-| ChatGPT app is the main art source now | Beat Gemini on every test (section 8) |
-| ChatGPT apartment (C1) in game, replaced Gemini's | Duff: "Yes please"; same layout, no code change |
-| ChatGPT gym (C2 try 2), tux (C3), Porch Pirate (C4), Dolores portrait (C5) in game | Scored 11–12; Claude wired after Duff's go on the shootout |
-| Gemini G7 = title screen; Gemini G6 props drive fryer/sandwich | Duff: "Carry on in the order you presented" |
-| ChatGPT vs Grok rematch: same Grok prompts, keep the winner per asset | Duff: "work backwards and have chatgpt test against grok" |
-| R1 Kwik try 1: Grok kept (ChatGPT drew isometric + lot/car) | Map is straight-on |
-| R2 trees: ChatGPT's maple/oak/ash/pine/lilac in; Grok's hedge kept | ChatGPT brighter; its hedge was boxy, town uses a long hedge wall |
+| ChatGPT app = main art source for character sheets and backgrounds | Beat Gemini on every test; handles sheet facings |
+| Canva = art source too, best for props/cards; character sheets under test | R3 props good; R6 rows mixed |
+| GitLab private repo `dufftkyosht-group/duffquest` is the live remote until GitHub is back | GitHub suspended; Duff created it and gave a token |
+| R3: Canva flag, Little Free Library, scattered leaves IN; Grok keeps the other 9 props | Canva baked grass-tuft bases into every object (wrong on sidewalks); cart/bike rack turn to mush at 17–42 px |
+| R6: Grok keeps `ch_regular` | Canva drew a different man (white trucker in cap); Earl's portrait + boss card = bald Black man, grey mustache, red flannel, navy suspenders |
+| R1 Kwik: ChatGPT try 2 (straight-on) in game | Duff: "finish switching kwik" |
+| R2 trees: ChatGPT maple/oak/ash/pine/lilac in; Grok hedge kept | ChatGPT brighter; its hedge was boxy |
 | Move collision boxes in code instead of asking for redraws | Cheaper, keeps better art |
-| GitHub suspended: keep working and committing locally, push when reinstated | Duff filed an appeal |
+| Try 3 more character sheets in Canva; if they fail, ChatGPT does them | Duff: "canvas might do this better now and if not we've got gpt" |
 
 ## 7. Changed / rejected
-- Grok/Place as art source → Gemini app → now ChatGPT app (Grok out for the week; ChatGPT scored higher)
-- Gemini apartment G1 → ChatGPT C1 (PR #32, merged)
-- Gemini gym G2 → ChatGPT C2 try 2 (local commit, unpushed)
+- Grok/Place as art source → Gemini app → ChatGPT app + Canva (Grok out for the week)
+- GitHub `duffpowell-commits/duffquest` → GitLab `dufftkyosht-group/duffquest` (temporary; suspension)
+- Old sandbox repo `/home/claude/duffquest` (died) → restored from `duffquest-full-history-2026-11-08.bundle`
+- Claude's zip-based restore + `duffquest-restored-2026-11-08.bundle` → obsolete (full-history bundle has real history, docs, grok_art)
+- Grok props flag / Little Free Library / scattered leaves → Canva R3
+- Gemini apartment G1 → ChatGPT C1; Gemini gym G2 → ChatGPT C2 try 2; Gemini "Dolores" G5 → ChatGPT C5; old porch pirate → ChatGPT C4; Grok trees → ChatGPT R2; Grok Kwik → ChatGPT R1 try 2
 - Gym extra walls (5 boxes) → one racks band `Rect2(0,0,320,56)`
-- Gemini "Dolores" G5 (curlers, robe, cigarette: wrong character) → ChatGPT C5
-- Old porch pirate art → ChatGPT C4 (`ch_pirate0/2` = try 1, `ch_pirate1/3` = try 2)
-- Grok trees (maple, oak, scraggly_ash, pine, lilac) → ChatGPT R2
-- Controls text on the title screen → "How to play" button (it covered Duff's face)
-- ❌ Automated Gemini API loop (free image quota 0; no billing)
-- ❌ ChatGPT/OpenAI API (no free tier for images)
-- ❌ Creative Claw generation (cost)
-- ❌ Making the HUD see-through for arena signs (Duff chose: signs drop low instead)
-- ❌ Gemini Flash-Lite for images (it claimed files were saved that weren't; G3 never arrived)
-- ❌ ChatGPT's "results" email (`gptimagetest.md`): it only copied the prompts, no images
+- Controls text on the title screen → "How to play" button
+- ❌ Restoring from the itch.io build `dufftkyosht.itch.io/duff-quest` (2.3 MB, isometric era, pre-Nov 7)
+- ❌ Restoring from a web-build decompile (source zip + bundle arrived instead)
+- ❌ Automated Gemini API loop (free image quota 0); ❌ ChatGPT/OpenAI API (no free tier); ❌ Creative Claw (cost; connector now gone)
+- ❌ HUD see-through for arena signs (signs drop low instead)
+- ❌ Gemini Flash-Lite for images; ❌ ChatGPT's "results" email (`gptimagetest.md`, prompts only)
+- ❌ Canva R6 Earl (wrong character)
 
 ## 8. Data & facts (exact)
 **Scores (12-point rubric, pass = 10+):**
@@ -97,63 +101,73 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | 5 Dolores | C5 11 | G5 8 (wrong character) |
 | 6 kitchen props | C6 12 (16/16 in order) | G6 9 (5/16) |
 | 7 show-off | C7 12 (Duff vs giant waffle) | G7 11 |
-- X1 (add one tree, change nothing): ChatGPT FAIL strictly: 5.76% of pixels outside the corner changed >60, mean diff 21.0; no furniture moved. Fix for edits: paste only the edited region onto the original.
-- X2 seamless tile: ChatGPT PASS by eye (3×3 tiling continues; edge-diff numbers high only because the edge is a grout line).
-- X3 menu board: not received yet.
-- Rematch: R1 Kwik try 1: Grok ~11 vs ChatGPT ~8 (isometric); R1 try 2 (straight-on): ChatGPT wins, in game. R2 trees: ChatGPT ~11 vs Grok ~9. Tally ChatGPT 2, Grok 0.
-- **Canva joins (Nov 8, 9:40 PM):** Duff hooked up the Canva connector; Claude generates with `mcp__Canva__generate-image` (free plan, quota unknown; 3 used). Claude only sees a 200 px preview: Duff downloads full size into chat or `geminiart`. Files: `grok_art/2026-11-08-canva-test/`.
-- R3 street clutter, Canva ~11 as a sheet, but every object has a grass-tuft base that looks wrong on sidewalks. Per-object: Canva wins flag (bison emblem), Little Free Library (has a roof), scattered leaves (real pile) -> IN GAME. Grok keeps bin, hydrant, newspaper box, bench, sun sign, cone, mailbox, bike rack, cart. Tool `tools/import_prop_sheet.py SRC [--only a,b] [--out DIR]` (blob detection, de-spill, BOX downscale). Renders `docs/renders/rematch_r3_props.png`, `rematch_r3_ingame.png`.
-- R6 Earl, Canva: good pixel art but a different man (white trucker in a cap); his portrait + boss card are a bald Black man, grey mustache, red flannel, suspenders. Row 4 also faced the wrong way in 2 of 4 cells (fixable by mirroring row 3: `r6_canva_leftfixed.png`). Grok keeps `ch_regular`. The R6 brief never described him: fixed in `CHATGPT_VS_GROK.txt`. Render `docs/renders/rematch_r6_earl.png`.
-- R4 Gym Bro card, Canva ~10 from preview, full size not downloaded yet.
-- Repo host while GitHub is suspended: GitLab `dufftkyosht-group/duffquest` (private), remote `gitlab`. History there is rooted at a rewritten copy of `02f9aa4` (GitLab rejects shallow pushes), so hashes differ from GitHub; tag `github-chatgpt-home` keeps the original-hash branch for pushing back to GitHub.
-- Backgrounds: PNG 640×360, opaque, filename = id. 1 world unit = 2 px. Sheets 256×256, 4×4 cells of 64, origin (32,60), rows down/up/right/left, cols stand/step/step/attack.
+- X1: ChatGPT FAIL strictly (5.76% of pixels outside the corner changed >60, mean diff 21.0). X2 tile: ChatGPT PASS by eye. X3 menu board: not run yet.
+- **Rematch tally:** R1 ChatGPT (try 2), R2 ChatGPT, R3 split (Canva 3 / Grok 9), R6 Grok (vs Canva). R4 Canva ~10 from preview only. R5, R7 not run.
+- **Canva:** media ids R4 `MAHaY7k4M30` (1680×944), R3 `MAHaY8agp6g`, R6 `MAHaYynnFDI`, Dolores sheet `MAHaZC0_uSM`, Brittany sheet `MAHaZEIpC3c`, Gym Bro sheet `MAHaZJsrtvo`. Uploaded refs: style board `MAHaY1N4noY`, boss sheet layout `MAHaY4Glqyk`, portraits Dolores `MAHaZOzLO98`, Brittany `MAHaZNHqYc4`, Gym Bro `MAHaZBaUtxE`. Canva outputs 1264×1264 (square). Claude only receives a 200 px preview; thumbnail URLs are signed (resizing them → 403). 9 generations used Nov 8; free quota unknown.
+- Canva links: `https://www.canva.com/M/<media id>` (needs Duff's login).
+- **Character looks (match portraits):** Earl = heavyset Black man, 60s, bald on top, grey sides, thick grey mustache, red plaid flannel, navy suspenders, dark jeans, brown boots, cream mug. Dolores = 60, tall grey beehive, gold cat-eye glasses, mustard-yellow uniform with white collar/cuffs, name tag, pencil behind ear. Brittany = long wavy honey-brown hair, blue-green eyes, winged eyeliner, black choker, grey tee. Gym Bro Supreme = huge muscular Black man, hot-pink headband, neon lime tank, dumbbell + black shaker.
+- `ch_waitress` is a generic brunette, not Dolores: Dolores has no matching sprite sheet.
+- Backgrounds: PNG 640×360, opaque, filename = id. 1 world unit = 2 px. Sheets 256×256, 4×4 cells of 64, origin (32,60), rows down/up/right/left, cols stand/step/step/attack. Stand frames 52 px tall (y 9..60).
 - ChatGPT outputs: 1672×941 (16:9), 1254×1254 (sheets). Gemini: ~2576×1438 JPG.
-- Gym walls now `ARENA_EXTRA_WALLS = {"gymbro": [Rect2(0, 0, 320, 56)]}`; wall check: Duff stops at y 52 (gym) vs 26 (ghoster).
-- Kwik footprint `Rect2(470, 40, 130, 70)`; `sf_kwik.png` canvas 260×140; ChatGPT try 2 is in, drawn 260×94 bottom-aligned.
-- Tree sizes after swap: sd_maple 108×112, sd_oak 112×108, sd_scraggly_ash 101×112, sd_pine 88×112, sd_lilac 65×76; sd_hedge kept 112×47.
+- Props after R3 swap: sd_football_fan_flag 35×42, sd_little_free_library 27×42, sd_scattered_leaves 44×31. Placements (`data/town_dressing.json`): leaves [42,126] and [450,357]; flag [140,104]; library [272,112] wall [8,4].
+- Gym walls `ARENA_EXTRA_WALLS = {"gymbro": [Rect2(0, 0, 320, 56)]}`. Kwik footprint `Rect2(470, 40, 130, 70)`; `sf_kwik.png` canvas 260×140, ChatGPT try 2 drawn 260×94 bottom-aligned.
+- Tree sizes: sd_maple 108×112, sd_oak 112×108, sd_scraggly_ash 101×112, sd_pine 88×112, sd_lilac 65×76; sd_hedge kept 112×47.
 - Arena HUD covers the top ~35 world units (~20%) of a fight screen.
+- **Repo:** branch `main` head `e2fd832` (GitLab). History rooted at a rewritten copy of `02f9aa4` (GitLab rejects shallow pushes), so hashes differ from GitHub. Tag `github-chatgpt-home` → `b02f5c6` = same content with original GitHub-lineage hashes (parent chain `91703b8` → `00f33b9` → `cc7f1c0` …). GitHub `main` last known `67d96bb` + PR #32.
+- GitLab token: `[secret removed: re-enter it]` (Duff's, expires 2026-12-08, broad scopes). Used as user `oauth2` via a `GIT_ASKPASS` script, never written to `.git/config`.
+- Godot: `Godot_v4.5-stable_linux.x86_64.zip` from github.com/godotengine/godot releases (reachable while the account is suspended). `docs/.gdignore` + `grok_art/.gdignore` stop editor imports there.
 - API price notes (not used): Nano Banana $0.039/image; GPT Image 2 $0.006/$0.053/$0.211 low/medium/high square.
 
 ## 9. People, terms & names
 - **People:** Duff (owner); Madison (partner); Octavia (daughter); Brittany (best friend, tester, iPhone); Dolores (Waffle Haus waitress NPC, 31 years in); Earl = The Regular (boss); "Place" = Duff's Cursor/Grok art agent.
-- **Terms:** M7 = backgrounds milestone; G1–G7 = Gemini tests; C1–C7 = ChatGPT tests (same jobs); X1–X3 = trick tests for both; R1–R7 = ChatGPT vs Grok rematch; "drop" = batch of new art.
-- **Drive folders:** "geminiart" `1VdN9JO8VeAx2_8DKFLDMwRJKclWln6F1` (all new results go here); "DuffQuest Art Inbox" `1axKztjLwkqYBuO89YvjQ2M-LVioGqoYA`; "97 Gemini art drops" `1kwe88L_hV7qM_-It2I8n6ZRTMchYoFT4`; "98 Gemini capability test" `1S95GvY8VOkFFdjVe3iHTUKp6BsZXKlMS`.
-- **Drive Docs:** "Gemini tests - shootout + redos (Nov 8)" `16qJDEFFn1KMEpq5DrFn45h0FjBFdbLvEiBK21zX3ONk`; "ChatGPT vs Grok rematch (Nov 8)" `1mszZJe55HuUkX0NwdlLwOeB_VSqmqcPH_OM7MMjSHIs`; Gemini test doc `13q2fog54B7WVbSIWjhQQzf9AOtz1NRHlV7Q8EThOh0s`. `g2_try2.jpg` uploaded to geminiart.
-- **Result file names:** `c#_try#.png`, `x#_chatgpt_try1.png`, `x#_gemini_try1.png`, `g#_try#.png`, `r#_chatgpt.png`, `r1_chatgpt_try2.png`.
-- **Repo folders:** `grok_art/2026-11-08-gemini-test/`, `grok_art/2026-11-08-chatgpt-test/`; briefs `grok_art/requests/AI_ART_SHOOTOUT.md`, `grok_art/requests/CHATGPT_VS_GROK.txt`.
-- **New tools:** `tools/import_big_sheet.py SRC TARGET_ID` (any-size 4×4 sheet → 256 format); `tools/import_props.py` (G6 → `kp_*`); `tools/import_chatgpt_trees.py` (R2 → `sd_*`); `tools/swap_storefront.py SRC NAME`; `tools/arena_shot.tscn -- <id>` (ids: boss arena, `title`, `home`, `fryer`, `sandwich`, `dolores`, `at:X,Y`); `tools/arena_wall_check.tscn`.
-- **Code names:** `ARENA_EXTRA_WALLS`, `_sync_arena_walls`, `TITLE_HELP`, `Art.portrait_for` (Dolores lines start with "Dolores"; "Madison texts" now maps to Madison).
+- **Terms:** M7 = backgrounds milestone; G1–G7 Gemini tests; C1–C7 ChatGPT tests; X1–X3 trick tests; R1–R7 rematch (R3 clutter, R4 Gym Bro card, R5 Brittany portraits, R6 Earl sheet, R7 Duff apron); "drop" = batch of new art.
+- **Drive:** folder "geminiart" `1VdN9JO8VeAx2_8DKFLDMwRJKclWln6F1` (all results go here); "DuffQuest Art Inbox" `1axKztjLwkqYBuO89YvjQ2M-LVioGqoYA`; "97 Gemini art drops" `1kwe88L_hV7qM_-It2I8n6ZRTMchYoFT4`; "98 Gemini capability test" `1S95GvY8VOkFFdjVe3iHTUKp6BsZXKlMS` (ref_style_board_2, ref_sheet_duff, ref_sheet_boss, ref_portrait_madison, ref_room_home).
+- **Drive Docs:** "STILL TO GRADE - ChatGPT round (Nov 8 night)" `1CxTpqzPxlrq5bTTacUtppwgzpsA5DQXAjC71geuubWQ` (R3 marked done, R4–R7 + X3 prompts, R6 look fixed); "ChatGPT vs Grok rematch (Nov 8)" `1mszZJe55HuUkX0NwdlLwOeB_VSqmqcPH_OM7MMjSHIs`; "Gemini tests - shootout + redos (Nov 8)" `16qJDEFFn1KMEpq5DrFn45h0FjBFdbLvEiBK21zX3ONk`; Gemini test doc `13q2fog54B7WVbSIWjhQQzf9AOtz1NRHlV7Q8EThOh0s`.
+- **Result file names:** `c#_try#.png`, `x#_chatgpt_try1.png`, `g#_try#.png`, `r#_chatgpt.png`, `r#_canva.png`, `<char>_sheet_canva.png`.
+- **Repo folders:** `grok_art/2026-11-08-chatgpt-test/`, `grok_art/2026-11-08-gemini-test/`, `grok_art/2026-11-08-canva-test/` (r3_canva, r6_canva, r6_canva_leftfixed); briefs `grok_art/requests/AI_ART_SHOOTOUT.md`, `grok_art/requests/CHATGPT_VS_GROK.txt`.
+- **Tools:** `tools/import_big_sheet.py SRC TARGET_ID [--height 52] [--feet 60]`; `tools/import_prop_sheet.py SRC [--only a,b] [--out DIR]` (new: blob detection, de-spill, BOX downscale); `tools/import_props.py`; `tools/import_chatgpt_trees.py`; `tools/swap_storefront.py SRC NAME`; `tools/arena_shot.tscn -- <id>` (ids: boss arena, `title`, `home`, `fryer`, `sandwich`, `dolores`, `at:X,Y`) → `/tmp/qa/arena_<id>.png`; `tools/arena_wall_check.tscn`.
+- **Code names:** `ARENA_EXTRA_WALLS`, `_sync_arena_walls`, `TITLE_HELP`, `Art.portrait_for`, `NPC_SPEAKERS`.
+- **Remotes:** `gitlab` = `https://gitlab.com/dufftkyosht-group/duffquest.git`. Also exists: public `duffpowell/duffquest` (README only).
 
 ## 10. Work state
 | Item | Status | Version / location | Notes |
 |---|---|---|---|
-| GitHub account `duffpowell-commits` | SUSPENDED (~4:35 PM Nov 8) | appeal filed by Duff | every push/fetch/API returns 403 "Your account was suspended" |
-| PR #32 ChatGPT apartment | merged | main | CI result unknown (lockout) |
-| Local unpushed commits (10 since `67d96bb`, head `cc7f1c0`) | committed, not pushed | branch `chatgpt-home` in the Claude sandbox repo `/home/claude/duffquest` | gym C2, tux C3, Dolores C5, C5–C7+X1 files, pirates C4, X2, rematch brief, R1 render, R2 trees + Madison-texts fix. LOST if the sandbox ends before reinstatement. |
-| Kwik storefront swap (R1 try 2) | DONE (Duff: "finish switching kwik") | `assets/art/sf_kwik.png` = ChatGPT try 2 | committed locally; render `docs/renders/rematch_r1_kwik_ingame.png`; rematch ChatGPT 2, Grok 0 |
-| ChatGPT C6 props | graded 12, not wired | `grok_art/2026-11-08-chatgpt-test/c6_try1.png` | waffle, coffee pot, tip jar, ticket ready for a Waffle Haus screen |
+| GitHub account `duffpowell-commits` | SUSPENDED (~4:35 PM Nov 8) | appeal filed | all git/API → 403 / no access |
+| Repo (live) | pushed | GitLab `main` `e2fd832` (+ this handoff commit) | smoke clean |
+| R3 Canva props | in game | `sd_football_fan_flag`, `sd_little_free_library`, `sd_scattered_leaves` | renders `docs/renders/rematch_r3_props.png`, `rematch_r3_ingame.png` |
+| R6 Canva Earl | rejected | `grok_art/2026-11-08-canva-test/r6_canva*.png` | render `docs/renders/rematch_r6_earl.png` |
+| Canva character sheets: Dolores, Brittany, Gym Bro | generated, NOT graded | Canva ids in §8 | need full-size downloads; previews: all 4×4 on magenta, back rows present on Dolores + Brittany, Gym Bro row 2 unclear |
+| R4 Canva Gym Bro card | preview ~10 | Canva `MAHaY7k4M30` | full size not downloaded |
+| ChatGPT R5, R6 (fixed prompt), R7, X3 | not run | Doc "STILL TO GRADE" | |
+| ChatGPT C6 props | graded 12, not wired | `grok_art/2026-11-08-chatgpt-test/c6_try1.png` | Waffle Haus screen |
 | ChatGPT C7 | graded 12, unused | `c7_try1.png` | spare loading screen / boss card |
-| ChatGPT X3, rematch R3–R7 | waiting | Doc "ChatGPT vs Grok rematch" | R3 clutter, R4 Gym Bro card, R5 Brittany (redo), R6 Earl sheet, R7 Duff apron |
-| Gemini redo doc (X1–X3, G3, G4 back row, G2 floor sign, G5 take 2) | waiting | Doc "Gemini tests - shootout + redos" | nothing back yet |
-| M7 backgrounds | 3/19 in (home, kitchen, gym) | | 16 left (list in repo `QUEUE.md`) |
+| Gemini redo doc | waiting, low priority | Doc "Gemini tests - shootout + redos" | ChatGPT won every test |
+| M7 backgrounds | 3/19 in (home, kitchen, gym) | | 16 left (Appendix A) |
+| Public GitLab `duffpowell/duffquest` | exists, README only | | should be deleted or made private (family in game) |
 
 ## 11. Next steps
-0. **Restoring in a fresh sandbox (Nov 8, 8 PM, works):** Duff's Drive/chat has `duffquest-full-history-2026-11-08.bundle` (188 MB, head `91703b8`, 23 commits, cut off at `02f9aa4`, so `git clone` fails). Restore: `git init dq; cd dq`, cut the bytes from `PACK` onward into a `.pack`, `git index-pack --stdin < x.pack`, copy the `.pack` + `.idx` into `.git/objects/pack/`, `echo 02f9aa48e9cd7e442a1b4f5919efd254ad0d28ae > .git/shallow`, `git update-ref refs/heads/chatgpt-home 91703b8`, `git checkout chatgpt-home`. Godot 4.5: `Godot_v4.5-stable_linux.x86_64.zip` from the godotengine GitHub releases (reachable even while the account is suspended). Smoke clean on `91703b8`.
-1. **Next action:** if this is a fresh sandbox, restore the unpushed work: clone/fetch the repo when GitHub works, then `git fetch duffquest-unpushed-2026-11-08.bundle chatgpt-home:chatgpt-home` (bundle needs base commit `67d96bb`, which is on GitHub `main`). Otherwise grade incoming rematch R3–R7 / X3.
-2. Grade incoming rematch R3–R7 and ChatGPT X3 (Drive `geminiart` or attached in chat); keep the winner, wire it, render, smoke, commit.
-3. When GitHub is back: `git fetch`, rebase, push the local commits, open PR(s), check CI, merge.
-4. Then back to M7: ChatGPT prompts for the 16 remaining backgrounds (signs low, straight-on).
+1. **Next action:** get the 3 Canva character sheets full size (Duff downloads `MAHaZC0_uSM`, `MAHaZEIpC3c`, `MAHaZJsrtvo` into chat or `geminiart` as `dolores_sheet_canva.png`, `brittany_sheet_canva.png`, `gymbro_sheet_canva.png`), grade each vs the existing sheet + portrait, import winners with `tools/import_big_sheet.py` (Dolores → new id or replace `ch_waitress`: ask Duff), render, smoke, commit, push.
+2. Whatever fails → ChatGPT with the same prompt (portrait attached).
+3. Grade R4 (Canva) full size; run R5, R6, R7, X3 in ChatGPT.
+4. Canva Pro trial: batch the 16 M7 backgrounds through Canva (signs low, straight-on), Duff downloads full size.
+5. When GitHub is back: push tag `github-chatgpt-home` to GitHub, reconcile with GitLab, open PR, check CI, merge; revoke the GitLab token.
+6. If this is a fresh sandbox: restore per the recipe in step 0 below.
+0. **Fresh-sandbox restore:** `git clone https://oauth2:<token>@gitlab.com/dufftkyosht-group/duffquest.git` (ask Duff for a token; don't store it in config). Fallback: `duffquest-full-history-2026-11-08.bundle` (188 MB, head `91703b8`, 23 commits, cut off at `02f9aa4`, so `git clone` fails): `git init dq; cd dq`, cut the bytes from `PACK` onward into a `.pack`, `git index-pack --stdin < x.pack`, copy `.pack` + `.idx` into `.git/objects/pack/`, `echo 02f9aa48e9cd7e442a1b4f5919efd254ad0d28ae > .git/shallow`, `git update-ref refs/heads/chatgpt-home 91703b8`, `git checkout chatgpt-home`. Install Godot 4.5, `--import`, smoke.
 
 ## 12. Open questions ⚠️
-None.
+- Dolores sheet: new id (e.g. `ch_dolores`) wired to her NPC, or replace `ch_waitress`? (ask when grading)
+- Canva Pro trial end date: set a cancel reminder? (offered, no answer yet)
+- Public GitLab `duffpowell/duffquest`: delete or make private? (raised, no answer yet)
 
 ## 13. Re-attach checklist
-- [ ] `handoff-duffquest.md` (this file, self-contained: all project docs are in the appendices).
-- [ ] Any new ChatGPT/Gemini images not saved to Drive `geminiart`.
-- [ ] `duffquest-unpushed-2026-11-08.bundle` (37 MB, sent to Duff in chat Nov 8; he saves it to Drive): all 10 unpushed commits, branch `chatgpt-home`.
+- [ ] `handoff-duffquest.md` (this file; also in the repo root on GitLab).
+- [ ] Full-size Canva downloads: Dolores, Brittany, Gym Bro sheets; R4 Gym Bro card.
+- [ ] GitLab token (re-enter; not stored in this file).
+- [ ] `duffquest-full-history-2026-11-08.bundle` only if GitLab is unreachable.
+- [ ] Any new ChatGPT images not yet saved to `geminiart`.
 
 ## 14. Appendices: full project data (verbatim)
-Everything below is copied as-is from the repo at `cc7f1c0` (branch `chatgpt-home`, 10 commits ahead of GitHub `main` `67d96bb`). Nothing summarised.
+Everything below is copied as-is from the repo at `cc7f1c0` (Handoff #3; the live repo on GitLab wins where they differ) (branch `chatgpt-home`, 10 commits ahead of GitHub `main` `67d96bb`). Nothing summarised.
 
 ### A. M7 background status (19 ids)
 
@@ -1298,4 +1312,6 @@ Art drop folders:
 - `docs/renders/town_storefronts_full.png`
 
 ---
-<sub>Audit: 14 sections + appendices A–N (verbatim) · 11 rules · 8 corrections · secrets removed: yes (none found) · generated by active-memory</sub>
+
+---
+<sub>Audit: 13/13 sections · 13 rules · 10 corrections · 70+ data points · secrets removed: yes (GitLab token) · generated by active-memory</sub>
