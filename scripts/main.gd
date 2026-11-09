@@ -2241,7 +2241,7 @@ func hurt_player(amount: float, from: Vector2, kb: float, kind: String) -> bool:
 		dmg *= Life.DRAIN_TAKEN
 	if kind in PROJ_KINDS and Gear.a_special(gear) == "heatproof":
 		dmg *= 0.5
-	energy -= dmg
+	energy = maxf(0.0, energy - dmg)   # never below 0 (HUD + lose checks use <= 0)
 	if arena_mode == "bet":
 		bet_hurt += 1
 	player.hurt()
@@ -4800,7 +4800,7 @@ func daily_new_day() -> Array:
 	energy = clampf(energy + float(e.get("energy", 0)), 1.0, 100.0)
 	if float(e.get("happy", 0)) != 0.0:
 		gain_happy(float(e.get("happy", 0)))
-	money += int(e.get("money", 0))
+	money = maxi(0, money + int(e.get("money", 0)))   # farmers_market costs $10; broke = no candle, not -$10
 	out.append(str(e.get("card", "")))
 	out.append("(%s)" % str(e.get("effect", "")))
 	apply_gear()

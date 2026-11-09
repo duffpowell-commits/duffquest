@@ -137,6 +137,33 @@ func _extra_checks(main: Node) -> void:
 	check("sick day menu = Quick + Never mind", opts.size() == 2 and opts[0][0] == "quick")
 	sh.free()
 	await _falcor_checks(main)
+	_soak_regressions(main)
+
+## Bugs the 30-day soak (tools/soak.gd) found. Keep them fixed.
+func _soak_regressions(main: Node) -> void:
+	main.day_count = 9
+	main.day_i = 12
+	main.money = 0
+	main.daily = Daily.new_state()
+	var farm_seed: = -1
+	for sd in 2000:
+		if Daily.roll(9, 5, [], 0, sd) == "farmers_market":
+			farm_seed = sd
+			break
+	main.wordle_seed = farm_seed
+	main.daily_new_day()
+	check("farmers market on $0 doesn't go negative (got $%d)" % main.money, main.today_event() == "farmers_market" and main.money == 0)
+	main.dialog.clear()
+	main.location = "outside"
+	main.in_title = false
+	main.close_overlay()
+	main.energy = 3.0
+	main.player.hurt_t = 0.0
+	main.player.roll_t = 0.0
+	main.player.frozen = false
+	var hit: bool = main.hurt_player(50.0, main.player.position + Vector2(10, 0), 0.0, "")
+	check("a big hit floors energy at 0, never negative (got %.1f)" % main.energy, hit and main.energy == 0.0)
+	main.energy = 100.0
 
 func _falcor_checks(main: Node) -> void:
 	main.no_loading = true
