@@ -31,3 +31,10 @@
 - Canva drew Earl as a stranger because the R6 brief never described him. Rule: every character prompt carries the look in words + the HD portrait attached.
 - Graded R6 from Canva's 200 px preview and got a row wrong. Rule: grade only full-size images.
 - `git stash` around before/after renders aborts on pop (`.godot/editor/filesystem_cache10` is tracked and rewritten by every import). Rule: `git worktree add /tmp/before HEAD` for the "before" render.
+
+## Nov 9 (multi-agent day)
+- Verify what the PUBLIC page actually plays, not just what butler reports: itch can have several HTML uploads and only one is embedded. Check the page's iframe upload id after the first push.
+- test_daily can print ALL PASS on a compile error: gate on "SCRIPT ERROR" too.
+- Check `git merge` exit codes; an untracked file silently aborts a merge mid-pipeline.
+- Never glob-delete `*.gd.uid`; many are tracked.
+- Parallel agents need separate worktrees AND separate XDG_DATA_HOME; only one Canva agent at a time.
