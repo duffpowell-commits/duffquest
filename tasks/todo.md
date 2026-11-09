@@ -1,5 +1,30 @@
 # Duff Quest — todo
 
+## JAM BLOCKER (found Nov 9, 07:50) — DECISION NEEDED FROM DUFF
+- The itch "2026 Jam" (itch.io/jam/2026-jam) rules: "No AI content (no AI stuff in your games, so no AI assets like
+  sprites, music, etc), however you may use AI for code assistance." DuffQuest's art is AI-generated -> it does NOT qualify.
+- Anything Jam 2026 (closes Feb 1 2027) also bans generative AI. Brackeys, Craftpix, Bara, Indie Jam: same.
+- AI-friendly jams exist but are short themed sprints for NEW games (All Tools Allowed by Critics Arcade, ctrl ai jam weekly,
+  Jamference AI Game Jam, Epic AI MegaJam = Unreal only). Options: (a) release DuffQuest on itch as a normal game, no jam;
+  (b) a short AI-friendly jam if one accepts existing games; (c) check whether Chaos Is the Mother of Order qualifies for the 2026 Jam.
+
+## IGN-style critique fixes (Nov 9; Duff: "they're warranted")
+Score now ~6.5/10; target 7.5-8. Effort: S = hours (one agent), M = a day of agent time, L = multi-day / Canva-bound.
+- [ ] (S) **Willnot intro card bug:** `docs/renders/qa_boss_intro.png` shows a gameplay frame instead of his burst card. Verify + fix.
+- [ ] (S/M) **HUD declutter for phones:** 5 status panels crowd the landscape screen. One compact top bar (Madison, Energy,
+      $, day/time); errand/rent/fund/bag collapse into a tap-to-expand or the phone. Render before/after.
+- [ ] (M) **Swap the real-billionaire parodies** (Elon Husk, Jeff Bozos, Bill Fences, The Donald; review Willnot too) for
+      original service-industry archetypes like Coupon Carol / Four-Hour Camper. Dated jokes + Google Play risk. Needs: new
+      names/scripts (code, fast), new portraits/cards/sheets/KO stills (Canva, ~5 bosses x ~7 images). Old set -> DLC folder.
+- [ ] (M) **Core-loop pacing:** does rent + shift grind feel like a second job by day 12? Use the soak test data
+      (docs/qa/soak_report.md) + Brittany playtest; tune pay/rent/energy, add skip/autopilot where it drags.
+- [ ] (L) **One art direction.** Three styles clash: chibi pixel world / Hazbin-style cards / glossy anime KO panels.
+      Decision: pixel world for gameplay + ONE comic style for every HD layer (cards, portraits, KO, loading). Pick the
+      card style (cleaner, already consistent across 17 bosses) and regenerate KO + loading stills toward it. Lock Duff's
+      face with one canonical face sheet as the first Canva ref every time. ~60 Canva images, one agent at a time.
+- [ ] (L) **The town is generic** next to the cards/cutscenes: M7 backgrounds + 2-3 hero landmarks with real Omaha
+      character (Canva), plus prop density on the empty right-side lawns.
+
 ## JAM PUSH (Nov 9 → Dec 28; itch "2026 Jam" closes Dec 31). Entry: DuffQuest + Chaos if we bust ass.
 - [x] **Upload the updated build to itch** (Nov 9: `7cd1f78` live via butler, key in `.env`) (`dufftkyosht.itch.io/duff-quest`). Fastest: Duff makes a butler API key
       (itch.io → Settings → API keys), pastes it once, Claude pushes with butler from the sandbox (itch API reachable,
@@ -12,6 +37,8 @@
 - [x] Duff sprite tattoos via `tools/tattoo_sprites.py` (pixel recolor agent running Nov 9).
 - [x] KO sfx + stat screen overflow fix (agent running Nov 9) — review, test, commit.
 - [ ] Title screen `bg_title.png`: Duff has bare arms, tattoo him (D1-D7).
+- [ ] Bug: new-game intro says Monday costs $150 (RENT+BILLS) but `weekly_base()` charges $195+ (adds HOUSEHOLD $45 + plans). Fix the intro text.
+- [ ] Doc drift found by reference.md (end of its section 9): stale .png names, M7 counts, voice.md 480x270, cast.gd DEFAULTS missing `stray`/`gala_baron`. Fix those docs/code.
 - [ ] In-engine cartoon blood/spit/teeth particles on KO x-ray + finisher hits (art rule H2).
 - [ ] KO stills for the last 6 bosses: coupon, allergy, camper, bdaydad, dasher, baron.
 - [ ] Restyle 21 old chibi sprite sheets (see `docs/reviews/loading_sprites.md`).

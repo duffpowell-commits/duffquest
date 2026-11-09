@@ -1,6 +1,6 @@
 # Claude reference: key facts for every DuffQuest session
 
-Short and stable. `CLAUDE.md` = status log; this = where things live and how we work. Update when a fact changes.
+Short and stable. `CLAUDE.md` = status log; this = ops (secrets, hosting, shipping); `reference.md` = how the GAME works (systems, data, art, tools). Update when a fact changes.
 
 ## Secrets (never ask Duff to paste keys again)
 - Vault: Cloudflare D1 database **`duff-vault`** (id `af975dad-2989-45e3-92c9-03caf55f14e3`), table `secrets(name, value, note, expires)`.
@@ -26,7 +26,7 @@ Short and stable. `CLAUDE.md` = status log; this = where things live and how we 
 ## Art pipeline (Nov 9)
 - **Image generator = Canva (`generate-image`) + Claude.** Grok is out of usage; Gemini app runs are retired.
   Canva: Business plan, ONE agent at a time (parallel calls hit the rate limit). Edit flow: upload the original
-  with `create-upload-url`, pass it as the FIRST reference. Full-size export via scratch design `DAHaZZaEJBs`.
+  with `create-upload-url`, pass it as the FIRST reference. Full-size export via scratch design `DAHabf2Qa9U` (old `DAHaZZaEJBs` hit the 100-page limit).
   Duff refs in Canva: front `MAHabDL4f8M`, side `MAHabLtLOTk`, eye hand `MAHabBgv_Hk`, creature forearm `MAHabP7oeP8`.
 - Claude does everything in code: keying, cutting sheets, recolors (`tools/tattoo_sprites.py`), fixes
   (`tools/fix_sheet_cells.py`), procedural SFX, in-engine effects (blood/spit lives in code, Canva blocks it).

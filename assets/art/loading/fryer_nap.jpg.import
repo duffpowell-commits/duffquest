@@ -15,9 +15,9 @@ dest_files=["res://.godot/imported/fryer_nap.jpg-5aaf287d9c0930fcf125efa359dd2e5
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.7
+compress/lossy_quality=0.8
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1

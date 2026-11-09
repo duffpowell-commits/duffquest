@@ -25,3 +25,9 @@
 - Using one finished still as the layout reference for five others cloned its composition AND Duff's faces into all five. Rule: style refs carry style only when they contain no characters; give characters their own refs and describe the composition per image.
 - Checked faces, missed anatomy: the x-ray inset showed a different bone than the hit on 4 of 5. Rule: grade every impact still on 'is the x-ray where the hit is, and is it the bone the narration names'.
 
+
+## Nov 8 night (restore + Canva session; full log docs/handoffs/2026-11-08_night_restore_gitlab_canva.md)
+- The sandbox died and took 6 unpushed commits and every chat-only image. Rule: push every chunk; every AI image goes to Drive `geminiart` or the repo, never only the chat.
+- Canva drew Earl as a stranger because the R6 brief never described him. Rule: every character prompt carries the look in words + the HD portrait attached.
+- Graded R6 from Canva's 200 px preview and got a row wrong. Rule: grade only full-size images.
+- `git stash` around before/after renders aborts on pop (`.godot/editor/filesystem_cache10` is tracked and rewritten by every import). Rule: `git worktree add /tmp/before HEAD` for the "before" render.
