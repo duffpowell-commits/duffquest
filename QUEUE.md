@@ -2,7 +2,9 @@
 Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into NOW.
 
 ## NOW
-- STYLE C CONVERSION (locked Nov 9): convert 57 KO stills + 13 loading screens to style C, order in docs/art_direction/STYLE_LOCK.md (Duff's 6 shared KO frames first). Then gala exes' ch_<id> sprite sheets (husk/bozos/fences/donald still show old faces in-world). No new images outside the lock.
+- ITCH EMBED FIX (Duff, dashboard): play `duff-quest-html.zip`, delete `duffquest-web.zip`. Then paste docs/itch/PAGE.md + images.
+- Gala exes' ch_<id> sprite sheets in style C (husk/bozos/fences/donald still show old faces in-world).
+- Balance call from Duff: happiness gates (tasks/todo.md).
 - JAM PUSH (Nov 9): itch build current + art-rule fixes. See `tasks/todo.md` top section and `docs/HANDOFF_NOV9.md`.
 - M7: 19 backgrounds from Place (`grok_art/requests/REQUEST_M7_backdrops.md`). Done 3/19: home_interior, bg_kitchen, arena_gymbro (Gemini). Art now comes from Duff's Gemini app runs (Drive 97 folder). Next from Place: arena_alley, arena_waffle, gala. Wire each drop as it lands (see CLAUDE.md M7 drop 1).
 
