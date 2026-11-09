@@ -1,7 +1,7 @@
 extends RefCounted
 ## Town street dressing (Grok, Nov 8): trees, clutter and fences from data/town_dressing.json.
-## Items are drawn depth-sorted: anything whose ground point is above Duff's feet is drawn by
-## main._draw_outside (behind him), the rest by DressingFront (a z_index 1 overlay, in front).
+## Items are y-sorted together with every actor by scripts/dressing_front.gd (Nov 9); the few
+## tucked behind a storefront ("behind_building", tagged in main._ready) are drawn by main._draw_outside.
 
 const Art: = preload("res://scripts/art.gd")
 const FENCE_SEG: = 39.0   # world units per fence segment (tools/import_dressing.py FENCE_STRIDE / 2)
@@ -48,28 +48,7 @@ static func draw_item(ci: CanvasItem, it: Dictionary, mod: Color = Color.WHITE) 
 		p -= Vector2(FENCE_SEG / 2.0 - 1.0, 0)   # end post art sits mid-cell
 	Art.image(ci, str(it["a"]), p, mod, float(it["s"]))
 
-## Items whose ground point is at or above feet_y (behind Duff), or below it when front is true.
-## see_through (front layer only): body boxes (Rect2) of Duff and everyone else on the street; an
-## item covering any of them is drawn faded so nobody vanishes behind a tree.
-static func draw_layer(ci: CanvasItem, items: Array, feet_y: float, front: bool, mod: Color = Color.WHITE, see_through: Array = []) -> void:
-	for it in items:
-		if (it["p"].y > feet_y) != front:
-			continue
-		var c: = mod
-		if front and covers_any(it, see_through):
-			c.a *= SEE_THROUGH_ALPHA
-		draw_item(ci, it, c)
-
 const SEE_THROUGH_ALPHA: = 0.45
-
-static func covers_any(it: Dictionary, boxes: Array) -> bool:
-	var r: = art_rect(it)
-	if not r.has_area():
-		return false
-	for b in boxes:
-		if r.intersects(b):
-			return true
-	return false
 
 ## Body box (world units) for something whose feet are at `feet`.
 static func body(feet: Vector2, w: float, h: float) -> Rect2:
