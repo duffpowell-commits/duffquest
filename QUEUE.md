@@ -7,6 +7,10 @@ Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into
 ## NEXT
 
 ## DONE
+- M12 (Nov 9): Falcor thread (day 10 scene + grief days) and Thanksgiving.
+- M11 (Nov 9): fridge calendar (30 November days, notes, cats), 14 random daily events, weekends off.
+- M10 (Nov 9): shuffled full shift + muscle-memory autopilot.
+- Nov 9: parody bosses get made-up human portraits (cartoon heads saved for DLC).
 - M9 (Nov 8): Palahniuk voice layer: 22 key lines, 4 choruses, 40 fact-checked fun facts on bus rides + load.
 - Nov 8: Madison + Octavia portrait touch-ups wired in (Place PR #21).
 - M8 (Nov 8): menus restyled in code to match Place's boss cards (fonts, ink panels, chunky buttons, sunburst title). Boss intros switched to the burst cards.
@@ -18,7 +22,6 @@ Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into
 - M1 (Nov 8): Grok outfit sheets for Duff outdoors (10 sheets) + redrawn shades overlay.
 
 ## IDEAS
-- (Nov 9) Daily life layer (calendar, curveballs, weekends, weather, Falcor, bonds, shift shuffle + muscle memory): spec `docs/daily_life.md`, waiting on Duff's go. Time slots skipped (saved for future games).
 - (Nov 8) Place agent is redrawing: Waffle Haus sign, bus-stop sign, cats, extra lawn props, the outfit sheets. Import when handed over.
 - (Nov 8) Screen-shake on/off in settings (accessibility).
 - (Nov 8) Missing outfit art: `duff_dress`, dodge-roll sheets, `ch_duff_suit`.

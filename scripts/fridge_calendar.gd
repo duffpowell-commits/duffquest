@@ -181,9 +181,7 @@ func _notes_for(day: int) -> Array:
 func _draw_notes(area: Rect2, u: float, a: float, day: int) -> void:
 	var notes: = _notes_for(day)
 	if notes.is_empty():
-		draw_string(_fonts["caveat"], area.position + Vector2(0, area.size.y * 0.4), "(nothing on the fridge today)",
-			HORIZONTAL_ALIGNMENT_CENTER, area.size.x, int(13 * u), Color(INK, 0.4 * a))
-		return
+		return   # an empty fridge says it (day 10)
 	var gap: = 6 * u
 	var h: = (area.size.y - gap * (notes.size() - 1)) / notes.size()
 	h = minf(h, area.size.y * 0.42)

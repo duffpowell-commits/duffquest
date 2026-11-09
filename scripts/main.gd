@@ -1341,7 +1341,12 @@ func _wake(energy_penalty: int) -> void:
 		lines.append("{partner}: \"My package says delivered. Grab it off the porch before the porch pirates do?\"")
 	if story_ready_unannounced() != "":
 		lines.append("{partner}'s got something to tell me. (Talk to her.)")
-	_say(lines.filter(func (l): return str(l) != ""))
+	lines.append_array(calendar_day_lines())
+	lines = lines.filter(func (l): return str(l) != "")
+	if calendar_event() == "falcor" and str(daily["falcor"]) == "":
+		falcor_scene(lines)
+	else:
+		_say(lines)
 	_sync_world()
 	save_game()
 
@@ -1730,6 +1735,9 @@ func try_shift() -> void:
 	var c: = fmod(clock, 1440.0)
 	if c >= 1320.0 or c < 360.0:
 		_say(["Fork's closed. Even Grill-Boy went home, and he lives in the walk-in. (Open 6 AM - 10 PM)"])
+		return
+	if calendar_event() == "thanksgiving":
+		_say(["The Fork's closed for Thanksgiving. First time in history. Chef's 'with family,' which means his boat."])
 		return
 	if Daily.is_weekend(day_i % 7):
 		_say(["It's the weekend. The schedule says I'm off. The Fork can lose money without me for once."])
@@ -3990,7 +3998,7 @@ func mood_new_day() -> Array:
 		mood["kind"] = ""
 	if mood_kind() == "upset":
 		return out
-	if life_events and Moods.roll_fussy(day_count, wordle_seed, int(mood["last_fussy"])):
+	if life_events and not falcor_grief() and Moods.roll_fussy(day_count, wordle_seed, int(mood["last_fussy"])):
 		start_fussy()
 		out.append("{partner} wakes up having a rough one. Not my fault. I gotta be gentle with her today.")
 	return out
@@ -4774,3 +4782,54 @@ func daily_new_day() -> Array:
 	out.append("(%s)" % str(e.get("effect", "")))
 	apply_gear()
 	return out
+
+## Special handler id for today's calendar square ("falcor", "thanksgiving") or "".
+func calendar_event() -> String:
+	return str(Daily.entry(day_count).get("event", ""))
+
+## Days 11-13 after Falcor: Madison's quiet. No fussy rolls, a soft line each morning.
+const FALCOR_GRIEF: = {
+	11: "{partner}'s quiet at breakfast. She feeds {cat1} and {cat2} twice, like she's making up the difference.",
+	12: "{partner} holds onto me at the door a little longer than usual. Doesn't say anything about the porch.",
+	13: "{partner} laughs at something {baby} does. First real one in three days. I write down the time.",
+}
+
+func falcor_grief() -> bool:
+	return str(daily["falcor"]) != "" and FALCOR_GRIEF.has(day_count)
+
+## Extra wake lines for special calendar days.
+func calendar_day_lines() -> Array:
+	var out: Array = []
+	if falcor_grief():
+		out.append(FALCOR_GRIEF[day_count])
+		if day_count == 11:
+			text("madison", "madison", "bowl's still on the porch. not ready to move it.")
+	if calendar_event() == "thanksgiving" and int(daily.get("thanks_day", -1)) != day_count:
+		daily["thanks_day"] = day_count
+		gain_happy(10.0)
+		energy = minf(100.0, energy + 20.0)
+		out.append("Waffle Haus at noon. Dolores brings a pie she says is 'from the case.' It's not from the case. (+10 Happiness, +20 Energy. The Fork's closed.)")
+	return out
+
+## Day 10: Falcor. Approved text (Duff, Nov 9). Sincere: no jokes at his expense.
+const FALCOR_LINES: = [
+	"Sunday. {partner}'s on the porch steps before the coffee's done. {stray}'s curled up next to his bowl like he's waiting on seconds. He's not waiting on anything anymore.",
+	"I get the shovel. She picks the spot. Neither of us says much.",
+	"A stray is a cat that picked you without asking. That's the whole contract. He kept his end.",
+]
+
+func falcor_scene(after: Array) -> void:
+	spawn_t = 150.0   # nobody on the block till about noon
+	_menu("SUNDAY", FALCOR_LINES, [["stay", "Stay with her", KEY_1], ["space", "Give her some space", KEY_2]], func (id: String) -> void:
+		daily["falcor"] = id
+		var out: Array = []
+		if id == "stay":
+			gain_happy(10.0)
+			advance_clock(180.0)
+			out.append("We sit on the steps till the coffee's cold. {partner} talks about the moth. I listen like it's the news. (+10 Happiness. The morning's gone. Worth it.)")
+		else:
+			out.append("I kiss the top of her head and give her the porch. She nods. Some things you do alone, even when you're not.")
+		save_game()
+		_say(out + after), "living_night")
+	if overlay_node:
+		overlay_node.set("backdrop_dim", 0.45)   # quiet room, no party burst
