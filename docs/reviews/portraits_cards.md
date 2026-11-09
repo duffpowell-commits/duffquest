@@ -105,3 +105,15 @@ Only 5 images actually fail. Items 6-10 are nits and doc fixes, ranked by how li
 8. **docs/duff_look.md** "panther" line contradicts D3 (risk: a future Duff prompt draws a panther).
 9. **boss_intro/husk.png**: optional pose change, because it clones Ghoster's card pose.
 10. **djvape portrait + card**: optional holster, because the vape looks like it grows out of her shoulder.
+
+## Fix log (Nov 9, HD art fixer pass)
+
+| file | what changed | how |
+|---|---|---|
+| boss_intro/crypto.png | The floating tablet behind his head is removed and the sunburst filled in. Title text is unchanged. 960x540 RGB is kept. | Canva edit |
+| boss_intro/fences.png | The fruit logo is gone, leaving a plain glowing tablet back. The flower ring is now a cyan segmented spinner. 960x540 RGB is kept. | Canva edit |
+| portraits_hd/octavia.png | Panel-3 irises are recoloured from magenta to the panel-1 blue (hue matched, tears and everything else untouched). | PIL hue shift on the iris pixels only (the Canva job errored with a 409) |
+| portraits_hd/bdaydad.png | The cake now fits fully inside all 3 panels, nothing is cut off at the edge, and there is no green fringe. | Canva edit on magenta, then `tools/import_portrait.py ... --cell 512` |
+
+Masters are in `grok_art/2026-11-09-fixes/`. portraits_hd/duff.png was already redone before this pass and I left it alone. The
+all-portrait green-fringe despill was not part of this job and is still open.
