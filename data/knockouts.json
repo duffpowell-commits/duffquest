@@ -1,0 +1,156 @@
+{
+  "_doc": "Boss knockout cutscenes (Baki x Spike Spiegel, narrated Palahniuk). Beats run in order: stance -> slip -> xray -> finisher -> crowd -> closer. Narration is Duff at the bar, present tense (docs/voice.md). 'crowd' is a speaker-labelled line (gets that NPC's portrait). Boss defeat line from boss.gd plays after 'closer'. Keep {tokens}. See docs/knockout_cutscenes.md.",
+  "husk": {
+    "move": "SHIFT CHANGE",
+    "stance": "He's streaming this to two hundred million people. My audience is a fryer and a guy named Hector. I bounce on my heels. I wave him in. Two fingers.",
+    "slip": "His rocket comes in slow. Everything is slow when you've worked a double. I lean six inches left. The rocket keeps going, toward its next funding round.",
+    "xray": "Fun fact: the human ego has no bones. It's held up by other people's money. My elbow finds it anyway. It makes the sound of a stock split.",
+    "finisher": "Every punch is a ticket. Every ticket gets fired. Nobody gets comped.",
+    "crowd": "Brittany: \"He's gonna post about this. He is gonna post SO much about this.\"",
+    "closer": "I fix my apron. Somewhere a market dips. Nobody I know owns any of it."
+  },
+  "bozos": {
+    "move": "SAME-DAY DELIVERY",
+    "stance": "He has seventeen houses. I have one apartment and a cat who hates me. I roll my neck. I let my hands hang loose, like I'm waiting on a bus.",
+    "slip": "His drones swarm in. I duck one, step through two, let the fourth hit the third. Teamwork. He's never seen it before.",
+    "xray": "The human jaw has two hinges. His were installed by the lowest bidder. One knee, and both of them open for business.",
+    "finisher": "You can't automate this. I checked. It's still just a guy with a spatula and nothing to lose.",
+    "crowd": "Dolores: \"Honey, that man just got returned to sender.\"",
+    "closer": "Package delivered. Signature required. I sign it with my left hook."
+  },
+  "fences": {
+    "move": "HARD REBOOT",
+    "stance": "He's buffering. I'm not. I tap my chest twice, open my hand, and wait. Patience is free. Everything else he sells.",
+    "slip": "A blue screen fills the room. I've seen worse at 2 AM on a POS terminal. I step around it like a puddle.",
+    "xray": "The spine is thirty-three vertebrae stacked like dirty plates. I clear the stack. Top to bottom. The way Dolores taught me.",
+    "finisher": "Ctrl. Alt. Delete. Three hits, in order, no updates required.",
+    "crowd": "Earl: \"Kid didn't even spill his coffee.\"",
+    "closer": "He shuts down. Doesn't save his work. Nobody ever does."
+  },
+  "baron": {
+    "move": "BACK OF HOUSE",
+    "stance": "His monocle costs more than my car. His car costs more than my life. I shrug off my jacket. I let it fall. I don't look where it lands.",
+    "slip": "He throws coins. Thirty-seven cents at a time. I catch a quarter out of the air and pocket it. Rent's due Monday.",
+    "xray": "Inherited wealth sits in the lower back. It's where the posture comes from. One kidney shot and three generations of it fold.",
+    "finisher": "This is what work feels like. I wanted you to know, just once, before you die old.",
+    "crowd": "{partner}: \"Babe. BABE. Don't break the champagne tower, we can't afford the tower.\"",
+    "closer": "He calls for Mummy. Mummy doesn't come. Welcome to the rest of us."
+  },
+  "donald": {
+    "move": "TARIFF THIS",
+    "stance": "He's talking. He's been talking for six minutes. I wait for a comma. There isn't one. I bounce, loose, and step in on a vowel.",
+    "slip": "He builds a wall. I go around it. Walls are like that. Ask anybody who's ever been in a kitchen.",
+    "xray": "The human hand has twenty-seven bones. His are smaller than mine. Everybody says so. My fist says so the loudest.",
+    "finisher": "Big league. Tremendous. The best knockout anybody's ever seen. People are saying.",
+    "crowd": "Brittany: \"I'm putting twenty on 'he says it was rigged.'\"",
+    "closer": "He calls it a win. Of course he does. I call it Tuesday."
+  },
+  "ghoster": {
+    "move": "READ RECEIPT",
+    "stance": "Three years ago he left {partner} on read. Tonight he's left standing. I hold my hands low. I make him guess.",
+    "slip": "He vanishes. Classic. I don't chase. I wait at the spot he'll come back to. Guys like him always come back to the same spot.",
+    "xray": "There's a nerve in the ribs called the intercostal. It's the one that holds your excuses. I hit it, and all of them come out at once.",
+    "finisher": "Seen. Seen. Seen. Delivered.",
+    "crowd": "{partner}: \"...Okay, that was kind of hot. Don't tell anyone I said that.\"",
+    "closer": "He types something. Deletes it. Types it again. Some guys never learn to hit send."
+  },
+  "gymbro": {
+    "move": "REST DAY",
+    "stance": "He's two hundred and sixty pounds of protein powder and grievance. I'm one-ninety of coffee and spite. I bounce. Loose. Like nothing in me is load-bearing.",
+    "slip": "His curl comes around like a wrecking ball. I'm not where the ball lands. I never was. I'm already under his elbow, where the muscle ends and the guy begins.",
+    "xray": "Fun fact: a bicep is just a tendon with a marketing budget. Mine finds the tendon. It snaps like a ticket off the rail.",
+    "finisher": "You train for mirrors. I train for Saturday brunch. Brunch has never once skipped leg day.",
+    "crowd": "Brittany: \"PAY ME. Everybody who bet on the abs, PAY ME.\"",
+    "closer": "He's crying. Not from pain. From missing a post. I let him have it. Grief is a muscle too."
+  },
+  "djvape": {
+    "move": "BASS DROP",
+    "stance": "The bass is so loud my fillings buzz. I nod along. I find the beat. I wait for the drop like everybody else in the room.",
+    "slip": "Vape cloud. Strawberry Mango Ice. I hold my breath and walk through it, the way I walk through the dish pit steam. Eyes open. Mouth shut.",
+    "xray": "The inner ear is three tiny bones and a lot of fluid. He's been drowning his for years. One open palm and the room tilts for him.",
+    "finisher": "Three. Two. One. Nothing drops harder than you.",
+    "crowd": "Dolores: \"I've seen better sets at a funeral, sweetie.\"",
+    "closer": "He asks if the fight counts as exposure. It does. He's exposed."
+  },
+  "crypto": {
+    "move": "RUG PULL",
+    "stance": "He's standing on a rug. He's always standing on a rug. I keep my feet on the tile. I keep my hands where he can't price them.",
+    "slip": "An NFT the size of a door comes at me. It has a monkey on it. I step aside and it hits nothing, which is exactly what it's worth.",
+    "xray": "There's a ligament in the ankle that holds up a man's entire belief system. I sweep it. His whole portfolio leaves the ground.",
+    "finisher": "Have fun staying solvent.",
+    "crowd": "Earl: \"Back in my day we called that a pyramid. And a pyramid was a shape.\"",
+    "closer": "He says he's up spiritually. I'm up four bucks. One of us is right."
+  },
+  "willnot": {
+    "move": "NO SHOES",
+    "stance": "Forty floors. No shoes. Glass everywhere. He's limping and he's still talking. I slide my feet like the floor is ice, which is a trick you learn after one bad mop shift.",
+    "slip": "He fires everything at once. Sprinklers. Vents. Bad attitude. I go low, then lower, then I'm behind him, like a server sneaking a plate out of the window.",
+    "xray": "The bottom of the foot has twenty-six bones and a thousand nerve endings. He walked across a glass floor to get here. I don't hit the foot. I don't have to.",
+    "finisher": "Yippee. Whatever. Just fall down.",
+    "crowd": "{partner}: \"Is it over? Can we go home? I left the baby with Brittany.\"",
+    "closer": "The tower goes quiet. Every ex, defeated. Every elevator, out of order. I take the stairs. Forty floors. It's still easier than brunch."
+  },
+  "regular": {
+    "move": "LAST CALL",
+    "stance": "Earl has been coming here for thirty-one years. He's outlived three owners and a fire. He stands up slow. I give him the respect of standing still.",
+    "slip": "He swings like a man who learned in a war nobody remembers. I slip it and it still rings my ear. The coffee cups shiver on the counter.",
+    "xray": "An old man's heart is a fist that never unclenched. I don't hit it. I hit everything around it, so it can finally rest.",
+    "finisher": "Order up. Hash browns, scattered, smothered, covered. And you, Earl. Plated.",
+    "crowd": "Dolores: \"Thirty-one years. Nobody's ever plated Earl.\"",
+    "closer": "He sits back down. He tips. Exact change. And one piece of advice I'm still trying to understand."
+  },
+  "sendback": {
+    "move": "EIGHTY-SIX",
+    "stance": "He's sent back nine plates. The tenth plate is me. I set my feet. I don't garnish anything.",
+    "slip": "He shoves the plate at me. I take it, turn, set it down on the pass without breaking stride. Twelve years on the line. Plates don't scare me.",
+    "xray": "The tongue has ten thousand taste buds. His only ever tasted complaints. One uppercut and he tastes something new. It's humility. It's medium rare.",
+    "finisher": "Your order is eighty-sixed. Forever.",
+    "crowd": "Dolores: \"Told you to stop sending it back, hon.\"",
+    "closer": "Five stars. Still no tip. Some things you can't beat out of a man. I try anyway, a little, in my heart."
+  },
+  "coupon": {
+    "move": "BUY ONE GET ONE",
+    "stance": "She has nine hundred coupons in a binder held shut by a rubber band and hate. I bow. You bow to a pro. Then you take her apart.",
+    "slip": "She throws the binder. Coupons everywhere, like confetti at a sad wedding. I walk through it. Half of them are expired. All of them are hers.",
+    "xray": "There's a muscle in the forearm called the flexor. It's the one that clips. Hers is the size of a ham. I tap it, and her whole hand forgets coupons exist.",
+    "finisher": "The first one's full price. The second one's free.",
+    "crowd": "Earl: \"She tried that move on me in '98. Didn't work then either.\"",
+    "closer": "She asks if there's a coupon for this. There isn't. There never is for the things that hurt."
+  },
+  "allergy": {
+    "move": "CROSS-CONTAMINATION",
+    "stance": "She's allergic to gluten, dairy, nuts and accountability. I wash my hands first. It's policy.",
+    "slip": "She fakes a reaction. Hand to throat. Gasping. I've seen better at a dinner theater. I step around the performance.",
+    "xray": "The human throat is a tube about an inch wide. Everything she's ever lied about goes down it. One jab to the solar plexus and the truth comes back up.",
+    "finisher": "I'm allergic too. To this.",
+    "crowd": "Dolores: \"She ate a whole basket of rolls in booth four, baby. I watched her.\"",
+    "closer": "She admits it. Free dessert. That's all it ever was. That's all it ever is."
+  },
+  "camper": {
+    "move": "CLOSING TIME",
+    "stance": "He's been in booth six for four hours on one coffee. His laptop's at three percent. So's my patience. I roll my shoulders. I stand where the outlet is.",
+    "slip": "He swings his laptop bag like a flail. I let it pass, close enough to read the stickers. One says 'disrupt.' I plan to.",
+    "xray": "Fun fact: sitting for four hours shortens your hip flexors by about the length of a grudge. His snap like a charging cable.",
+    "finisher": "We close at two. It's two.",
+    "crowd": "Brittany: \"He was on the wifi the whole fight. He's still on the wifi.\"",
+    "closer": "He leaves. He goes to the library. It's quieter there. It's free there. Nobody there will ever hit him."
+  },
+  "bdaydad": {
+    "move": "HAPPY BIRTHDAY",
+    "stance": "There are eleven kids, one cake and one dad who said 'yeet' on purpose. I take off my hat. Birthdays deserve respect.",
+    "slip": "He sends the kids in first. Nuggets fly. I dodge a juice box, a party hat and Tanner, who bites. Tanner always bites.",
+    "xray": "A grown man's dignity sits in his knees. That's why dads crouch so much at parties. One low kick and his folds into a lawn chair.",
+    "finisher": "Make a wish.",
+    "crowd": "{partner}: \"Okay, when {baby} turns one we are NOT doing a Waffle Haus party.\"",
+    "closer": "The kids clap. They think it's part of the show. In a way, everything is part of the show."
+  },
+  "dasher": {
+    "move": "CHECK, PLEASE",
+    "stance": "He's halfway to the door with a whole pie under his arm. I take one step. That's all it takes. He knows I've done this before.",
+    "slip": "He runs. I don't. I cut the angle the way you cut a corner in a busy kitchen, and he runs straight into the space where I already am.",
+    "xray": "Running away uses about two hundred muscles. Stopping uses just one, and it's mine.",
+    "finisher": "Your total comes to: everything.",
+    "crowd": "Earl: \"Should've paid for the pie, son. Pie's worth paying for.\"",
+    "closer": "He pays. In cash. And the pie. I eat a slice on my break. It tastes like justice and margarine."
+  }
+}
