@@ -1,6 +1,6 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
-##   (ids: a boss arena, "title", "home", "dolores" (her dialogue line), "at:X,Y" (outdoors at a world point), or "fryer"/"sandwich" = the kitchen station with food in it)
+##   (ids: a boss arena, "title", "home", "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "at:X,Y" (outdoors at a world point), or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var game: Node
@@ -39,14 +39,19 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		if id.begins_with("at:"):  # at:X,Y = stand Duff at that outdoor world point
 			var xy: = id.substr(3).split(",")
+			if m.location != "outside":
+				m.leave_home()
+				m.dialog.clear()
 			m.player.position = Vector2(float(xy[0]), float(xy[1]))
 		elif id == "dolores":
 			m._say(["Dolores (31 years in): \"Three grills, hon. Fire 'em, plate 'em, don't let 'em burn. And don't let the drunks hug you. They mean it.\""])
+		elif id == "waffle":  # Waffle Haus shift (Dolores behind the counter)
+			m.start_waffle()
 		elif id in ["fryer", "sandwich", "home"]:
 			m.debug_station(id)
 		else:
 			m.start_story_fight(id)
-	if frame == 215 and id in ["fryer", "sandwich"]:
+	if frame == 215 and id in ["fryer", "sandwich", "waffle"]:
 		_key(KEY_SPACE)  # past the NEXT STATION card
 	if frame == 260 and id in ["fryer", "sandwich"]:
 		var g: Node = _find_game(m)
@@ -57,9 +62,9 @@ func _process(_d: float) -> void:
 			g.baskets[0]["prog"] = 0.8
 			g.baskets[1]["prog"] = 1.5
 
-	if frame == 230 and id == "home":
+	if frame == 230 and id in ["home", "waffle"]:
 		m.dialog.clear()
-	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores"] and not id.begins_with("at:"):
+	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle"] and not id.begins_with("at:"):
 		m.dialog.clear()
 		m.player.position = m.ARENA_ORIGIN + Vector2(200, 140)
 	if frame == 280:

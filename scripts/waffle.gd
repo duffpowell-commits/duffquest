@@ -224,7 +224,7 @@ func _draw() -> void:
 		if word[i] == " ":
 			continue
 		draw_string(f, o + Vector2((150 + i * 16 + 3) / 1.5, 18.0 / 1.5), word[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#1a1418"))
-	Art.person(self, "ch_waitress", o + Vector2(40, 27), Vector2.DOWN, t, false, call_t > 0.0)
+	Art.person(self, "ch_dolores", o + Vector2(22, 92), Vector2.DOWN, t, false, call_t > 0.0)
 
 	for g in 3:
 		var gp: Vector2 = o + GRILLS[g]
