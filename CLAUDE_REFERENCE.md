@@ -33,6 +33,11 @@ Short and stable. `CLAUDE.md` = status log; this = ops (secrets, hosting, shippi
 - Rules: `docs/art_rules.md` (Duff's look D1-D7, gore H2), `docs/duff_look.md`, voice `docs/voice.md`.
 - "Place" (Cursor/Grok art agent) hands drops in `grok_art/<date>-<name>/HANDOFF.md`.
 
+## Decisions (Nov 9)
+- Real names (Madison, Octavia, Jen, Brittany) are fine on the public itch build. Parody-name swap via data/cast.json not needed.
+- House art style = C (docs/art_direction/). Gala unlocks story day 24.
+- 2026 Jam is out (bans AI art). Seasonal RPG Game Jam #1 (closes Dec 23 5:59 PM CT; host artistotel; born on Melonland forum) has no AI rule; Duff asked the host on the jam's itch Community tab.
+
 ## Deadlines
 - itch "2026 Jam" closes Dec 31, 2026; our deadline **Dec 28**. Entries: DuffQuest (+ Chaos, separate repo).
 
