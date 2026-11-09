@@ -78,6 +78,25 @@ static func grade_for(s: float) -> String:
 	if s >= 0.5: return "C"
 	return "F"
 
+static func grade_rank(g: String) -> int:
+	return ["F", "C", "B", "A", "S"].find(g)
+
+## Muscle memory: a station Duff has S'd before can be autopiloted for a flat B.
+const AUTOPILOT_SCORE: = 0.72
+const AUTOPILOT_NOTE: = "Muscle memory. My hands run the station. My brain files a complaint."
+
+func can_autopilot(k: String) -> bool:
+	if m == null or not (k in FULL):
+		return false
+	var best = m.get("station_best")
+	return typeof(best) == TYPE_DICTIONARY and str(best.get(k, "")) == "S"
+
+## Lineup quiz stays first (it's Chef's lineup); the other seven stations come in a new order each shift.
+static func full_order() -> Array:
+	var rest: Array = FULL.slice(1)
+	rest.shuffle()
+	return [FULL[0]] + rest
+
 static func grade_color(g: String) -> Color:
 	return {"S": Color("#ffd23f"), "A": Color("#8aff8a"), "B": Color("#8ad0ff"), "C": Color("#ffb060"), "F": Color("#ff5f5f") }.get(g, Color.WHITE)
 
@@ -132,7 +151,7 @@ func _card(heading: String, lines: Array, lines2: Array, big: String, opts: Arra
 func start() -> void:
 	_card("THE TWISTED FORK  -  %s" % day_name,
 		["Clock in. The Fork is a family (unpaid overtime). Grade sets pay: S = double, F = docked.",
-		"Full Shift: all 8 stations. Quick Shift: 4 random ones.",
+		"Full Shift: all 8 stations, new order every night. Quick Shift: 4 random ones. S a station once and you can autopilot it for a B.",
 		"Friday Night Rush: tickets pile on the rail. Chain good grades for a combo. Tips go to 'the pool' (Chef's boat)."],
 		[], "", [["full", "Full Shift (8)", KEY_1], ["quick", "Quick Shift (4)", KEY_2], ["rush", "Friday Night Rush", KEY_3], ["leave", "Never mind", KEY_ESCAPE]],
 		_on_menu)
@@ -153,7 +172,7 @@ func begin(md: String) -> void:
 	if md == "rush":
 		_start_rush()
 		return
-	var list: Array = FULL.duplicate()
+	var list: Array = full_order()
 	if md == "quick":
 		list.shuffle()
 		list = list.slice(0, 4)
@@ -209,7 +228,22 @@ func _next(prev: Dictionary) -> void:
 	if nxt["ctx"].get("eighty_six", false):
 		lines.append("!! Something's about to get 86'd. Leave it off or comp the ticket.")
 	lines.append("NEXT: %s. %s" % [NAMES[k], HELP[k]])
-	_card(heading, lines, [], big, [["go", "Let's go", KEY_SPACE]], func (_id: String) -> void: _play(nxt))
+	var opts: Array = [["go", "Let's go", KEY_SPACE]]
+	if can_autopilot(k) and nxt["ctx"].is_empty():
+		lines.append("I've S'd this station before. I could do it asleep. Basically am.")
+		opts.append(["auto", "Autopilot (B)", KEY_2])
+	_card(heading, lines, [], big, opts, func (id: String) -> void:
+		if id == "auto":
+			_autopilot(nxt)
+		else:
+			_play(nxt))
+
+func _autopilot(item: Dictionary) -> void:
+	var key: String = item["key"]
+	var res: = {"key": key, "name": NAMES[key], "score": AUTOPILOT_SCORE, "grade": grade_for(AUTOPILOT_SCORE),
+		"notes": [AUTOPILOT_NOTE], "bonus": 0, "kind": "station", "autopilot": true }
+	results.append(res)
+	_next(res)
 
 func _play(item: Dictionary) -> void:
 	var key: String = item["key"]

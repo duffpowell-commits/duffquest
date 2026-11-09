@@ -340,6 +340,8 @@ var bounties: = {"beaten": [], "day": -1 }
 var waffle_data: = {"shifts": 0, "regular_beaten": 0, "best": 0 }
 var waffle_node: Node = null
 var bet: = {"day": -1, "won": 0, "lost": 0 }
+## Best grade ever per shift station ("fryer": "S"). An S unlocks Autopilot (B) for that station.
+var station_best: Dictionary = {}
 var door_armed: = {}
 var door_loc: = ""
 var bet_kind: = ""
@@ -594,7 +596,7 @@ func to_dict() -> Dictionary:
 		"day_i": day_i, "day_count": day_count, "clock": clock, "money": money, "energy": energy, "happiness": happiness,
 		"quest": quest, "quest_kind": quest_kind, "last_quest_kind": last_quest_kind, "inventory": inventory.duplicate(),
 		"leftovers": leftovers.duplicate(), "achievements": achievements.duplicate(), "fryer_smell": fryer_smell,
-		"shifts_worked": shifts_worked, "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices,
+		"shifts_worked": shifts_worked, "station_best": station_best.duplicate(), "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices,
 		"cats_fed_day": cats_fed_day, "couch_day": couch_day, "crib_day": crib_day, "freya_trust": freya_trust,
 		"freya_treat_day": freya_treat_day, "inspector_follow": inspector_follow, "inspector_t": inspector_t,
 		"gear": gear.duplicate(true), "shades": shades, "wordle": wordle.duplicate(true), "wordle_seed": wordle_seed, "kills": kills.duplicate(),
@@ -658,6 +660,8 @@ func from_dict(d: Dictionary) -> void:
 	kills = {}
 	story = SaveGame.clean_story(d.get("story", {}))
 	bounties = Bounties.clean(d.get("bounties", {}))
+	var sb = d.get("station_best", {})
+	station_best = sb.duplicate() if typeof(sb) == TYPE_DICTIONARY else {}
 	var bd = d.get("bet", {})
 	bet = {"day": -1, "won": 0, "lost": 0 }
 	if typeof(bd) == TYPE_DICTIONARY:
@@ -1734,6 +1738,15 @@ func end_shift(r: Dictionary) -> void:
 	apply_shift_result(r)
 	save_game()
 
+## Muscle memory: remember the best grade per station (autopilot runs don't count).
+func record_station_bests(res: Array) -> void:
+	for x in res:
+		if typeof(x) != TYPE_DICTIONARY or str(x.get("kind", "")) != "station" or bool(x.get("autopilot", false)):
+			continue
+		var k: = str(x["key"])
+		if ShiftScript.grade_rank(str(x["grade"])) > ShiftScript.grade_rank(str(station_best.get(k, "F"))) or not station_best.has(k):
+			station_best[k] = str(x["grade"])
+
 func apply_shift_result(r: Dictionary) -> void:
 	AudioScript.sfx("cash")
 	money += int(r["total"])
@@ -1741,6 +1754,7 @@ func apply_shift_result(r: Dictionary) -> void:
 	money += cha_tips
 	energy = clampf(energy - int(r["energy_cost"]) - int(r["injuries"]) + int(r["meal"]), 0.0, 100.0)
 	energy = maxf(energy, 1.0)
+	record_station_bests(r.get("results", []))
 	advance_clock({"full": 360.0, "quick": 180.0, "rush": 240.0 }.get(str(r.get("mode", "full")), 300.0))
 	for lo in r["leftovers"]:
 		leftovers.append(lo)
