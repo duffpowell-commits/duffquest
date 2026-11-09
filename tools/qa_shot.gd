@@ -42,6 +42,8 @@ func _ready() -> void:
 		_clean(); m.gala_unlocked = true; m.start_gala(0)])
 
 func _clean() -> void:
+	if m.in_shift:  # kitchen shots leave a shift running; its card would sit over every later shot
+		m.end_shift({"left": true})
 	m.close_overlay()
 	m.dialog.clear()
 	m.toast_t = 0.0
@@ -53,6 +55,8 @@ func _clean() -> void:
 		m._set_camera()
 
 func _boss(k: String) -> void:
+	if m.in_shift:
+		m.end_shift({"left": true})
 	m.close_overlay()
 	m.dialog.clear()
 	if m.arena_boss and is_instance_valid(m.arena_boss):
@@ -75,6 +79,7 @@ func _process(_d: float) -> void:
 		return
 	if m == null:
 		m = game.get_child(0).get_child(0).get_child(0)
+		m.no_loading = true  # loading screens would cover every shot
 	if wait > 0:
 		wait -= 1
 		if wait == 0:

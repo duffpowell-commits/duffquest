@@ -7,6 +7,7 @@ Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into
 ## NEXT
 
 ## DONE
+- M13 (Nov 9): parody bosses (Husk, Bozos, Fences, Donald, Willnot): intro cards, sprite sheets, KO stills, knockouts live.
 - M12 (Nov 9): Falcor thread (day 10 scene + grief days) and Thanksgiving.
 - M11 (Nov 9): fridge calendar (30 November days, notes, cats), 14 random daily events, weekends off.
 - M10 (Nov 9): shuffled full shift + muscle-memory autopilot.

@@ -2079,8 +2079,8 @@ func debug_station(k: String) -> void:
 		shift.bonus_total = 0
 		shift._finish_shift()
 		return
-	shift.queue = [{"key": k, "ctx": {"eighty_six": true, "steal": true } if k in ["sandwich", "salad"] else {} }]
-	shift._next({})
+	# Straight into the station (debug/QA): skip the NEXT STATION card M10's shuffle put in front of it.
+	shift._play({"key": k, "ctx": {"eighty_six": true, "steal": true } if k in ["sandwich", "salad"] else {} })
 
 func _draw() -> void:
 	_draw_outside()
