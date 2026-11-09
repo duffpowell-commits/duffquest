@@ -79,3 +79,29 @@ and ghoster (contact + mouth) and an override added for djvape (it had none and 
 gore renders: the splat lands on the contact point and the tooth/spit leaves from the mouth.
 K3: no leaked faces (style refs husk_a/donald_b carry no characters into A/C; donald_b's Chip face did not leak into
 any B). K6: three different B layouts (elbow jab with inset, rib punch with two face insets, open palm to the ear).
+
+## Batch 4: crypto, sendback, regular, coupon, allergy, camper KO a/b/c
+
+Same refs as batch 3 (A/C: old still + boss sheet + `husk_a` style ref; B: face sheet + old still + boss sheet +
+`donald_b` style ref). Renders: `docs/renders/style_c_convert_ko_mid6.jpg` (all 18 new),
+`docs/renders/style_c_convert_ko_mid6_gore.jpg` (engine x-ray + finisher beats with blood/teeth).
+
+| file | grade | notes |
+|---|---|---|
+| crypto_a / crypto_c | PASS | NFT-cat tablet push; flat on coins with thumbs-up and spiral eyes, red crash arrow. Coins are plain discs. |
+| crypto_b | PASS after 1 fix | Leg sweep, ankle x-ray (bones + torn ligament) + inset (K1 = ankle ligament). Try 1 put the eye hand on BOTH hands (D4). Edit: floor arm is now grey-wash + creature forearm + blackletter hand; the thigh hand keeps the eye. Soft: that eye arm's upper sleeve reads as dark chevrons rather than full blackout. |
+| sendback_a / sendback_c | PASS | Finger jab over the steak; face-down in the plate with fork raised, furious inset. |
+| sendback_b | PASS | Uppercut, skull/jaw x-ray with the tongue glowing (K1 = taste buds), Duff grin + customer insets. Blackout + eye fist, neck clean. |
+| regular_a / regular_c | PASS | Haymaker over the coffee; black eye, Dolores pours, exact-change tip (plain coins and a blank green bill). |
+| regular_b | PASS | Duff ducks under the haymaker, punch under the suspender buckle; inset x-ray of the ribcage cracking around a calm whole heart (K1 = "hit everything around it"). Blackout + eye fist. |
+| coupon_a / coupon_c | PASS | Binder wind-up; down on the coupons, spiral eyes, coupon on the forehead. Coupons blank. |
+| coupon_b | PASS (no new gen) | The approved style-pick master `grok_art/2026-11-09-art-direction/coupon_C.png` (already C, D1-D7 + K1 graded Nov 9) shipped as-is. |
+| allergy_a / allergy_c | PASS | Throat-clutch accusation; down in the rolls, free cake on the table. |
+| allergy_b | PASS | Over Duff's LEFT shoulder: blackout + eye fist into the solar plexus, fox on the visible (left) neck = correct. X-ray ribs, breastbone tip, diaphragm. |
+| camper_a / camper_c | PASS | Patched laptop-bag swing; KO on the floor, laptop on his chest, blank screen. |
+| camper_b | PASS | Knee to the hip, pelvis + femur-head x-ray (K1). Grabbing arm (viewer's left) creature forearm + blackletter hand; far arm blackout + eye hand; fox on viewer's right neck = correct. |
+
+Data: all six had no `impact` override; added one per boss in `data/knockouts.json` so the engine splat sits on the
+new contact points (checked in the gore render).
+K3: no leaked faces. K6: six different B layouts (sweep, uppercut, duck-under body shot, forearm tap, over-shoulder
+jab, knee).
