@@ -1,6 +1,7 @@
 extends Node
 ## Renders every beat of a boss knockout cutscene. Run:
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/ko_shot.tscn -- gymbro
+## Video: add --fixed-fps 30 --write-movie /tmp/ko.avi --resolution 1280x720 and "-- gymbro video"
 ## -> /tmp/qa/ko_<boss>_<n>_<beat>.png (one shot per beat, ~1.4 s in) + /tmp/qa/loading.png
 var game: Node
 var m: Node
@@ -8,11 +9,14 @@ var ko: Node
 var frame: = 0
 var id: = "gymbro"
 var shots: = 0
+var video: = false                          # "-- gymbro video": play in real time (record with --write-movie)
+var end_t: = -1
 
 func _ready() -> void:
 	var a: = OS.get_cmdline_user_args()
 	if a.size() > 0:
 		id = a[0]
+	video = a.size() > 1 and a[1] == "video"
 	DirAccess.make_dir_recursive_absolute("/tmp/qa")
 	game = load("res://game.tscn").instantiate()
 	add_child(game)
@@ -46,7 +50,8 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		m.show_loading()
 	if frame == 240:
-		get_viewport().get_texture().get_image().save_png("/tmp/qa/loading.png")
+		if not video:
+			get_viewport().get_texture().get_image().save_png("/tmp/qa/loading.png")
 		m.no_loading = true
 		var ls: = _find(game, "res://scripts/loading_screen.gd")
 		ls._finish()
@@ -55,6 +60,13 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		m.boss_defeated(m.arena_boss)
 		ko = _find(game, "res://scripts/knockout.gd")
+	if frame > 250 and ko and video:
+		if not ko.playing():
+			if end_t < 0:
+				end_t = frame
+			if frame > end_t + 75:           # 2.5 s of the normal win screen after it
+				get_tree().quit()
+		return
 	if frame > 250 and ko:
 		if not ko.playing():
 			get_viewport().get_texture().get_image().save_png("/tmp/qa/ko_%s_after.png" % id)
