@@ -148,18 +148,18 @@ At about 1 call per minute (one agent at a time, Canva rate limit) that is rough
 portraits need no work if B or C wins (they already are this style). Full-size export pages: about 100, so start a
 new scratch design (the current `DAHabdund5o` is at 34 pages).
 
-## Known issues in this draft's images
+## Canonical Duff face sheet (Nov 9)
 
-- **duff_face_sheet_draft.png:** front and 3/4 views pass (blackout on the viewer's right, creature arm and blackletter
-  hand on the viewer's left, fox on the viewer's right). The **profile facing the viewer's left fails D5**: it shows the
-  grey-wash arm with an eye-in-triangles hand, when that view should show the blackout sleeve. The 3 head close-ups put
-  the fox correctly. Hair reads a bit more ginger-brown than `portraits_hd/duff.png`. Try 1 (arms swapped in every
-  view) is in `rejected/`. Fix this before locking it as canon.
-- **stance_B / stance_C:** Canva kept drawing the fox under his visible RIGHT ear even after an explicit edit, so it was
-  removed with a local pixel patch (a faint ghost is visible only at full zoom on stance_B). Same gotcha as
-  `docs/reviews/ko_stills.md`. Raw Canva output is in `rejected/`.
-- coupon_B / coupon_C pass D1-D7 and K1 (radius/ulna x-ray at the contact point). The far arm's grey-wash piece reads
-  as a horned face; acceptable as "grey-wash horns" but worth a look.
+`docs/art_direction/duff_face_sheet.png` (Canva media `MAHacL92VLk`, master `grok_art/2026-11-09-style-c/`). Built from
+the draft: the profile view (facing the viewer's left, so his LEFT side) was redone with one Canva edit (`face_try1.png`)
+and only that column was pasted back (aligned, lightly sharpened). It now shows the blackout sleeve (flower of life,
+elbow mandala, chevrons) and the eye-in-triangles hand, plus the fox on the visible neck side. Front and 3/4: blackout
+on the viewer's right, creature forearm + blackletter hand on the viewer's left, fox on the viewer's right. Passes
+D1-D7. Soft notes: hair reads a bit ginger-brown next to `portraits_hd/duff.png`; the front forearm creature has small
+pointed ears (orange eyes, leaves, not a panther); the profile column is slightly softer than the rest.
+
+Older notes: stance_B / stance_C fox fixed with a local pixel patch (raw Canva output in `rejected/`). coupon_B / coupon_C
+pass D1-D7 and K1.
 
 ## Why C (Nov 9)
 

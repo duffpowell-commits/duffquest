@@ -25,6 +25,7 @@ Short and stable. `CLAUDE.md` = status log; this = ops (secrets, hosting, shippi
 
 ## Art pipeline (Nov 9)
 - House style = C (docs/art_direction/STYLE_LOCK.md); canonical Duff ref = docs/art_direction/duff_face_sheet.png; no image outside the lock.
+- **Canonical Duff face sheet in Canva: `MAHacL92VLk`** (FIRST reference for every future Duff image). Scratch export design (new Nov 9): `DAHacBeu8SQ`.
 - **Image generator = Canva (`generate-image`) + Claude.** Grok is out of usage; Gemini app runs are retired.
   Canva: Business plan, ONE agent at a time (parallel calls hit the rate limit). Edit flow: upload the original
   with `create-upload-url`, pass it as the FIRST reference. Full-size export via scratch design `DAHabdund5o` (26 pages Nov 9; `DAHabf2Qa9U` also works; old `DAHaZZaEJBs` is locked at 100+ pages). Start a new one past ~90 pages.
