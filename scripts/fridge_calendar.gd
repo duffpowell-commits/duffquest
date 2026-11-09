@@ -64,6 +64,10 @@ func _process(d: float) -> void:
 			_close()
 	queue_redraw()
 
+## True once the fridge fill is fully opaque (game.gd then stops rendering the world under it).
+func covers_screen() -> bool:
+	return _t >= FADE and main != null
+
 func _T(s: String) -> String:
 	return Cast.T(s)
 
