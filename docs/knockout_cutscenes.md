@@ -44,6 +44,8 @@ STYLE: bold cartoon characters with thick tapered ink lines, angular shapes and 
 Status: engine built; Gym Bro live (stills a/b/c + shared Duff x6 in `assets/art/ko/`). Next: A/B/C stills for the other 16, flip `"live": true` per boss.
 
 ## Parody bosses redesigned (Duff, Nov 8 23:10)
+> **SUPERSEDED Nov 9:** the duck, TV and lightbulb heads below were rejected as Hazbin imitation. The shipped art uses made-up HUMAN faces (art rule P1); the cartoon heads are DLC only. Keep the outfits and props, not the heads.
+
 Husk, Bozos, Fences, The Donald, Willnot keep their NAMES but get original faces (no real-person likeness;
 their old portraits/cards/sheets get replaced too). Designs: Husk = wiry, goggles, silver space-cowboy jacket,
 jetpack, a dozen phones taped to his chest. Bozos = tiny bald man in a cardboard-box mech, drone hat.
