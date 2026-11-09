@@ -1,34 +1,34 @@
 {
   "_doc": "Boss knockout cutscenes (Baki x Spike Spiegel, narrated Palahniuk). Beats run in order: stance -> slip -> xray -> finisher -> crowd -> closer. Narration is Duff at the bar, present tense (docs/voice.md). 'crowd' is a speaker-labelled line (gets that NPC's portrait). Boss defeat line from boss.gd plays after 'closer'. Keep {tokens}. See docs/knockout_cutscenes.md. \"live\": true = plays in game (pilot: gymbro).",
   "husk": {
-    "move": "SHIFT CHANGE",
-    "stance": "Two hundred million people are watching his stream. Hector from the dish pit is watching mine. Hector isn't even watching. He's eating my fries.",
-    "slip": "Rocket punch. Slow. Everything's slow after a double. I lean six inches left. The chat spams laughing faces. For once, the chat is right.",
-    "xray": "The jaw is the only bone in the skull that moves. My elbow shows it somewhere new to go.",
+    "move": "END STREAM",
+    "stance": "Viewers: 4,812. He's streaming the gala in a hoodie that costs more than my car. I'm in my one good shirt. Viewers: 4,813. That one's {partner}, hate-watching.",
+    "slip": "Viewers: 9,000. He calls a scooter drop. Branded. Code TYLER. I lean left and it takes out the shrimp tower. Viewers: 12,000. The shrimp is trending.",
+    "xray": "Viewers: 40,000. The jaw is the only bone in the skull that moves. He's been running his since college. My elbow gives it the night off.",
     "finisher": "Like. Subscribe. Lie down.",
-    "crowd": "Brittany: \"Viewers are dropping, Duff! Two hundred million. Forty million. Okay, it's mostly bots now.\"",
-    "closer": "Stream ended. Viewers: zero. I fix my apron. Somewhere a market dips. Nobody I know owns any of it.",
-    "live": true
+    "crowd": "Brittany: \"Viewers are tanking, Duff! Forty thousand. Four hundred. Okay, it's just his mom now.\"",
+    "closer": "Viewers: 1. Stream ended. I fix my shirt. College Tyler pivots to the floor. First thing he's ever stuck with.",
+    "live": false
   },
   "bozos": {
-    "move": "SAME-DAY DELIVERY",
-    "stance": "Order status: out for delivery. The package is me. He owns seventeen houses. I own a bus pass and a cat who thinks I'm staff.",
-    "slip": "Drones. A whole fleet. I duck the first. The second hits the third. The fourth starts talking about a union.",
-    "xray": "Two hinges hold a jaw on. His were assembled overseas. My knee comes up from below, and both hinges quit on the same shift.",
-    "finisher": "You can't automate this. I checked. It's still just a guy with a spatula and nothing to lose.",
-    "crowd": "Dolores: \"Return to sender. No refunds. Store policy.\"",
-    "closer": "Status: delivered. Left at front door. Signed for by my left hook.",
-    "live": true
+    "move": "ZERO PERCENT",
+    "stance": "Tip status: pending. Four years of dates, and she tipped for both of them. His suit is made of other people's thirty percents. Tip status: still pending.",
+    "slip": "Tip drones. A whole fleet, all asking how my experience was. I duck the first. The second clips the third. The fourth leaves me one star and quits.",
+    "xray": "Tip status: processing. Two hinges hold a jaw on. My knee comes up from below and takes thirty percent of each. Platform fee.",
+    "finisher": "Tip status: delivered. One hundred percent. All of it, right here.",
+    "crowd": "Dolores: \"Thirty years of tables. First tip I ever enjoyed watching.\"",
+    "closer": "Tip status: refunded. He's on the carpet. I tuck a twenty in Dolores's apron. Somebody at this party should get tipped.",
+    "live": false
   },
   "fences": {
-    "move": "HARD REBOOT",
-    "stance": "Error: punch not found. He's buffering. I'm not. I tap my chest twice and wait. Patience is free. Everything else, he sells you.",
-    "slip": "Blue screen. The whole room goes blue. I've rebooted a register at 2 AM with ketchup on both thumbs. This is nothing.",
-    "xray": "The spine is thirty-three vertebrae stacked like dirty plates. I clear the stack. Top to bottom. The way Dolores taught me.",
-    "finisher": "Ctrl. Alt. Delete. Three hits, in order, no updates required.",
-    "crowd": "Earl: \"Kid didn't even spill his coffee.\"",
-    "closer": "Do you want to save your changes? He doesn't answer. Nobody ever does.",
-    "live": true
+    "move": "NOTICE TO QUIT",
+    "stance": "NOTICE: Tenant will be fought. He dumped her by text. He raises our rent by text. Tonight he hears it in person. I crack my knuckles. That's not in the lease.",
+    "slip": "NOTICE: Late fees incoming. He throws them like confetti. Carpet fee. Air fee. A fee for the fee. I walk right through. I've been paying these since June.",
+    "xray": "NOTICE: Entry without warning. He never gave us any. The spine is thirty-three vertebrae, stacked like overdue notices. My palm serves every one.",
+    "finisher": "Consider this your notice. Effective immediately.",
+    "crowd": "Earl: \"Kid just evicted the landlord. Thirty-one years I've seen everything. Not that.\"",
+    "closer": "NOTICE: Deposit withheld. He's face-down on a brochure for his third boat. {partner} texts him 'k.' Same font. Same template.",
+    "live": false
   },
   "baron": {
     "move": "BACK OF HOUSE",
@@ -40,14 +40,14 @@
     "closer": "He calls for Mummy. Mummy doesn't come. Welcome to the rest of us."
   },
   "donald": {
-    "move": "TARIFF THIS",
-    "stance": "He's talking. Six minutes now. No commas. I wait for one. I'm still waiting. I step in on a vowel.",
-    "slip": "A wall goes up. Big. Beautiful. Somebody else paid for it. I walk around the end. Every wall has an end.",
-    "xray": "The human hand has twenty-seven bones. His are smaller than mine. Everybody says so. My fist says so the loudest.",
-    "finisher": "Big league. Tremendous. The best knockout anybody's ever seen. People are saying.",
-    "crowd": "Dolores: \"First time all night that man stopped talking. Somebody frame it.\"",
-    "closer": "He calls it a landslide. Best loss in history. I call it Tuesday and clock back in.",
-    "live": true
+    "move": "HOSTILE TAKEOVER",
+    "stance": "Q1: he buys the Twisted Fork. Q2: he decides he wants her back too. He's never cooked an egg. I take my apron off. Technically it's company property now.",
+    "slip": "Q2: cost-cutting. He throws the budget at me and it blows apart into layoffs. I slip through. I've outlasted four owners. I know where the gaps are.",
+    "xray": "Q3: restructuring. Twenty-seven bones in a hand. His have only ever signed things. My fist reorganizes all twenty-seven.",
+    "finisher": "Q4: I'm letting you go.",
+    "crowd": "{partner}: \"That's for the Fork, Chip. And for making me split the check at prom.\"",
+    "closer": "Year end: he sells the Fork back on his way to the floor. At a loss. Monday I clock in. Same line. Same burns. My boss, for once, is nobody's ex.",
+    "live": false
   },
   "ghoster": {
     "move": "READ RECEIPT",
@@ -57,6 +57,7 @@
     "finisher": "Seen. Seen. Seen. Delivered.",
     "crowd": "{partner}: \"...Okay, that was kind of hot. Don't tell anyone I said that.\"",
     "closer": "Typing... Typing... Nothing. Some guys never learn to hit send.",
+    "impact": {"xray": {"at": [0.52, 0.56], "mouth": [0.66, 0.07], "dir": -30}},
     "live": true
   },
   "gymbro": {
@@ -67,6 +68,7 @@
     "finisher": "You train for mirrors. I train for Saturday brunch. Brunch has never once skipped leg day.",
     "crowd": "Brittany: \"PAY ME. Everybody who bet on the abs, PAY ME.\"",
     "closer": "He's crying. Not from pain. From missing a post. I let him have it. Grief is a muscle too.",
+    "impact": {"xray": {"at": [0.57, 0.45], "mouth": [0.78, 0.14], "dir": -20}},
     "live": true
   },
   "djvape": {

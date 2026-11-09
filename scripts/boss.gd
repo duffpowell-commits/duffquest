@@ -4,31 +4,39 @@ const Proj: = preload("res://scripts/projectile.gd")
 const Cast: = preload("res://scripts/cast.gd")
 
 const BOSSES: = {
-	"husk": {"name": "Elon Husk", "hp": 260.0, "attacks": ["posting", "rocket"],
-		"intro": "Elon Husk: I bought this gala at 4 AM. Also your landlord. Also the concept of Tuesday.",
-		"taunts": ["Free speech means I talk and you get rate-limited.", "Your apron is now a paid subscription.", "Self-punching in two weeks. It's been nine years.", "I'm not a billionaire. I'm a meme with a lawyer."],
-		"rage": "Elon Husk: Fine. I'm posting a poll about whether you deserve to live.",
-		"defeat": "Elon Husk: Losing builds character. I'll buy one tomorrow." },
-	"bozos": {"name": "Jeff Bozos", "hp": 280.0, "attacks": ["drones", "shine"],
-		"intro": "Jeff Bozos: Your beating ships today! Bathroom breaks not included for the driver.",
-		"taunts": ["My warehouse workers get TWO pee bottles. Generous.", "Customers who fought me also bought: medical debt.", "I went to space so I'd never hear 'union' again.", "Your rating dropped to four stars. You're fired."],
-		"rage": "Jeff Bozos: Activating surge pain! Now 30% more efficient!",
-		"defeat": "Jeff Bozos: Fine. I'll write it off. I write EVERYTHING off." },
-	"fences": {"name": "Bill Fences", "hp": 280.0, "attacks": ["bsod", "update"],
-		"intro": "Bill Fences: Hello, user. Your defeat has been installed without consent.",
-		"taunts": ["Restarting your life to apply updates.", "I solved poverty in a TED Talk. You're welcome.", "Your license for 'breathing' has expired.", "This beating is 64% complete. Estimated time: forever."],
-		"rage": "Bill Fences: Initiating philanthropy! It's tax-deductible violence!",
-		"defeat": "Bill Fences: Fatal error. I'll start a foundation about it." },
+	# Gala exes (Nov 9): four of {partner}'s exes who "made it". Internal ids kept for saves/assets.
+	# "setup" = {partner}'s line before the intro (main._spawn_boss). "stun_*" = projectile stun toasts.
+	"husk": {"name": "{gala_ex_1}", "hp": 260.0, "attacks": ["posting", "rocket"], "labels": {"post": "#GRIND"},
+		"setup": "{partner}: Oh no. Tyler. College Tyler. He livestreamed our dates. Nine viewers. Eight were his mom.",
+		"intro": "{gala_ex_1}: We're LIVE, fam. Say hi to my ex's new guy. He cooks. Like, for money. Wild.",
+		"taunts": ["Smash that like before he smashes me.", "I'm not unemployed. I'm pre-seed.", "My startup is Uber for apologies. We're pivoting.", "Chat says your apron is giving 'hourly.'"],
+		"rage": "{gala_ex_1}: Chat, clip this. CLIP IT. We're pivoting to violence.",
+		"defeat": "{gala_ex_1}: Ending stream. Not 'cause I lost. Bandwidth issues. Emotional bandwidth." },
+	"bozos": {"name": "{gala_ex_2}", "hp": 280.0, "attacks": ["drones", "shine"],
+		"setup": "{partner}: Grant. Ugh. Zero percent on every date. Every date I snuck back in and tipped for him.",
+		"intro": "{gala_ex_2}: I founded TipTop. Servers get tipped, I keep thirty percent. It's called disruption, babe.",
+		"taunts": ["Tipping is a feeling. I monetized the feeling.", "Suggested tip: 18%, 20%, or me.", "I don't tip. I'm a platform.", "You're not underpaid. You're under-optimized."],
+		"rage": "{gala_ex_2}: Surge fee! Thirty percent of your pain is MINE now!",
+		"defeat": "{gala_ex_2}: Fine. Leave a review. I keep thirty percent of it." },
+	"fences": {"name": "{gala_ex_3}", "hp": 280.0, "attacks": ["bsod", "update"], "labels": {"trap": "FEE"},
+		"setup": "{partner}: Babe. That's our landlord. I dated our LANDLORD. He dumped me by text. Then raised our rent in the same thread.",
+		"intro": "{gala_ex_3}: Hi, tenants. Yes, I own your building. Yes, I dumped her by text. Same template.",
+		"taunts": ["Per the lease, this beating is your responsibility.", "That's a carpet fee. And a breathing fee.", "My third boat is named after her. It's called Deposit.", "Rent goes up every time you blink. Stop blinking."],
+		"rage": "{gala_ex_3}: That's it. I'm invoking clause 14(b). Clause 14(b) is me, ANGRY.",
+		"defeat": "{gala_ex_3}: Fine. FINE. I'm keeping your deposit anyway.",
+		"stun_wave": "Served. A rent notice, square in the chest. Nine pages. I have to read them all.",
+		"stun_trap": "Late fee! I'm stuck here till I read the fine print." },
 	"baron": {"name": "{gala_baron}", "hp": 300.0, "attacks": ["hire", "coins"],
 		"intro": "{gala_baron}: A WORKER? At my gala? Jeeves, sanitize the chandelier.",
 		"taunts": ["My trust fund has a trust fund. And an intern.", "I've never worked a day. It's EXHAUSTING.", "Bootstraps? Darling, I was born in a boot.", "Is that a name tag? How very... employed."],
 		"rage": "{gala_baron}: Jeeves! Hire MORE help! Minimum wage, maximum loyalty!",
 		"defeat": "{gala_baron}: My monocle! My yacht slip! Mummy will hear of this!" },
-	"donald": {"name": "The Donald", "hp": 360.0, "attacks": ["tariff", "wall"],
-		"intro": "The Donald: Tremendous gala. Paid for by a charity I may or may not have closed.",
-		"taunts": ["Nobody's ever been sued more. Big league.", "Tariffs on spatulas. You'll pay. I won't.", "Your apron? Very low ratings. Sad.", "I declared bankruptcy six times. Ask me how I'm still rich."],
-		"rage": "The Donald: Everybody's saying I'm winning. Mostly me. I'm saying it.",
-		"defeat": "The Donald: Rigged! I'm counting this as a win anyway. Tremendous loss." },
+	"donald": {"name": "{gala_ex_4}", "hp": 360.0, "attacks": ["tariff", "wall"], "labels": {"tariff": "CUTS", "wall": "NDA"},
+		"setup": "{partner}: Is that Chip? It's Chip. Babe, Chip bought the Fork. You work for my ex now. I'm gonna be sick.",
+		"intro": "{gala_ex_4}: Bought the Twisted Fork this morning. So I'm her ex AND your boss. Love a vertical integration.",
+		"taunts": ["You're not fired. You're right-sized.", "We're cutting the fries. Not the price. The fries.", "I don't run restaurants. I run them into the ground. Profitably.", "Your pension is a pizza party. You're buying the pizza."],
+		"rage": "{gala_ex_4}: Restructuring! EVERYBODY gets restructured! Starting with your face!",
+		"defeat": "{gala_ex_4}: ...I'm selling the Fork back. At a loss. Don't tell my investors." },
 
 	"ghoster": {"name": "{ex_1}", "hp": 32.0, "attacks": ["seen", "vanish"],
 		"intro": "{ex_1}: hey! been sooo busy. with what? ...growth. personal growth. mostly naps.",
@@ -107,11 +115,11 @@ const BOSSES: = {
 }
 const VENTS: = [Vector2(40, 52), Vector2(280, 52), Vector2(40, 152), Vector2(280, 152)]
 const TELE: = {
-	"posting": [0.6, "Hold on, just posting..."], "rocket": [0.35, "LAUNCH!"],
-	"drones": [0.7, "Same-day harm incoming!"], "shine": [0.2, "*belt buckle gleams*"],
-	"bsod": [0.8, "Have you tried turning it off and on?"], "update": [0.5, "Mandatory update!"],
+	"posting": [0.6, "Hold on, going live..."], "rocket": [0.35, "Sponsored scooter drop!"],
+	"drones": [0.7, "Tip drones, launch!"], "shine": [0.2, "*flips the tip screen around*"],
+	"bsod": [0.8, "*slides a notice under the door*"], "update": [0.5, "Late fee! Late fee! Late fee!"],
 	"hire": [0.7, "Jeeves! Fetch the unpaid interns!"], "coins": [0.7, "*monocle glints*"],
-	"tariff": [0.8, "TARIFF! (You pay it.)"], "wall": [0.4, "A beautiful wall. Somebody else's money."],
+	"tariff": [0.8, "COST-CUTTING! (You're the cost.)"], "wall": [0.4, "Wall of NDAs. You saw nothing."],
 	"seen": [0.5, "*Seen*"], "vanish": [0.4, "brb"], "pop": [0.45, "u up?"],
 	"curl": [0.6, "Curl for the algorithm, bro!"], "flex": [0.3, "Check out these GUNS!"], "charge": [0.7, "LEG DAY? NEVER HEARD OF IT!"],
 	"drop": [0.9, "Wait for it... wait for it..."], "vape": [0.6, "*long inhale*"],
@@ -244,6 +252,10 @@ func _physics_process(delta: float) -> void:
 		if m.hurt_player(8.0, global_position, 200.0, "boss"):
 			contact_cd = 1.0
 	queue_redraw()
+
+## A boss-specific line (e.g. "stun_wave") or the fallback; projectiles call this on their thrower.
+func opt_line(key: String, fallback: String) -> String:
+	return str(BOSSES[kind].get(key, fallback))
 
 func _opt(key: String, sub: String, fallback):
 	var d = BOSSES[kind].get(key, {})
@@ -482,8 +494,8 @@ func _draw_sprite() -> void:
 			draw_rect(Rect2(-1, 5, 2, 1), Color(1, 1, 0.7, gleam))
 		"fences":
 			if state == "tele":
-				draw_rect(Rect2(6, -2, 6, 5), Color("#2050d0"))
-				draw_string(f, Vector2(6, 2), ":(", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color.WHITE)
+				draw_rect(Rect2(6, -3, 8, 6), Color("#f4f0e4"))           # rent notice
+				draw_string(f, Vector2(6, 2), "DUE", HORIZONTAL_ALIGNMENT_LEFT, -1, 4, Color("#d02020"))
 		"ghoster":
 			draw_string(f, Vector2(-9, -14), "Seen", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color(0.3, 0.5, 1.0, mod.a))
 		"gymbro":

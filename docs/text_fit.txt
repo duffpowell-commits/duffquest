@@ -1,3 +1,3 @@
-Lines that overflow their box (checked 1433 literals)
+Lines that overflow their box (checked 1456 literals)
 
 
