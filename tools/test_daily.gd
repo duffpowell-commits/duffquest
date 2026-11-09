@@ -257,6 +257,35 @@ func _qa_leftover_checks() -> void:
 				bad.append("aisle %d over %s" % [i + 1, id])
 	check("grocery aisle tags clear of shelves + items (%s)" % ", ".join(bad), bad.is_empty())
 	g.free()
+	# every outdoor door point sits on paving in data/town_ground.txt (nearest dual-grid corner = 's')
+	var MainS: GDScript = load("res://scripts/main.gd")
+	var C: Dictionary = MainS.get_script_constant_map()
+	var doors: = {"home": C["HOME_DOOR"], "kwik": C["SHOP_PT"], "fork": C["FORK_DOOR"], "pharmacy": C["PHARM_DOOR"],
+		"grocery": C["GROC_DOOR"], "plasma": C["PLASMA_DOOR"]}
+	for e in C["STORY"]:
+		var r: Rect2 = e["r"]
+		doors[str(e["id"])] = Vector2(r.get_center().x, r.end.y + 6.0)
+	var grid: Array = []
+	var origin: = Vector2.ZERO
+	var tile: = 64.0
+	for line in FileAccess.get_file_as_string("res://data/town_ground.txt").split("\n"):
+		var l: = line.strip_edges()
+		if l == "" or l.begins_with("#"):
+			continue
+		if l.begins_with("tile "):
+			tile = float(l.split(" ")[1])
+		elif l.begins_with("origin "):
+			origin = Vector2(float(l.split(" ")[1]), float(l.split(" ")[2]))
+		else:
+			grid.append(l)
+	var off: = []
+	for k in doors:
+		var w: Vector2 = doors[k]
+		var c: = ((w * 2.0 - origin) / tile).round()   # world -> art px (x2) -> corner index
+		var row: String = grid[clampi(int(c.y), 0, grid.size() - 1)]
+		if row[clampi(int(c.x), 0, row.length() - 1)] != "s":
+			off.append(k)
+	check("door points on a footpath (%s)" % ", ".join(off), off.is_empty())
 
 class FakeMain extends Node:
 	var station_best: Dictionary = {}
