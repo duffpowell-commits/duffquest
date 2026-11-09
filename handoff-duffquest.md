@@ -101,6 +101,11 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 - X2 seamless tile: ChatGPT PASS by eye (3×3 tiling continues; edge-diff numbers high only because the edge is a grout line).
 - X3 menu board: not received yet.
 - Rematch: R1 Kwik try 1: Grok ~11 vs ChatGPT ~8 (isometric); R1 try 2 (straight-on): ChatGPT wins, in game. R2 trees: ChatGPT ~11 vs Grok ~9. Tally ChatGPT 2, Grok 0.
+- **Canva joins (Nov 8, 9:40 PM):** Duff hooked up the Canva connector; Claude generates with `mcp__Canva__generate-image` (free plan, quota unknown; 3 used). Claude only sees a 200 px preview: Duff downloads full size into chat or `geminiart`. Files: `grok_art/2026-11-08-canva-test/`.
+- R3 street clutter, Canva ~11 as a sheet, but every object has a grass-tuft base that looks wrong on sidewalks. Per-object: Canva wins flag (bison emblem), Little Free Library (has a roof), scattered leaves (real pile) -> IN GAME. Grok keeps bin, hydrant, newspaper box, bench, sun sign, cone, mailbox, bike rack, cart. Tool `tools/import_prop_sheet.py SRC [--only a,b] [--out DIR]` (blob detection, de-spill, BOX downscale). Renders `docs/renders/rematch_r3_props.png`, `rematch_r3_ingame.png`.
+- R6 Earl, Canva: good pixel art but a different man (white trucker in a cap); his portrait + boss card are a bald Black man, grey mustache, red flannel, suspenders. Row 4 also faced the wrong way in 2 of 4 cells (fixable by mirroring row 3: `r6_canva_leftfixed.png`). Grok keeps `ch_regular`. The R6 brief never described him: fixed in `CHATGPT_VS_GROK.txt`. Render `docs/renders/rematch_r6_earl.png`.
+- R4 Gym Bro card, Canva ~10 from preview, full size not downloaded yet.
+- Repo host while GitHub is suspended: GitLab `dufftkyosht-group/duffquest` (private), remote `gitlab`. History there is rooted at a rewritten copy of `02f9aa4` (GitLab rejects shallow pushes), so hashes differ from GitHub; tag `github-chatgpt-home` keeps the original-hash branch for pushing back to GitHub.
 - Backgrounds: PNG 640×360, opaque, filename = id. 1 world unit = 2 px. Sheets 256×256, 4×4 cells of 64, origin (32,60), rows down/up/right/left, cols stand/step/step/attack.
 - ChatGPT outputs: 1672×941 (16:9), 1254×1254 (sheets). Gemini: ~2576×1438 JPG.
 - Gym walls now `ARENA_EXTRA_WALLS = {"gymbro": [Rect2(0, 0, 320, 56)]}`; wall check: Duff stops at y 52 (gym) vs 26 (ghoster).
