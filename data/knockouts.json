@@ -37,7 +37,8 @@
     "xray": "Old money lives in the lower back. Three generations of good posture. One kidney shot and every generation bows.",
     "finisher": "This is what work feels like. I wanted you to know, just once, before you die old.",
     "crowd": "{partner}: \"Babe. BABE. Don't break the champagne tower, we can't afford the tower.\"",
-    "closer": "He calls for Mummy. Mummy doesn't come. Welcome to the rest of us."
+    "closer": "He calls for Mummy. Mummy doesn't come. Welcome to the rest of us.",
+    "live": true
   },
   "donald": {
     "move": "HOSTILE TAKEOVER",
@@ -128,7 +129,8 @@
     "xray": "There's a muscle in the forearm called the flexor. It's the one that clips. Hers is the size of a ham. I tap it, and her whole hand forgets coupons exist.",
     "finisher": "The first one's full price. The second one's free.",
     "crowd": "Brittany: \"She's got a coupon for the ambulance. Duff. She has a coupon for the AMBULANCE.\"",
-    "closer": "She asks if there's a coupon for this. There isn't. There never is for the things that hurt."
+    "closer": "She asks if there's a coupon for this. There isn't. There never is for the things that hurt.",
+    "live": true
   },
   "allergy": {
     "move": "CROSS-CONTAMINATION",
@@ -137,7 +139,8 @@
     "xray": "The human throat is a tube about an inch wide. Everything she's ever lied about goes down it. One jab to the solar plexus and the truth comes back up.",
     "finisher": "I'm allergic too. To this.",
     "crowd": "Dolores: \"Booth four. A whole basket of rolls. I counted.\"",
-    "closer": "She admits it. Free dessert. That's all it ever was. That's all it ever is."
+    "closer": "She admits it. Free dessert. That's all it ever was. That's all it ever is.",
+    "live": true
   },
   "camper": {
     "move": "CLOSING TIME",
@@ -146,7 +149,8 @@
     "xray": "Four hours in a booth shortens the hip flexors by about the length of a grudge. One knee to the hip and his snap like a gas-station charging cable.",
     "finisher": "We close at two. It's two.",
     "crowd": "Brittany: \"He was on the wifi the whole fight. He's still on the wifi.\"",
-    "closer": "He leaves. He goes to the library. It's quieter there. It's free there. Nobody there will ever hit him."
+    "closer": "He leaves. He goes to the library. It's quieter there. It's free there. Nobody there will ever hit him.",
+    "live": true
   },
   "bdaydad": {
     "move": "HAPPY BIRTHDAY",
@@ -155,7 +159,8 @@
     "xray": "A grown man's dignity sits in his knees. That's why dads crouch so much at parties. One low kick and his folds into a lawn chair.",
     "finisher": "Make a wish.",
     "crowd": "{partner}: \"Okay, when {baby} turns one we are NOT doing a Waffle Haus party.\"",
-    "closer": "The kids clap. They think it's part of the show. In a way, everything is part of the show."
+    "closer": "The kids clap. They think it's part of the show. In a way, everything is part of the show.",
+    "live": true
   },
   "dasher": {
     "move": "CHECK, PLEASE",
@@ -164,6 +169,7 @@
     "xray": "Running away takes about two hundred muscles. Stopping takes one. It's mine.",
     "finisher": "Your total comes to: everything.",
     "crowd": "Earl: \"Should've paid for the pie, son. Pie's worth paying for.\"",
-    "closer": "He pays. In cash. And the pie. I eat a slice on my break. It tastes like justice and margarine."
+    "closer": "He pays. In cash. And the pie. I eat a slice on my break. It tastes like justice and margarine.",
+    "live": true
   }
 }
