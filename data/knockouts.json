@@ -58,7 +58,7 @@
     "finisher": "Seen. Seen. Seen. Delivered.",
     "crowd": "{partner}: \"...Okay, that was kind of hot. Don't tell anyone I said that.\"",
     "closer": "Typing... Typing... Nothing. Some guys never learn to hit send.",
-    "impact": {"xray": {"at": [0.52, 0.56], "mouth": [0.66, 0.07], "dir": -30}},
+    "impact": {"xray": {"at": [0.55, 0.53], "mouth": [0.63, 0.13], "dir": -30}},
     "live": true
   },
   "gymbro": {
@@ -69,7 +69,7 @@
     "finisher": "You train for mirrors. I train for Saturday brunch. Brunch has never once skipped leg day.",
     "crowd": "Brittany: \"PAY ME. Everybody who bet on the abs, PAY ME.\"",
     "closer": "He's crying. Not from pain. From missing a post. I let him have it. Grief is a muscle too.",
-    "impact": {"xray": {"at": [0.57, 0.45], "mouth": [0.78, 0.14], "dir": -20}},
+    "impact": {"xray": {"at": [0.57, 0.48], "mouth": [0.89, 0.20], "dir": -20}},
     "live": true
   },
   "djvape": {
@@ -80,6 +80,7 @@
     "finisher": "Three. Two. One. Nothing drops harder than you.",
     "crowd": "Dolores: \"I've seen better sets at a funeral, sweetie.\"",
     "closer": "She asks if the fight counts as exposure. It does. She's exposed.",
+    "impact": {"xray": {"at": [0.64, 0.44], "mouth": [0.83, 0.45], "dir": -20}},
     "live": true
   },
   "crypto": {
