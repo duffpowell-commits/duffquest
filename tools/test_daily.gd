@@ -60,6 +60,7 @@ func _init() -> void:
 	check("station_best survives save/load", main.station_best.get("fryer") == "S")
 	_extra_checks(main)
 	_ko_sfx_checks()
+	_ko_gore_checks()
 	_button_fit_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
@@ -194,6 +195,78 @@ func _ko_sfx_checks() -> void:
 		ko._next()
 	check("tapping through: xray crack fires, later cues skipped", ko.played.has("crack") and not ko.played.has("snap2"))
 	ko.queue_free()
+
+const AudioScript: = preload("res://scripts/audio.gd")
+const Gore: = preload("res://scripts/ko_gore.gd")
+
+func _gore_nodes(ko: Node) -> int:
+	var n: = 0
+	for c in ko.get_children():
+		if c.get_script() == Gore:
+			n += 1
+	return n
+
+func _ko_gore_checks() -> void:
+	# setting: default ON, saves and loads (throwaway settings file, never the real one)
+	var path: = "user://test_daily_settings.json"
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	var a: Node = AudioScript.new()
+	a.settings_path = path
+	a.load_settings()
+	check("cartoon gore defaults ON", a.gore == true)
+	a.set_gore(false)
+	var b: Node = AudioScript.new()
+	b.settings_path = path
+	b.load_settings()
+	check("cartoon gore OFF survives save/load", b.gore == false and not bool(b.to_dict().get("gore", true)))
+	# gore hits land on KO sound cues
+	var ok_t: = true
+	for beat in Gore.HITS:
+		var cue_t: = []
+		for c in Knockout.SFX_CUES.get(beat, []):
+			cue_t.append(snappedf(float(c[0]), 0.01))
+		for h in Gore.HITS[beat]:
+			ok_t = ok_t and cue_t.has(snappedf(float(h[0]), 0.01))
+	check("gore hits fire on KO sfx cue times", ok_t)
+	# ON: a gore node with blood in the air on the x-ray hit; same seed = same particles
+	var keep: Node = AudioScript.inst
+	b.gore = true
+	AudioScript.inst = b
+	var ko: Node2D = Knockout.new()
+	root.add_child(ko)
+	ko.fixed_seed = 77
+	ko.start("ghoster")
+	ko._next(); ko._next()                  # -> xray
+	ko._process(0.3)
+	var g: Node = ko.gore
+	check("gore ON: one gore node", _gore_nodes(ko) == 1 and g != null)
+	var kinds: = {}
+	if g:
+		for q in g.alive():
+			kinds[q["k"]] = true
+	check("gore ON: blood, spit and a tooth in the air on the x-ray", kinds.has("drop") and kinds.has("tooth"))
+	var first: Array = g.parts.duplicate(true) if g else []
+	ko.start("ghoster")
+	ko._next(); ko._next()
+	ko._process(0.3)
+	check("gore is repeatable with a fixed seed", ko.gore != null and str(ko.gore.parts) == str(first))
+	while ko.playing():
+		ko._next()
+	check("gore node removed when the cutscene ends", ko.gore == null)
+	# OFF: no gore node at all, on any beat
+	b.gore = false
+	ko.start("ghoster")
+	var none: = true
+	for i in 4:
+		ko._process(0.3)
+		none = none and _gore_nodes(ko) == 0 and ko.gore == null
+		ko._next()
+	check("gore OFF: no gore nodes", none)
+	AudioScript.inst = keep
+	ko.queue_free()
+	a.free()
+	b.free()
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 func _button_fit_checks() -> void:
 	# stat points card: 2 columns of 308/2 - 4 wide, 21 tall (card.gd), label size 8

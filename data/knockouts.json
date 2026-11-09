@@ -57,6 +57,7 @@
     "finisher": "Seen. Seen. Seen. Delivered.",
     "crowd": "{partner}: \"...Okay, that was kind of hot. Don't tell anyone I said that.\"",
     "closer": "Typing... Typing... Nothing. Some guys never learn to hit send.",
+    "impact": {"xray": {"at": [0.52, 0.56], "mouth": [0.66, 0.07], "dir": -30}},
     "live": true
   },
   "gymbro": {
@@ -67,6 +68,7 @@
     "finisher": "You train for mirrors. I train for Saturday brunch. Brunch has never once skipped leg day.",
     "crowd": "Brittany: \"PAY ME. Everybody who bet on the abs, PAY ME.\"",
     "closer": "He's crying. Not from pain. From missing a post. I let him have it. Grief is a muscle too.",
+    "impact": {"xray": {"at": [0.57, 0.45], "mouth": [0.78, 0.14], "dir": -20}},
     "live": true
   },
   "djvape": {
