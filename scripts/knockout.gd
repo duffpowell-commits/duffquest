@@ -7,7 +7,21 @@ extends Node2D
 ##
 ## Art: res://assets/art/ko/<boss>_a|b|c.jpg and ko/duff_stance|slip|fin1|fin2|fin3|walk.jpg (16:9).
 ## Missing files fall back to the boss intro card and the HD portraits, so it always runs.
+##
+## Sound: res://assets/sfx/ko/*.ogg (made by tools/make_ko_sfx.py, all original synthesis), played
+## on the SFX bus so the settings volume / mute apply. SFX_CUES = [seconds into beat, file, volume dB,
+## bed?]; a bed (drone, crowd murmur) stops when the beat is skipped, one-shots ring out.
 const Cast: = preload("res://scripts/cast.gd")
+const AudioScript: = preload("res://scripts/audio.gd")
+const SFX_DIR: = "res://assets/sfx/ko/"
+const SFX_CUES: = {
+	"slip": [[0.35, "whoosh", 0.0, false]],                     # Duff starts to slide at bt 0.4
+	"xray": [[0.0, "crack", 0.0, false], [0.0, "drone", -7.0, true]],   # the hit + the freeze
+	"finisher": [[0.0, "snap1", -1.0, false], [0.35, "snap2", -1.0, false], [0.70, "snap3", 0.0, false],
+		[1.05, "boom", 0.0, false]],                              # panel cuts every 0.35 s, white flash at 1.05
+	"crowd": [[0.0, "crowd", -2.0, true]],
+	"closer": [[0.0, "jazz", -1.0, false]],                     # walk-off sting, keeps playing after the end
+}
 
 const BEATS: = ["stance", "slip", "xray", "finisher", "crowd", "closer"]
 const TEAL: = Color("#3fe0d0")
@@ -24,11 +38,23 @@ var flash: = 0.0
 var _tex: = {}
 var _seed: = 0
 var _last: = ""                             # main.ko_kind already started
+var _cue: = 0                                # next SFX_CUES entry of this beat
+var _shots: Array = []                       # one-shot players
+var _bed: AudioStreamPlayer
+var played: Array = []                       # cue names in order (tests read this)
 
 func _ready() -> void:
 	var f: = FileAccess.open("res://data/knockouts.json", FileAccess.READ)
 	if f:
 		data = JSON.parse_string(f.get_as_text())
+	for i in 3:
+		var p: = AudioStreamPlayer.new()
+		p.bus = "SFX"
+		add_child(p)
+		_shots.append(p)
+	_bed = AudioStreamPlayer.new()
+	_bed.bus = "SFX"
+	add_child(_bed)
 
 static func is_live(kind_id: String) -> bool:
 	var f: = FileAccess.open("res://data/knockouts.json", FileAccess.READ)
@@ -44,6 +70,8 @@ func start(boss: String) -> void:
 	flash = 0.0
 	shake = 0.0
 	_seed = randi()
+	_cue = 0
+	played.clear()
 
 func playing() -> bool:
 	return kind != ""
@@ -58,6 +86,9 @@ func _hold() -> float:
 func _next() -> void:
 	beat += 1
 	bt = 0.0
+	_cue = 0
+	if _bed and _bed.playing:
+		_bed.stop()
 	if beat >= BEATS.size():
 		kind = ""
 		if main and main.has_method("knockout_done"):
@@ -90,6 +121,7 @@ func _process(d: float) -> void:
 			queue_redraw()
 		return
 	bt += d
+	_play_cues()
 	flash = maxf(0.0, flash - d * 2.5)
 	shake = maxf(0.0, shake - d * 1.8)
 	if BEATS[beat] == "finisher":             # last panel lands with a full white hit
@@ -99,6 +131,38 @@ func _process(d: float) -> void:
 	if bt >= _hold():
 		_next()
 	queue_redraw()
+
+# ---------------------------------------------------------------- sound
+
+func _play_cues() -> void:
+	var cues: Array = SFX_CUES.get(BEATS[beat], [])
+	while _cue < cues.size() and float(cues[_cue][0]) <= bt:
+		var c: Array = cues[_cue]
+		_cue += 1
+		_play(str(c[1]), float(c[2]), bool(c[3]))
+
+func _play(name: String, db: float, bed: bool) -> void:
+	played.append(name)
+	if AudioScript.inst != null and is_instance_valid(AudioScript.inst) and bool(AudioScript.inst.silent):
+		return                               # headless runs: same rule as audio.gd
+	var s: = _load_sfx(SFX_DIR + name + ".ogg")
+	if s == null:
+		return
+	var p: AudioStreamPlayer = _bed
+	if not bed:
+		p = _shots[0]
+		for q in _shots:
+			if not (q as AudioStreamPlayer).playing:
+				p = q
+				break
+	p.stream = s
+	p.volume_db = db
+	p.play()
+
+func _load_sfx(p: String) -> AudioStream:
+	if not _tex.has(p):
+		_tex[p] = load(p) if ResourceLoader.exists(p) else null
+	return _tex[p]
 
 # ---------------------------------------------------------------- art
 

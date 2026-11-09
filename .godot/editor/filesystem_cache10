@@ -283,7 +283,7 @@ regular_5am.jpg::CompressedTexture2D::918419268348183609::1794216668::1794216668
 rent_slot.jpg::CompressedTexture2D::2770715276697259452::1794216668::1794216668::1::::<><><>0<>0<>27fc8b849a3781b2431a1f3de1f3f42b<>res://.godot/imported/rent_slot.jpg-d05e7be03b96ad2d49aa918c0cad8eff.ctex::
 waffle_showoff.jpg::CompressedTexture2D::9030520255458050304::1794216668::1794216668::1::::<><><>0<>0<>38e0420a25fb65033c212c5dc9bb8d2a<>res://.godot/imported/waffle_showoff.jpg-1c39d531f09622701a22410b7c50eded.ctex::
 witnesses.jpg::CompressedTexture2D::2069852656708274478::1794216668::1794216668::1::::<><><>0<>0<>05b15001917c558617accc0b39079d34<>res://.godot/imported/witnesses.jpg-d0b9a56126194085a9e04c269df93fc2.ctex::
-::res://assets/art/portraits_hd/::1794228895
+::res://assets/art/portraits_hd/::1794228999
 allergy.png::CompressedTexture2D::6921697925648705456::1794216668::1794216668::1::::<><><>0<>0<>82470099e11a36f10a3289428410bc1a<>res://.godot/imported/allergy.png-1861512d34c3e906f391446434e6eed2.ctex::
 baron.png::CompressedTexture2D::5630560525266715583::1794216668::1794216668::1::::<><><>0<>0<>163f61724721cf787922aaa748731a20<>res://.godot/imported/baron.png-0ea95e2bf5b69eb9d82b30288b597198.ctex::
 bdaydad.png::CompressedTexture2D::4045774838366905802::1794216668::1794216668::1::::<><><>0<>0<>9184c83b03f4f69c7068cb67d6ca5e62<>res://.godot/imported/bdaydad.png-6087a8489ff516ff56d7df56d93c4a40.ctex::
@@ -400,7 +400,7 @@ show_and_tell_family.json::JSON::-1::1794216668::0::1::::<><><>0<>0<><>::
 town_dressing.json::JSON::-1::1794216668::0::1::::<><><>0<>0<><>::
 town_ground.txt::TextFile::-1::1794216668::0::1::::<><><>0<>0<><>::
 words5.txt::TextFile::-1::1794216668::0::1::::<><><>0<>0<><>::
-::res://scripts/::1794216670
+::res://scripts/::1794229023
 art.gd::GDScript::2550548600385224652::1794216670::0::1::::<>RefCounted<><>0<>0<><>::
 art_manifest.gd::GDScript::5961543388782625655::1794216670::0::1::::<>RefCounted<><>0<>0<><>::
 audio.gd::GDScript::3225730722935409287::1794216670::0::1::::<>Node<><>0<>0<><>::
@@ -442,7 +442,7 @@ shift.gd::GDScript::2670496410079115969::1794216670::0::1::::<>Node2D<><>0<>0<><
 tone.gd::GDScript::9156450939499320463::1794216670::0::1::::<>RefCounted<><>0<>0<><>::
 touch_controls.gd::GDScript::1759517423240609614::1794216670::0::1::::<>Node2D<><>0<>0<><>::
 transit.gd::GDScript::252395163706373737::1794216670::0::1::::<>RefCounted<><>0<>0<><>::
-ui_style.gd::GDScript::1171530373388291705::1794228845::0::1::::<>Node<><>0<>0<><>::
+ui_style.gd::GDScript::1171530373388291705::1794229023::0::1::::<>Node<><>0<>0<><>::
 waffle.gd::GDScript::924232099443855140::1794216670::0::1::::<>Node2D<><>0<>0<><>::
 wordle_logic.gd::GDScript::2979312191621367052::1794216670::0::1::::<>RefCounted<><>0<>0<><>::
 ::res://scripts/iso/::1794216670
@@ -482,7 +482,7 @@ hd2d.gdshader::Shader::7474509219637023304::1794216670::0::1::::<><><>0<>0<><>::
 ::res://tasks/::1794216670
 lessons.md::TextFile::-1::1794220556::0::1::::<><><>0<>0<><>::
 todo.md::TextFile::-1::1794218221::0::1::::<><><>0<>0<><>::
-::res://tools/::1794228916
+::res://tools/::1794229114
 actor_fade_shot.gd::GDScript::7916786354093214199::1794216670::0::1::::<>Node<><>0<>0<><>::
 actor_fade_shot.tscn::PackedScene::-1::1794216670::0::1::::<><><>0<>0<><>::res://tools/actor_fade_shot.gd
 arena_shot.gd::GDScript::8767486246906617003::1794216670::0::1::::<>Node<><>0<>0<><>::
@@ -510,6 +510,8 @@ shift_shot.gd::GDScript::4288440445429274524::1794216670::0::1::::<>Node<><>0<>0
 shift_shot.tscn::PackedScene::-1::1794216670::0::1::::<><><>0<>0<><>::res://tools/shift_shot.gd
 smoke.gd::GDScript::879066701685882942::1794216670::0::1::::<>Node<><>0<>0<><>::
 smoke.tscn::PackedScene::-1::1794216670::0::1::::<><><>0<>0<><>::res://tools/smoke.gd
+stat_shot.gd::GDScript::5081173781779533920::1794229110::0::1::::<>Node<><>0<>0<><>::
+stat_shot.tscn::PackedScene::-1::1794229114::0::1::::<><><>0<>0<><>::res://tools/stat_shot.gd
 test_daily.gd::GDScript::6150181449718948956::1794228917::0::1::::<>SceneTree<><>0<>0<><>::
 text_fit.gd::GDScript::146513478754910280::1794216670::0::1::::<>SceneTree<><>0<>0<><>::
 voice_shot.gd::GDScript::4707904547081266126::1794216670::0::1::::<>Node<><>0<>0<><>::
