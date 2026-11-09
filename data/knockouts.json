@@ -8,7 +8,7 @@
     "finisher": "Like. Subscribe. Lie down.",
     "crowd": "Brittany: \"Viewers are tanking, Duff! Forty thousand. Four hundred. Okay, it's just his mom now.\"",
     "closer": "Viewers: 1. Stream ended. I fix my shirt. College Tyler pivots to the floor. First thing he's ever stuck with.",
-    "live": false
+    "live": true
   },
   "bozos": {
     "move": "ZERO PERCENT",
@@ -18,7 +18,7 @@
     "finisher": "Tip status: delivered. One hundred percent. All of it, right here.",
     "crowd": "Dolores: \"Thirty years of tables. First tip I ever enjoyed watching.\"",
     "closer": "Tip status: refunded. He's on the carpet. I tuck a twenty in Dolores's apron. Somebody at this party should get tipped.",
-    "live": false
+    "live": true
   },
   "fences": {
     "move": "NOTICE TO QUIT",
@@ -28,7 +28,7 @@
     "finisher": "Consider this your notice. Effective immediately.",
     "crowd": "Earl: \"Kid just evicted the landlord. Thirty-one years I've seen everything. Not that.\"",
     "closer": "NOTICE: Deposit withheld. He's face-down on a brochure for his third boat. {partner} texts him 'k.' Same font. Same template.",
-    "live": false
+    "live": true
   },
   "baron": {
     "move": "BACK OF HOUSE",
@@ -48,7 +48,7 @@
     "finisher": "Q4: I'm letting you go.",
     "crowd": "{partner}: \"That's for the Fork, Chip. And for making me split the check at prom.\"",
     "closer": "Year end: he sells the Fork back on his way to the floor. At a loss. Monday I clock in. Same line. Same burns. My boss, for once, is nobody's ex.",
-    "live": false
+    "live": true
   },
   "ghoster": {
     "move": "READ RECEIPT",

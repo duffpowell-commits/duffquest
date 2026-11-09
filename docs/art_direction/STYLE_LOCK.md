@@ -1,8 +1,12 @@
-# DuffQuest HD style lock (DRAFT, Nov 9 2026)
+# DuffQuest HD style lock (LOCKED, Nov 9 2026)
 
-Status: **draft, waiting on Duff's pick** from `docs/art_direction/compare_ABC.jpg` (A = current gritty anime KO look,
-B = flat cartoon in the boss-card style, C = B's characters plus KO speed lines). Claude recommends **C** (see the
-bottom). Rules marked **[B/C]** apply if B or C wins. If Duff picks A, see "If A wins" at the end.
+Status: **LOCKED. Duff picked C on Nov 9, 2026** ("middle ground") from `docs/art_direction/compare_ABC.jpg` (option C rows).
+C = the boss-card faces and linework (thick tapered ink, flat bold colour, one hard shadow) for EVERY HD image, while KO
+stills keep dramatic flat speed lines and a little crack-line hatching. Loading screens use B's calmer background
+(flat set or soft sunburst, no speed lines). A and B are retired. No HD image ships outside this lock.
+
+Canonical Duff reference: `docs/art_direction/duff_face_sheet.png` (Canva media id in `CLAUDE_REFERENCE.md`). It is the
+FIRST character reference for every Duff image (after the image being redrawn, if any).
 
 Pixel sprites are NOT covered here. They stay as they are (`docs/art_rules.md` section 5).
 
@@ -15,8 +19,7 @@ Every HD image in DuffQuest (boss intro cards, dialogue portraits, KO stills, lo
 cartoon**: thick black ink outlines that taper at the ends, flat solid colour fills with at most ONE hard cel-shadow
 tone, clean simple shapes, expressive rubbery faces, and no painterly texture, paper grit, gloss or airbrush. Characters
 look exactly like their `portraits_hd/` face and the boss card. Backgrounds are flat graphics, not scenery paintings:
-a two-tone sunburst for cards, portraits and calm loading screens, and (option C only) radiating flat speed lines for
-KO stills. Energy comes from pose, expression and the background, never from rendering detail.
+a two-tone sunburst for cards, portraits and calm loading screens, and radiating flat speed lines for KO stills. Energy comes from pose, expression and the background, never from rendering detail.
 
 ## 2. Palette
 
@@ -34,8 +37,8 @@ KO stills. Energy comes from pose, expression and the background, never from ren
 ## 3. Line and shading rules
 
 - L1 Outline weight: thick on the silhouette (about 1/150 of image height), thinner inside. Lines taper at both ends.
-- L2 ONE hard shadow tone per material. No soft shading, no rim-light gradient (C allows a thin flat cyan rim line on Duff).
-- L3 Hatching: **B: none. C: only crack-line hatching on the impact limb and the deepest shadow, 5-10 strokes max.**
+- L2 ONE hard shadow tone per material. No soft shading, no rim-light gradient (a thin flat cyan rim line on Duff is allowed).
+- L3 Hatching: **only crack-line hatching on the impact limb and the deepest shadow of KO stills, 5-10 strokes max. None on cards, portraits, loading screens.**
 - L4 Muscles are shapes plus one shadow, not hatched anatomy.
 - L5 Tattoos are flat: the blackout sleeve is a solid black fill with skin-colour negative shapes. Grey-wash pieces use
   one flat grey.
@@ -46,13 +49,15 @@ KO stills. Energy comes from pose, expression and the background, never from ren
 
 | Asset | Size | Composition |
 |---|---|---|
-| Boss intro card | 960x540 PNG (current size) | Boss full-body on the left half, mid-action, on the boss's 2-tone sunburst. Right half empty for the engine name text (the art has no text). |
-| Dialogue portrait | keep current `portraits_hd/` sizes | Chest-up, 3 moods (calm / happy / angry) side by side on transparent, same framing in every mood. |
-| KO still A (wind-up) | 1280x720 JPG q88 (master 1920x1080) | Boss alone, wind-up face, flat background (C: speed lines toward the boss). |
+| Boss intro card | 960x540 PNG (current size) | Boss full-body on the left half, mid-action, on the boss's 2-tone sunburst. Name lettered on the right half in cream Baloo 2 ExtraBold with a dark outline (lettered in code, not by Canva, so the spelling is exact). |
+| Dialogue portrait | 1536x512 (3 cells of 512) | Chest-up, 3 moods side by side on transparent, same framing in every mood (bosses: smug / shocked / enraged). Import with `tools/import_portrait.py`. |
+| KO still A (wind-up) | 1280x720 JPG q88 (master 1920x1080) | Boss alone, wind-up face, flat speed lines toward the boss. |
 | KO still B (impact + x-ray) | same | Duff's strike lands; impact burst at the contact point; x-ray of the bone named in `data/knockouts.json`. Duff's striking arm is the blackout arm unless the beat says otherwise. Every B still gets its own layout (K6). |
 | KO still C (knocked out) | same | Boss down, spiral eyes or similar, flat background. |
 | Duff KO frames (stance/slip/fin1-3/walk) | same | Duff alone, 3/4 or chest-on; close-up inset panels allowed; navy/amber palette. |
 | Loading screen | 1280x720 JPG q88 | One readable gag, 1-3 characters, flat simple set, a quiet area (lower third) for the caption the engine draws. |
+
+Cards: the engine lifts every card 13% (`CARD_LIFT`), so keep the top of the head (and props) below ~18% of the height; fix with `tools/letter_card.py --drop N`.
 
 Shared: no text in art (K5), nothing important cropped, faces at least 1/6 of image height on KO and loading so
 they read on a phone.
@@ -66,8 +71,8 @@ exists. Never name shows or studios in prompts (it pulls in their characters). G
 **STYLE block (paste into every prompt):**
 > Bold flat cartoon TV-animation style: thick tapered black ink outlines, flat solid colour fills with one hard
 > cel-shadow tone, clean simple shapes, expressive face, no painterly texture, no grit, no glossy highlights, no
-> cross-hatching. [C only: bold radiating flat speed lines behind the subject and a few crisp crack-line hatching strokes
-> only on the impact limb.] No text, no letters, no watermark.
+> cross-hatching. [KO stills only: bold radiating flat speed lines behind the subject and a few crisp crack-line hatching
+> strokes only on the impact limb.] No text, no letters, no watermark.
 
 **DUFF block (paste whenever Duff is in frame):** the TATTOOS block from `docs/duff_look.md`, plus for chest-on shots:
 > His LEFT arm is on the VIEWER'S RIGHT: a near-solid BLACK blackout sleeve shoulder to wrist with skin-tone
@@ -88,8 +93,7 @@ For 3/4 shots where his RIGHT side faces camera: "NO tattoo on the visible side 
 
 **T3 KO still restyle (converting an existing still)**
 > Redraw the FIRST reference with the exact same composition, poses, camera [and x-ray inset], in the style of the
-> SECOND reference. [STYLE]. Background: [sunburst in TONE1/TONE2 | C: flat speed lines in TONE1/TONE2 with an ACCENT
-> impact burst]. [BOSS] must look exactly like the second reference, now with a [wind-up / pained / knocked-out] face.
+> SECOND reference. [STYLE]. Background: flat speed lines in TONE1/TONE2 with an ACCENT impact burst. [BOSS] must look exactly like the second reference, now with a [wind-up / pained / knocked-out] face.
 > Keep the cyan x-ray of the [BONE] at the contact point. [DUFF]. 16:9.
 
 **T4 KO still from scratch**
@@ -99,14 +103,14 @@ For 3/4 shots where his RIGHT side faces camera: "NO tattoo on the visible side 
 > [GAG in one sentence]. [Who is where, from the VIEWER's view]. Simple flat set: [3-5 props]. Keep the lower third
 > calm and empty-ish for a caption. [STYLE]. [DUFF if Duff]. 16:9.
 
-## 6. Pass/fail checklist (add to `docs/art_rules.md` once a style wins)
+## 6. Pass/fail checklist (copied into `docs/art_rules.md` section 7, ST1-ST7)
 
 Run `docs/art_rules.md` D1-D7, K1-K6, P1, H1-H4 as today, plus:
 
 - [ ] ST1 Lines are thick, tapered, near-black. No sketchy or hairline ink.
 - [ ] ST2 Max one hard shadow tone per material. No gradients, gloss, grain or paper texture.
-- [ ] ST3 Hatching: B none; C only on the impact limb / deepest shadow.
-- [ ] ST4 Background is flat graphic (sunburst or speed lines), 2 tones + 1 accent.
+- [ ] ST3 Hatching only on a KO still's impact limb / deepest shadow; none anywhere else.
+- [ ] ST4 Background is flat graphic, 2 tones + 1 accent: speed lines on KO stills, sunburst on cards/portraits, calm flat set or sunburst on loading screens.
 - [ ] ST5 Side-by-side with the boss's intro card (and `portraits_hd/`) it reads as the same show. Check by pasting
   both into one image, not from memory.
 - [ ] ST6 Duff's face matches the canonical face sheet (shape of jaw, brows, undercut, ponytail, plugs, blue eyes).
@@ -115,11 +119,11 @@ Any ST fail = FIX; ST5 or ST6 fail = REDO.
 
 ## 7. Plan
 
-1. **Duff picks** A/B/C from `compare_ABC.jpg`.
+1. **Done Nov 9:** Duff picked C.
 2. **Canonical Duff sheet** in the winning style: front, 3/4, profile, 3 expressions, both arms bare enough to show the
-   tattoos. Draft (B style) is `docs/art_direction/duff_face_sheet_draft.png`; see its known issue below. Lock it as
-   `docs/ref/duff/duff_canon_sheet.png` and upload it once to Canva; it becomes the first character ref for every
-   future Duff image (after the image being redrawn). Budget: 2-4 generations + 1-2 edits.
+   tattoos. **Done Nov 9:** `docs/art_direction/duff_face_sheet.png` (profile fixed, master in
+   `grok_art/2026-11-09-style-c/`), uploaded once to Canva; it is the first character ref for every future Duff image
+   (after the image being redrawn).
 3. **Convert KO and loading stills**, most-seen first. Masters to `grok_art/<date>-style-lock/`, game files swapped
    only after review.
 
@@ -146,31 +150,23 @@ At about 1 call per minute (one agent at a time, Canva rate limit) that is rough
 portraits need no work if B or C wins (they already are this style). Full-size export pages: about 100, so start a
 new scratch design (the current `DAHabdund5o` is at 34 pages).
 
-## Known issues in this draft's images
+## Canonical Duff face sheet (Nov 9)
 
-- **duff_face_sheet_draft.png:** front and 3/4 views pass (blackout on the viewer's right, creature arm and blackletter
-  hand on the viewer's left, fox on the viewer's right). The **profile facing the viewer's left fails D5**: it shows the
-  grey-wash arm with an eye-in-triangles hand, when that view should show the blackout sleeve. The 3 head close-ups put
-  the fox correctly. Hair reads a bit more ginger-brown than `portraits_hd/duff.png`. Try 1 (arms swapped in every
-  view) is in `rejected/`. Fix this before locking it as canon.
-- **stance_B / stance_C:** Canva kept drawing the fox under his visible RIGHT ear even after an explicit edit, so it was
-  removed with a local pixel patch (a faint ghost is visible only at full zoom on stance_B). Same gotcha as
-  `docs/reviews/ko_stills.md`. Raw Canva output is in `rejected/`.
-- coupon_B / coupon_C pass D1-D7 and K1 (radius/ulna x-ray at the contact point). The far arm's grey-wash piece reads
-  as a horned face; acceptable as "grey-wash horns" but worth a look.
+`docs/art_direction/duff_face_sheet.png` (Canva media `MAHacL92VLk`, master `grok_art/2026-11-09-style-c/`). Built from
+the draft: the profile view (facing the viewer's left, so his LEFT side) was redone with one Canva edit (`face_try1.png`)
+and only that column was pasted back (aligned, lightly sharpened). It now shows the blackout sleeve (flower of life,
+elbow mandala, chevrons) and the eye-in-triangles hand, plus the fox on the visible neck side. Front and 3/4: blackout
+on the viewer's right, creature forearm + blackletter hand on the viewer's left, fox on the viewer's right. Passes
+D1-D7. Soft notes: hair reads a bit ginger-brown next to `portraits_hd/duff.png`; the front forearm creature has small
+pointed ears (orange eyes, leaves, not a panther); the profile column is slightly softer than the rest.
 
-## Recommendation: C (Claude)
+Older notes: stance_B / stance_C fox fixed with a local pixel patch (raw Canva output in `rejected/`). coupon_B / coupon_C
+pass D1-D7 and K1.
+
+## Why C (Nov 9)
 
 - B and C draw the characters the same way; that is what fixes the clash. Next to the Coupon Carol card both read as
   the same show, A clearly does not.
 - C keeps the speed lines that make a knockout feel like a hit. Pure B stills (sunburst behind a punch) look like a
   second boss card, so KOs lose their punch and become harder to tell apart from intros.
-- Cost is the same for B and C (cards and portraits already match; only KO + loading convert). Loading screens should
-  use the B background (calm sunburst or flat set) even under C; speed lines are for KO stills only.
-
-## If A wins
-
-A would mean re-drawing the 17 boss cards and 22 portraits into the gritty look instead (about 39 images, fewer than
-70), but the gritty style drifts Duff's face the most, its hatching turns to mush at phone and portrait size, and the
-small dialogue portraits would clash with the pixel sprites. If Duff still prefers it, swap the STYLE block for the
-"style-fusion prompt" in `docs/knockout_cutscenes.md` and invert section 7 (convert cards + portraits).
+- Loading screens use the B background (calm sunburst or flat set); speed lines are for KO stills only.
