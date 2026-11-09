@@ -74,3 +74,19 @@ Any **HARD** rule failure is an automatic FIX or REDO.
 - **R7 Side-facing sprites (Nov 9 fix).** Facing screen-RIGHT shows his RIGHT side (creature arm near); facing
   screen-LEFT shows his LEFT side (blackout sleeve near + fox). Side rows are inked separately, never mirrored.
   Tool: `tools/tattoo_sprites.py` (reads backups in `grok_art/2026-11-09-sprites-backup/`, safe to rerun).
+
+## 7. House style C (LOCKED Nov 9, every HD image; full spec `docs/art_direction/STYLE_LOCK.md`)
+Duff picked option C: boss-card faces and linework everywhere, KO stills keep speed lines and light hatching.
+Run D1-D7, K1-K6, P1, H1-H4 as above, plus:
+- **ST1 Lines.** Thick, tapered, near-black (#14121A) ink. No sketchy or hairline ink.
+- **ST2 Shading.** At most one hard shadow tone per material. No gradients, gloss, grain, paper texture or airbrush.
+- **ST3 Hatching.** Only crack-line strokes on a KO still's impact limb / deepest shadow (5-10 max). None on cards,
+  portraits or loading screens.
+- **ST4 Background.** Flat graphic, 2 tones + 1 accent: speed lines on KO stills, sunburst on cards and portraits,
+  a calm flat set or soft sunburst on loading screens (never speed lines there).
+- **ST5 Same show.** Pasted side by side with the boss's intro card and `portraits_hd/` sheet, it reads as the same
+  show. Check by pasting both into one image, not from memory.
+- **ST6 Duff's face** matches `docs/art_direction/duff_face_sheet.png` (jaw, brows, dirty-blond undercut, ponytail,
+  plugs, blue eyes, stubble). The face sheet is the FIRST character reference for every Duff image.
+- **ST7 Fox side.** Fox on Duff's LEFT neck (viewer's right when he faces camera), or hidden. Zoom in; #1 miss.
+Any ST fail = FIX; ST5 or ST6 fail = REDO. No image ships outside the lock.
