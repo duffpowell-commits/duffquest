@@ -10,6 +10,9 @@ plus small spiked hoops, a calm flat stare.
 ## Reference images (`docs/ref/duff/`) — attach these to every art prompt that shows Duff's arms
 | File | What it is | Use for |
 |---|---|---|
+| `photo_front.jpg` | Duff, front, shirtless: both arms, chest, belly, neck | **the truth** for placement of everything |
+| `photo_side_right_arm.jpg` | Duff, right side: the right upper-arm piece, forearm, wrist/hand script | **the truth** for the right arm |
+| `photo_left_upper_arm_flower.jpg` | Left upper arm under a black tee sleeve: flower of life in blackout | how the sleeve looks with his usual tee |
 | `photo_left_sleeve_forearm.jpg` | Duff's real LEFT arm, forearm to upper arm | **the truth** for the sleeve |
 | `photo_left_sleeve_elbow.jpg` | Duff's real LEFT arm, elbow mandala close-up | **the truth** for the elbow mandala |
 | `fox_duff_surf.jpg` | Fox-Duff, both arms, correct sides | layout: which piece goes where (both arms) |
@@ -27,13 +30,19 @@ Duff has full tattoo sleeves on BOTH arms:
   designs: flower-of-life circles on the upper arm, a large petal mandala with a central eye on the outer elbow, chevron and
   triangle bands down the forearm.
 - Back of the LEFT hand: a blackwork mandala with a single all-seeing eye in the centre; small dots on the fingers.
-- RIGHT upper arm and shoulder: a flowing black flame piece.
-- RIGHT forearm: a dark black-and-blue panther head with glowing orange eyes and a pink tongue, framed by golden-orange leaves.
+- RIGHT upper arm: a large grey-wash biomechanical piece — organic horn/flame shapes with eye-like openings, wrapping the outer
+  arm from shoulder to just above the elbow (NOT solid black flames — the fox art got this wrong). Small piece on the back of the
+  right shoulder.
+- RIGHT forearm: a dark panther head with orange eyes framed by orange-gold leaves, then a feather/leaf piece toward the wrist;
+  a thin black bracelet on the wrist.
 - Back of the RIGHT hand: a few lines of small cursive script (not legible).
 - LEFT side of the neck: a realistic fox head with pale blue crystal shards and a pale blue rose.
 - Under the shirt (only if shirtless, which the game never is): skull with a pink bow (right chest), small script (left chest),
   belly script "Despite these scars I will recover".
 
-At sprite size (64 px) this reads as: left arm almost solid dark ink, right forearm dark with an orange dot or two, neck mark.
+At sprite size (64 px) this reads as: LEFT arm almost solid dark ink shoulder to wrist; RIGHT arm skin with grey markings on the
+upper arm and a darker forearm patch with an orange fleck; a dark mark on the left side of the neck.
+
+Photos win over the fox art wherever they disagree.
 
 **Check on every Duff image:** both arms inked, sleeve on the LEFT arm, panther on the RIGHT forearm.
