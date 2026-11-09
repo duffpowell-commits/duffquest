@@ -28,8 +28,36 @@ func _ready() -> void:
 	overlay.main = main
 	overlay.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	layer.add_child(overlay)
+	var gate: = WorldGate.new()
+	gate.name = "WorldGate"
+	gate.vp = vp
+	gate.process_priority = 1000
+	gate.process_mode = Node.PROCESS_MODE_ALWAYS
 	for path in ["res://scripts/loading_screen.gd", "res://scripts/fridge_calendar.gd", "res://scripts/knockout.gd"]:   # above the portraits
 		var n: Node2D = load(path).new()
 		n.main = main
 		n.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		layer.add_child(n)
+		gate.covers.append(n)
+	add_child(gate)
+	var guard: = preload("res://scripts/perf_guard.gd").new()
+	guard.name = "PerfGuard"
+	guard.main = main
+	add_child(guard)
+
+## Full-screen HD overlays (loading screen, fridge calendar, knockout) are opaque: while one is up,
+## stop rendering the 640x360 world under it (the container keeps showing its last frame). On a
+## phone that's the whole world pass + lights + screen shader saved, every frame of a cutscene.
+## Runs after every other node's _process (priority), so it sees this frame's overlay state.
+class WorldGate extends Node:
+	var vp: SubViewport
+	var covers: Array = []
+	func _process(_d: float) -> void:
+		var hide: = false
+		for n in covers:
+			if is_instance_valid(n) and n.covers_screen():
+				hide = true
+				break
+		var mode: = SubViewport.UPDATE_DISABLED if hide else SubViewport.UPDATE_ALWAYS
+		if vp.render_target_update_mode != mode:
+			vp.render_target_update_mode = mode

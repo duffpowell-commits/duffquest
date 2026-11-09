@@ -24,6 +24,16 @@ func _setup() -> void:
 	add_button("gore", Rect2(148, 126, 164, 16), _gore_label(), KEY_G, Color("#8a2a34"))
 	add_button("shake", Rect2(148, 144, 164, 16), _shake_label(), KEY_K, Color("#4a5a8a"))
 	add_button("back", Rect2(110, 163, 100, 15), "Back", KEY_ESCAPE, Color("#a43a2c"))
+	if _guard():
+		add_button("gfx", Rect2(214, 163, 98, 15), _gfx_label(), KEY_V, Color("#3a5a8a"))
+
+## perf_guard.gd (game.gd's child): Lite graphics = no HD-2D screen shader / window lights, for slow phones.
+func _guard() -> Node:
+	return get_tree().root.find_child("PerfGuard", true, false) if is_inside_tree() else null
+
+func _gfx_label() -> String:
+	var g: = _guard()
+	return "Graphics: Lite" if g and g.low else "Graphics: Full"
 
 func _mute_label() -> String:
 	return "Sound: MUTED (tap to unmute)" if audio and audio.muted else "Sound: ON (tap to mute)"
@@ -75,6 +85,12 @@ func _on_button(id: String) -> void:
 			audio.set_screen_shake(not JuiceScript.shake_on)
 			get_button("shake")["label"] = _shake_label()
 			AudioScript.sfx("select")
+		"gfx":
+			var g: = _guard()
+			if g:
+				g.force_low(not g.low, true)
+				get_button("gfx")["label"] = _gfx_label()
+				AudioScript.sfx("select")
 		"back": finish(1.0)
 
 func _set_from(bar: Rect2, p: Vector2, which: String) -> void:
