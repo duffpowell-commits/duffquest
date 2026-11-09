@@ -337,7 +337,10 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   rematch (Nov 8)" in `geminiart`). Results: R1 Kwik: Grok wins (ChatGPT drew it isometric with a lot/car/trees; try-2 prompt
   asks straight-on, building only; render `docs/renders/rematch_r1_kwik.png`). R2 trees: ChatGPT wins, maple/oak/ash/pine/lilac
   swapped in by `tools/import_chatgpt_trees.py` (scaled to Grok's heights, placements unchanged; Grok's long hedge kept);
-  renders `rematch_r2_trees.png`, `rematch_r2_trees_ingame.png`. Also fixed: 'Madison texts: ...' lines showed Duff's portrait. List: R1 Kwik storefront, R2 trees, R3 clutter, R4 Gym Bro intro card, R5 Brittany
+  renders `rematch_r2_trees.png`, `rematch_r2_trees_ingame.png`. Also fixed: 'Madison texts: ...' lines showed Duff's portrait.
+  R1 try 2 (straight-on, building only) WON and replaced `sf_kwik` via new `tools/swap_storefront.py SRC NAME` (fits the
+  footprint canvas, bottom-aligned; door/shop trigger unchanged). Shot: `arena_shot.tscn -- at:535,128`; render
+  `docs/renders/rematch_r1_kwik_ingame.png`. Storefront prompts must say straight-on + building only. List: R1 Kwik storefront, R2 trees, R3 clutter, R4 Gym Bro intro card, R5 Brittany
   portraits (redo), R6 Earl sheet, R7 Duff apron; Grok's original prompts, results `r1_chatgpt.png`...
 
 ## Next (Duff's asks)
