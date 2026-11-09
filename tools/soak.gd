@@ -22,7 +22,6 @@ const STALL: = 1500                       # frames (50 s at 30 fps) with nothing
 const DAY_FRAME_CAP: = 60000              # one in-game day taking longer than this = stuck day
 const ESCAPES: = ["leave", "no", "later", "back", "close", "never", "nah"]
 const RELOAD_DAY: = 15
-const GALA_DAY: = 20
 
 class SoakLogger extends Logger:
 	var errors: Array = []
@@ -82,6 +81,8 @@ var seen: = {}
 var reload_snapshot: = {}
 var reload_done: = false
 var gala_done: = false
+var gala_tries: = 0
+var gala_seen_unlock: = false
 var mode_i: = 0
 var last_day: = 0
 var ctx_prev: = ""
@@ -510,6 +511,7 @@ func _build_plan() -> void:
 	plan = []
 	var d: = int(m.day_count)
 	var weekend: bool = Daily.is_weekend(int(m.day_i) % 7)
+	_check_gala_gate(d)
 	if d == RELOAD_DAY and not reload_done:
 		plan.append([_reload])
 		return
@@ -547,7 +549,7 @@ func _build_plan() -> void:
 		plan.append([func (): m.bus_menu(str(m.bus_stops()[rng.randi() % m.bus_stops().size()]["id"]).substr(4))])
 	if rng.randf() < 0.15:
 		plan.append([func (): m.open_gear()])
-	if d == GALA_DAY and not gala_done:
+	if d >= int(m.GALA_DAY) and m.gala_unlocked and not m.gala_beaten and not gala_done:
 		plan.append([_gala])
 	plan.append([_at_home])
 	plan.append([func (): if m.fryer_smell and not lazy: m.interact("shower")])
@@ -622,15 +624,43 @@ func _street_fight() -> void:
 		m.spawn_enemy(k, m.player.position + Vector2(rng.randf_range(-50, 50), rng.randf_range(-30, 30)))
 	cover("street_fight")
 
+## The gala opens on its own the morning of main.GALA_DAY (no fund gate, no bot help).
+func _check_gala_gate(d: int) -> void:
+	if d < int(m.GALA_DAY):
+		if m.gala_unlocked:
+			issue("gala", "gala unlocked before day %d" % int(m.GALA_DAY))
+		return
+	if not m.gala_unlocked:
+		issue("gala", "gala still locked on day %d" % d)
+		return
+	if gala_seen_unlock:
+		return
+	gala_seen_unlock = true
+	var invite: = false
+	for t in m.threads.get("madison", []):
+		if str(t.get("text", "")).contains("gala guest list"):
+			invite = int(t.get("day", -1)) == int(m.GALA_DAY)
+	if d != int(m.GALA_DAY) or not invite or (m.threads.get("gala", []) as Array).is_empty():
+		issue("gala", "invite didn't land on the day-%d morning (seen day %d, madison text %s)" % [int(m.GALA_DAY), d, invite])
+	else:
+		cover("gala_unlocked_day%d" % d)
+
+## First try straight up; a lost gala gets retried the next day with god mode (logged).
 func _gala() -> void:
 	gala_done = true
-	if not m.gala_unlocked:
-		assist("gala unlocked by the bot (fund never hits $100k in 30 days)")
-		m.gala_unlocked = true
-	god = true
+	god = gala_tries >= 1
+	if god:
+		assist("god mode for the gala retry")
+	gala_tries += 1
 	m.start_gala(0)
 	cover("gala")
-	plan.push_front([func (): god = false; cover("gala_won" if m.gala_beaten else "gala_lost")])
+	plan.push_front([func ():
+		god = false
+		if m.gala_beaten:
+			cover("gala_won_day%d" % int(m.day_count))
+		else:
+			cover("gala_lost")
+			gala_done = false])
 
 ## Nothing left to do: Waffle Haus some nights, otherwise bed.
 func _evening() -> void:
@@ -725,6 +755,8 @@ func _finish() -> bool:
 	var keys: = seen.keys()
 	keys.sort()
 	print("-- coverage (%d): %s" % [keys.size(), ", ".join(keys.map(func (k): return "%s x%d" % [k, seen[k]]))])
+	if m and last_day > days_target and not m.gala_beaten:
+		issue("gala", "gala not beaten by day %d" % days_target)
 	var real_errs: = errs.filter(func (e): return e["type"] != "WARNING")
 	var ok: = issues.is_empty() and real_errs.is_empty() and last_day > days_target
 	print("SOAK %s (seed %d)" % ["PASS" if ok else "FAIL", seed_n])

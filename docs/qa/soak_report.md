@@ -94,3 +94,14 @@ Both are one-line fixes in `scripts/main.gd`; nothing in knockout.gd, combat bar
   noise, not a SCRIPT ERROR; baseline commit 5ee5f84 prints the same.
 - Not covered by the bot: the symphony date (only the akarui date came up), the bus pass/car purchase,
   stonks trades on purpose (the phone monkey hits them at random), Freya at 5 trust, a full 100k fund.
+
+## Follow-up (Nov 9, branch gala-gate): gala gated on story day 24
+Duff's call: the gala invite lands the morning of day 24 (`main.GALA_DAY`), not at the $100k fund.
+The soak no longer unlocks it: it flags an issue if the gala opens before day 24, is still shut on/after 24,
+the day-24 invite texts are missing, or the gala isn't beaten by day 30 (first try straight up; a loss gets a
+god-mode retry next day, logged as an assist).
+
+| Seed | Days | Engine errors | Issues | Assists | Gala |
+|---|---|---|---|---|---|
+| 1 | 30/30 | 0 | 0 | 2 (damage chip-ins, days 2-3) | unlocked day 24 on its own, beaten day 24 first try |
+| 4 lazy | 30/30 | 0 | 0 | 7 (5 happiness gates, 2 gala damage chip-ins) | unlocked day 24 on its own, beaten day 24 first try |
