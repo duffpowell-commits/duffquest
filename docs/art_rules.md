@@ -68,3 +68,6 @@ Any **HARD** rule failure is an automatic FIX or REDO.
 - **R5** Keep masters in `grok_art/<date>-<set>/` and save review sheets to `docs/renders/`.
 - **R6** Write reviews to `docs/reviews/`, one line per image: grade, the rule IDs it failed, and the fix
   prompt.
+- **R7 Side-facing sprites (Nov 9 fix).** Facing screen-RIGHT shows his RIGHT side (creature arm near); facing
+  screen-LEFT shows his LEFT side (blackout sleeve near + fox). Side rows are inked separately, never mirrored.
+  Tool: `tools/tattoo_sprites.py` (reads backups in `grok_art/2026-11-09-sprites-backup/`, safe to rerun).
