@@ -286,6 +286,21 @@ func _qa_leftover_checks() -> void:
 		if row[clampi(int(c.x), 0, row.length() - 1)] != "s":
 			off.append(k)
 	check("door points on a footpath (%s)" % ", ".join(off), off.is_empty())
+	# ambient enemy barks: a second enemy close by keeps quiet while the first is talking
+	var EnemyS: = load("res://scripts/enemy.gd")
+	var e1: Node2D = EnemyS.new()
+	var e2: Node2D = EnemyS.new()
+	e1.add_to_group("enemy"); e2.add_to_group("enemy")
+	root.add_child(e1); root.add_child(e2)
+	e1.set_physics_process(false); e2.set_physics_process(false)
+	e1.global_position = Vector2(100, 100); e2.global_position = Vector2(130, 100)
+	e1.line_t = 0.0; e2.line_t = 0.0
+	check("bark: nobody talking -> free to bark", not e2.bark_crowded())
+	e1.say("hey")
+	check("bark: neighbour talking -> wait", e2.bark_crowded())
+	e2.global_position = Vector2(400, 100)
+	check("bark: far away -> free to bark", not e2.bark_crowded())
+	e1.free(); e2.free()
 
 class FakeMain extends Node:
 	var station_best: Dictionary = {}
