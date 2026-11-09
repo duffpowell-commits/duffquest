@@ -16,7 +16,9 @@ Each morning gets at most ONE headline: calendar day > curveball > life.gd money
 If a calendar day or curveball fires, the money roll waits until tomorrow. Stops pile-ups.
 
 ## 1. Calendar (`data/calendar.json`)
-A fridge calendar: the whole month on paper with magnets, notes Duff and Madison leave each other, Octavia's crayon, and the cats. All 30 November days are written in the data file (the table below was the first draft of days 1-14). Random events only skip `headline` days (10 Falcor, 28 Thanksgiving); ordinary calendar days still roll.
+A fridge calendar: the whole month on paper with magnets, notes Duff and Madison leave each other, Octavia's crayon, and the cats. All 30 November days are written in the data file (the table below was the first draft of days 1-14). Random events only skip `headline` days (10 Falcor, 24 Gala invite, 28 Thanksgiving); ordinary calendar days still roll.
+
+**Gala (Duff, Nov 9):** the invite lands the morning of day 24 (Sunday; `main.GALA_DAY`), not at the $100k fund (unreachable in 30 days, see docs/qa/soak_report.md). Committee thread + Madison's guest-list text; the fridge gets a gold GALA tag on 24 (`tag_from`, so it isn't on the paper before the envelope arrives) and her note 'Day 24: The Gala. Wear the shirt.' The limo stays open days 24-30 and after; no shift on Sunday, the story bosses are long done (d2-d12), and Thanksgiving (28) only closes the Fork. The $100k fund stays as Octavia's long-term score ('Fully Funded').
 
 | Day | | Today card | Notes |
 |---|---|---|---|

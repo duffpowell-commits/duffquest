@@ -144,11 +144,14 @@ func _draw_paper(r: Rect2, u: float, a: float, day: int, dom: int, col_first: in
 		draw_string(_fonts["small"], cell.position + Vector2(3 * u, 9 * u), str(d), HORIZONTAL_ALIGNMENT_LEFT, -1, int(7 * u), Color(INK, 0.75 * a))
 		var e: = Daily.entry(cal_month * Daily.MONTH_LEN + d)
 		var tag: = _T(str(e.get("tag", "")))
+		if int(e.get("tag_from", 0)) > int(main.day_count):
+			tag = ""   # not written yet (the gala tag goes up the morning the invite lands)
 		if tag != "":
 			var tc: = Color("#5b2a86")
 			if tag == "RENT": tc = RED
 			elif tag == "PAYDAY": tc = GREEN
 			elif tag == "<3": tc = Color("#d0457a")
+			elif tag == "GALA": tc = Color("#a07a10")
 			draw_string(_fonts["caveat"], Vector2(cell.position.x, cell.end.y - 5 * u), tag, HORIZONTAL_ALIGNMENT_CENTER, cell.size.x, int(10 * u), Color(tc, a))
 		if d < dom:
 			# crossed off in pencil

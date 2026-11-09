@@ -1,16 +1,19 @@
 extends Node
 ## Renders the fridge calendar on a few days, for checking by eye.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/calendar_shot.tscn
-## -> /tmp/qa/cal_<day>.png ; contact sheet: docs/renders/fridge_calendar.png (tools/calendar_sheet.py)
+## -> /tmp/qa/cal_<day>.png (or $QA_DIR/cal_<day>.png) ; contact sheet: docs/renders/fridge_calendar.png (tools/calendar_sheet.py)
 ## Cases: [day, forced daily event id or ""]
-const CASES: = [[1, ""], [7, "cat_chaos"], [9, ""], [16, "park_day"], [19, "ice"], [25, ""]]
+const CASES: = [[1, ""], [7, "cat_chaos"], [9, ""], [16, "park_day"], [19, "ice"], [23, ""], [24, ""], [25, ""]]
 var frame: = 0
 var game: Node
 var main: Node
 var ci: = 0
+var out_dir: = "/tmp/qa"
 
 func _ready() -> void:
-	DirAccess.make_dir_recursive_absolute("/tmp/qa")
+	if OS.get_environment("QA_DIR") != "":
+		out_dir = OS.get_environment("QA_DIR")
+	DirAccess.make_dir_recursive_absolute(out_dir)
 	game = load("res://game.tscn").instantiate()
 	add_child(game)
 
@@ -33,7 +36,7 @@ func _process(_d: float) -> void:
 	if frame >= 180 and (frame - 180) % 30 == 0:
 		if ci > 0:
 			var prev: Array = CASES[ci - 1]
-			get_viewport().get_texture().get_image().save_png("/tmp/qa/cal_%02d.png" % int(prev[0]))
+			get_viewport().get_texture().get_image().save_png(out_dir + "/cal_%02d.png" % int(prev[0]))
 			main.calendar_done()
 		if ci >= CASES.size():
 			get_tree().quit()

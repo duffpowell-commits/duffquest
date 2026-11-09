@@ -138,6 +138,7 @@ func _extra_checks(main: Node) -> void:
 	sh.free()
 	await _falcor_checks(main)
 	_soak_regressions(main)
+	_gala_gate_checks(main)
 
 ## Bugs the 30-day soak (tools/soak.gd) found. Keep them fixed.
 func _soak_regressions(main: Node) -> void:
@@ -164,6 +165,60 @@ func _soak_regressions(main: Node) -> void:
 	var hit: bool = main.hurt_player(50.0, main.player.position + Vector2(10, 0), 0.0, "")
 	check("a big hit floors energy at 0, never negative (got %.1f)" % main.energy, hit and main.energy == 0.0)
 	main.energy = 100.0
+
+## Gala opens on story day 24 (main.GALA_DAY), not at the $100k fund (Duff, Nov 9).
+func _gala_gate_checks(main: Node) -> void:
+	main.no_loading = true
+	main.close_overlay()
+	main.dialog.clear()
+	main.gala_unlocked = false
+	main.threads["gala"] = []
+	main.daily = Daily.new_state()
+	main.day_count = 9
+	main.day_i = 12
+	main.college["cash"] = 200000.0
+	main.check_fund_goal()
+	check("gala: a full fund no longer opens the gala", not main.gala_unlocked and main.achievements.has("Fully Funded"))
+	main.college["cash"] = 0.0
+	check("gala: GALA_DAY is 24", int(main.GALA_DAY) == 24)
+	main.day_count = 22
+	main.day_i = 25
+	main._wake(0)
+	main.close_overlay()
+	main.dialog.clear()
+	check("gala: locked on day 23", main.day_count == 23 and not main.gala_unlocked)
+	main._wake(0)
+	main.close_overlay()
+	main.dialog.clear()
+	var mad: Array = main.threads.get("madison", [])
+	var invite: = false
+	for t in mad:
+		if str(t["text"]).contains("gala guest list") and int(t["day"]) == 24:
+			invite = true
+	check("gala: unlocked on day 24", main.day_count == 24 and main.gala_unlocked)
+	check("gala: day-24 morning brings the Committee text + Madison's guest-list text", invite and not (main.threads.get("gala", []) as Array).is_empty() and main.unread["gala"])
+	check("gala: day 24 is a calendar headline marked GALA", bool(Daily.entry(24).get("headline", false)) and str(Daily.entry(24).get("tag", "")) == "GALA" and main.today_event() == "")
+	var n_gala: = (main.threads["gala"] as Array).size()
+	main._wake(0)
+	main.close_overlay()
+	main.dialog.clear()
+	check("gala: invite only sent once (day 25 keeps it open)", main.gala_unlocked and (main.threads["gala"] as Array).size() == n_gala)
+	# old save from the fund-gate era that already had the gala keeps it, even before day 24
+	var d: Dictionary = main.to_dict()
+	d["day_count"] = 6
+	d["gala_unlocked"] = true
+	main.from_dict(JSON.parse_string(JSON.stringify(d)))
+	check("gala: old save with gala_unlocked=true stays unlocked (day 6)", main.gala_unlocked)
+	# old save past day 24 that never unlocked it catches up on load
+	d["day_count"] = 26
+	d["gala_unlocked"] = false
+	main.from_dict(JSON.parse_string(JSON.stringify(d)))
+	check("gala: old save on day 26 without the gala catches up on load", main.gala_unlocked)
+	d["day_count"] = 20
+	d["gala_unlocked"] = false
+	main.from_dict(JSON.parse_string(JSON.stringify(d)))
+	check("gala: save on day 20 stays locked", not main.gala_unlocked)
+	SaveGame.erase(main.save_path)
 
 func _falcor_checks(main: Node) -> void:
 	main.no_loading = true
