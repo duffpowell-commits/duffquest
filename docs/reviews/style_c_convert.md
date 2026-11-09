@@ -52,3 +52,30 @@ Renders: `docs/renders/style_c_convert_loading.jpg` (old vs new, all 13), `docs/
 
 Notes: ST3/ST4 hold on all 13 (no hatching, no speed lines, flat sets with a soft sunburst or flat wall). Every
 lower third is simpler than the old art; the engine caption bar sits over it fine.
+
+## Batch 3: Gym Bro, Ghoster, DJ Vape KO a/b/c
+
+Refs: A/C = old still (composition) + the boss's `portraits_hd/` sheet on white + `ko/husk_a.jpg` (`MAHacVuZoNU`) as
+the style ref. B = face sheet `MAHacL92VLk` + old still + boss sheet + `ko/donald_b.jpg` (`MAHacWboDx8`) as the
+style ref. Each boss keeps its card's two sunburst tones for the speed lines (Gym Bro browns + hot pink, Ghoster
+slate/teal + cyan, DJ Vape charcoal-purple/slate + magenta).
+Renders: `docs/renders/style_c_convert_boss_first3.jpg` (old vs new), `docs/renders/style_c_convert_ko_<boss>_beats.jpg`,
+`docs/renders/style_c_convert_ko_<boss>_gore.jpg` (in-engine x-ray/finisher blood frames).
+
+| file | grade | notes |
+|---|---|---|
+| gymbro_a | PASS | Low-angle curl, browns + pink lines, flat muscles, no veins. |
+| gymbro_b | PASS | Straight punch into the inner elbow; x-ray of upper-arm + forearm bones with the bicep tendon snapping, plus a close-up inset (K1 = "bicep tendon"). Blackout sleeve + eye-in-triangles fist, grey-wash near arm, neck clean. |
+| gymbro_c | PASS | Flat on his back, crying selfie, torn tank, blank phone, crying inset. |
+| ghoster_a | PASS | Smug reach + phone, body dissolving into flat smoke; teal lines. |
+| ghoster_b | PASS | Rib punch; ribcage x-ray with one glowing nerve along a rib (K1 = intercostal nerve) + close-up inset; two face insets kept. Blackout + eye fist, neck clean. Cracked phone screen has no text. |
+| ghoster_c | PASS | Fading into cyan wisps, spiral eyes, "..." bubble (dots only), phone insets. |
+| djvape_a | PASS | Vape cloud as flat puffs over the deck, magenta/cyan accents. |
+| djvape_b | PASS | Open palm on the ear/headphone; x-ray of the inner ear (ossicles + cochlea) at the contact (K1 = "three tiny bones"). Blackout + eye-in-triangles on the back of the palm, neck clean. |
+| djvape_c | PASS | Tangled in cables, spiral eyes, vapes puffing, disco ball, face inset. |
+
+Data: the new B layouts moved the hit and the faces, so `data/knockouts.json` `impact.xray` was retuned for gymbro
+and ghoster (contact + mouth) and an override added for djvape (it had none and used the defaults). Checked in the
+gore renders: the splat lands on the contact point and the tooth/spit leaves from the mouth.
+K3: no leaked faces (style refs husk_a/donald_b carry no characters into A/C; donald_b's Chip face did not leak into
+any B). K6: three different B layouts (elbow jab with inset, rib punch with two face insets, open palm to the ear).
