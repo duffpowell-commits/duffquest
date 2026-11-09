@@ -166,6 +166,7 @@
     "xray": "Running away takes about two hundred muscles. Stopping takes one. It's mine.",
     "finisher": "Your total comes to: everything.",
     "crowd": "Earl: \"Should've paid for the pie, son. Pie's worth paying for.\"",
-    "closer": "He pays. In cash. And the pie. I eat a slice on my break. It tastes like justice and margarine."
+    "closer": "He pays. In cash. And the pie. I eat a slice on my break. It tastes like justice and margarine.",
+    "live": true
   }
 }
