@@ -11,6 +11,7 @@ Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into
 ## NEXT
 
 ## DONE
+- Nov 9 night: test_daily covers bus pass, minivan, stock trades, college fund, symphony date (money never negative or lost; none of them had bugs). Doc/code drift fixed (cast.gd defaults, ko/loading _doc, voice.md, knockout_cutscenes.md). CI deploy_itch on main (needs BUTLER_API_KEY variable).
 - Nov 9 evening: QA fixes: new-game intro rent total ($195 via weekly_base), KO x-ray crop per boss (`b_anchor`; willnot + dasher jaws visible). CI blocked by GitLab account verification (Duff).
 - Nov 9 (multi-agent): build shrink, halo fix, KO gore, HUD declutter, combat bark/y-sort polish, QA leftovers, all 17 KOs live, gala bosses -> Madison's exes (code; art pending), itch kit.
 - M14 (Nov 9): parody x-ray stills redone (hit = x-ray bone, unique faces); all 17 knockout scripts varied.

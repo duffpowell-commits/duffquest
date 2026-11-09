@@ -59,6 +59,7 @@ func _init() -> void:
 	main.from_dict(JSON.parse_string(JSON.stringify(d)))
 	check("station_best survives save/load", main.station_best.get("fryer") == "S")
 	_extra_checks(main)
+	_money_path_checks(main)
 	_ko_sfx_checks()
 	_ko_gore_checks()
 	_button_fit_checks()
@@ -70,6 +71,112 @@ func _init() -> void:
 	quit(1 if fails > 0 else 0)
 
 const Daily: = preload("res://scripts/daily.gd")
+const TransitS: = preload("res://scripts/transit.gd")
+const MarketS: = preload("res://scripts/market.gd")
+const DatesS: = preload("res://scripts/dates.gd")
+const SymphonyS: = preload("res://scripts/minigames/symphony.gd")
+
+## Paths the 30-day soak bot never takes (docs/qa/soak_report.md): bus pass, minivan, stock trades,
+## the college fund, the symphony date. Money must never go negative or vanish.
+func _money_path_checks(main: Node) -> void:
+	main.no_loading = true
+	main.close_overlay()
+	main.dialog.clear()
+	var keep_story: Dictionary = main.story.duplicate(true)
+	main.day_count = 6
+	# bus pass
+	main.bus_pass_until = -1
+	main.has_car = false
+	main.money = TransitS.PASS_PRICE - 1
+	main.buy_bus_pass()
+	check("bus pass refused when short, money kept", main.money == TransitS.PASS_PRICE - 1 and not main.pass_active())
+	main.money = 100
+	main.buy_bus_pass()
+	check("bus pass: -$%d, good through day %d" % [TransitS.PASS_PRICE, main.day_count + TransitS.PASS_DAYS - 1],
+		main.money == 100 - TransitS.PASS_PRICE and main.bus_pass_until == main.day_count + TransitS.PASS_DAYS - 1)
+	main.buy_bus_pass()
+	check("second bus pass not charged", main.money == 100 - TransitS.PASS_PRICE)
+	check("pass rides free on its last day", main.fare_for(2) == 0)
+	main.day_count = main.bus_pass_until + 1
+	check("pass expires: fare back to $%d" % TransitS.FARE, main.fare_for(1) == TransitS.FARE)
+	main.day_count = 6
+	# minivan
+	main.story["ending_seen"] = false
+	main.money = 5000
+	main.buy_car()
+	check("minivan locked before the ending", not main.has_car and main.money == 5000)
+	main.story["ending_seen"] = true
+	main.money = TransitS.CAR_PRICE - 1
+	main.buy_car()
+	check("minivan refused when short", not main.has_car and main.money == TransitS.CAR_PRICE - 1)
+	main.money = TransitS.CAR_PRICE + 10
+	main.happiness = 95.0
+	main.buy_car()
+	check("minivan bought: -$%d, rides free, happiness capped" % TransitS.CAR_PRICE,
+		main.has_car and main.money == 10 and main.fare_for(2) == 0 and main.happiness <= 100.0)
+	var d: Dictionary = JSON.parse_string(JSON.stringify(main.to_dict()))
+	main.has_car = false
+	main.bus_pass_until = -1
+	main.from_dict(d)
+	check("minivan + bus pass survive save/load", main.has_car and main.bus_pass_until == 6 + TransitS.PASS_DAYS - 1)
+	main.has_car = false
+	main.bus_pass_until = -1
+	main.story = keep_story
+	# brokerage: buy and sell at one price keeps total wealth (cents may sit in brokerage cash)
+	main.market = MarketS.new_state(1234)
+	main.brokerage = MarketS.new_account(false)
+	main.money = 500
+	var wealth: = func () -> float: return float(main.money) + float(main.brokerage["cash"]) + MarketS.holdings_value(main.brokerage, main.market)
+	var w0: float = wealth.call()
+	var spent: float = main.trade_buy("brokerage", "VOOM", 200.0)
+	check("buy $200 of VOOM: wallet $%d" % main.money, is_equal_approx(spent, 200.0) and main.money == 300)
+	check("buy keeps total wealth ($%.2f -> $%.2f)" % [w0, wealth.call()], absf(wealth.call() - w0) < 0.01)
+	main.trade_buy("brokerage", "GMSTP", -1.0)
+	check("buy everything: wallet $0, never negative", main.money == 0 and float(main.brokerage["cash"]) >= 0.0)
+	main.trade_sell("brokerage", "GMSTP", 1.0)
+	main.trade_sell("brokerage", "VOOM", 1.0)
+	check("sell everything: wealth back ($%.2f)" % wealth.call(), absf(wealth.call() - w0) < 0.01 and MarketS.holdings_value(main.brokerage, main.market) < 0.01)
+	check("selling nothing returns 0", main.trade_sell("brokerage", "DOGEB", 1.0) == 0.0)
+	main.trade_buy("brokerage", "BUNZ", 300.0)
+	main.trade_buy("brokerage", "DOGEB", 100.0)
+	var bad: = []
+	for wk in 60:
+		main.market_week()
+		for a in MarketS.ASSETS:
+			var px: float = MarketS.price(main.market, a["t"])
+			if is_nan(px) or is_inf(px) or px <= 0.0:
+				bad.append("%s wk%d" % [a["t"], wk])
+	var wv: float = wealth.call()
+	check("60 market weeks: prices finite and > 0 (%s)" % ", ".join(bad.slice(0, 4)), bad.is_empty())
+	check("60 market weeks: wealth finite, wallet >= 0 ($%.2f)" % wv, not is_nan(wv) and not is_inf(wv) and wv >= 0.0 and main.money >= 0)
+	# college fund
+	main.college = MarketS.new_account(true)
+	main.money = 50
+	var dep: int = main.fund_deposit(100)
+	check("fund deposit capped at the wallet ($%d)" % dep, dep == 50 and main.money == 0 and is_equal_approx(float(main.college["cash"]), 50.0))
+	check("fund deposit with $0 does nothing", main.fund_deposit(-1) == 0 and main.money == 0)
+	check("college buy with no cash spends nothing", main.trade_buy("college", "VOOM", 500.0) <= 50.0 and float(main.college["cash"]) >= 0.0)
+	main.brokerage = MarketS.new_account(true)
+	main.college = MarketS.new_account(true)
+	# symphony date
+	check("symphony comes after a sushi date (day 4+)",
+		DatesS.next_kind({"akarui": 1, "symphony": 0}, 5) == "symphony" and DatesS.next_kind({"akarui": 0, "symphony": 0}, 5) == "akarui")
+	check("no date before day 2", DatesS.next_kind(DatesS.new_stats(), 1) == "")
+	main.location = "home"
+	main.invite_date("symphony")
+	main.money = DatesS.SITTER_COST + DatesS.TICKETS - 1
+	check("symphony refused when short of sitter + tickets", not main.start_date("symphony", "sitter") and main.money == DatesS.SITTER_COST + DatesS.TICKETS - 1)
+	main.dialog.clear()
+	var stats_before: Dictionary = main.date_stats.duplicate()
+	main.happiness = 40.0
+	var g: Node = SymphonyS.new()
+	main._after_date(g, 1.0, [], "symphony")
+	check("symphony date: happiness up, counted, invite cleared",
+		main.happiness > 40.0 and int(main.date_stats["symphony"]) == int(stats_before["symphony"]) + 1 and str(main.date_invite["kind"]) == "")
+	check("symphony date: Culture Vulture unlocked", main.achievements.has("Culture Vulture"))
+	g.free()
+	main.dialog.clear()
+	main.money = 0
 
 func _extra_checks(main: Node) -> void:
 	# calendar data

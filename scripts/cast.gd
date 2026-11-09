@@ -8,6 +8,7 @@ const DEFAULTS: = {
 	"ex_1": "The Ghoster", "ex_2": "Gym Bro Supreme", "ex_3": "DJ Vape Lord", "ex_4": "Mr. Crypto",
 	"ex_final": "Bruce Willnot", "final_tower": "Nakatomeh Plaza",
 	"gala_ex_1": "Tyler Pivot", "gala_ex_2": "Grant Gratuity", "gala_ex_3": "Landlord Lance", "gala_ex_4": "Chip Leverage",
+	"gala_baron": "Baron Von Trustfund", "stray": "Falcor",
 	"pharmacy": "Walgrumps Pharmacy", "pharmacist": "Pharmacist Deb", "grocery": "Hy-Whee Market",
 	"grocery_slogan": "A helpful smile in every aisle-ish",
 	"pirate_1": "Package Pauly", "pirate_2": "Doorbell Dodger", "pirate_3": "Sticky Rick",
