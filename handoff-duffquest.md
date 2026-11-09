@@ -133,6 +133,7 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | M7 backgrounds | 3/19 in (home, kitchen, gym) | | 16 left (list in repo `QUEUE.md`) |
 
 ## 11. Next steps
+0. **Restoring in a fresh sandbox (Nov 8, 8 PM, works):** Duff's Drive/chat has `duffquest-full-history-2026-11-08.bundle` (188 MB, head `91703b8`, 23 commits, cut off at `02f9aa4`, so `git clone` fails). Restore: `git init dq; cd dq`, cut the bytes from `PACK` onward into a `.pack`, `git index-pack --stdin < x.pack`, copy the `.pack` + `.idx` into `.git/objects/pack/`, `echo 02f9aa48e9cd7e442a1b4f5919efd254ad0d28ae > .git/shallow`, `git update-ref refs/heads/chatgpt-home 91703b8`, `git checkout chatgpt-home`. Godot 4.5: `Godot_v4.5-stable_linux.x86_64.zip` from the godotengine GitHub releases (reachable even while the account is suspended). Smoke clean on `91703b8`.
 1. **Next action:** if this is a fresh sandbox, restore the unpushed work: clone/fetch the repo when GitHub works, then `git fetch duffquest-unpushed-2026-11-08.bundle chatgpt-home:chatgpt-home` (bundle needs base commit `67d96bb`, which is on GitHub `main`). Otherwise grade incoming rematch R3–R7 / X3.
 2. Grade incoming rematch R3–R7 and ChatGPT X3 (Drive `geminiart` or attached in chat); keep the winner, wire it, render, smoke, commit.
 3. When GitHub is back: `git fetch`, rebase, push the local commits, open PR(s), check CI, merge.
