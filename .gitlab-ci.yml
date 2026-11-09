@@ -1,0 +1,22 @@
+# Tests on every push. Deploy to itch from main only when a BUTLER_API_KEY CI variable exists.
+image: ubuntu:24.04
+
+variables:
+  GIT_DEPTH: "1"
+
+before_script:
+  - apt-get update -qq && apt-get install -y -qq curl unzip xvfb libfontconfig1 libgl1 libxi6 libxrandr2 libxcursor1 libxinerama1 >/dev/null
+
+test:
+  stage: test
+  timeout: 20m
+  script:
+    - tools/ship_itch.sh --no-push
+
+deploy_itch:
+  stage: deploy
+  timeout: 30m
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main" && $BUTLER_API_KEY'
+  script:
+    - tools/ship_itch.sh

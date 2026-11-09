@@ -2,7 +2,7 @@
 
 Comedy RPG about Duff's real life in Omaha: keep Madison happy, pay the rent,
 work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDScript, 640×360
-landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
+landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions. **Key facts (secrets vault, itch target, art tools): `CLAUDE_REFERENCE.md`.**
 
 ## Where things stand
 - **Nov 9 07:30: ITCH IS CURRENT (build `7cd1f78`, all art fixes + tattoos + KO sfx).** Full handoff: `docs/HANDOFF_NOV9.md` (secrets in gitignored `.env`; Canva scratch now `DAHabf2Qa9U`). Next: jam submission + itch page polish, title-screen tattoos, in-engine KO blood.
