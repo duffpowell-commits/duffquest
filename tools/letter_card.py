@@ -43,7 +43,7 @@ def letter(src, boss, lines, cx_frac=0.74, top_frac=0.16, bottom_frac=0.64, drop
     d = ImageDraw.Draw(im)
     max_w = int(W * 0.44)
     band = int(H * (bottom_frac - top_frac))
-    size = 260
+    size = 214
     while True:
         f = ImageFont.truetype(str(FONT), size)
         boxes = [d.textbbox((0, 0), t, font=f, stroke_width=size // 11) for t in lines]
