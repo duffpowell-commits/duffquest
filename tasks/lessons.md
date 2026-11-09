@@ -18,3 +18,8 @@
 - A headless test called `_wake()` -> `save_game()` on the real `user://` save; the next render hit Continue and loaded the test's state. Rule: tests set `main.save_path` to a throwaway path and erase it; delete the sandbox save before renders.
 - Duff on parody bosses: the duck/TV/lightbulb heads read as Hazbin imitation. Made-up HUMAN faces against the house portrait (Ghoster) as style ref; cartoony versions are DLC.
 - Sad scenes don't get the party burst: give the card a quiet `backdrop` + dim.
+
+## Nov 9 (M13 session)
+- AI image refs leak their characters: a B still built from Ghoster's still kept Ghoster's face in a side panel on 3 of 5. Rule: when a reference image has a character in it, check every panel of the output for that character.
+- A QA tool that silently shoots the wrong screen is worse than none: qa_shot's boss shots had been shift cards/loading screens since M10. Rule: after a feature adds a new overlay (shift card, loading screen), rerun qa_shot and LOOK at a full-size boss frame.
+

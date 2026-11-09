@@ -7,7 +7,8 @@
     "xray": "Fun fact: the human ego has no bones. It's held up by other people's money. My elbow finds it anyway. It makes the sound of a stock split.",
     "finisher": "Every punch is a ticket. Every ticket gets fired. Nobody gets comped.",
     "crowd": "Brittany: \"He's gonna post about this. He is gonna post SO much about this.\"",
-    "closer": "I fix my apron. Somewhere a market dips. Nobody I know owns any of it."
+    "closer": "I fix my apron. Somewhere a market dips. Nobody I know owns any of it.",
+    "live": true
   },
   "bozos": {
     "move": "SAME-DAY DELIVERY",
@@ -16,7 +17,8 @@
     "xray": "The human jaw has two hinges. His were installed by the lowest bidder. One knee, and both of them open for business.",
     "finisher": "You can't automate this. I checked. It's still just a guy with a spatula and nothing to lose.",
     "crowd": "Dolores: \"Honey, that man just got returned to sender.\"",
-    "closer": "Package delivered. Signature required. I sign it with my left hook."
+    "closer": "Package delivered. Signature required. I sign it with my left hook.",
+    "live": true
   },
   "fences": {
     "move": "HARD REBOOT",
@@ -25,7 +27,8 @@
     "xray": "The spine is thirty-three vertebrae stacked like dirty plates. I clear the stack. Top to bottom. The way Dolores taught me.",
     "finisher": "Ctrl. Alt. Delete. Three hits, in order, no updates required.",
     "crowd": "Earl: \"Kid didn't even spill his coffee.\"",
-    "closer": "He shuts down. Doesn't save his work. Nobody ever does."
+    "closer": "He shuts down. Doesn't save his work. Nobody ever does.",
+    "live": true
   },
   "baron": {
     "move": "BACK OF HOUSE",
@@ -43,7 +46,8 @@
     "xray": "The human hand has twenty-seven bones. His are smaller than mine. Everybody says so. My fist says so the loudest.",
     "finisher": "Big league. Tremendous. The best knockout anybody's ever seen. People are saying.",
     "crowd": "Brittany: \"I'm putting twenty on 'he says it was rigged.'\"",
-    "closer": "He calls it a win. Of course he does. I call it Tuesday."
+    "closer": "He calls it a win. Of course he does. I call it Tuesday.",
+    "live": true
   },
   "ghoster": {
     "move": "READ RECEIPT",
@@ -92,7 +96,8 @@
     "xray": "The bottom of the foot has twenty-six bones and a thousand nerve endings. He walked across a glass floor to get here. I don't hit the foot. I don't have to.",
     "finisher": "Yippee. Whatever. Just fall down.",
     "crowd": "{partner}: \"Is it over? Can we go home? I left the baby with Brittany.\"",
-    "closer": "The tower goes quiet. Every ex, defeated. Every elevator, out of order. I take the stairs. Forty floors. It's still easier than brunch."
+    "closer": "The tower goes quiet. Every ex, defeated. Every elevator, out of order. I take the stairs. Forty floors. It's still easier than brunch.",
+    "live": true
   },
   "regular": {
     "move": "LAST CALL",

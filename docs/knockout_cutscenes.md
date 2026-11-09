@@ -52,3 +52,6 @@ The Donald = giant orange rubber duck in a suit with a floor-length red tie. Wil
 lightbulb head, handgun duct-taped to his back. Step 1: 3-expression face sheets (Canva, 2:1) -> Duff OK ->
 portraits_hd, boss_intro cards, ch_ sheets, then ko stills. Batch 1 ko stills (ghoster, djvape, crypto,
 sendback, regular) generated, waiting on full-size downloads.
+
+Nov 9 (M13): husk, bozos, fences, donald, willnot live (11 of 17). Left: coupon, allergy, camper, bdaydad, dasher, baron.
+B-still prompt = ref `ghoster_b` + face sheet; it copies Ghoster's face into the bottom-middle panel unless fixed by an edit.

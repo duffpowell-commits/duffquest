@@ -30,3 +30,4 @@
 - [x] Review fixes: brulee/tempura ticks no longer freeze; spatula "flip" no longer counts as heavy; crits do; no late shake after the 86 cinematic/pause
 - [ ] Try it on the phone: is 70 ms light hit-stop too sticky on fast combos?
 - [ ] Enemy speech bubbles still cover damage numbers when 3+ enemies bunch up
+- (Nov 9) Stat points screen: Defense and Grit button labels run past the button edge (seen in smoke frame 599).
