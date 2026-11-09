@@ -36,8 +36,10 @@ Any **HARD** rule failure is an automatic FIX or REDO.
   layout reference for the others.
 
 ## 3. Parody bosses (HARD)
-- **P1** Husk, Bozos, Fences, The Donald and Willnot have made-up human faces. No real person's likeness,
-  and no duck, TV or lightbulb heads. Those are Hazbin imitations and belong in the DLC.
+- **P1** Every boss has a made-up human face. No real person's likeness, and no duck, TV or lightbulb heads.
+  Those are Hazbin imitations and belong in the DLC. (Nov 9: the four billionaire parodies are retired to
+  `docs/dlc_concepts/billionaires/`; their slots are now Madison's gala exes Tyler Pivot, Grant Gratuity,
+  Landlord Lance and Chip Leverage, brief in `docs/gala_exes_art_brief.md`. No public figures anywhere.)
 
 ## 4. All HD art (portraits, boss intros, loading screens)
 - **H1 One house style.** Human characters in a bold Hazbin-like cartoon look, matched against
@@ -46,7 +48,8 @@ Any **HARD** rule failure is an automatic FIX or REDO.
   lip, flying teeth, and bruises. Not allowed: dismemberment, exposed organs, or realistic wounds. The
   itch "2026 Jam" has no content rules beyond itch's own, so the itch page just gets a "blood/violence"
   content tag. Canva's filter blocks blood in generated images, so do NOT prompt for it. Blood gets
-  added in-engine instead: spit and blood particles in `knockout.gd` on the x-ray and finisher hits.
+  added in-engine instead: spit, blood and teeth in `scripts/ko_gore.gd` on the x-ray and finisher hits
+  (Settings "Cartoon gore" toggle, default ON).
   Missing blood is never a reason to fail an image.
 - **H3 Clean output.** Nothing cropped off the important parts, no watermark, no garbled fake text, no
   extra fingers or limbs.
