@@ -1,5 +1,6 @@
 extends Node
 const CastScript: = preload("res://scripts/cast.gd")
+const JuiceScript: = preload("res://scripts/juice.gd")
 
 const DIR: = "res://assets/audio/"
 const TRACKS: = ["neighborhood", "home", "kitchen", "boss", "willnot", "gala", "date", "credits"]
@@ -88,7 +89,13 @@ func set_muted(on: bool) -> void:
 	save_settings()
 
 func to_dict() -> Dictionary:
-	return {"music": music_vol, "sfx": sfx_vol, "mute": muted, "clean": bool(CastScript.clean) }
+	var d: = {"music": music_vol, "sfx": sfx_vol, "mute": muted, "clean": bool(CastScript.clean) }
+	d["screen_shake"] = bool(JuiceScript.shake_on)
+	return d
+
+func set_screen_shake(on: bool) -> void:
+	JuiceScript.shake_on = on
+	save_settings()
 
 func set_clean(on: bool) -> void:
 	CastScript.clean = on
@@ -111,6 +118,7 @@ func load_settings() -> void:
 	sfx_vol = clampf(float(d.get("sfx", 0.8)), 0.0, 1.0)
 	muted = bool(d.get("mute", false))
 	CastScript.clean = bool(d.get("clean", false))
+	JuiceScript.shake_on = bool(d.get("screen_shake", true))
 	apply()
 
 func play_sfx(name: String, pitch: float = 1.0) -> void:

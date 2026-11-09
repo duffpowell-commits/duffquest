@@ -61,6 +61,7 @@ func _init() -> void:
 	_extra_checks(main)
 	_ko_sfx_checks()
 	_button_fit_checks()
+	_qa_leftover_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
@@ -213,6 +214,49 @@ func _button_fit_checks() -> void:
 	check("stat point buttons fit their boxes (%s)" % ", ".join(bad), bad.is_empty())
 	var long: Array = UiStyle.fit_text("a b c d e f g h i j k l m n o p q r s t u v w x y z " .repeat(4), 60.0, 12.0, 8)
 	check("fit_text cuts what can't fit with ...", (long[0] as PackedStringArray).size() == 1 and str(long[0][0]).ends_with("..."))
+
+const AudioS: = preload("res://scripts/audio.gd")
+const JuiceS: = preload("res://scripts/juice.gd")
+const GroceryS: = preload("res://scripts/minigames/grocery.gd")
+
+func _qa_leftover_checks() -> void:
+	# screen shake setting: default ON, saved as `screen_shake`, and OFF really stops the shake.
+	# Throwaway settings file, never user://settings.json.
+	var path: = "user://test_settings_shake.json"
+	var a: Node = AudioS.new()
+	a.settings_path = path
+	SaveGame.erase(path)
+	a.load_settings()
+	check("screen shake defaults ON", JuiceS.shake_on)
+	a.set_screen_shake(false)
+	var saved: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
+	check("screen_shake saved in settings", saved is Dictionary and saved.get("screen_shake") == false)
+	JuiceS.shake_on = true
+	a.load_settings()
+	check("screen shake OFF survives reload", not JuiceS.shake_on)
+	var j: Node = JuiceS.new()
+	j.shake(3.0)
+	check("shake OFF: no trauma", j._trauma == 0.0)
+	JuiceS.shake_on = true
+	j.shake(3.0)
+	check("shake ON: trauma", j._trauma > 0.0)
+	j.free()
+	a.free()
+	SaveGame.erase(path)
+	# grocery aisle tags sit in the lane's empty left end: no item marker/icon, no shelf under them
+	var g: Node2D = GroceryS.new()
+	g.font = ThemeDB.fallback_font
+	var bad: = []
+	for i in GroceryS.SHELVES.size():
+		var r: Rect2 = g.aisle_tag_rect(i)
+		if r.intersects(GroceryS.SHELVES[i]):
+			bad.append("aisle %d on shelf" % (i + 1))
+		for id in GroceryS.SPOTS:
+			var sp: Vector2 = GroceryS.SPOTS[id]
+			if r.intersects(Rect2(sp + Vector2(-13, -13), Vector2(30, 20))):
+				bad.append("aisle %d over %s" % [i + 1, id])
+	check("grocery aisle tags clear of shelves + items (%s)" % ", ".join(bad), bad.is_empty())
+	g.free()
 
 class FakeMain extends Node:
 	var station_best: Dictionary = {}
