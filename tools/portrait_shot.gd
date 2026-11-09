@@ -16,6 +16,16 @@ const CASES: = [
 	["Brittany: Hey! Best day ever!", 80.0],
 	["Brittany: Okay.", 80.0],
 	["Brittany: You stole my fries? Unbelievable.", 80.0],
+	["Elon Husk: Funding secured.", 80.0],
+	["Elon Husk: WHO SHORTED MY JETPACK?!", 80.0],
+	["Jeff Bozos: Two-day delivery. On you.", 80.0],
+	["Jeff Bozos: NO RETURNS!", 80.0],
+	["Bill Fences: Please wait. Updating.", 80.0],
+	["Bill Fences: FATAL EXCEPTION!!", 80.0],
+	["The Donald: Tremendous. Huge.", 80.0],
+	["The Donald: TARIFF! TARIFF!", 80.0],
+	["Bruce Willnot: Yippee.", 80.0],
+	["Bruce Willnot: GET OFF MY FLOOR!", 80.0],
 ]
 var frame: = 0
 var game: Node
