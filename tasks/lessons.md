@@ -22,4 +22,6 @@
 ## Nov 9 (M13 session)
 - AI image refs leak their characters: a B still built from Ghoster's still kept Ghoster's face in a side panel on 3 of 5. Rule: when a reference image has a character in it, check every panel of the output for that character.
 - A QA tool that silently shoots the wrong screen is worse than none: qa_shot's boss shots had been shift cards/loading screens since M10. Rule: after a feature adds a new overlay (shift card, loading screen), rerun qa_shot and LOOK at a full-size boss frame.
+- Using one finished still as the layout reference for five others cloned its composition AND Duff's faces into all five. Rule: style refs carry style only when they contain no characters; give characters their own refs and describe the composition per image.
+- Checked faces, missed anatomy: the x-ray inset showed a different bone than the hit on 4 of 5. Rule: grade every impact still on 'is the x-ray where the hit is, and is it the bone the narration names'.
 
