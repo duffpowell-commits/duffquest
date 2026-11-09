@@ -163,6 +163,20 @@ const ASSETS = {
     "kind": "humanoid",
     "s": 2
   },
+  "ch_dolores": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
   "ch_sendback": {
     "w": 256,
     "h": 256,

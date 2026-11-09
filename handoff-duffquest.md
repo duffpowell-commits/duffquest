@@ -136,8 +136,8 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | Repo (live) | pushed | GitLab `main` `e2fd832` (+ this handoff commit) | smoke clean |
 | R3 Canva props | in game | `sd_football_fan_flag`, `sd_little_free_library`, `sd_scattered_leaves` | renders `docs/renders/rematch_r3_props.png`, `rematch_r3_ingame.png` |
 | R6 Canva Earl | rejected | `grok_art/2026-11-08-canva-test/r6_canva*.png` | render `docs/renders/rematch_r6_earl.png` |
-| Canva character sheets: Dolores, Brittany, Gym Bro | generated, NOT graded | Canva ids in §8 | need full-size downloads; previews: all 4×4 on magenta, back rows present on Dolores + Brittany, Gym Bro row 2 unclear |
-| R4 Canva Gym Bro card | preview ~10 | Canva `MAHaY7k4M30` | full size not downloaded |
+| Canva character sheets: Dolores, Brittany, Gym Bro | IN GAME (Nov 8, 22:30) | `ch_dolores` (new, Waffle Haus), `ch_brittany`, `ch_gymbro` | graded Gym Bro 11, Brittany 11, Dolores 10; wrong-facing cells fixed with `tools/fix_sheet_cells.py` (`*_fixed.png`); Dolores moved to `o+(22,92)` in `waffle.gd` (was hidden under the HUD); renders `docs/renders/canva_sheets_old_vs_new.png`, `canva_sheets_ingame.png` |
+| R4 Canva Gym Bro card | REJECTED | `grok_art/2026-11-08-canva-test/r4_canva.png` | wrong man (light-skinned, brown hair, black crown tank); existing `boss_intro/gymbro.png` kept |
 | ChatGPT R5, R6 (fixed prompt), R7, X3 | not run | Doc "STILL TO GRADE" | |
 | ChatGPT C6 props | graded 12, not wired | `grok_art/2026-11-08-chatgpt-test/c6_try1.png` | Waffle Haus screen |
 | ChatGPT C7 | graded 12, unused | `c7_try1.png` | spare loading screen / boss card |

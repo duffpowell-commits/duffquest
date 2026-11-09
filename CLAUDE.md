@@ -5,6 +5,7 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
+- **Nov 8 late:** Canva sheets in: `ch_gymbro`, `ch_brittany`, new `ch_dolores` (her own sheet; Waffle Haus uses it, `ch_waitress` kept for generic diners). Canva sheets often draw wrong-facing side cells: fix with `tools/fix_sheet_cells.py` before `import_big_sheet.py`. `tools/arena_shot.tscn -- waffle` shows the Waffle Haus shift. Remote is GitLab while GitHub is suspended (see `handoff-duffquest.md`).
 - **Next milestone: see `QUEUE.md` NOW** (Nov 8: M7 backgrounds IN PROGRESS, 2/19 in: home + kitchen. Place's next drops: `arena_alley`, `arena_waffle`, `gala`).
 - **Other agent: "Place"** (Duff's art agent, Cursor/Grok side) owns art: it is redrawing the outfit
   sheets, Waffle Haus sign, bus-stop sign, cats, extra lawn props, and making all 17 bosses. It hands
