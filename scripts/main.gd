@@ -478,6 +478,9 @@ func _ready() -> void:
 	touch.b_pressed.connect(_on_roll)
 	touch.g_pressed.connect(open_gear)
 	touch.p_pressed.connect(open_phone)
+	touch.drawer_pressed.connect(func () -> void:
+		if not busy():
+			hud.toggle_drawer())
 	touch.s_pressed.connect(func () -> void:
 		if not busy() and dialog.is_empty():
 			combat.special_pressed())
@@ -503,7 +506,7 @@ func _setup_input() -> void:
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
 		"interact": [KEY_E, KEY_ENTER], "attack": [KEY_SPACE, KEY_J],
 		"roll": [KEY_SHIFT, KEY_K, KEY_L], "gear": [KEY_I],
-		"special": [KEY_F, KEY_U], "swap_special": [KEY_Q], "demon": [KEY_R], "stats": [KEY_T], "phone": [KEY_P, KEY_TAB], "settings": [KEY_O, KEY_ESCAPE],
+		"special": [KEY_F, KEY_U], "swap_special": [KEY_Q], "demon": [KEY_R], "stats": [KEY_T], "phone": [KEY_P], "drawer": [KEY_TAB], "settings": [KEY_O, KEY_ESCAPE],
 	}
 	for action in map:
 		if not InputMap.has_action(action):
@@ -915,6 +918,8 @@ func _unhandled_input(e: InputEvent) -> void:
 		open_gear()
 	elif e.is_action_pressed("phone"):
 		open_phone()
+	elif e.is_action_pressed("drawer"):
+		hud.toggle_drawer()
 	elif e.is_action_pressed("settings"):
 		open_settings()
 
