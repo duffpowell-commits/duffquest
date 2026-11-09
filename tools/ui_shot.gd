@@ -2,6 +2,7 @@ extends Node
 ## Full-window shots of single UI screens (QA leftovers, Nov 9). Pick the screen after `--`:
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/ui_shot.tscn -- grocery [out.png]
 ##   ... -- settings [out.png]
+##   ... -- map [out.png]   (whole town; 1 world unit = 2 px)
 ## Default output: /tmp/qa/ui_<screen>.png. Uses a throwaway save path, never the real save.
 var game: Node
 var m: Node
@@ -43,6 +44,20 @@ func _process(_d: float) -> void:
 				m._start_grocery(false, {})
 			"settings":
 				m.open_settings()
+			"map":   # whole town, zoomed out (1 world unit = 2 px at 1280x720), HUD hidden
+				var cam: Camera2D = m.cam
+				m.juice.enabled = false
+				cam.zoom = Vector2.ONE
+				cam.limit_left = -10000
+				cam.limit_top = -10000
+				cam.limit_right = 10000
+				cam.limit_bottom = 10000
+				cam.position_smoothing_enabled = false
+				cam.reparent(m)
+				cam.global_position = Vector2(320, 180)
+				cam.offset = Vector2.ZERO
+				for h in game.find_children("*", "CanvasLayer", true, false):
+					(h as CanvasLayer).visible = false
 	if frame == 240:
 		get_viewport().get_texture().get_image().save_png(out)
 		DirAccess.remove_absolute(ProjectSettings.globalize_path("user://ui_shot_throwaway.json"))
