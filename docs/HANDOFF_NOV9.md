@@ -23,7 +23,7 @@ DuffQuest already plays and qualifies. Get a current build onto itch, submit it,
 - Godot 4.5-stable web templates are installed in the sandbox. Export with:
   `godot --headless --path . --export-release "Web" build/web/index.html`, then zip so `index.html` sits at the root.
 - The itch API is reachable from the sandbox (tested). **Ask Duff for a butler API key** from itch.io →
-  Settings → API keys, then push with butler: `butler push build/web dufftkyosht/duff-quest:html5`.
+  Settings → API keys, then push with butler: `butler push build/web dufftkyosht/duff-quest:html`.
   Keep the key in a temp env var only; never put it in the repo or `.git/config`. If there's no key,
   send Duff the zip and point him to the phone steps in `docs/itch_deploy.md`.
 - Rebuild **after** the art fixes, sprite tattoos and KO sound effects land. The 06:51 zip is stale.
