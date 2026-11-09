@@ -38,6 +38,7 @@
     "finisher": "This is what work feels like. I wanted you to know, just once, before you die old.",
     "crowd": "{partner}: \"Babe. BABE. Don't break the champagne tower, we can't afford the tower.\"",
     "closer": "He calls for Mummy. Mummy doesn't come. Welcome to the rest of us.",
+    "impact": {"xray": {"at": [0.57, 0.60], "mouth": [0.78, 0.04], "dir": -30}},
     "live": true
   },
   "donald": {
@@ -102,6 +103,7 @@
     "finisher": "Yippee. Whatever. Just fall down.",
     "crowd": "{partner}: \"Is it over? Can we go home? I left the baby with Brittany.\"",
     "closer": "The tower goes quiet. Every ex, defeated. Every elevator, out of order. I take the stairs. Forty floors. It's still easier than brunch.",
+    "impact": {"xray": {"at": [0.52, 0.05], "mouth": [0.56, 0.02], "dir": -30}},
     "live": true
   },
   "regular": {
@@ -167,6 +169,7 @@
     "finisher": "Make a wish.",
     "crowd": "{partner}: \"Okay, when {baby} turns one we are NOT doing a Waffle Haus party.\"",
     "closer": "The kids clap. They think it's part of the show. In a way, everything is part of the show.",
+    "impact": {"xray": {"at": [0.41, 0.59], "mouth": [0.26, 0.04], "dir": -150}},
     "live": true
   },
   "dasher": {
@@ -177,6 +180,7 @@
     "finisher": "Your total comes to: everything.",
     "crowd": "Earl: \"Should've paid for the pie, son. Pie's worth paying for.\"",
     "closer": "He pays. In cash. And the pie. I eat a slice on my break. It tastes like justice and margarine.",
+    "impact": {"xray": {"at": [0.60, 0.16], "mouth": [0.58, 0.03], "dir": -30}},
     "live": true
   }
 }
