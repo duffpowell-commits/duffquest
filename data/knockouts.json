@@ -91,6 +91,7 @@
     "finisher": "Have fun staying solvent.",
     "crowd": "Earl: \"Back in my day we called that a pyramid. And a pyramid was a shape.\"",
     "closer": "He says he's up spiritually. I'm up four bucks. One of us is right.",
+    "impact": {"xray": {"at": [0.56, 0.78], "mouth": [0.62, 0.10], "dir": -30}},
     "live": true
   },
   "willnot": {
@@ -111,6 +112,7 @@
     "finisher": "Order up. Hash browns, scattered, smothered, covered. And you, Earl. Plated.",
     "crowd": "Dolores: \"Thirty-one years. Nobody's ever plated Earl.\"",
     "closer": "He sits back down. He tips. Exact change. And one piece of advice I'm still trying to understand.",
+    "impact": {"xray": {"at": [0.22, 0.64], "mouth": [0.14, 0.12], "dir": -60}},
     "live": true
   },
   "sendback": {
@@ -121,6 +123,7 @@
     "finisher": "Your order is eighty-sixed. Forever.",
     "crowd": "Dolores: \"Told you to stop sending it back, hon.\"",
     "closer": "Five stars. Still no tip. Some things you can't beat out of a man. I try anyway, a little, in my heart.",
+    "impact": {"xray": {"at": [0.56, 0.42], "mouth": [0.62, 0.22], "dir": -30}},
     "live": true
   },
   "coupon": {
@@ -131,6 +134,7 @@
     "finisher": "The first one's full price. The second one's free.",
     "crowd": "Brittany: \"She's got a coupon for the ambulance. Duff. She has a coupon for the AMBULANCE.\"",
     "closer": "She asks if there's a coupon for this. There isn't. There never is for the things that hurt.",
+    "impact": {"xray": {"at": [0.51, 0.40], "mouth": [0.78, 0.20], "dir": -20}},
     "live": true
   },
   "allergy": {
@@ -141,6 +145,7 @@
     "finisher": "I'm allergic too. To this.",
     "crowd": "Dolores: \"Booth four. A whole basket of rolls. I counted.\"",
     "closer": "She admits it. Free dessert. That's all it ever was. That's all it ever is.",
+    "impact": {"xray": {"at": [0.38, 0.45], "mouth": [0.30, 0.24], "dir": -150}},
     "live": true
   },
   "camper": {
@@ -151,6 +156,7 @@
     "finisher": "We close at two. It's two.",
     "crowd": "Brittany: \"He was on the wifi the whole fight. He's still on the wifi.\"",
     "closer": "He leaves. He goes to the library. It's quieter there. It's free there. Nobody there will ever hit him.",
+    "impact": {"xray": {"at": [0.49, 0.52], "mouth": [0.13, 0.08], "dir": -150}},
     "live": true
   },
   "bdaydad": {
