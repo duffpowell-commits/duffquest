@@ -3,6 +3,7 @@
 Source: Duff's own photos, catalogued for the fox-wallpaper art (Nov 6). Nov 9: Duff caught that the game and comics dropped his
 sleeves — every prompt up to then only said "fox neck tattoo", so the models drew bare arms.
 
+**Build: keep him BUFF** (Duff, Nov 9: the hero build stays in comics and sprites; only the ink must match the photos).
 **Head:** dirty-blond undercut, hair tied back in a ponytail, blue eyes, ginger-blond stubble, stretched lobes with round plugs
 plus small spiked hoops, a calm flat stare.
 **Usual clothes:** black tee, work apron (black or red variant), red shoes.
@@ -13,6 +14,9 @@ plus small spiked hoops, a calm flat stare.
 | `photo_front.jpg` | Duff, front, shirtless: both arms, chest, belly, neck | **the truth** for placement of everything |
 | `photo_side_right_arm.jpg` | Duff, right side: the right upper-arm piece, forearm, wrist/hand script | **the truth** for the right arm |
 | `photo_left_upper_arm_flower.jpg` | Left upper arm under a black tee sleeve: flower of life in blackout | how the sleeve looks with his usual tee |
+| `photo_left_hand_eye.jpg` | Back of the LEFT hand (red light) | the eye mandala + finger dots |
+| `photo_right_hand_script.jpg` | Back of the RIGHT hand (red light) | the blackletter hand script |
+| `photo_right_forearm_creature.jpg` | RIGHT forearm (red light) | the creature head (NOT a panther) |
 | `photo_left_sleeve_forearm.jpg` | Duff's real LEFT arm, forearm to upper arm | **the truth** for the sleeve |
 | `photo_left_sleeve_elbow.jpg` | Duff's real LEFT arm, elbow mandala close-up | **the truth** for the elbow mandala |
 | `fox_duff_surf.jpg` | Fox-Duff, both arms, correct sides | layout: which piece goes where (both arms) |
@@ -29,13 +33,16 @@ Duff has full tattoo sleeves on BOTH arms:
 - LEFT arm, shoulder to wrist: a heavy blackout sacred-geometry sleeve — mostly solid black ink with skin-tone negative-space
   designs: flower-of-life circles on the upper arm, a large petal mandala with a central eye on the outer elbow, chevron and
   triangle bands down the forearm.
-- Back of the LEFT hand: a blackwork mandala with a single all-seeing eye in the centre; small dots on the fingers.
+- Back of the LEFT hand: a large all-seeing eye inside a ring of sharp black triangles (a spiked sun/mandala) covering the whole
+  back of the hand, blending into the sleeve at the wrist; small dot tattoos on the fingers and knuckles.
 - RIGHT upper arm: a large grey-wash biomechanical piece — organic horn/flame shapes with eye-like openings, wrapping the outer
   arm from shoulder to just above the elbow (NOT solid black flames — the fox art got this wrong). Small piece on the back of the
   right shoulder.
-- RIGHT forearm: a dark panther head with orange eyes framed by orange-gold leaves, then a feather/leaf piece toward the wrist;
-  a thin black bracelet on the wrist.
-- Back of the RIGHT hand: a few lines of small cursive script (not legible).
+- RIGHT forearm: NOT a panther (Duff, Nov 9). A dark creature head with several glowing eyes (orange in colour photos), a snout
+  with a nose and freckle dots and its pink tongue curling out, framed by leaves (orange-gold), with two lines of small script
+  above it. A thin black bracelet on the wrist.
+- Back of the RIGHT hand: several lines of bold gothic blackletter script running from the knuckles down onto the wrist
+  (draw it as illegible blackletter; never invent readable words).
 - LEFT side of the neck: a realistic fox head with pale blue crystal shards and a pale blue rose.
 - Under the shirt (only if shirtless, which the game never is): skull with a pink bow (right chest), small script (left chest),
   belly script "Despite these scars I will recover".
