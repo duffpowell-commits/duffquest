@@ -28,7 +28,7 @@
     "finisher": "Consider this your notice. Effective immediately.",
     "crowd": "Earl: \"Kid just evicted the landlord. Thirty-one years I've seen everything. Not that.\"",
     "closer": "NOTICE: Deposit withheld. He's face-down on a brochure for his third boat. {partner} texts him 'k.' Same font. Same template.",
-    "live": false
+    "live": true
   },
   "baron": {
     "move": "BACK OF HOUSE",
