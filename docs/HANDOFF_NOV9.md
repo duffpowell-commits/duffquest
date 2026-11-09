@@ -20,15 +20,8 @@ Session `session_01V3sbxP3j4WYR7ytqqi2uUE` pushed itch build `d49898c` (commit `
 The house rule is one Claude session per repo. Always run `git fetch` before starting and before pushing.
 
 ## Secrets
-- `.env` in the repo root holds `BUTLER_API_KEY` (itch) and `GITLAB_TOKEN`. It is gitignored and excluded from exports, and it lives only in that sandbox.
-- A fresh clone won't have it. Ask Duff to paste the keys again and recreate `.env` with `umask 077`.
-- Load it with: `set -a; . ./.env; set +a`.
-- **Duff should revoke and reissue the GitLab token.** It was pasted in chat.
-- **Push to GitLab:** temp `/tmp/askpass.sh` (user `oauth2`, prints `$GITLAB_TOKEN`), then `git push gitlab main`, then delete the script. Never put the token in `.git/config`.
-- **Push to itch:**
-  - butler binary from `https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default`.
-  - Command: `butler push build/web dufftkyosht/duff-quest:html --userversion <sha>`.
-  - Check: `butler status dufftkyosht/duff-quest`.
+- Keys live in the Cloudflare D1 vault `duff-vault` (read with the Cloudflare MCP). Never ask Duff to paste them. Details: `CLAUDE_REFERENCE.md`.
+- One-command ship: `BUTLER_API_KEY=... tools/ship_itch.sh`.
 
 ## Build the web version
 ```
