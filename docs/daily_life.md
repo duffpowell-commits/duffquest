@@ -2,7 +2,7 @@
 
 Goal: no day feels like filler. Spirit of Persona 5's calendar life, minus time slots
 (Duff, Nov 9: skip time slots in DuffQuest; concept saved for future games).
-Status: Duff said go Nov 9 (M10-M12; bonds cut). M10 DONE. Calendar is a **fridge calendar** with notes Duff and Madison leave each other, cats included (Duff).
+Status: Duff said go Nov 9 (M10-M12; bonds cut). M10 + M11 DONE. Calendar is a **fridge calendar** with notes Duff and Madison leave each other, cats included (Duff).
 
 ## What already exists (build on it, don't duplicate)
 - Day loop: wake 7:00 (`clock = 420`), sleep from 20:00, forced at 2:00. 2 game-min per real second.
@@ -16,7 +16,7 @@ Each morning gets at most ONE headline: calendar day > curveball > life.gd money
 If a calendar day or curveball fires, the money roll waits until tomorrow. Stops pile-ups.
 
 ## 1. Calendar (`data/calendar.json`)
-Fixed handwritten days, shown on the wake splash as a "today" card (date + one line, bar voice).
+A fridge calendar: the whole month on paper with magnets, notes Duff and Madison leave each other, Octavia's crayon, and the cats. All 30 November days are written in the data file (the table below was the first draft of days 1-14). Random events only skip `headline` days (10 Falcor, 28 Thanksgiving); ordinary calendar days still roll.
 
 | Day | | Today card | Notes |
 |---|---|---|---|
