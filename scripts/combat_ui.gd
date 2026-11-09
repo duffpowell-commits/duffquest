@@ -96,22 +96,41 @@ func _center(f: Font, pos: Vector2, width: float, s: String, size: int, col: Col
 	draw_string(f, p + Vector2(1, 1), s, HORIZONTAL_ALIGNMENT_LEFT, -1, size, Color(0, 0, 0, col.a * 0.85))
 	draw_string(f, p, s, HORIZONTAL_ALIGNMENT_LEFT, -1, size, col)
 
+## Level / special / heat: a slim bar above the attack buttons, only while fighting (or while
+## something about it is worth seeing: heat refilling, points to spend, demon time).
+const PANEL_R: = Rect2(240, 92, 78, 12)
+const COMBAT_HOLD: = 4.0
+var fight_t: = 0.0
+
+func in_fight() -> bool:
+	if m.location in ["arena", "gala"]:
+		return true
+	var p: Vector2 = m.player.global_position
+	for e in m.live_enemies():
+		if (e as Node2D).global_position.distance_to(p) < 170.0:
+			return true
+	return false
+
+func panel_shown() -> bool:
+	return fight_t > 0.0 or c.demon_t > 0.0 or c.crash_t > 0.0 or c.demon_ready() or c.points > 0 or c.heat < c.heat_max() - 0.5
+
 func _draw_panel(f: Font) -> void:
 	if not m.dialog.is_empty() or m.busy():
 		return
-	var r: = Rect2(2, 100, 100, 20)
+	fight_t = COMBAT_HOLD if in_fight() else maxf(0.0, fight_t - get_process_delta_time())
+	if not panel_shown():
+		return
+	var r: = PANEL_R
 	draw_rect(Rect2(r.position + Vector2(PX * 2, PX * 2), r.size), Color(0, 0, 0, 0.2))
 	draw_rect(r, Color(PANEL.r, PANEL.g, PANEL.b, 0.82))
 	var sp: Dictionary = c.current()
-	var lv: = "Lv %d" % c.level
-	draw_string(f, r.position + Vector2(3, 7), lv, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#9fe0ff"))
+	draw_string(f, r.position + Vector2(2, 5.5), "Lv %d" % c.level, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#9fe0ff"))
 	var sname: String = sp.get("short", "") if not sp.is_empty() else ""
 	var cost: = int(c.cost_of(sp)) if not sp.is_empty() else 0
 	var ready: bool = not sp.is_empty() and c.heat >= c.cost_of(sp)
-	draw_string(f, r.position + Vector2(24, 7), "%s %d" % [sname, cost], HORIZONTAL_ALIGNMENT_LEFT, 72, 6,
+	draw_string(f, r.position + Vector2(18, 5.5), "%s %d" % [sname, cost], HORIZONTAL_ALIGNMENT_LEFT, 38, 5,
 		Color("#f0ead8") if ready else Color(1, 1, 1, 0.45))
-
-	var hb: = Rect2(r.position + Vector2(3, 10), Vector2(94, 4))
+	var hb: = Rect2(r.position + Vector2(2, 7), Vector2(r.size.x - 4, 2.5))
 	draw_rect(hb, Color(0, 0, 0, 0.65))
 	var frac: = clampf(c.heat / c.heat_max(), 0.0, 1.0)
 	var col: = Color("#ff7a2a")
@@ -123,12 +142,11 @@ func _draw_panel(f: Font) -> void:
 	if not sp.is_empty():
 		var mark: = hb.position.x + hb.size.x * clampf(c.cost_of(sp) / c.heat_max(), 0.0, 1.0)
 		draw_line(Vector2(mark, hb.position.y - 0.5), Vector2(mark, hb.end.y + 0.5), Color(1, 1, 1, 0.7), PX)
-
-	var xb: = Rect2(r.position + Vector2(3, 16), Vector2(94, 1.5))
+	var xb: = Rect2(r.position + Vector2(2, 10.2), Vector2(r.size.x - 4, 1.0))
 	draw_rect(xb, Color(0, 0, 0, 0.6))
 	draw_rect(Rect2(xb.position, Vector2(xb.size.x * clampf(float(c.xp) / c.xp_to_next(), 0.0, 1.0), xb.size.y)), Color("#6ac8ff"))
 	if c.points > 0:
-		draw_string(f, r.position + Vector2(72, 7), "+%d pts" % c.points, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#a0ff90"))
+		draw_string(f, r.position + Vector2(56, 5.5), "+%d pts" % c.points, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#a0ff90"))
 	if c.demon_t > 0.0:
 		_center(f, Vector2(r.position.x, r.position.y - 2), r.size.x, "DEMON TIME", 6, Color("#ff7ab0"))
 	elif c.crash_t > 0.0:
