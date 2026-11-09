@@ -99,7 +99,7 @@ func _process(_d: float) -> void:
 			get_viewport().get_texture().get_image().save_png("/tmp/qa/ko_%s_after.png" % id)
 			get_tree().quit()
 			return
-		ko.bt = minf(ko.bt, 3.0)            # hold each beat; we step them ourselves
+		ko.bt = minf(ko.bt, 2.0)            # hold each beat (under the 2.4 s minimum hold, so short beats never end themselves); we step them ourselves
 		if frame % 100 == 0:
 			get_viewport().get_texture().get_image().save_png("/tmp/qa/ko_%s_%d_%s.png" % [id, ko.beat, ko.BEATS[ko.beat]])
 			ko._next()

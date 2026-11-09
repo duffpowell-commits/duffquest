@@ -123,3 +123,28 @@ every result at full size and zoomed into the arms, neck and x-ray.
 
 K1 and K3 were re-checked on every B still. All x-ray insets are unchanged, and no new faces leaked in. Nothing is left failing in this set.
 Still open (not in my scope): K6, the soft layout sameness of the batch-2 B stills.
+
+## Last 6 bosses (Nov 9, ko-last6): coupon, allergy, camper, bdaydad, dasher, baron
+
+18 new stills, all opened at full size (1920x1080 masters in `grok_art/2026-11-09-ko-last6/`, game files 1280x720 q88).
+Refs per still: boss face sheet (`portraits_hd/<boss>.png` on white) + `ko/willnot_a.jpg` as style-only for A/C;
+`ko/duff_stance.jpg` + `portraits_hd/duff.png` + boss face sheet for B. Scratch export design: `DAHabdund5o` (the old
+`DAHaZZaEJBs` hit Canva's 102-page edit limit).
+
+| file | grade | notes |
+|---|---|---|
+| coupon_a/c, allergy_a/c, camper_a/c, bdaydad_a/c, dasher_a, baron_a/c | PASS | own faces, neon palettes, no text |
+| coupon_b | PASS after 2 fixes | try 1: one arm had TWO hands (H3). Try 2 (removed it) put the sleeve on his RIGHT (D5). Fixed by mirroring + Canva edit: fox removed from the visible neck side, grey-wash ink on the far arm. K1: knuckles into the forearm flexor, x-ray shows radius/ulna at the contact point. |
+| allergy_b | PASS | over-the-shoulder; blackout left jab into the solar plexus, x-ray shows breastbone tip, lower ribs, diaphragm |
+| camper_b | PASS after 2 edits | grabbing (right) arm was bare -> grey-wash + creature forearm; eye on that hand -> blackletter. Knee into the hip, x-ray shows pelvis/femur head. |
+| bdaydad_b | PASS | low shin kick into the knee, knee joint x-ray; blackout left arm with eye hand on the floor |
+| dasher_b | PASS after 1 fix | xray line names no bone, so the hit is a stiff-arm across the collarbones (x-ray: both clavicles). Same D5 mirror problem as coupon_b, same fix. |
+| dasher_c | PASS after fix | try 1 tripped Canva's safety filter ("cherry filling oozing" read as blood); try 2 drew swoosh-like logos on the sneakers, Canva edit only faded them, finished with a local PIL recolor (faint outline left, unreadable at 1280). |
+| baron_b | PASS after 1 fix | kidney shot to the lower back, x-ray shows lumbar spine + floating ribs. Same D5 mirror fix; far arm now grey-wash, creature, blackletter hand. |
+
+**Gotcha (new):** "Duff on the viewer's right, facing the viewer's left" makes Canva draw him chest-on, so the arm on the
+viewer's LEFT of his torso is his RIGHT arm, and it put the blackout sleeve there with the fox on his left neck (D5). Prompt
+that worked (allergy_b, camper_b, bdaydad_b): blackout arm explicitly on the VIEWER'S RIGHT side of his torso, or an
+over-the-shoulder shot from behind his LEFT shoulder. Cheap fix: mirror the image, then a Canva edit that removes the
+visible-side fox and inks the far arm grey-wash. K3: no leaked faces in any B still (style ref had no characters in the B
+prompts). K6: the six B layouts all differ.
