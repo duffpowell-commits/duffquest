@@ -24,3 +24,31 @@ Renders: `docs/renders/style_c_convert_duff_ko.jpg` (old vs new), `docs/renders/
 Gotcha (again): any time Duff's head turns toward the viewer's right, the visible neck is his RIGHT side and Canva
 still paints the fox there even when the prompt says "only on the viewer's right". One cheap edit fixes it ("remove the
 neck tattoo, plain skin"); with the face sheet as the first ref the edit kept everything else.
+
+## Batch 2: the 13 loading screens (`assets/art/loading/`)
+
+Refs: face sheet `MAHacL92VLk` first whenever Duff is in it, then the old screen (gag and layout), then the
+character's `portraits_hd/` sheet for Madison (`MAHacYhIu5c`), Brittany (`MAHacQ_ShTE`), Octavia (`MAHacZsntEg`), then
+the left half of the Coupon Carol card (`MAHacUbzTKs`, flat sunburst, no lettering) as the style ref. Prompts asked
+for a flat simple set, a calm lower third, no hatching and no speed lines (ST3/ST4).
+Renders: `docs/renders/style_c_convert_loading.jpg` (old vs new, all 13), `docs/renders/style_c_convert_loading_engine.png`
+(engine loading screen with the caption bar).
+
+| file | grade | notes |
+|---|---|---|
+| brunch_atlas | PASS after 1 fix | Try 1 put the fox on his RIGHT neck (face turned to the viewer's right). Edit removed it. Blackout + eye fist on his left, creature/grey-wash + script on the other. |
+| fryer_nap | PASS | Dolores pours coffee at sleeping Duff. Blackout + eye hand, creature forearm, script hand all right. Visible neck is his left (fox hidden under the jaw). Name badge blank. |
+| goose_bet | PASS after 1 fix | Try 1 had blackwork flowers on the creature forearm and script on the raised palm (D3/D4). Edit: creature head + leaves on the near forearm, script fist, plain palm. Brittany matches her sheet. Duff's face slightly narrower than the sheet (soft). |
+| gym_spot | PASS | Gym Bro spots a rolling-pin bench with waffle-iron plates. Eye hand + blackout on his left, script hand, grey-wash upper arm, neck clean. |
+| octavia_fund | PASS | Octavia hugs the coin jar; Madison matches her sheet. Duff: blackout + eye hand on his left, grey-wash arm, neck clean. Calm table for the caption. |
+| omaha_winter | PASS | Hoodie + gloves cover the arms (D7). Flat sky/sunburst, skyline. |
+| one_trip | PASS after 1 fix + local patch | Try 1 had the eye-in-triangles on BOTH hands. The edit added blackletter but left a small eye in the middle of it; finished with a local PIL patch (script strip pasted over the eye, feathered). Fox is on his visible LEFT neck (correct). |
+| plasma_day | PASS | Blackout thumbs-up with the eye on the back of the hand, creature arm with the needle, script hand. No blood. |
+| raccoon_break | PASS | Raccoon in a hairnet; fox on his visible LEFT neck (correct); blackout + eye hand on his left. |
+| regular_5am | PASS | Earl + mug pyramid + Dolores, flat sunrise sunburst. No Duff. |
+| rent_slot | PASS (soft) | Side view of his RIGHT side: creature forearm + script hand on the jar, blackout far arm on the floor (reads a bit like a dangling tie). Neck clean. |
+| waffle_showoff | PASS | Blackout + eye fist on the pan, grey-wash back arm, red shoes, neck clean. Neon cup glow is the only soft gradient. |
+| witnesses | PASS | Porch pirate + the three cats; no Duff, no text. |
+
+Notes: ST3/ST4 hold on all 13 (no hatching, no speed lines, flat sets with a soft sunburst or flat wall). Every
+lower third is simpler than the old art; the engine caption bar sits over it fine.
