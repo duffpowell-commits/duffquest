@@ -156,7 +156,8 @@
     "xray": "A grown man's dignity sits in his knees. That's why dads crouch so much at parties. One low kick and his folds into a lawn chair.",
     "finisher": "Make a wish.",
     "crowd": "{partner}: \"Okay, when {baby} turns one we are NOT doing a Waffle Haus party.\"",
-    "closer": "The kids clap. They think it's part of the show. In a way, everything is part of the show."
+    "closer": "The kids clap. They think it's part of the show. In a way, everything is part of the show.",
+    "live": true
   },
   "dasher": {
     "move": "CHECK, PLEASE",
