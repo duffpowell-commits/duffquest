@@ -532,7 +532,7 @@ stay raw.
 - After any import: `godot --headless --path . --import`, then render and look at full-size frames.
 
 ### Canva workflow (the current art source; Duff is on the Business plan; one Canva user at a time)
-- **Scratch design: `DAHabf2Qa9U`** (the old `DAHaZZaEJBs` hit the 100-page limit).
+- **Scratch design: `DAHabdund5o`** (also `DAHabf2Qa9U`; the old `DAHaZZaEJBs` hit the 100-page limit).
 - Edit: `create-upload-url` (POST raw bytes) → `generate-image` with the original as the FIRST reference.
 - Full size without Duff downloading anything: `read-design` (open_transaction) → `add_page` + `insert_fill` per image →
   `commit` → `export-design` png (1680×945) → curl the URLs.
