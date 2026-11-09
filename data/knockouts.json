@@ -48,7 +48,7 @@
     "finisher": "Q4: I'm letting you go.",
     "crowd": "{partner}: \"That's for the Fork, Chip. And for making me split the check at prom.\"",
     "closer": "Year end: he sells the Fork back on his way to the floor. At a loss. Monday I clock in. Same line. Same burns. My boss, for once, is nobody's ex.",
-    "live": false
+    "live": true
   },
   "ghoster": {
     "move": "READ RECEIPT",
