@@ -59,11 +59,65 @@ static func button(ci: CanvasItem, r: Rect2, text: String, col: Color, enabled: 
 	ci.draw_rect(rr, c)
 	ci.draw_rect(Rect2(rr.position, Vector2(rr.size.x, rr.size.y * 0.38)), c.lightened(0.14))
 	ci.draw_rect(rr, INK, false, w * 1.4)
-	var lines: = text.split("\n")
-	var y0: = rr.position.y + rr.size.y * 0.5 + size * 0.36 - (lines.size() - 1) * size * 0.55
+	var fit: = fit_text(text, rr.size.x - BUTTON_PAD, rr.size.y - 1.0, size)
+	var lines: PackedStringArray = fit[0]
+	var sz: int = fit[1]
+	var y0: = rr.position.y + rr.size.y * 0.5 + sz * 0.36 - (lines.size() - 1) * sz * 0.55
 	for i in lines.size():
-		label(ci, Vector2(rr.position.x, y0 + i * size * 1.1), lines[i], size, CREAM if enabled else Color(CREAM, 0.45),
+		label(ci, Vector2(rr.position.x, y0 + i * sz * LINE_H), lines[i], sz, CREAM if enabled else Color(CREAM, 0.45),
 			rr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
+
+const BUTTON_PAD: = 16.0      # both side margins inside a button together (the key hint sits in the left 6)
+const LINE_H: = 1.1           # button line spacing, x font size
+const MIN_SIZE: = 6
+
+## Text fitting for button labels (same idea as tools/text_fit.gd: measure with the real font).
+## Keeps `size` if every line fits `width`; else word-wraps into as many lines as `height` holds;
+## else steps the size down to MIN_SIZE; last resort cuts the final line with "...".
+## Returns [PackedStringArray lines, int size]. Explicit "\n" breaks are kept.
+static func fit_text(text: String, width: float, height: float, size: int) -> Array:
+	install()
+	for sz in range(size, MIN_SIZE - 1, -1):
+		var max_lines: = maxi(1, int(floor((height + sz * (LINE_H - 1.0)) / (sz * LINE_H))))
+		var out: = PackedStringArray()
+		for para in text.split("\n"):
+			out.append_array(wrap_words(para, width, sz))
+		if out.size() <= max_lines and _widest(out, sz) <= width:
+			return [out, sz]
+	var lines: = PackedStringArray()
+	for para in text.split("\n"):
+		lines.append_array(wrap_words(para, width, MIN_SIZE))
+	var keep: = maxi(1, int(floor((height + MIN_SIZE * (LINE_H - 1.0)) / (MIN_SIZE * LINE_H))))
+	if lines.size() > keep:
+		lines = lines.slice(0, keep)
+		lines[keep - 1] = lines[keep - 1] + "..."
+	for i in lines.size():
+		while lines[i].length() > 4 and _w(lines[i], MIN_SIZE) > width:
+			lines[i] = lines[i].substr(0, lines[i].length() - 4) + "..."
+	return [lines, MIN_SIZE]
+
+## Greedy word wrap with the display font (a single word wider than `width` stays on its own line).
+static func wrap_words(para: String, width: float, size: int) -> PackedStringArray:
+	var out: = PackedStringArray()
+	var cur: = ""
+	for wd in para.split(" ", false):
+		var t: = wd if cur == "" else cur + " " + wd
+		if cur != "" and _w(t, size) > width:
+			out.append(cur)
+			cur = wd
+		else:
+			cur = t
+	out.append(cur)
+	return out
+
+static func _w(s: String, size: int) -> float:
+	return display.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+
+static func _widest(lines: PackedStringArray, size: int) -> float:
+	var m: = 0.0
+	for l in lines:
+		m = maxf(m, _w(l, size))
+	return m
 
 ## Round touch button: ink ring, flat fill, display-font letter.
 static func round_button(ci: CanvasItem, c: Vector2, r: float, col: Color, text: String, alpha: float = 0.85) -> void:

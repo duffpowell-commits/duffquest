@@ -59,6 +59,8 @@ func _init() -> void:
 	main.from_dict(JSON.parse_string(JSON.stringify(d)))
 	check("station_best survives save/load", main.station_best.get("fryer") == "S")
 	_extra_checks(main)
+	_ko_sfx_checks()
+	_button_fit_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
@@ -163,6 +165,54 @@ func _falcor_checks(main: Node) -> void:
 	main.location = "outside"
 	main.try_shift()
 	check("Fork closed on Thanksgiving", not main.in_shift)
+
+const Knockout: = preload("res://scripts/knockout.gd")
+const Combat: = preload("res://scripts/combat.gd")
+const UiStyle: = preload("res://scripts/ui_style.gd")
+const Cast: = preload("res://scripts/cast.gd")
+
+func _ko_sfx_checks() -> void:
+	var missing: = []
+	var want: = []
+	for b in Knockout.BEATS:
+		for c in Knockout.SFX_CUES.get(b, []):
+			want.append(c[1])
+			if not ResourceLoader.exists(Knockout.SFX_DIR + str(c[1]) + ".ogg"):
+				missing.append(c[1])
+	check("knockout sfx files all import (%s)" % ", ".join(missing), missing.is_empty())
+	var ko: Node2D = Knockout.new()
+	root.add_child(ko)
+	ko.start("gymbro")
+	var steps: = 0
+	while ko.playing() and steps < 2000:
+		ko._process(0.05)
+		steps += 1
+	check("knockout plays every cue once, in beat order", ko.played == want)
+	ko.start("gymbro")                       # tap through fast: the opening cue of each beat still fires
+	for i in 3:
+		ko._process(0.05)
+		ko._next()
+	check("tapping through: xray crack fires, later cues skipped", ko.played.has("crack") and not ko.played.has("snap2"))
+	ko.queue_free()
+
+func _button_fit_checks() -> void:
+	# stat points card: 2 columns of 308/2 - 4 wide, 21 tall (card.gd), label size 8
+	var w: = 308.0 / 2.0 - 4.0 - UiStyle.BUTTON_PAD
+	var bad: = []
+	var labels: = ["Later (press T anytime)"]
+	for k in ["str", "def", "heat", "grit"]:
+		labels.append("%s: %s" % [Combat.STATS[k]["name"], Combat.STATS[k]["desc"]])
+	for l in labels:
+		var f: Array = UiStyle.fit_text(Cast.N(l), w, 20.0, 8)
+		var lines: PackedStringArray = f[0]
+		var widest: = 0.0
+		for ln in lines:
+			widest = maxf(widest, UiStyle.display.get_string_size(ln, HORIZONTAL_ALIGNMENT_LEFT, -1, int(f[1])).x)
+		if widest > w or lines.size() * int(f[1]) * UiStyle.LINE_H > 21.0 or " ".join(lines).contains("..."):
+			bad.append(l)
+	check("stat point buttons fit their boxes (%s)" % ", ".join(bad), bad.is_empty())
+	var long: Array = UiStyle.fit_text("a b c d e f g h i j k l m n o p q r s t u v w x y z " .repeat(4), 60.0, 12.0, 8)
+	check("fit_text cuts what can't fit with ...", (long[0] as PackedStringArray).size() == 1 and str(long[0][0]).ends_with("..."))
 
 class FakeMain extends Node:
 	var station_best: Dictionary = {}
