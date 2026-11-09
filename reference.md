@@ -1,6 +1,6 @@
 # Duff Quest: reference
 
-This file explains how the game works. `CLAUDE.md` is the session log (status and what happened when). This file is
+This file explains how the game works. `CLAUDE.md` is the session log (status and what happened when). `CLAUDE_REFERENCE.md` covers ops: secrets vault, hosting, shipping to itch. This file is
 not a changelog. When the code and this file disagree, the code wins: fix this file.
 Facts were checked against the source on Nov 9, 2026. Anything not checked is marked **(unverified)**.
 
