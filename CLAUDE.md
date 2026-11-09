@@ -6,6 +6,12 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
 
 ## Where things stand
 - **Nov 9 (M12): Falcor + Thanksgiving LIVE.** Falcor = the stray Madison feeds (`{stray}` in cast.json), never drawn. Notes on days 3/7/9/11/13. Day 10 wake opens the SUNDAY card (`FALCOR_LINES`, text approved by Duff, quiet `living_night` backdrop): Stay with her (+10 Happiness, morning gone) / Give her some space; saved in `daily.falcor`. Days 11-13: no fussy rolls, a soft wake line each day, Madison's bowl text on day 11. Day 28 Thanksgiving: Fork closed, Waffle Haus, +10 Happiness +20 Energy. Render `docs/renders/falcor_day.jpg` (`tools/wake_shot.tscn -- 9`). test_daily 43/43. **Tests must not touch the real save** (see tasks/lessons.md).
+- **Nov 9: DUFF HAS FULL TATTOO SLEEVES.** Every Duff prompt must include the TATTOOS block from `docs/duff_look.md` and attach
+  the refs in `docs/ref/duff/` (Duff's real left-sleeve photos + fox-Duff art for placement). Until now prompts only said "fox neck
+  tattoo", so the knockout comics, loading screens and sprites show bare arms. Fix list (not started): 5 shared Duff KO panels
+  (stance, slip, fin1-3), 6 x-ray stills (husk, bozos, fences, donald, willnot, ghoster), 7 loading screens (brunch_atlas,
+  fryer_nap, gym_spot, octavia_fund, one_trip, plasma_day, raccoon_break), then the Duff sprite sheets (test one first: does a
+  Canva edit keep the 4x4 grid?) and `portraits_hd/duff.png`.
 - **Nov 9 (M14): knockout x-rays + dialogue variety (Duff's notes).** (1) The 5 parody B stills were redone WITHOUT Ghoster's still
   as the template (it cloned Duff's two faces + layout into every one, and the x-ray showed a different bone than the hit). Refs
   now: `ko/duff_stance.jpg` + Duff's face sheet + the boss face sheet; prompt names THE HIT, THE X-RAY "at that exact contact point,
