@@ -6,6 +6,15 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
 
 ## Where things stand
 - **Nov 9 (M12): Falcor + Thanksgiving LIVE.** Falcor = the stray Madison feeds (`{stray}` in cast.json), never drawn. Notes on days 3/7/9/11/13. Day 10 wake opens the SUNDAY card (`FALCOR_LINES`, text approved by Duff, quiet `living_night` backdrop): Stay with her (+10 Happiness, morning gone) / Give her some space; saved in `daily.falcor`. Days 11-13: no fussy rolls, a soft wake line each day, Madison's bowl text on day 11. Day 28 Thanksgiving: Fork closed, Waffle Haus, +10 Happiness +20 Energy. Render `docs/renders/falcor_day.jpg` (`tools/wake_shot.tscn -- 9`). test_daily 43/43. **Tests must not touch the real save** (see tasks/lessons.md).
+- **Nov 9 (M14): knockout x-rays + dialogue variety (Duff's notes).** (1) The 5 parody B stills were redone WITHOUT Ghoster's still
+  as the template (it cloned Duff's two faces + layout into every one, and the x-ray showed a different bone than the hit). Refs
+  now: `ko/duff_stance.jpg` + Duff's face sheet + the boss face sheet; prompt names THE HIT, THE X-RAY "at that exact contact point,
+  inside the same figure", and EXPRESSIONS for both. Each: own layout, own Duff face, x-ray on the struck bone, matching the `xray`
+  text. (2) All 17 knockout scripts: 34 lines rewritten so each strip has its own device (Husk = viewer count, Bozos = package
+  tracking, Fences = error popups, Ghoster = timestamps, Willnot = floor forty, Send-It-Back = a ticket, Camper = battery %, Baron
+  = talked to as "you"). Rules in `docs/voice.md` ("Knockout strips"). File: `tools/rewrites/ko_variety_m14.json`, applied with
+  `tools/apply_ko_rewrites.py` (token + length checks, minimal diff). ko_shot misses Ghoster's finisher frame (the beat ends itself
+  before the 100-frame step); his beats sheet reuses the old finisher panel.
 - **Nov 9 (M13): parody bosses DONE + LIVE.** Husk, Bozos, Fences, The Donald, Willnot: burst intro cards (`boss_intro/<b>.png`,
   names spelled right), `ch_<b>` sheets, KO stills `ko/<b>_a|b|c.jpg`, `"live": true` in `data/knockouts.json`. Masters in
   `grok_art/2026-11-09-parody-bosses/` (Canva generate-image with refs: face sheet + Ghoster's card / sheet / ko stills as style;
