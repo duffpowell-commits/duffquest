@@ -14,7 +14,7 @@ happy, pays the rent every Monday, works shifts at the Twisted Fork (a chain of 
 feeds the cats and fights street enemies and parody bosses with a frying pan. The fights play like the GBA Dragon
 Ball Z games. The story: beat four exes, then Bruce Willnot in Nakatomeh Plaza, which rolls the ending. Side content:
 Waffle Haus graveyard shifts, the 86 List bounties, Brittany's bets, dates, plasma donation, the stock market
-and Octavia's college fund, and the Elite Gala (five billionaire bosses, unlocked when the fund reaches $100k).
+and Octavia's college fund, and the Elite Gala (five gala bosses, invite lands the morning of story day 24, `GALA_DAY`; open through day 30 and after).
 All narration is Duff telling the story at the bar, in present tense.
 
 **Pillars** (`docs/PITCH.md`):
@@ -280,8 +280,10 @@ stay raw.
 - The story is `main.STORY`, in order. Madison announces each boss (`story_announce`) when the day and Happiness
   conditions are met. Fight via the building door (`story_doors`) → `start_story_fight` (arena `arena_<id>`, energy
   refilled). The reward is cash + scrap + a gear piece + an achievement + 15 Happiness. Losing → `story_lose`.
-- **Gala:** `check_gala_unlock()` fires when the college fund hits `Market.GOAL` $100k (gala text thread, "Take
-  the limo"). `BOSS_ORDER` husk → bozos → fences → baron → donald, with a full heal between fights. `gala_win`/`gala_lose`.
+- **Gala:** `check_gala_unlock()` fires from `_wake()` (`gala_new_day()`) the morning `day_count` reaches `GALA_DAY` (24): Committee
+  thread + Madison's guest-list text, calendar day 24 is a headline tagged GALA (`tag_from` hides it till then). Saves past day 24 without it
+  catch up in `from_dict`; old saves with `gala_unlocked` keep it. The $100k fund is its own goal (`check_fund_goal()`, "Fully Funded").
+  Phone: "Take the limo". `BOSS_ORDER` husk → bozos → fences → baron → donald, with a full heal between fights. `gala_win`/`gala_lose`.
 - **Parody bosses** (husk, bozos, fences, donald, willnot) have made-up **human** faces (art rule P1). The duck/TV/
   lightbulb heads are DLC concepts only (`docs/dlc_concepts/`).
 - **Boss art:** sprites `ch_<id>.png` (256 4×4, column 3 = that boss's own attack pose); HD portraits
@@ -365,7 +367,7 @@ stay raw.
 - **Phone** (`phone.gd`, P): text threads `sister` / `gala` / `madison`, Wordle (`wordle.gd` + `wordle_logic.gd`;
   data `words5.txt` valid guesses, `answers_common.txt`, `answers_themed.txt` at a 40% themed chance; Jen roasts the
   result), brokerage and **college fund** (`market.gd`: VOOM, SCHMD, BUNZ, BONDZ, GTS, GMSTP, DOGEB; weekly
-  `market_week()` on Mondays; fund goal $100k unlocks the gala).
+  `market_week()` on Mondays; fund goal $100k = "Fully Funded" achievement, not the gala).
 - **Dates** (`dates.gd`, `akarui.gd` sushi from day 2 +25, `symphony.gd` from day 4 +30): invite when Happiness ≥ 50,
   3-day cooldown, window 17:00-21:00, sitter $35 or Jen $20, tickets $60. Gives the glow.
 - **Plasma** (`life.gd`, `plasma.gd`): 8:00-18:00, promo pay $50/60/70/80/100 then $35 (+$15 second time that week), max 2 a week,
