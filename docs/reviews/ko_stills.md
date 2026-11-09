@@ -94,3 +94,32 @@ K5: no move names or captions anywhere. The only text-like marks are husk_c's ph
 
 After those: crypto_b, husk_b, husk_c, regular_c, then the fox-only fixes (duff_fin1, duff_fin3, bozos_b, fences_b,
 willnot_b). Fix `portraits_hd/duff.png` and the stale line in `duff_look.md` first, or the D5 error will come back.
+
+## Fix log (Nov 9, HD art fixer pass)
+
+I re-checked every FIX row against the current file before acting, because several stills had already been edited today. They
+still failed the same rules. Masters: `grok_art/2026-11-09-fixes/ko_<name>.png` (1920x1080 Canva exports). The originals as they
+stood before this pass: `grok_art/2026-11-09-fixes/before/`. Before/after sheet: `docs/renders/art_fixes_nov9.jpg`. I judged
+every result at full size and zoomed into the arms, neck and x-ray.
+
+| file | what changed | how |
+|---|---|---|
+| duff_stance | The raised forearm on the viewer's right is now near-solid black with skin-line mandala and chevrons (it was line art on skin). The wrong-side fox under the visible ear is removed. The inset face's neck is cleaned up. | Canva edit x2, then a local PIL patch for the fox (Canva would not move it) |
+| duff_slip | The whole image is flipped, so the sleeve and fox are now on his left. The cat-eared forearm head is replaced with a round, ear-less creature (orange eyes, tongue, leaves). | PIL flip, then Canva edit |
+| duff_fin1 | Wrong-side fox removed. The raised fist sleeve is darkened to blackout. | Canva edit |
+| duff_fin2 | Wrong-side fox removed. The kick-side arm is blackout. The cat head is replaced with a round creature (orange eyes, tongue, leaves). | Canva edit x3 (2nd try rejected: grey blob) |
+| duff_fin3 | Wrong-side fox removed. | Canva edit |
+| duff_walk | Flipped. Both bare forearms are inked: blackout on his left, grey-wash and a bracelet on his right. | PIL flip, then Canva edit |
+| regular_b | K1 fixed: Duff's black-sleeved eye-fist now lands under the suspender buckle, and the burst is moved there. Duff has the blond ponytail and stubble. | Canva edit |
+| regular_c | Bills are plain green with an empty oval (no portrait, no micro-text). | Canva edit |
+| gymbro_b, djvape_b | The striking arm is a solid blackout sleeve with an eye-in-triangles hand. Wrong-side fox removed. | Canva edit |
+| ghoster_b | The punching arm is one blackout sleeve from shoulder to wrist (the flame shapes are gone). Fox removed on both Duff faces. | Canva edit |
+| crypto_b | Eye-in-triangles on Duff's floor fist with black ink up the wrist. Script on the other hand. The stray eye the 1st try put on the boss's hand is removed. Fox removed. | Canva edit x2 |
+| sendback_b | Eye-in-triangles on the uppercut fist. Fox removed on both faces. | Canva edit |
+| husk_b | Fox removed. The round sigil on the near hand is replaced by blackletter. | Canva edit |
+| husk_c | The fake red letters on the phone are gone; only the chart line is left. | Canva edit |
+| donald_b | Fox removed. The forearm skull is replaced by the round creature head. | Canva edit |
+| bozos_b, fences_b, willnot_b | Wrong-side neck mark removed. | Canva edit |
+
+K1 and K3 were re-checked on every B still. All x-ray insets are unchanged, and no new faces leaked in. Nothing is left failing in this set.
+Still open (not in my scope): K6, the soft layout sameness of the batch-2 B stills.

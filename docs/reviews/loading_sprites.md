@@ -180,3 +180,23 @@ Any one of those breaks S2. With tiny arms (a 6x9 px forearm and hand), a prompt
    - Render one in-game frame per outfit to confirm "dark arm + lighter inked arm" reads at real scale.
 6. **Build (S4/D1).** Recolouring can't add muscle. The chibi body is medium-built. If Duff wants him to read buffer, that needs
    a 1-px wider shoulder and arm outline pass. That is a separate, hand-checked change, not part of the ink script.
+
+## Fix log (Nov 9, HD art fixer pass, loading art only; sprites untouched)
+
+I re-graded the current files first. fryer_nap, one_trip, plasma_day and raccoon_break had already been retattooed today. Their
+arms were right, but the whole Duff was mirrored (sleeve and fox on his right). Masters are in `grok_art/2026-11-09-fixes/loading_<name>.png`,
+the originals are in `.../before/loading/`, and the before/after sheet is `docs/renders/art_fixes_nov9.jpg`.
+
+| file | what changed | how |
+|---|---|---|
+| fryer_nap, one_trip, plasma_day, raccoon_break | Flipped horizontally. Sleeve, fox and eye hand are now on his left. No text in these images. | PIL flip |
+| brunch_atlas | Creature head (orange eyes, tongue, leaves) added to the forearm on the viewer's left. Wrong-side fox removed. | Canva edit |
+| gym_spot | Hand ink swapped: the eye is now on the blackout-sleeve hand and the script on the other hand. Wrong-side fox removed. | Canva edit x2 |
+| goose_bet | Sleeves unrolled to the wrists. Fox removed. Blackletter on the raised hand. | Canva edit |
+| octavia_fund | Wrong-side fox removed. The eye-in-triangles is on the hand nearest the baby (the sleeve side), with script on the other hand. | Canva edit x2 |
+| omaha_winter | NYC skyline replaced with a Midwestern stepped-top tower skyline. The cuff/glove gap is closed. Fox removed. | Canva edit |
+| rent_slot | Neck bulge fixed and fox removed. Sleeve rolled down. Script on the jar hand, eye on the hand cupped at his ear. | Canva edit |
+| waffle_showoff | REDO in the house cartoon style (it was pixel art). Buff, with the blackout sleeve on the viewer's right and the creature arm on the left. Neon cup sign, no text. Wrong-side neck tattoo removed. | Canva generate + edit |
+
+Known soft spots, all passing: octavia_fund's sleeve forearm reads dark grey rather than jet black. In several scenes the fox is
+simply absent because his left side faces away. That is correct under D5.
