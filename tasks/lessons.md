@@ -12,3 +12,9 @@
 - Replaced PNGs, rendered, got the old art. Rule: `godot --headless --path . --import` after any asset swap, before renders.
 - Burst intro card's letterbox bar covered the dialogue box's last line + prompt; missed because I judged a
   shrunken contact sheet. Rule: for overlay/UI changes, look at one full-size frame per screen, not just the sheet.
+
+## Nov 9 (M10-M12 session)
+- Patched a "reset" line into what I thought was new-game but was `from_dict`: it wiped `station_best` on every load. Rule: `new_game()` is `from_dict({})`; put defaults in the `d.get(key, default)`, never a separate reset.
+- A headless test called `_wake()` -> `save_game()` on the real `user://` save; the next render hit Continue and loaded the test's state. Rule: tests set `main.save_path` to a throwaway path and erase it; delete the sandbox save before renders.
+- Duff on parody bosses: the duck/TV/lightbulb heads read as Hazbin imitation. Made-up HUMAN faces against the house portrait (Ghoster) as style ref; cartoony versions are DLC.
+- Sad scenes don't get the party burst: give the card a quiet `backdrop` + dim.

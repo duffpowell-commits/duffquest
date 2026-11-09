@@ -4,6 +4,7 @@ extends SceneTree
 ## Prints PASS/FAIL per check and exits 1 on any failure.
 
 const Shift: = preload("res://scripts/shift.gd")
+const SaveGame: = preload("res://scripts/save_game.gd")
 var fails: = 0
 
 func check(name: String, ok: bool) -> void:
@@ -37,6 +38,7 @@ func _init() -> void:
 
 	# record + save round trip on the real main scene
 	var main: Node = load("res://main.tscn").instantiate()
+	main.save_path = "user://test_daily_save.json"   # never touch the real save
 	root.add_child(main)
 	await process_frame
 	main.station_best = {}
@@ -57,6 +59,7 @@ func _init() -> void:
 	main.from_dict(JSON.parse_string(JSON.stringify(d)))
 	check("station_best survives save/load", main.station_best.get("fryer") == "S")
 	_extra_checks(main)
+	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
 	print("%s (%d failed)" % ["ALL PASS" if fails == 0 else "FAILURES", fails])
@@ -129,6 +132,37 @@ func _extra_checks(main: Node) -> void:
 	var opts: Array = sh.menu_opts()
 	check("sick day menu = Quick + Never mind", opts.size() == 2 and opts[0][0] == "quick")
 	sh.free()
+	await _falcor_checks(main)
+
+func _falcor_checks(main: Node) -> void:
+	main.no_loading = true
+	main.daily = Daily.new_state()
+	main.day_count = 9
+	main.day_i = 12
+	var h0: float = main.happiness
+	main._wake(0)
+	check("day 10 wakes into the Falcor card", main.day_count == 10 and main.overlay_node != null and str(main.overlay_node.get("heading")) == "SUNDAY")
+	check("no random event on Falcor's day", main.today_event() == "")
+	main.overlay_node.chosen.emit("stay")
+	check("Stay with her: choice saved", str(main.daily["falcor"]) == "stay")
+	check("Stay with her: +Happiness", main.happiness > h0 or main.happiness >= 100.0)
+	check("Falcor card closed", main.overlay_node == null)
+	main.dialog.clear()
+	main._wake(0)
+	check("day 11: grief line in the morning", main.falcor_grief())
+	var thread: Array = main.threads.get("madison", [])
+	check("day 11: Madison's text about the bowl", not thread.is_empty() and str(thread[-1]["text"]).contains("bowl"))
+	check("no fussy rolls while she's grieving", str(main.mood["kind"]) != "fussy")
+	main.dialog.clear()
+	main.day_count = 27
+	main.day_i = 30
+	main._wake(0)
+	check("day 28 is Thanksgiving", main.calendar_event() == "thanksgiving")
+	main.dialog.clear()
+	main.clock = 600.0
+	main.location = "outside"
+	main.try_shift()
+	check("Fork closed on Thanksgiving", not main.in_shift)
 
 class FakeMain extends Node:
 	var station_best: Dictionary = {}

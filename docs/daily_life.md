@@ -2,7 +2,7 @@
 
 Goal: no day feels like filler. Spirit of Persona 5's calendar life, minus time slots
 (Duff, Nov 9: skip time slots in DuffQuest; concept saved for future games).
-Status: Duff said go Nov 9 (M10-M12; bonds cut). M10 + M11 DONE. Calendar is a **fridge calendar** with notes Duff and Madison leave each other, cats included (Duff).
+Status: Duff said go Nov 9 (M10-M12; bonds cut). M10 + M11 + M12 DONE. Calendar is a **fridge calendar** with notes Duff and Madison leave each other, cats included (Duff).
 
 ## What already exists (build on it, don't duplicate)
 - Day loop: wake 7:00 (`clock = 420`), sleep from 20:00, forced at 2:00. 2 game-min per real second.
