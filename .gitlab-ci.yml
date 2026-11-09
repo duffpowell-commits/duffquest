@@ -1,11 +1,14 @@
-# Tests on every push. Deploy to itch from main only when a BUTLER_API_KEY CI variable exists.
+# Tests on every push. On main, deploy_itch ships the web build to itch (dufftkyosht/duff-quest:html)
+# through tools/ship_itch.sh. It needs a masked + protected CI/CD variable BUTLER_API_KEY
+# (Settings > CI/CD > Variables); without it the job logs why and passes, so main never goes red for it.
 image: ubuntu:24.04
 
 variables:
   GIT_DEPTH: "1"
 
 before_script:
-  - apt-get update -qq && apt-get install -y -qq curl unzip xvfb libfontconfig1 libgl1 libxi6 libxrandr2 libxcursor1 libxinerama1 >/dev/null
+  # python3: ship_itch.sh runs tools/set_lossy_imports.py; without it the build ships lossless (~2x bigger)
+  - apt-get update -qq && apt-get install -y -qq curl unzip python3 xvfb libfontconfig1 libgl1 libxi6 libxrandr2 libxcursor1 libxinerama1 >/dev/null
 
 test:
   stage: test
@@ -17,6 +20,12 @@ deploy_itch:
   stage: deploy
   timeout: 30m
   rules:
-    - if: '$CI_COMMIT_BRANCH == "main" && $BUTLER_API_KEY'
+    - if: '$CI_COMMIT_BRANCH == "main"'
   script:
+    - |
+      if [ -z "${BUTLER_API_KEY:-}" ]; then
+        echo "SKIP: no BUTLER_API_KEY CI/CD variable, so nothing was pushed to itch."
+        echo "Add it in Settings > CI/CD > Variables (masked, protected), then re-run this pipeline."
+        exit 0
+      fi
     - tools/ship_itch.sh

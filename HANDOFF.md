@@ -32,7 +32,12 @@ comic-panel knockout cutscenes. Godot 4.5, GDScript, landscape, 640x360 game + H
   KO x-ray beat takes a per-boss `"b_anchor"` in `data/knockouts.json` (0 = keep the top of the still, default 0.5),
   set to 0 for willnot + dasher so the jaw/face x-ray is no longer cut; their `impact` points moved to match.
   Render: `docs/renders/ko_xray_crop_fix.png`.
-- **GitLab CI has never run a job:** every pipeline fails with "user not being verified" (0 jobs). Duff must verify his
+- **CI ships to itch (Nov 9 night):** `.gitlab-ci.yml` `deploy_itch` runs on every main pipeline: with a masked +
+  protected CI/CD variable `BUTLER_API_KEY` it runs `tools/ship_itch.sh` (tests, export, butler push to
+  `dufftkyosht/duff-quest:html`); without it the job prints `SKIP: no BUTLER_API_KEY` and passes. CI now installs
+  python3 so CI builds get the lossy imports (54 MB, not ~110). Claude's sandbox can't reach itch.io, so CI is the
+  only ship path from here. Duff adds the variable himself (token has no `api` scope).
+- **(Resolved Nov 9 ~14:40: Duff verified) GitLab CI had never run a job:** every pipeline fails with "user not being verified" (0 jobs). Duff must verify his
   GitLab account (gitlab.com, phone or card) before shared runners work. Nothing in the repo can fix it; tests run
   locally via `tools/ship_itch.sh --no-push` instead.
 - **itch** https://dufftkyosht.itch.io/duff-quest — channel `html` has build **`532e95b`** (everything below).
