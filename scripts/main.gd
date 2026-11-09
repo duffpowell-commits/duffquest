@@ -96,6 +96,9 @@ const GALA_ORIGIN: = Vector2(400, 440)
 const GALA_SIZE: = Vector2(320, 180)
 const GALA_SPAWN: = Vector2(560, 590)
 const BOSS_ORDER: = ["husk", "bozos", "fences", "baron", "donald"]
+## The gala invite lands on this story day's morning (Duff, Nov 9: the $100k fund gate was
+## unreachable in 30 days). Open from then to the end of the month and after.
+const GALA_DAY: = 24
 const ARENA_ORIGIN: = Vector2(760, 440)
 const ARENA_SIZE: = Vector2(320, 180)
 const ARENA_SPAWN: = Vector2(920, 590)
@@ -753,6 +756,8 @@ func from_dict(d: Dictionary) -> void:
 	gala_unlocked = bool(d.get("gala_unlocked", false))
 	gala_beaten = bool(d.get("gala_beaten", false))
 	gala_runs = int(d.get("gala_runs", 0))
+	if not gala_unlocked and day_count >= GALA_DAY:
+		check_gala_unlock(false)   # save from before the day-24 gate, already past the invite morning
 	fund_happy_day = int(d.get("fund_happy_day", -1))
 	fund_happy_today = float(d.get("fund_happy_today", 0.0))
 	gala_stage = -1
@@ -1360,6 +1365,7 @@ func _wake(energy_penalty: int) -> void:
 	if story_ready_unannounced() != "":
 		lines.append("{partner}'s got something to tell me. (Talk to her.)")
 	lines.append_array(calendar_day_lines())
+	lines.append_array(gala_new_day())
 	lines = lines.filter(func (l): return str(l) != "")
 	if calendar_event() == "falcor" and str(daily["falcor"]) == "":
 		falcor_scene(lines)
@@ -2055,8 +2061,8 @@ func debug_station(k: String) -> void:
 			return
 		"rich":
 			college["cash"] = Market.GOAL + 5.0
-			check_gala_unlock()
-			open_phone("gala_thread")
+			check_fund_goal()
+			open_phone("fund")
 			return
 		"gala":
 			gala_unlocked = true
@@ -2767,7 +2773,7 @@ func trade_buy(a: String, t: String, amt: float) -> float:
 	if a == "brokerage":
 		_sweep_brokerage()
 	if a == "college":
-		check_gala_unlock()
+		check_fund_goal()
 	return spend
 
 func trade_sell(a: String, t: String, frac: float) -> float:
@@ -2801,7 +2807,7 @@ func fund_deposit(want: int) -> int:
 	var h: = clampf(amt * 0.03, 0.0, FUND_HAPPY_CAP - fund_happy_today)
 	gain_happy(h)
 	fund_happy_today += h
-	check_gala_unlock()
+	check_fund_goal()
 	return amt
 
 func market_week() -> Array:
@@ -2820,25 +2826,41 @@ func market_week() -> Array:
 		college["cash"] = float(college["cash"]) + float(d2["paid_out"])
 	if float(d2["total"]) >= 0.01:
 		lines.append("{baby}'s fund pulls $%.2f in dividends. Fund: $%s" % [float(d2["total"]), PhoneScript._money(fund_value())])
-	if check_gala_unlock():
-		lines.append("{baby}'s fund hits $100,000! {partner} cries. Then my phone buzzes: an unknown number...")
+	if check_fund_goal():
+		lines.append("{baby}'s fund hits $100,000! {partner} cries. I cry. {cat1} knocks a glass off the counter to mark the occasion.")
 	return lines
 
-func check_gala_unlock() -> bool:
-	if gala_unlocked or fund_value() < Market.GOAL:
+## Octavia's fund goal: its own long-term score (achievement + a happy bump), no longer the gala key.
+func check_fund_goal() -> bool:
+	if achievements.has("Fully Funded") or fund_value() < Market.GOAL:
+		return false
+	achievements.append("Fully Funded")
+	gain_happy(30.0)
+	_toast("*BZZT* {baby}'s fund hits $100k! College: handled. Me: crying in the kitchen.")
+	return true
+
+## Day GALA_DAY morning: the gala invite (Committee thread + Madison's guest-list text).
+## Old saves that already have gala_unlocked keep it; saves past the day catch up on load.
+func check_gala_unlock(toast: bool = true) -> bool:
+	if gala_unlocked or day_count < GALA_DAY:
 		return false
 	gala_unlocked = true
-	text("gala", "gala", "Dear {hero}. Your net worth has crossed the threshold where we start pretending you exist. You are invited to THE ELITE GALA.")
+	text("gala", "gala", "Dear {hero}. A seat opened up at THE ELITE GALA. Our intern mailed your invite by mistake. We honor our mistakes. Barely.")
 	text("gala", "gala", "Black tie. Our guests are eager to meet a 'self-made man.' None of them are. -- The Committee")
-	text("gala", "sys", "Tap 'Take the limo' when you're ready. Five fights, a heal between each. No phones inside.")
+	text("gala", "sys", "Tap 'Take the limo' when you're ready, any night till the month runs out. Five fights, a heal between each. No phones inside.")
 	text("madison", "madison", "babe the gala guest list leaked. FOUR of my exes are on it. they all got rich. how. we're going. i'm wearing the green dress")
 	unread["gala"] = true
+	unread["madison"] = true
 	ping_t = 2.0
-	if not achievements.has("Fully Funded"):
-		achievements.append("Fully Funded")
-	gain_happy(30.0)
-	_toast("*BZZT* {baby}'s fund hits $100k! Some unknown number's texting me...")
+	if toast:
+		_toast("*BZZT* Gold envelope under the door. THE ELITE GALA. Some unknown number's texting me...")
 	return true
+
+## Wake line for the invite morning.
+func gala_new_day() -> Array:
+	if not check_gala_unlock():
+		return []
+	return ["A gold envelope's under the door. THE ELITE GALA. {partner}'s already holding up the green dress. (P = phone: 'Take the limo' any night.)"]
 
 func start_gala(first: int = 0) -> void:
 	if not gala_unlocked or busy():
