@@ -13,6 +13,7 @@ extends Node2D
 ## bed?]; a bed (drone, crowd murmur) stops when the beat is skipped, one-shots ring out.
 const Cast: = preload("res://scripts/cast.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
+const GoreScript: = preload("res://scripts/ko_gore.gd")   # cartoon blood / spit / teeth (art rule H2)
 const SFX_DIR: = "res://assets/sfx/ko/"
 const SFX_CUES: = {
 	"slip": [[0.35, "whoosh", 0.0, false]],                     # Duff starts to slide at bt 0.4
@@ -42,6 +43,9 @@ var _cue: = 0                                # next SFX_CUES entry of this beat
 var _shots: Array = []                       # one-shot players
 var _bed: AudioStreamPlayer
 var played: Array = []                       # cue names in order (tests read this)
+var gore: Node2D = null                      # ko_gore.gd child, only while playing with "Cartoon gore" ON
+var fixed_seed: = -1                         # >= 0: use this seed (renders / tests repeat exactly)
+var _off: = Vector2.ZERO                     # screen shake offset this frame
 
 func _ready() -> void:
 	var f: = FileAccess.open("res://data/knockouts.json", FileAccess.READ)
@@ -69,9 +73,28 @@ func start(boss: String) -> void:
 	bt = 0.0
 	flash = 0.0
 	shake = 0.0
-	_seed = randi()
+	_seed = fixed_seed if fixed_seed >= 0 else randi()
 	_cue = 0
 	played.clear()
+	_drop_gore()
+	if gore_on():
+		gore = GoreScript.new()
+		gore.name = "Gore"
+		gore.seed_base = _seed
+		gore.impact = (data.get(kind, {}) as Dictionary).get("impact", {})
+		add_child(gore)
+
+## The "Cartoon gore" setting (Settings screen, saved in user://settings.json). Default ON.
+static func gore_on() -> bool:
+	if AudioScript.inst != null and is_instance_valid(AudioScript.inst):
+		return bool(AudioScript.inst.get("gore"))
+	return true
+
+func _drop_gore() -> void:
+	if gore != null and is_instance_valid(gore):
+		remove_child(gore)
+		gore.queue_free()
+	gore = null
 
 func playing() -> bool:
 	return kind != ""
@@ -96,6 +119,7 @@ func _next() -> void:
 		_bed.stop()
 	if beat >= BEATS.size():
 		kind = ""
+		_drop_gore()
 		if main and main.has_method("knockout_done"):
 			main.knockout_done()
 		return
@@ -135,7 +159,28 @@ func _process(d: float) -> void:
 			shake = 1.0
 	if bt >= _hold():
 		_next()
+	if not playing():
+		return
+	var rng: = RandomNumberGenerator.new()      # seeded shake: same bt, same frame
+	rng.seed = _seed + beat * 7919 + int(bt * 60.0)
+	_off = Vector2(rng.randf_range(-1, 1), rng.randf_range(-1, 1)) * shake * get_viewport_rect().size.y * 0.025
+	if gore != null:
+		var vp: = get_viewport_rect().size
+		gore.sync(BEATS[beat], bt, _stage(vp), _off)
 	queue_redraw()
+
+func _stage(vp: Vector2) -> Rect2:
+	return Rect2(0, vp.y * BAR, vp.x, vp.y * (0.77 - BAR))
+
+## Where the x-ray hit lands, as a share of the stage (data/knockouts.json "impact" override or default).
+func _impact_frac(b: String) -> Vector2:
+	var o: Variant = ((data.get(kind, {}) as Dictionary).get("impact", {}) as Dictionary).get(b, {})
+	var at: Variant = (o as Dictionary).get("at", null) if o is Dictionary else null
+	if at == null:
+		at = GoreScript.DEFAULTS[b]["at"][0]
+	if at is Array and (at as Array)[0] is Array:
+		at = (at as Array)[0]
+	return Vector2(float(at[0]), float(at[1]))
 
 # ---------------------------------------------------------------- sound
 
@@ -279,9 +324,8 @@ func _draw() -> void:
 	if not playing():
 		return
 	var vp: = get_viewport_rect().size
-	var off: = Vector2(randf_range(-1, 1), randf_range(-1, 1)) * shake * vp.y * 0.025
-	draw_set_transform(off, 0.0, Vector2.ONE)
-	var stage: = Rect2(0, vp.y * BAR, vp.x, vp.y * (0.77 - BAR))
+	draw_set_transform(_off, 0.0, Vector2.ONE)
+	var stage: = _stage(vp)
 	draw_rect(Rect2(Vector2.ZERO, vp), INK)
 	match BEATS[beat]:
 		"stance": _beat_stance(vp, stage)
@@ -358,7 +402,7 @@ func _beat_xray(vp: Vector2, stage: Rect2) -> void:
 		var rr: = Rect2(r.position + Vector2(r.size.x * 0.25, 0), Vector2(r.size.x * 0.5, r.size.y))
 		_fit(g[0], g[1], rr)
 		_glow_rect(Rect2(rr.position + Vector2(rr.size.x * 0.1, 0), Vector2(rr.size.x * 0.8, rr.size.y)))
-	var hit: = stage.position + stage.size * Vector2(0.56, 0.42)
+	var hit: = stage.position + stage.size * _impact_frac("xray")
 	var k: = clampf(bt / 0.25, 0.0, 1.0)
 	_cracks(hit, stage.size.y * 0.45 * k, Color(INK, 0.9), 6.0)
 	_cracks(hit, stage.size.y * 0.45 * k, Color(TEAL, 0.5), 2.0)

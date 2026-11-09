@@ -37,6 +37,9 @@ fi
 command -v xvfb-run >/dev/null || apt-get install -y -qq xvfb >/dev/null
 
 echo "== import"; godot --headless --path . --import >"$L/import.log" 2>&1
+# big HD art ships as lossy WebP (masters untouched); a 2nd import picks up brand-new drops
+python3 tools/set_lossy_imports.py | tee -a "$L/import.log" | grep -q " 0 .import" \
+  || godot --headless --path . --import >>"$L/import.log" 2>&1
 echo "== test_daily"; godot --headless --path . --script tools/test_daily.gd 2>&1 | tee "$L/test.log" | tail -1
 grep -q "ALL PASS" "$L/test.log" || { echo "TESTS FAILED"; exit 1; }
 echo "== smoke (600 frames)"; mkdir -p "$L/smoke"
