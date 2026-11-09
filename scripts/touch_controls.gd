@@ -9,6 +9,7 @@ signal s_pressed
 signal s_released
 signal swap_pressed
 signal d_pressed
+signal drawer_pressed
 
 const JOY_HOME: = Vector2(36, 142)
 const JOY_R: = 20.0
@@ -17,8 +18,8 @@ const BTN_B: = Vector2(272, 160)
 const BTN_R: = 11.0
 const BTN_G: = Vector2(306, 112)
 const BTN_G_R: = 7.0
-const BTN_P: = Vector2(109, 13)
-const BTN_P_R: = 10.0
+const BTN_P: = Vector2(195, 9)     # hud.gd layout()["phone"]
+const BTN_P_R: = 9.0
 const BTN_S: = Vector2(248, 148)
 const BTN_S_R: = 10.0
 const BTN_SW: = Vector2(240, 126)
@@ -57,6 +58,9 @@ func _input(e: InputEvent) -> void:
 			elif tp.distance_to(BTN_P) < BTN_P_R:
 				p_pressed.emit()
 				get_viewport().set_input_as_handled()
+			elif not dialog_open() and _on_hud(tp):
+				drawer_pressed.emit()
+				get_viewport().set_input_as_handled()
 			elif not dialog_open() and tp.distance_to(BTN_S) < BTN_S_R + 4.0:
 				s_idx = t.index
 				s_pressed.emit()
@@ -85,6 +89,15 @@ func _input(e: InputEvent) -> void:
 	if player:
 		player.joy_vec = joy_knob / JOY_R
 	queue_redraw()
+
+## Taps on the HUD's top strip (or the open drawer) toggle the detail drawer.
+func _on_hud(tp: Vector2) -> bool:
+	if m == null or m.get("hud") == null or not m.hud.visible:
+		return false
+	var L: Dictionary = m.hud.layout()
+	if (L["strip"] as Rect2).grow(2.0).has_point(tp):
+		return true
+	return bool(m.hud.drawer_open) and (L["drawer"] as Rect2).has_point(tp)
 
 func _demon_shown() -> bool:
 	return m != null and m.get("combat") != null and m.combat.demon_unlocked
