@@ -36,8 +36,10 @@ Any **HARD** rule failure is an automatic FIX or REDO.
   layout reference for the others.
 
 ## 3. Parody bosses (HARD)
-- **P1** Husk, Bozos, Fences, The Donald and Willnot have made-up human faces. No real person's likeness,
-  and no duck, TV or lightbulb heads. Those are Hazbin imitations and belong in the DLC.
+- **P1** Every boss has a made-up human face. No real person's likeness, and no duck, TV or lightbulb heads.
+  Those are Hazbin imitations and belong in the DLC. (Nov 9: the four billionaire parodies are retired to
+  `docs/dlc_concepts/billionaires/`; their slots are now Madison's gala exes Tyler Pivot, Grant Gratuity,
+  Landlord Lance and Chip Leverage, brief in `docs/gala_exes_art_brief.md`. No public figures anywhere.)
 
 ## 4. All HD art (portraits, boss intros, loading screens)
 - **H1 One house style.** Human characters in a bold Hazbin-like cartoon look, matched against
