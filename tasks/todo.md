@@ -8,6 +8,13 @@
   Jamference AI Game Jam, Epic AI MegaJam = Unreal only). Options: (a) release DuffQuest on itch as a normal game, no jam;
   (b) a short AI-friendly jam if one accepts existing games; (c) check whether Chaos Is the Mother of Order qualifies for the 2026 Jam.
 
+## Soak/perf findings (Nov 9, docs/qa/soak_report.md + perf_report.md) — DECISIONS FOR DUFF
+- [ ] **Gala is unreachable:** Octavia's fund can't hit $100k in 30 days, so all 5 gala bosses (incl. the new gala exes) are post-game in practice. Lower the gate (e.g. $10k or a story day) or move the gala into the 30 days.
+- [ ] **Happiness bars too strict:** a player who works every day but skips the evening shower + couch never meets the happiness gate for 4 of 5 story bosses and never sees Show & Tell. Teach the evening routine better or loosen the gates.
+- [ ] Untested by the soak bot: symphony date, bus pass / car purchase, stock trades.
+- [ ] First boot on 4G ~60 s: the 38 MB index.wasm dominates. Check whether itch serves it brotli/gzip (would be ~9 MB); else consider a custom stripped engine build.
+- Done: soak test `tools/soak.sh` (30 days x 6 seeds clean), web boot check `ship_itch.sh --web-check`, perf (-23..53% frame cost), auto Lite graphics, KO texture leak fixed.
+
 ## IGN-style critique fixes (Nov 9; Duff: "they're warranted")
 Score now ~6.5/10; target 7.5-8. Effort: S = hours (one agent), M = a day of agent time, L = multi-day / Canva-bound.
 - [ ] (S) **Willnot intro card bug:** `docs/renders/qa_boss_intro.png` shows a gameplay frame instead of his burst card. Verify + fix.
