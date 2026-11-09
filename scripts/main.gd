@@ -613,7 +613,7 @@ func new_game(write_save: bool = true) -> void:
 	daily_new_day()
 	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Heard.",
 		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
-		"Every Monday, rent and bills: $%d. Rent is due. Rent is always due. The Twisted Fork (bottom-right) needs a cook. They always need a cook." % (RENT + BILLS)])
+		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. The Twisted Fork (bottom-right) needs a cook. They always need a cook." % weekly_base()])
 	if write_save:
 		save_game()
 
