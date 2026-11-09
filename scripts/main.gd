@@ -26,6 +26,7 @@ const Market: = preload("res://scripts/market.gd")
 const PhoneScript: = preload("res://scripts/minigames/phone.gd")
 const EndingScript: = preload("res://scripts/minigames/ending.gd")
 const BossScript: = preload("res://scripts/boss.gd")
+const KnockoutScript: = preload("res://scripts/knockout.gd")
 const WaffleScript: = preload("res://scripts/waffle.gd")
 const Bounties: = preload("res://scripts/bounties.gd")
 const Errands: = preload("res://scripts/errands.gd")
@@ -303,6 +304,11 @@ var fund_happy_today: = 0.0
 var inspector_quip_t: = 0.0
 var inspector_pos: = Vector2.ZERO
 var dialog: Array[String] = []
+var ko_kind: = ""                           # boss knockout cutscene playing (knockout.gd, HD layer)
+var _ko_boss: Node = null                   # boss whose knockout already played
+var loading_req: = 0                        # bumped to ask loading_screen.gd for a loading screen
+var loading_on: = false                     # a loading screen is up
+var no_loading: = false                     # tools: skip loading screens
 var hint: = ""
 var toast: = ""
 var toast_t: = 0.0
@@ -769,7 +775,27 @@ static func ui_layer() -> CanvasLayer:
 	return l
 
 func busy() -> bool:
-	return in_title or in_shift or overlay_node != null
+	return in_title or in_shift or overlay_node != null or ko_kind != "" or loading_on
+
+## Loading screen (loading_screen.gd on the HD layer). Freezes the world until it's dismissed.
+func show_loading() -> void:
+	if no_loading:
+		return
+	loading_on = true
+	loading_req += 1
+	player.frozen = true
+	_sync_world()
+
+func loading_done() -> void:
+	loading_on = false
+	_sync_world()
+
+## Called by knockout.gd when the cutscene ends: run the normal defeat flow.
+func knockout_done() -> void:
+	ko_kind = ""
+	_sync_world()
+	if is_instance_valid(_ko_boss):
+		boss_defeated(_ko_boss)
 
 func open_overlay(node: Node) -> void:
 	close_overlay()
@@ -1260,6 +1286,7 @@ func _wake(energy_penalty: int) -> void:
 	_set_camera()
 	var lines: Array = night_report.duplicate()
 	lines.append("Day %d, %s. Coffee. Then everything else." % [day_count, DAY_NAMES[day_i % 7]])
+	show_loading()
 	lines.append_array(couch_lines)
 	lines.append_array(mood_new_day())
 	if couch_lines.is_empty():
@@ -1675,6 +1702,7 @@ func try_shift() -> void:
 func start_shift() -> void:
 	if in_shift:
 		return
+	show_loading()
 	in_shift = true
 	player.shoes = "black"
 	inspector_follow = false
@@ -2728,6 +2756,12 @@ func _spawn_boss() -> void:
 	_say([str(BossScript.BOSSES[b.kind]["intro"])])
 
 func boss_defeated(b: Node) -> void:
+	if b != _ko_boss and KnockoutScript.is_live(str(b.kind)):
+		_ko_boss = b                        # knockout cutscene first; knockout_done() comes back here
+		ko_kind = str(b.kind)
+		player.frozen = true
+		_sync_world()
+		return
 	if b == arena_boss and arena_boss != null:
 		match arena_mode:
 			"bounty": bounty_defeated(b)
@@ -2880,6 +2914,7 @@ func _on_story_menu(choice: String, id: String) -> void:
 func start_story_fight(id: String) -> void:
 	if busy():
 		return
+	show_loading()
 	clear_enemies()
 	arena_id = id
 	arena_mode = "story"
@@ -4299,6 +4334,7 @@ func _on_bounty_menu(id: String) -> void:
 func start_bounty(id: String) -> void:
 	if busy():
 		return
+	show_loading()
 	clear_enemies()
 	arena_id = "alley"
 	arena_mode = "bounty"
@@ -4391,6 +4427,7 @@ func waffle_menu() -> void:
 func start_waffle() -> void:
 	if busy():
 		return
+	show_loading()
 	clear_enemies()
 	arena_id = "waffle"
 	arena_mode = "waffle"

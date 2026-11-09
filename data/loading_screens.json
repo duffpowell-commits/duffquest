@@ -1,19 +1,61 @@
 {
-  "_doc": "Loading screens: art = assets/art/loading/<id>.png (16:9, Canva, Hazbin cartoon style). Caption = Duff at the bar, present tense, Palahniuk layer. Shown on new day / shift start / boss arena entry. Art pending full-size downloads from Canva (Nov 8).",
+  "_doc": "Loading screens: art = assets/art/loading/<id>.png (16:9, Canva, Hazbin cartoon style). Caption = Duff at the bar, present tense, Palahniuk layer. Shown on new day / shift start / boss arena entry. 12 of 14 in (Nov 8); cat_sacrifice regenerating; waffle_showoff = ChatGPT C7.",
   "screens": [
-    {"id": "fryer_nap", "caption": "Sleep is a rumor. I heard it once, back in 2019."},
-    {"id": "octavia_fund", "caption": "She's got no teeth and she runs my whole economy."},
-    {"id": "plasma_day", "caption": "I sell my blood twice a week. It buys me back a Tuesday."},
-    {"id": "one_trip", "caption": "Two trips is for people with nothing to prove."},
-    {"id": "regular_5am", "caption": "Earl doesn't drink coffee. Earl outlasts it."},
-    {"id": "witnesses", "caption": "Nobody saw anything. Everybody saw everything."},
-    {"id": "omaha_winter", "caption": "Nebraska has two seasons: the fight and the thaw."},
-    {"id": "goose_bet", "caption": "Brittany has twenty bucks on the goose."},
-    {"id": "brunch_atlas", "caption": "Sunday brunch. Two hundred people want eggs the way their mother never made them."},
-    {"id": "raccoon_break", "caption": "The raccoon and I split family meal. He has better benefits."},
-    {"id": "rent_slot", "caption": "I offer the landlord a jar of quarters and my whole heart. He takes the quarters."},
-    {"id": "first_word", "caption": "Her first word is '86.' I've never been prouder or more scared."},
-    {"id": "gym_spot", "caption": "{partner}'s ex spots me on bench. Neither of us says a word. That's the whole friendship."},
-    {"id": "waffle_showoff", "caption": "Me versus a waffle the size of a car. The waffle has the reach. I have the syrup."}
+    {
+      "id": "fryer_nap",
+      "caption": "Sleep is a rumor. I heard it once, back in 2019."
+    },
+    {
+      "id": "octavia_fund",
+      "caption": "She's got no teeth and she runs my whole economy."
+    },
+    {
+      "id": "plasma_day",
+      "caption": "I sell my blood twice a week. It buys me back a Tuesday."
+    },
+    {
+      "id": "one_trip",
+      "caption": "Two trips is for people with nothing to prove."
+    },
+    {
+      "id": "regular_5am",
+      "caption": "Earl doesn't drink coffee. Earl outlasts it."
+    },
+    {
+      "id": "witnesses",
+      "caption": "Nobody saw anything. Everybody saw everything."
+    },
+    {
+      "id": "omaha_winter",
+      "caption": "Nebraska has two seasons: the fight and the thaw."
+    },
+    {
+      "id": "goose_bet",
+      "caption": "Brittany has twenty bucks on the goose."
+    },
+    {
+      "id": "brunch_atlas",
+      "caption": "Sunday brunch. Two hundred people want eggs the way their mother never made them."
+    },
+    {
+      "id": "raccoon_break",
+      "caption": "The raccoon and I split family meal. He has better benefits."
+    },
+    {
+      "id": "rent_slot",
+      "caption": "I offer the landlord a jar of quarters and my whole heart. He takes the quarters."
+    },
+    {
+      "id": "cat_sacrifice",
+      "caption": "The cats bring {baby} an offering. She accepts it. I sleep with one eye open now."
+    },
+    {
+      "id": "gym_spot",
+      "caption": "{partner}'s ex spots me on bench. Neither of us says a word. That's the whole friendship."
+    },
+    {
+      "id": "waffle_showoff",
+      "caption": "Me versus a waffle the size of a car. The waffle has the reach. I have the syrup."
+    }
   ]
 }

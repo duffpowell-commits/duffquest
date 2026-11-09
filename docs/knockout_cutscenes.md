@@ -35,3 +35,10 @@ If Duff attaches the video files, re-time the beats below against them.
 driven by a beat table; effects in code (letterbox, slow-mo, shake, flash, speed lines, crack-line shader,
 stamp text). Hook: where a boss's HP hits 0, before the `defeat` line. Falls back to the current defeat
 flow if a boss has no `ko/` art yet.
+
+## Style-fusion prompt (Nov 8; worked first try on all 9 Gym Bro stills)
+Describe traits, never name the shows (names pull models toward copying those shows' characters).
+```
+STYLE: bold cartoon characters with thick tapered ink lines, angular shapes and flat cel shading (keep the faces from the attached portraits). Fight-impact rendering: hyper-detailed muscle anatomy drawn with dense black crack-line hatching on every muscle, popping veins, sweat beads flying; extreme low camera and foreshortening; manga-panel composition with diagonal borders and the subject breaking out of the panel edge; background replaced by radiating speed lines on one flat colour; a glowing teal rim-light outline around the figure. Duff moves like a relaxed martial artist: loose bouncing stance, weight on the back foot, lead hand low, half-lidded bored look and a slight smirk, one sudden snapping strike. Duff's frames use a smoky jazz-noir palette (navy, amber, cigarette grey); the boss is saturated neon. 1990s cel-anime film grain. No text, no letters.
+```
+Status: engine built; Gym Bro live (stills a/b/c + shared Duff x6 in `assets/art/ko/`). Next: A/B/C stills for the other 16, flip `"live": true` per boss.
