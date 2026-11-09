@@ -17,6 +17,12 @@ plus small spiked hoops, a calm flat stare.
 | `photo_left_hand_eye.jpg` | Back of the LEFT hand (red light) | the eye mandala + finger dots |
 | `photo_right_hand_script.jpg` | Back of the RIGHT hand (red light) | the blackletter hand script |
 | `photo_right_forearm_creature.jpg` | RIGHT forearm (red light) | the creature head (NOT a panther) |
+| `photo_left_shoulder_mandala_full.jpg` | LEFT arm, shoulder to forearm, best overall shot | **the truth** for the whole left sleeve layout |
+| `photo_left_shoulder_cap_closeup.jpg` | Shoulder-cap mandala close-up | petal mandala on the shoulder |
+| `photo_left_inner_arm_skull.jpg` | Inner LEFT upper arm | a grinning skull/teeth piece worked into the blackout |
+| `photo_left_forearm_star_mandala.jpg` | LEFT forearm, outer side | big star mandala on the forearm, eye at the wrist band |
+| `photo_left_arm_overhead.jpg` | LEFT arm from above | how the blackout reads at a distance |
+| `photo_left_hand_eye_daylight.jpg` | LEFT hand, daylight | the eye hand piece, true colours |
 | `photo_left_sleeve_forearm.jpg` | Duff's real LEFT arm, forearm to upper arm | **the truth** for the sleeve |
 | `photo_left_sleeve_elbow.jpg` | Duff's real LEFT arm, elbow mandala close-up | **the truth** for the elbow mandala |
 | `fox_duff_surf.jpg` | Fox-Duff, both arms, correct sides | layout: which piece goes where (both arms) |
@@ -30,7 +36,9 @@ black arm with pale geometric shapes. Draw it darker than the fox art does.
 
 ## TATTOOS (copy this block)
 Duff has full tattoo sleeves on BOTH arms:
-- LEFT arm, shoulder to wrist: a heavy blackout sacred-geometry sleeve — mostly solid black ink with skin-tone negative-space
+- LEFT arm, shoulder to wrist (layout from the Nov 9 photos): petal MANDALA on the shoulder cap; a thin skin line, then a big
+  FLOWER OF LIFE over the whole upper arm; a grinning SKULL with bared teeth on the inner upper arm; a petal mandala on the outer
+  elbow; a big STAR MANDALA on the outer forearm; an EYE inside the band at the wrist. All of it a heavy blackout sacred-geometry sleeve — mostly solid black ink with skin-tone negative-space
   designs: flower-of-life circles on the upper arm, a large petal mandala with a central eye on the outer elbow, chevron and
   triangle bands down the forearm.
 - Back of the LEFT hand: a large all-seeing eye inside a ring of sharp black triangles (a spiked sun/mandala) covering the whole
