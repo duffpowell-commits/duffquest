@@ -52,7 +52,8 @@
     "xray": "There's a nerve in the ribs called the intercostal. It's the one that holds your excuses. I hit it, and all of them come out at once.",
     "finisher": "Seen. Seen. Seen. Delivered.",
     "crowd": "{partner}: \"...Okay, that was kind of hot. Don't tell anyone I said that.\"",
-    "closer": "He types something. Deletes it. Types it again. Some guys never learn to hit send."
+    "closer": "He types something. Deletes it. Types it again. Some guys never learn to hit send.",
+    "live": true
   },
   "gymbro": {
     "move": "REST DAY",
@@ -71,16 +72,18 @@
     "xray": "The inner ear is three tiny bones and a lot of fluid. She's been drowning hers for years. One open palm and the room tilts for her.",
     "finisher": "Three. Two. One. Nothing drops harder than you.",
     "crowd": "Dolores: \"I've seen better sets at a funeral, sweetie.\"",
-    "closer": "She asks if the fight counts as exposure. It does. She's exposed."
+    "closer": "She asks if the fight counts as exposure. It does. She's exposed.",
+    "live": true
   },
   "crypto": {
     "move": "RUG PULL",
     "stance": "He's standing on a rug. He's always standing on a rug. I keep my feet on the tile. I keep my hands where he can't price them.",
-    "slip": "An NFT the size of a door comes at me. It has a monkey on it. I step aside and it hits nothing, which is exactly what it's worth.",
+    "slip": "An NFT the size of a door comes at me. It has a cartoon cat on it. I step aside and it hits nothing, which is exactly what it's worth.",
     "xray": "There's a ligament in the ankle that holds up a man's entire belief system. I sweep it. His whole portfolio leaves the ground.",
     "finisher": "Have fun staying solvent.",
     "crowd": "Earl: \"Back in my day we called that a pyramid. And a pyramid was a shape.\"",
-    "closer": "He says he's up spiritually. I'm up four bucks. One of us is right."
+    "closer": "He says he's up spiritually. I'm up four bucks. One of us is right.",
+    "live": true
   },
   "willnot": {
     "move": "NO SHOES",
@@ -98,7 +101,8 @@
     "xray": "An old man's heart is a fist that never unclenched. I don't hit it. I hit everything around it, so it can finally rest.",
     "finisher": "Order up. Hash browns, scattered, smothered, covered. And you, Earl. Plated.",
     "crowd": "Dolores: \"Thirty-one years. Nobody's ever plated Earl.\"",
-    "closer": "He sits back down. He tips. Exact change. And one piece of advice I'm still trying to understand."
+    "closer": "He sits back down. He tips. Exact change. And one piece of advice I'm still trying to understand.",
+    "live": true
   },
   "sendback": {
     "move": "EIGHTY-SIX",
@@ -107,7 +111,8 @@
     "xray": "The tongue has ten thousand taste buds. His only ever tasted complaints. One uppercut and he tastes something new. It's humility. It's medium rare.",
     "finisher": "Your order is eighty-sixed. Forever.",
     "crowd": "Dolores: \"Told you to stop sending it back, hon.\"",
-    "closer": "Five stars. Still no tip. Some things you can't beat out of a man. I try anyway, a little, in my heart."
+    "closer": "Five stars. Still no tip. Some things you can't beat out of a man. I try anyway, a little, in my heart.",
+    "live": true
   },
   "coupon": {
     "move": "BUY ONE GET ONE",

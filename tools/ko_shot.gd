@@ -55,10 +55,14 @@ func _process(_d: float) -> void:
 		m.no_loading = true
 		var ls: = _find(game, "res://scripts/loading_screen.gd")
 		ls._finish()
-		m.start_story_fight(id)
+		if id in ["ghoster", "gymbro", "djvape", "crypto", "willnot"]:
+			m.start_story_fight(id)
 	if frame == 250:
 		m.dialog.clear()
-		m.boss_defeated(m.arena_boss)
+		if m.arena_boss:
+			m.boss_defeated(m.arena_boss)
+		else:                                # bounty/waffle bosses: play the cutscene on its own
+			m.ko_kind = id
 		ko = _find(game, "res://scripts/knockout.gd")
 	if frame > 250 and ko and video:
 		if not ko.playing():
