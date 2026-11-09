@@ -1,4 +1,4 @@
-# DuffQuest — FULL HANDOFF (Nov 9, 2026, 13:40 CT)
+# DuffQuest — FULL HANDOFF (Nov 9, 2026, 14:45 CT)
 
 Standalone: a cold session needs only this file to pick up. Last commit at writing: see `git log -1`.
 Deeper references: `CLAUDE_REFERENCE.md` (stable facts), `CLAUDE.md` (history log, top bullets newest),
@@ -28,6 +28,13 @@ comic-panel knockout cutscenes. Godot 4.5, GDScript, landscape, 640x360 game + H
    `--web-check` boots it in headless Chrome as a phone.
 
 ## 3. State at handoff
+- **Nov 9 evening (QA milestone):** new-game intro now quotes the real weekly bill (`weekly_base()`, $195, was $150);
+  KO x-ray beat takes a per-boss `"b_anchor"` in `data/knockouts.json` (0 = keep the top of the still, default 0.5),
+  set to 0 for willnot + dasher so the jaw/face x-ray is no longer cut; their `impact` points moved to match.
+  Render: `docs/renders/ko_xray_crop_fix.png`.
+- **GitLab CI has never run a job:** every pipeline fails with "user not being verified" (0 jobs). Duff must verify his
+  GitLab account (gitlab.com, phone or card) before shared runners work. Nothing in the repo can fix it; tests run
+  locally via `tools/ship_itch.sh --no-push` instead.
 - **itch** https://dufftkyosht.itch.io/duff-quest — channel `html` has build **`532e95b`** (everything below).
 - **BLOCKER Duff must clear (dashboard, 1 min):** the page's Run-game embed plays OLD upload `20348255`
   `duffquest-web.zip` (manual, Nov 7). Butler updates upload `20362247` `duff-quest-html.zip`, which only shows in
@@ -63,8 +70,8 @@ comic-panel knockout cutscenes. Godot 4.5, GDScript, landscape, 640x360 game + H
    in town/fights. Make style-C 4x4 sheets (see how other `ch_*` sheets are cut; brief in `docs/gala_exes_art_brief.md`).
 3. **Balance (needs Duff's call):** players who skip the evening shower + couch never meet the happiness gates for
    4/5 story bosses (`docs/qa/soak_report.md`). Either teach the routine (prompt/toast) or loosen the gates.
-4. Optional art: reframe `assets/art/ko/willnot_b.jpg` (jaw cut by the engine's x-ray crop) and `dasher_b.jpg`, or loosen
-   the crop in `scripts/knockout.gd`. `data/loading_screens.json` lists `cat_sacrifice.jpg`, which doesn't exist.
+4. Optional art: `data/loading_screens.json` lists `cat_sacrifice.jpg`, which doesn't exist (skipped in game; needs a
+   style-C Canva image). (willnot/dasher KO crop: done Nov 9 evening via `b_anchor`.)
 5. First boot on 4G ~60 s: check whether itch serves `index.wasm` compressed (would be ~9 MB); else a custom stripped engine.
 6. M7: 16 more backgrounds, now in style C via Canva.
 7. Brittany playtest on iPhone; tune pacing (soak bot said gala/happiness balance; rent grind unknown by feel).
