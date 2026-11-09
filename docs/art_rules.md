@@ -46,7 +46,8 @@ Any **HARD** rule failure is an automatic FIX or REDO.
   lip, flying teeth, and bruises. Not allowed: dismemberment, exposed organs, or realistic wounds. The
   itch "2026 Jam" has no content rules beyond itch's own, so the itch page just gets a "blood/violence"
   content tag. Canva's filter blocks blood in generated images, so do NOT prompt for it. Blood gets
-  added in-engine instead: spit and blood particles in `knockout.gd` on the x-ray and finisher hits.
+  added in-engine instead: spit, blood and teeth in `scripts/ko_gore.gd` on the x-ray and finisher hits
+  (Settings "Cartoon gore" toggle, default ON).
   Missing blood is never a reason to fail an image.
 - **H3 Clean output.** Nothing cropped off the important parts, no watermark, no garbled fake text, no
   extra fingers or limbs.
