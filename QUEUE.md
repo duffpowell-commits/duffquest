@@ -18,6 +18,7 @@ Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into
 - M1 (Nov 8): Grok outfit sheets for Duff outdoors (10 sheets) + redrawn shades overlay.
 
 ## IDEAS
+- (Nov 9) Daily life layer (calendar, curveballs, weekends, weather, Falcor, bonds, shift shuffle + muscle memory): spec `docs/daily_life.md`, waiting on Duff's go. Time slots skipped (saved for future games).
 - (Nov 8) Place agent is redrawing: Waffle Haus sign, bus-stop sign, cats, extra lawn props, the outfit sheets. Import when handed over.
 - (Nov 8) Screen-shake on/off in settings (accessibility).
 - (Nov 8) Missing outfit art: `duff_dress`, dodge-roll sheets, `ch_duff_suit`.
