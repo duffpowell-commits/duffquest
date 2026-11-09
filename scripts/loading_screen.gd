@@ -64,6 +64,10 @@ func _process(d: float) -> void:
 			_finish()
 	queue_redraw()
 
+## True while the dark backing rect is fully opaque (game.gd then stops rendering the world under it).
+func covers_screen() -> bool:
+	return _t >= 0.0 and _tex != null and minf(_t / FADE, (HOLD - _t) / FADE) >= 0.5
+
 func _draw() -> void:
 	if _t < 0.0 or _tex == null:
 		return

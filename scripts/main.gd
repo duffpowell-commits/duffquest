@@ -310,6 +310,7 @@ var ko_kind: = ""                           # boss knockout cutscene playing (kn
 var _ko_boss: Node = null                   # boss whose knockout already played
 var loading_req: = 0                        # bumped to ask loading_screen.gd for a loading screen
 var loading_on: = false                     # a loading screen is up
+var _drawn_loc: = ""                        # location the world canvas was last drawn for
 var no_loading: = false                     # tools: skip loading screens
 var hint: = ""
 var toast: = ""
@@ -1667,6 +1668,9 @@ func _process(delta: float) -> void:
 	ping_t = maxf(0.0, ping_t - delta)
 	sigh_t = maxf(0.0, sigh_t - delta)
 	save_flash_t = maxf(0.0, save_flash_t - delta)
+	_update_world_cover()
+	if location != _drawn_loc:
+		queue_redraw()
 	if busy():
 		return
 	player.frozen = not dialog.is_empty()
@@ -2082,13 +2086,30 @@ func debug_station(k: String) -> void:
 	# Straight into the station (debug/QA): skip the NEXT STATION card M10's shuffle put in front of it.
 	shift._play({"key": k, "ctx": {"eighty_six": true, "steal": true } if k in ["sandwich", "salad"] else {} })
 
+## Only the place Duff is in gets drawn: town, home, gala and arena never share the screen (each
+## has its own camera limits), and one canvas item holding all four cost ~150 draw calls a frame
+## on phones. _process() redraws on a location change even while busy (perf, Nov 9).
 func _draw() -> void:
-	_draw_outside()
-	_draw_inside()
-	if gala_unlocked or location == "gala":
-		_draw_gala()
-	if location == "arena":
-		_draw_arena()
+	_drawn_loc = location
+	match location:
+		"home":
+			_draw_inside()
+		"gala":
+			_draw_gala()
+		"arena":
+			_draw_arena()
+		_:
+			_draw_outside()
+
+## An opaque full-screen menu/minigame (every minigame.gd overlay paints its whole 320x180 first)
+## hides the world: stop drawing it and its screen shader until the overlay closes. Looks identical.
+func _update_world_cover() -> void:
+	var cover: = overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
+	if visible == cover:
+		visible = not cover
+		var hd: = get_node_or_null("HD2DPresentation")
+		if hd:
+			hd.set_world_shown(not cover)
 
 func _draw_outside() -> void:
 	var f: = ThemeDB.fallback_font

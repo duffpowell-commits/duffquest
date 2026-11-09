@@ -20,6 +20,16 @@ func _setup() -> void:
 	add_button("mute", Rect2(148, 96, 164, 18), _mute_label(), KEY_M, Color("#6a4a96"))
 	add_button("clean", Rect2(148, 118, 164, 18), _clean_label(), KEY_C, Color("#3a6a5a"))
 	add_button("back", Rect2(110, 150, 100, 22), "Back", KEY_ESCAPE, Color("#a43a2c"))
+	if _guard():
+		add_button("gfx", Rect2(214, 150, 98, 22), _gfx_label(), KEY_G, Color("#3a5a8a"))
+
+## perf_guard.gd (game.gd's child): Lite graphics = no HD-2D screen shader / window lights, for slow phones.
+func _guard() -> Node:
+	return get_tree().root.find_child("PerfGuard", true, false) if is_inside_tree() else null
+
+func _gfx_label() -> String:
+	var g: = _guard()
+	return "Graphics: Lite" if g and g.low else "Graphics: Full"
 
 func _mute_label() -> String:
 	return "Sound: MUTED (tap to unmute)" if audio and audio.muted else "Sound: ON (tap to mute)"
@@ -55,6 +65,12 @@ func _on_button(id: String) -> void:
 			get_button("clean")["label"] = _clean_label()
 			AudioScript.sfx("select")
 			flash("Clean language ON. Heck yeah." if Cast.clean else "Clean language OFF. Hell yeah.", Color.WHITE, 1.0)
+		"gfx":
+			var g: = _guard()
+			if g:
+				g.force_low(not g.low, true)
+				get_button("gfx")["label"] = _gfx_label()
+				AudioScript.sfx("select")
 		"back": finish(1.0)
 
 func _set_from(bar: Rect2, p: Vector2, which: String) -> void:
