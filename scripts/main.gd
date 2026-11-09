@@ -78,7 +78,7 @@ const AUTO_DOORS: = ["home_door", "door_out", "shop", "fork", "pharmacy", "groce
 const AUTO_DOOR_R: = 9.0
 const AUTO_REARM_R: = 20.0
 const HOME_DOOR: = Vector2(95, 118)
-const SHOP_PT: = Vector2(535, 124)
+const SHOP_PT: = Vector2(557, 124)   # Kwik glass doors (Nov 9: was 535, left of the door art)
 const BUNS_POS: = SHOP_PT
 const ENSURE_POS: = Vector2(172, 212)
 const PHARM_R: = Rect2(345, 306, 76, 38)
@@ -138,7 +138,7 @@ const DEFEAT_LINES: = {
 	"hoa": "HOA enforcer goes down. His power was always just a laminated sheet. +$%d",
 	"hustler": "I bonk the hustler. The 'opportunity'? MLM essential oils. +$%d",
 	"pete": "Palm Beach Pete: 'My accountant will hear about this!' Drops $%d and a timeshare brochure.",
-	"drone": "I swat the delivery drone. The algorithm docks the driver anyway. +$%d",
+	"drone": "I swat a tip drone. It still takes its thirty percent. +$%d",
 	"butler": "I bonk the butler. He unionizes on the spot and tips me $%d.",
 	"nft": "NFT bonked. Floor price: $%d. Roadmap: also the floor.",
 	"pirate": "Porch pirate goes down. Shoulda got a real job, like gig work. Oh wait. +$%d",
@@ -2177,11 +2177,11 @@ const HIT_LINES: = {
 	"firework": "Sparkler'd. Very festive. Very ouch.",
 	"pete": "Pete body-slams me. Smells like sunscreen he didn't use and a boat he didn't pay off.",
 	"karen": "Karen jabs me with her phone. She's going live.", "hoa": "Bonked with bylaw 4.2.c: 'No joy.'",
-	"post": "Hit by a hot take. 400k likes, zero facts.", "rocket": "Rocket strike! A 'rapid unscheduled disassembly.' Of me.",
-	"drone": "Drone-delivered to the face. Left a review: one star.", "laser": "Blinded by the belt buckle!", "bsod": "", "update": "",
+	"post": "Hit by a hot take. 400k likes, zero facts.", "rocket": "A sponsored e-scooter lands on me. Use code TYLER for 10% off my spine.",
+	"drone": "Tip drone to the face. It asks how my experience was.", "laser": "Blinded by a tip screen. Suggested: 30%.", "bsod": "", "update": "",
 	"butler": "A butler pummels me. He's paid $9 an hour to do it. Respect.", "coin": "Pelted with gold coins. First money's trickled down in years.",
-	"tariff": "TARIFF'D. My face now costs 25% more and I'm the one paying.", "tariff_bit": "Shrapnel from a tariff.", "wall": "Bonked by a beautiful wall.",
-	"boss": "Body-checked by a billionaire. Classic. They never touch anything they can't buy.",
+	"tariff": "Cost-cut. Right in the ribs. They're 'lean' now.", "tariff_bit": "Shrapnel from a restructuring.", "wall": "Bonked by a wall of NDAs. Can't say how much it hurt.",
+	"boss": "Body-checked by a boss. Classic. They never touch anything they can't buy.",
 	"seen": "Left on read. Stings worse than a fryer burn.", "dumbbell": "Dumbbell to the dome. Bro.", "charge": "Bro-charged! He didn't even warm up.",
 	"bass": "", "vape": "Mango ice cloud. Hacking up a lung. Sponsored content.", "rug": "RUG PULLED! I hit the floor. My portfolio's right there with me.",
 	"bullet": "Bullet spray! Mostly noise, but OW. Damn.", "nft": "Bitten by an NFT. It's worth less than the bite.",
@@ -2671,7 +2671,7 @@ func open_phone(scr: String = "home") -> void:
 	if busy() or not dialog.is_empty():
 		return
 	if location == "gala":
-		_toast("Security takes my phone. 'Only billionaires may post, sir.'")
+		_toast("Security takes my phone. 'Only donors may post, sir.' Tyler is posting. Tyler is always posting.")
 		return
 	if location == "arena":
 		_toast("No time to text. Kinda in a boss fight here.")
@@ -2791,6 +2791,7 @@ func check_gala_unlock() -> bool:
 	text("gala", "gala", "Dear {hero}. Your net worth has crossed the threshold where we start pretending you exist. You are invited to THE ELITE GALA.")
 	text("gala", "gala", "Black tie. Our guests are eager to meet a 'self-made man.' None of them are. -- The Committee")
 	text("gala", "sys", "Tap 'Take the limo' when you're ready. Five fights, a heal between each. No phones inside.")
+	text("madison", "madison", "babe the gala guest list leaked. FOUR of my exes are on it. they all got rich. how. we're going. i'm wearing the green dress")
 	unread["gala"] = true
 	ping_t = 2.0
 	if not achievements.has("Fully Funded"):
@@ -2808,7 +2809,7 @@ func start_gala(first: int = 0) -> void:
 	_set_camera()
 	energy = 100.0
 	gala_stage = first
-	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "Five billionaires. One line cook. Alright. Heard. Let's fucking cook."])
+	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. Charity thing. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "{partner} reads the guest list and goes pale. Four of the names are her exes. All four 'made it.'", "{partner}: Babe. I am SO sorry. In advance. For all of them.", "Four exes. One rich host. One line cook. Alright. Heard. Let's fucking cook."])
 	_spawn_boss()
 	_sync_world()
 
@@ -2820,7 +2821,8 @@ func _spawn_boss() -> void:
 	add_child(b)
 	gala_boss = b
 	b.set_physics_process(not busy())
-	_say([str(BossScript.BOSSES[b.kind]["intro"])])
+	var setup: = str(BossScript.BOSSES[b.kind].get("setup", ""))       # {partner} reacts to her ex first
+	_say(([setup] if setup != "" else []) + [str(BossScript.BOSSES[b.kind]["intro"])])
 
 func boss_defeated(b: Node) -> void:
 	if b != _ko_boss and KnockoutScript.is_live(str(b.kind)):
@@ -2856,7 +2858,7 @@ func gala_win(line: String) -> void:
 	var first: = not gala_beaten
 	gala_beaten = true
 	gala_runs += 1
-	var lines: Array = [line, "I clear THE ELITE GALA. The billionaires flee to their New Zealand bunkers. Don't let the door hit ya."]
+	var lines: Array = [line, "I clear THE ELITE GALA. Her exes fight over the valet. {gala_ex_1} is still streaming it."]
 	if first:
 		for id in ["golden_spatula", "trust_fund"]:
 			if not Gear.owns(gear, id):
@@ -2870,7 +2872,7 @@ func gala_win(line: String) -> void:
 		money += 250
 		gear["scraps"] = int(gear["scraps"]) + 10
 		lines.append("Rematch bonus: +$250 in loose cufflinks and +10 scrap. Still more than their tax rate.")
-	lines.append("{partner}: You beat up billionaires?? ...Put the spatula in the dishwasher.")
+	lines.append("{partner}: You beat up FOUR of my exes in one night?? ...Put the spatula in the dishwasher.")
 	apply_gear()
 	_leave_gala()
 	_say(lines)

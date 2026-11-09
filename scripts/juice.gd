@@ -18,6 +18,9 @@ var _trauma: = 0.0
 var _shake_px: = 0.0
 var _last_us: = 0
 var enabled: = true
+## Settings > Screen shake (accessibility, Nov 9). Saved as `screen_shake` in user://settings.json by audio.gd.
+## Off = no camera shake / zoom punch; hit-stop and sparks stay.
+static var shake_on: = true
 var _base_zoom: = Vector2.ONE
 var _shaking: = false
 
@@ -56,7 +59,7 @@ func hitstop(sec: float) -> void:
 	Engine.time_scale = STOP_SCALE
 
 func shake(px: float) -> void:
-	if not enabled:
+	if not enabled or not shake_on:
 		return
 	_shake_px = maxf(_shake_px * _trauma, px)
 	_trauma = 1.0

@@ -21,7 +21,7 @@ func _splash(boss: String) -> Texture2D:
 	var key: = "intro_" + boss
 	if not _tex.has(key):
 		var p: = "res://assets/art/boss_intro/%s.png" % boss
-		_tex[key] = load(p) if ResourceLoader.exists(p) else null
+		_tex[key] = load(p) if Art.has_intro_card(boss) else null
 	return _tex[key]
 
 ## Boss intro card: Place's full-bleed "burst" card (Duff's pick, Nov 8) fills the screen and slides
