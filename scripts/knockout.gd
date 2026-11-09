@@ -76,6 +76,11 @@ func start(boss: String) -> void:
 func playing() -> bool:
 	return kind != ""
 
+## The cutscene paints the whole screen ink first (shake can bare a few px at one edge, which then
+## show the frozen world's last frame: the world is paused during the cutscene anyway).
+func covers_screen() -> bool:
+	return playing()
+
 func _text(key: String) -> String:
 	return Cast.T(str((data.get(kind, {}) as Dictionary).get(key, "")))
 
