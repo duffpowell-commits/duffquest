@@ -60,4 +60,4 @@ upper arm and a darker forearm patch with an orange fleck; a dark mark on the le
 
 Photos win over the fox art wherever they disagree.
 
-**Check on every Duff image:** both arms inked, sleeve on the LEFT arm, panther on the RIGHT forearm.
+**Check on every Duff image:** run the D1-D7 checklist in `docs/art_rules.md` (buff, blackout sleeve on the LEFT arm, creature head (not a panther) on the RIGHT forearm, both hand tattoos, fox on the left side of the neck).
