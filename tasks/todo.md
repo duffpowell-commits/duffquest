@@ -1,16 +1,17 @@
 # Duff Quest — todo
 
 ## JAM PUSH (Nov 9 → Dec 28; itch "2026 Jam" closes Dec 31). Entry: DuffQuest + Chaos if we bust ass.
-- [ ] **Upload the updated build to itch** (`dufftkyosht.itch.io/duff-quest`). Fastest: Duff makes a butler API key
+- [x] **Upload the updated build to itch** (Nov 9: `7cd1f78` live via butler, key in `.env`) (`dufftkyosht.itch.io/duff-quest`). Fastest: Duff makes a butler API key
       (itch.io → Settings → API keys), pastes it once, Claude pushes with butler from the sandbox (itch API reachable,
       tested Nov 9). Key lives only in a temp env var, never in the repo. Fallback: phone upload, `docs/itch_deploy.md`.
-- [ ] Rebuild the web zip AFTER the art fixes + KO sfx land (zip from 06:51 Nov 9 = commit dc217e1, stale).
+- [x] Rebuild the web zip AFTER the art fixes + KO sfx land (zip from 06:51 Nov 9 = commit dc217e1, stale).
 - [ ] Submit DuffQuest to the 2026 Jam once the itch page is current; keep pushing updates until Dec 28.
 - [ ] Itch page: screenshots, GIF, controls, AI-use disclosure, content tag (cartoon blood/violence).
 - [ ] Shrink the web build (90 MB zipped; mostly KO/loading JPGs) — try q80 + 1024w for loading screens.
-- [ ] Art fixes from `docs/reviews/*.md` (Canva agent running Nov 9): 19 KO stills, loading screens, crypto/fences cards, octavia/bdaydad portraits.
-- [ ] Duff sprite tattoos via `tools/tattoo_sprites.py` (pixel recolor agent running Nov 9).
-- [ ] KO sfx + stat screen overflow fix (agent running Nov 9) — review, test, commit.
+- [x] Art fixes from `docs/reviews/*.md` (Canva agent running Nov 9): 19 KO stills, loading screens, crypto/fences cards, octavia/bdaydad portraits.
+- [x] Duff sprite tattoos via `tools/tattoo_sprites.py` (pixel recolor agent running Nov 9).
+- [x] KO sfx + stat screen overflow fix (agent running Nov 9) — review, test, commit.
+- [ ] Title screen `bg_title.png`: Duff has bare arms, tattoo him (D1-D7).
 - [ ] In-engine cartoon blood/spit/teeth particles on KO x-ray + finisher hits (art rule H2).
 - [ ] KO stills for the last 6 bosses: coupon, allergy, camper, bdaydad, dasher, baron.
 - [ ] Restyle 21 old chibi sprite sheets (see `docs/reviews/loading_sprites.md`).
