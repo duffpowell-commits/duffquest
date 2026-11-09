@@ -55,6 +55,11 @@ lightbulb head, handgun duct-taped to his back. Step 1: 3-expression face sheets
 portraits_hd, boss_intro cards, ch_ sheets, then ko stills. Batch 1 ko stills (ghoster, djvape, crypto,
 sendback, regular) generated, waiting on full-size downloads.
 
+> **SUPERSEDED Nov 9 (gala exes):** husk/bozos/fences/donald are no longer billionaire parodies. They are
+> Madison's exes Tyler Pivot, Grant Gratuity, Landlord Lance and Chip Leverage (cast tokens gala_ex_1..4).
+> New scripts are in `data/knockouts.json` with `"live": false` until new stills exist; art brief
+> `docs/gala_exes_art_brief.md`; old art + scripts in `docs/dlc_concepts/billionaires/`.
+
 Nov 9 (M13): husk, bozos, fences, donald, willnot live (11 of 17). Left: coupon, allergy, camper, bdaydad, dasher, baron.
 B-still prompt = ref `ghoster_b` + face sheet; it copies Ghoster's face into the bottom-middle panel unless fixed by an edit.
 
