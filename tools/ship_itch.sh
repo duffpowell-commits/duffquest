@@ -11,7 +11,7 @@ if ! command -v godot >/dev/null; then
   curl -sSL -o "$T/godot.zip" "https://github.com/godotengine/godot/releases/download/$GV/Godot_v${GV}_linux.x86_64.zip"
   unzip -qo "$T/godot.zip" -d "$T" && ln -sf "$T/Godot_v${GV}_linux.x86_64" /usr/local/bin/godot
 fi
-TPL=~/.local/share/godot/export_templates/${GV/-/.}
+TPL=${XDG_DATA_HOME:-$HOME/.local/share}/godot/export_templates/${GV/-/.}
 if [ ! -f "$TPL/web_nothreads_release.zip" ]; then
   curl -sSL -o "$T/tpl.tpz" "https://github.com/godotengine/godot/releases/download/$GV/Godot_v${GV}_export_templates.tpz"
   mkdir -p "$TPL" && unzip -qo -j "$T/tpl.tpz" 'templates/web*' -d "$TPL"
