@@ -1,5 +1,5 @@
 {
-  "_doc": "Boss knockout cutscenes (Baki x Spike Spiegel, narrated Palahniuk). Beats run in order: stance -> slip -> xray -> finisher -> crowd -> closer. Narration is Duff at the bar, present tense (docs/voice.md). 'crowd' is a speaker-labelled line (gets that NPC's portrait). Boss defeat line from boss.gd plays after 'closer'. Keep {tokens}. See docs/knockout_cutscenes.md.",
+  "_doc": "Boss knockout cutscenes (Baki x Spike Spiegel, narrated Palahniuk). Beats run in order: stance -> slip -> xray -> finisher -> crowd -> closer. Narration is Duff at the bar, present tense (docs/voice.md). 'crowd' is a speaker-labelled line (gets that NPC's portrait). Boss defeat line from boss.gd plays after 'closer'. Keep {tokens}. See docs/knockout_cutscenes.md. \"live\": true = plays in game (pilot: gymbro).",
   "husk": {
     "move": "SHIFT CHANGE",
     "stance": "He's streaming this to two hundred million people. My audience is a fryer and a guy named Hector. I bounce on my heels. I wave him in. Two fingers.",
@@ -61,7 +61,8 @@
     "xray": "Fun fact: a bicep is just a tendon with a marketing budget. Mine finds the tendon. It snaps like a ticket off the rail.",
     "finisher": "You train for mirrors. I train for Saturday brunch. Brunch has never once skipped leg day.",
     "crowd": "Brittany: \"PAY ME. Everybody who bet on the abs, PAY ME.\"",
-    "closer": "He's crying. Not from pain. From missing a post. I let him have it. Grief is a muscle too."
+    "closer": "He's crying. Not from pain. From missing a post. I let him have it. Grief is a muscle too.",
+    "live": true
   },
   "djvape": {
     "move": "BASS DROP",

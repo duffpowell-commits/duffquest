@@ -28,3 +28,8 @@ func _ready() -> void:
 	overlay.main = main
 	overlay.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	layer.add_child(overlay)
+	for path in ["res://scripts/loading_screen.gd", "res://scripts/knockout.gd"]:   # above the portraits
+		var n: Node2D = load(path).new()
+		n.main = main
+		n.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		layer.add_child(n)

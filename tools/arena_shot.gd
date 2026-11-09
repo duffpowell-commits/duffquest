@@ -37,6 +37,7 @@ func _process(_d: float) -> void:
 		m = game.get_child(0).get_child(0).get_child(0)
 		m.close_overlay()
 		m.dialog.clear()
+		m.no_loading = true
 		if id.begins_with("at:"):  # at:X,Y = stand Duff at that outdoor world point
 			var xy: = id.substr(3).split(",")
 			if m.location != "outside":
