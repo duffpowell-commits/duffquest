@@ -126,7 +126,8 @@
     "xray": "There's a muscle in the forearm called the flexor. It's the one that clips. Hers is the size of a ham. I tap it, and her whole hand forgets coupons exist.",
     "finisher": "The first one's full price. The second one's free.",
     "crowd": "Brittany: \"She's got a coupon for the ambulance. Duff. She has a coupon for the AMBULANCE.\"",
-    "closer": "She asks if there's a coupon for this. There isn't. There never is for the things that hurt."
+    "closer": "She asks if there's a coupon for this. There isn't. There never is for the things that hurt.",
+    "live": true
   },
   "allergy": {
     "move": "CROSS-CONTAMINATION",
