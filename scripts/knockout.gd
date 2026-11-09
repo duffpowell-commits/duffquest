@@ -119,6 +119,11 @@ func _next() -> void:
 		_bed.stop()
 	if beat >= BEATS.size():
 		kind = ""
+		# drop this boss's 1280x720 stills (~3.7 MB of texture memory each, ~6 per cutscene):
+		# kept forever they pile up past what iPhone Safari allows a tab. Sounds stay cached.
+		for k in _tex.keys():
+			if str(k).ends_with(".jpg") or str(k).ends_with(".png"):
+				_tex.erase(k)
 		_drop_gore()
 		if main and main.has_method("knockout_done"):
 			main.knockout_done()

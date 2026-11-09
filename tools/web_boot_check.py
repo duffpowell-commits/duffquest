@@ -33,6 +33,9 @@ NETS = {  # Chrome DevTools presets (bytes/s, ms)
     "fast4g": dict(downloadThroughput=9e6 / 8, uploadThroughput=1.5e6 / 8, latency=60),
     "slow4g": dict(downloadThroughput=1.6e6 / 8, uploadThroughput=0.75e6 / 8, latency=150),
 }
+# Emscripten prints these via console.error every 10 s while index.wasm is still downloading
+# (slow networks). Not errors; logged as "benign" instead of failing the check.
+BENIGN = ("still waiting on run dependencies", "dependency: wasm-instantiate", "(end of list)")
 # Points in the 320x180 UI space (main.UI_SCALE = 2 on the 640x360 game).
 NEW_GAME = (55, 162)      # card.gd: first of 3 buttons on the bottom row (no save -> New Game)
 BTN_A = (296, 140)        # touch_controls.gd
@@ -77,7 +80,7 @@ def main():
     sizes = {f: os.path.getsize(os.path.join(WEB, f)) for f in os.listdir(WEB)}
     httpd = serve(WEB)
     url = "http://127.0.0.1:%d/index.html%s" % (httpd.server_address[1], ("#" + a.hash) if a.hash else "")
-    errors, warnings, log = [], [], []
+    errors, warnings, benign, log = [], [], [], []
     res = {"url": url, "bytes": sum(sizes.values()), "files": sizes, "cpu_throttle": a.cpu, "net": a.net or "local"}
     ok = True
 
@@ -99,7 +102,9 @@ def main():
         def on_console(m):
             line = "[%s] %s" % (m.type, m.text)
             log.append(line)
-            if m.type == "error":
+            if m.type == "error" and any(b in m.text for b in BENIGN):
+                benign.append(m.text)
+            elif m.type == "error":
                 errors.append(m.text)
             elif m.type == "warning":
                 warnings.append(m.text)
@@ -198,7 +203,7 @@ def main():
                 print("screenshot:", os.path.relpath(a.shot, ROOT))
         browser.close()
     httpd.shutdown()
-    res.update(console_errors=errors, console_warnings=warnings)
+    res.update(console_errors=errors, console_warnings=warnings, benign_emscripten=len(benign))
     for e in errors:
         print("CONSOLE ERROR:", e[:300])
     for w in warnings[:20]:
