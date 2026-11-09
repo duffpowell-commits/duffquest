@@ -47,6 +47,8 @@ var day_name: = "Friday"
 var auto: = false
 var force: Dictionary = {}
 var mode: = ""
+## Shift buttons allowed today (daily event); empty = all.
+var modes: Array = []
 var queue: Array = []
 var results: Array = []
 var events: Array = []
@@ -153,8 +155,13 @@ func start() -> void:
 		["Clock in. The Fork is a family (unpaid overtime). Grade sets pay: S = double, F = docked.",
 		"Full Shift: all 8 stations, new order every night. Quick Shift: 4 random ones. S a station once and you can autopilot it for a B.",
 		"Friday Night Rush: tickets pile on the rail. Chain good grades for a combo. Tips go to 'the pool' (Chef's boat)."],
-		[], "", [["full", "Full Shift (8)", KEY_1], ["quick", "Quick Shift (4)", KEY_2], ["rush", "Friday Night Rush", KEY_3], ["leave", "Never mind", KEY_ESCAPE]],
-		_on_menu)
+		[], "", menu_opts(), _on_menu)
+
+func menu_opts() -> Array:
+	var all: = [["full", "Full Shift (8)", KEY_1], ["quick", "Quick Shift (4)", KEY_2], ["rush", "Friday Night Rush", KEY_3]]
+	var out: Array = all.filter(func (o: Array) -> bool: return modes.is_empty() or str(o[0]) in modes)
+	out.append(["leave", "Never mind", KEY_ESCAPE])
+	return out
 
 func _on_menu(id: String) -> void:
 	if id == "leave":

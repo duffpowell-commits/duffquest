@@ -62,9 +62,73 @@ func _init() -> void:
 	print("%s (%d failed)" % ["ALL PASS" if fails == 0 else "FAILURES", fails])
 	quit(1 if fails > 0 else 0)
 
-## M11/M12 checks get added here.
-func _extra_checks(_main: Node) -> void:
-	pass
+const Daily: = preload("res://scripts/daily.gd")
+
+func _extra_checks(main: Node) -> void:
+	# calendar data
+	var days: Dictionary = Daily.calendar().get("days", {})
+	check("calendar has all 30 days", days.size() == 30)
+	var bad: = []
+	for k in days:
+		var e: Dictionary = days[k]
+		if str(e.get("card", "")) == "": bad.append(k)
+		for n in e.get("notes", []):
+			if not str(n.get("from", "")) in ["hero", "partner", "baby", "cat1", "cat2", "cat3"]: bad.append(k)
+	check("every day has a card, every note a known author %s" % str(bad), bad.is_empty())
+	check("day 10 is a headline (Falcor)", bool(Daily.entry(10).get("headline", false)) and Daily.entry(10).get("event") == "falcor")
+	check("no calendar past the month", Daily.entry(31).is_empty())
+	check("day 31 is December 1", Daily.month_name(31) == "DECEMBER" and Daily.day_of_month(31) == 1)
+	# events
+	var ids: = {}
+	for e in Daily.events_data().get("events", []):
+		ids[str(e["id"])] = str(e.get("pool", ""))
+	check("event ids unique and pooled", ids.size() == Daily.events_data()["events"].size() and not ids.values().has(""))
+	check("headline day rolls no event", Daily.roll(10, 6, [], 5, 123) == "")
+	check("roll is deterministic", Daily.roll(5, 1, [], 0, 77) == Daily.roll(5, 1, [], 0, 77))
+	var weekend_ok: = true
+	var repeat_ok: = true
+	var beaten_ok: = true
+	var hits: = 0
+	for sd in 400:
+		var id: = Daily.roll(5 + sd % 20, 5, [], 0, sd)
+		if id != "":
+			hits += 1
+			if ids[id] != "weekend": weekend_ok = false
+		var id2: = Daily.roll(4, 1, ["inspector", "ice"], 0, sd)
+		if id2 in ["inspector", "ice"]: repeat_ok = false
+		if Daily.roll(4, 1, [], 0, sd) == "boss_tips": beaten_ok = false
+	check("weekend rolls only weekend events", weekend_ok)
+	check("recent events don't repeat", repeat_ok)
+	check("boss_tips needs a beaten boss", beaten_ok)
+	check("roughly 75%% of mornings get an event (%d/400)" % hits, hits > 240 and hits < 360)
+	check("no_repeat list capped", Daily.remember(["a", "b", "c", "d", "e"], "f") == ["b", "c", "d", "e", "f"])
+	check("short_staffed = full shift only, x1.5", Daily.shift_modes("short_staffed") == ["full"] and Daily.shift_pay("short_staffed") == 1.5)
+	check("quiet day = no modifiers", Daily.shift_pay("") == 1.0 and Daily.walk("") == 1.0 and Daily.spawn("") == 1.0)
+	# main wiring
+	main.day_count = 4
+	main.day_i = 7
+	main.daily = Daily.new_state()
+	main.daily_new_day()
+	check("morning roll stamps today", int(main.daily["day"]) == 4)
+	main.daily = {"day": 4, "id": "ice", "recent": ["ice"], "falcor": ""}
+	check("today_event reads today's id", main.today_event() == "ice")
+	check("ice counts as the headline (bill roll waits)", main.daily_headline())
+	main.apply_gear()
+	check("ice slows walking", main.player.speed_mult < 0.9)
+	main.day_count = 5
+	check("yesterday's event expires", main.today_event() == "")
+	main.daily = {"day": 5, "id": "", "recent": [], "falcor": ""}
+	main.day_count = 2
+	main.daily = {"day": 2, "id": "lazy", "recent": [], "falcor": ""}
+	var d: Dictionary = main.to_dict()
+	main.daily = Daily.new_state()
+	main.from_dict(JSON.parse_string(JSON.stringify(d)))
+	check("daily state survives save/load", main.today_event() == "lazy")
+	var sh: Node = Shift.new()
+	sh.modes = ["quick"]
+	var opts: Array = sh.menu_opts()
+	check("sick day menu = Quick + Never mind", opts.size() == 2 and opts[0][0] == "quick")
+	sh.free()
 
 class FakeMain extends Node:
 	var station_best: Dictionary = {}

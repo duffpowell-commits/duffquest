@@ -9,6 +9,7 @@ const IsoTest: = preload("res://scripts/iso/iso_test.gd")
 const Ground: = preload("res://scripts/ground.gd")
 const Dressing: = preload("res://scripts/dressing.gd")
 const ShiftScript: = preload("res://scripts/shift.gd")
+const Daily: = preload("res://scripts/daily.gd")
 const CatScript: = preload("res://scripts/cat.gd")
 const SaveGame: = preload("res://scripts/save_game.gd")
 const Cast: = preload("res://scripts/cast.gd")
@@ -157,6 +158,7 @@ const BED_PT: = Vector2(30, 530)
 const CRIB_PT: = Vector2(91, 518)
 const SHOWER_PT: = Vector2(290, 532)
 const KITCHEN_PT: = Vector2(200, 528)
+const FRIDGE_PT: = Vector2(131, 515)
 const COUCH_PT: = Vector2(56, 566)
 const BOWLS_PT: = Vector2(144, 588)
 const FREYA_PT: = Vector2(72, 526)
@@ -342,6 +344,11 @@ var waffle_node: Node = null
 var bet: = {"day": -1, "won": 0, "lost": 0 }
 ## Best grade ever per shift station ("fryer": "S"). An S unlocks Autopilot (B) for that station.
 var station_best: Dictionary = {}
+## Daily life (scripts/daily.gd): today's random event id, no-repeat list, Falcor thread state.
+var daily: Dictionary = Daily.new_state()
+var calendar_req: = 0                       # bumped to ask fridge_calendar.gd to show the month
+var calendar_on: = false                    # fridge calendar is up (world frozen)
+var calendar_pending: = false               # show it once the morning loading screen is gone
 var door_armed: = {}
 var door_loc: = ""
 var bet_kind: = ""
@@ -584,6 +591,7 @@ func new_game(write_save: bool = true) -> void:
 	market = Market.new_state(randi())
 	jen_text_daily()
 	errand_new_day()
+	daily_new_day()
 	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Heard.",
 		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
 		"Every Monday, rent and bills: $%d. Rent is due. Rent is always due. The Twisted Fork (bottom-right) needs a cook. They always need a cook." % (RENT + BILLS)])
@@ -596,7 +604,7 @@ func to_dict() -> Dictionary:
 		"day_i": day_i, "day_count": day_count, "clock": clock, "money": money, "energy": energy, "happiness": happiness,
 		"quest": quest, "quest_kind": quest_kind, "last_quest_kind": last_quest_kind, "inventory": inventory.duplicate(),
 		"leftovers": leftovers.duplicate(), "achievements": achievements.duplicate(), "fryer_smell": fryer_smell,
-		"shifts_worked": shifts_worked, "station_best": station_best.duplicate(), "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices,
+		"shifts_worked": shifts_worked, "station_best": station_best.duplicate(), "daily": daily.duplicate(true), "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices,
 		"cats_fed_day": cats_fed_day, "couch_day": couch_day, "crib_day": crib_day, "freya_trust": freya_trust,
 		"freya_treat_day": freya_treat_day, "inspector_follow": inspector_follow, "inspector_t": inspector_t,
 		"gear": gear.duplicate(true), "shades": shades, "wordle": wordle.duplicate(true), "wordle_seed": wordle_seed, "kills": kills.duplicate(),
@@ -660,6 +668,7 @@ func from_dict(d: Dictionary) -> void:
 	kills = {}
 	story = SaveGame.clean_story(d.get("story", {}))
 	bounties = Bounties.clean(d.get("bounties", {}))
+	daily = Daily.clean(d.get("daily", {}))
 	var sb = d.get("station_best", {})
 	station_best = sb.duplicate() if typeof(sb) == TYPE_DICTIONARY else {}
 	var bd = d.get("bet", {})
@@ -779,7 +788,7 @@ static func ui_layer() -> CanvasLayer:
 	return l
 
 func busy() -> bool:
-	return in_title or in_shift or overlay_node != null or ko_kind != "" or loading_on
+	return in_title or in_shift or overlay_node != null or ko_kind != "" or loading_on or calendar_on
 
 ## Loading screen (loading_screen.gd on the HD layer). Freezes the world until it's dismissed.
 func show_loading() -> void:
@@ -792,6 +801,22 @@ func show_loading() -> void:
 
 func loading_done() -> void:
 	loading_on = false
+	if calendar_pending:
+		calendar_pending = false
+		show_calendar()
+	_sync_world()
+
+## Fridge calendar (fridge_calendar.gd on the HD layer). Freezes the world until tapped away.
+func show_calendar() -> void:
+	if no_loading:
+		return
+	calendar_on = true
+	calendar_req += 1
+	player.frozen = true
+	_sync_world()
+
+func calendar_done() -> void:
+	calendar_on = false
 	_sync_world()
 
 ## Called by knockout.gd when the cutscene ends: run the normal defeat flow.
@@ -977,6 +1002,7 @@ func interactables() -> Array:
 			{"id": "crib", "pos": CRIB_PT, "r": 16.0, "label": "Check on {baby}" },
 			{"id": "shower", "pos": SHOWER_PT, "r": 18.0, "label": "Shower" },
 			{"id": "kitchen", "pos": KITCHEN_PT, "r": 20.0, "label": "Kitchen" },
+			{"id": "fridge", "pos": FRIDGE_PT, "r": 13.0, "label": "Fridge calendar" },
 			{"id": "couch", "pos": COUCH_PT, "r": 18.0, "label": "Couch time with {partner}" },
 			{"id": "backwalk", "pos": MAT_PT, "r": 14.0, "label": "Back walk from {partner} (SPEED)" },
 			{"id": "mirror", "pos": MIRROR_PT, "r": 13.0, "label": "Mirror (blackheads / cologne)" },
@@ -1035,6 +1061,7 @@ func interact(id: String) -> void:
 			AudioScript.sfx("hiss")
 			freya_menu()
 		"crib": check_crib()
+		"fridge": show_calendar()
 		"shower": shower()
 		"kitchen": kitchen()
 		"couch": couch_time()
@@ -1289,8 +1316,11 @@ func _wake(energy_penalty: int) -> void:
 	player.position = HOME_SPAWN
 	_set_camera()
 	var lines: Array = night_report.duplicate()
-	lines.append("Day %d, %s. Coffee. Then everything else." % [day_count, DAY_NAMES[day_i % 7]])
+	var card: = str(Daily.entry(day_count).get("card", ""))
+	lines.append("Day %d, %s. %s" % [day_count, DAY_NAMES[day_i % 7], card if card != "" else "Coffee. Then everything else."])
+	calendar_pending = not no_loading
 	show_loading()
+	lines.append_array(daily_new_day())
 	lines.append_array(couch_lines)
 	lines.append_array(mood_new_day())
 	if couch_lines.is_empty():
@@ -1701,6 +1731,9 @@ func try_shift() -> void:
 	if c >= 1320.0 or c < 360.0:
 		_say(["Fork's closed. Even Grill-Boy went home, and he lives in the walk-in. (Open 6 AM - 10 PM)"])
 		return
+	if Daily.is_weekend(day_i % 7):
+		_say(["It's the weekend. The schedule says I'm off. The Fork can lose money without me for once."])
+		return
 	start_shift()
 
 func start_shift() -> void:
@@ -1721,6 +1754,9 @@ func start_shift() -> void:
 	shift = ShiftScript.new()
 	shift.m = self
 	shift.day_name = DAY_NAMES[day_i % 7]
+	shift.modes = Daily.shift_modes(today_event())
+	if Daily.inspector(today_event()):
+		shift.force["inspector"] = true
 	shift.shift_over.connect(end_shift)
 	shift_layer.add_child(shift)
 	shift.start()
@@ -1749,6 +1785,9 @@ func record_station_bests(res: Array) -> void:
 
 func apply_shift_result(r: Dictionary) -> void:
 	AudioScript.sfx("cash")
+	var dmul: = Daily.shift_pay(today_event())
+	if dmul != 1.0:
+		r["total"] = int(round(int(r["total"]) * dmul))
 	money += int(r["total"])
 	var cha_tips: = charisma_tips(int(r.get("tips", 0)))
 	money += cha_tips
@@ -2148,6 +2187,7 @@ func apply_gear() -> void:
 		player.speed_mult *= Life.DRAIN_SPEED
 	player.roll_cd_len = (0.45 if asp in ["fast", "trust"] else 0.7) * combat.roll_mult()
 	player.speed_mult *= combat.speed_mult()
+	player.speed_mult *= Daily.walk(today_event())
 	player.combo_len = 4 if Gear.w_special(gear) in ["quick", "golden"] else 3
 	player.iframe_len = 1.2 if asp in ["goalie", "trust"] else 0.8
 
@@ -2249,7 +2289,7 @@ func spawn_cap() -> int:
 	return mini(6, 1 + day_count / 2) + (2 if phase() == "Night" else 0)
 
 func spawn_interval() -> float:
-	var base: = maxf(10.0, 28.0 - 2.0 * day_count)
+	var base: = maxf(10.0, 28.0 - 2.0 * day_count) / Daily.spawn(today_event())
 	match phase():
 		"Night": return base * 0.6
 		"Evening": return base * 0.8
@@ -4100,7 +4140,7 @@ func curveball_new_day() -> Array:
 		else:
 			keep.append(b)
 	bills = keep
-	var id: = Life.roll_event(day_count, wordle_seed, event_days, has_car) if life_events else ""
+	var id: = Life.roll_event(day_count, wordle_seed, event_days, has_car) if life_events and not daily_headline() else ""
 	if id != "":
 		out.append_array(deliver_curveball(id))
 	return out
@@ -4702,3 +4742,35 @@ func _auto_doors() -> void:
 			door_armed[id] = false
 			interact(id)
 			return
+
+
+# ---------------------------------------------------------------- daily life (docs/daily_life.md)
+
+## Today's random event id ("" if none or it's from another day).
+func today_event() -> String:
+	return str(daily["id"]) if int(daily["day"]) == day_count else ""
+
+## A calendar headline or a random event owns this morning (the bill roll waits).
+func daily_headline() -> bool:
+	return bool(Daily.entry(day_count).get("headline", false)) or today_event() != ""
+
+## Morning roll: pick today's event, apply its one-off effects, return lines for the wake report.
+func daily_new_day() -> Array:
+	if int(daily["day"]) == day_count:
+		return []
+	var id: = Daily.roll(day_count, day_i % 7, daily["recent"], (story["beaten"] as Array).size(), wordle_seed)
+	daily["day"] = day_count
+	daily["id"] = id
+	daily["recent"] = Daily.remember(daily["recent"], id)
+	var out: Array = []
+	if id == "":
+		return out
+	var e: = Daily.event(id)
+	energy = clampf(energy + float(e.get("energy", 0)), 1.0, 100.0)
+	if float(e.get("happy", 0)) != 0.0:
+		gain_happy(float(e.get("happy", 0)))
+	money += int(e.get("money", 0))
+	out.append(str(e.get("card", "")))
+	out.append("(%s)" % str(e.get("effect", "")))
+	apply_gear()
+	return out
