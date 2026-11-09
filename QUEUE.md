@@ -2,6 +2,7 @@
 Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into NOW.
 
 ## NOW
+- JAM PUSH (Nov 9): itch build current + art-rule fixes. See `tasks/todo.md` top section and `docs/HANDOFF_NOV9.md`.
 - M7: 19 backgrounds from Place (`grok_art/requests/REQUEST_M7_backdrops.md`). Done 3/19: home_interior, bg_kitchen, arena_gymbro (Gemini). Art now comes from Duff's Gemini app runs (Drive 97 folder). Next from Place: arena_alley, arena_waffle, gala. Wire each drop as it lands (see CLAUDE.md M7 drop 1).
 
 ## NEXT

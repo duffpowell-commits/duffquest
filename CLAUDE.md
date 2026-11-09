@@ -5,6 +5,7 @@ work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDSc
 landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
 
 ## Where things stand
+- **Nov 9 07:00: JAM PUSH.** Full handoff: `docs/HANDOFF_NOV9.md`. itch page `dufftkyosht.itch.io/duff-quest` runs a pre-Nov 7 build; upload a fresh one (butler key from Duff, or phone steps in `docs/itch_deploy.md`). Art rules: `docs/art_rules.md`; reviews: `docs/reviews/`.
 - **Nov 9 (M12): Falcor + Thanksgiving LIVE.** Falcor = the stray Madison feeds (`{stray}` in cast.json), never drawn. Notes on days 3/7/9/11/13. Day 10 wake opens the SUNDAY card (`FALCOR_LINES`, text approved by Duff, quiet `living_night` backdrop): Stay with her (+10 Happiness, morning gone) / Give her some space; saved in `daily.falcor`. Days 11-13: no fussy rolls, a soft wake line each day, Madison's bowl text on day 11. Day 28 Thanksgiving: Fork closed, Waffle Haus, +10 Happiness +20 Energy. Render `docs/renders/falcor_day.jpg` (`tools/wake_shot.tscn -- 9`). test_daily 43/43. **Tests must not touch the real save** (see tasks/lessons.md).
 - **Nov 9: DUFF HAS FULL TATTOO SLEEVES.** Every Duff prompt must include the TATTOOS block from `docs/duff_look.md` and attach
   the refs in `docs/ref/duff/` (Duff's real left-sleeve photos + fox-Duff art for placement). Until now prompts only said "fox neck
