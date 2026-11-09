@@ -18,7 +18,7 @@
     "finisher": "Tip status: delivered. One hundred percent. All of it, right here.",
     "crowd": "Dolores: \"Thirty years of tables. First tip I ever enjoyed watching.\"",
     "closer": "Tip status: refunded. He's on the carpet. I tuck a twenty in Dolores's apron. Somebody at this party should get tipped.",
-    "live": false
+    "live": true
   },
   "fences": {
     "move": "NOTICE TO QUIT",
