@@ -105,3 +105,24 @@ Data: all six had no `impact` override; added one per boss in `data/knockouts.js
 new contact points (checked in the gore render).
 K3: no leaked faces. K6: six different B layouts (sweep, uppercut, duck-under body shot, forearm tap, over-shoulder
 jab, knee).
+
+## Batch 5: bdaydad, dasher, baron, willnot KO a/b/c (the 4 gala-ex slots were already style C)
+
+husk, bozos, fences, donald a/b/c were made in style C earlier today (`docs/reviews/gala_exes_style_c.md`), so the
+order table is now fully converted. Renders: `docs/renders/style_c_convert_ko_late4.jpg`,
+`docs/renders/style_c_convert_ko_late4_gore.jpg`.
+
+| file | grade | notes |
+|---|---|---|
+| bdaydad_a / bdaydad_c | PASS | Cake overhead; KO in the collapsed lawn chair, cake hat, juice box. |
+| bdaydad_b | PASS | Low shin kick into the knee, knee-joint x-ray (K1). Floor hand = blackout + eye, far arm grey-wash + creature; fox on the viewer's right neck (his left) = correct. |
+| dasher_a | PASS (soft) | Pie grab out the door. Soft: a few red cherry drips off the pie could read as splatter at a glance (H2 nit). |
+| dasher_b | PASS after 1 fix | Stiff-arm across the collarbones. Try 1 put the x-ray on Duff's hand; edit moved it to the driver's two clavicles (K1). Blackout stiff arm, script on the hanging hand. A wider re-frame (to keep the hit out of the engine's top crop) made faces too small and was rejected (`rejected/rej_dasher_b_wide.png`); in-engine the hit sits near the top of the x-ray stage but reads. |
+| dasher_c | PASS | Pie tin hat, spiral eyes, knocked-off plain sneakers (no logos), no money. |
+| baron_a / baron_c | PASS | Coin flick with the champagne tower; KO bowing on the ballroom floor, monocle + watch. |
+| baron_b | PASS | Kidney hook from behind: lumbar spine + floating ribs x-ray (K1). Blackout + eye fist, grey-wash/creature arm with script hand. |
+| willnot_a | PASS | Barefoot glass charge, skyline sprinklers, holster empty. |
+| willnot_b | PASS after 1 fix (soft) | Uppercut, jaw/skull x-ray (K1). Try 1 had a pistol grip in the holster; edit emptied it. Soft: same as the old still, the jaw sits at the very top of the frame, so the engine's x-ray crop shows the fist and burst but cuts the head; the wide re-frame was rejected (faces too small). |
+| willnot_c | PASS after 1 fix | Spread-eagle on the glass. Try 1 drew a pistol on the floor; edit removed it. |
+
+Data: `impact.xray` overrides added for all four (none existed).
