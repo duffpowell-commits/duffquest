@@ -28,6 +28,9 @@ func _ready() -> void:
 func say(s: String, dur: float = 1.8) -> void:
 	line = s
 	line_t = dur
+	var bk: Variant = get_parent().get("barks") if get_parent() != null else null
+	if bk != null and not bk.admit(self):
+		line_t = 0.0   # rate-limited (scripts/barks.gd)
 
 func _physics_process(delta: float) -> void:
 	t += delta
@@ -83,8 +86,4 @@ func _draw() -> void:
 		draw_string(f, Vector2(-3, -10 - (1.4 - pet_t) * 6.0), "<3", HORIZONTAL_ALIGNMENT_LEFT, -1, 7, Color("#ff5fa2"))
 	if huff_t > 0.0:
 		draw_string(ThemeDB.fallback_font, Vector2(-4, -10), "!#", HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#ff7a3a"))
-	if line_t > 0.0 and line != "":
-		var f2: = ThemeDB.fallback_font
-		var sw: = f2.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x
-		draw_rect(Rect2(-sw / 2.0 - 2.0, -24, sw + 4.0, 9), Color(1, 1, 1, 0.9))
-		draw_string(f2, Vector2(-sw / 2.0, -17), line, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#222222"))
+	# speech bubble: drawn by main's Barks node (scripts/barks.gd)

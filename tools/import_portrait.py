@@ -5,7 +5,7 @@ transparent, equal-cell PNG sheet for the dialogue box.
 
 - background colour is read from the image corners (works for magenta, purple, green...)
 - JPG fringe: pixels close to the background become transparent; edge pixels get the background
-  tint pulled out (despill)
+  tint pulled out (despill); then tools/clean_halo.py clean() removes any green halo left on the edge
 - panels are found by empty background columns (equal slices if they touch), trimmed, and centred into equal square cells
   sharing one scale (so every expression has the same head size)
 Output: assets/art/portraits_hd/<name>.png  (N cells wide, 1 cell tall)
@@ -14,15 +14,18 @@ import argparse
 from pathlib import Path
 from PIL import Image
 
+from clean_halo import clean  # same folder: green-screen despill + 1 px fringe erode
+
 OUT = Path(__file__).resolve().parent.parent / "assets" / "art" / "portraits_hd"
 
 
-def keep_largest(img):
-    """Drop alpha islands other than the biggest one (stray hair from a neighbouring panel)."""
+def keep_largest(img, min_px=0):
+    """Drop alpha islands other than the biggest one (stray hair from a neighbouring panel).
+    min_px > 0: also keep every island at least that many pixels (detached props like a floating icon)."""
     w, h = img.size
     a = img.getchannel("A").load()
     seen = [[False] * w for _ in range(h)]
-    best = []
+    comps = []
     for sy in range(h):
         for sx in range(w):
             if seen[sy][sx] or a[sx, sy] == 0:
@@ -36,21 +39,24 @@ def keep_largest(img):
                     if 0 <= nx < w and 0 <= ny < h and not seen[ny][nx] and a[nx, ny] > 0:
                         seen[ny][nx] = True
                         stack.append((nx, ny))
-            if len(comp) > len(best):
-                best = comp
+            comps.append(comp)
+    comps.sort(key=len, reverse=True)
+    keep = comps[:1] + [c for c in comps[1:] if min_px and len(c) >= min_px]
     out = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     src, dst = img.load(), out.load()
-    for x, y in best:
-        dst[x, y] = src[x, y]
+    for comp in keep:
+        for x, y in comp:
+            dst[x, y] = src[x, y]
     return out
 
 
-def run(src, name, cell, margin, count=3):
+def run(src, name, cell, margin, count=3, min_island=0):
     im = Image.open(src).convert("RGB")
     W, H = im.size
     px = im.load()
-    corners = [px[2, 2], px[W - 3, 2], px[2, H - 3], px[W - 3, H - 3]]
-    bg = tuple(sorted(c[i] for c in corners)[1] for i in range(3))
+    # top corners only: busts run off the bottom edge, so the bottom corners are often body
+    corners = [px[2, 2], px[W - 3, 2]]
+    bg = tuple((corners[0][i] + corners[1][i]) // 2 for i in range(3))
 
     def dist(c):
         return sum(abs(a - b) for a, b in zip(c, bg))
@@ -87,7 +93,7 @@ def run(src, name, cell, margin, count=3):
         panels = [(round(i * W / count), round((i + 1) * W / count)) for i in range(count)]
     crops = []
     for x0, x1 in panels:
-        c = keep_largest(rgba.crop((x0, 0, x1, H)))
+        c = keep_largest(rgba.crop((x0, 0, x1, H)), min_island)
         crops.append(c.crop(c.getchannel("A").getbbox()))
     biggest = max(max(c.width, c.height) for c in crops)
     scale = (cell - 2 * margin) / biggest
@@ -96,8 +102,10 @@ def run(src, name, cell, margin, count=3):
         c = c.resize((round(c.width * scale), round(c.height * scale)), Image.LANCZOS)
         # bottom-align (shoulders sit on the box edge), centre horizontally
         sheet.alpha_composite(c, (i * cell + (cell - c.width) // 2, cell - margin - c.height))
+    sheet, n_band, n_erode = clean(sheet)  # strip the screen-colour halo the keyer leaves on the edge
     OUT.mkdir(parents=True, exist_ok=True)
     sheet.save(OUT / f"{name}.png")
+    print(f"halo: despilled {n_band} px, eroded {n_erode} px")
     print(f"bg={bg} panels={panels} -> {OUT / (name + '.png')} ({sheet.width}x{sheet.height})")
 
 
@@ -108,5 +116,7 @@ if __name__ == "__main__":
     ap.add_argument("--cell", type=int, default=512)
     ap.add_argument("--margin", type=int, default=16)
     ap.add_argument("--count", type=int, default=3, help="expressions in the strip")
+    ap.add_argument("--min-island", type=int, default=0,
+                    help="also keep detached pieces this many px or bigger (e.g. 400 for a floating icon)")
     a = ap.parse_args()
-    run(a.src, a.name, a.cell, a.margin, a.count)
+    run(a.src, a.name, a.cell, a.margin, a.count, a.min_island)

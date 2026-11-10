@@ -9,7 +9,7 @@ const STATS: = {
 	"driver": {"hp": 999.0, "speed": 240.0, "contact": 18.0, "name": "Road-Rage Driver" },
 	"hustler": {"hp": 2.0, "speed": 50.0, "contact": 0.0, "name": "Door-to-Door Hustler" },
 	"pete": {"hp": 18.0, "speed": 38.0, "contact": 8.0, "name": "Palm Beach Pete" },
-	"drone": {"hp": 1.0, "speed": 58.0, "contact": 6.0, "name": "Delivery Drone" },
+	"drone": {"hp": 1.0, "speed": 58.0, "contact": 6.0, "name": "Tip Drone" },
 	"butler": {"hp": 2.0, "speed": 42.0, "contact": 6.0, "name": "Hired Butler" },
 	"nft": {"hp": 1.0, "speed": 50.0, "contact": 5.0, "name": "Bored Ape-ish NFT" },
 	"pirate": {"hp": 3.0, "speed": 52.0, "contact": 0.0, "name": "Porch Pirate" },
@@ -24,7 +24,7 @@ const LINES: = {
 	"hoa": ["Grass: 0.4 inches too free.", "Citation 14-B: unlicensed joy.", "That mailbox is a crime.", "Bylaw 9: no fun after 8 PM.", "I don't make rules. I laminate them."],
 	"driver": ["HONK HONK!", "SIDEWALKS ARE WOKE!", "LATE FOR MY COLD PLUNGE!", "I'M FINANCING THIS AT 19%!"],
 	"hustler": ["Be your own boss! (Pay me.)", "Rise and grind, king!", "Not an MLM. A FAMILY.", "Passive income! Active begging!"],
-	"drone": ["*bzzz* Your package: PAIN", "*bzzz* Tip your drone", "*bzzz* Driver rating: you"],
+	"drone": ["*bzzz* Add a tip? 30%? 40%?", "*bzzz* Tip your drone", "*bzzz* Driver rating: you"],
 	"nft": ["I'm worth 40 ETH! (JPEG)", "Right-click me, coward", "Utility coming Q5!"],
 	"butler": ["Pardon me, sir. *slap*", "The Baron sends regards. From his yacht.", "No benefits, sir. *slap*"],
 	"pirate": ["Just browsing your porch, boss.", "Last-mile logistics, baby!", "Delivery guy. In reverse.", "Your doorbell cam sells my data too.", "Leave at door? Don't mind if I do."],
@@ -105,6 +105,21 @@ func display_name() -> String:
 func say(s: String, dur: float = 2.2) -> void:
 	line = preload("res://scripts/cast.gd").T(s)
 	line_t = dur
+	var bk: Variant = m.get("barks") if m != null and is_instance_valid(m) else null
+	if bk != null and not bk.admit(self):
+		line_t = 0.0   # rate-limited (scripts/barks.gd)
+
+## Ambient barks wait their turn when another enemy close by is already talking (Nov 9 QA: bubbles
+## piled up when 3+ enemies bunched). Telegraph / story lines still always show.
+const BARK_SPACE: = 70.0
+func bark_crowded() -> bool:
+	for e in get_tree().get_nodes_in_group("enemy"):
+		if e == self or not is_instance_valid(e) or not (e is Node2D):
+			continue
+		var lt: Variant = e.get("line_t")
+		if lt != null and float(lt) > 0.0 and (e as Node2D).global_position.distance_to(global_position) < BARK_SPACE:
+			return true
+	return false
 
 func telegraphing() -> bool:
 	return state.begins_with("tele")
@@ -129,7 +144,8 @@ func _physics_process(delta: float) -> void:
 	if line_cd <= 0.0 and dist < 150.0:
 		line_cd = randf_range(6.0, 10.0)
 		var key: = "karen_buddy" if buddy else kind
-		say(LINES[key][randi() % LINES[key].size()])
+		if not bark_crowded():
+			say(LINES[key][randi() % LINES[key].size()])
 	var v: = Vector2.ZERO
 	if stun > 0.0:
 		v = Vector2.ZERO
@@ -490,11 +506,7 @@ func _draw() -> void:
 		var nm: = display_name()
 		var nw: = f.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 5).x
 		draw_string(f, Vector2(-nw / 2.0, 19), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#ffd0a0"))
-	if line_t > 0.0 and line != "":
-		var sw: = f.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x
-		var bp: = Vector2(-sw / 2.0 - 2.0, -26.0)
-		draw_rect(Rect2(bp, Vector2(sw + 4.0, 9)), Color(1, 1, 1, 0.92))
-		draw_string(f, bp + Vector2(2, 7), line, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#222222"))
+	# speech bubble: drawn by main's Barks node (scripts/barks.gd), laid out with everyone else's
 	if w.a > 0.0:
 		pass
 

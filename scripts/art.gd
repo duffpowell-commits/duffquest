@@ -117,7 +117,7 @@ static func duff_mood(text: String, energy: float = 100.0) -> int:
 
 
 const NPC_SPEAKERS: = ["Brittany", "Dolores", "Earl", "Karen", "Linda", "Scammer", "Inspector Tiny", "Brenda", "Palm Beach Pete", "Security", "Chef", "Landlord", 
-	"Server", "Grill-Boy", "Grill-Boy Brayden", "Brayden", "Jeeves", "Elon Husk", "Jeff Bozos", "Bill Fences", "The Donald", "Expo", "Butler", "Theo"]
+	"Server", "Grill-Boy", "Grill-Boy Brayden", "Brayden", "Jeeves", "Expo", "Butler", "Theo"]
 
 static var _boss_names: Array = []
 
@@ -147,7 +147,7 @@ static func is_duff_line(text: String, hero: String) -> bool:
 static var _boss_by_name: Dictionary = {}
 
 ## Boss kind ("husk", "willnot"...) if this dialogue line is spoken by a boss, else "".
-## A line that yells: an ALL-CAPS word of 4+ letters ("A WORKER?", "TARIFF!") or two '!'.
+## A line that yells: an ALL-CAPS word of 4+ letters ("A WORKER?", "LATE FEE!") or two '!'.
 static func _shouty(body: String) -> bool:
 	if body.count("!") >= 2:
 		return true
@@ -163,6 +163,14 @@ static func boss_speaker(text: String) -> String:
 	var c: = text.find(": ")
 	return str(_boss_by_name.get(text.substr(0, c), "")) if c > 0 else ""
 
+## Boss intro cards (boss_intro/<id>.png) that still show the OLD lettered names (the billionaire parodies,
+## retired Nov 9 for the gala exes). Their intros fall back to the plain dialogue box until new cards land
+## (docs/gala_exes_art_brief.md); then drop the id from this list.
+const RETIRED_CARDS: = []
+
+static func has_intro_card(kind: String) -> bool:
+	return kind != "" and not (kind in RETIRED_CARDS) and ResourceLoader.exists("res://assets/art/boss_intro/%s.png" % kind)
+
 ## Boss kind if this line is that boss's intro (the line that gets the full-screen splash), else "".
 static func boss_intro_for(text: String) -> String:
 	var k: = boss_speaker(text)
@@ -174,11 +182,13 @@ static func boss_intro_for(text: String) -> String:
 static func portrait_for(text: String, hero: String, partner: String, baby: String) -> String:
 	if hd_enabled and text.begins_with("Brittany: "):
 		return "brittany"
+	if hd_enabled and text.begins_with("Dolores"):      # 'Dolores leans in: "..."', 'Dolores (31 years in): ...'
+		return "dolores"
 	if hd_enabled:
 		var boss: = boss_speaker(text)
 		if boss != "":
 			return boss                                    # HD only: no pixel boss portraits
-	if text.begins_with(partner + ": "):
+	if text.begins_with(partner + ": ") or text.begins_with(partner + " texts"):
 		return "madison"
 	if text.begins_with(baby + " ") or text.begins_with(baby + "'s ") or text.begins_with(baby + ": "):
 		return "octavia"
@@ -203,7 +213,7 @@ static func octavia_mood(text: String) -> int:
 	return 0
 
 ## HD cartoon portraits (assets/art/portraits_hd/<who>.png, 3 cells: happy, deadpan, furious).
-const HD_PORTRAITS: = ["duff", "madison", "octavia", "brittany"]
+const HD_PORTRAITS: = ["duff", "madison", "octavia", "brittany", "dolores"]
 const ANGRY_WORDS: = ["pissed", "furious", "stole", "steal", "stealing", "thief", "hate", "rage", "seriously", "unbelievable", "wtf", "screw"]
 const WAIL_WORDS: = ["cry", "cries", "crying", "wail", "wails", "scream", "screams", "screaming", "fuss", "fussy", "shriek", "shrieks", "meltdown"]
 
@@ -227,7 +237,7 @@ static func hd_mood(who: String, line: String, energy: float, happiness: float, 
 				if _has_word(l, w):
 					return 2
 			return 0 if octavia_mood(line) == 1 else 1
-		"brittany":
+		"brittany", "dolores":
 			for w in ANGRY_WORDS:
 				if _has_word(l, w):
 					return 2

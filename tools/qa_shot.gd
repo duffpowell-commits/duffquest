@@ -6,6 +6,8 @@ extends Node
 ## Output: /tmp/qa/*.png (contact sheets go in docs/renders/qa_*.png via tools/qa_sheet.py).
 
 const BossScript: = preload("res://scripts/boss.gd")
+const Art: = preload("res://scripts/art.gd")
+const Cast: = preload("res://scripts/cast.gd")
 const OUT: = "/tmp/qa/"
 
 var frame: = 0
@@ -42,6 +44,8 @@ func _ready() -> void:
 		_clean(); m.gala_unlocked = true; m.start_gala(0)])
 
 func _clean() -> void:
+	if m.in_shift:  # kitchen shots leave a shift running; its card would sit over every later shot
+		m.end_shift({"left": true})
 	m.close_overlay()
 	m.dialog.clear()
 	m.toast_t = 0.0
@@ -53,11 +57,17 @@ func _clean() -> void:
 		m._set_camera()
 
 func _boss(k: String) -> void:
+	if m.in_shift:
+		m.end_shift({"left": true})
 	m.close_overlay()
 	m.dialog.clear()
 	if m.arena_boss and is_instance_valid(m.arena_boss):
 		m.arena_boss.queue_free()
 	m.start_story_fight(k)
+	# Some fights open with narration before the boss speaks (willnot: two NAKATOMEH lines). The
+	# burst card only shows on the boss's own intro line, so skip ahead to it.
+	while m.dialog.size() > 1 and Art.boss_intro_for(Cast.T(str(m.dialog[0]))) == "":
+		m.dialog.pop_front()
 
 func _key(k: int) -> void:
 	for p in [true, false]:
@@ -75,6 +85,7 @@ func _process(_d: float) -> void:
 		return
 	if m == null:
 		m = game.get_child(0).get_child(0).get_child(0)
+		m.no_loading = true  # loading screens would cover every shot
 	if wait > 0:
 		wait -= 1
 		if wait == 0:

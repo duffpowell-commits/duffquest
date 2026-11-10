@@ -1,6 +1,9 @@
 extends Node2D
 # Presentation only. World-space coordinates and gameplay state are untouched.
 var lights: Array[PointLight2D] = []
+var post: CanvasLayer
+var low: = false            # perf_guard.gd "lite graphics": no screen shader, no window lights
+var world_shown: = true     # main.gd: false while an opaque full-screen menu/minigame hides the world
 
 func _ready() -> void:
  name = "HD2DPresentation"
@@ -20,7 +23,7 @@ func _ready() -> void:
   env.environment.glow_enabled = true
   env.environment.glow_intensity = 0.15
  add_child(env)
- var post := CanvasLayer.new()
+ post = CanvasLayer.new()
  post.name = "WorldOnlyPostProcess"
  post.layer = 0
  add_child(post)
@@ -51,6 +54,24 @@ func _ready() -> void:
   light.blend_mode = PointLight2D.BLEND_MODE_ADD
   add_child(light)
   lights.append(light)
+
+## Lite graphics for slow phones (perf_guard.gd). The pixel art is untouched; only the HD-2D
+## screen shader (soft bloom, vignette, far-edge blur) and the 9 soft window lights go.
+func set_low(on: bool) -> void:
+ low = on
+ _refresh()
+
+## Nothing to post-process while an opaque overlay covers the world: skip the screen copy + shader.
+func set_world_shown(on: bool) -> void:
+ if on != world_shown:
+  world_shown = on
+  _refresh()
+
+func _refresh() -> void:
+ if post:
+  post.visible = world_shown and not low
+ for l in lights:
+  l.enabled = not low
 
 func _fit_small_window() -> void:
  var window := get_window()

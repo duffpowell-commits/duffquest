@@ -16,6 +16,16 @@ const CASES: = [
 	["Brittany: Hey! Best day ever!", 80.0],
 	["Brittany: Okay.", 80.0],
 	["Brittany: You stole my fries? Unbelievable.", 80.0],
+	["{gala_ex_1}: Funding secured.", 80.0],
+	["{gala_ex_1}: WHO UNFOLLOWED ME?!", 80.0],
+	["{gala_ex_2}: Suggested tip: me.", 80.0],
+	["{gala_ex_2}: NO REFUNDS!", 80.0],
+	["{gala_ex_3}: Per the lease.", 80.0],
+	["{gala_ex_3}: LATE FEE!!", 80.0],
+	["{gala_ex_4}: You're right-sized.", 80.0],
+	["{gala_ex_4}: RESTRUCTURE! NOW!", 80.0],
+	["Bruce Willnot: Yippee.", 80.0],
+	["Bruce Willnot: GET OFF MY FLOOR!", 80.0],
 ]
 var frame: = 0
 var game: Node

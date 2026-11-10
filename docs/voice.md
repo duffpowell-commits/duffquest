@@ -24,7 +24,7 @@
   `%.1f`, `%%`) exactly, same count and order.
 - Keep `+5 Energy`-style stat results at the end of the line, unchanged.
 - Length: aim for the same length; never more than ~1.4× the original. Text boxes are small
-  (480×270 screen). Cut words before adding them.
+  (640×360 screen). Cut words before adding them.
 - No double quotes inside a line unless they were already escaped (`\"`); use single quotes for
   quoted speech inside narration.
 - Keep the joke. If the original punchline already lands, change only the framing.
@@ -72,3 +72,13 @@ underneath; Madison, Octavia and the cats are never the joke's target. If a line
 satire lines do: "Nobody needs a gnome. The economy needs you to need a gnome."), leave it alone.
 Budget: about one Palahniuk-flavoured line in five popups. Rewrites: `tools/rewrites/palahniuk_m9.json`
 (22 lines, applied with `tools/apply_rewrites.py`).
+
+## Knockout strips (Nov 9, M14)
+Duff: "the dialogue for each strip is too similar." Read in a row, 17 strips with the same shape (He's X / I'm Y / I bounce;
+he throws X, I step around it; "The human ___ has N bones"; a pet-name quip; a shrug-aphorism) turn into a template. Rules:
+- **One device per strip** that runs through its beats: a running number, a format (ticket, tracking, error popup, timestamps),
+  addressing the boss as "you", or plain sincerity (Earl). Don't reuse a device across bosses.
+- **Budgets across all 17:** "Fun fact" x1, "The human ___" x2, "I bounce" x1, one bet line, Dolores pet names x2 (sweetie, hon).
+- **The x-ray line names the bone the art shows being hit.** If the still changes, the line changes.
+- Keep lines that already land word for word (finishers mostly).
+

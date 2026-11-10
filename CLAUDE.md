@@ -2,9 +2,71 @@
 
 Comedy RPG about Duff's real life in Omaha: keep Madison happy, pay the rent,
 work the line at the Twisted Fork, fight exes and porch pirates. Godot 4.5, GDScript, 640×360
-landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions.
+landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this first; it is the handoff between sessions. **Key facts (secrets vault, itch target, art tools): `CLAUDE_REFERENCE.md`.** **Per-session summaries for agents: `docs/handoffs/`** (e.g. `2026-11-09_daily_life_session.md`: human parody bosses, fridge calendar, daily events, Falcor; Duff's decisions + mistakes; `2026-11-08_knockouts_loading_screens.md`: knockout engine, loading screens, Canva full-size export, cat/parody decisions; `2026-11-08_night_restore_gitlab_canva.md`: sandbox lost, repo restored from bundles, GitLab move + hash rewrite, Canva joins, R3/R6 rematch).
+
+**Reference:** `reference.md` = how the game works (systems, data, art rules, tools, build). This file = session log.
 
 ## Where things stand
+- **TRACKER.md** (repo root) is the running Built / Next / Could improve list. Update it every milestone with this file.
+  GitHub (`duffpowell-commits/duffquest`) is back (Nov 10). Its `.github/workflows/build.yml` already uploads main to itch
+  (needs repo secret `BUTLER_API_KEY`). GitHub and GitLab histories are unrelated (GitLab was a re-import); GitHub's
+  main tree = our 9148e34, so join with a merge commit (parents gh/main + main, our tree), never a force push.
+- **Nov 10 ~18:30: title screen shows the real Duff** (branch `title-tattoos`, Duff's note: missing tattoos, wrong style).
+  `tools/title_compose.py` builds `bg_title.png` (now 1280x720, manifest `s` 4) from the style-C portrait
+  (`portraits_hd/duff.png`, grin: both sleeves, fox neck piece, beard, bun) in a flat comic panel over the in-game
+  kitchen (`bg_kitchen`) with a navy/teal sunburst. Before/after: `docs/renders/title_tattoos_before_after.png`.
+  Not pushed yet: the GitLab token was revoked; push needs fresh access.
+- **Nov 10 evening: IGN review fixes merged** (branch `review-fixes`). (1) **Phone-first controls:** `Cast.touch` +
+  `Cast.TOUCH_WORDS` rewrite keyboard hints ("PULL (Space)" -> "PULL IT") in minigames/buttons while the touch layer is up;
+  touch-only "How to play" (`TITLE_HELP_TOUCH`); buttons radius 9, outlined captions, A says next / talk/use / bonk.
+  (2) **Gentler week one:** first Monday bills half (`first_week_prorate()`), the Fork takes shifts the first weekend
+  (`first_weekend()`, days 2-3); intro line says so. (3) **Real boss arenas:** the six identical placeholder rooms
+  (alley, ghoster, djvape, crypto, willnot, waffle) are painted in code, `tools/arena_paint/paint_arenas.py` (stand-ins
+  until M7 art); sheet `docs/renders/arenas_painted_sheet.png`, in game `docs/renders/arenas_ingame.png`
+  (`arena_shot -- bounty:sendback` renders the alley). (4) **Gala bug:** invite lands the morning after the ending
+  (`gala_due()`), not 12 dead days later on day 24; soak updated (seeds 1 + 4 lazy clean, gala day 13/14). test_daily 112/112. CI itch push works (BUTLER_API_KEY set); builds now labelled with `CI_COMMIT_SHORT_SHA` (CI image has no git).
+- **Nov 9 night: money paths tested.** `_money_path_checks` in `tools/test_daily.gd`: bus pass, minivan, brokerage buy/sell (wealth conserved), 60 market weeks (finite prices), college fund caps, symphony date gating + result. All passed first run (no bugs). Doc drift fixed (reference.md section 9 lists what is still open).
+- **Nov 9 night: itch deploys from GitLab CI.** `deploy_itch` runs on main; needs CI/CD variable `BUTLER_API_KEY` (masked, protected), else logs `SKIP` and passes. CI installs python3 for lossy imports. GitLab account is verified; main pipelines run (test job ~3 min). This sandbox can't reach itch.io. See `HANDOFF.md` section 3.
+- **Nov 10 ~04:30: gala exes' sprites + IGN review** (branch `gala-exes-sheets`): Canva face-ref uploads are blocked for these sessions, so the 4 gala exes' `ch_<id>` sheets were repainted in code from repo sheets (`tools/sheet_repaint/<id>.py`; bases: old ch_husk, old ch_donald, ch_crypto, ch_gymbro; old sheets in `grok_art/2026-11-10-gala-exes/old/`). Review `docs/reviews/gala_exes_sheets.md`, render `docs/renders/gala_exes_sheets_ingame.png`. Fixed `ch_crypto` side rows (were reversed vs `Art.row_for`). Outside review: `docs/reviews/ign_review_2026-11-10.md` (6.4/10) with a ranked fix list; good source for the next milestone.
+- **Nov 9 ~14:45: QA milestone merged** (branch `qa-nov9-evening`): intro rent text = `weekly_base()` ($195); KO x-ray `b_anchor` per boss in `data/knockouts.json` (willnot, dasher = 0, impacts remapped); render `docs/renders/ko_xray_crop_fix.png`. **GitLab CI fails with 0 jobs because Duff's GitLab account isn't verified** (GraphQL failureReason); local `ship_itch.sh` is the gate until he verifies. See `HANDOFF.md`.
+- **Nov 9 ~13:10: STOPPING POINT. FULL HANDOFF: `HANDOFF.md` in the repo root (read it first; `docs/HANDOFF_NOV9_PM.md` has same-day detail).** All art is house style C (KO + loading converted). itch `html` channel = `532e95b`, BUT the page still embeds the old manual upload until Duff switches it (see handoff). Logo + page copy in `docs/itch/`.
+- **Nov 9 ~09:00: MULTI-AGENT PUSH (session_01V3sbx).** Merged + live on itch (build `bb95ad0`, 56 MB): build shrink 113->54 MB (`tools/set_lossy_imports.py`, run by ship script; HD art ships as WebP), portrait green-halo cleanup (`tools/clean_halo.py`), in-engine cartoon gore on KOs (`scripts/ko_gore.gd`, per-boss `"impact"` key, Settings toggle), screen-shake toggle, grocery labels, footpaths to doors, bark cap + `scripts/barks.gd` (max 2 bubbles, numbers on top), outdoor y-sort of actors + dressing (`dressing_front.gd` rewritten), HUD declutter (one top strip + Tab/tap drawer), Willnot intro QA fix, **all 17 KOs live** (last 6 stills), itch page kit `docs/itch/`. **Gala bosses are now Madison's exes:** Tyler Pivot (husk), Grant Gratuity (bozos), Landlord Lance (fences), Chip Leverage (donald, final). Names in `data/cast.json`; old billionaire art/scripts in `docs/dlc_concepts/billionaires/`; their old cards hidden via `RETIRED_CARDS` (scripts/art.gd) and KOs `live:false` until new art (brief: `docs/gala_exes_art_brief.md`). **JAM:** the itch 2026 Jam bans AI art; DuffQuest can't enter it. Options + ranked list in tasks/todo.md. **Art direction:** comparison A/B/C running (`docs/art_direction/`); pick ONE comic style, then lock it before more images. Gotcha: test_daily prints ALL PASS even on compile errors; ship script now also fails on SCRIPT ERROR. `.godot/editor/` untracked. **Later Nov 9:** soak test (`tools/soak.sh`, 30 days x 6 seeds clean; 2 bugs fixed), phone perf + auto Lite graphics + `ship_itch.sh --web-check` merged; itch build `8ac17f8`. Balance decisions pending in tasks/todo.md (happiness gates strict). **Later still (Nov 9 ~11:30):** gala unlocks story day 24 (`GALA_DAY` in main.gd; soak verifies it). **Art style C locked** (`docs/art_direction/STYLE_LOCK.md`, checklist ST1-ST7 in art_rules.md section 7); canonical Duff face sheet `docs/art_direction/duff_face_sheet.png` = Canva `MAHacL92VLk`, FIRST ref for every Duff image. Gala exes have style-C portraits, lettered cards (`tools/letter_card.py`) and live KOs; `RETIRED_CARDS` empty. Their `ch_<id>` sprite sheets were repainted in code Nov 10 (`tools/sheet_repaint/`). itch build `cac220e`. Gotcha: after merging new art, `touch` the files before `--import` or the tracked cache keeps old art; untracked `*.gd.uid` files can silently block `git merge` (check its exit).
+- **Nov 9 07:30: ITCH IS CURRENT (build `7cd1f78`, all art fixes + tattoos + KO sfx).** Full handoff: `docs/HANDOFF_NOV9.md` (secrets in gitignored `.env`; Canva scratch now `DAHabf2Qa9U`). Next: jam submission + itch page polish, title-screen tattoos, in-engine KO blood.
+- **Nov 9 (M12): Falcor + Thanksgiving LIVE.** Falcor = the stray Madison feeds (`{stray}` in cast.json), never drawn. Notes on days 3/7/9/11/13. Day 10 wake opens the SUNDAY card (`FALCOR_LINES`, text approved by Duff, quiet `living_night` backdrop): Stay with her (+10 Happiness, morning gone) / Give her some space; saved in `daily.falcor`. Days 11-13: no fussy rolls, a soft wake line each day, Madison's bowl text on day 11. Day 28 Thanksgiving: Fork closed, Waffle Haus, +10 Happiness +20 Energy. Render `docs/renders/falcor_day.jpg` (`tools/wake_shot.tscn -- 9`). test_daily 43/43. **Tests must not touch the real save** (see tasks/lessons.md).
+- **Nov 9: DUFF HAS FULL TATTOO SLEEVES.** Every Duff prompt must include the TATTOOS block from `docs/duff_look.md` and attach
+  the refs in `docs/ref/duff/` (Duff's real left-sleeve photos + fox-Duff art for placement). Until now prompts only said "fox neck
+  tattoo", so the knockout comics, loading screens and sprites show bare arms. Fix list (HD stills DONE Nov 9: all 16 KO/loading images with Duff now tattooed; rules in docs/art_rules.md, reviews in docs/reviews/): 5 shared Duff KO panels
+  (stance, slip, fin1-3), 6 x-ray stills (husk, bozos, fences, donald, willnot, ghoster), 7 loading screens (brunch_atlas,
+  fryer_nap, gym_spot, octavia_fund, one_trip, plasma_day, raccoon_break), then the Duff sprite sheets (test one first: does a
+  Canva edit keep the 4x4 grid?) and `portraits_hd/duff.png`.
+- **Nov 9: knockout SFX + button text fit.** 9 original synthesized sounds in `assets/sfx/ko/*.ogg` (`tools/make_ko_sfx.py`, numpy/scipy -> ffmpeg libvorbis, peaks ~-3 dBFS, rerun = same files): whoosh (slip), crack + drone/heartbeat (xray), snap1-3 + boom (finisher panels / white flash), crowd gasp-murmur, jazz walk-off sting (closer). Cue table `SFX_CUES` in `scripts/knockout.gd`, played on the SFX bus (settings volume/mute apply); beds stop when a beat is skipped. Button labels now fit their box everywhere (`UiStyle.fit_text`; fixed the stat points card). test_daily 48/48.
+- **Nov 9 (M14): knockout x-rays + dialogue variety (Duff's notes).** (1) The 5 parody B stills were redone WITHOUT Ghoster's still
+  as the template (it cloned Duff's two faces + layout into every one, and the x-ray showed a different bone than the hit). Refs
+  now: `ko/duff_stance.jpg` + Duff's face sheet + the boss face sheet; prompt names THE HIT, THE X-RAY "at that exact contact point,
+  inside the same figure", and EXPRESSIONS for both. Each: own layout, own Duff face, x-ray on the struck bone, matching the `xray`
+  text. (2) All 17 knockout scripts: 34 lines rewritten so each strip has its own device (Husk = viewer count, Bozos = package
+  tracking, Fences = error popups, Ghoster = timestamps, Willnot = floor forty, Send-It-Back = a ticket, Camper = battery %, Baron
+  = talked to as "you"). Rules in `docs/voice.md` ("Knockout strips"). File: `tools/rewrites/ko_variety_m14.json`, applied with
+  `tools/apply_ko_rewrites.py` (token + length checks, minimal diff). ko_shot misses Ghoster's finisher frame (the beat ends itself
+  before the 100-frame step); his beats sheet reuses the old finisher panel.
+- **Nov 9 (M13): parody bosses DONE + LIVE.** Husk, Bozos, Fences, The Donald, Willnot: burst intro cards (`boss_intro/<b>.png`,
+  names spelled right), `ch_<b>` sheets, KO stills `ko/<b>_a|b|c.jpg`, `"live": true` in `data/knockouts.json`. Masters in
+  `grok_art/2026-11-09-parody-bosses/` (Canva generate-image with refs: face sheet + Ghoster's card / sheet / ko stills as style;
+  full-size via scratch design `DAHaZZaEJBs` pages 25-49). Sheets: row 4 = row 3 mirrored (`fix_sheet_cells.py 3,c=2,c:m`; Canva
+  drew the left-walk cells facing right). **Gotcha:** B stills made from `ghoster_b` as the ref copy GHOSTER's face into the
+  bottom-middle panel; fixed with a Canva edit ("change ONLY the grey face in the bottom-middle panel"). Check that panel on every
+  new B still. Renders: `docs/renders/ko_<b>_beats.png`, `qa_boss_intro.png`, `qa_boss_fight.png`.
+  Also fixed: `debug_station` goes straight into the station again (M10 put a NEXT STATION card first); `qa_shot` ends any running
+  shift between shots and sets `no_loading` (before, every boss shot was a shift card or a loading screen).
+- **Next:** the 16 M7 backgrounds (QUEUE NOW); KO stills for coupon, allergy, camper, bdaydad, dasher, baron; Freya's photo -> cat
+  scene + Lucifer recolor. Bonds (spec section 5) cut by Duff. Time slots skipped (saved for future games).
+- **Nov 9 (M11): fridge calendar + daily events LIVE.** Spec `docs/daily_life.md`. `scripts/daily.gd` (pure logic) + `data/calendar.json` (30 handwritten November days: today card, grid tag, sticky notes from hero/partner/baby/cat1-3; `headline` days block random events) + `data/daily_events.json` (10 weekday + 4 weekend events, 75% of mornings, no repeat within 5 days; effects: energy/happy/money on wake, shift_pay, shift_modes, inspector, walk, spawn). `scripts/fridge_calendar.gd` (HD layer, game.gd) shows after the morning loading screen and from the new **Fridge calendar** spot at home (`FRIDGE_PT`). One headline per day: a random event or calendar headline blocks the old bill roll (`curveball_new_day`). **Weekends: no Fork shift.** Fonts: Caveat (Madison) + Patrick Hand (Duff), OFL, from npm @fontsource (GitHub raw is 403 from the sandbox). Tests: `godot --headless --path . --script tools/test_daily.gd` (33 checks). Renders: `docs/renders/fridge_calendar.png`, `fridge_wake_flow.jpg` (tools `calendar_shot`, `wake_shot`).
+- **Nov 9 (M10): shift shuffle + muscle memory.** Full shift: quiz first, other 7 shuffled. `main.station_best` (saved) = best grade per station; an S unlocks **Autopilot (B)** on that station's card. Render `docs/renders/shift_autopilot.png` (`tools/shift_shot`).
+- **Nov 9: parody bosses have made-up HUMAN faces** (Duff: duck/TV/lightbulb heads were too much Hazbin imitation; cartoon sheets kept for DLC in `docs/dlc_concepts/`). New portraits_hd for husk/bozos/fences/donald/willnot, drawn against Ghoster's portrait as the style ref. Willnot's gun: shoulder holster. (Cards, sprites, KO stills done in M13.) `import_portrait.py`: bg from top corners, `--min-island` keeps detached props.
+- **Nov 8 late (4): Knockouts LIVE for gymbro, ghoster, djvape, crypto, sendback, regular** (beat sheets `docs/renders/ko_<boss>_beats.png`). **Full-size Canva without Duff downloading:** media id -> scratch design `DAHaZZaEJBs` (read-design open_transaction, add_page + insert_fill per page, commit) -> export-design PNG 1680x945 -> curl the URLs. After adding art run `godot --headless --path . --import` or ResourceLoader won't see it. Parody bosses (husk/bozos/fences/donald/willnot) keep names, new original faces: face sheets generated (Canva jobs), Willnot's gun-on-back needs a rethink (Duff).
+- **Nov 8 late (3): Knockout cutscene ENGINE + Gym Bro pilot LIVE.** `scripts/knockout.gd` (HD layer, beats from `data/knockouts.json`, `"live": true` per boss; only gymbro so far) hooked in `main.boss_defeated()` -> `knockout_done()`. Stills `assets/art/ko/*.jpg` (Canva, style-fusion prompt in `docs/knockout_cutscenes.md`); missing stills fall back to portraits. Check: `tools/ko_shot.tscn -- <boss>` -> `/tmp/qa/ko_*`. **Loading screens LIVE:** `scripts/loading_screen.gd`, 13 scenes in `assets/art/loading/*.jpg` + captions `data/loading_screens.json`; shown on wake, shift, story/bounty fight, Waffle Haus (`main.show_loading()`, tools set `no_loading`). Renders `docs/renders/ko_gymbro_beats.png`.
+- **Nov 8 late (2):** Boss knockout cutscenes for ALL 17 bosses (Baki x Spike Spiegel, Palahniuk narration): scripts done in `data/knockouts.json`, plan + beat template + art list in `docs/knockout_cutscenes.md` (pilot: Gym Bro). Loading screens: 14 captions in `data/loading_screens.json`; 13 Canva scenes generated, waiting on Duff's full-size downloads; engine for both not built yet.
+- **Nov 8 late:** Canva sheets in: `ch_gymbro`, `ch_brittany`, new `ch_dolores` (her own sheet; Waffle Haus uses it, `ch_waitress` kept for generic diners). Canva sheets often draw wrong-facing side cells: fix with `tools/fix_sheet_cells.py` before `import_big_sheet.py`. `tools/arena_shot.tscn -- waffle` shows the Waffle Haus shift. Remote is GitLab while GitHub is suspended (see `handoff-duffquest.md`).
 - **Next milestone: see `QUEUE.md` NOW** (Nov 8: M7 backgrounds IN PROGRESS, 2/19 in: home + kitchen. Place's next drops: `arena_alley`, `arena_waffle`, `gala`).
 - **Other agent: "Place"** (Duff's art agent, Cursor/Grok side) owns art: it is redrawing the outfit
   sheets, Waffle Haus sign, bus-stop sign, cats, extra lawn props, and making all 17 bosses. It hands
@@ -316,6 +378,32 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
   and warmer. Render: `docs/renders/m7_home_chatgpt.png`, `chatgpt_c1_vs_gemini_g1.png`. `arena_shot.tscn -- home` added.
   Shootout brief: `grok_art/requests/AI_ART_SHOOTOUT.md`; Gemini's copy is a Google Doc in Drive `geminiart`.
   Note: importing `tools/make_m7_guides.py` from Python runs it (no main guard) and rewrites the guides.
+- **Done (Nov 8): ChatGPT gym + tux.** C2 try 2 (straight-on, racks only along the back wall, sign spelled right) replaced
+  Gemini's `arena_gymbro`; its extra walls shrank to one racks band (`ARENA_EXTRA_WALLS gymbro = [Rect2(0,0,320,56)]`).
+  Sign top sits ~16% down, so the errand panel clips its last letter in fights. C3 (tux sheet, rows/poses match
+  `duff_home` exactly; back row shows a black tee, not the jacket) -> new `tools/import_big_sheet.py` (any-size 4x4 sheet ->
+  256 format, one scale from the stand frame) -> `ch_duff_suit` (symphony/gala). Renders: `docs/renders/m7_gym_chatgpt.png`,
+  `duff_tux_chatgpt.png`. **GitHub account suspended Nov 8 ~4:35 PM (appeal filed by Duff);** these commits were made
+  locally and pushed once access returned (or are still waiting: check `git log origin/main..`).
+- **Done (Nov 8): Dolores HD portrait (ChatGPT C5).** `portraits_hd/dolores.png` (smug / deadpan / furious);
+  `Art.portrait_for` maps any line starting "Dolores" (her lines are narration-style: 'Dolores (31 years in): "..."');
+  mood = Brittany's word rules. `arena_shot.tscn -- dolores`. Render: `docs/renders/dolores_portrait_chatgpt.png`.
+  ChatGPT results so far (`grok_art/2026-11-08-chatgpt-test/`): C1 11, C2 11, C3 11, C5 11, C6 12 (all 16 props in order,
+  not wired: Gemini's kp_* still drive fryer/sandwich), C7 12 (Duff vs giant waffle; spare title/splash art).
+  X1 (add one tree, change nothing): FAIL strictly, the whole image is re-rendered (5.8% of pixels outside the corner
+  changed >60), but no furniture moved. Fix for edits: paste only the edited region back onto the original.
+  C4 Porch Pirate 12 (both tries: real back view, box hidden in front, throw column) -> `ch_pirate0/2` (try 1),
+  `ch_pirate1/3` (try 2) via `import_big_sheet.py`; render `docs/renders/porch_pirate_chatgpt.png`. X2 seamless tile:
+  PASS by eye (3x3 tiling continues the checker; edge-diff numbers are high only because the edge is a grout line).
+  Missing: X3. Next: ChatGPT vs Grok rematch, brief `grok_art/requests/CHATGPT_VS_GROK.txt` (Drive Doc "ChatGPT vs Grok
+  rematch (Nov 8)" in `geminiart`). Results: R1 Kwik: Grok wins (ChatGPT drew it isometric with a lot/car/trees; try-2 prompt
+  asks straight-on, building only; render `docs/renders/rematch_r1_kwik.png`). R2 trees: ChatGPT wins, maple/oak/ash/pine/lilac
+  swapped in by `tools/import_chatgpt_trees.py` (scaled to Grok's heights, placements unchanged; Grok's long hedge kept);
+  renders `rematch_r2_trees.png`, `rematch_r2_trees_ingame.png`. Also fixed: 'Madison texts: ...' lines showed Duff's portrait.
+  R1 try 2 (straight-on, building only) WON and replaced `sf_kwik` via new `tools/swap_storefront.py SRC NAME` (fits the
+  footprint canvas, bottom-aligned; door/shop trigger unchanged). Shot: `arena_shot.tscn -- at:535,128`; render
+  `docs/renders/rematch_r1_kwik_ingame.png`. Storefront prompts must say straight-on + building only. List: R1 Kwik storefront, R2 trees, R3 clutter, R4 Gym Bro intro card, R5 Brittany
+  portraits (redo), R6 Earl sheet, R7 Duff apron; Grok's original prompts, results `r1_chatgpt.png`...
 
 ## Next (Duff's asks)
 - When Grok art lands in the Drive inbox: pull it (subagent; Drive returns big base64), clean

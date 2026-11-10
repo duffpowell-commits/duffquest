@@ -103,7 +103,8 @@ func _draw() -> void:
 				var p: Vector2 = it["pos"] - Vector2(wdt / 2.0, 0)
 				var col: Color = it["col"]
 				col.a = minf(1.0, k * 2.0)
-				draw_string(f, p + Vector2(0.7, 0.7), s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, Color(0, 0, 0, col.a * 0.8))
+				# dark outline so a number stays readable over a white speech bubble or bright ground
+				draw_string_outline(f, p, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, 3, Color(0.08, 0.04, 0.06, col.a * 0.9))
 				draw_string(f, p, s, HORIZONTAL_ALIGNMENT_LEFT, -1, sz, col)
 			"sparks":
 				var e: float = 1.0 - k

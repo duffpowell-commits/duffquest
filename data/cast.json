@@ -1,5 +1,5 @@
 {
-  "_readme": "Every person-specific name and real place in the game lives here, plus parody names (story bosses, the pharmacy, the grocery store, the porch pirates, the cologne, the sitter app) and the date venues, and the Gala's old-money snob (gala_baron). To make a public fork, edit only this file. Code uses {key} tokens (and {KEY} for UPPERCASE).",
+  "_readme": "Every person-specific name and real place in the game lives here, plus parody names (story bosses, the pharmacy, the grocery store, the porch pirates, the cologne, the sitter app) and the date venues, the Gala's old-money snob (gala_baron), and the four exes of {partner} who 'made it' and show up at the charity gala (gala_ex_1..gala_ex_4; boss ids husk, bozos, fences, donald stay as internal ids). To make a public fork, edit only this file. Code uses {key} tokens (and {KEY} for UPPERCASE).",
   "game_title": "Duff Quest",
   "hero": "Duff",
   "partner": "Madison",
@@ -38,5 +38,10 @@
   "plasma": "PlazMart Donor Center",
   "phlebotomist": "Phlebotomist Phil",
   "plasma_sign": "PLAZMART PLASMA",
-  "gala_baron": "Baron Von Trustfund"
+  "gala_baron": "Baron Von Trustfund",
+  "gala_ex_1": "Tyler Pivot",
+  "gala_ex_2": "Grant Gratuity",
+  "gala_ex_3": "Landlord Lance",
+  "gala_ex_4": "Chip Leverage",
+  "stray": "Falcor"
 }
