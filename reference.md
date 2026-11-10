@@ -14,7 +14,7 @@ happy, pays the rent every Monday, works shifts at the Twisted Fork (a chain of 
 feeds the cats and fights street enemies and parody bosses with a frying pan. The fights play like the GBA Dragon
 Ball Z games. The story: beat four exes, then Bruce Willnot in Nakatomeh Plaza, which rolls the ending. Side content:
 Waffle Haus graveyard shifts, the 86 List bounties, Brittany's bets, dates, plasma donation, the stock market
-and Octavia's college fund, and the Elite Gala (five gala bosses, invite lands the morning of story day 24, `GALA_DAY`; open through day 30 and after).
+and Octavia's college fund, and the Elite Gala (five gala bosses, invite lands the morning after the story ending, or story day 24 (`GALA_DAY`) at the latest; open through day 30 and after).
 All narration is Duff telling the story at the bar, in present tense.
 
 **Pillars** (`docs/PITCH.md`):
@@ -120,7 +120,10 @@ stay raw.
   stats T; phone P/Tab; settings O/Esc.
 - Touch (`touch_controls.gd`): joystick bottom-left, A (use/bonk), B (roll), S (special), G (gear), the P phone
   icon in the HUD, the `<>` swap, and D (demon, only shown when ready). The title has a "How to play" card
-  (`TITLE_HELP`). Touch through the SubViewport is verified.
+  (`TITLE_HELP`, or `TITLE_HELP_TOUCH` when touch is up). Touch through the SubViewport is verified. While the touch layer is
+  visible, `Cast.touch` is true and `Cast.T()` rewrites keyboard hints in minigame text and button labels into tap words
+  (`Cast.TOUCH_WORDS`, e.g. "PULL (Space)" -> "PULL IT"). Buttons are radius 9 with outlined captions; A's caption says
+  next / talk/use / bonk depending on what A will do.
 
 ---
 
@@ -135,8 +138,9 @@ stay raw.
   `day_i % 7 == 0`, which triggers `market_week()` and `pay_rent()` on wake.
 - **Rent:** `weekly_base() = RENT 110 + rent_bump + BILLS 40 + Life.HOUSEHOLD 45 + plan_due()`. If Duff can't pay, he
   pays what he has, plus `LATE_FEE` 15, the rest goes to `rent_debt`, he gets a late notice, -20 Happiness and
-  Madison is upset ("rent"). The intro line says "$150" (RENT+BILLS only), which understates the real Monday
-  bill.
+  Madison is upset ("rent"). **Week one is prorated** (`first_week_prorate()`: nothing paid yet, no late notice, day <= 7):
+  the first Monday bills half (`rent_due()` and `pay_rent()` both apply it). The intro line quotes `weekly_base()` and the
+  prorated amount.
 - **Money:** an int. Comes from shifts, Waffle Haus, bosses and bounties, bets, plasma, market sales, events. Prices use
   `price_mult()` (0.8 with CHA).
 - **Energy** (0-100, capped at `Life.DRAIN_MAX` 80 while drained after plasma) is also Duff's **HP**:
@@ -178,7 +182,8 @@ stay raw.
 - `Daily.roll(day_count, weekday, recent, beaten, seed)` is deterministic per (seed, day) and skips headline days.
   `main.daily_new_day()` stamps `daily {day,id,recent,falcor}` and applies energy/happy/money once. Lookups:
   `Daily.shift_pay/walk/spawn/shift_modes/inspector(today_event())`.
-- **Weekends** (`Daily.WEEKEND = [5,6]`, Sat/Sun): `try_shift` refuses ("schedule says I'm off"). The Fork's
+- **Weekends** (`Daily.WEEKEND = [5,6]`, Sat/Sun): `try_shift` refuses ("schedule says I'm off"), except the first weekend (`first_weekend()`, story days 2-3), so a new
+  player gets two shifts before the first Monday. The Fork's
   hours are 6:00-22:00.
 - `fridge_calendar.gd`: full-screen month grid with magnets plus today's sticky notes. Fonts Caveat (Madison) and
   Patrick Hand (Duff). It appears after the morning loading screen (`calendar_pending` → `loading_done` →
@@ -280,7 +285,8 @@ stay raw.
 - The story is `main.STORY`, in order. Madison announces each boss (`story_announce`) when the day and Happiness
   conditions are met. Fight via the building door (`story_doors`) → `start_story_fight` (arena `arena_<id>`, energy
   refilled). The reward is cash + scrap + a gear piece + an achievement + 15 Happiness. Losing → `story_lose`.
-- **Gala:** `check_gala_unlock()` fires from `_wake()` (`gala_new_day()`) the morning `day_count` reaches `GALA_DAY` (24): Committee
+- **Gala:** `check_gala_unlock()` fires from `_wake()` (`gala_new_day()`) the first morning `gala_due()` is true: the story ending has
+  played (`story.ending_seen`, so normally day 13) or `day_count` reaches `GALA_DAY` (24). Committee
   thread + Madison's guest-list text, calendar day 24 is a headline tagged GALA (`tag_from` hides it till then). Saves past day 24 without it
   catch up in `from_dict`; old saves with `gala_unlocked` keep it. The $100k fund is its own goal (`check_fund_goal()`, "Fully Funded").
   Phone: "Take the limo". `BOSS_ORDER` husk → bozos → fences → baron → donald, with a full heal between fights. `gala_win`/`gala_lose`.
@@ -396,7 +402,9 @@ stay raw.
   points: bed, crib, shower, kitchen, fridge calendar, couch, bowls, mirror, mat, mail). The exit is the drawn door at the
   bottom middle. When new art moves the furniture, move the rects (cheaper than a redraw).
 - **Arenas:** `assets/art/arena_<id>.png` 640×360: alley (bounties/bets), crypto, djvape, ghoster, gymbro,
-  waffle, willnot; plus `gala.png`. `ARENA_EXTRA_WALLS` holds per-arena walls (`gymbro`: back racks band) and is applied by
+  waffle, willnot; plus `gala.png`. gymbro is Gemini art; the other six are painted in code by
+  `tools/arena_paint/paint_arenas.py` (Nov 10; stand-ins until M7 art lands; the script header lists where each
+  in-code overlay sits). Render one in game: `tools/arena_shot.tscn -- <id>` or `-- bounty:sendback` (alley). `ARENA_EXTRA_WALLS` holds per-arena walls (`gymbro`: back racks band) and is applied by
   the `arena_id` setter → `_sync_arena_walls`. `_draw_arena` still draws text signs for ghoster/djvape/crypto; delete
   them when the art letters the sign. The top HUD covers the top ~35 units of an arena.
 - **Checks:** `tools/map_shot.tscn` (whole town), `tools/arena_shot.tscn -- <id>|home|title|dolores|at:X,Y`,
@@ -730,4 +738,3 @@ the $150 intro, cast.gd DEFAULTS (now has `stray` + `gala_baron`). Still open be
 - CLAUDE.md M5 says "burst-preview splashes unused (keyed versions shipped)", but the same entry and the files show the
   opaque burst cards shipped.
 - M7 counts disagree: QUEUE says "3/19 done", a CLAUDE.md line says "2/19 in", and another says "the 16 M7 backgrounds".
-- The new-game intro says Monday costs $150 (RENT+BILLS); `weekly_base()` also adds HOUSEHOLD $45 (+ plans/bumps).
