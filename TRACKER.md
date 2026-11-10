@@ -7,7 +7,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 - **2026-11-10 (evening)** Title screen shows the real Duff: both tattoo sleeves and the fox on his neck, from his
   style-C portrait, in a comic panel over the in-game kitchen (`tools/title_compose.py`,
-  `docs/renders/title_tattoos_before_after.png`). GitHub Actions itch deploy (`.github/workflows/deploy_itch.yml`).
+  `docs/renders/title_tattoos_before_after.png`).
 - **2026-11-10** IGN review fixes: phone-first touch wording and bigger outlined buttons; first Monday's rent
   prorated to half and the Fork open the first weekend; six boss arenas painted in code (alley, Seen Cafe,
   Club Cloud 9, crypto garage, tower office, Waffle Haus); the gala invite arrives the morning after the ending,
