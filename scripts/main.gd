@@ -569,6 +569,7 @@ func _spawn_raccoons() -> void:
 		rc.set_physics_process(location == "outside")
 		raccoons.append(rc)
 
+const TITLE_HELP_TOUCH: = ["Move: drag anywhere on the left half.  A: talk or use when someone's close, otherwise bonk (tap fast for a 3-hit combo).  B: dodge roll.  G: gear.  Phone: the phone icon up top.", " ", "S: special (hold to charge).  <>: swap special.  D: Demon Time.  Tap the top bar for money, bills and stats."]
 const TITLE_HELP: = ["Move: WASD / arrows / joystick.  Use: E or A.  Bonk: Space (or A), mash for a 3-hit combo.  Dodge roll: Shift or B.  Gear: I or G.  Phone: P or the phone icon.", " ", "Special: F or S (hold to charge).  Swap special: Q or <>.  Demon Time: R or D.  Spend stat points: T."]
 
 func show_title() -> void:
@@ -588,7 +589,7 @@ func show_title() -> void:
 		if id == "settings":
 			open_settings()
 		elif id == "help":
-			_menu("How to play", TITLE_HELP, [["back", "Back", KEY_1]], func (_b: String) -> void: show_title())
+			_menu("How to play", TITLE_HELP_TOUCH if Cast.touch else TITLE_HELP, [["back", "Back", KEY_1]], func (_b: String) -> void: show_title())
 		elif id == "continue":
 			in_title = false
 			load_game()
@@ -613,7 +614,7 @@ func new_game(write_save: bool = true) -> void:
 	daily_new_day()
 	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Heard.",
 		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
-		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. The Twisted Fork (bottom-right) needs a cook. They always need a cook." % weekly_base()])
+		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. This first Monday it's prorated to $%d. The Twisted Fork (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))]])
 	if write_save:
 		save_game()
 
@@ -756,7 +757,7 @@ func from_dict(d: Dictionary) -> void:
 	gala_unlocked = bool(d.get("gala_unlocked", false))
 	gala_beaten = bool(d.get("gala_beaten", false))
 	gala_runs = int(d.get("gala_runs", 0))
-	if not gala_unlocked and day_count >= GALA_DAY:
+	if not gala_unlocked and gala_due():
 		check_gala_unlock(false)   # save from before the day-24 gate, already past the invite morning
 	fund_happy_day = int(d.get("fund_happy_day", -1))
 	fund_happy_today = float(d.get("fund_happy_today", 0.0))
@@ -869,6 +870,7 @@ func close_overlay() -> void:
 		hud.visible = true
 		touch.set_process_input(true)
 		touch.visible = DisplayServer.is_touchscreen_available() or OS.has_feature("web_ios") or OS.has_feature("web_android") or bool(touch.get("used"))
+		Cast.touch = touch.visible
 	_sync_world()
 
 func _menu(heading: String, lines: Array, opts: Array, cb: Callable, backdrop: String = "") -> void:
@@ -1434,8 +1436,16 @@ func _tick_plans() -> void:
 		pl["left"] = int(pl["left"]) - 1
 	plans = plans.filter(func (pl): return int(pl["left"]) > 0)
 
+## Week one is prorated (Nov 10, review fix): a new game starts Friday with $40, so a full $195 on the first
+## Monday was a guaranteed late notice. The first Monday (story day <= 7, nothing paid yet) bills half.
+func first_week_prorate() -> bool:
+	return weeks_paid == 0 and late_notices == 0 and day_count <= 7
+
 func pay_rent() -> Array:
 	var base: = weekly_base()
+	var prorated: = first_week_prorate()
+	if prorated:
+		base = int(ceil(base / 2.0))
 	var due: = base + rent_debt
 	var parts: = "rent $%d, bills $%d, family basics $%d%s" % [RENT + rent_bump, BILLS, Life.HOUSEHOLD, (", payment plans $%d" % plan_due()) if plan_due() > 0 else ""]
 	_tick_plans()
@@ -1443,6 +1453,9 @@ func pay_rent() -> Array:
 		money -= due
 		rent_debt = 0
 		weeks_paid += 1
+		if prorated:
+			return ["Monday. Rent is due. Rent is always due.",
+				"First week's prorated, since I moved in on a Friday. I pay $%d, half of the usual. $%d left. Next Monday it's the full $%d." % [due, money, weekly_base()]]
 		return ["Monday. Rent is due. Rent is always due.",
 			"I pay $%d (%s%s). $%d left. Landlord's third boat thanks me." % [due, parts, (", back rent $%d" % (due - base)) if due > base else "", money]]
 	var partial: = maxi(0, money)
@@ -1455,7 +1468,7 @@ func pay_rent() -> Array:
 		"Can't cover $%d (%s). I pay what I've got ($%d). Late fee $%d, because being broke is expensive. Owe $%d next Monday. {partner}'s stressed. -20 Happiness" % [due, parts, partial, LATE_FEE, rent_debt]]
 
 func rent_due() -> int:
-	return weekly_base() + rent_debt
+	return (int(ceil(weekly_base() / 2.0)) if first_week_prorate() else weekly_base()) + rent_debt
 
 func days_until_rent() -> int:
 	var d: = (7 - day_i % 7) % 7
@@ -1766,10 +1779,15 @@ func try_shift() -> void:
 	if calendar_event() == "thanksgiving":
 		_say(["The Fork's closed for Thanksgiving. First time in history. Chef's 'with family,' which means his boat."])
 		return
-	if Daily.is_weekend(day_i % 7):
+	if Daily.is_weekend(day_i % 7) and not first_weekend():
 		_say(["It's the weekend. The schedule says I'm off. The Fork can lose money without me for once."])
 		return
 	start_shift()
+
+## The first weekend the Fork is short-staffed and takes Duff (Nov 10, review fix): two extra shifts before the
+## first Monday, so a new player can actually make rent.
+func first_weekend() -> bool:
+	return day_count <= 3
 
 func start_shift() -> void:
 	if in_shift:
@@ -2841,8 +2859,13 @@ func check_fund_goal() -> bool:
 
 ## Day GALA_DAY morning: the gala invite (Committee thread + Madison's guest-list text).
 ## Old saves that already have gala_unlocked keep it; saves past the day catch up on load.
+## Nov 10 (review fix): beating {ex_final} on story day 12 used to leave the gala locked until day 24, so the
+## biggest fights sat behind 12 dead days after the credits. The invite now also lands the morning after the ending.
+func gala_due() -> bool:
+	return day_count >= GALA_DAY or bool(story.get("ending_seen", false))
+
 func check_gala_unlock(toast: bool = true) -> bool:
-	if gala_unlocked or day_count < GALA_DAY:
+	if gala_unlocked or not gala_due():
 		return false
 	gala_unlocked = true
 	text("gala", "gala", "Dear {hero}. A seat opened up at THE ELITE GALA. Our intern mailed your invite by mistake. We honor our mistakes. Barely.")
@@ -3189,7 +3212,7 @@ func _after_ending(_n: Node, _s: float, _x: Array) -> void:
 	player.position = INT_SPAWN
 	_set_camera()
 	_sync_world()
-	_say(["Post-game: the days keep going. Rent keeps coming. The Gala, Stonks and {sister}'s Wordle are all still here.", "(Beaten bosses stay beaten. Thanks for playing.)"])
+	_say(["Post-game: the days keep going. Rent keeps coming. Stonks and {sister}'s Wordle are all still here.", "Tomorrow morning there's a gold envelope coming. The real final round is a black-tie party. (Beaten bosses stay beaten.)"])
 	if not has_car:
 		text("madison", "madison", "we're officially a family now. families have minivans. a used one is $%d. start saving, chef <3 (buy it at any bus stop)" % Transit.CAR_PRICE)
 		unread["madison"] = true

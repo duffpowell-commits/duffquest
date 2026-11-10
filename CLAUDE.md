@@ -7,6 +7,15 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
 **Reference:** `reference.md` = how the game works (systems, data, art rules, tools, build). This file = session log.
 
 ## Where things stand
+- **Nov 10 evening: IGN review fixes merged** (branch `review-fixes`). (1) **Phone-first controls:** `Cast.touch` +
+  `Cast.TOUCH_WORDS` rewrite keyboard hints ("PULL (Space)" -> "PULL IT") in minigames/buttons while the touch layer is up;
+  touch-only "How to play" (`TITLE_HELP_TOUCH`); buttons radius 9, outlined captions, A says next / talk/use / bonk.
+  (2) **Gentler week one:** first Monday bills half (`first_week_prorate()`), the Fork takes shifts the first weekend
+  (`first_weekend()`, days 2-3); intro line says so. (3) **Real boss arenas:** the six identical placeholder rooms
+  (alley, ghoster, djvape, crypto, willnot, waffle) are painted in code, `tools/arena_paint/paint_arenas.py` (stand-ins
+  until M7 art); sheet `docs/renders/arenas_painted_sheet.png`, in game `docs/renders/arenas_ingame.png`
+  (`arena_shot -- bounty:sendback` renders the alley). (4) **Gala bug:** invite lands the morning after the ending
+  (`gala_due()`), not 12 dead days later on day 24; soak updated. test_daily 112/112.
 - **Nov 9 night: money paths tested.** `_money_path_checks` in `tools/test_daily.gd`: bus pass, minivan, brokerage buy/sell (wealth conserved), 60 market weeks (finite prices), college fund caps, symphony date gating + result. All passed first run (no bugs). Doc drift fixed (reference.md section 9 lists what is still open).
 - **Nov 9 night: itch deploys from GitLab CI.** `deploy_itch` runs on main; needs CI/CD variable `BUTLER_API_KEY` (masked, protected), else logs `SKIP` and passes. CI installs python3 for lossy imports. GitLab account is verified; main pipelines run (test job ~3 min). This sandbox can't reach itch.io. See `HANDOFF.md` section 3.
 - **Nov 10 ~04:30: gala exes' sprites + IGN review** (branch `gala-exes-sheets`): Canva face-ref uploads are blocked for these sessions, so the 4 gala exes' `ch_<id>` sheets were repainted in code from repo sheets (`tools/sheet_repaint/<id>.py`; bases: old ch_husk, old ch_donald, ch_crypto, ch_gymbro; old sheets in `grok_art/2026-11-10-gala-exes/old/`). Review `docs/reviews/gala_exes_sheets.md`, render `docs/renders/gala_exes_sheets_ingame.png`. Fixed `ch_crypto` side rows (were reversed vs `Art.row_for`). Outside review: `docs/reviews/ign_review_2026-11-10.md` (6.4/10) with a ranked fix list; good source for the next milestone.

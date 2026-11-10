@@ -55,9 +55,36 @@ static func T(s: String) -> String:
 			s = s.replace(p[0], p[1])
 	if clean:
 		s = clean_text(s)
+	if touch:
+		s = touch_text(s)
 	return s
 
 static var clean: = false
+
+## Phone mode (set by main when the touch controls show): keyboard hints in player-facing text are
+## rewritten to the on-screen buttons or dropped, so a phone player never reads "Space" or "Enter".
+## Only exact, known phrases are touched: story text that says "space" is left alone.
+static var touch: = false
+const TOUCH_WORDS: = [
+	[" (H switches)", " (SWITCH HAND)"], ["HEAT -/+ (Z/X)", "the HEAT buttons"], ["Drop and pull baskets (1/2).", "Drop and pull baskets."],
+	["PULL (Space)", "PULL IT"], ["SEND with Enter", "tap SEND"], [" or press 1-4", ""],
+	["Compliant (1) or Violation (2)", "Compliant or Violation"], [" (Enter = center)", ""],
+	[" Keys: arrows + Space, X toss.", ""], [" (or arrows + hold Space)", ""], [" (drag / Space)", ""],
+	[" Enter = guess.", ""], ["  (C / Space)", ""], ["  (Space)", ""], [" (Space)", ""],
+]
+static var _touch_memo: Dictionary = {}
+
+static func touch_text(s: String) -> String:
+	if _touch_memo.has(s):
+		return str(_touch_memo[s])
+	var out: = s
+	if out.find("(") >= 0 or out.find("Enter") >= 0 or out.find("press") >= 0 or out.find("Keys") >= 0:
+		for w in TOUCH_WORDS:
+			out = out.replace(str(w[0]), str(w[1]))
+	if _touch_memo.size() > 4000:
+		_touch_memo.clear()
+	_touch_memo[s] = out
+	return out
 
 const CLEAN_WORDS: = [
 	["motherfuck(?<s>er|ers|ing)?", "#$%!"], ["fuck(?<s>ing|in'|ed|er|ers|s)?", "#$%!"],

@@ -58,4 +58,4 @@ if [ "$WEB_CHECK" = 1 ]; then
 fi
 [ "$NO_PUSH" = 1 ] && exit 0
 : "${BUTLER_API_KEY:?set BUTLER_API_KEY (vault: duff-vault)}"
-echo "== butler push"; butler push build/web dufftkyosht/duff-quest:html --userversion "$(git rev-parse --short HEAD)"
+echo "== butler push"; butler push build/web dufftkyosht/duff-quest:html --userversion "${CI_COMMIT_SHORT_SHA:-$(git rev-parse --short HEAD 2>/dev/null || echo local)}"

@@ -1,6 +1,6 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
-##   (ids: a boss arena, "title", "home", "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "at:X,Y" (outdoors at a world point), or "fryer"/"sandwich" = the kitchen station with food in it)
+##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "title", "home", "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "at:X,Y" (outdoors at a world point), or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var game: Node
@@ -50,6 +50,8 @@ func _process(_d: float) -> void:
 			m.start_waffle()
 		elif id in ["fryer", "sandwich", "home"]:
 			m.debug_station(id)
+		elif id.begins_with("bounty:"):  # a bounty fight in the alley behind the Fork, e.g. bounty:sendback
+			m.start_bounty(id.substr(7))
 		else:
 			m.start_story_fight(id)
 	if frame == 215 and id in ["fryer", "sandwich", "waffle"]:
