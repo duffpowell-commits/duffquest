@@ -8,8 +8,9 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
 
 ## Where things stand
 - **TRACKER.md** (repo root) is the running Built / Next / Could improve list. Update it every milestone with this file.
-  GitHub (`duffpowell-commits/duffquest`) is back as a remote (Nov 10); `.github/workflows/deploy_itch.yml` ships main to
-  itch like GitLab's job once the repo secret `BUTLER_API_KEY` exists.
+  GitHub (`duffpowell-commits/duffquest`) is back (Nov 10). Its `.github/workflows/build.yml` already uploads main to itch
+  (needs repo secret `BUTLER_API_KEY`). GitHub and GitLab histories are unrelated (GitLab was a re-import); GitHub's
+  main tree = our 9148e34, so join with a merge commit (parents gh/main + main, our tree), never a force push.
 - **Nov 10 ~18:30: title screen shows the real Duff** (branch `title-tattoos`, Duff's note: missing tattoos, wrong style).
   `tools/title_compose.py` builds `bg_title.png` (now 1280x720, manifest `s` 4) from the style-C portrait
   (`portraits_hd/duff.png`, grin: both sleeves, fox neck piece, beard, bun) in a flat comic panel over the in-game
