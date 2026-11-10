@@ -21,7 +21,8 @@ jobs:
     steps:
       - name: Skip without a token
         if: env.GITLAB_TOKEN == ''
-        run: echo "SKIP: no GITLAB_TOKEN repo secret, so main was not mirrored to GitLab."
+        run: |
+          echo "SKIP: no GITLAB_TOKEN repo secret, so main was not mirrored to GitLab."
       - uses: actions/checkout@v4
         if: env.GITLAB_TOKEN != ''
         with:
