@@ -7,7 +7,8 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 - **2026-11-10 (evening)** Title screen shows the real Duff: both tattoo sleeves and the fox on his neck, from his
   style-C portrait, in a comic panel over the in-game kitchen (`tools/title_compose.py`,
-  `docs/renders/title_tattoos_before_after.png`).
+  `docs/renders/title_tattoos_before_after.png`). GitHub is the main repo again; GitLab is a backup mirrored by
+  `.github/workflows/mirror_gitlab.yml`.
 - **2026-11-10** IGN review fixes: phone-first touch wording and bigger outlined buttons; first Monday's rent
   prorated to half and the Fork open the first weekend; six boss arenas painted in code (alley, Seen Cafe,
   Club Cloud 9, crypto garage, tower office, Waffle Haus); the gala invite arrives the morning after the ending,
@@ -32,7 +33,8 @@ One page: what's built, what's next, what could be better. Updated at every mile
 3. **Cat loading screen:** Alastor, Lucifer and Freya.
 4. **Brittany playtest** of the gentler first week on her iPhone.
 5. **Balance call:** happiness gates are strict (`tasks/todo.md`), and the errand drain is harsh in week one.
-6. **M7 backgrounds** still waiting on real art: the remaining scene backdrops in
+6. **GitHub secrets (Duff):** `GITLAB_TOKEN` for the backup mirror; check `BUTLER_API_KEY` for the itch upload.
+7. **M7 backgrounds** still waiting on real art: the remaining scene backdrops in
    `grok_art/requests/REQUEST_M7_backdrops.md`.
 
 ## Could improve
