@@ -23,14 +23,13 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - Tests: `test_daily` ALL PASS; 30-day soak clean.
 
 ## Next (in order; details in TRACKER.md)
-1. **Itch page:** make the page play the CI build (`html` channel) instead of the old manual upload, then paste
-   `docs/itch/PAGE.md` + images. Duff's step on the itch dashboard; sessions can't reach itch.io.
+1. **Itch page:** CI-build switch DONE (Duff, Nov 10). Still: paste `docs/itch/PAGE.md` + images. Duff's step on the itch dashboard; sessions can't reach itch.io.
 2. **Cat loading screen** (Alastor, Lucifer, Freya) and the remaining **M7 scene backdrops**
    (`grok_art/requests/REQUEST_M7_backdrops.md`). Art comes from Canva via Duff's Drive (see Art pipeline).
 3. **Brittany playtest** of the gentler first week (iPhone).
 4. **Balance call (Duff decides):** strict happiness gates (`tasks/todo.md`), harsh week-one errand drain.
 5. Could-improve list from the IGN review (6.4/10): three art styles, nightly routine with no skip, bounty bosses
-   reusing moves, dead "Octavia's fund $0 / 100k" HUD line, 3-card touch tutorial, gala floor still beige.
+   reusing moves, 3-card touch tutorial, gala floor still beige. (Bedtime skip + fund line done Nov 10.)
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`

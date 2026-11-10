@@ -318,6 +318,7 @@ var loading_on: = false                     # a loading screen is up
 var _drawn_loc: = ""                        # location the world canvas was last drawn for
 var no_loading: = false                     # tools: skip loading screens
 var hint: = ""
+var routine_played: = false   # true after the first full bedtime routine; unlocks the BEDTIME skip card
 var toast: = ""
 var toast_t: = 0.0
 var save_flash_t: = 0.0
@@ -641,7 +642,7 @@ func to_dict() -> Dictionary:
 		"errand": errand.duplicate(true), "errand_stats": errand_stats.duplicate(),
 		"buffs": buffs.duplicate(true), "buff_days": buff_days.duplicate(), "meal_day": meal_day, "cha_line_day": cha_line_day,
 		"date_invite": date_invite.duplicate(), "date_stats": date_stats.duplicate(), "glow_day": glow_day,
-		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "quest_wait": quest_wait,
+		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "routine_played": routine_played, "quest_wait": quest_wait,
 		"bills": bills.duplicate(true), "owed": owed.duplicate(true), "plans": plans.duplicate(true), "rent_bump": rent_bump,
 		"formula_spike_day": formula_spike_day, "event_days": event_days.duplicate(), "phone_cracked": phone_cracked, "bills_paid": bills_paid,
 		"has_car": has_car, "bus_pass_until": bus_pass_until, "bus_rides": bus_rides,
@@ -720,6 +721,7 @@ func from_dict(d: Dictionary) -> void:
 	plasma = Life.clean_plasma(d.get("plasma", {}))
 	mood = Moods.clean_mood(d.get("mood", {}))
 	couch_night = bool(d.get("couch_night", false))
+	routine_played = bool(d.get("routine_played", int(d.get("day_count", 1)) > 1))   # old saves: past night one
 	quest_wait = float(d.get("quest_wait", 0.0))
 	bills = Life.clean_list(d.get("bills", []), ["day", "due"])
 	owed = Life.clean_list(d.get("owed", []), ["day", "fee", "text"])
@@ -1284,11 +1286,47 @@ func go_to_sleep(passed_out: bool) -> void:
 			night_report.append("No Show & Tell tonight. But she still leaves her phone face-up on my side of the bed. Just in case.")
 		_start_baby_shift()
 		return
+	if not routine_played:   # first night: play it all once so the routine makes sense
+		_play_night_routine()
+		return
+	_menu("BEDTIME", ["Show & Tell with {partner}, the 3 AM shift, then the creak-free crawl to bed.",
+		"Skip it and I wing the whole night on autopilot. Safe, but smaller payoff."],
+		[["play", "Play tonight", KEY_1], ["skip", "Skip: autopilot", KEY_2]],
+		func (c: String) -> void:
+			if c == "skip":
+				_skip_night_routine()
+			else:
+				_play_night_routine())
+
+func _play_night_routine() -> void:
 	var st: = ShowTellScript.new()
 	st.ctx = {"seed": day_count * 7919 + int(wordle_seed) }
 	_run_game(st, _after_show_tell)
 
+## IGN review: the nightly trio ran every night with no skip. Autopilot = a middling Show & Tell
+## (+8, below a good game's +10..12), one bottle + one diaper used, sneak to bed clean. Running out
+## of supplies still costs exactly what it costs in the real minigame.
+func _skip_night_routine() -> void:
+	var gain: = 8.0
+	happiness = minf(100.0, happiness + gain)
+	night_report.append("Autopilot Show & Tell. I nod at every plushie. She knows. She lets it slide. +%d Happiness" % int(gain))
+	var formula: = int(inventory.get("formula", 0))
+	var diapers: = int(inventory.get("diapers", 0))
+	if formula > 0:
+		inventory["formula"] = formula - 1
+	else:
+		happiness = maxf(0.0, happiness - 15.0)
+		night_report.append("3 AM and no formula. {partner} has to make a gas station run. -15 Happiness")
+	if diapers > 0:
+		inventory["diapers"] = diapers - 1
+	else:
+		happiness = maxf(0.0, happiness - 10.0)
+		night_report.append("Out of diapers. Dish towel diaper. -10 Happiness")
+	night_report.append("3 AM shift on autopilot: bottle, diaper, rock, bed. I don't remember any of it.")
+	_wake(0)
+
 func _after_show_tell(_n: Node, score: float, _notes: Array) -> void:
+	routine_played = true
 	var gain: = roundf(3.0 + 9.0 * score)
 	happiness = minf(100.0, happiness + gain)
 	var pct: = int(round(score * 100.0))
