@@ -165,8 +165,14 @@ func _draw() -> void:
 		_mt(f, r2.position + Vector2(4, 9), toast, tw, 7, n, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER)
 
 	if m.hint != "" and m.dialog.is_empty():
+		# Dark pill behind the prompt so it reads on any floor (the teal rug ate the old pale-green text).
 		var hr: Rect2 = L["hint"]
-		_t(f, hr.position + Vector2(0, 9), Cast.T(m.hint), 7, Color("#c0d890"), hr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
+		var ht: String = Cast.T(m.hint)
+		var tw: = f.get_string_size(ht, HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x
+		var pill: = Rect2(hr.position.x + (hr.size.x - tw) * 0.5 - 5.0, hr.position.y + 1.0, tw + 10.0, 11.0)
+		draw_rect(pill, Color(INK, 0.82))
+		draw_rect(pill, Color("#f2c14e"), false, PX)
+		_t(f, hr.position + Vector2(0, 9), ht, 7, Color("#fff4d6"), hr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 
 	if not m.dialog.is_empty():
 		var line: String = Cast.T(str(m.dialog[0]))
