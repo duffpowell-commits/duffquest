@@ -60,6 +60,7 @@ func _init() -> void:
 	check("station_best survives save/load", main.station_best.get("fryer") == "S")
 	_extra_checks(main)
 	_money_path_checks(main)
+	_review_fix_checks(main)
 	_ko_sfx_checks()
 	_ko_gore_checks()
 	_button_fit_checks()
@@ -326,6 +327,51 @@ func _gala_gate_checks(main: Node) -> void:
 	main.from_dict(JSON.parse_string(JSON.stringify(d)))
 	check("gala: save on day 20 stays locked", not main.gala_unlocked)
 	SaveGame.erase(main.save_path)
+
+## Nov 10 review fixes: gentler first week, gala after the ending, phone wording.
+func _review_fix_checks(main: Node) -> void:
+	main.no_loading = true
+	main.close_overlay()
+	main.dialog.clear()
+	main.weeks_paid = 0
+	main.late_notices = 0
+	main.rent_debt = 0
+	main.day_count = 1
+	var full: int = main.weekly_base()
+	check("first week: rent is prorated to half", main.first_week_prorate() and main.rent_due() == int(ceil(full / 2.0)))
+	main.money = 1000
+	main.pay_rent()
+	check("first week: paying takes only the prorated amount", main.money == 1000 - int(ceil(full / 2.0)) and main.weeks_paid == 1)
+	check("second week: full rent again", not main.first_week_prorate() and main.rent_due() == full)
+	main.weeks_paid = 0
+	main.day_count = 8
+	check("prorate never applies after the first week", not main.first_week_prorate())
+	main.day_count = 2
+	check("first weekend: the Fork is open on day 2", main.first_weekend())
+	main.day_count = 4
+	check("later weekends: the Fork is closed again", not main.first_weekend())
+	# the gala follows the story ending (day 12), not only GALA_DAY
+	main.gala_unlocked = false
+	main.threads["gala"] = []
+	main.daily = Daily.new_state()
+	main.story["ending_seen"] = false
+	main.day_count = 12
+	check("gala: not due on day 12 before the ending", not main.gala_due())
+	main.story["ending_seen"] = true
+	check("gala: due the moment the ending has played", main.gala_due())
+	main.day_count = 12
+	main.day_i = 15
+	main._wake(0)
+	main.close_overlay()
+	main.dialog.clear()
+	check("gala: the morning after the ending (day 13) brings the invite", main.day_count == 13 and main.gala_unlocked and not (main.threads.get("gala", []) as Array).is_empty())
+	main.story["ending_seen"] = false
+	main.gala_unlocked = false
+	# phone wording: keyboard hints are rewritten only while touch controls are up
+	Cast.touch = true
+	var phone: = Cast.T("PULL (Space)")
+	Cast.touch = false
+	check("touch: keyboard hints become tap words", phone == "PULL IT" and Cast.T("PULL (Space)") == "PULL (Space)")
 
 func _falcor_checks(main: Node) -> void:
 	main.no_loading = true

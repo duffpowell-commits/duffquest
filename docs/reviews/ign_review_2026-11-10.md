@@ -33,3 +33,8 @@ The writing, systems and test suite (102 checks green; six 30-day soak runs, zer
 ## Closing
 
 DuffQuest knows exactly who it's about, and that specificity is rare. Under it sits a sturdy, tested sim. But a stranger on itch meets keyboard prompts on a phone, a grey box where the dumpster should be, and a credits roll before the best fight. Fix the first half hour and the floor goes up a full point.
+
+## Follow-up (Nov 10 evening, branch `review-fixes`)
+All three top fixes plus the gala timing bug were addressed. Phone: tap wording, touch-only help, bigger outlined buttons.
+Week one: first Monday prorated to half, the Fork takes shifts the first weekend. Arenas: six placeholder rooms painted in
+code (`docs/renders/arenas_ingame.png`). Gala: invite the morning after the ending. Not re-scored.

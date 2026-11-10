@@ -62,7 +62,7 @@ comic-panel knockout cutscenes. Godot 4.5, GDScript, landscape, 640x360 game + H
 - Billionaire parody bosses -> **Madison's exes at the gala**: Tyler Pivot (id `husk`, influencer), Grant Gratuity
   (`bozos`, tip-app CEO), Landlord Lance (`fences`, owns their building), Chip Leverage (`donald`, final; bought the
   Fork). Baron Von Trustfund stays as host. Names in `data/cast.json`. Old set saved in `docs/dlc_concepts/billionaires/`.
-- Gala opens story day 24 (`GALA_DAY` in `scripts/main.gd`); Octavia's $100k fund is a separate long-term goal.
+- Gala opens the morning after the story ending, or story day 24 at the latest (`gala_due()`, `GALA_DAY` in `scripts/main.gd`; changed Nov 10); Octavia's $100k fund is a separate long-term goal.
 - **Jams:** itch "2026 Jam" bans AI art -> out. Seasonal RPG Game Jam host (illustrator) signals anti-AI -> skip.
   No email exists for her anyway. Plan = launch DuffQuest on itch as a normal free game. Options ranked in
   `tasks/todo.md` (AI Browser Game Jam #6 in Dec if posted; free listings: 5 Year Long Jam, Best Game of the Year).
@@ -99,7 +99,7 @@ comic-panel knockout cutscenes. Godot 4.5, GDScript, landscape, 640x360 game + H
 ## 7. Testing & QA tools
 - `godot --headless --path . --script tools/test_daily.gd` -> must print ALL PASS **and** no `SCRIPT ERROR` lines.
 - Smoke: `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 --write-movie /tmp/s/f.png --quit-after 600`.
-- Soak: `tools/soak.sh` (30 days, several seeds; checks gala day 24, money/energy never negative, all bosses).
+- Soak: `tools/soak.sh` (30 days, several seeds; checks the gala opens on time (after the ending or day 24), money/energy never negative, all bosses).
 - Web: `tools/web_boot_check.py` (or `ship_itch.sh --web-check`). Perf: `tools/perf_run.tscn`, `docs/qa/perf_report.md`.
 - Text fit: `tools/text_fit.gd` -> `docs/text_fit.txt` (0 overflows). Note: it doesn't check `data/knockouts.json`.
 - Render tools (save to `docs/renders/`, never paste many images into chat): `ko_shot` (`-- <boss> [gore]`), `qa_shot`,
