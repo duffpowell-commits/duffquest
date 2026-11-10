@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/bg_grocery.png-47068d195cf8a56b73d5af8dd6acf8
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=1.0
 compress/uastc_level=0

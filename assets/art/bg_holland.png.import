@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/bg_holland.png-05754fa3685b248fc9ca96a6b2e784
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=1.0
 compress/uastc_level=0

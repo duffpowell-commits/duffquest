@@ -24,12 +24,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 ## Next (in order; details in TRACKER.md)
 1. **Itch page:** CI-build switch DONE (Duff, Nov 10). Still: paste `docs/itch/PAGE.md` + images. Duff's step on the itch dashboard; sessions can't reach itch.io.
-2. **Import the Nov 10 Canva drop** (cat loading screen + 9 scene backdrops + gala floor): generated, waiting on
-   Duff to save full-res to Drive. Ids, targets, media ids: `grok_art/requests/CANVA_DROP_2026-11-10.md`.
+2. **Nov 10 Canva drop: DONE** (cat loading screen, 9 scene backdrops, gala floor). Render: `docs/renders/backdrops_nov10.png`.
 3. **Brittany playtest** of the gentler first week (iPhone).
 4. **Balance:** softened Nov 10 (gates 45-65, slower wait drain with a floor of 40). Re-check after Brittany's playtest.
 5. Could-improve list from the IGN review (6.4/10): three art styles, nightly routine with no skip, bounty bosses
-   reusing moves, 3-card touch tutorial, gala floor still beige.
+   reusing moves, 3-card touch tutorial.
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`
@@ -47,9 +46,14 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 ## Art pipeline
 - House style C: `docs/art_direction/STYLE_LOCK.md`. Duff always has both tattoo sleeves + fox neck piece (`docs/duff_look.md`).
-- Canva generates; **sessions can't download Canva exports** (proxy blocks export-download.canva.com). Duff saves the
-  PNGs to Drive "97 Gemini art drops"; pull them with the Drive connector's `download_file_content` (big base64 spills
-  to a tool-results file: decode with python, don't read it into context).
+- **Fully automatic art pipeline (Nov 10), no Duff steps:** Canva `generate-image` -> put each media id full-bleed on
+  its own 1920x1080 page of one Canva design (`edit-design` insert_fill, commit) -> `export-design` png -> Zapier
+  Google Drive "Upload File" (connection `023ae0fb-19cc-8509-b28e-979de3a98f75`, pass it as connection_id) with the
+  export URL into Drive "97 Gemini art drops" (folder id `1kwe88L_hV7qM_-It2I8n6ZRTMchYoFT4`) -> Drive connector
+  `download_file_content` (spills to a tool-results JSON file; decode `content` with python, don't read it into
+  context). The sandbox itself can't fetch Canva export URLs; Zapier can. Export links expire in hours: re-export.
+- Backdrops + loading screens: `tools/backdrop_import/import_backdrops.py <dir>` (1280x720, manifest "s": 4, then set
+  `compress/mode=1` in the .import and reimport). Check: `res://tools/backdrop_shot.tscn` + `tools/backdrop_sheet.py`.
 - Arenas: `tools/arena_import/import_arenas.py`; title: `tools/title_compose.py`. Big HD art ships lossy (`.import` mode 1).
 
 ## House rules

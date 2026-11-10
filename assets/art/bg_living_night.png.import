@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/bg_living_night.png-133717ecc1e2c49205457d598
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=1.0
 compress/uastc_level=0
