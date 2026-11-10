@@ -8,7 +8,9 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
 
 ## Where things stand
 - **TRACKER.md** (repo root) is the running Built / Next / Could improve list. Update it every milestone with this file.
-  GitHub (`duffpowell-commits/duffquest`) is back (Nov 10). Its `.github/workflows/build.yml` already uploads main to itch
+  **GitHub (`duffpowell-commits/duffquest`) is the primary home again (Nov 10, Duff); GitLab is the backup.**
+  `.github/workflows/mirror_gitlab.yml` mirrors main to GitLab on every push (needs repo secret `GITLAB_TOKEN`).
+  Push to GitHub; GitLab follows. Its `.github/workflows/build.yml` already uploads main to itch
   (needs repo secret `BUTLER_API_KEY`). GitHub and GitLab histories are unrelated (GitLab was a re-import); GitHub's
   main tree = our 9148e34, so join with a merge commit (parents gh/main + main, our tree), never a force push.
 - **Nov 10 ~18:30: title screen shows the real Duff** (branch `title-tattoos`, Duff's note: missing tattoos, wrong style).

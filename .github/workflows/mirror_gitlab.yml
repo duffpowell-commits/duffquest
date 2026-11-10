@@ -1,0 +1,32 @@
+name: mirror_gitlab
+
+# Backup: every push to main is mirrored to gitlab.com/dufftkyosht-group/duffquest (main only, never forced).
+# Needs repo secret GITLAB_TOKEN: a GitLab project access token for duffquest with write_repository.
+# Without it the job says why and passes.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: mirror-gitlab
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}
+    steps:
+      - name: Skip without a token
+        if: env.GITLAB_TOKEN == ''
+        run: echo "SKIP: no GITLAB_TOKEN repo secret, so main was not mirrored to GitLab."
+      - uses: actions/checkout@v4
+        if: env.GITLAB_TOKEN != ''
+        with:
+          fetch-depth: 0
+      - name: Push main to GitLab
+        if: env.GITLAB_TOKEN != ''
+        run: |
+          git push "https://oauth2:${GITLAB_TOKEN}@gitlab.com/dufftkyosht-group/duffquest.git" HEAD:refs/heads/main
