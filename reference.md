@@ -402,12 +402,15 @@ stay raw.
   `FRIDGE_R`, `COUNTER_R`, `COUCH_R`, `MIRROR_R`, `SIDE_TABLE_R`, `DRESSER_R`, `CAT_TREE_R`; `*_PT` interaction
   points: bed, crib, shower, kitchen, fridge calendar, couch, bowls, mirror, mat, mail). The exit is the drawn door at the
   bottom middle. When new art moves the furniture, move the rects (cheaper than a redraw).
-- **Arenas:** `assets/art/arena_<id>.png` 640×360: alley (bounties/bets), crypto, djvape, ghoster, gymbro,
-  waffle, willnot; plus `gala.png`. gymbro is Gemini art; the other six are painted in code by
-  `tools/arena_paint/paint_arenas.py` (Nov 10; stand-ins until M7 art lands; the script header lists where each
-  in-code overlay sits). Render one in game: `tools/arena_shot.tscn -- <id>` or `-- bounty:sendback` (alley). `ARENA_EXTRA_WALLS` holds per-arena walls (`gymbro`: back racks band) and is applied by
-  the `arena_id` setter → `_sync_arena_walls`. `_draw_arena` still draws text signs for ghoster/djvape/crypto; delete
-  them when the art letters the sign. The top HUD covers the top ~35 units of an arena.
+- **Arenas:** `assets/art/arena_<id>.png`: alley (bounties/bets), crypto, djvape, ghoster, waffle, willnot are painted
+  art (Canva, Nov 10) at 1280×720, manifest `s` 4, lossy import (q 0.85, set in their `.import` files); brought in by
+  `python3 tools/arena_import/import_arenas.py <dir of 1920×1080 PNGs>` (sources live in Duff's Drive "97 Gemini art drops").
+  gymbro is Gemini art at 640×360, `s` 2. `tools/arena_paint/` is the old code-painted fallback and OVERWRITES these
+  files: only run it on purpose. Render one in game: `tools/arena_shot.tscn -- <id>` or `-- bounty:sendback` (alley).
+  `ARENA_EXTRA_WALLS` (main.gd) holds each painting's back-wall furniture and side walls; applied by the `arena_id` setter
+  → `_sync_arena_walls`; check with `tools/arena_wall_check.tscn` (Duff stops at the furniture edge). Joke captions go
+  through `_arena_caption` (dark strip at y 18, under the HUD bar). The top HUD covers the top ~16 units of an arena.
+  Waffle Haus: `waffle.gd` `GRILLS` sit on the griddle fronts (y 64, wall 74), order rail `ry` 32 under the hood.
 - **Checks:** `tools/map_shot.tscn` (whole town), `tools/arena_shot.tscn -- <id>|home|title|dolores|at:X,Y`,
   `res://tools/arena_wall_check.tscn`, `python3 tools/make_m7_guides.py` (red collision boxes over the art; it has no main
   guard, so importing it runs it).

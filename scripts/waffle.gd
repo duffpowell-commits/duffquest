@@ -14,7 +14,7 @@ const BASE_PAY: = 5
 const MAX_TIP: = 3
 const WALKOUT_PEN: = 2
 const FINISH_BONUS: = 20
-const GRILLS: = [Vector2(90, 40), Vector2(160, 40), Vector2(230, 40)]
+const GRILLS: = [Vector2(64, 64), Vector2(160, 64), Vector2(256, 64)]  # the three griddles in arena_waffle
 const MENU: = [
 	["ALL-STAR", "All-Star Special. Eggs, toast, waffle, the works."],
 	["PECAN WAF", "Pecan waffle! Extra butter, extra pecan, extra regret."],
@@ -219,11 +219,8 @@ func clock_minutes() -> float:
 func _draw() -> void:
 	var o: = origin()
 	var f: = ThemeDB.fallback_font
-	var word: = "WAFFLE HAUS"
-	for i in word.length():
-		if word[i] == " ":
-			continue
-		draw_string(f, o + Vector2((150 + i * 16 + 3) / 1.5, 18.0 / 1.5), word[i], HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#1a1418"))
+	# lettering on the art's blank yellow sign (x 92..228, lower half sits below the HUD bar)
+	draw_string(f, o + Vector2(92, 26), "W A F F L E   H A U S", HORIZONTAL_ALIGNMENT_CENTER, 136, 8, Color("#1a1418"))
 	Art.person(self, "ch_dolores", o + Vector2(22, 92), Vector2.DOWN, t, false, call_t > 0.0)
 
 	for g in 3:
@@ -255,7 +252,7 @@ func _draw() -> void:
 				draw_circle(gp + Vector2(-6 + k * 4, -2 - (2.0 - smoke[g]) * 10.0 - k * 2), 4.0, Color(0.3, 0.3, 0.3, 0.5 * smoke[g] / 2.0))
 		draw_arc(gp + Vector2(0, 3), 9.0, 0, TAU, 16, Color(1, 0.85, 0.3, 0.3 + 0.2 * sin(t * 4.0 + g)), 1.0)
 
-	var ry: = 60.0
+	var ry: = 32.0  # order rail hangs just under the hood, above the griddles
 	draw_rect(Rect2(o + Vector2(10, ry - 1), Vector2(300, 1)), Color("#c8d0dc"))
 	var x: = 12.0
 	for tk in tickets:
