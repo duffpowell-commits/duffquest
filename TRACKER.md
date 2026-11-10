@@ -5,6 +5,9 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (late)** IGN fixes: nightly routine gets a BEDTIME card after night one (play, or skip on
+  autopilot: +8 Happiness, uses a bottle + diaper, no fail risk; missing supplies still cost). The dead
+  "Octavia's fund $0 / 100k" drawer line + bar are gone; the line shows only once there's money in the fund.
 - **2026-11-10 (late)** Interact prompt ("E / A: Talk to Madison") readable on any floor: dark pill, gold
   edge, cream text (was pale green on the teal rug). NPC/cat barks now dodge the pill instead of overlapping it
   (`barks.gd hint_rects`). Render id `hint` added (`docs/renders/hint_prompt_pill.png`).
@@ -33,7 +36,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Next
 
-1. **Itch page:** make it play the CI build (`html` channel) instead of the old manual upload (Duff, itch
+1. ~~Itch page CI build switch~~ done by Duff Nov 10. Still to paste: `docs/itch/PAGE.md` + images (Duff).
    dashboard), then paste `docs/itch/PAGE.md` and the images.
 2. **Cat loading screen:** Alastor, Lucifer and Freya.
 3. **M7 backgrounds** still waiting on real art: the remaining scene backdrops in
@@ -47,8 +50,6 @@ From the IGN-style review (`docs/reviews/ign_review_2026-11-10.md`) and QA, stil
 
 - **Gala floor** is still beige tiles; the arenas are painted now.
 - **Three art styles:** chibi pixel sprites, flat cartoon portraits, glossy anime KO panels.
-- **Nightly routine:** Show & Tell, the 3 AM baby game and the stealth crawl run every night with no skip.
 - **Bounty bosses reuse story moves** (Coupon Carol, the Allergy Liar, the Camper), and boss taunts lean on one joke formula.
-- **HUD:** the drawer still shows "Octavia's fund $0 / 100k", a goal nobody reaches that no longer unlocks anything.
 - **Touch tutorial:** the review wanted a 3-card move / A / roll tutorial on first launch; the help text is phone-worded now but still a text card.
 - **Madison's errand drain** (happiness ticks down in real time) can still feel harsh in week one.

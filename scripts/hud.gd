@@ -67,7 +67,7 @@ func rent_text() -> String:
 func fund_text() -> String:
 	var fv: float = m.fund_value()
 	var lbl: = ("$%.1fk" % (fv / 1000.0)) if fv >= 1000.0 else ("$%d" % int(fv))
-	return Cast.T("{baby}'s fund ") + lbl + " / 100k"
+	return Cast.T("{baby}'s college fund: ") + lbl   # no "/ 100k": the goal gates nothing since Nov 9
 
 ## Peek when something behind the drawer changes. First call only primes the values.
 func _watch() -> void:
@@ -91,7 +91,7 @@ func _watch() -> void:
 	elif now["rent"] != _seen["rent"]:
 		msg = rent_text()
 		col = PAPER
-	elif now["fund"] != _seen["fund"]:
+	elif now["fund"] != _seen["fund"] and int(now["fund"]) > 0:
 		msg = fund_text()
 		col = Color("#c8b0e8")
 	_seen = now
@@ -287,8 +287,9 @@ func drawer_lines() -> Array:
 	out.append([Cast.T(m.quest_text()), GOLD, 2])
 	var dr: int = m.days_until_rent()
 	out.append([rent_text(), Color("#e06a4a") if m.money < m.rent_due() and dr <= 2 else PAPER, 1])
-	out.append([fund_text(), Color("#c8b0e8"), 1])
-	out.append([Cast.T("{partner}: ") + Cast.T(m.mood_label()), Color("#e88aa8"), 1])
+	if m.fund_value() >= 1.0:   # only once there's money in it (IGN review: dead "$0 / 100k" line)
+		out.append([fund_text(), Color("#c8b0e8"), 1])
+	out.append([Cast.T("{partner}: ") + Cast.T(m.mood_label()), Color("#e88aa8"), 1, "mood"])
 	var bag: = bag_text()
 	out.append(["Bag: " + (bag if bag != "" else "empty"), PAPER if bag != "" else Color(1, 1, 1, 0.5), 2])
 	return out
@@ -303,7 +304,6 @@ func _draw_drawer(f: Font) -> float:
 		var n: = clampi(int(ceil(f.get_string_size(str(r[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x / (tw - 2.0))), 1, int(r[2]))
 		heights.append(n)
 		h += n * 8.0 + 1.0
-	h += 4.0   # fund bar
 	var box: = Rect2(dr.position, Vector2(dr.size.x, h + 2.0))
 	_panel(box, 0.9)
 	var y: = box.position.y + 3.0
@@ -311,10 +311,7 @@ func _draw_drawer(f: Font) -> float:
 		var r: Array = rows[i]
 		_mt(f, Vector2(box.position.x + 4, y + 6), str(r[0]), tw, 6, int(heights[i]), r[1])
 		y += int(heights[i]) * 8.0 + 1.0
-		if i == 2:
-			_bar(Vector2(box.position.x + 4, y), 90, m.fund_value() / Market.GOAL, Color("#9a78c0"))
-			y += 4.0
-		if i == 3:
+		if r.size() > 3 and r[3] == "mood":
 			_draw_face(Vector2(box.position.x + 10 + f.get_string_size(str(r[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x, y - 5), m.mood_face())
 	return box.end.y
 

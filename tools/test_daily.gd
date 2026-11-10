@@ -247,6 +247,7 @@ func _extra_checks(main: Node) -> void:
 	await _falcor_checks(main)
 	_soak_regressions(main)
 	_gala_gate_checks(main)
+	_bedtime_skip_checks(main)
 
 ## Bugs the 30-day soak (tools/soak.gd) found. Keep them fixed.
 func _soak_regressions(main: Node) -> void:
@@ -612,3 +613,29 @@ func _qa_leftover_checks() -> void:
 
 class FakeMain extends Node:
 	var station_best: Dictionary = {}
+
+## IGN review: the nightly routine gets a skip after night one (autopilot, smaller payoff).
+func _bedtime_skip_checks(main: Node) -> void:
+	main.no_loading = true
+	main.close_overlay()
+	main.dialog.clear()
+	main.couch_night = false
+	main.mood = main.Moods.new_mood()
+	main.cats_fed_day = main.day_count
+	main.routine_played = false
+	main.go_to_sleep(false)
+	check("bedtime: first night goes straight to Show & Tell (no skip card)", main.overlay_node != null and main.overlay_node.get_script() == main.ShowTellScript)
+	main.close_overlay()
+	main.routine_played = true
+	main.inventory["formula"] = 2
+	main.inventory["diapers"] = 0
+	main.happiness = 50.0
+	var d0: int = main.day_count
+	main._skip_night_routine()
+	main.close_overlay()
+	main.dialog.clear()
+	var rep: = "\n".join(main.night_report)
+	check("bedtime skip: day advances, +8 Show & Tell, dish towel when out of diapers, 1 bottle used",
+		main.day_count == d0 + 1 and rep.contains("+8 Happiness") and rep.contains("Dish towel") and int(main.inventory["formula"]) == 1)
+	var dd: Dictionary = main.to_dict()
+	check("bedtime: routine_played survives a save", bool(dd.get("routine_played", false)))
