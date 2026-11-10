@@ -1,5 +1,5 @@
 {
-  "_doc": "Loading screens: art = assets/art/loading/<id>.jpg (16:9, Canva, house style C). Caption = Duff at the bar, present tense, Palahniuk layer. Shown on new day / shift start / boss arena entry. 13 of 14 in (Nov 9); cat_sacrifice has no art yet and is skipped; waffle_showoff = ChatGPT C7.",
+  "_doc": "Loading screens: art = assets/art/loading/<id>.jpg (16:9, Canva, house style C). Caption = Duff at the bar, present tense, Palahniuk layer. Shown on new day / shift start / boss arena entry. 14 of 14 in (cat_sacrifice added Nov 10); waffle_showoff = ChatGPT C7.",
   "screens": [
     {
       "id": "fryer_nap",

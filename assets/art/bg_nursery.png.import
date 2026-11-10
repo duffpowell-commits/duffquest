@@ -15,7 +15,7 @@ dest_files=["res://.godot/imported/bg_nursery.png-c7007737f2b1a53f9a00702afd7cb7
 
 [params]
 
-compress/mode=0
+compress/mode=1
 compress/high_quality=false
 compress/lossy_quality=1.0
 compress/uastc_level=0
