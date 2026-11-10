@@ -340,6 +340,13 @@ var arena_id: = "":
 # Extra walls for arenas whose art has furniture past the shared bands (relative to ARENA_ORIGIN, world units).
 const ARENA_EXTRA_WALLS: = {
 	"gymbro": [Rect2(0, 0, 320, 56)],  # ChatGPT C2 gym: racks along the back wall only
+	# Painted arenas (Canva, Nov 10; tools/arena_import): back-wall furniture depth + perspective side walls.
+	"alley": [Rect2(0, 0, 320, 56), Rect2(0, 0, 24, 96), Rect2(296, 0, 24, 96)],
+	"ghoster": [Rect2(0, 0, 320, 56), Rect2(0, 0, 16, 90), Rect2(304, 0, 16, 90)],
+	"djvape": [Rect2(0, 0, 320, 50), Rect2(126, 0, 68, 54), Rect2(0, 0, 20, 80), Rect2(300, 0, 20, 80)],
+	"crypto": [Rect2(0, 0, 320, 54), Rect2(274, 0, 28, 64), Rect2(0, 0, 20, 80), Rect2(300, 0, 20, 80)],
+	"willnot": [Rect2(0, 0, 320, 58), Rect2(0, 60, 20, 100), Rect2(300, 60, 20, 100)],
+	"waffle": [Rect2(0, 0, 320, 74)],  # grill line; GRILLS (waffle.gd) sit on its front edge
 }
 var _arena_extra_bodies: = {}
 var arena_mode: = ""
@@ -3224,28 +3231,16 @@ func _draw_arena() -> void:
 	Art.image(self, "arena_" + arena_id, o)
 	match arena_id:
 		"ghoster":
-			draw_string(f, o + Vector2(0, 40), "SEEN CAFE  -  open 24/7, never replies", HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 8, Color("#a0c0ff"))
-			for p in [Vector2(60, 70), Vector2(260, 70), Vector2(60, 140), Vector2(260, 140)]:
-				draw_string(f, o + p + Vector2(-8, 12), "seen", HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color(1, 1, 1, 0.4))
-		"djvape":
-			for y in range(30, 172, 16):
-				for x in range(8, 312, 16):
-					var hue: = fmod((x + y) / 160.0 + t * 0.2, 1.0)
-					draw_rect(Rect2(o + Vector2(x, y), Vector2(15, 15)), Color.from_hsv(hue, 0.6, 0.35 + 0.15 * sin(t * 4.0 + x), 0.45))
-			draw_string(f, o + Vector2(120, 26), "DJ BOOTH", HORIZONTAL_ALIGNMENT_CENTER, 80, 7, Color("#40e0ff"))
+			_arena_caption(f, o, "SEEN CAFE  -  open 24/7, never replies", Color("#a0c0ff"))
+			for p in [Vector2(50, 88), Vector2(255, 88), Vector2(43, 140), Vector2(262, 140)]:  # the four rugs
+				draw_string(f, o + p + Vector2(-8, 2), "seen", HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color(1, 1, 1, 0.45))
 		"crypto":
-			for x in range(12, 308, 24):
-				draw_rect(Rect2(o + Vector2(x + 2, 8), Vector2(3, 2)), Color("#40ff60") if int(t * 6.0 + x) % 3 else Color("#105020"))
-			draw_string(f, o + Vector2(0, 46), "HONEYBUNCOIN MINING RIG  (-99.8%)", HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 7, Color("#ff5050"))
+			_arena_caption(f, o, "HONEYBUNCOIN MINING RIG  (-99.8%)", Color("#ff5050"))
 		"alley":
-			draw_string(f, o + Vector2(148, 12), "FORK - STAFF", HORIZONTAL_ALIGNMENT_CENTER, 24, 4, Color("#2a1a2e"))
 			if arena_mode == "bet":
 				_draw_bet_hud(f, o)
 			else:
-				draw_string(f, o + Vector2(0, 46), "BEHIND THE TWISTED FORK  -  86 LIST ENFORCEMENT ZONE", HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 6, Color("#ffd23f"))
-		"willnot":
-			var tl: = maxf(0.0, final_timer)
-			draw_string(f, o + Vector2(0, 46), "SELF-DESTRUCT  %d:%02d" % [int(tl) / 60, int(tl) % 60], HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 9, Color("#ff3030") if int(t * 2.0) % 2 == 0 or tl > 30.0 else Color("#ffd23f"))
+				_arena_caption(f, o, "BEHIND THE TWISTED FORK  -  86 LIST ENFORCEMENT ZONE", Color("#ffd23f"))
 	if finale_t > 0.0:
 		var rng: = RandomNumberGenerator.new()
 		rng.seed = int(t * 12.0)
@@ -3254,6 +3249,11 @@ func _draw_arena() -> void:
 			draw_circle(pp, rng.randf_range(10, 26), Color(1, rng.randf_range(0.3, 0.8), 0.1, 0.75))
 		draw_rect(Rect2(o, ARENA_SIZE), Color(1, 0.9, 0.6, 0.25 + 0.25 * sin(t * 30.0)))
 	draw_rect(Rect2(o, ARENA_SIZE), Color("#888888"), false, 2.0)
+
+## One-line joke caption on a dark strip across the back wall, just under the HUD bar (never on the floor).
+func _arena_caption(f: Font, o: Vector2, line: String, c: Color) -> void:
+	draw_rect(Rect2(o + Vector2(0, 18), Vector2(ARENA_SIZE.x, 9)), Color(0, 0, 0, 0.55))
+	draw_string(f, o + Vector2(0, 25), line, HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 6, c)
 
 const ERRAND_THANKS: = {
 	"pharmacy": ["You got it?! You waited in THE line? Marry me. Again. Hypothetically.", "My hero. My prescription hero. Here's your copay back, plus bus fare.", "You survived {pharmacy}. Honestly, that's a story boss."],
