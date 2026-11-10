@@ -7,6 +7,11 @@ landscape (HD chibi pixel art since Nov 7; was 480×270). Owner: Duff. Read this
 **Reference:** `reference.md` = how the game works (systems, data, art rules, tools, build). This file = session log.
 
 ## Where things stand
+- **Nov 10 ~18:30: title screen shows the real Duff** (branch `title-tattoos`, Duff's note: missing tattoos, wrong style).
+  `tools/title_compose.py` builds `bg_title.png` (now 1280x720, manifest `s` 4) from the style-C portrait
+  (`portraits_hd/duff.png`, grin: both sleeves, fox neck piece, beard, bun) in a flat comic panel over the in-game
+  kitchen (`bg_kitchen`) with a navy/teal sunburst. Before/after: `docs/renders/title_tattoos_before_after.png`.
+  Not pushed yet: the GitLab token was revoked; push needs fresh access.
 - **Nov 10 evening: IGN review fixes merged** (branch `review-fixes`). (1) **Phone-first controls:** `Cast.touch` +
   `Cast.TOUCH_WORDS` rewrite keyboard hints ("PULL (Space)" -> "PULL IT") in minigames/buttons while the touch layer is up;
   touch-only "How to play" (`TITLE_HELP_TOUCH`); buttons radius 9, outlined captions, A says next / talk/use / bonk.
