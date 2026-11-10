@@ -83,6 +83,7 @@ var reload_done: = false
 var gala_done: = false
 var gala_tries: = 0
 var gala_seen_unlock: = false
+var ending_morning: = -1   # first morning the story ending had played (the gala invite is due then)
 var mode_i: = 0
 var last_day: = 0
 var ctx_prev: = ""
@@ -549,7 +550,7 @@ func _build_plan() -> void:
 		plan.append([func (): m.bus_menu(str(m.bus_stops()[rng.randi() % m.bus_stops().size()]["id"]).substr(4))])
 	if rng.randf() < 0.15:
 		plan.append([func (): m.open_gear()])
-	if d >= int(m.GALA_DAY) and m.gala_unlocked and not m.gala_beaten and not gala_done:
+	if m.gala_unlocked and not m.gala_beaten and not gala_done:
 		plan.append([_gala])
 	plan.append([_at_home])
 	plan.append([func (): if m.fryer_smell and not lazy: m.interact("shower")])
@@ -624,14 +625,18 @@ func _street_fight() -> void:
 		m.spawn_enemy(k, m.player.position + Vector2(rng.randf_range(-50, 50), rng.randf_range(-30, 30)))
 	cover("street_fight")
 
-## The gala opens on its own the morning of main.GALA_DAY (no fund gate, no bot help).
+## The gala opens on its own the morning after the story ending, or on main.GALA_DAY, whichever comes first
+## (no fund gate, no bot help).
 func _check_gala_gate(d: int) -> void:
-	if d < int(m.GALA_DAY):
+	if ending_morning < 0 and bool(m.story.get("ending_seen", false)):
+		ending_morning = d
+	var due: = int(m.GALA_DAY) if ending_morning < 0 else mini(int(m.GALA_DAY), ending_morning)
+	if d < due:
 		if m.gala_unlocked:
-			issue("gala", "gala unlocked before day %d" % int(m.GALA_DAY))
+			issue("gala", "gala unlocked before day %d" % due)
 		return
 	if not m.gala_unlocked:
-		issue("gala", "gala still locked on day %d" % d)
+		issue("gala", "gala still locked on day %d (due day %d)" % [d, due])
 		return
 	if gala_seen_unlock:
 		return
@@ -639,9 +644,9 @@ func _check_gala_gate(d: int) -> void:
 	var invite: = false
 	for t in m.threads.get("madison", []):
 		if str(t.get("text", "")).contains("gala guest list"):
-			invite = int(t.get("day", -1)) == int(m.GALA_DAY)
-	if d != int(m.GALA_DAY) or not invite or (m.threads.get("gala", []) as Array).is_empty():
-		issue("gala", "invite didn't land on the day-%d morning (seen day %d, madison text %s)" % [int(m.GALA_DAY), d, invite])
+			invite = int(t.get("day", -1)) == due
+	if d != due or not invite or (m.threads.get("gala", []) as Array).is_empty():
+		issue("gala", "invite didn't land on the day-%d morning (seen day %d, madison text %s)" % [due, d, invite])
 	else:
 		cover("gala_unlocked_day%d" % d)
 
