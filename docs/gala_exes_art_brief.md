@@ -15,7 +15,7 @@ Internal ids stay (saves, assets, manifest). Names live in `data/cast.json`.
 | `donald` | `gala_ex_4` | Chip Leverage | fight 5, FINAL |
 
 **Status Nov 9 (style C):** portraits, lettered intro cards and KO a/b/c done for all four; cards unretired, KOs live.
-Review: `docs/reviews/gala_exes_style_c.md`. Still placeholder: sprite sheets `ch_<id>.png` only.
+Review: `docs/reviews/gala_exes_style_c.md`. Sprite sheets `ch_<id>.png`: repainted in code Nov 10 (`tools/sheet_repaint/`, review `docs/reviews/gala_exes_sheets.md`). Nothing placeholder left.
 
 ## What was placeholder (before Nov 9 style-C pass)
 - **Intro cards** `assets/art/boss_intro/{husk,bozos,fences,donald}.png` still letter the OLD names. They are
