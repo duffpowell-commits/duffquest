@@ -27,9 +27,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 2. **Import the Nov 10 Canva drop** (cat loading screen + 9 scene backdrops + gala floor): generated, waiting on
    Duff to save full-res to Drive. Ids, targets, media ids: `grok_art/requests/CANVA_DROP_2026-11-10.md`.
 3. **Brittany playtest** of the gentler first week (iPhone).
-4. **Balance call (Duff decides):** strict happiness gates (`tasks/todo.md`), harsh week-one errand drain.
+4. **Balance:** softened Nov 10 (gates 45-65, slower wait drain with a floor of 40). Re-check after Brittany's playtest.
 5. Could-improve list from the IGN review (6.4/10): three art styles, nightly routine with no skip, bounty bosses
-   reusing moves, 3-card touch tutorial, gala floor still beige. (Bedtime skip + fund line done Nov 10.)
+   reusing moves, 3-card touch tutorial, gala floor still beige.
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`

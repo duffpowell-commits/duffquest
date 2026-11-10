@@ -10,7 +10,7 @@
 
 ## Soak/perf findings (Nov 9, docs/qa/soak_report.md + perf_report.md) — DECISIONS FOR DUFF
 - [x] (DONE Nov 9: gala opens story day 24) **Gala is unreachable:** Octavia's fund can't hit $100k in 30 days, so all 5 gala bosses (incl. the new gala exes) are post-game in practice. Lower the gate (e.g. $10k or a story day) or move the gala into the 30 days.
-- [ ] **Happiness bars too strict:** a player who works every day but skips the evening shower + couch never meets the happiness gate for 4 of 5 story bosses and never sees Show & Tell. Teach the evening routine better or loosen the gates.
+- [x] (DONE Nov 10: gates 45-65, wait drain 0.08/s, floor 40) **Happiness bars too strict:** a player who works every day but skips the evening shower + couch never meets the happiness gate for 4 of 5 story bosses and never sees Show & Tell. Teach the evening routine better or loosen the gates.
 - [x] (DONE Nov 9 night, `_money_path_checks` in tools/test_daily.gd: 23 checks, no bugs found) Untested by the soak bot: symphony date, bus pass / car purchase, stock trades.
 - [ ] First boot on 4G ~60 s: the 38 MB index.wasm dominates. Check whether itch serves it brotli/gzip (would be ~9 MB); else consider a custom stripped engine build.
 - Done: soak test `tools/soak.sh` (30 days x 6 seeds clean), web boot check `ship_itch.sh --web-check`, perf (-23..53% frame cost), auto Lite graphics, KO texture leak fixed.
