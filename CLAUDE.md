@@ -24,8 +24,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 ## Next (in order; details in TRACKER.md)
 1. **Itch page:** CI-build switch DONE (Duff, Nov 10). Still: paste `docs/itch/PAGE.md` + images. Duff's step on the itch dashboard; sessions can't reach itch.io.
-2. **Cat loading screen** (Alastor, Lucifer, Freya) and the remaining **M7 scene backdrops**
-   (`grok_art/requests/REQUEST_M7_backdrops.md`). Art comes from Canva via Duff's Drive (see Art pipeline).
+2. **Import the Nov 10 Canva drop** (cat loading screen + 9 scene backdrops + gala floor): generated, waiting on
+   Duff to save full-res to Drive. Ids, targets, media ids: `grok_art/requests/CANVA_DROP_2026-11-10.md`.
 3. **Brittany playtest** of the gentler first week (iPhone).
 4. **Balance call (Duff decides):** strict happiness gates (`tasks/todo.md`), harsh week-one errand drain.
 5. Could-improve list from the IGN review (6.4/10): three art styles, nightly routine with no skip, bounty bosses
