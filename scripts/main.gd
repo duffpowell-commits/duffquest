@@ -68,6 +68,11 @@ const BILLS: = 40
 const LATE_FEE: = 15
 const AUTOSAVE_EVERY: = 180.0
 const MIN_PER_SEC: = 2.0
+## Balance (Duff, Nov 10: "soften them"). Was a flat 0.2/s (~6 per game hour) with no floor, so one errand
+## trip could eat its own reward. Story gates were 50/60/65/70/75, now 45/50/55/60/65.
+const WAIT_DRAIN: = 0.08          # happiness per real second while {partner} waits on a want (~2.4 per game hour)
+const WAIT_DRAIN_WEEK1: = 0.04    # first 7 days
+const WAIT_FLOOR: = 40.0          # waiting alone never drags her below this (Buffs.MIN_HAPPY)
 
 const FORK_DOOR: = Vector2(535, 318)
 const WAFFLE_SIGN_PT: = Vector2(606, 150)
@@ -105,19 +110,19 @@ const ARENA_SPAWN: = Vector2(920, 590)
 const FINAL_TIME: = 210.0
 
 const STORY: = [
-	{"id": "ghoster", "name": "{ex_1}", "day": 2, "happy": 50.0, "place": "SEEN CAFE", "r": Rect2(205, 108, 60, 40), "c": "#5a6a8a",
+	{"id": "ghoster", "name": "{ex_1}", "day": 2, "happy": 45.0, "place": "SEEN CAFE", "r": Rect2(205, 108, 60, 40), "c": "#5a6a8a",
 		"cash": 60, "scrap": 8, "ach": "Left On Read", "where": "the Seen Cafe (by the neighbor's)",
 		"tip": "{partner}: Ugh. {ex_1} watched my story. Twelve times. He's lurking at the Seen Cafe. Make him go away?" },
-	{"id": "gymbro", "name": "{ex_2}", "day": 4, "happy": 60.0, "place": "IRON TEMPLE GYM", "r": Rect2(400, 40, 55, 50), "c": "#8a3a5a",
+	{"id": "gymbro", "name": "{ex_2}", "day": 4, "happy": 50.0, "place": "IRON TEMPLE GYM", "r": Rect2(400, 40, 55, 50), "c": "#8a3a5a",
 		"cash": 90, "scrap": 10, "ach": "Skipped Leg Day", "where": "Iron Temple Gym (north road)",
 		"tip": "{partner}: {ex_2} keeps posting gym selfies tagged 'thinking of what I lost'. He's at Iron Temple. Don't hit him while he flexes, it doesn't work." },
-	{"id": "djvape", "name": "{ex_3}", "day": 6, "happy": 65.0, "place": "CLUB CLOUD 9", "r": Rect2(350, 232, 80, 52), "c": "#5a2a8a",
+	{"id": "djvape", "name": "{ex_3}", "day": 6, "happy": 55.0, "place": "CLUB CLOUD 9", "r": Rect2(350, 232, 80, 52), "c": "#5a2a8a",
 		"cash": 120, "scrap": 12, "ach": "Dropped The Beat", "where": "Club Cloud 9 (south of the crossroads)",
 		"tip": "{partner}: {ex_3} dedicated a SoundCloud track to me. It's called 'Her Loss (Mango Ice Remix)'. She's spinning at Club Cloud 9. Roll through the bass drop." },
-	{"id": "crypto", "name": "{ex_4}", "day": 9, "happy": 70.0, "place": "THE MINING RIG", "r": Rect2(200, 228, 58, 42), "c": "#3a5a3a",
+	{"id": "crypto", "name": "{ex_4}", "day": 9, "happy": 60.0, "place": "THE MINING RIG", "r": Rect2(200, 228, 58, 42), "c": "#3a5a3a",
 		"cash": 160, "scrap": 15, "ach": "Rug Pulled The Rug Puller", "where": "The Mining Rig (garage by HOA HQ)",
 		"tip": "{partner}: {ex_4} DMed me a 'business opportunity'. Again. His garage 'mining rig' is by HOA HQ. Don't stand on any rugs." },
-	{"id": "willnot", "name": "{ex_final}", "day": 12, "happy": 75.0, "place": "{FINAL_TOWER}", "r": Rect2(340, 6, 52, 80), "c": "#4a4a5a",
+	{"id": "willnot", "name": "{ex_final}", "day": 12, "happy": 65.0, "place": "{FINAL_TOWER}", "r": Rect2(340, 6, 52, 80), "c": "#4a4a5a",
 		"cash": 500, "scrap": 25, "ach": "Forty Floors, Zero Shoes", "where": "{final_tower} (the tower up north)",
 		"tip": "{partner}: Babe. All my exes are hiding out in {final_tower} with some guy named {ex_final}. No shoes. Lots of attitude. Clock's ticking, apparently." },
 ]
@@ -1677,6 +1682,9 @@ func mood_word() -> String:
 	elif happiness >= 40.0: return "Meh"
 	return "Pissed"
 
+func wait_drain() -> float:
+	return WAIT_DRAIN_WEEK1 if day_count <= 7 else WAIT_DRAIN
+
 func quest_text() -> String:
 	if date_ready():
 		return "DATE NIGHT: talk to {partner} (sitter first)"
@@ -1761,8 +1769,8 @@ func _process(delta: float) -> void:
 		if autosave_t <= 0.0:
 			save_game()
 		_update_inspector(delta)
-		if quest == 1:
-			happiness = maxf(0.0, happiness - 0.2 * delta)
+		if quest == 1 and happiness > WAIT_FLOOR:   # waiting on a want: slow leak, never past the floor
+			happiness = maxf(WAIT_FLOOR, happiness - wait_drain() * delta)
 		if errand_overdue():
 			errand_miss(false)
 		if (buff_active("speed") or drained()) != _speed_on:

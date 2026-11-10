@@ -248,6 +248,7 @@ func _extra_checks(main: Node) -> void:
 	_soak_regressions(main)
 	_gala_gate_checks(main)
 	_bedtime_skip_checks(main)
+	_balance_checks(main)
 
 ## Bugs the 30-day soak (tools/soak.gd) found. Keep them fixed.
 func _soak_regressions(main: Node) -> void:
@@ -639,3 +640,12 @@ func _bedtime_skip_checks(main: Node) -> void:
 		main.day_count == d0 + 1 and rep.contains("+8 Happiness") and rep.contains("Dish towel") and int(main.inventory["formula"]) == 1)
 	var dd: Dictionary = main.to_dict()
 	check("bedtime: routine_played survives a save", bool(dd.get("routine_played", false)))
+
+## Duff, Nov 10: softer gates + waiting drain.
+func _balance_checks(main: Node) -> void:
+	var gates: Array = main.STORY.map(func (n): return float(n["happy"]))
+	check("balance: story gates are 45/50/55/60/65 (got %s)" % str(gates), gates == [45.0, 50.0, 55.0, 60.0, 65.0])
+	main.day_count = 3
+	check("balance: week-one waiting drain is half the later one", is_equal_approx(main.wait_drain(), main.WAIT_DRAIN_WEEK1) and main.WAIT_DRAIN_WEEK1 * 2.0 == main.WAIT_DRAIN)
+	main.day_count = 10
+	check("balance: later drain <= 0.1/s and the floor is 40", main.wait_drain() <= 0.1 and main.WAIT_FLOOR == 40.0)

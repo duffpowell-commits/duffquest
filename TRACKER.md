@@ -5,6 +5,8 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (late)** Balance softened (Duff): story happiness gates 50/60/65/70/75 -> 45/50/55/60/65;
+  the drain while Madison waits on a want went 0.2/s -> 0.08/s (0.04/s in week one) and never drags her below 40.
 - **2026-11-10 (late)** IGN fixes: nightly routine gets a BEDTIME card after night one (play, or skip on
   autopilot: +8 Happiness, uses a bottle + diaper, no fail risk; missing supplies still cost). The dead
   "Octavia's fund $0 / 100k" drawer line + bar are gone; the line shows only once there's money in the fund.
@@ -42,7 +44,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 3. **M7 backgrounds** still waiting on real art: the remaining scene backdrops in
    `grok_art/requests/REQUEST_M7_backdrops.md`.
 4. **Brittany playtest** of the gentler first week on her iPhone.
-5. **Balance call:** happiness gates are strict (`tasks/todo.md`), and the errand drain is harsh in week one.
+5. Balance softened Nov 10; re-check with Brittany's playtest.
 
 ## Could improve
 
@@ -52,4 +54,3 @@ From the IGN-style review (`docs/reviews/ign_review_2026-11-10.md`) and QA, stil
 - **Three art styles:** chibi pixel sprites, flat cartoon portraits, glossy anime KO panels.
 - **Bounty bosses reuse story moves** (Coupon Carol, the Allergy Liar, the Camper), and boss taunts lean on one joke formula.
 - **Touch tutorial:** the review wanted a 3-card move / A / roll tutorial on first launch; the help text is phone-worded now but still a text card.
-- **Madison's errand drain** (happiness ticks down in real time) can still feel harsh in week one.
