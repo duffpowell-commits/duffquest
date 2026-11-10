@@ -1,0 +1,36 @@
+name: deploy_itch
+
+# Mirrors GitLab's deploy_itch job: on every push to main, run tools/ship_itch.sh (import, tests, smoke,
+# web export, butler push to dufftkyosht/duff-quest:html). Needs the repo secret BUTLER_API_KEY
+# (Settings > Secrets and variables > Actions). Without it the job says why and passes, so main never goes red.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-itch
+  cancel-in-progress: false
+
+jobs:
+  deploy_itch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+    steps:
+      - name: Skip without a key
+        if: env.BUTLER_API_KEY == ''
+        run: |
+          echo "SKIP: no BUTLER_API_KEY repo secret, so nothing was pushed to itch."
+          echo "Add it in Settings > Secrets and variables > Actions, then re-run this workflow."
+      - uses: actions/checkout@v4
+        if: env.BUTLER_API_KEY != ''
+      - name: Build and push to itch
+        if: env.BUTLER_API_KEY != ''
+        env:
+          CI_COMMIT_SHORT_SHA: ${{ github.sha }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq python3 xvfb >/dev/null
+          export CI_COMMIT_SHORT_SHA="${CI_COMMIT_SHORT_SHA:0:7}"
+          sudo -E tools/ship_itch.sh
