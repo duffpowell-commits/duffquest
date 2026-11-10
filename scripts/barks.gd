@@ -143,6 +143,18 @@ func safe_rect() -> Rect2:
 	var r: = Rect2(inv * vr.position, (inv.basis_xform(vr.size)))
 	return Rect2(r.position + Vector2(4, r.size.y * 0.22), Vector2(r.size.x - 8, r.size.y * 0.66))
 
+## World rect of the HUD's interact prompt (hud.gd "hint", 320x180 HUD units: y 108..121, centre half
+## of the width), empty when no prompt is up. Generous on x since the pill hugs the text.
+func hint_rects() -> Array:
+	var vp: = get_viewport()
+	if vp == null or m == null or str(m.hint) == "" or not m.dialog.is_empty():
+		return []
+	var inv: = vp.get_canvas_transform().affine_inverse()
+	var vr: = vp.get_visible_rect()
+	var tl: = inv * (vr.position + vr.size * Vector2(0.2, 107.0 / 180.0))
+	var br: = inv * (vr.position + vr.size * Vector2(0.8, 122.0 / 180.0))
+	return [Rect2(tl, br - tl)]
+
 func layout(delta: float) -> void:
 	shown = shown.filter(_alive)
 	shown.sort_custom(func(x, y):
@@ -150,7 +162,7 @@ func layout(delta: float) -> void:
 			return x["prio"]
 		return float(x["since"]) < float(y["since"]))
 	var nums: = number_rects()
-	var bubbles: Array = []
+	var bubbles: Array = hint_rects()   # bubbles dodge the "E / A: ..." prompt pill like another bubble
 	var safe: = safe_rect()
 	var f: = ThemeDB.fallback_font
 	for e in shown:

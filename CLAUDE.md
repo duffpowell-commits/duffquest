@@ -18,6 +18,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   shows the real Duff (both sleeves + fox neck tattoo, `tools/title_compose.py`); the six themed boss arenas are real
   painted art (alley, Seen Cafe, Club Cloud 9, crypto garage, tower office, Waffle Haus) with walls fitted to each
   painting. Renders: `docs/renders/arenas_painted_ingame.png`, `docs/renders/title_tattoos_before_after.png`.
+- Also Nov 10 (late): interact prompt above Duff's head is now a dark pill with cream text (was illegible on the
+  teal rug); barks dodge it. Render: `docs/renders/hint_prompt_pill.png` (render id `hint`).
 - Tests: `test_daily` ALL PASS; 30-day soak clean.
 
 ## Next (in order; details in TRACKER.md)
@@ -38,7 +40,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `XDG_DATA_HOME=/tmp/xdg godot --headless --path . --fixed-fps 30 --script tools/soak.gd -- --seed=1` (add `--lazy` for the rent/upset paths)
 - Smoke (what CI runs): `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 --write-movie /tmp/smoke/f.png --quit-after 600`
 - In-engine renders: `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- <id>`
-  (ids: a boss arena, `bounty:sendback`, `waffle`, `title`, `home`, `at:X,Y`) → `/tmp/qa/`. Copy keepers into `docs/renders/`.
+  (ids: a boss arena, `bounty:sendback`, `waffle`, `title`, `home`, `hint`, `at:X,Y`) → `/tmp/qa/`. Copy keepers into `docs/renders/`.
 - Arena walls: `godot --headless --path . res://tools/arena_wall_check.tscn`
 - After swapping art: `touch` the files, then `godot --headless --path . --import`.
 - CI status: `gh api repos/duffpowell-commits/duffquest/actions/runs?per_page=5` (`gh` GraphQL is blocked; the

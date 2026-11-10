@@ -1,6 +1,6 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
-##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "title", "home", "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "at:X,Y" (outdoors at a world point), or "fryer"/"sandwich" = the kitchen station with food in it)
+##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "at:X,Y" (outdoors at a world point), or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var game: Node
@@ -50,6 +50,8 @@ func _process(_d: float) -> void:
 			m.start_waffle()
 		elif id in ["fryer", "sandwich", "home"]:
 			m.debug_station(id)
+		elif id == "hint":  # home, Duff next to Madison so the "E / A: Talk to" prompt shows
+			m.debug_station("home")
 		elif id.begins_with("bounty:"):  # a bounty fight in the alley behind the Fork, e.g. bounty:sendback
 			m.start_bounty(id.substr(7))
 		else:
@@ -65,9 +67,11 @@ func _process(_d: float) -> void:
 			g.baskets[0]["prog"] = 0.8
 			g.baskets[1]["prog"] = 1.5
 
-	if frame == 230 and id in ["home", "waffle"]:
+	if frame == 230 and id in ["home", "waffle", "hint"]:
 		m.dialog.clear()
-	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle"] and not id.begins_with("at:"):
+		if id == "hint":
+			m.player.position = m.MADISON_POS + Vector2(16, 4)
+	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint"] and not id.begins_with("at:"):
 		m.dialog.clear()
 		m.player.position = m.ARENA_ORIGIN + Vector2(200, 140)
 	if frame == 280:
