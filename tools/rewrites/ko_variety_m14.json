@@ -1,0 +1,63 @@
+{
+  "_doc": "M14 (Nov 9, Duff: 'the dialogue for each strip is too similar'). Every knockout gets its own device instead of the shared He's-X-I'm-Y / The-human-N-bones / Dolores-honey shape. Lines that already landed are left out of this file (unchanged). Apply: python3 tools/apply_ko_rewrites.py",
+  "husk": {
+    "stance": "Two hundred million people are watching his stream. Hector from the dish pit is watching mine. Hector isn't even watching. He's eating my fries.",
+    "slip": "Rocket punch. Slow. Everything's slow after a double. I lean six inches left. The chat spams laughing faces. For once, the chat is right.",
+    "xray": "The jaw is the only bone in the skull that moves. My elbow shows it somewhere new to go.",
+    "finisher": "Like. Subscribe. Lie down.",
+    "crowd": "Brittany: \"Viewers are dropping, Duff! Two hundred million. Forty million. Okay, it's mostly bots now.\"",
+    "closer": "Stream ended. Viewers: zero. I fix my apron. Somewhere a market dips. Nobody I know owns any of it."
+  },
+  "bozos": {
+    "stance": "Order status: out for delivery. The package is me. He owns seventeen houses. I own a bus pass and a cat who thinks I'm staff.",
+    "slip": "Drones. A whole fleet. I duck the first. The second hits the third. The fourth starts talking about a union.",
+    "xray": "Two hinges hold a jaw on. His were assembled overseas. My knee comes up from below, and both hinges quit on the same shift.",
+    "crowd": "Dolores: \"Return to sender. No refunds. Store policy.\"",
+    "closer": "Status: delivered. Left at front door. Signed for by my left hook."
+  },
+  "fences": {
+    "stance": "Error: punch not found. He's buffering. I'm not. I tap my chest twice and wait. Patience is free. Everything else, he sells you.",
+    "slip": "Blue screen. The whole room goes blue. I've rebooted a register at 2 AM with ketchup on both thumbs. This is nothing.",
+    "closer": "Do you want to save your changes? He doesn't answer. Nobody ever does."
+  },
+  "baron": {
+    "stance": "Your shoes have never stood a double. Mine stood four this week. I drop my jacket. I don't look where it lands. Somebody always picks it up for you.",
+    "slip": "Coins, thirty-seven cents at a time. I catch a quarter out of the air. Pocket it. That's one load of laundry.",
+    "xray": "Old money lives in the lower back. Three generations of good posture. One kidney shot and every generation bows."
+  },
+  "donald": {
+    "stance": "He's talking. Six minutes now. No commas. I wait for one. I'm still waiting. I step in on a vowel.",
+    "slip": "A wall goes up. Big. Beautiful. Somebody else paid for it. I walk around the end. Every wall has an end.",
+    "crowd": "Dolores: \"First time all night that man stopped talking. Somebody frame it.\"",
+    "closer": "He calls it a landslide. Best loss in history. I call it Tuesday and clock back in."
+  },
+  "ghoster": {
+    "stance": "11:52 PM, three years ago: he leaves {partner} on read. 11:52 PM, tonight: he's left standing. I hold my hands low. I let him guess.",
+    "closer": "Typing... Typing... Nothing. Some guys never learn to hit send."
+  },
+  "djvape": {
+    "stance": "A hundred and twenty-eight beats a minute. My fillings hum along. Everybody in here is waiting for the drop. So am I. Mine's just different."
+  },
+  "willnot": {
+    "stance": "Floor forty. No shoes. Glass everywhere. He's bleeding and still monologuing. I slide my feet like the floor's just been mopped.",
+    "slip": "Sprinklers. Vents. A fire axe. Bad attitude. He throws all of it. I go low, then lower, then I'm behind him, like a server sneaking a plate out of the window.",
+    "xray": "Twenty-six bones in each foot, and he walked across broken glass on all of them. I'm not cruel. I aim higher. The jaw goes up. So does he."
+  },
+  "sendback": {
+    "stance": "Ticket. Table nine. Sent back: nine plates. Plate ten: me. No garnish. No substitutions.",
+    "xray": "Ten thousand taste buds, give or take. His have only ever tasted complaints. One uppercut and he tries something new. Humility. Medium rare."
+  },
+  "coupon": {
+    "crowd": "Brittany: \"She's got a coupon for the ambulance. Duff. She has a coupon for the AMBULANCE.\""
+  },
+  "allergy": {
+    "crowd": "Dolores: \"Booth four. A whole basket of rolls. I counted.\""
+  },
+  "camper": {
+    "stance": "His laptop: three percent. My patience: two. Four hours in booth six on one coffee. I go stand where the outlet is.",
+    "xray": "Four hours in a booth shortens the hip flexors by about the length of a grudge. One knee to the hip and his snap like a gas-station charging cable."
+  },
+  "dasher": {
+    "xray": "Running away takes about two hundred muscles. Stopping takes one. It's mine."
+  }
+}

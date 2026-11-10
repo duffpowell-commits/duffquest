@@ -1,0 +1,6 @@
+build/
+
+# local secrets
+.env
+.env.*
+.godot/editor/

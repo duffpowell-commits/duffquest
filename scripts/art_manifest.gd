@@ -25,15 +25,15 @@ const ASSETS = {
   "sd_chain_link_gate": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},
   "sd_chain_link_straight": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},
   "sd_fire_hydrant": {"w": 17, "h": 28, "cell": [17, 28], "origin": [8, 28], "s": 2},
-  "sd_football_fan_flag": {"w": 24, "h": 42, "cell": [24, 42], "origin": [12, 42], "s": 2},
+  "sd_football_fan_flag": {"w": 35, "h": 42, "cell": [35, 42], "origin": [17, 42], "s": 2},
   "sd_hedge": {"w": 112, "h": 47, "cell": [112, 47], "origin": [56, 47], "s": 2},
-  "sd_lilac": {"w": 83, "h": 76, "cell": [83, 76], "origin": [41, 76], "s": 2},
-  "sd_little_free_library": {"w": 22, "h": 42, "cell": [22, 42], "origin": [11, 42], "s": 2},
+  "sd_lilac": {"w": 65, "h": 76, "cell": [65, 76], "origin": [32, 76], "s": 2},
+  "sd_little_free_library": {"w": 27, "h": 42, "cell": [27, 42], "origin": [13, 42], "s": 2},
   "sd_mailbox": {"w": 23, "h": 38, "cell": [23, 38], "origin": [11, 38], "s": 2},
-  "sd_maple": {"w": 96, "h": 112, "cell": [96, 112], "origin": [48, 112], "s": 2},
+  "sd_maple": {"w": 108, "h": 112, "cell": [108, 112], "origin": [54, 112], "s": 2},
   "sd_newspaper_box": {"w": 23, "h": 38, "cell": [23, 38], "origin": [11, 38], "s": 2},
-  "sd_oak": {"w": 108, "h": 108, "cell": [108, 108], "origin": [54, 108], "s": 2},
-  "sd_pine": {"w": 64, "h": 112, "cell": [64, 112], "origin": [32, 112], "s": 2},
+  "sd_oak": {"w": 112, "h": 108, "cell": [112, 108], "origin": [56, 108], "s": 2},
+  "sd_pine": {"w": 88, "h": 112, "cell": [88, 112], "origin": [44, 112], "s": 2},
   "sd_political_sun_sign": {"w": 31, "h": 30, "cell": [31, 30], "origin": [15, 30], "s": 2},
   "sd_pothole_cone": {"w": 17, "h": 24, "cell": [17, 24], "origin": [8, 24], "s": 2},
   "sd_privacy_wood_corner": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},
@@ -45,8 +45,8 @@ const ASSETS = {
   "sd_red_brick_end": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},
   "sd_red_brick_gate": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},
   "sd_red_brick_straight": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},
-  "sd_scattered_leaves": {"w": 44, "h": 13, "cell": [44, 13], "origin": [22, 13], "s": 2},
-  "sd_scraggly_ash": {"w": 99, "h": 112, "cell": [99, 112], "origin": [49, 112], "s": 2},
+  "sd_scattered_leaves": {"w": 44, "h": 31, "cell": [44, 31], "origin": [22, 31], "s": 2},
+  "sd_scraggly_ash": {"w": 101, "h": 112, "cell": [101, 112], "origin": [50, 112], "s": 2},
   "sd_shopping_cart": {"w": 22, "h": 32, "cell": [22, 32], "origin": [11, 32], "s": 2},
   "sd_white_picket_corner": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},
   "sd_white_picket_end": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},
@@ -150,6 +150,20 @@ const ASSETS = {
     "s": 2
   },
   "ch_waitress": {
+    "w": 256,
+    "h": 256,
+    "cell": [
+      64,
+      64
+    ],
+    "origin": [
+      32,
+      60
+    ],
+    "kind": "humanoid",
+    "s": 2
+  },
+  "ch_dolores": {
     "w": 256,
     "h": 256,
     "cell": [
@@ -500,18 +514,18 @@ const ASSETS = {
     "s": 2
   },
   "bg_title": {
-    "w": 640,
-    "h": 360,
+    "w": 1280,
+    "h": 720,
     "cell": [
-      640,
-      360
+      1280,
+      720
     ],
     "origin": [
       0,
       0
     ],
     "kind": "backdrop",
-    "s": 2
+    "s": 4
   },
   "bg_grocery": {
     "w": 640,

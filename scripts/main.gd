@@ -9,6 +9,7 @@ const IsoTest: = preload("res://scripts/iso/iso_test.gd")
 const Ground: = preload("res://scripts/ground.gd")
 const Dressing: = preload("res://scripts/dressing.gd")
 const ShiftScript: = preload("res://scripts/shift.gd")
+const Daily: = preload("res://scripts/daily.gd")
 const CatScript: = preload("res://scripts/cat.gd")
 const SaveGame: = preload("res://scripts/save_game.gd")
 const Cast: = preload("res://scripts/cast.gd")
@@ -26,6 +27,7 @@ const Market: = preload("res://scripts/market.gd")
 const PhoneScript: = preload("res://scripts/minigames/phone.gd")
 const EndingScript: = preload("res://scripts/minigames/ending.gd")
 const BossScript: = preload("res://scripts/boss.gd")
+const KnockoutScript: = preload("res://scripts/knockout.gd")
 const WaffleScript: = preload("res://scripts/waffle.gd")
 const Bounties: = preload("res://scripts/bounties.gd")
 const Errands: = preload("res://scripts/errands.gd")
@@ -37,6 +39,7 @@ const Art: = preload("res://scripts/art.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
 const CombatScript: = preload("res://scripts/combat.gd")
 const CombatFX: = preload("res://scripts/combat_fx.gd")
+const BarksScript: = preload("res://scripts/barks.gd")
 const JuiceScript: = preload("res://scripts/juice.gd")
 const CombatUI: = preload("res://scripts/combat_ui.gd")
 const Life: = preload("res://scripts/life.gd")
@@ -76,7 +79,7 @@ const AUTO_DOORS: = ["home_door", "door_out", "shop", "fork", "pharmacy", "groce
 const AUTO_DOOR_R: = 9.0
 const AUTO_REARM_R: = 20.0
 const HOME_DOOR: = Vector2(95, 118)
-const SHOP_PT: = Vector2(535, 124)
+const SHOP_PT: = Vector2(557, 124)   # Kwik glass doors (Nov 9: was 535, left of the door art)
 const BUNS_POS: = SHOP_PT
 const ENSURE_POS: = Vector2(172, 212)
 const PHARM_R: = Rect2(345, 306, 76, 38)
@@ -93,6 +96,9 @@ const GALA_ORIGIN: = Vector2(400, 440)
 const GALA_SIZE: = Vector2(320, 180)
 const GALA_SPAWN: = Vector2(560, 590)
 const BOSS_ORDER: = ["husk", "bozos", "fences", "baron", "donald"]
+## The gala invite lands on this story day's morning (Duff, Nov 9: the $100k fund gate was
+## unreachable in 30 days). Open from then to the end of the month and after.
+const GALA_DAY: = 24
 const ARENA_ORIGIN: = Vector2(760, 440)
 const ARENA_SIZE: = Vector2(320, 180)
 const ARENA_SPAWN: = Vector2(920, 590)
@@ -107,7 +113,7 @@ const STORY: = [
 		"tip": "{partner}: {ex_2} keeps posting gym selfies tagged 'thinking of what I lost'. He's at Iron Temple. Don't hit him while he flexes, it doesn't work." },
 	{"id": "djvape", "name": "{ex_3}", "day": 6, "happy": 65.0, "place": "CLUB CLOUD 9", "r": Rect2(350, 232, 80, 52), "c": "#5a2a8a",
 		"cash": 120, "scrap": 12, "ach": "Dropped The Beat", "where": "Club Cloud 9 (south of the crossroads)",
-		"tip": "{partner}: {ex_3} dedicated a SoundCloud track to me. It's called 'Her Loss (Mango Ice Remix)'. He's spinning at Club Cloud 9. Roll through the bass drop." },
+		"tip": "{partner}: {ex_3} dedicated a SoundCloud track to me. It's called 'Her Loss (Mango Ice Remix)'. She's spinning at Club Cloud 9. Roll through the bass drop." },
 	{"id": "crypto", "name": "{ex_4}", "day": 9, "happy": 70.0, "place": "THE MINING RIG", "r": Rect2(200, 228, 58, 42), "c": "#3a5a3a",
 		"cash": 160, "scrap": 15, "ach": "Rug Pulled The Rug Puller", "where": "The Mining Rig (garage by HOA HQ)",
 		"tip": "{partner}: {ex_4} DMed me a 'business opportunity'. Again. His garage 'mining rig' is by HOA HQ. Don't stand on any rugs." },
@@ -136,7 +142,7 @@ const DEFEAT_LINES: = {
 	"hoa": "HOA enforcer goes down. His power was always just a laminated sheet. +$%d",
 	"hustler": "I bonk the hustler. The 'opportunity'? MLM essential oils. +$%d",
 	"pete": "Palm Beach Pete: 'My accountant will hear about this!' Drops $%d and a timeshare brochure.",
-	"drone": "I swat the delivery drone. The algorithm docks the driver anyway. +$%d",
+	"drone": "I swat a tip drone. It still takes its thirty percent. +$%d",
 	"butler": "I bonk the butler. He unionizes on the spot and tips me $%d.",
 	"nft": "NFT bonked. Floor price: $%d. Roadmap: also the floor.",
 	"pirate": "Porch pirate goes down. Shoulda got a real job, like gig work. Oh wait. +$%d",
@@ -156,6 +162,7 @@ const BED_PT: = Vector2(30, 530)
 const CRIB_PT: = Vector2(91, 518)
 const SHOWER_PT: = Vector2(290, 532)
 const KITCHEN_PT: = Vector2(200, 528)
+const FRIDGE_PT: = Vector2(131, 515)
 const COUCH_PT: = Vector2(56, 566)
 const BOWLS_PT: = Vector2(144, 588)
 const FREYA_PT: = Vector2(72, 526)
@@ -302,7 +309,14 @@ var fund_happy_today: = 0.0
 
 var inspector_quip_t: = 0.0
 var inspector_pos: = Vector2.ZERO
+var barks: Node   # speech bubbles for enemies/bosses/raccoons (scripts/barks.gd)
 var dialog: Array[String] = []
+var ko_kind: = ""                           # boss knockout cutscene playing (knockout.gd, HD layer)
+var _ko_boss: Node = null                   # boss whose knockout already played
+var loading_req: = 0                        # bumped to ask loading_screen.gd for a loading screen
+var loading_on: = false                     # a loading screen is up
+var _drawn_loc: = ""                        # location the world canvas was last drawn for
+var no_loading: = false                     # tools: skip loading screens
 var hint: = ""
 var toast: = ""
 var toast_t: = 0.0
@@ -325,7 +339,7 @@ var arena_id: = "":
 		_sync_arena_walls()
 # Extra walls for arenas whose art has furniture past the shared bands (relative to ARENA_ORIGIN, world units).
 const ARENA_EXTRA_WALLS: = {
-	"gymbro": [Rect2(0, 0, 320, 70), Rect2(8, 82, 18, 36), Rect2(286, 100, 26, 60), Rect2(10, 146, 110, 26), Rect2(0, 162, 320, 18)],
+	"gymbro": [Rect2(0, 0, 320, 56)],  # ChatGPT C2 gym: racks along the back wall only
 }
 var _arena_extra_bodies: = {}
 var arena_mode: = ""
@@ -334,6 +348,13 @@ var bounties: = {"beaten": [], "day": -1 }
 var waffle_data: = {"shifts": 0, "regular_beaten": 0, "best": 0 }
 var waffle_node: Node = null
 var bet: = {"day": -1, "won": 0, "lost": 0 }
+## Best grade ever per shift station ("fryer": "S"). An S unlocks Autopilot (B) for that station.
+var station_best: Dictionary = {}
+## Daily life (scripts/daily.gd): today's random event id, no-repeat list, Falcor thread state.
+var daily: Dictionary = Daily.new_state()
+var calendar_req: = 0                       # bumped to ask fridge_calendar.gd to show the month
+var calendar_on: = false                    # fridge calendar is up (world frozen)
+var calendar_pending: = false               # show it once the morning loading screen is gone
 var door_armed: = {}
 var door_loc: = ""
 var bet_kind: = ""
@@ -358,6 +379,11 @@ func _ready() -> void:
 	for it in dressing:
 		if it["wall"] != null:
 			_add_wall(it["wall"])
+		# tucked behind a storefront (art overlaps it, ground above its base): stays in main._draw
+		var ar: = Dressing.art_rect(it)
+		for b in buildings:
+			if ar.has_area() and ar.intersects(b["vis"]) and it["p"].y < (b["r"] as Rect2).end.y:
+				it["behind_building"] = true
 	_add_wall(Rect2(-10, -10, WORLD.x + 20, 10))
 	_add_wall(Rect2(-10, WORLD.y, WORLD.x + 20, 10))
 	_add_wall(Rect2(-10, 0, 10, WORLD.y))
@@ -392,7 +418,7 @@ func _ready() -> void:
 	add_child(player)
 	var dfront: = preload("res://scripts/dressing_front.gd").new()
 	dfront.m = self
-	dfront.z_index = 1
+	dfront.name = "DepthSort"   # y-sorts dressing + actors outdoors (z 0, see dressing_front.gd)
 	add_child(dfront)
 	cam = Camera2D.new()
 	cam.position_smoothing_enabled = false
@@ -424,6 +450,11 @@ func _ready() -> void:
 	cfx.c = combat
 	add_child(cfx)
 	combat.fx = cfx
+	barks = BarksScript.new()
+	barks.name = "Barks"
+	barks.m = self
+	barks.fx = cfx
+	add_child(barks)
 	juice = JuiceScript.new()
 	juice.name = "Juice"
 	juice.m = self
@@ -451,6 +482,9 @@ func _ready() -> void:
 	touch.b_pressed.connect(_on_roll)
 	touch.g_pressed.connect(open_gear)
 	touch.p_pressed.connect(open_phone)
+	touch.drawer_pressed.connect(func () -> void:
+		if not busy():
+			hud.toggle_drawer())
 	touch.s_pressed.connect(func () -> void:
 		if not busy() and dialog.is_empty():
 			combat.special_pressed())
@@ -476,7 +510,7 @@ func _setup_input() -> void:
 		"move_up": [KEY_W, KEY_UP], "move_down": [KEY_S, KEY_DOWN],
 		"interact": [KEY_E, KEY_ENTER], "attack": [KEY_SPACE, KEY_J],
 		"roll": [KEY_SHIFT, KEY_K, KEY_L], "gear": [KEY_I],
-		"special": [KEY_F, KEY_U], "swap_special": [KEY_Q], "demon": [KEY_R], "stats": [KEY_T], "phone": [KEY_P, KEY_TAB], "settings": [KEY_O, KEY_ESCAPE],
+		"special": [KEY_F, KEY_U], "swap_special": [KEY_Q], "demon": [KEY_R], "stats": [KEY_T], "phone": [KEY_P], "drawer": [KEY_TAB], "settings": [KEY_O, KEY_ESCAPE],
 	}
 	for action in map:
 		if not InputMap.has_action(action):
@@ -535,6 +569,7 @@ func _spawn_raccoons() -> void:
 		rc.set_physics_process(location == "outside")
 		raccoons.append(rc)
 
+const TITLE_HELP_TOUCH: = ["Move: drag anywhere on the left half.  A: talk or use when someone's close, otherwise bonk (tap fast for a 3-hit combo).  B: dodge roll.  G: gear.  Phone: the phone icon up top.", " ", "S: special (hold to charge).  <>: swap special.  D: Demon Time.  Tap the top bar for money, bills and stats."]
 const TITLE_HELP: = ["Move: WASD / arrows / joystick.  Use: E or A.  Bonk: Space (or A), mash for a 3-hit combo.  Dodge roll: Shift or B.  Gear: I or G.  Phone: P or the phone icon.", " ", "Special: F or S (hold to charge).  Swap special: Q or <>.  Demon Time: R or D.  Spend stat points: T."]
 
 func show_title() -> void:
@@ -554,7 +589,7 @@ func show_title() -> void:
 		if id == "settings":
 			open_settings()
 		elif id == "help":
-			_menu("How to play", TITLE_HELP, [["back", "Back", KEY_1]], func (_b: String) -> void: show_title())
+			_menu("How to play", TITLE_HELP_TOUCH if Cast.touch else TITLE_HELP, [["back", "Back", KEY_1]], func (_b: String) -> void: show_title())
 		elif id == "continue":
 			in_title = false
 			load_game()
@@ -576,9 +611,10 @@ func new_game(write_save: bool = true) -> void:
 	market = Market.new_state(randi())
 	jen_text_daily()
 	errand_new_day()
+	daily_new_day()
 	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Heard.",
 		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
-		"Every Monday, rent and bills: $%d. Rent is due. Rent is always due. The Twisted Fork (bottom-right) needs a cook. They always need a cook." % (RENT + BILLS)])
+		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. This first Monday it's prorated to $%d. The Twisted Fork (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))]])
 	if write_save:
 		save_game()
 
@@ -588,7 +624,7 @@ func to_dict() -> Dictionary:
 		"day_i": day_i, "day_count": day_count, "clock": clock, "money": money, "energy": energy, "happiness": happiness,
 		"quest": quest, "quest_kind": quest_kind, "last_quest_kind": last_quest_kind, "inventory": inventory.duplicate(),
 		"leftovers": leftovers.duplicate(), "achievements": achievements.duplicate(), "fryer_smell": fryer_smell,
-		"shifts_worked": shifts_worked, "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices,
+		"shifts_worked": shifts_worked, "station_best": station_best.duplicate(), "daily": daily.duplicate(true), "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices,
 		"cats_fed_day": cats_fed_day, "couch_day": couch_day, "crib_day": crib_day, "freya_trust": freya_trust,
 		"freya_treat_day": freya_treat_day, "inspector_follow": inspector_follow, "inspector_t": inspector_t,
 		"gear": gear.duplicate(true), "shades": shades, "wordle": wordle.duplicate(true), "wordle_seed": wordle_seed, "kills": kills.duplicate(),
@@ -652,6 +688,9 @@ func from_dict(d: Dictionary) -> void:
 	kills = {}
 	story = SaveGame.clean_story(d.get("story", {}))
 	bounties = Bounties.clean(d.get("bounties", {}))
+	daily = Daily.clean(d.get("daily", {}))
+	var sb = d.get("station_best", {})
+	station_best = sb.duplicate() if typeof(sb) == TYPE_DICTIONARY else {}
 	var bd = d.get("bet", {})
 	bet = {"day": -1, "won": 0, "lost": 0 }
 	if typeof(bd) == TYPE_DICTIONARY:
@@ -718,6 +757,8 @@ func from_dict(d: Dictionary) -> void:
 	gala_unlocked = bool(d.get("gala_unlocked", false))
 	gala_beaten = bool(d.get("gala_beaten", false))
 	gala_runs = int(d.get("gala_runs", 0))
+	if not gala_unlocked and gala_due():
+		check_gala_unlock(false)   # save from before the day-24 gate, already past the invite morning
 	fund_happy_day = int(d.get("fund_happy_day", -1))
 	fund_happy_today = float(d.get("fund_happy_today", 0.0))
 	gala_stage = -1
@@ -769,7 +810,43 @@ static func ui_layer() -> CanvasLayer:
 	return l
 
 func busy() -> bool:
-	return in_title or in_shift or overlay_node != null
+	return in_title or in_shift or overlay_node != null or ko_kind != "" or loading_on or calendar_on
+
+## Loading screen (loading_screen.gd on the HD layer). Freezes the world until it's dismissed.
+func show_loading() -> void:
+	if no_loading:
+		return
+	loading_on = true
+	loading_req += 1
+	player.frozen = true
+	_sync_world()
+
+func loading_done() -> void:
+	loading_on = false
+	if calendar_pending:
+		calendar_pending = false
+		show_calendar()
+	_sync_world()
+
+## Fridge calendar (fridge_calendar.gd on the HD layer). Freezes the world until tapped away.
+func show_calendar() -> void:
+	if no_loading:
+		return
+	calendar_on = true
+	calendar_req += 1
+	player.frozen = true
+	_sync_world()
+
+func calendar_done() -> void:
+	calendar_on = false
+	_sync_world()
+
+## Called by knockout.gd when the cutscene ends: run the normal defeat flow.
+func knockout_done() -> void:
+	ko_kind = ""
+	_sync_world()
+	if is_instance_valid(_ko_boss):
+		boss_defeated(_ko_boss)
 
 func open_overlay(node: Node) -> void:
 	close_overlay()
@@ -793,6 +870,7 @@ func close_overlay() -> void:
 		hud.visible = true
 		touch.set_process_input(true)
 		touch.visible = DisplayServer.is_touchscreen_available() or OS.has_feature("web_ios") or OS.has_feature("web_android") or bool(touch.get("used"))
+		Cast.touch = touch.visible
 	_sync_world()
 
 func _menu(heading: String, lines: Array, opts: Array, cb: Callable, backdrop: String = "") -> void:
@@ -848,6 +926,8 @@ func _unhandled_input(e: InputEvent) -> void:
 		open_gear()
 	elif e.is_action_pressed("phone"):
 		open_phone()
+	elif e.is_action_pressed("drawer"):
+		hud.toggle_drawer()
 	elif e.is_action_pressed("settings"):
 		open_settings()
 
@@ -947,6 +1027,7 @@ func interactables() -> Array:
 			{"id": "crib", "pos": CRIB_PT, "r": 16.0, "label": "Check on {baby}" },
 			{"id": "shower", "pos": SHOWER_PT, "r": 18.0, "label": "Shower" },
 			{"id": "kitchen", "pos": KITCHEN_PT, "r": 20.0, "label": "Kitchen" },
+			{"id": "fridge", "pos": FRIDGE_PT, "r": 13.0, "label": "Fridge calendar" },
 			{"id": "couch", "pos": COUCH_PT, "r": 18.0, "label": "Couch time with {partner}" },
 			{"id": "backwalk", "pos": MAT_PT, "r": 14.0, "label": "Back walk from {partner} (SPEED)" },
 			{"id": "mirror", "pos": MIRROR_PT, "r": 13.0, "label": "Mirror (blackheads / cologne)" },
@@ -1005,6 +1086,7 @@ func interact(id: String) -> void:
 			AudioScript.sfx("hiss")
 			freya_menu()
 		"crib": check_crib()
+		"fridge": show_calendar()
 		"shower": shower()
 		"kitchen": kitchen()
 		"couch": couch_time()
@@ -1259,7 +1341,11 @@ func _wake(energy_penalty: int) -> void:
 	player.position = HOME_SPAWN
 	_set_camera()
 	var lines: Array = night_report.duplicate()
-	lines.append("Day %d, %s. Coffee. Then everything else." % [day_count, DAY_NAMES[day_i % 7]])
+	var card: = str(Daily.entry(day_count).get("card", ""))
+	lines.append("Day %d, %s. %s" % [day_count, DAY_NAMES[day_i % 7], card if card != "" else "Coffee. Then everything else."])
+	calendar_pending = not no_loading
+	show_loading()
+	lines.append_array(daily_new_day())
 	lines.append_array(couch_lines)
 	lines.append_array(mood_new_day())
 	if couch_lines.is_empty():
@@ -1280,7 +1366,13 @@ func _wake(energy_penalty: int) -> void:
 		lines.append("{partner}: \"My package says delivered. Grab it off the porch before the porch pirates do?\"")
 	if story_ready_unannounced() != "":
 		lines.append("{partner}'s got something to tell me. (Talk to her.)")
-	_say(lines.filter(func (l): return str(l) != ""))
+	lines.append_array(calendar_day_lines())
+	lines.append_array(gala_new_day())
+	lines = lines.filter(func (l): return str(l) != "")
+	if calendar_event() == "falcor" and str(daily["falcor"]) == "":
+		falcor_scene(lines)
+	else:
+		_say(lines)
 	_sync_world()
 	save_game()
 
@@ -1344,8 +1436,16 @@ func _tick_plans() -> void:
 		pl["left"] = int(pl["left"]) - 1
 	plans = plans.filter(func (pl): return int(pl["left"]) > 0)
 
+## Week one is prorated (Nov 10, review fix): a new game starts Friday with $40, so a full $195 on the first
+## Monday was a guaranteed late notice. The first Monday (story day <= 7, nothing paid yet) bills half.
+func first_week_prorate() -> bool:
+	return weeks_paid == 0 and late_notices == 0 and day_count <= 7
+
 func pay_rent() -> Array:
 	var base: = weekly_base()
+	var prorated: = first_week_prorate()
+	if prorated:
+		base = int(ceil(base / 2.0))
 	var due: = base + rent_debt
 	var parts: = "rent $%d, bills $%d, family basics $%d%s" % [RENT + rent_bump, BILLS, Life.HOUSEHOLD, (", payment plans $%d" % plan_due()) if plan_due() > 0 else ""]
 	_tick_plans()
@@ -1353,6 +1453,9 @@ func pay_rent() -> Array:
 		money -= due
 		rent_debt = 0
 		weeks_paid += 1
+		if prorated:
+			return ["Monday. Rent is due. Rent is always due.",
+				"First week's prorated, since I moved in on a Friday. I pay $%d, half of the usual. $%d left. Next Monday it's the full $%d." % [due, money, weekly_base()]]
 		return ["Monday. Rent is due. Rent is always due.",
 			"I pay $%d (%s%s). $%d left. Landlord's third boat thanks me." % [due, parts, (", back rent $%d" % (due - base)) if due > base else "", money]]
 	var partial: = maxi(0, money)
@@ -1365,7 +1468,7 @@ func pay_rent() -> Array:
 		"Can't cover $%d (%s). I pay what I've got ($%d). Late fee $%d, because being broke is expensive. Owe $%d next Monday. {partner}'s stressed. -20 Happiness" % [due, parts, partial, LATE_FEE, rent_debt]]
 
 func rent_due() -> int:
-	return weekly_base() + rent_debt
+	return (int(ceil(weekly_base() / 2.0)) if first_week_prorate() else weekly_base()) + rent_debt
 
 func days_until_rent() -> int:
 	var d: = (7 - day_i % 7) % 7
@@ -1601,6 +1704,9 @@ func _process(delta: float) -> void:
 	ping_t = maxf(0.0, ping_t - delta)
 	sigh_t = maxf(0.0, sigh_t - delta)
 	save_flash_t = maxf(0.0, save_flash_t - delta)
+	_update_world_cover()
+	if location != _drawn_loc:
+		queue_redraw()
 	if busy():
 		return
 	player.frozen = not dialog.is_empty()
@@ -1670,11 +1776,23 @@ func try_shift() -> void:
 	if c >= 1320.0 or c < 360.0:
 		_say(["Fork's closed. Even Grill-Boy went home, and he lives in the walk-in. (Open 6 AM - 10 PM)"])
 		return
+	if calendar_event() == "thanksgiving":
+		_say(["The Fork's closed for Thanksgiving. First time in history. Chef's 'with family,' which means his boat."])
+		return
+	if Daily.is_weekend(day_i % 7) and not first_weekend():
+		_say(["It's the weekend. The schedule says I'm off. The Fork can lose money without me for once."])
+		return
 	start_shift()
+
+## The first weekend the Fork is short-staffed and takes Duff (Nov 10, review fix): two extra shifts before the
+## first Monday, so a new player can actually make rent.
+func first_weekend() -> bool:
+	return day_count <= 3
 
 func start_shift() -> void:
 	if in_shift:
 		return
+	show_loading()
 	in_shift = true
 	player.shoes = "black"
 	inspector_follow = false
@@ -1689,6 +1807,9 @@ func start_shift() -> void:
 	shift = ShiftScript.new()
 	shift.m = self
 	shift.day_name = DAY_NAMES[day_i % 7]
+	shift.modes = Daily.shift_modes(today_event())
+	if Daily.inspector(today_event()):
+		shift.force["inspector"] = true
 	shift.shift_over.connect(end_shift)
 	shift_layer.add_child(shift)
 	shift.start()
@@ -1706,13 +1827,26 @@ func end_shift(r: Dictionary) -> void:
 	apply_shift_result(r)
 	save_game()
 
+## Muscle memory: remember the best grade per station (autopilot runs don't count).
+func record_station_bests(res: Array) -> void:
+	for x in res:
+		if typeof(x) != TYPE_DICTIONARY or str(x.get("kind", "")) != "station" or bool(x.get("autopilot", false)):
+			continue
+		var k: = str(x["key"])
+		if ShiftScript.grade_rank(str(x["grade"])) > ShiftScript.grade_rank(str(station_best.get(k, "F"))) or not station_best.has(k):
+			station_best[k] = str(x["grade"])
+
 func apply_shift_result(r: Dictionary) -> void:
 	AudioScript.sfx("cash")
+	var dmul: = Daily.shift_pay(today_event())
+	if dmul != 1.0:
+		r["total"] = int(round(int(r["total"]) * dmul))
 	money += int(r["total"])
 	var cha_tips: = charisma_tips(int(r.get("tips", 0)))
 	money += cha_tips
 	energy = clampf(energy - int(r["energy_cost"]) - int(r["injuries"]) + int(r["meal"]), 0.0, 100.0)
 	energy = maxf(energy, 1.0)
+	record_station_bests(r.get("results", []))
 	advance_clock({"full": 360.0, "quick": 180.0, "rush": 240.0 }.get(str(r.get("mode", "full")), 300.0))
 	for lo in r["leftovers"]:
 		leftovers.append(lo)
@@ -1945,8 +2079,8 @@ func debug_station(k: String) -> void:
 			return
 		"rich":
 			college["cash"] = Market.GOAL + 5.0
-			check_gala_unlock()
-			open_phone("gala_thread")
+			check_fund_goal()
+			open_phone("fund")
 			return
 		"gala":
 			gala_unlocked = true
@@ -1990,16 +2124,33 @@ func debug_station(k: String) -> void:
 		shift.bonus_total = 0
 		shift._finish_shift()
 		return
-	shift.queue = [{"key": k, "ctx": {"eighty_six": true, "steal": true } if k in ["sandwich", "salad"] else {} }]
-	shift._next({})
+	# Straight into the station (debug/QA): skip the NEXT STATION card M10's shuffle put in front of it.
+	shift._play({"key": k, "ctx": {"eighty_six": true, "steal": true } if k in ["sandwich", "salad"] else {} })
 
+## Only the place Duff is in gets drawn: town, home, gala and arena never share the screen (each
+## has its own camera limits), and one canvas item holding all four cost ~150 draw calls a frame
+## on phones. _process() redraws on a location change even while busy (perf, Nov 9).
 func _draw() -> void:
-	_draw_outside()
-	_draw_inside()
-	if gala_unlocked or location == "gala":
-		_draw_gala()
-	if location == "arena":
-		_draw_arena()
+	_drawn_loc = location
+	match location:
+		"home":
+			_draw_inside()
+		"gala":
+			_draw_gala()
+		"arena":
+			_draw_arena()
+		_:
+			_draw_outside()
+
+## An opaque full-screen menu/minigame (every minigame.gd overlay paints its whole 320x180 first)
+## hides the world: stop drawing it and its screen shader until the overlay closes. Looks identical.
+func _update_world_cover() -> void:
+	var cover: = overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
+	if visible == cover:
+		visible = not cover
+		var hd: = get_node_or_null("HD2DPresentation")
+		if hd:
+			hd.set_world_shown(not cover)
 
 func _draw_outside() -> void:
 	var f: = ThemeDB.fallback_font
@@ -2010,14 +2161,13 @@ func _draw_outside() -> void:
 	draw_texture_rect(gt, Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0), false)
 	Art.image(self, "map_objects", Vector2.ZERO)
 	# storefronts (Grok, Nov 8): one sprite per footprint, drawn at the rect; shut places get dimmed
-	# street dressing (Grok, Nov 8) is depth-sorted with them; what stands in front of Duff is drawn
-	# by the DressingFront overlay instead (scripts/dressing_front.gd)
-	var feet: = player.position.y + 10.0 if player and location == "outside" else 1e9
+	# street dressing (Grok, Nov 8) is y-sorted WITH the actors by scripts/dressing_front.gd (Nov 9);
+	# only items tucked behind a storefront are drawn here, sorted with the storefronts
 	var layer: Array = []
 	for b in buildings:
 		layer.append([(b["r"] as Rect2).end.y, b])
 	for it in dressing:
-		if it["p"].y <= feet:
+		if it.get("behind_building", false):
 			layer.append([it["p"].y, it])
 	layer.sort_custom(func(x, y): return x[0] < y[0])
 	for e in layer:
@@ -2037,12 +2187,20 @@ func _draw_outside() -> void:
 	var ph: = phase()
 	if ph == "Night" or ph == "Evening":
 		draw_rect(Rect2(Vector2.ZERO, WORLD), Color(0.05, 0.05, 0.2, 0.35 if ph == "Night" else 0.15))
-	if inspector_follow and location == "outside":
-		_draw_inspector()
+	# the inspector and Brittany are drawn outdoors by y-sorted proxies (dressing_front.gd)
 
 func _draw_inspector() -> void:
+	draw_inspector_at(self, Vector2.ZERO)
+
+## ofs: world -> the canvas item's local space (proxies pass -their position)
+func draw_inspector_at(ci: CanvasItem, ofs: Vector2) -> void:
 	var to: = player.global_position - inspector_pos if player else Vector2.DOWN
-	Art.person(self, "ch_inspector", inspector_pos + Vector2(0, 6), to, t, to.length() > 26.0)
+	Art.person(ci, "ch_inspector", inspector_pos + Vector2(0, 6) + ofs, to, t, to.length() > 26.0)
+
+func draw_brittany(ci: CanvasItem, ofs: Vector2) -> void:
+	Art.person(ci, "ch_brittany", BRITT_POS + Vector2(0, 6) + ofs, player.position - BRITT_POS, t, false, int(t * 0.7) % 4 == 0)
+	if int(bet["day"]) != day_count:
+		ci.draw_string(ThemeDB.fallback_font, BRITT_POS + ofs + Vector2(-3, -24 + sin(t * 3.0) * 1.5), "$", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#60e060"))
 
 func _draw_inside() -> void:
 	var f: = ThemeDB.fallback_font
@@ -2083,11 +2241,11 @@ const HIT_LINES: = {
 	"firework": "Sparkler'd. Very festive. Very ouch.",
 	"pete": "Pete body-slams me. Smells like sunscreen he didn't use and a boat he didn't pay off.",
 	"karen": "Karen jabs me with her phone. She's going live.", "hoa": "Bonked with bylaw 4.2.c: 'No joy.'",
-	"post": "Hit by a hot take. 400k likes, zero facts.", "rocket": "Rocket strike! A 'rapid unscheduled disassembly.' Of me.",
-	"drone": "Drone-delivered to the face. Left a review: one star.", "laser": "Blinded by the belt buckle!", "bsod": "", "update": "",
+	"post": "Hit by a hot take. 400k likes, zero facts.", "rocket": "A sponsored e-scooter lands on me. Use code TYLER for 10% off my spine.",
+	"drone": "Tip drone to the face. It asks how my experience was.", "laser": "Blinded by a tip screen. Suggested: 30%.", "bsod": "", "update": "",
 	"butler": "A butler pummels me. He's paid $9 an hour to do it. Respect.", "coin": "Pelted with gold coins. First money's trickled down in years.",
-	"tariff": "TARIFF'D. My face now costs 25% more and I'm the one paying.", "tariff_bit": "Shrapnel from a tariff.", "wall": "Bonked by a beautiful wall.",
-	"boss": "Body-checked by a billionaire. Classic. They never touch anything they can't buy.",
+	"tariff": "Cost-cut. Right in the ribs. They're 'lean' now.", "tariff_bit": "Shrapnel from a restructuring.", "wall": "Bonked by a wall of NDAs. Can't say how much it hurt.",
+	"boss": "Body-checked by a boss. Classic. They never touch anything they can't buy.",
 	"seen": "Left on read. Stings worse than a fryer burn.", "dumbbell": "Dumbbell to the dome. Bro.", "charge": "Bro-charged! He didn't even warm up.",
 	"bass": "", "vape": "Mango ice cloud. Hacking up a lung. Sponsored content.", "rug": "RUG PULLED! I hit the floor. My portfolio's right there with me.",
 	"bullet": "Bullet spray! Mostly noise, but OW. Damn.", "nft": "Bitten by an NFT. It's worth less than the bite.",
@@ -2106,6 +2264,7 @@ func apply_gear() -> void:
 		player.speed_mult *= Life.DRAIN_SPEED
 	player.roll_cd_len = (0.45 if asp in ["fast", "trust"] else 0.7) * combat.roll_mult()
 	player.speed_mult *= combat.speed_mult()
+	player.speed_mult *= Daily.walk(today_event())
 	player.combo_len = 4 if Gear.w_special(gear) in ["quick", "golden"] else 3
 	player.iframe_len = 1.2 if asp in ["goalie", "trust"] else 0.8
 
@@ -2127,7 +2286,7 @@ func hurt_player(amount: float, from: Vector2, kb: float, kind: String) -> bool:
 		dmg *= Life.DRAIN_TAKEN
 	if kind in PROJ_KINDS and Gear.a_special(gear) == "heatproof":
 		dmg *= 0.5
-	energy -= dmg
+	energy = maxf(0.0, energy - dmg)   # never below 0 (HUD + lose checks use <= 0)
 	if arena_mode == "bet":
 		bet_hurt += 1
 	player.hurt()
@@ -2207,7 +2366,7 @@ func spawn_cap() -> int:
 	return mini(6, 1 + day_count / 2) + (2 if phase() == "Night" else 0)
 
 func spawn_interval() -> float:
-	var base: = maxf(10.0, 28.0 - 2.0 * day_count)
+	var base: = maxf(10.0, 28.0 - 2.0 * day_count) / Daily.spawn(today_event())
 	match phase():
 		"Night": return base * 0.6
 		"Evening": return base * 0.8
@@ -2576,7 +2735,7 @@ func open_phone(scr: String = "home") -> void:
 	if busy() or not dialog.is_empty():
 		return
 	if location == "gala":
-		_toast("Security takes my phone. 'Only billionaires may post, sir.'")
+		_toast("Security takes my phone. 'Only donors may post, sir.' Tyler is posting. Tyler is always posting.")
 		return
 	if location == "arena":
 		_toast("No time to text. Kinda in a boss fight here.")
@@ -2632,7 +2791,7 @@ func trade_buy(a: String, t: String, amt: float) -> float:
 	if a == "brokerage":
 		_sweep_brokerage()
 	if a == "college":
-		check_gala_unlock()
+		check_fund_goal()
 	return spend
 
 func trade_sell(a: String, t: String, frac: float) -> float:
@@ -2666,7 +2825,7 @@ func fund_deposit(want: int) -> int:
 	var h: = clampf(amt * 0.03, 0.0, FUND_HAPPY_CAP - fund_happy_today)
 	gain_happy(h)
 	fund_happy_today += h
-	check_gala_unlock()
+	check_fund_goal()
 	return amt
 
 func market_week() -> Array:
@@ -2685,24 +2844,46 @@ func market_week() -> Array:
 		college["cash"] = float(college["cash"]) + float(d2["paid_out"])
 	if float(d2["total"]) >= 0.01:
 		lines.append("{baby}'s fund pulls $%.2f in dividends. Fund: $%s" % [float(d2["total"]), PhoneScript._money(fund_value())])
-	if check_gala_unlock():
-		lines.append("{baby}'s fund hits $100,000! {partner} cries. Then my phone buzzes: an unknown number...")
+	if check_fund_goal():
+		lines.append("{baby}'s fund hits $100,000! {partner} cries. I cry. {cat1} knocks a glass off the counter to mark the occasion.")
 	return lines
 
-func check_gala_unlock() -> bool:
-	if gala_unlocked or fund_value() < Market.GOAL:
+## Octavia's fund goal: its own long-term score (achievement + a happy bump), no longer the gala key.
+func check_fund_goal() -> bool:
+	if achievements.has("Fully Funded") or fund_value() < Market.GOAL:
+		return false
+	achievements.append("Fully Funded")
+	gain_happy(30.0)
+	_toast("*BZZT* {baby}'s fund hits $100k! College: handled. Me: crying in the kitchen.")
+	return true
+
+## Day GALA_DAY morning: the gala invite (Committee thread + Madison's guest-list text).
+## Old saves that already have gala_unlocked keep it; saves past the day catch up on load.
+## Nov 10 (review fix): beating {ex_final} on story day 12 used to leave the gala locked until day 24, so the
+## biggest fights sat behind 12 dead days after the credits. The invite now also lands the morning after the ending.
+func gala_due() -> bool:
+	return day_count >= GALA_DAY or bool(story.get("ending_seen", false))
+
+func check_gala_unlock(toast: bool = true) -> bool:
+	if gala_unlocked or not gala_due():
 		return false
 	gala_unlocked = true
-	text("gala", "gala", "Dear {hero}. Your net worth has crossed the threshold where we start pretending you exist. You are invited to THE ELITE GALA.")
+	text("gala", "gala", "Dear {hero}. A seat opened up at THE ELITE GALA. Our intern mailed your invite by mistake. We honor our mistakes. Barely.")
 	text("gala", "gala", "Black tie. Our guests are eager to meet a 'self-made man.' None of them are. -- The Committee")
-	text("gala", "sys", "Tap 'Take the limo' when you're ready. Five fights, a heal between each. No phones inside.")
+	text("gala", "sys", "Tap 'Take the limo' when you're ready, any night till the month runs out. Five fights, a heal between each. No phones inside.")
+	text("madison", "madison", "babe the gala guest list leaked. FOUR of my exes are on it. they all got rich. how. we're going. i'm wearing the green dress")
 	unread["gala"] = true
+	unread["madison"] = true
 	ping_t = 2.0
-	if not achievements.has("Fully Funded"):
-		achievements.append("Fully Funded")
-	gain_happy(30.0)
-	_toast("*BZZT* {baby}'s fund hits $100k! Some unknown number's texting me...")
+	if toast:
+		_toast("*BZZT* Gold envelope under the door. THE ELITE GALA. Some unknown number's texting me...")
 	return true
+
+## Wake line for the invite morning.
+func gala_new_day() -> Array:
+	if not check_gala_unlock():
+		return []
+	return ["A gold envelope's under the door. THE ELITE GALA. {partner}'s already holding up the green dress. (P = phone: 'Take the limo' any night.)"]
 
 func start_gala(first: int = 0) -> void:
 	if not gala_unlocked or busy():
@@ -2713,7 +2894,7 @@ func start_gala(first: int = 0) -> void:
 	_set_camera()
 	energy = 100.0
 	gala_stage = first
-	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "Five billionaires. One line cook. Alright. Heard. Let's fucking cook."])
+	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. Charity thing. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "{partner} reads the guest list and goes pale. Four of the names are her exes. All four 'made it.'", "{partner}: Babe. I am SO sorry. In advance. For all of them.", "Four exes. One rich host. One line cook. Alright. Heard. Let's fucking cook."])
 	_spawn_boss()
 	_sync_world()
 
@@ -2725,9 +2906,16 @@ func _spawn_boss() -> void:
 	add_child(b)
 	gala_boss = b
 	b.set_physics_process(not busy())
-	_say([str(BossScript.BOSSES[b.kind]["intro"])])
+	var setup: = str(BossScript.BOSSES[b.kind].get("setup", ""))       # {partner} reacts to her ex first
+	_say(([setup] if setup != "" else []) + [str(BossScript.BOSSES[b.kind]["intro"])])
 
 func boss_defeated(b: Node) -> void:
+	if b != _ko_boss and KnockoutScript.is_live(str(b.kind)):
+		_ko_boss = b                        # knockout cutscene first; knockout_done() comes back here
+		ko_kind = str(b.kind)
+		player.frozen = true
+		_sync_world()
+		return
 	if b == arena_boss and arena_boss != null:
 		match arena_mode:
 			"bounty": bounty_defeated(b)
@@ -2755,7 +2943,7 @@ func gala_win(line: String) -> void:
 	var first: = not gala_beaten
 	gala_beaten = true
 	gala_runs += 1
-	var lines: Array = [line, "I clear THE ELITE GALA. The billionaires flee to their New Zealand bunkers. Don't let the door hit ya."]
+	var lines: Array = [line, "I clear THE ELITE GALA. Her exes fight over the valet. {gala_ex_1} is still streaming it."]
 	if first:
 		for id in ["golden_spatula", "trust_fund"]:
 			if not Gear.owns(gear, id):
@@ -2769,7 +2957,7 @@ func gala_win(line: String) -> void:
 		money += 250
 		gear["scraps"] = int(gear["scraps"]) + 10
 		lines.append("Rematch bonus: +$250 in loose cufflinks and +10 scrap. Still more than their tax rate.")
-	lines.append("{partner}: You beat up billionaires?? ...Put the spatula in the dishwasher.")
+	lines.append("{partner}: You beat up FOUR of my exes in one night?? ...Put the spatula in the dishwasher.")
 	apply_gear()
 	_leave_gala()
 	_say(lines)
@@ -2880,6 +3068,7 @@ func _on_story_menu(choice: String, id: String) -> void:
 func start_story_fight(id: String) -> void:
 	if busy():
 		return
+	show_loading()
 	clear_enemies()
 	arena_id = id
 	arena_mode = "story"
@@ -3023,7 +3212,7 @@ func _after_ending(_n: Node, _s: float, _x: Array) -> void:
 	player.position = INT_SPAWN
 	_set_camera()
 	_sync_world()
-	_say(["Post-game: the days keep going. Rent keeps coming. The Gala, Stonks and {sister}'s Wordle are all still here.", "(Beaten bosses stay beaten. Thanks for playing.)"])
+	_say(["Post-game: the days keep going. Rent keeps coming. Stonks and {sister}'s Wordle are all still here.", "Tomorrow morning there's a gold envelope coming. The real final round is a black-tie party. (Beaten bosses stay beaten.)"])
 	if not has_car:
 		text("madison", "madison", "we're officially a family now. families have minivans. a used one is $%d. start saving, chef <3 (buy it at any bus stop)" % Transit.CAR_PRICE)
 		unread["madison"] = true
@@ -3901,7 +4090,7 @@ func mood_new_day() -> Array:
 		mood["kind"] = ""
 	if mood_kind() == "upset":
 		return out
-	if life_events and Moods.roll_fussy(day_count, wordle_seed, int(mood["last_fussy"])):
+	if life_events and not falcor_grief() and Moods.roll_fussy(day_count, wordle_seed, int(mood["last_fussy"])):
 		start_fussy()
 		out.append("{partner} wakes up having a rough one. Not my fault. I gotta be gentle with her today.")
 	return out
@@ -4051,7 +4240,7 @@ func curveball_new_day() -> Array:
 		else:
 			keep.append(b)
 	bills = keep
-	var id: = Life.roll_event(day_count, wordle_seed, event_days, has_car) if life_events else ""
+	var id: = Life.roll_event(day_count, wordle_seed, event_days, has_car) if life_events and not daily_headline() else ""
 	if id != "":
 		out.append_array(deliver_curveball(id))
 	return out
@@ -4299,6 +4488,7 @@ func _on_bounty_menu(id: String) -> void:
 func start_bounty(id: String) -> void:
 	if busy():
 		return
+	show_loading()
 	clear_enemies()
 	arena_id = "alley"
 	arena_mode = "bounty"
@@ -4391,6 +4581,7 @@ func waffle_menu() -> void:
 func start_waffle() -> void:
 	if busy():
 		return
+	show_loading()
 	clear_enemies()
 	arena_id = "waffle"
 	arena_mode = "waffle"
@@ -4489,10 +4680,7 @@ func _draw_waffle_sign_and_board(f: Font) -> void:
 			draw_line(pp + Vector2(5, 0), pp + Vector2(0, 4.4), Color("#d02020"), 1.0)
 	draw_string(f, bp + Vector2(-4, -1), "86 LIST", HORIZONTAL_ALIGNMENT_CENTER, 28, 4, Color("#ffd23f"))
 
-	if location == "outside" and phase() != "Night":
-		Art.person(self, "ch_brittany", BRITT_POS + Vector2(0, 6), player.position - BRITT_POS, t, false, int(t * 0.7) % 4 == 0)
-		if int(bet["day"]) != day_count:
-			draw_string(f, BRITT_POS + Vector2(-3, -24 + sin(t * 3.0) * 1.5), "$", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#60e060"))
+	# Brittany: drawn by a y-sorted proxy (dressing_front.gd -> draw_brittany)
 
 const BETS: = {
 	"nohit": {"name": "No-Hit Run", "goal": 8, "time": 0.0, "pitch": "Beat 8 of these goobers without getting touched ONCE. One hit and I win.",
@@ -4651,3 +4839,86 @@ func _auto_doors() -> void:
 			door_armed[id] = false
 			interact(id)
 			return
+
+
+# ---------------------------------------------------------------- daily life (docs/daily_life.md)
+
+## Today's random event id ("" if none or it's from another day).
+func today_event() -> String:
+	return str(daily["id"]) if int(daily["day"]) == day_count else ""
+
+## A calendar headline or a random event owns this morning (the bill roll waits).
+func daily_headline() -> bool:
+	return bool(Daily.entry(day_count).get("headline", false)) or today_event() != ""
+
+## Morning roll: pick today's event, apply its one-off effects, return lines for the wake report.
+func daily_new_day() -> Array:
+	if int(daily["day"]) == day_count:
+		return []
+	var id: = Daily.roll(day_count, day_i % 7, daily["recent"], (story["beaten"] as Array).size(), wordle_seed)
+	daily["day"] = day_count
+	daily["id"] = id
+	daily["recent"] = Daily.remember(daily["recent"], id)
+	var out: Array = []
+	if id == "":
+		return out
+	var e: = Daily.event(id)
+	energy = clampf(energy + float(e.get("energy", 0)), 1.0, 100.0)
+	if float(e.get("happy", 0)) != 0.0:
+		gain_happy(float(e.get("happy", 0)))
+	money = maxi(0, money + int(e.get("money", 0)))   # farmers_market costs $10; broke = no candle, not -$10
+	out.append(str(e.get("card", "")))
+	out.append("(%s)" % str(e.get("effect", "")))
+	apply_gear()
+	return out
+
+## Special handler id for today's calendar square ("falcor", "thanksgiving") or "".
+func calendar_event() -> String:
+	return str(Daily.entry(day_count).get("event", ""))
+
+## Days 11-13 after Falcor: Madison's quiet. No fussy rolls, a soft line each morning.
+const FALCOR_GRIEF: = {
+	11: "{partner}'s quiet at breakfast. She feeds {cat1} and {cat2} twice, like she's making up the difference.",
+	12: "{partner} holds onto me at the door a little longer than usual. Doesn't say anything about the porch.",
+	13: "{partner} laughs at something {baby} does. First real one in three days. I write down the time.",
+}
+
+func falcor_grief() -> bool:
+	return str(daily["falcor"]) != "" and FALCOR_GRIEF.has(day_count)
+
+## Extra wake lines for special calendar days.
+func calendar_day_lines() -> Array:
+	var out: Array = []
+	if falcor_grief():
+		out.append(FALCOR_GRIEF[day_count])
+		if day_count == 11:
+			text("madison", "madison", "bowl's still on the porch. not ready to move it.")
+	if calendar_event() == "thanksgiving" and int(daily.get("thanks_day", -1)) != day_count:
+		daily["thanks_day"] = day_count
+		gain_happy(10.0)
+		energy = minf(100.0, energy + 20.0)
+		out.append("Waffle Haus at noon. Dolores brings a pie she says is 'from the case.' It's not from the case. (+10 Happiness, +20 Energy. The Fork's closed.)")
+	return out
+
+## Day 10: Falcor. Approved text (Duff, Nov 9). Sincere: no jokes at his expense.
+const FALCOR_LINES: = [
+	"Sunday. {partner}'s on the porch steps before the coffee's done. {stray}'s curled up next to his bowl like he's waiting on seconds. He's not waiting on anything anymore.",
+	"I get the shovel. She picks the spot. Neither of us says much.",
+	"A stray is a cat that picked you without asking. That's the whole contract. He kept his end.",
+]
+
+func falcor_scene(after: Array) -> void:
+	spawn_t = 150.0   # nobody on the block till about noon
+	_menu("SUNDAY", FALCOR_LINES, [["stay", "Stay with her", KEY_1], ["space", "Give her some space", KEY_2]], func (id: String) -> void:
+		daily["falcor"] = id
+		var out: Array = []
+		if id == "stay":
+			gain_happy(10.0)
+			advance_clock(180.0)
+			out.append("We sit on the steps till the coffee's cold. {partner} talks about the moth. I listen like it's the news. (+10 Happiness. The morning's gone. Worth it.)")
+		else:
+			out.append("I kiss the top of her head and give her the porch. She nods. Some things you do alone, even when you're not.")
+		save_game()
+		_say(out + after), "living_night")
+	if overlay_node:
+		overlay_node.set("backdrop_dim", 0.45)   # quiet room, no party burst

@@ -2,11 +2,25 @@
 Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into NOW.
 
 ## NOW
-- M7: 19 backgrounds from Place (`grok_art/requests/REQUEST_M7_backdrops.md`). Done 3/19: home_interior, bg_kitchen, arena_gymbro (Gemini). Art now comes from Duff's Gemini app runs (Drive 97 folder). Next from Place: arena_alley, arena_waffle, gala. Wire each drop as it lands (see CLAUDE.md M7 drop 1).
+- ITCH EMBED FIX (Duff, dashboard): play `duff-quest-html.zip`, delete `duffquest-web.zip`. Then paste docs/itch/PAGE.md + images.
+- Balance call from Duff: happiness gates (tasks/todo.md).
+- JAM PUSH (Nov 9): itch build current + art-rule fixes. See `tasks/todo.md` top section and `docs/HANDOFF_NOV9.md`.
+- M7: 19 backgrounds from Place (`grok_art/requests/REQUEST_M7_backdrops.md`). Done 3/19: home_interior, bg_kitchen, arena_gymbro (Gemini). Art now comes from Duff's Gemini app runs (Drive 97 folder). Next from Place: arena_alley, arena_waffle, gala. (Nov 10: all six placeholder arenas now have code-painted stand-ins; a real drop just replaces the PNG.) Wire each drop as it lands (see CLAUDE.md M7 drop 1).
 
 ## NEXT
 
 ## DONE
+- Nov 10 evening: IGN review fixes: phone wording + bigger touch buttons, prorated first rent + Fork open the first weekend, six arenas painted in code (`tools/arena_paint/`), gala invite the morning after the ending. test_daily 112/112.
+- Nov 10: gala exes' world sprite sheets (ch_husk/bozos/fences/donald) repainted in code from repo sheets (Canva upload blocked): `tools/sheet_repaint/<id>.py`, masters `grok_art/2026-11-10-gala-exes/`, review `docs/reviews/gala_exes_sheets.md`, in-game `docs/renders/gala_exes_sheets_ingame.png`. ch_crypto side rows were swapped (Mr. Crypto walked backwards), fixed. IGN-style review: `docs/reviews/ign_review_2026-11-10.md` (6.4/10; top fixes: phone-first controls, gentler week one, real boss arenas).
+- Nov 9 night: test_daily covers bus pass, minivan, stock trades, college fund, symphony date (money never negative or lost; none of them had bugs). Doc/code drift fixed (cast.gd defaults, ko/loading _doc, voice.md, knockout_cutscenes.md). CI deploy_itch on main (needs BUTLER_API_KEY variable).
+- Nov 9 evening: QA fixes: new-game intro rent total ($195 via weekly_base), KO x-ray crop per boss (`b_anchor`; willnot + dasher jaws visible). CI blocked by GitLab account verification (Duff).
+- Nov 9 (multi-agent): build shrink, halo fix, KO gore, HUD declutter, combat bark/y-sort polish, QA leftovers, all 17 KOs live, gala bosses -> Madison's exes (code; art pending), itch kit.
+- M14 (Nov 9): parody x-ray stills redone (hit = x-ray bone, unique faces); all 17 knockout scripts varied.
+- M13 (Nov 9): parody bosses (Husk, Bozos, Fences, Donald, Willnot): intro cards, sprite sheets, KO stills, knockouts live.
+- M12 (Nov 9): Falcor thread (day 10 scene + grief days) and Thanksgiving.
+- M11 (Nov 9): fridge calendar (30 November days, notes, cats), 14 random daily events, weekends off.
+- M10 (Nov 9): shuffled full shift + muscle-memory autopilot.
+- Nov 9: parody bosses get made-up human portraits (cartoon heads saved for DLC).
 - M9 (Nov 8): Palahniuk voice layer: 22 key lines, 4 choruses, 40 fact-checked fun facts on bus rides + load.
 - Nov 8: Madison + Octavia portrait touch-ups wired in (Place PR #21).
 - M8 (Nov 8): menus restyled in code to match Place's boss cards (fonts, ink panels, chunky buttons, sunburst title). Boss intros switched to the burst cards.

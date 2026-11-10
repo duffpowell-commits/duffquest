@@ -1,5 +1,6 @@
 extends Node2D
 const UiStyle: = preload("res://scripts/ui_style.gd")
+const Cast: = preload("res://scripts/cast.gd")
 
 signal a_pressed
 signal b_pressed
@@ -9,6 +10,7 @@ signal s_pressed
 signal s_released
 signal swap_pressed
 signal d_pressed
+signal drawer_pressed
 
 const JOY_HOME: = Vector2(36, 142)
 const JOY_R: = 20.0
@@ -16,15 +18,15 @@ const BTN_A: = Vector2(296, 140)
 const BTN_B: = Vector2(272, 160)
 const BTN_R: = 11.0
 const BTN_G: = Vector2(306, 112)
-const BTN_G_R: = 7.0
-const BTN_P: = Vector2(109, 13)
-const BTN_P_R: = 10.0
+const BTN_G_R: = 9.0      # Nov 10: 7 -> 9 (review: too small for a thumb)
+const BTN_P: = Vector2(195, 9)     # hud.gd layout()["phone"]
+const BTN_P_R: = 9.0
 const BTN_S: = Vector2(248, 148)
 const BTN_S_R: = 10.0
 const BTN_SW: = Vector2(240, 126)
-const BTN_SW_R: = 6.0
+const BTN_SW_R: = 9.0     # Nov 10: 6 -> 9
 const BTN_D: = Vector2(282, 116)
-const BTN_D_R: = 7.0
+const BTN_D_R: = 9.0      # Nov 10: 7 -> 9
 var s_idx: = -1
 
 var m: Node = null
@@ -37,6 +39,8 @@ var used: = false
 
 func _ready() -> void:
 	visible = DisplayServer.is_touchscreen_available() or OS.has_feature("web_ios") or OS.has_feature("web_android")
+	if visible:
+		Cast.touch = true
 
 func _input(e: InputEvent) -> void:
 	if e is InputEventScreenTouch:
@@ -44,6 +48,7 @@ func _input(e: InputEvent) -> void:
 		var tp: = get_canvas_transform().affine_inverse() * t.position
 		visible = true
 		used = true
+		Cast.touch = true
 		if t.pressed:
 			if tp.distance_to(BTN_A) < BTN_R + 5.0:
 				a_pressed.emit()
@@ -56,6 +61,9 @@ func _input(e: InputEvent) -> void:
 				get_viewport().set_input_as_handled()
 			elif tp.distance_to(BTN_P) < BTN_P_R:
 				p_pressed.emit()
+				get_viewport().set_input_as_handled()
+			elif not dialog_open() and _on_hud(tp):
+				drawer_pressed.emit()
 				get_viewport().set_input_as_handled()
 			elif not dialog_open() and tp.distance_to(BTN_S) < BTN_S_R + 4.0:
 				s_idx = t.index
@@ -85,6 +93,15 @@ func _input(e: InputEvent) -> void:
 	if player:
 		player.joy_vec = joy_knob / JOY_R
 	queue_redraw()
+
+## Taps on the HUD's top strip (or the open drawer) toggle the detail drawer.
+func _on_hud(tp: Vector2) -> bool:
+	if m == null or m.get("hud") == null or not m.hud.visible:
+		return false
+	var L: Dictionary = m.hud.layout()
+	if (L["strip"] as Rect2).grow(2.0).has_point(tp):
+		return true
+	return bool(m.hud.drawer_open) and (L["drawer"] as Rect2).has_point(tp)
 
 func _demon_shown() -> bool:
 	return m != null and m.get("combat") != null and m.combat.demon_unlocked
@@ -131,7 +148,7 @@ func _draw() -> void:
 		draw_arc(joy_center, JOY_R, 0, TAU, 32, Color(0.94, 0.89, 0.77, 0.4), 0.67)
 		draw_circle(joy_center + joy_knob, 8, Color(0.94, 0.89, 0.77, 0.42))
 		_btn(BTN_B, BTN_R, Color("#a43a2c"), "B", f)
-		draw_string(f, BTN_B + Vector2(-5, -13), "roll", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color(1, 1, 1, 0.55))
+		_hint(BTN_B + Vector2(0, -13), "roll")
 		_btn(BTN_G, BTN_G_R, Color("#d8982e"), "G", f)
 		var c = m.combat if m != null and m.get("combat") != null else null
 		if c != null:
@@ -139,12 +156,21 @@ func _draw() -> void:
 			var ok: bool = not sp.is_empty() and c.heat >= c.cost_of(sp)
 			_btn(BTN_S, BTN_S_R, Color("#e0702a") if ok else Color("#6a4a3a"), "S", f)
 			if not sp.is_empty():
-				draw_string(f, BTN_S + Vector2(-12, 17), str(sp["short"]), HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color(1, 1, 1, 0.55))
+				_hint(BTN_S + Vector2(0, 17), str(sp["short"]))
 			if c.unlocked().size() > 1:
 				_btn(BTN_SW, BTN_SW_R, Color("#7a6a8a"), "", f)
-				draw_string(f, BTN_SW + Vector2(-3.5, 2), "<>", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#f0ead8"))
+				draw_string(f, BTN_SW + Vector2(-5, 2.5), "<>", HORIZONTAL_ALIGNMENT_CENTER, 10, 7, Color("#f0ead8"))
 			if _demon_shown():
 				var glow: bool = c.demon_ready() or c.demon_t > 0.0
 				_btn(BTN_D, BTN_D_R, Color("#c02a6a") if glow else Color("#4a2a3a"), "D", f)
 	_btn(BTN_A, BTN_R, Color("#4e7a3a"), "A", f)
-	draw_string(f, BTN_A + Vector2(-11, 18), "use/bonk" if not talk else "next", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color(1, 1, 1, 0.55))
+	_hint(BTN_A + Vector2(0, 18), "next" if talk else ("talk/use" if _near_thing() else "bonk"))
+
+## Button captions: 6 px, near-opaque, with a dark outline so they read on any floor (review: 5 px at 55% was invisible).
+func _hint(at: Vector2, s: String) -> void:
+	var f: = ThemeDB.fallback_font
+	draw_string_outline(f, at - Vector2(20, 0), s, HORIZONTAL_ALIGNMENT_CENTER, 40, 6, 2, Color(0, 0, 0, 0.7))
+	draw_string(f, at - Vector2(20, 0), s, HORIZONTAL_ALIGNMENT_CENTER, 40, 6, Color(1, 1, 1, 0.92))
+
+func _near_thing() -> bool:
+	return m != null and m.has_method("nearest_interactable") and not (m.nearest_interactable() as Dictionary).is_empty()
