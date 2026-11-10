@@ -80,32 +80,32 @@ const ASSETS = {
     "s": 2
   },
   "arena_waffle": {
-    "w": 640,
-    "h": 360,
+    "w": 1280,
+    "h": 720,
     "cell": [
-      640,
-      360
+      1280,
+      720
     ],
     "origin": [
       0,
       0
     ],
     "kind": "backdrop",
-    "s": 2
+    "s": 4
   },
   "arena_alley": {
-    "w": 640,
-    "h": 360,
+    "w": 1280,
+    "h": 720,
     "cell": [
-      640,
-      360
+      1280,
+      720
     ],
     "origin": [
       0,
       0
     ],
     "kind": "backdrop",
-    "s": 2
+    "s": 4
   },
   "ch_regular": {
     "w": 256,
@@ -276,46 +276,46 @@ const ASSETS = {
     "s": 2
   },
   "arena_crypto": {
-    "w": 640,
-    "h": 360,
+    "w": 1280,
+    "h": 720,
     "cell": [
-      640,
-      360
+      1280,
+      720
     ],
     "origin": [
       0,
       0
     ],
     "kind": "backdrop",
-    "s": 2
+    "s": 4
   },
   "arena_djvape": {
-    "w": 640,
-    "h": 360,
+    "w": 1280,
+    "h": 720,
     "cell": [
-      640,
-      360
+      1280,
+      720
     ],
     "origin": [
       0,
       0
     ],
     "kind": "backdrop",
-    "s": 2
+    "s": 4
   },
   "arena_ghoster": {
-    "w": 640,
-    "h": 360,
+    "w": 1280,
+    "h": 720,
     "cell": [
-      640,
-      360
+      1280,
+      720
     ],
     "origin": [
       0,
       0
     ],
     "kind": "backdrop",
-    "s": 2
+    "s": 4
   },
   "arena_gymbro": {
     "w": 640,
@@ -332,18 +332,18 @@ const ASSETS = {
     "s": 2
   },
   "arena_willnot": {
-    "w": 640,
-    "h": 360,
+    "w": 1280,
+    "h": 720,
     "cell": [
-      640,
-      360
+      1280,
+      720
     ],
     "origin": [
       0,
       0
     ],
     "kind": "backdrop",
-    "s": 2
+    "s": 4
   },
   "av_bank": {
     "w": 48,

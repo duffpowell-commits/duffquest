@@ -2,7 +2,7 @@ extends Node
 ## Per-arena wall check: pushes Duff up/left/right/down from the arena centre in each listed arena and prints
 ## where he stops (relative to ARENA_ORIGIN). Run:
 ##   godot --headless --path . res://tools/arena_wall_check.tscn
-const ARENAS: = ["gymbro", "ghoster"]
+const ARENAS: = ["gymbro", "alley", "ghoster", "djvape", "crypto", "willnot", "waffle"]
 var game: Node
 var m: Node
 var frame: = 0
@@ -20,6 +20,8 @@ func _physics_process(_d: float) -> void:
 		m.in_title = false
 		m.close_overlay()
 		m.start_story_fight(a)
+		if m.arena_id != a:
+			m.arena_id = a  # bounty / bet / shift arenas have no story fight: just switch the walls
 		if m.arena_id != a:
 			print("arena_wall_check: could not start ", a)
 		if m.arena_boss:

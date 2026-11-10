@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (night)** The six themed boss arenas are real painted art (alley, Seen Cafe, Club Cloud 9, crypto
+  garage, tower office, Waffle Haus) at 1280x720 (`tools/arena_import/`), walls fitted to each painting, Waffle Haus
+  grills and order rail moved onto the art (`docs/renders/arenas_painted_ingame.png`). CLAUDE.md rewritten as a lean
+  handoff; the old log is `docs/handoffs/SESSION_LOG.md`. GitLab dropped for now: GitHub main is the only home.
 - **2026-11-10 (evening)** Title screen shows the real Duff: both tattoo sleeves and the fox on his neck, from his
   style-C portrait, in a comic panel over the in-game kitchen (`tools/title_compose.py`,
   `docs/renders/title_tattoos_before_after.png`). GitHub is the main repo again: `build.yml` passed and pushed the
@@ -26,22 +30,19 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Next
 
-1. **Real painted arena backgrounds** (Duff's pick, Nov 10): six paintings are made (Canva scratch design, pages
-   5-10) but can't be downloaded from a cloud session. Once they're in Drive or the repo: wire in, render in engine.
-2. **Itch page:** make it play the CI build (`duff-quest-html.zip`) instead of the old manual upload (Duff, itch
+1. **Itch page:** make it play the CI build (`html` channel) instead of the old manual upload (Duff, itch
    dashboard), then paste `docs/itch/PAGE.md` and the images.
-3. **Cat loading screen:** Alastor, Lucifer and Freya.
+2. **Cat loading screen:** Alastor, Lucifer and Freya.
+3. **M7 backgrounds** still waiting on real art: the remaining scene backdrops in
+   `grok_art/requests/REQUEST_M7_backdrops.md`.
 4. **Brittany playtest** of the gentler first week on her iPhone.
 5. **Balance call:** happiness gates are strict (`tasks/todo.md`), and the errand drain is harsh in week one.
-6. **GitHub secret (Duff):** `GITLAB_TOKEN` for the backup mirror (the mirror skips without it; GitLab is behind).
-7. **M7 backgrounds** still waiting on real art: the remaining scene backdrops in
-   `grok_art/requests/REQUEST_M7_backdrops.md`.
 
 ## Could improve
 
 From the IGN-style review (`docs/reviews/ign_review_2026-11-10.md`) and QA, still open:
 
-- **Arenas:** the six code-painted rooms are stand-ins; only the gym is real art. The gala floor is still beige tiles.
+- **Gala floor** is still beige tiles; the arenas are painted now.
 - **Three art styles:** chibi pixel sprites, flat cartoon portraits, glossy anime KO panels.
 - **Nightly routine:** Show & Tell, the 3 AM baby game and the stealth crawl run every night with no skip.
 - **Bounty bosses reuse story moves** (Coupon Carol, the Allergy Liar, the Camper), and boss taunts lean on one joke formula.
