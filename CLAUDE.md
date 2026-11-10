@@ -27,8 +27,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 2. **Nov 10 Canva drop: DONE** (cat loading screen, 9 scene backdrops, gala floor). Render: `docs/renders/backdrops_nov10.png`.
 3. **Brittany playtest** of the gentler first week (iPhone).
 4. **Balance:** softened Nov 10 (gates 45-65, slower wait drain with a floor of 40). Re-check after Brittany's playtest.
-5. Could-improve list from the IGN review (6.4/10): three art styles, nightly routine with no skip, bounty bosses
-   reusing moves, 3-card touch tutorial.
+5. **IGN review v2: 7.1/10** (`docs/reviews/ign_review_2026-11-10_v2.md`). Next milestone = **phone onboarding**:
+   3 tap-through touch cards on first launch, all touch buttons >= BTN_R 11, no key names when touch is active.
+   Then: translucent bottom-anchored minigame panels so the paintings show + fix sprite-vs-painting scale in arenas;
+   one signature move per bounty boss; 4G first boot (~60 s, 38 MB wasm).
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`
