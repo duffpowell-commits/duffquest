@@ -120,7 +120,8 @@ stay raw.
   stats T; phone P/Tab; settings O/Esc.
 - Touch (`touch_controls.gd`): joystick bottom-left, A (use/bonk), B (roll), S (special), G (gear), the P phone
   icon in the HUD, the `<>` swap, and D (demon, only shown when ready). The title has a "How to play" card
-  (`TITLE_HELP`, or `TITLE_HELP_TOUCH` when touch is up). Touch through the SubViewport is verified. While the touch layer is
+  (`TITLE_HELP`, or `TITLE_HELP_TOUCH` when touch is up). The title backdrop `bg_title.png` is built by
+  `tools/title_compose.py` (Duff's style-C portrait in a comic panel over the in-game kitchen; rerun after portrait edits). Touch through the SubViewport is verified. While the touch layer is
   visible, `Cast.touch` is true and `Cast.T()` rewrites keyboard hints in minigame text and button labels into tap words
   (`Cast.TOUCH_WORDS`, e.g. "PULL (Space)" -> "PULL IT"). Buttons are radius 9 with outlined captions; A's caption says
   next / talk/use / bonk depending on what A will do.
