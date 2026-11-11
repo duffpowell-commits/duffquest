@@ -226,7 +226,7 @@ func _draw() -> void:
 	for b in buttons:
 		var r: Rect2 = b["rect"]
 		UiStyle.button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
-		if int(b["key"]) != 0:
+		if int(b["key"]) != 0 and not Cast.touch:   # key chips are keyboard-only; phones never see "Space"/"Escape"
 			txt(r.position + Vector2(2, 7), OS.get_keycode_string(int(b["key"])), 6, Color(1, 1, 1, 0.45))
 	_draw_top()
 	if show_header:

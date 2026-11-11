@@ -5,6 +5,7 @@ const PlayerScript: = preload("res://scripts/player.gd")
 const RaccoonScript: = preload("res://scripts/raccoon.gd")
 const HudScript: = preload("res://scripts/hud.gd")
 const TouchScript: = preload("res://scripts/touch_controls.gd")
+const TouchTutScript: = preload("res://scripts/touch_tutorial.gd")
 const IsoTest: = preload("res://scripts/iso/iso_test.gd")
 const Ground: = preload("res://scripts/ground.gd")
 const Dressing: = preload("res://scripts/dressing.gd")
@@ -224,6 +225,7 @@ var raccoon_pets: = 0
 var porch_pkg: = false
 var porch_day: = -1
 var touch: Node2D
+var tut: Node2D   # touch_tutorial.gd (three control cards, phones only)
 var hud: Node2D
 var audio: Node = null
 var combat: Node = null
@@ -509,6 +511,9 @@ func _ready() -> void:
 		if not busy() and dialog.is_empty():
 			combat.demon_pressed())
 	layer.add_child(touch)
+	tut = TouchTutScript.new()
+	tut.visible = false
+	touch.add_child(tut)
 
 	if _check_debug_hash():
 		return
@@ -602,7 +607,15 @@ func show_title() -> void:
 		if id == "settings":
 			open_settings()
 		elif id == "help":
-			_menu("How to play", TITLE_HELP_TOUCH if Cast.touch else TITLE_HELP, [["back", "Back", KEY_1]], func (_b: String) -> void: show_title())
+			var hopts: Array = [["back", "Back", KEY_1]]
+			if Cast.touch:
+				hopts.push_front(["cards", "Show me the buttons", KEY_2])
+			_menu("How to play", TITLE_HELP_TOUCH if Cast.touch else TITLE_HELP, hopts, func (b: String) -> void:
+				if b == "cards":
+					tut.done.connect(show_title, CONNECT_ONE_SHOT)
+					tut.start()
+				else:
+					show_title())
 		elif id == "continue":
 			in_title = false
 			load_game()
@@ -630,6 +643,12 @@ func new_game(write_save: bool = true) -> void:
 		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. This first Monday it's prorated to $%d. The Twisted Fork (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))]])
 	if write_save:
 		save_game()
+	maybe_touch_tutorial()
+
+## First new game on a phone: the three control cards, before the intro talk. Once per install.
+func maybe_touch_tutorial() -> void:
+	if Cast.touch and tut != null and not TouchTutScript.seen():
+		tut.start()
 
 func to_dict() -> Dictionary:
 	return {
@@ -824,7 +843,7 @@ static func ui_layer() -> CanvasLayer:
 	return l
 
 func busy() -> bool:
-	return in_title or in_shift or overlay_node != null or ko_kind != "" or loading_on or calendar_on
+	return in_title or in_shift or overlay_node != null or ko_kind != "" or loading_on or calendar_on or (tut != null and tut.active())
 
 ## Loading screen (loading_screen.gd on the HD layer). Freezes the world until it's dismissed.
 func show_loading() -> void:
@@ -1805,7 +1824,7 @@ func _process(delta: float) -> void:
 		_arena_process(delta)
 	_auto_doors()
 	var it: = nearest_interactable()
-	hint = ("E / A: " + str(it["label"])) if not it.is_empty() else ""
+	hint = (("A: " if Cast.touch else "E / A: ") + str(it["label"])) if not it.is_empty() else ""
 	if location == "gala":
 		hint = ""
 	if location == "outside" and phase() == "Night" and hint == "":
