@@ -5,6 +5,13 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (late night)** UI style pass 2: stealth floor is one night-lit plank floor (warped creaky boards with
+  ink cracks, crib, bed, pulsing step tiles for touch) over the nursery painting; Blackhead Patrol is Duff's back
+  with both tattoo sleeves and the fox at his nape; Back Walk is Duff face-down on the bed with the real Madison
+  sprite walking him; quiz and inspector answers are cream index cards with coloured key badges
+  (`UiStyle.card_button`); temp check got a glowing grill and sear marks. Quiz question that only made sense after
+  another one now stands alone. UI audit's temp-check shot was catching the shift menu (wrong key), fixed.
+  `docs/renders/ui_pass2_before_after.png`, full sheet `ui_audit_pass2.png`.
 - **2026-11-10 (night)** UI style pass 1 (Duff: menus + minigames should match the art): every play object in
   15 minigames drawn as a style-lock prop (ink outline, hard shadow, one cel band); art-less screens (gear, Wordle,
   settings, mash, stealth) get the cards' sunburst; phone home has a navy/teal wallpaper; store/pharmacy item grids

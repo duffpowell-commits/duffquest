@@ -140,6 +140,49 @@ static func prop_circle(ci: CanvasItem, c: Vector2, rad: float, fill: Color, w: 
 	ci.draw_circle(c - Vector2(rad * 0.06, rad * 0.06), rad * 0.8, fill)
 	ci.draw_arc(c, rad, 0, TAU, maxi(16, int(rad * 2.0)), Color(PROP_INK, fill.a), w * 1.3)
 
+## Answer card (quiz / inspector calls): a cream index card with a hard shadow and thick ink border,
+## a coloured badge tab on the left holding the key letter, ink lettering. `col` tints the result:
+## low saturation = neutral cream card; anything saturated (green right / red wrong) floods the card.
+static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, badge_col: Color, col: Color,
+		enabled: bool = true, pressed: bool = false, w: float = 1.0, size: int = 8) -> void:
+	var neutral: = col.s < 0.25
+	var fill: = CREAM if neutral else col.lightened(0.1)
+	var ink_text: = INK if neutral else CREAM
+	if not enabled:
+		fill = fill.darkened(0.45)
+	var sink: = w * 1.6 if pressed else 0.0
+	var rr: = Rect2(r.position + Vector2(sink, sink), r.size)
+	if not pressed:
+		ci.draw_rect(Rect2(r.position + Vector2(w * 2.0, w * 2.0), r.size), Color(INK, 0.85))
+	ci.draw_rect(rr, fill)
+	# one hard cel band along the bottom, like the props
+	ci.draw_rect(Rect2(rr.position.x, rr.end.y - rr.size.y * 0.22, rr.size.x, rr.size.y * 0.22), fill.darkened(0.1))
+	if neutral:   # faint ruled lines: it's an index card
+		var y: = rr.position.y + 9.0 * w
+		while y < rr.end.y - 4.0 * w:
+			ci.draw_line(Vector2(rr.position.x + 3 * w, y), Vector2(rr.end.x - 3 * w, y), Color(TEAL, 0.18), w * 0.6)
+			y += 8.0 * w
+	var bw: = minf(rr.size.y * 0.7, 15.0)
+	var badge_r: = Rect2(rr.position + Vector2(3 * w, (rr.size.y - bw) * 0.5), Vector2(bw, bw))
+	ci.draw_rect(Rect2(badge_r.position + Vector2(w, w), badge_r.size), Color(INK, 0.7))
+	ci.draw_rect(badge_r, badge_col)
+	ci.draw_rect(badge_r, INK, false, w * 1.1)
+	label(ci, Vector2(badge_r.position.x, badge_r.end.y - bw * 0.24), badge, int(bw * (0.8 if badge.length() < 2 else 0.58)), CREAM, bw,
+		HORIZONTAL_ALIGNMENT_CENTER, 2)
+	ci.draw_rect(rr, INK, false, w * 1.4)
+	var tx: = badge_r.end.x + 3 * w
+	var tw: = rr.end.x - tx - 3 * w
+	var fit: = fit_text(text, tw, rr.size.y - 2.0, size)
+	var lines: PackedStringArray = fit[0]
+	var sz: int = fit[1]
+	var y0: = rr.position.y + rr.size.y * 0.5 + sz * 0.36 - (lines.size() - 1) * sz * 0.55
+	for i in lines.size():
+		var p: = Vector2(tx, y0 + i * sz * LINE_H)
+		if neutral:
+			ci.draw_string(display, p, lines[i], HORIZONTAL_ALIGNMENT_CENTER, tw, sz, ink_text)
+		else:
+			label(ci, p, lines[i], sz, ink_text, tw, HORIZONTAL_ALIGNMENT_CENTER, 2)
+
 ## Round touch button: ink ring, flat fill, display-font letter.
 static func round_button(ci: CanvasItem, c: Vector2, r: float, col: Color, text: String, alpha: float = 0.85) -> void:
 	ci.draw_circle(c + Vector2(1.0, 1.0), r, Color(INK, 0.55 * alpha))

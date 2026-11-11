@@ -8,7 +8,7 @@ const BANK: = [
 	{"q": "Cold-held TCS food must stay at or below...", "a": ["41°F", "45°F", "50°F", "55°F"], "why": "Cold holding: 41°F or lower." },
 	{"q": "The temperature danger zone is...", "a": ["41°F to 135°F", "32°F to 100°F", "50°F to 150°F", "70°F to 165°F"], "why": "Bacteria party between 41°F and 135°F." },
 	{"q": "Cooling cooked food: 135°F down to 70°F within...", "a": ["2 hours", "4 hours", "6 hours", "Whenever"], "why": "Stage one: 135°F to 70°F in 2 hours." },
-	{"q": "...then 70°F down to 41°F within...", "a": ["4 more hours", "2 more hours", "8 more hours", "Overnight is fine"], "why": "Stage two: 70°F to 41°F in 4 more hours (6 total)." },
+	{"q": "Cooling, part two: once cooked food hits 70°F, it has to get down to 41°F within...", "a": ["4 more hours", "2 more hours", "8 more hours", "Overnight is fine"], "why": "Stage two: 70°F to 41°F in 4 more hours (6 total)." },
 	{"q": "Leftovers reheated for hot holding must reach...", "a": ["165°F within 2 hours", "135°F within 4 hours", "145°F within 6 hours", "Steaming = good"], "why": "Reheat to 165°F for 15 seconds within 2 hours." },
 	{"q": "The whole handwashing process should take at least...", "a": ["20 seconds", "5 seconds", "One quick rinse", "Until someone sees you"], "why": "At least 20 seconds, with 10-15 seconds of scrubbing." },
 	{"q": "Which goes on the BOTTOM shelf of the walk-in?", "a": ["Raw poultry", "Raw ground beef", "Raw fish", "Ready-to-eat salads"], "why": "Top to bottom: ready-to-eat, seafood, whole cuts, ground meat, poultry." },
