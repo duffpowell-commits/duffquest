@@ -144,7 +144,7 @@ static func prop_circle(ci: CanvasItem, c: Vector2, rad: float, fill: Color, w: 
 ## a coloured badge tab on the left holding the key letter, ink lettering. `col` tints the result:
 ## low saturation = neutral cream card; anything saturated (green right / red wrong) floods the card.
 static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, badge_col: Color, col: Color,
-		enabled: bool = true, pressed: bool = false, w: float = 1.0, size: int = 8) -> void:
+		enabled: bool = true, pressed: bool = false, w: float = 1.0, size: int = 8, icon: Texture2D = null) -> void:
 	var neutral: = col.s < 0.25
 	var fill: = CREAM if neutral else col.lightened(0.1)
 	var ink_text: = INK if neutral else CREAM
@@ -164,14 +164,37 @@ static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, b
 			y += 8.0 * w
 	var bw: = minf(rr.size.y * 0.7, 15.0)
 	var badge_r: = Rect2(rr.position + Vector2(3 * w, (rr.size.y - bw) * 0.5), Vector2(bw, bw))
-	ci.draw_rect(Rect2(badge_r.position + Vector2(w, w), badge_r.size), Color(INK, 0.7))
-	ci.draw_rect(badge_r, badge_col)
-	ci.draw_rect(badge_r, INK, false, w * 1.1)
-	label(ci, Vector2(badge_r.position.x, badge_r.end.y - bw * 0.24), badge, int(bw * (0.8 if badge.length() < 2 else 0.58)), CREAM, bw,
-		HORIZONTAL_ALIGNMENT_CENTER, 2)
+	if icon != null:   # picture tile: the house-style prop sits where the badge would, a touch bigger
+		var ih: = rr.size.y - 2.0
+		var iw: = ih * icon.get_width() / float(icon.get_height())
+		if iw > ih * 1.15:
+			iw = ih * 1.15
+			ih = iw * icon.get_height() / float(icon.get_width())
+		badge_r = Rect2(rr.position + Vector2(2 * w, (rr.size.y - ih) * 0.5), Vector2(iw, ih))
+		ci.draw_texture_rect(icon, badge_r, false, Color.WHITE if enabled else Color(0.55, 0.55, 0.55))
+	else:
+		ci.draw_rect(Rect2(badge_r.position + Vector2(w, w), badge_r.size), Color(INK, 0.7))
+		ci.draw_rect(badge_r, badge_col)
+		ci.draw_rect(badge_r, INK, false, w * 1.1)
+		label(ci, Vector2(badge_r.position.x, badge_r.end.y - bw * 0.24), badge, int(bw * (0.8 if badge.length() < 2 else 0.58)), CREAM, bw,
+			HORIZONTAL_ALIGNMENT_CENTER, 2)
 	ci.draw_rect(rr, INK, false, w * 1.4)
 	var tx: = badge_r.end.x + 3 * w
 	var tw: = rr.end.x - tx - 3 * w
+	if icon != null and tw < 17.0:   # narrow picture tile: re-lay it as icon on top, name underneath
+		var ih2: = rr.size.y - 9.0
+		var iw2: = minf(ih2 * icon.get_width() / float(icon.get_height()), rr.size.x - 6.0)
+		ih2 = iw2 * icon.get_height() / float(icon.get_width())
+		# repaint the card body over the side-placed icon, then the stacked layout
+		ci.draw_rect(Rect2(rr.position + Vector2(1, 1), rr.size - Vector2(2, 2)), fill)
+		ci.draw_texture_rect(icon, Rect2(rr.position.x + (rr.size.x - iw2) * 0.5, rr.position.y + 1.0, iw2, ih2), false,
+			Color.WHITE if enabled else Color(0.55, 0.55, 0.55))
+		var small: = fit_text(text, rr.size.x - 4.0, 7.0, 6)
+		var ln: PackedStringArray = small[0]
+		ci.draw_string(display, Vector2(rr.position.x + 2, rr.end.y - 2.0), ln[0] if ln.size() > 0 else text,
+			HORIZONTAL_ALIGNMENT_CENTER, rr.size.x - 4.0, int(small[1]), ink_text)
+		ci.draw_rect(rr, INK, false, w * 1.4)
+		return
 	var fit: = fit_text(text, tw, rr.size.y - 2.0, size)
 	var lines: PackedStringArray = fit[0]
 	var sz: int = fit[1]

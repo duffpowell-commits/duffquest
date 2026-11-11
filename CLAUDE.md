@@ -49,7 +49,14 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
    mounts it after boot, group `extra_pack` rescans). Engine ships pre-gzipped (`index.wasm.gz`, 9.3 MB), unzipped in
    the browser by the preset's `html/head_include`; falls back to plain `index.wasm`. Render:
    `docs/renders/web_boot_4g_after.png`. Boot test: `tools/web_boot_test.py` (see Commands).
-   Next: boss taunts still lean on one joke formula.
+   Fork kitchen painted (Nov 11 early): 47 house-style C food/kitchen props (`kf_*`, 3 Canva 4x4 sheets + a cake,
+   masters in `grok_art/2026-11-10-kitchen-props/`, cut by `tools/import_kitchen_props.py`) in all six Fork stations:
+   fryers + baskets, sandwich layers on a plate, salad bowl + toppings, Black Forest cake + cream + cherries, breading
+   bowls + pickles, cutting board/tomato/dice, hotel pans, spray/rag. Ingredient buttons are picture tiles
+   (`b["icon"]`, `UiStyle.card_button(icon=)`); `minigame.pic()` draws a prop or returns false (old shapes stay as
+   fallback). Render: `docs/renders/fork_kitchen_before_after.png`.
+   Next (Duff picked, Nov 11): FULL overworld repaint (painted neighborhood/home/Fork exteriors so walking around
+   matches the fights and minigames), then boss taunts.
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`

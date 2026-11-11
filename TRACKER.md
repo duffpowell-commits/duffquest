@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-11 (early)** Fork kitchen painted (Duff: "minigames still behind on style"): 47 house-style C props from
+  three Canva 4x4 sheets + a Black Forest cake, cut by `tools/import_kitchen_props.py` (magenta key, rim-only despill
+  so purple onions survive, wire-mesh cleanup). Fryer = two real fryers with baskets that brown; sandwich builds real
+  layers on a plate; salad fills a real bowl; dessert is a real cake with piped cream and cherries; breading bowls,
+  cutting board + tomato that dices down, hotel pans, spray/rag. Every ingredient button is a picture tile. Soak PASS.
 - **2026-11-10 (late night)** "Heard." moved into the kitchens only (Duff): stripped from the intro ("That's the whole
   religion. Amen."), the raccoon gag, the gala, a combat toast, the grocery coupon win and the mirror line; the
   Heard-Chef Holler skill is now the Line-Cook Holler ("BEHIND!!"). Added where it belongs: the Fork's between-station

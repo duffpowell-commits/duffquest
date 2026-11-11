@@ -283,10 +283,18 @@ func _draw_game() -> void:
 			var pulse: = 1.0 - fmod(t, BEAT) / BEAT
 			draw_circle(Vector2(270, 50), 8 + pulse * 8, Color(1, 0.8, 0.2, 0.3 + pulse * 0.5))
 			txt(Vector2(240, 80), "Chop on the pulse", 8, Color(1, 1, 1, 0.6))
-			prop(Rect2(40, 60, 170, 60), Color("#b8865a"))
-			prop_circle(Vector2(90, 90), 22, Color("#e04a3a"))
-			for i in chops:
-				prop(Rect2(120 + i * 6, 76, 4, 28), Color("#e04a3a"))
+			if pic("kf_board", Vector2(125, 92), 92.0):
+				var left: = 1.0 - chops / 12.0   # the tomato shrinks as the dice pile grows
+				if left > 0.05:
+					pic("kf_tomato_whole", Vector2(95, 88), 14.0 + 26.0 * left)
+				if chops > 0:
+					pic("kf_diced", Vector2(155, 96), 10.0 + chops * 1.8)
+				pic("kf_knife", Vector2(150, 70), 26.0)
+			else:
+				prop(Rect2(40, 60, 170, 60), Color("#b8865a"))
+				prop_circle(Vector2(90, 90), 22, Color("#e04a3a"))
+				for i in chops:
+					prop(Rect2(120 + i * 6, 76, 4, 28), Color("#e04a3a"))
 			txt(Vector2(40, 140), "%d / 12 chops" % chops, 8)
 			txt(Vector2(0, 28), "Steady beats only. Rushing = cuts.", 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
 		"stock":
@@ -294,9 +302,13 @@ func _draw_game() -> void:
 			for i in pans.size():
 				var p: Dictionary = pans[i]
 				var r: = Rect2(6 + i * 62, 40, 58, 66)
-				prop(r, Color("#9aa0aa"))
 				var lv: float = p["level"]
-				draw_rect(Rect2(r.position.x + 4, r.end.y - 4 - 40 * lv, 50, 40 * lv), Color("#6aa04a"))
+				if pic("kf_hotel_pan", r.get_center() + Vector2(0, 8), 50.0):
+					# steel shows through where the pan is empty: cover the lettuce from the top down
+					draw_rect(Rect2(r.position.x + 9, r.position.y + 21, 40, 16 * (1.0 - lv)), Color("#b8bec8"))
+				else:
+					prop(r, Color("#9aa0aa"))
+					draw_rect(Rect2(r.position.x + 4, r.end.y - 4 - 40 * lv, 50, 40 * lv), Color("#6aa04a"))
 				txt(Vector2(r.position.x, r.position.y + 10), p["n"], 8, Color.BLACK, HORIZONTAL_ALIGNMENT_CENTER, 58)
 				var hot: = int(p["temp"]) > 41
 				txt(Vector2(r.position.x, r.position.y + 20), "%d°F" % p["temp"], 8, Color("#7a2a22") if hot else Color("#103a10"), HORIZONTAL_ALIGNMENT_CENTER, 58)
@@ -324,3 +336,4 @@ func _draw_game() -> void:
 				var c: Color = [Color("#7a6a4a"), Color("#b8c0c8"), Color("#e8f4f0")][cells[i]]
 				prop(_cell_rect(i), c)
 			draw_rect(Rect2(60, 40, 200, 80), Color(1, 1, 1, 0.3), false, 1.0)
+			pic("kf_spray" if tool != "soap" else "kf_rag", Vector2(290, 80), 30.0)

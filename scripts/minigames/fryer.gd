@@ -22,7 +22,11 @@ func _setup() -> void:
 		baskets = [fries, wings]
 	for i in baskets.size():
 		var b: Dictionary = baskets[i]
-		add_button("b%d" % i, Rect2(8 + i * 82, 150, 78, 24), "DROP %s" % b["n"], b["key"], Color("#9c5a2c"))
+		var bt: = add_button("b%d" % i, Rect2(8 + i * 82, 150, 78, 24), "DROP %s" % b["n"], b["key"], Color("#9c5a2c"))
+		var ic: = "kf_basket_fries" if b["n"] == "Fries" else "kf_basket_wings"
+		if Art.tex(ic) != null:   # picture tile
+			bt["icon"] = ic
+			bt["col"] = Color("#57504e")
 	add_button("down", Rect2(200, 150, 54, 24), "HEAT -", KEY_Z)
 	add_button("up", Rect2(258, 150, 54, 24), "HEAT +", KEY_X)
 
@@ -136,8 +140,15 @@ func debug_solve(good: bool) -> void:
 
 func _draw_game() -> void:
 
-	prop(Rect2(20, 30, 180, 100), Color("#888c96"))
-	prop(Rect2(28, 38, 164, 70), Color("#c89b3c").darkened(clampf((oil - 340.0) / 120.0, 0, 0.6)))
+	var burn: = clampf((oil - 340.0) / 120.0, 0, 0.6)
+	if Art.tex("kf_fryer") != null:   # one fryer per basket; oil browns as it overheats
+		for k in 2:
+			var fc: = Vector2(71 + k * 80, 76)
+			pic("kf_fryer", fc, 90.0)
+			draw_rect(Rect2(fc.x - 22, fc.y - 30, 40, 14), Color(0.25, 0.12, 0.02, burn))
+	else:
+		prop(Rect2(20, 30, 180, 100), Color("#888c96"))
+		prop(Rect2(28, 38, 164, 70), Color("#c89b3c").darkened(burn))
 	if oil > 385.0:
 		for i in 5:
 			draw_circle(Vector2(40 + i * 35, 34 - fmod(t * 20.0 + i * 7.0, 14.0)), 4, Color(0.8, 0.8, 0.8, 0.4))
@@ -151,11 +162,13 @@ func _draw_game() -> void:
 			food = Color("#e0a030").lerp(Color("#2a1a0a"), clampf((p - 1.1) / 0.5, 0, 1))
 		var by: = 46.0 if b["state"] == "in" else 20.0
 		if b["state"] != "out":
-			if Art.tex("kp_fry_basket") != null:
-				# Gemini G6 props: basket, then the food in it tinted by doneness (pale -> golden -> burnt)
-				var tint: = Color(1.25, 1.2, 1.0).lerp(Color.WHITE, clampf(p, 0, 1))
-				if p > 1.1:
-					tint = Color.WHITE.lerp(Color(0.3, 0.2, 0.12), clampf((p - 1.1) / 0.5, 0, 1))
+			var tint: = Color(1.2, 1.15, 1.0).lerp(Color.WHITE, clampf(p, 0, 1))
+			if p > 1.1:
+				tint = Color.WHITE.lerp(Color(0.35, 0.22, 0.12), clampf((p - 1.1) / 0.5, 0, 1))
+			if pic("kf_basket_fries" if b["n"] == "Fries" else "kf_basket_wings", Vector2(bx + 35, by + 14), 40.0, tint):
+				pass
+			elif Art.tex("kp_fry_basket") != null:
+				# older Gemini G6 props (fallback), tinted by the same doneness
 				Art.image(self, "kp_fry_basket", Vector2(bx + 35, by + 14))
 				Art.image(self, "kp_fries" if b["n"] == "Fries" else "kp_fried_chicken", Vector2(bx + 31, by + 15), tint, 0.85 if b["n"] == "Fries" else 0.6)
 			else:
