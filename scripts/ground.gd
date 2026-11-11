@@ -17,9 +17,17 @@ static var warnings: PackedStringArray = []
 static func origin() -> Vector2:
 	return _origin
 
+## Painted street (tools/import_street.py, Nov 11): same size + origin as the tile build. The tiles still get
+## built once so the origin/layout parse stays the single source of truth, then the painting replaces them.
+const PAINTED: = "res://assets/art/ground_painted.png"
+
 static func texture() -> Texture2D:
 	if _tex == null:
 		_tex = _build()
+		if ResourceLoader.exists(PAINTED):
+			var p: = load(PAINTED) as Texture2D
+			if p != null and p.get_size() == _tex.get_size():
+				_tex = p
 	return _tex
 
 static func _build() -> Texture2D:

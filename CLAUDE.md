@@ -59,6 +59,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
    formula at 2 and bans shared openers across bosses); Gear rows carry item icons (`kf_gear_*`, crate when locked);
    the hustler's NOPE is a door card and the front door swings shut per mash; breading hands are real hands.
    Render: `docs/renders/slab_screens_after.png`.
+   Street ground painted (Nov 11): Canva repaint of the tile layout in the home-interior pixel style, fitted by
+   `tools/import_street.py` (road centres matched exactly, one uniform scale) -> `assets/art/ground_painted.png`;
+   `scripts/ground.gd` uses it when present, tiles stay as the fallback. Render: `docs/renders/street_ground_before_after.png`.
    Next (Duff picked, Nov 11): FULL overworld repaint (painted neighborhood/home/Fork exteriors so walking around
    matches the fights and minigames), then boss taunts.
 
