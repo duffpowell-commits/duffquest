@@ -249,6 +249,7 @@ func _extra_checks(main: Node) -> void:
 	_gala_gate_checks(main)
 	_bedtime_skip_checks(main)
 	_balance_checks(main)
+	_touch_tut_checks(main)
 
 ## Bugs the 30-day soak (tools/soak.gd) found. Keep them fixed.
 func _soak_regressions(main: Node) -> void:
@@ -649,3 +650,24 @@ func _balance_checks(main: Node) -> void:
 	check("balance: week-one waiting drain is half the later one", is_equal_approx(main.wait_drain(), main.WAIT_DRAIN_WEEK1) and main.WAIT_DRAIN_WEEK1 * 2.0 == main.WAIT_DRAIN)
 	main.day_count = 10
 	check("balance: later drain <= 0.1/s and the floor is 40", main.wait_drain() <= 0.1 and main.WAIT_FLOOR == 40.0)
+
+## IGN review v2: phone onboarding (three control cards, once per install, phones only).
+func _touch_tut_checks(main: Node) -> void:
+	var Cast: = preload("res://scripts/cast.gd")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://touch_tut.cfg"))
+	var was: bool = Cast.touch
+	Cast.touch = false
+	main.maybe_touch_tutorial()
+	check("touch tut: never on keyboard", not main.tut.active())
+	Cast.touch = true
+	main.maybe_touch_tutorial()
+	check("touch tut: starts on a phone's first game and blocks the world", main.tut.active() and main.busy())
+	main.tut.next(); main.tut.next()
+	check("touch tut: still on card 3 of 3", main.tut.active() and main.tut.card == 2)
+	main.tut.next()
+	check("touch tut: done after 3 cards, remembered", not main.tut.active() and not main.busy() and main.TouchTutScript.seen())
+	main.maybe_touch_tutorial()
+	check("touch tut: not shown twice", not main.tut.active())
+	var T: = preload("res://scripts/touch_controls.gd")
+	check("touch buttons: G, S, swap, D all >= A", T.BTN_G_R >= T.BTN_R and T.BTN_S_R >= T.BTN_R and T.BTN_SW_R >= T.BTN_R and T.BTN_D_R >= T.BTN_R)
+	Cast.touch = was

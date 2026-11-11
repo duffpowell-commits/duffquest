@@ -18,15 +18,15 @@ const BTN_A: = Vector2(296, 140)
 const BTN_B: = Vector2(272, 160)
 const BTN_R: = 11.0
 const BTN_G: = Vector2(306, 112)
-const BTN_G_R: = 9.0      # Nov 10: 7 -> 9 (review: too small for a thumb)
+const BTN_G_R: = 11.0     # = BTN_R (IGN v2: every thumb button as big as A)
 const BTN_P: = Vector2(195, 9)     # hud.gd layout()["phone"]
 const BTN_P_R: = 9.0
 const BTN_S: = Vector2(248, 148)
-const BTN_S_R: = 10.0
+const BTN_S_R: = 11.0
 const BTN_SW: = Vector2(240, 126)
-const BTN_SW_R: = 9.0     # Nov 10: 6 -> 9
+const BTN_SW_R: = 11.0
 const BTN_D: = Vector2(282, 116)
-const BTN_D_R: = 9.0      # Nov 10: 7 -> 9
+const BTN_D_R: = 11.0
 var s_idx: = -1
 
 var m: Node = null
