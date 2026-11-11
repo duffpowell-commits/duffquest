@@ -7,68 +7,28 @@ fight exes and porch pirates. Godot 4.5, GDScript, 640×360 viewport (1280×720 
 `CLAUDE_REFERENCE.md` (itch target, art tools, key facts). History: `docs/handoffs/SESSION_LOG.md` (old long log)
 and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
-## Status (Nov 11, 2026)
-- **main is green and live.** GitHub `duffpowell-commits/duffquest` is the ONLY home. GitLab is dropped for now
-  (Duff, Nov 10): don't push there, don't ask for a GitLab token. `.github/workflows/mirror_gitlab.yml` exists and
-  skips cleanly without its secret; leave it or delete it, it does nothing.
+## Status (Nov 11, 2026 morning)
+- **main is green and live.** GitHub `duffpowell-commits/duffquest` is the ONLY home (GitLab dropped; the
+  `mirror_gitlab.yml` workflow skips cleanly, ignore it).
 - **Every push to main ships:** `.github/workflows/build.yml` parses scripts, runs the smoke test, exports web +
   debug APK, refreshes the `dev` release, and butler-pushes the web build to itch `dufftkyosht/duff-quest:html`
-  (secret `BUTLER_API_KEY`, confirmed working Nov 10). A red CI = nothing ships.
-- **Done this session (Nov 10):** IGN review fixes (phone wording, gentler week one, gala invite timing); title screen
-  shows the real Duff (both sleeves + fox neck tattoo, `tools/title_compose.py`); the six themed boss arenas are real
-  painted art (alley, Seen Cafe, Club Cloud 9, crypto garage, tower office, Waffle Haus) with walls fitted to each
-  painting. Renders: `docs/renders/arenas_painted_ingame.png`, `docs/renders/title_tattoos_before_after.png`.
-- Also Nov 10 (late): interact prompt above Duff's head is now a dark pill with cream text (was illegible on the
-  teal rug); barks dodge it. Render: `docs/renders/hint_prompt_pill.png` (render id `hint`).
-- Tests: `test_daily` ALL PASS; 30-day soak PASS (seed 1, 0 issues). The soak was red from the touch-tutorial
-  milestone until Nov 10 late night: the bot couldn't tap the control cards away. Fixed in `tools/soak.gd`.
+  (secret `BUTLER_API_KEY`). A red CI = nothing ships.
+- **IGN review v3: 7.9/10** (`docs/reviews/ign_review_2026-11-11_v3.md`). Duff + Brittany played it Nov 11: "it's
+  come a long way."
+- **Last session's handoff (read it): `docs/handoffs/2026-11-11_painted_minigames_ign_v3.md`.** It covers what
+  shipped, the step-by-step prop-art pipeline, the ranked next list and the gotchas.
+- Tests: `test_daily` ALL PASS; 30-day soak PASS (seed 1, 0 issues).
 
-## Next (in order; details in TRACKER.md)
-1. **Itch page:** CI-build switch DONE (Duff, Nov 10). Still: paste `docs/itch/PAGE.md` + images. Duff's step on the itch dashboard; sessions can't reach itch.io.
-2. **Nov 10 Canva drop: DONE** (cat loading screen, 9 scene backdrops, gala floor). Render: `docs/renders/backdrops_nov10.png`.
-3. **Brittany playtest** of the gentler first week (iPhone).
-4. **Balance:** softened Nov 10 (gates 45-65, slower wait drain with a floor of 40). Re-check after Brittany's playtest.
-5. **IGN review v2: 7.1/10** (`docs/reviews/ign_review_2026-11-10_v2.md`). Phone onboarding DONE (Nov 10 night,
-   `scripts/touch_tutorial.gd`, render `docs/renders/touch_onboarding.png`). UI style pass 1 DONE
-   (Nov 10 night): house-style props in 15 minigames, sunburst behind art-less screens, phone wallpaper, store and
-   pharmacy grids moved right so the paintings show. Before/after: `docs/renders/ui_audit_{before,after}.png`.
-   UI style pass 2 DONE (Nov 10 late night): stealth is a night plank floor with warped creaky boards, a crib and
-   a bed, lit step tiles; blackheads is Duff's tattooed back; backwalk is Duff face-down with the real Madison sprite
-   walking him; quiz + inspector answers are index cards with key badges (`UiStyle.card_button`, set `b["badge"]`);
-   temp check has a real grill + sear marks. Render: `docs/renders/ui_pass2_before_after.png`.
-   Arena sprite scale DONE (Nov 10 late night): on painted fight floors (story/bounty/bet arenas + gala, not the
-   Waffle Haus shift) Duff draws at `STAGE_SCALE` 1.45 like the bosses, regular enemies at 1.3; visual only, hitboxes
-   unchanged (`main.on_fight_floor()`, `player.stage_scale`). Render: `docs/renders/arena_scale_before_after.png`.
-   Bounty signature moves DONE (Nov 10 late night): Coupon Carol `storm` (expired coupons fall on shadows), the
-   Camper `lasso` (charger cord yanks Duff in + 0.5 s tangle), the Allergy Liar `gluten` (shout ring, stuns unless
-   rolled); projectile kinds `coupon` / `cord` / `gluten`. Render: `docs/renders/bounty_signature_moves.png`
-   (render id `move:<bounty>:<attack>:<frames>`).
-   4G first boot DONE (Nov 10 late night): 55.5 s -> 17.0 s on throttled 4G (9 Mbit/s, headless Chrome, real
-   build). index.pck 22.8 -> 8.3 MB: KO stills, boss intro cards, 12 loading screens and 9 scene backdrops moved to
-   `extra.pck` (Web preset exclude_filter; `tools/make_extra_pack.gd` builds it; `scripts/extra_pack.gd` streams +
-   mounts it after boot, group `extra_pack` rescans). Engine ships pre-gzipped (`index.wasm.gz`, 9.3 MB), unzipped in
-   the browser by the preset's `html/head_include`; falls back to plain `index.wasm`. Render:
-   `docs/renders/web_boot_4g_after.png`. Boot test: `tools/web_boot_test.py` (see Commands).
-   Fork kitchen painted (Nov 11 early): 47 house-style C food/kitchen props (`kf_*`, 3 Canva 4x4 sheets + a cake,
-   masters in `grok_art/2026-11-10-kitchen-props/`, cut by `tools/import_kitchen_props.py`) in all six Fork stations:
-   fryers + baskets, sandwich layers on a plate, salad bowl + toppings, Black Forest cake + cream + cherries, breading
-   bowls + pickles, cutting board/tomato/dice, hotel pans, spray/rag. Ingredient buttons are picture tiles
-   (`b["icon"]`, `UiStyle.card_button(icon=)`); `minigame.pic()` draws a prop or returns false (old shapes stay as
-   fallback). Render: `docs/renders/fork_kitchen_before_after.png`.
-   Taunts + last slab screens DONE (Nov 11): 12 taunts rewritten (0 "I'm not X, I'm Y" left; `test_daily` caps the
-   formula at 2 and bans shared openers across bosses); Gear rows carry item icons (`kf_gear_*`, crate when locked);
-   the hustler's NOPE is a door card and the front door swings shut per mash; breading hands are real hands.
-   Render: `docs/renders/slab_screens_after.png`.
-   Street ground painted (Nov 11): Canva repaint of the tile layout in the home-interior pixel style, fitted by
-   `tools/import_street.py` (road centres matched exactly, one uniform scale) -> `assets/art/ground_painted.png`;
-   `scripts/ground.gd` uses it when present, tiles stay as the fallback. Render: `docs/renders/street_ground_before_after.png`.
-   Last slabs painted (Nov 11): K6 sheet -> Kwik-N-Go shelf tiles, raw protein on the temp-check grill (browns with
-   core temp, `temp_check._meat()`), baby FEED/CHANGE icons. Render: `docs/renders/shop_baby_temp_after.png`.
-   **IGN review v3: 7.9/10** (`docs/reviews/ign_review_2026-11-11_v3.md`): all three v2 fixes landed. Ranked next:
-   Brittany phone playtest, itch page paste, overworld repaint, last 5 flat screens (phone, symphony, show & tell,
-   grocery map, wordle keyboard), boot under 10 s.
-   Next (Duff picked, Nov 11): FULL overworld repaint (painted neighborhood/home/Fork exteriors so walking around
-   matches the fights and minigames), then boss taunts.
+## Next (in order)
+1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
+2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
+3. **FULL overworld repaint (Duff's pick):** painted neighborhood, home and Fork exteriors at real footprints, so
+   walking around matches the fights and minigames. The ground is already painted (`scripts/ground.gd`). Guard the
+   collision and doors.
+4. **The last 5 flat screens:** phone, symphony, show & tell, grocery map, wordle keyboard (one props sheet).
+5. **Boot under 10 s** (17.0 s now): move the next-biggest chunk of index.pck to `extra.pck`.
+6. **Balance re-check** after the playtest (gates 45-65, wait drain floor 40).
+History of everything built: `TRACKER.md` (newest first).
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`
