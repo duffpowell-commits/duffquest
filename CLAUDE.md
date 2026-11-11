@@ -55,6 +55,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
    bowls + pickles, cutting board/tomato/dice, hotel pans, spray/rag. Ingredient buttons are picture tiles
    (`b["icon"]`, `UiStyle.card_button(icon=)`); `minigame.pic()` draws a prop or returns false (old shapes stay as
    fallback). Render: `docs/renders/fork_kitchen_before_after.png`.
+   Taunts + last slab screens DONE (Nov 11): 12 taunts rewritten (0 "I'm not X, I'm Y" left; `test_daily` caps the
+   formula at 2 and bans shared openers across bosses); Gear rows carry item icons (`kf_gear_*`, crate when locked);
+   the hustler's NOPE is a door card and the front door swings shut per mash; breading hands are real hands.
+   Render: `docs/renders/slab_screens_after.png`.
    Next (Duff picked, Nov 11): FULL overworld repaint (painted neighborhood/home/Fork exteriors so walking around
    matches the fights and minigames), then boss taunts.
 

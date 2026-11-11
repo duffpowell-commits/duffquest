@@ -128,8 +128,12 @@ func _draw_game() -> void:
 
 	var dry_col: = Color("#f2d2b4") if hand == "dry" else Color("#f2d2b4").darkened(0.5)
 	var wet_col: = Color("#f2c66a") if hand == "wet" else Color("#f2c66a").darkened(0.5)
-	prop(Rect2(244, 26, 30, 30), dry_col)
-	prop(Rect2(280, 26, 30, 30), wet_col)
+	# the two hands: one stays dry (flour, crumbs), one wet (egg): the station's whole rule
+	var dim: = Color(0.45, 0.45, 0.5)
+	if not (pic("kf_hand_dry", Vector2(259, 41), 30.0, Color.WHITE if hand == "dry" else dim)
+			and pic("kf_hand_wet", Vector2(295, 41), 30.0, Color.WHITE if hand == "wet" else dim)):
+		prop(Rect2(244, 26, 30, 30), dry_col)
+		prop(Rect2(280, 26, 30, 30), wet_col)
 	txt(Vector2(244, 64), "DRY", 8, Color.WHITE if hand == "dry" else Color(1, 1, 1, 0.4), HORIZONTAL_ALIGNMENT_CENTER, 30)
 	txt(Vector2(280, 64), "WET", 8, Color.WHITE if hand == "wet" else Color(1, 1, 1, 0.4), HORIZONTAL_ALIGNMENT_CENTER, 30)
 	txt(Vector2(240, 80), "Active hand", 8, Color(1, 1, 1, 0.6))

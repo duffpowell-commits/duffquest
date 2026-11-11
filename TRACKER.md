@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-11** Boss taunts: the "I'm not X. I'm Y." reframe was 9 of 68 lines; 12 rewritten (Husk films the
+  beatdown "in vertical, for the investors", the Regular has been sitting there "since Truman", the crypto bro's wallet
+  password was his ex's birthday). New test caps the formula at 2 and bans shared openers. Last slab screens: Gear
+  rows get item icons (16-prop sheet K5), the hustler fight is a door slamming shut, breading has dry/wet hands.
 - **2026-11-11 (early)** Fork kitchen painted (Duff: "minigames still behind on style"): 47 house-style C props from
   three Canva 4x4 sheets + a Black Forest cake, cut by `tools/import_kitchen_props.py` (magenta key, rim-only despill
   so purple onions survive, wire-mesh cleanup). Fryer = two real fryers with baskets that brown; sandwich builds real
@@ -94,6 +98,4 @@ From the IGN v2 review (`docs/reviews/ign_review_2026-11-10_v2.md`) and QA, stil
 
 - **Overworld is still all pixel tiles** (outside street + home): every walk into a painted fight/minigame is a style
   jump. Duff wants the FULL repaint (painted neighborhood, house, Fork/Waffle Haus exteriors, collision refit).
-- Boss taunts lean on one joke formula.
-- Non-Fork menus still slab-heavy: Gear shop list, door-to-door hustler's NOPE slab, DRY/WET hand boxes in pickles.
 - Nobody has played the gentler week one on a real phone yet (Brittany).
