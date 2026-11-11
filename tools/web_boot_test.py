@@ -1,0 +1,51 @@
+# Headless-Chrome boot timer for the web build: python3 tools/web_boot_test.py <build_dir> <port> <label>
+# Throttles to "decent 4G" (9 Mbit/s, 70 ms), prints seconds until the engine is running, bytes per file, and
+# when extra.pck mounted. Needs playwright + /usr/bin/google-chrome (cloud sandbox has both).
+import asyncio, sys, time, threading, functools, http.server, socketserver
+from playwright.async_api import async_playwright
+root, port, label = sys.argv[1], int(sys.argv[2]), sys.argv[3]
+class Q(http.server.SimpleHTTPRequestHandler):
+    def log_message(self,*a): pass
+socketserver.TCPServer.allow_reuse_address=True
+srv=socketserver.ThreadingTCPServer(("127.0.0.1",port),functools.partial(Q,directory=root))
+threading.Thread(target=srv.serve_forever,daemon=True).start()
+async def main():
+    async with async_playwright() as p:
+        b=await p.chromium.launch(executable_path="/usr/bin/google-chrome",args=["--use-angle=swiftshader","--enable-unsafe-swiftshader","--ignore-gpu-blocklist"])
+        pg=await b.new_page(viewport={"width":1280,"height":720})
+        cdp=await pg.context.new_cdp_session(pg)
+        await cdp.send("Network.enable")
+        # "decent 4G": 9 Mbit/s down, 70 ms RTT
+        await cdp.send("Network.emulateNetworkConditions",{"offline":False,"latency":70,"downloadThroughput":9_000_000/8,"uploadThroughput":3_000_000/8})
+        got={}; logs=[]
+        cdp.on("Network.loadingFinished", lambda e: got.__setitem__(e["requestId"], e.get("encodedDataLength",0)))
+        urls={}
+        cdp.on("Network.responseReceived", lambda e: urls.__setitem__(e["requestId"], e["response"]["url"].split("/")[-1]))
+        pg.on("console", lambda m: logs.append((round(time.time()-t0,1), m.text)))
+        t0=time.time()
+        await pg.goto(f"http://127.0.0.1:{port}/index.html")
+        boot=None
+        for _ in range(960):
+            hit=[ts for ts,t in logs if "Build configuration" in t]
+            if hit: boot=hit[0]; break
+            await pg.wait_for_timeout(250)
+        await pg.wait_for_timeout(4000)
+        await pg.screenshot(path=f"/tmp/bt/{label}_boot.png")
+        mounted=None
+        for _ in range(120):
+            if any("extra pack: mounted" in t for _,t in logs): break
+            await pg.wait_for_timeout(500)
+        for ts,t in logs:
+            if "extra pack" in t: mounted=(ts,t)
+        print(f"[{label}] engine + game pack running after {boot}s on throttled 4G")
+        tot=0
+        for rid,n in got.items():
+            nm=urls.get(rid,"?")
+            if n>200000: print(f"   {nm:22s} {n/1e6:6.1f} MB on the wire")
+            tot+=n
+        print(f"   total {tot/1e6:.1f} MB; gz loader used: {await pg.evaluate('!!window.__dq_wasm_gz')}; extra pack: {mounted}")
+        errs=[t for _,t in logs if "ERROR" in t or "rror" in t]
+        print("   extra mounted at", [ts for ts,t in logs if "extra pack: mounted" in t])
+        print("   console errors:", errs[:5])
+        await b.close()
+asyncio.run(main())

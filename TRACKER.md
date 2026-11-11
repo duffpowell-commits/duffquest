@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (late night)** 4G first boot 55.5 s -> 17.0 s (IGN v2 "~60 s on 4G"), measured in headless Chrome on
+  a throttled 9 Mbit/s link against the real web build. First download 61 MB -> 17.6 MB: the game pack drops to
+  8.3 MB (KO stills, boss intro cards, 12 loading screens, 9 scene backdrops stream in after boot as extra.pck,
+  landing ~30 s in, during the title/intro) and the engine ships pre-gzipped (9.3 MB) with an in-browser unzip that
+  falls back to the plain file on old browsers. HD portrait/arena art re-encoded at lossy 0.8.
 - **2026-11-10 (late night)** Bounty signature moves (IGN v2 "six bounties, three original movesets"): Coupon Carol's
   coupon storm (expired coupons flutter down onto growing shadows, three on Duff), the Camper's charger-cord lasso
   (yanks Duff toward him, tangles him half a second; a roll slips it), the Allergy Liar's "IS THERE GLUTEN IN THIS?!"

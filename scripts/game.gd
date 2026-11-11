@@ -40,6 +40,9 @@ func _ready() -> void:
 		layer.add_child(n)
 		gate.covers.append(n)
 	add_child(gate)
+	var extra: = preload("res://scripts/extra_pack.gd").new()   # web: streams the deferred art in the background
+	extra.name = "ExtraPack"
+	add_child(extra)
 	var guard: = preload("res://scripts/perf_guard.gd").new()
 	guard.name = "PerfGuard"
 	guard.main = main

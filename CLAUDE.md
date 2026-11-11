@@ -43,7 +43,13 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
    Camper `lasso` (charger cord yanks Duff in + 0.5 s tangle), the Allergy Liar `gluten` (shout ring, stuns unless
    rolled); projectile kinds `coupon` / `cord` / `gluten`. Render: `docs/renders/bounty_signature_moves.png`
    (render id `move:<bounty>:<attack>:<frames>`).
-   Next: 4G first boot (~60 s, 38 MB wasm); boss taunts still lean on one joke formula.
+   4G first boot DONE (Nov 10 late night): 55.5 s -> 17.0 s on throttled 4G (9 Mbit/s, headless Chrome, real
+   build). index.pck 22.8 -> 8.3 MB: KO stills, boss intro cards, 12 loading screens and 9 scene backdrops moved to
+   `extra.pck` (Web preset exclude_filter; `tools/make_extra_pack.gd` builds it; `scripts/extra_pack.gd` streams +
+   mounts it after boot, group `extra_pack` rescans). Engine ships pre-gzipped (`index.wasm.gz`, 9.3 MB), unzipped in
+   the browser by the preset's `html/head_include`; falls back to plain `index.wasm`. Render:
+   `docs/renders/web_boot_4g_after.png`. Boot test: `tools/web_boot_test.py` (see Commands).
+   Next: boss taunts still lean on one joke formula.
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`
@@ -58,6 +64,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - UI audit (every menu + minigame, touch mode): `res://tools/ui_audit_shot.tscn` + `python3 tools/ui_audit_sheet.py <tag>`
   -> `docs/renders/ui_audit_<tag>.png`. Play objects use `prop()` / `prop_circle()` (minigame.gd -> UiStyle), never raw
   `draw_rect` fills.
+- Web boot test (needs web export templates in ~/.local/share/godot/export_templates/4.5.stable): export Web to
+  /tmp/bw, `tools/make_extra_pack.gd -- /tmp/bw/extra.pck`, `gzip -9 -k -n /tmp/bw/index.wasm`, then
+  `python3 tools/web_boot_test.py /tmp/bw 8832 after` (headless Chrome, throttled 4G, prints seconds + bytes).
 - Arena walls: `godot --headless --path . res://tools/arena_wall_check.tscn`
 - After swapping art: `touch` the files, then `godot --headless --path . --import`.
 - CI status: `gh api repos/duffpowell-commits/duffquest/actions/runs?per_page=5` (`gh` GraphQL is blocked; the

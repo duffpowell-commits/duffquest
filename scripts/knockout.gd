@@ -48,6 +48,7 @@ var fixed_seed: = -1                         # >= 0: use this seed (renders / te
 var _off: = Vector2.ZERO                     # screen shake offset this frame
 
 func _ready() -> void:
+	add_to_group("extra_pack")
 	var f: = FileAccess.open("res://data/knockouts.json", FileAccess.READ)
 	if f:
 		data = JSON.parse_string(f.get_as_text())
@@ -220,6 +221,10 @@ func _load_sfx(p: String) -> AudioStream:
 	return _tex[p]
 
 # ---------------------------------------------------------------- art
+
+## Web: KO stills + intro cards arrive with the extra pack; forget the "missing" answers.
+func extra_pack_loaded() -> void:
+	_tex.clear()
 
 func _load(p: String) -> Texture2D:
 	if not _tex.has(p):
