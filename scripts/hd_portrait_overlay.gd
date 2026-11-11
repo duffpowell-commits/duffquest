@@ -8,6 +8,13 @@ const Cast: = preload("res://scripts/cast.gd")
 const UI_SCALE: = 2.0                       # main.gd UI_SCALE: HUD units -> 640×360 px
 var main: Node                               # main.gd instance
 var _tex: = {}
+
+func _enter_tree() -> void:
+	add_to_group("extra_pack")
+
+## Web: boss intro cards arrive with the extra pack; forget the "missing" answers.
+func extra_pack_loaded() -> void:
+	_tex.clear()
 var _splash_boss: = ""                      # boss whose intro splash is up
 var _splash_t: = 0.0                        # seconds since it appeared (slide-in)
 const SPLASH_IN: = 0.28

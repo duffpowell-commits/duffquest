@@ -17,6 +17,15 @@ var _t: = -1.0
 var _recent: Array = []
 
 func _ready() -> void:
+	add_to_group("extra_pack")
+	_scan()
+
+## Web: most loading screens arrive with the extra pack (scripts/extra_pack.gd); look again then.
+func extra_pack_loaded() -> void:
+	_scan()
+
+func _scan() -> void:
+	screens.clear()
 	var f: = FileAccess.open("res://data/loading_screens.json", FileAccess.READ)
 	if f:
 		var d: Variant = JSON.parse_string(f.get_as_text())
@@ -26,6 +35,8 @@ func _ready() -> void:
 					screens.append(s)
 
 func _pick() -> void:
+	if screens.is_empty():
+		return
 	var pool: = screens.filter(func(s): return not _recent.has(s["id"]))
 	if pool.is_empty():
 		pool = screens
