@@ -452,7 +452,7 @@ func _on_button(id: String) -> void:
 					get_button(id)["enabled"] = false
 					flash("Clipped! -$%d" % int(c[2]), Color("#c0d890"), 0.7)
 					if coupon_savings_potential() >= _max_coupon():
-						_end_coupons("I clip all the good coupons. Beat the algorithm at its own game. Heard.")
+						_end_coupons("I clip all the good coupons. Beat the algorithm at its own game.")
 				else:
 					flash(str(c[4]) if c.size() > 4 else "Nope.", Color("#e6a640"), 1.4)
 			elif id.begins_with("pc_"):

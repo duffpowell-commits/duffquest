@@ -66,6 +66,7 @@ func _init() -> void:
 	_button_fit_checks()
 	_qa_leftover_checks()
 	_signature_move_checks(main)
+	_heard_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
@@ -713,3 +714,24 @@ func _signature_move_checks(main: Node) -> void:
 	for n in [cord, cord2, ring, cp]:
 		if is_instance_valid(n):
 			n.queue_free()
+
+
+## Duff's "Heard." lives in the kitchens only (Duff, Nov 10): Waffle Haus, the Fork's shift flow and Fork stations.
+## Plain verb uses ("never heard of it") are fine; this catches the callout: Heard. / Heard, / HEARD!
+const HEARD_OK: = ["res://scripts/waffle.gd", "res://scripts/shift.gd", "res://scripts/minigames/sandwich.gd"]
+
+func _heard_checks() -> void:
+	var rx: = RegEx.create_from_string("\\b(Heard|HEARD)[.,!]")
+	var bad: Array = []
+	for root in ["res://scripts", "res://data"]:
+		_heard_scan(root, rx, bad)
+	check("'Heard.' only in the kitchens (%s)" % ", ".join(bad), bad.is_empty())
+
+func _heard_scan(dir: String, rx: RegEx, bad: Array) -> void:
+	for f in DirAccess.get_files_at(dir):
+		var p: = dir.path_join(f)
+		if (f.ends_with(".gd") or f.ends_with(".json")) and not HEARD_OK.has(p):
+			if rx.search(FileAccess.get_file_as_string(p)) != null:
+				bad.append(p.get_file())
+	for d in DirAccess.get_directories_at(dir):
+		_heard_scan(dir.path_join(d), rx, bad)

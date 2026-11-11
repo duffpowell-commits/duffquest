@@ -97,7 +97,7 @@ const RACCOON_SPOTS: = [Vector2(405, 125), Vector2(165, 350), Vector2(625, 225)]
 const PORCH_PT: = Vector2(122, 117)
 const PIRATE_NAMES: = ["{pirate_1}", "{pirate_2}", "{pirate_3}", "{pirate_4}", "{pirate_5}", "{pirate_6}"]
 const RACCOON_GIFTS: = [["a dollar (slightly damp)", "money", 1], ["a honey bun, still sealed. Somehow.", "honey buns", 1], ["a cat treat. {cat3} would approve.", "treats", 1], ["a bent fork (1 scrap)", "scrap", 1]]
-const RACCOON_GAGS: = ["The raccoon pats my hand back. Best customer service in Omaha, and it works for trash.", "It shows me a french fry. Found it in the dumpster behind a $19 burger place. Same fry.", "It chitters like a hustle podcast. Pretty sure it's selling me a course.", "It washes my hand. Cleaner than half the line cooks I've worked with. Heard."]
+const RACCOON_GAGS: = ["The raccoon pats my hand back. Best customer service in Omaha, and it works for trash.", "It shows me a french fry. Found it in the dumpster behind a $19 burger place. Same fry.", "It chitters like a hustle podcast. Pretty sure it's selling me a course.", "It washes my hand. Cleaner than half the line cooks I've worked with."]
 const GALA_ORIGIN: = Vector2(400, 440)
 const GALA_SIZE: = Vector2(320, 180)
 const GALA_SPAWN: = Vector2(560, 590)
@@ -638,7 +638,7 @@ func new_game(write_save: bool = true) -> void:
 	jen_text_daily()
 	errand_new_day()
 	daily_new_day()
-	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Heard.",
+	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Amen.",
 		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
 		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. This first Monday it's prorated to $%d. The Twisted Fork (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))]])
 	if write_save:
@@ -2048,7 +2048,7 @@ func debug_station(k: String) -> void:
 				enter_home()
 			shades = k == "say_shades"
 			Cast.clean = k == "say_clean"
-			_say([{"say_smirk": "Fork's 86'd on honey buns again. Heard. I'll handle it.",
+			_say([{"say_smirk": "Fork's 86'd on honey buns again. I'll handle it.",
 				"say_tired": "Landlord raised rent. Insurance denied the claim. Bus is late. Damn.",
 				"say_happy": "PROMOTED! Lead Line Cook! Love you, Madison!",
 				"say_shades": "Round shades on. Cosmetic only. Still the coolest line cook in Omaha.",
@@ -2580,7 +2580,7 @@ func _on_deal(id: String, e: Node, price: int) -> void:
 		e.say("Your loss, chief.")
 	else:
 		e.take_hit((e.global_position - player.global_position).normalized(), Gear.attack(gear) * 2.0, Gear.w_special(gear))
-		_toast("Free bonk. Negotiations are over. Heard.")
+		_toast("Free bonk. Negotiations are over.")
 
 func hustler_trap(e: Node) -> void:
 	_run_game(MashScript.new(), _after_mash.bind(e))
@@ -2974,7 +2974,7 @@ func start_gala(first: int = 0) -> void:
 	_set_camera()
 	energy = 100.0
 	gala_stage = first
-	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. Charity thing. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "{partner} reads the guest list and goes pale. Four of the names are her exes. All four 'made it.'", "{partner}: Babe. I am SO sorry. In advance. For all of them.", "Four exes. One rich host. One line cook. Alright. Heard. Let's fucking cook."])
+	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. Charity thing. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "{partner} reads the guest list and goes pale. Four of the names are her exes. All four 'made it.'", "{partner}: Babe. I am SO sorry. In advance. For all of them.", "Four exes. One rich host. One line cook. Alright. Let's fucking cook."])
 	_spawn_boss()
 	_sync_world()
 
