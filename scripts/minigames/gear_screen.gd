@@ -38,9 +38,17 @@ func _relabel() -> void:
 			else:
 				b["label"] = ("??? (Elite Gala)" if bool(it.get("gala", false)) else "??? (tier %d)" % int(it["tier"]))
 				b["col"] = Color("#24222e")
+			# item icon on the row (kf_gear_*), mystery crate while it's locked
+			var art: String = ("kf_gear_" + str({"golden_spatula": "spatula", "trust_fund": "coat"}.get(id, id))) if Gear.owns(g, id) else "kf_gear_locked"
+			if Art.tex(art) != null:
+				b["icon"] = art
+			else:
+				b.erase("icon")
 			if id == sel:
 				b["col"] = (b["col"] as Color).lightened(0.25)
 	get_button("shades")["label"] = "Round shades (S): %s" % ("ON" if m != null and bool(m.shades) else "OFF")
+	if Art.tex("kf_gear_shades") != null:
+		get_button("shades")["icon"] = "kf_gear_shades"
 	var up: = get_button("upgrade")
 	if Gear.owns(g, sel) and Gear.level(g, sel) < Gear.MAX_LEVEL:
 		up["label"] = "UPGRADE (%d scrap)" % Gear.upgrade_cost(sel, Gear.level(g, sel))

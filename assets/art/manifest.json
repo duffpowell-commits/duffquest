@@ -3355,6 +3355,230 @@
       "kind": "prop",
       "s": 2
     },
+    "kf_gear_spatula": {
+      "w": 76,
+      "h": 80,
+      "cell": [
+        76,
+        80
+      ],
+      "origin": [
+        38,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_skillet": {
+      "w": 80,
+      "h": 75,
+      "cell": [
+        80,
+        75
+      ],
+      "origin": [
+        40,
+        37
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_knife": {
+      "w": 79,
+      "h": 80,
+      "cell": [
+        79,
+        80
+      ],
+      "origin": [
+        39,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_tenderizer": {
+      "w": 75,
+      "h": 80,
+      "cell": [
+        75,
+        80
+      ],
+      "origin": [
+        37,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_flail": {
+      "w": 75,
+      "h": 80,
+      "cell": [
+        75,
+        80
+      ],
+      "origin": [
+        37,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_cleaver": {
+      "w": 72,
+      "h": 80,
+      "cell": [
+        72,
+        80
+      ],
+      "origin": [
+        36,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_apron": {
+      "w": 71,
+      "h": 80,
+      "cell": [
+        71,
+        80
+      ],
+      "origin": [
+        35,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_clogs": {
+      "w": 80,
+      "h": 58,
+      "cell": [
+        80,
+        58
+      ],
+      "origin": [
+        40,
+        29
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_sleeves": {
+      "w": 80,
+      "h": 77,
+      "cell": [
+        80,
+        77
+      ],
+      "origin": [
+        40,
+        38
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_coat": {
+      "w": 80,
+      "h": 78,
+      "cell": [
+        80,
+        78
+      ],
+      "origin": [
+        40,
+        39
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_dad": {
+      "w": 71,
+      "h": 80,
+      "cell": [
+        71,
+        80
+      ],
+      "origin": [
+        35,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_shades": {
+      "w": 80,
+      "h": 48,
+      "cell": [
+        80,
+        48
+      ],
+      "origin": [
+        40,
+        24
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_door": {
+      "w": 44,
+      "h": 80,
+      "cell": [
+        44,
+        80
+      ],
+      "origin": [
+        22,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_hand_dry": {
+      "w": 72,
+      "h": 80,
+      "cell": [
+        72,
+        80
+      ],
+      "origin": [
+        36,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_hand_wet": {
+      "w": 69,
+      "h": 80,
+      "cell": [
+        69,
+        80
+      ],
+      "origin": [
+        34,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_gear_locked": {
+      "w": 79,
+      "h": 80,
+      "cell": [
+        79,
+        80
+      ],
+      "origin": [
+        39,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
     "kf_cake": {
       "w": 300,
       "h": 168,

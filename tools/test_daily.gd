@@ -67,6 +67,7 @@ func _init() -> void:
 	_qa_leftover_checks()
 	_signature_move_checks(main)
 	_heard_checks()
+	_taunt_variety_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
@@ -735,3 +736,24 @@ func _heard_scan(dir: String, rx: RegEx, bad: Array) -> void:
 				bad.append(p.get_file())
 	for d in DirAccess.get_directories_at(dir):
 		_heard_scan(dir.path_join(d), rx, bad)
+
+
+## Boss taunts (IGN v2: "lean on one joke formula"): at most 2 use the "I'm not X. I'm Y." reframe across every
+## boss, and no two bosses open on the same first three words.
+func _taunt_variety_checks() -> void:
+	var B: = preload("res://scripts/boss.gd")
+	var rx: = RegEx.create_from_string("(?i)\\b(I'm|You're|It's|I am|You are) not\\b")
+	var formula: = 0
+	var openers: = {}
+	var dupes: Array = []
+	for id in B.BOSSES:
+		for line in B.BOSSES[id].get("taunts", []):
+			if rx.search(str(line)) != null:
+				formula += 1
+			var words: = str(line).to_lower().split(" ")
+			var head: = " ".join(words.slice(0, 3))
+			if openers.has(head) and openers[head] != id:
+				dupes.append(head)
+			openers[head] = id
+	check("taunts: 'I'm not X, I'm Y' used at most twice (%d)" % formula, formula <= 2)
+	check("taunts: no shared openers across bosses (%s)" % ", ".join(dupes), dupes.is_empty())

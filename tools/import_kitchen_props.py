@@ -27,6 +27,10 @@ SHEETS = {
                      "pickle_raw", "flour", "egg_wash", "breadcrumbs", "fried_pickles", "board", "knife", "tomato_whole"],
     "k3_sheet.png": ["torte", "whipped", "cherry", "choc_bottle", "plate", "mint", "hotel_pan", "spray",
                      "rag", "label", "diced", "fryer", "basket", "salt", "ticket", "produce_box"],
+    # gear screen + hustler door + breading hands (Nov 11)
+    "k5_sheet.png": ["gear_spatula", "gear_skillet", "gear_knife", "gear_tenderizer", "gear_flail", "gear_cleaver",
+                     "gear_apron", "gear_clogs", "gear_sleeves", "gear_coat", "gear_dad", "gear_shades",
+                     "door", "hand_dry", "hand_wet", "gear_locked"],
 }
 
 
