@@ -28,9 +28,12 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 3. **Brittany playtest** of the gentler first week (iPhone).
 4. **Balance:** softened Nov 10 (gates 45-65, slower wait drain with a floor of 40). Re-check after Brittany's playtest.
 5. **IGN review v2: 7.1/10** (`docs/reviews/ign_review_2026-11-10_v2.md`). Phone onboarding DONE (Nov 10 night,
-   `scripts/touch_tutorial.gd`, render `docs/renders/touch_onboarding.png`). Next milestone = **let the art breathe**:
-   translucent bottom-anchored minigame panels so the paintings show + fix sprite-vs-painting scale in arenas.
-   Then one signature move per bounty boss; 4G first boot (~60 s, 38 MB wasm).
+   `scripts/touch_tutorial.gd`, render `docs/renders/touch_onboarding.png`). UI style pass 1 DONE
+   (Nov 10 night): house-style props in 15 minigames, sunburst behind art-less screens, phone wallpaper, store and
+   pharmacy grids moved right so the paintings show. Before/after: `docs/renders/ui_audit_{before,after}.png`.
+   Next: **UI style pass 2** (stealth floor still a checkerboard; quiz/inspector/temp-check answer buttons are full
+   teal slabs; backwalk/blackheads still flat shapes) + sprite-vs-painting scale in arenas. Then one signature move
+   per bounty boss; 4G first boot (~60 s, 38 MB wasm).
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`
@@ -42,6 +45,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - In-engine renders: `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- <id>`
   (ids: a boss arena, `bounty:sendback`, `waffle`, `title`, `home`, `hint`, `at:X,Y`) → `/tmp/qa/`. Copy keepers into `docs/renders/`.
 - Phone onboarding render: `res://tools/touch_shot.tscn` + `python3 tools/touch_sheet.py` (forces touch mode).
+- UI audit (every menu + minigame, touch mode): `res://tools/ui_audit_shot.tscn` + `python3 tools/ui_audit_sheet.py <tag>`
+  -> `docs/renders/ui_audit_<tag>.png`. Play objects use `prop()` / `prop_circle()` (minigame.gd -> UiStyle), never raw
+  `draw_rect` fills.
 - Arena walls: `godot --headless --path . res://tools/arena_wall_check.tscn`
 - After swapping art: `touch` the files, then `godot --headless --path . --import`.
 - CI status: `gh api repos/duffpowell-commits/duffquest/actions/runs?per_page=5` (`gh` GraphQL is blocked; the

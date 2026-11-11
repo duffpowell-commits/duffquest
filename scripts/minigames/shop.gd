@@ -17,8 +17,8 @@ func _setup() -> void:
 	space_is_pen = false
 	for i in ITEMS.size():
 		var it: Array = ITEMS[i]
-		add_button(it[0], Rect2(6 + (i % 2) * 156, 30 + (i / 2) * 24, 152, 21), "", KEYS[i])
-	add_button("done", Rect2(110, 154, 100, 22), "DONE", KEY_ESCAPE, Color("#a43a2c"))
+		add_button(it[0], Rect2(118 + (i % 2) * 100, 30 + (i / 2) * 24, 96, 21), "", KEYS[i])   # right block: the left third shows the painted store
+	add_button("done", Rect2(216, 154, 98, 22), "DONE", KEY_ESCAPE, Color("#a43a2c"))
 	_relabel()
 
 func price(id: String) -> int:
@@ -32,7 +32,7 @@ func price(id: String) -> int:
 func _relabel() -> void:
 	for it in ITEMS:
 		var have: = int(m.inventory.get(it[0], 0)) if m else 0
-		get_button(it[0])["label"] = "%s  $%d   (have %d)" % [it[1], price(it[0]), have]
+		get_button(it[0])["label"] = "%s $%d\nhave %d" % [it[1], price(it[0]), have]
 
 func buy(id: String) -> bool:
 	var p: = price(id)

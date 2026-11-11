@@ -194,7 +194,10 @@ func _status_bar() -> void:
 	draw_rect(Rect2(297, 4, 11, 4), Color("#7aa05a"))
 
 func _draw_game() -> void:
-	draw_rect(Rect2(0, 0, W, H), Color("#1c1712"))
+	if screen == "home":   # wallpaper: STYLE_LOCK Duff-frame navy/teal sunburst
+		UiStyle.burst(self, Rect2(0, 0, W, H), Color("#1E4A66"), Vector2(W * 0.5, H * 0.62), 24, t * 0.03)
+	else:
+		draw_rect(Rect2(0, 0, W, H), Color("#1c1712"))
 	_status_bar()
 	if m == null:
 		return
