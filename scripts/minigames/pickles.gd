@@ -20,6 +20,11 @@ func _setup() -> void:
 	add_button("egg", Rect2(84, 122, 70, 22), "Egg wash", KEY_2, Color("#a08a30"))
 	add_button("bread", Rect2(160, 122, 70, 22), "Breading", KEY_3, Color("#8a6a40"))
 	add_button("basket", Rect2(236, 122, 78, 22), "Into basket", KEY_4, Color("#555a66"))
+	for pair in [["flour", "kf_flour"], ["egg", "kf_egg_wash"], ["bread", "kf_breadcrumbs"], ["basket", "kf_basket"]]:
+		var b: = get_button(pair[0])
+		if Art.tex(pair[1]) != null:   # picture tile
+			b["icon"] = pair[1]
+			b["col"] = Color("#57504e")
 	add_button("hand", Rect2(8, 150, 146, 24), "SWITCH HAND", KEY_H, Color("#57504e"))
 	add_button("pull", Rect2(160, 150, 154, 24), "PULL BASKET", KEY_SPACE, Color("#a43a2c"))
 	get_button("pull")["enabled"] = false
@@ -113,8 +118,9 @@ func _draw_game() -> void:
 	var bins: = [["Flour", Color("#f0ece0")], ["Egg wash", Color("#f2c66a")], ["Breading", Color("#c8964a")]]
 	for i in 3:
 		var x: = 18 + i * 76
-		prop(Rect2(x, 70, 54, 34), Color("#9aa0aa"))
-		draw_rect(Rect2(x + 4, 74, 46, 26), bins[i][1])
+		if not pic(["kf_flour", "kf_egg_wash", "kf_breadcrumbs"][i], Vector2(x + 27, 87), 36.0):
+			prop(Rect2(x, 70, 54, 34), Color("#9aa0aa"))
+			draw_rect(Rect2(x + 4, 74, 46, 26), bins[i][1])
 		if phase == "bread" and step == i:
 			draw_rect(Rect2(x - 2, 68, 58, 38), Color("#c0d890"), false, 1.0)
 	txt(Vector2(8, 28), "Pickles battered: %d / %d" % [battered, total], 8)
@@ -129,13 +135,19 @@ func _draw_game() -> void:
 	txt(Vector2(240, 80), "Active hand", 8, Color(1, 1, 1, 0.6))
 
 	var pc: Color = [Color("#6a9a3a"), Color("#d8d4c4"), Color("#e8cf7a"), Color("#c8964a")][step if phase == "bread" else 3]
-	prop_circle(Vector2(272, 100), 9, pc)
+	var st: int = step if phase == "bread" else 3
+	# the pickle in hand: raw chip -> floured -> egg-washed -> breaded
+	var shown: = pic("kf_pickle_raw", Vector2(272, 100), 20.0) if st == 3 else \
+		pic("kf_pickles", Vector2(272, 100), 20.0, [Color.WHITE, Color(1.6, 1.6, 1.5), Color(1.4, 1.25, 0.7)][st])
+	if not shown:
+		prop_circle(Vector2(272, 100), 9, pc)
 	if phase == "fry":
 		var fc: = Color("#e8cf7a").lerp(Color("#c07a20"), clampf(fry_p, 0, 1))
 		if fry_p > 1.05:
 			fc = Color("#c07a20").lerp(Color("#2a1a0a"), clampf((fry_p - 1.05) / 0.5, 0, 1))
 		prop(Rect2(18, 70, 206, 34), Color("#c89b3c"))
-		for k in total:
-			prop_circle(Vector2(50 + k * 50, 87), 9, fc)
+		for k in total:   # breaded chips browning in the oil
+			if not pic("kf_pickle_raw", Vector2(50 + k * 50, 87), 22.0, Color.WHITE.lerp(fc, 0.55)):
+				prop_circle(Vector2(50 + k * 50, 87), 9, fc)
 		bar(Rect2(18, 108, 206, 5), fry_p / 1.4, fc)
 		draw_rect(Rect2(18 + 206 * 0.8 / 1.4, 106, 206 * 0.25 / 1.4, 9), Color(1, 1, 1, 0.25))

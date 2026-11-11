@@ -131,6 +131,15 @@ func hurt(amount: int, why: String) -> void:
 	if shift and shift.has_method("injure"):
 		shift.injure(amount, why)
 
+## House-style prop (kf_*, tools/import_kitchen_props.py): `h` world units tall, centred on `c`. False if the art is missing.
+func pic(name: String, c: Vector2, h: float, mod: Color = Color.WHITE) -> bool:
+	var tx: = Art.tex(name)
+	if tx == null:
+		return false
+	var w: = h * tx.get_width() / float(tx.get_height())
+	draw_texture_rect(tx, Rect2(c - Vector2(w, h) * 0.5, Vector2(w, h)), false, mod)
+	return true
+
 func add_button(id: String, rect: Rect2, label: String, key: int = 0, col: Color = Color("#57504e")) -> Dictionary:
 	var b: = {"id": id, "rect": rect, "label": label, "key": key, "enabled": true, "col": col }
 	buttons.append(b)
@@ -234,9 +243,10 @@ func _draw() -> void:
 	_draw_game()
 	for b in buttons:
 		var r: Rect2 = b["rect"]
-		if b.has("badge"):   # answer card (quiz, inspector): the badge already shows the key
-			UiStyle.card_button(self, r, Cast.T(str(b["label"])), str(b["badge"]), b.get("badge_col", UiStyle.TEAL),
-				b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
+		if b.has("badge") or b.has("icon"):   # answer card (quiz, inspector) or picture tile (Fork ingredients)
+			var ic: Texture2D = Art.tex(str(b["icon"])) if b.has("icon") else null
+			UiStyle.card_button(self, r, Cast.T(str(b["label"])), str(b.get("badge", "")), b.get("badge_col", UiStyle.TEAL),
+				b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8, ic)
 			continue
 		UiStyle.button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
 		if int(b["key"]) != 0 and not Cast.touch:   # key chips are keyboard-only; phones never see "Space"/"Escape"

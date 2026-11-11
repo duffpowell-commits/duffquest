@@ -4,8 +4,10 @@ const ING: = {
 	"greens": ["Greens", "#4a9a3a"], "chicken": ["Chicken", "#c8a070"], "bacon": ["Bacon", "#b04a3a"],
 	"egg": ["Egg", "#f5e08a"], "tomato": ["Tomato", "#e04a3a"], "blue": ["Blue chz", "#c8d0e0"],
 	"feta": ["Feta", "#f4f4f4"], "pecans": ["Pecans", "#8a5a2a"], "apple": ["Apple", "#d0e060"],
-	"onion": ["Onion", "#c08ac0"], "ranch": ["Ranch", "#f0f0e0"], "vin": ["Balsamic", "#5a2a2a"],
+	"onion": ["Onion", "#c08ac0"], "ranch": ["Ranch", "#f0f0e0"], "vin": ["Vinegar", "#5a2a2a"],
 }
+## salad ids whose prop is named differently
+const ICON: = {"chicken": "kf_grilled", "tomato": "kf_tomato"}
 const ORDER: = ["greens", "chicken", "bacon", "egg", "tomato", "blue", "feta", "pecans", "apple", "onion", "ranch", "vin"]
 const KEYS: = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS, KEY_EQUAL]
 const MENU: = {
@@ -48,7 +50,11 @@ func _setup() -> void:
 		var id: String = ORDER[i]
 		var row: = 0 if i < 7 else 1
 		var col: = i if i < 7 else i - 7
-		add_button(id, Rect2(4 + col * 45, 128 + row * 24, 43, 21), ING[id][0], KEYS[i], Color(ING[id][1]).darkened(0.5))
+		var b: = add_button(id, Rect2(4 + col * 45, 128 + row * 24, 43, 21), ING[id][0], KEYS[i], Color(ING[id][1]).darkened(0.5))
+		var art: String = ICON.get(id, "kf_" + id)
+		if Art.tex(art) != null:   # picture tile (house-style prop, tools/import_kitchen_props.py)
+			b["icon"] = art
+			b["col"] = Color("#57504e")
 	add_button("gloves", Rect2(4 + 5 * 45, 152, 88, 21), "GLOVES+SANITIZE", KEY_G, Color("#43668e"))
 	add_button("serve", Rect2(266, 104, 50, 21), "SERVE", KEY_ENTER, Color("#4e7a3a"))
 	if eighty_six != "":
@@ -154,10 +160,17 @@ func _draw_game() -> void:
 	txt(Vector2(8, y + 4), "Spec:", 6, Color("#6a625a"))
 	mtxt(Vector2(8, y + 12), spec.trim_suffix(", "), 112, 6, Color("#6a625a"), 4)
 
-	prop_circle(Vector2(200, 72), 38, Color("#e8e8f0"))
-	draw_circle(Vector2(200, 72), 33, Color("#cfd2dc"))
-	for i in built.size():
-		var a: = i * 2.4
-		prop_circle(Vector2(200, 72) + Vector2.from_angle(a) * (6.0 + i * 2.5), 7, Color(ING[built[i]][1]))
+	if pic("kf_bowl", Vector2(200, 78), 66.0):
+		for i in built.size():   # toppings pile up inside the rim
+			var a: = i * 2.4
+			var at: = Vector2(200, 64) + Vector2(cos(a) * (6.0 + i * 3.0), sin(a) * (2.0 + i * 1.0))
+			if not pic(ICON.get(built[i], "kf_" + built[i]), at, 18.0):
+				prop_circle(at, 6, Color(ING[built[i]][1]))
+	else:
+		prop_circle(Vector2(200, 72), 38, Color("#e8e8f0"))
+		draw_circle(Vector2(200, 72), 33, Color("#cfd2dc"))
+		for i in built.size():
+			var a: = i * 2.4
+			prop_circle(Vector2(200, 72) + Vector2.from_angle(a) * (6.0 + i * 2.5), 7, Color(ING[built[i]][1]))
 	if gloves:
 		txt(Vector2(150, 24), "Gloves: fresh", 8, Color("#c0d890"))

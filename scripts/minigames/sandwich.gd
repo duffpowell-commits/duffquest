@@ -41,7 +41,10 @@ func _setup() -> void:
 		var id: String = ORDER[i]
 		var row: = 0 if i < 6 else 1
 		var col: = i if i < 6 else i - 6
-		add_button(id, Rect2(4 + col * 52.5, 128 + row * 24, 50, 21), ING[id][0], KEYS[i], Color(ING[id][1]).darkened(0.45))
+		var b: = add_button(id, Rect2(4 + col * 52.5, 128 + row * 24, 50, 21), ING[id][0], KEYS[i], Color(ING[id][1]).darkened(0.45))
+		if Art.tex("kf_" + id) != null:   # picture tile (house-style prop, tools/import_kitchen_props.py)
+			b["icon"] = "kf_" + id
+			b["col"] = Color("#57504e")
 	add_button("undo", Rect2(4 + 5 * 52.5, 152, 50, 21), "UNDO", KEY_BACKSPACE)
 	add_button("send", Rect2(266, 104, 50, 21), "SEND", KEY_ENTER, Color("#4e7a3a"))
 	if eighty_six != "":
@@ -205,7 +208,8 @@ func _draw_game() -> void:
 			spec += String(ING[id][0]) + ", "
 		mtxt(Vector2(8, y), spec.trim_suffix(", "), 112, 6, Color("#6a625a"), 4)
 
-	prop(Rect2(150, 108, 100, 4), Color("#cccccc"))
+	if not pic("kf_plate", Vector2(200, 110), 30.0):
+		prop(Rect2(150, 108, 100, 4), Color("#cccccc"))
 	var by: = 106.0
 	for id in built:
 		var h: = 6.0 if id in ["bun_b", "bun_t", "fried", "grilled"] else 3.0
@@ -221,6 +225,12 @@ const LAYER_ART: = {"bun_b": ["kp_bun", 0.45, 1.0], "bun_t": ["kp_bun", 0.0, 0.5
 	"grilled": ["kp_fried_chicken", 0.0, 1.0], "lettuce": ["kp_lettuce", 0.0, 1.0], "tomato": ["kp_tomato", 0.15, 0.85]}
 
 func _layer_sprite(id: String, by: float, h: float) -> bool:
+	var kf: = Art.tex("kf_" + id)
+	if kf != null:   # house-style layer: full prop, squashed into the layer's slot so the stack reads bottom-to-top
+		var lw: = 56.0 if id in ["bun_b", "bun_t", "fried", "grilled", "hot"] else 50.0
+		var lh: = maxf(h * 2.4, 8.0)
+		draw_texture_rect(kf, Rect2(200 - lw / 2, by - lh + h * 0.6, lw, lh), false)
+		return true
 	if not LAYER_ART.has(id) or Art.tex(LAYER_ART[id][0]) == null:
 		return false
 	var tx: Texture2D = Art.tex(LAYER_ART[id][0])
