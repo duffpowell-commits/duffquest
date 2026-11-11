@@ -7,7 +7,7 @@ fight exes and porch pirates. Godot 4.5, GDScript, 640×360 viewport (1280×720 
 `CLAUDE_REFERENCE.md` (itch target, art tools, key facts). History: `docs/handoffs/SESSION_LOG.md` (old long log)
 and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
-## Status (Nov 10, 2026 late night)
+## Status (Nov 11, 2026)
 - **main is green and live.** GitHub `duffpowell-commits/duffquest` is the ONLY home. GitLab is dropped for now
   (Duff, Nov 10): don't push there, don't ask for a GitLab token. `.github/workflows/mirror_gitlab.yml` exists and
   skips cleanly without its secret; leave it or delete it, it does nothing.
@@ -62,6 +62,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
    Street ground painted (Nov 11): Canva repaint of the tile layout in the home-interior pixel style, fitted by
    `tools/import_street.py` (road centres matched exactly, one uniform scale) -> `assets/art/ground_painted.png`;
    `scripts/ground.gd` uses it when present, tiles stay as the fallback. Render: `docs/renders/street_ground_before_after.png`.
+   Last slabs painted (Nov 11): K6 sheet -> Kwik-N-Go shelf tiles, raw protein on the temp-check grill (browns with
+   core temp, `temp_check._meat()`), baby FEED/CHANGE icons. Render: `docs/renders/shop_baby_temp_after.png`.
+   **IGN review v3: 7.9/10** (`docs/reviews/ign_review_2026-11-11_v3.md`): all three v2 fixes landed. Ranked next:
+   Brittany phone playtest, itch page paste, overworld repaint, last 5 flat screens (phone, symphony, show & tell,
+   grocery map, wordle keyboard), boot under 10 s.
    Next (Duff picked, Nov 11): FULL overworld repaint (painted neighborhood/home/Fork exteriors so walking around
    matches the fights and minigames), then boss taunts.
 

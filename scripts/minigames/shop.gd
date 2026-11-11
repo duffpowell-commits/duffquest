@@ -17,7 +17,8 @@ func _setup() -> void:
 	space_is_pen = false
 	for i in ITEMS.size():
 		var it: Array = ITEMS[i]
-		add_button(it[0], Rect2(118 + (i % 2) * 100, 30 + (i / 2) * 24, 96, 21), "", KEYS[i])   # right block: the left third shows the painted store
+		var b: = add_button(it[0], Rect2(118 + (i % 2) * 100, 30 + (i / 2) * 24, 96, 21), "", KEYS[i])   # right block: the left third shows the painted store
+		b["icon"] = "kf_shop_" + str(it[0]).split(" ")[0]   # shelf tile: the product itself, not a teal slab
 	add_button("done", Rect2(216, 154, 98, 22), "DONE", KEY_ESCAPE, Color("#a43a2c"))
 	_relabel()
 

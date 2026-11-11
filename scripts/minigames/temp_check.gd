@@ -1,13 +1,13 @@
 extends "res://scripts/minigames/minigame.gd"
 
 const PROTEINS: = [
-	{"n": "Chicken breast", "t": 165, "c": "#e8c9a0", "why": "Poultry: 165°F (instant).", "raw": "Salmonella says thanks." },
-	{"n": "Chicken wings", "t": 165, "c": "#e2b47a", "why": "Poultry: 165°F (instant).", "raw": "Raw wings. Bold. Illegal." },
-	{"n": "Ground turkey burger", "t": 165, "c": "#d9b08c", "why": "Ground poultry is still poultry: 165°F.", "raw": "That's a lawsuit on a bun." },
-	{"n": "Ground beef patty", "t": 155, "c": "#8a4b3a", "why": "Ground beef: 155°F for 17 seconds.", "raw": "E. coli has entered the chat. Corporate blames 'supply chain.'" },
-	{"n": "Pork chop", "t": 145, "c": "#d9a08c", "why": "Pork / whole cuts: 145°F for 15 seconds.", "raw": "Pink pork, angry inspector, angrier lawyer." },
-	{"n": "Ribeye steak", "t": 145, "c": "#9a4a3a", "why": "Whole-muscle beef: 145°F for 15 seconds (or as ordered by an informed guest).", "raw": "Under temp. Back on the grill." },
-	{"n": "Salmon fillet", "t": 145, "c": "#f08a6a", "why": "Fish: 145°F for 15 seconds.", "raw": "Sushi is a different restaurant, chef." },
+	{"n": "Chicken breast", "art": "kf_raw_chicken", "t": 165, "c": "#e8c9a0", "why": "Poultry: 165°F (instant).", "raw": "Salmonella says thanks." },
+	{"n": "Chicken wings", "art": "kf_wings", "t": 165, "c": "#e2b47a", "why": "Poultry: 165°F (instant).", "raw": "Raw wings. Bold. Illegal." },
+	{"n": "Ground turkey burger", "art": "kf_raw_turkey", "t": 165, "c": "#d9b08c", "why": "Ground poultry is still poultry: 165°F.", "raw": "That's a lawsuit on a bun." },
+	{"n": "Ground beef patty", "art": "kf_raw_beef", "t": 155, "c": "#8a4b3a", "why": "Ground beef: 155°F for 17 seconds.", "raw": "E. coli has entered the chat. Corporate blames 'supply chain.'" },
+	{"n": "Pork chop", "art": "kf_raw_pork", "t": 145, "c": "#d9a08c", "why": "Pork / whole cuts: 145°F for 15 seconds.", "raw": "Pink pork, angry inspector, angrier lawyer." },
+	{"n": "Ribeye steak", "art": "kf_raw_ribeye", "t": 145, "c": "#9a4a3a", "why": "Whole-muscle beef: 145°F for 15 seconds (or as ordered by an informed guest).", "raw": "Under temp. Back on the grill." },
+	{"n": "Salmon fillet", "art": "kf_raw_salmon", "t": 145, "c": "#f08a6a", "why": "Fish: 145°F for 15 seconds.", "raw": "Sushi is a different restaurant, chef." },
 ]
 const CENTER: = Vector2(160, 84)
 const RADII: = Vector2(54, 26)
@@ -149,6 +149,21 @@ func debug_solve(good: bool) -> void:
 		_pull()
 		_next_round()
 
+# the raw cut, painted, fitted inside the probe oval; it browns as the core climbs
+func _meat(_col: Color) -> bool:
+	var tx: = Art.tex(str(protein.get("art", "")))
+	if tx == null:
+		return false
+	var box: = RADII * 2.2
+	var sc: = minf(box.x / tx.get_width(), box.y / tx.get_height())
+	var sz: = Vector2(tx.get_width(), tx.get_height()) * sc
+	var cook: = 0.0 if phase == "probe" else clampf((core - 38.0) / 200.0, 0.0, 0.7)
+	var mod: = Color.WHITE.lerp(Color("#7a4a2a"), cook)
+	if protein.get("art", "") == "kf_wings" and cook < 0.35:   # the only cooked-looking prop: pale it while raw
+		mod = mod * Color("#f4d6c8").lerp(Color.WHITE, cook / 0.35)
+	draw_texture_rect(tx, Rect2(CENTER - sz * 0.5, sz), false, mod)
+	return true
+
 func _draw_game() -> void:
 	txt(Vector2(0, 28), "%s  (round %d/%d)" % [protein.get("n", ""), round_i + 1, rounds], 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
 	# flat-top grill: steel body, glowing coals under the grate, ink grate bars
@@ -159,9 +174,10 @@ func _draw_game() -> void:
 	var col: = Color(protein.get("c", "#cccccc"))
 	if phase != "probe":
 		col = col.lerp(Color("#6b3a1a"), clampf((core - 38.0) / 200.0, 0, 0.7))
-	draw_set_transform(CENTER, 0, RADII / RADII.x)
-	prop_circle(Vector2.ZERO, RADII.x, col)
-	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	if not _meat(col):   # no art: the old flat oval
+		draw_set_transform(CENTER, 0, RADII / RADII.x)
+		prop_circle(Vector2.ZERO, RADII.x, col)
+		draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	if phase != "probe":   # grill marks darken as it cooks
 		var sear: = Color(UiStyle.PROP_INK, clampf((core - 60.0) / 120.0, 0.15, 0.6))
 		for k in 4:

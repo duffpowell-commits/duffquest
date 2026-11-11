@@ -3579,6 +3579,230 @@
       "kind": "prop",
       "s": 2
     },
+    "kf_shop_honey": {
+      "w": 80,
+      "h": 64,
+      "cell": [
+        80,
+        64
+      ],
+      "origin": [
+        40,
+        32
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_formula": {
+      "w": 61,
+      "h": 80,
+      "cell": [
+        61,
+        80
+      ],
+      "origin": [
+        30,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_diapers": {
+      "w": 73,
+      "h": 80,
+      "cell": [
+        73,
+        80
+      ],
+      "origin": [
+        36,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_cherries": {
+      "w": 80,
+      "h": 79,
+      "cell": [
+        80,
+        79
+      ],
+      "origin": [
+        40,
+        39
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_chocolate": {
+      "w": 76,
+      "h": 80,
+      "cell": [
+        76,
+        80
+      ],
+      "origin": [
+        38,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_cream": {
+      "w": 54,
+      "h": 80,
+      "cell": [
+        54,
+        80
+      ],
+      "origin": [
+        27,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_flour": {
+      "w": 61,
+      "h": 80,
+      "cell": [
+        61,
+        80
+      ],
+      "origin": [
+        30,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_eggs": {
+      "w": 80,
+      "h": 76,
+      "cell": [
+        80,
+        76
+      ],
+      "origin": [
+        40,
+        38
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_treats": {
+      "w": 66,
+      "h": 80,
+      "cell": [
+        66,
+        80
+      ],
+      "origin": [
+        33,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_shop_ensure": {
+      "w": 37,
+      "h": 80,
+      "cell": [
+        37,
+        80
+      ],
+      "origin": [
+        18,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_raw_chicken": {
+      "w": 80,
+      "h": 65,
+      "cell": [
+        80,
+        65
+      ],
+      "origin": [
+        40,
+        32
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_raw_turkey": {
+      "w": 80,
+      "h": 64,
+      "cell": [
+        80,
+        64
+      ],
+      "origin": [
+        40,
+        32
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_raw_beef": {
+      "w": 80,
+      "h": 66,
+      "cell": [
+        80,
+        66
+      ],
+      "origin": [
+        40,
+        33
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_raw_pork": {
+      "w": 80,
+      "h": 78,
+      "cell": [
+        80,
+        78
+      ],
+      "origin": [
+        40,
+        39
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_raw_ribeye": {
+      "w": 80,
+      "h": 70,
+      "cell": [
+        80,
+        70
+      ],
+      "origin": [
+        40,
+        35
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_raw_salmon": {
+      "w": 80,
+      "h": 62,
+      "cell": [
+        80,
+        62
+      ],
+      "origin": [
+        40,
+        31
+      ],
+      "kind": "prop",
+      "s": 2
+    },
     "kf_cake": {
       "w": 300,
       "h": 168,
