@@ -159,12 +159,12 @@ func _draw_game() -> void:
 		for y in ROWS:
 			var v: = Vector2i(x, y)
 			var r: = _tile_rect(v)
-			draw_rect(r, Color("#7a5a3a") if (x + y) % 2 == 0 else Color("#74563a"))
+			prop(r, Color("#7a5a3a") if (x + y) % 2 == 0 else Color("#74563a"), 0.18)
 			if creaky.has(v):
 				draw_line(r.position + Vector2(5, 8), r.position + Vector2(13, 14), Color(0, 0, 0, 0.35), 1.0)
 				draw_line(r.position + Vector2(13, 14), r.position + Vector2(19, 10), Color(0, 0, 0, 0.35), 1.0)
-	draw_rect(_tile_rect(Vector2i(0, 2)).grow(-3), Color("#c8b8e8"))
-	draw_rect(_tile_rect(goal).grow(-2), Color("#6a7ab0"))
+	prop(_tile_rect(Vector2i(0, 2)).grow(-3), Color("#c8b8e8"))
+	prop(_tile_rect(goal).grow(-2), Color("#6a7ab0"))
 	txt(_tile_rect(goal).position + Vector2(2, 16), "BED", 7)
 	Art.frame(self, "baby", _tile_rect(Vector2i(0, 2)).get_center(), 0, 0)
 	for c in cats:

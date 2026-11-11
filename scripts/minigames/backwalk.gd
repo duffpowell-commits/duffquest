@@ -64,12 +64,12 @@ func _on_button(id: String) -> void:
 		say = "I go too early. Now she's balancing on one foot."
 
 func _draw_game() -> void:
-	draw_rect(Rect2(40, 98, 240, 22), Color("#4a3a6a"))
+	prop(Rect2(40, 98, 240, 22), Color("#4a3a6a"))
 
-	draw_rect(Rect2(60, 92, 170, 14), Color("#fbf6ec"))
-	draw_rect(Rect2(230, 90, 18, 16), Color("#f2d2b4"))
+	prop(Rect2(60, 92, 170, 14), Color("#fbf6ec"))
+	prop(Rect2(230, 90, 18, 16), Color("#f2d2b4"))
 	draw_rect(Rect2(232, 88, 14, 5), Color("#6e5236"))
-	draw_rect(Rect2(30, 94, 30, 10), Color("#3a3a5a"))
+	prop(Rect2(30, 94, 30, 10), Color("#3a3a5a"))
 
 	var prog: = clampf((t - LEAD_IN) / (BEAT * STEPS), 0.0, 1.0)
 	var mx: = 80.0 + prog * 140.0

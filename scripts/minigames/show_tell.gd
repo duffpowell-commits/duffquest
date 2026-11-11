@@ -161,10 +161,10 @@ func _draw_game() -> void:
 func _draw_bed() -> void:
 	var bob: = sin(t * 2.0) * 0.6
 
-	draw_rect(Rect2(92, 34, 136, 34), Color("#6a4630"))
+	prop(Rect2(92, 34, 136, 34), Color("#6a4630"))
 	draw_rect(Rect2(92, 34, 136, 3), Color("#8a6040"))
-	draw_rect(Rect2(98, 58, 56, 14), Color("#f0ead8"))
-	draw_rect(Rect2(166, 58, 56, 14), Color("#f0ead8"))
+	prop(Rect2(98, 58, 56, 14), Color("#f0ead8"))
+	prop(Rect2(166, 58, 56, 14), Color("#f0ead8"))
 
 	var talking: = int(t * 6.0) % 2 == 0 and t > lead_in
 	var cur: = _current()
@@ -180,7 +180,7 @@ func _draw_bed() -> void:
 		draw_rect(Rect2(178, 82, 9, 13), Color("#202030"))
 		draw_rect(Rect2(179, 83, 7, 11), Color(0.75, 0.9, 1.0, 0.9))
 
-	draw_rect(Rect2(86, 92, 148, 28), Color("#5a6ab0"))
+	prop(Rect2(86, 92, 148, 28), Color("#5a6ab0"))
 	draw_rect(Rect2(86, 92, 148, 3), Color("#7a8ad0"))
 	for x in range(94, 230, 14):
 		draw_line(Vector2(x, 97), Vector2(x + 6, 118), Color("#4a5a9a"), 1.0)

@@ -56,7 +56,7 @@ func _draw_game() -> void:
 	draw_set_transform(Vector2(40, 82), 0.0, Vector2(3, 3))
 	Art.frame(self, "ch_hustler", Vector2.ZERO, 3 if pitch_i % 2 == 1 else 0, 0)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	draw_rect(Rect2(72, 22, 236, 46), Color(1, 1, 1, 0.92))
+	prop(Rect2(72, 22, 236, 46), Color("#fff1d6"), 0.0)
 	mtxt(Vector2(78, 36), PITCH[pitch_i], 224, 9, Color("#2b2218"), 3)
 	bar(Rect2(40, 84, 240, 10), float(presses) / NEED, Color("#c0d890"))
 	txt(Vector2(40, 104), "Escape: %d / %d" % [presses, NEED], 8, Color.WHITE)

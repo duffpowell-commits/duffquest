@@ -64,15 +64,15 @@ func _on_button(id: String) -> void:
 func _draw_game() -> void:
 
 	var squish: = 1.0 - clampf(t - last_sq, 0.0, 0.2) * 1.5
-	draw_circle(Vector2(46, 66), 6.0 * (0.7 + 0.3 * (1.0 - squish)), Color("#e6a640"))
+	prop_circle(Vector2(46, 66), 6.0 * (0.7 + 0.3 * (1.0 - squish)), Color("#e6a640"))
 
-	draw_rect(Rect2(220, 30, 34, 60), Color("#ffffff"))
+	prop(Rect2(220, 30, 34, 60), Color("#ffffff"))
 	draw_rect(Rect2(220, 30 + 60 * (1.0 - bag), 34, 60 * bag), Color("#f0c050"))
 	draw_rect(Rect2(220, 30, 34, 60), Color("#8a8a9a"), false, 1.0)
 	txt(Vector2(212, 100), "Bag %d%%" % int(bag * 100.0), 7, Color("#333333"))
 
 	txt(Vector2(30, 116), "FLOW", 7, Color("#333333"))
-	draw_rect(Rect2(60, 110, 150, 8), Color("#c0c0c8"))
+	prop(Rect2(60, 110, 150, 8), Color("#c0c0c8"))
 	draw_rect(Rect2(60 + 150 * BAND.x / 1.2, 110, 150 * (BAND.y - BAND.x) / 1.2, 8), Color("#8ad08a"))
 	draw_rect(Rect2(60 + 150 * clampf(flow / 1.2, 0.0, 1.0) - 1, 107, 3, 14), Color("#c03030"))
 	draw_rect(Rect2(6, 124, 308, 26), Color(0.1, 0.08, 0.15, 0.92))

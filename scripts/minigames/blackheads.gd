@@ -51,7 +51,7 @@ func _on_button(id: String) -> void:
 		finish(score())
 
 func _draw_game() -> void:
-	draw_rect(Rect2(70, 24, 180, 98), Color("#f2d2b4"))
+	prop(Rect2(70, 24, 180, 98), Color("#f2d2b4"), 0.15)
 	draw_rect(Rect2(70, 24, 180, 98), Color("#c29a6a"), false, 2.0)
 	draw_line(Vector2(160, 26), Vector2(160, 120), Color("#d8a868"), 2.0)
 	for h in heads:

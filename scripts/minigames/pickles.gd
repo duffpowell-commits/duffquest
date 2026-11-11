@@ -113,7 +113,7 @@ func _draw_game() -> void:
 	var bins: = [["Flour", Color("#f0ece0")], ["Egg wash", Color("#f2c66a")], ["Breading", Color("#c8964a")]]
 	for i in 3:
 		var x: = 18 + i * 76
-		draw_rect(Rect2(x, 70, 54, 34), Color("#9aa0aa"))
+		prop(Rect2(x, 70, 54, 34), Color("#9aa0aa"))
 		draw_rect(Rect2(x + 4, 74, 46, 26), bins[i][1])
 		if phase == "bread" and step == i:
 			draw_rect(Rect2(x - 2, 68, 58, 38), Color("#c0d890"), false, 1.0)
@@ -122,20 +122,20 @@ func _draw_game() -> void:
 
 	var dry_col: = Color("#f2d2b4") if hand == "dry" else Color("#f2d2b4").darkened(0.5)
 	var wet_col: = Color("#f2c66a") if hand == "wet" else Color("#f2c66a").darkened(0.5)
-	draw_rect(Rect2(244, 26, 30, 30), dry_col)
-	draw_rect(Rect2(280, 26, 30, 30), wet_col)
+	prop(Rect2(244, 26, 30, 30), dry_col)
+	prop(Rect2(280, 26, 30, 30), wet_col)
 	txt(Vector2(244, 64), "DRY", 8, Color.WHITE if hand == "dry" else Color(1, 1, 1, 0.4), HORIZONTAL_ALIGNMENT_CENTER, 30)
 	txt(Vector2(280, 64), "WET", 8, Color.WHITE if hand == "wet" else Color(1, 1, 1, 0.4), HORIZONTAL_ALIGNMENT_CENTER, 30)
 	txt(Vector2(240, 80), "Active hand", 8, Color(1, 1, 1, 0.6))
 
 	var pc: Color = [Color("#6a9a3a"), Color("#d8d4c4"), Color("#e8cf7a"), Color("#c8964a")][step if phase == "bread" else 3]
-	draw_circle(Vector2(272, 100), 9, pc)
+	prop_circle(Vector2(272, 100), 9, pc)
 	if phase == "fry":
 		var fc: = Color("#e8cf7a").lerp(Color("#c07a20"), clampf(fry_p, 0, 1))
 		if fry_p > 1.05:
 			fc = Color("#c07a20").lerp(Color("#2a1a0a"), clampf((fry_p - 1.05) / 0.5, 0, 1))
-		draw_rect(Rect2(18, 70, 206, 34), Color("#c89b3c"))
+		prop(Rect2(18, 70, 206, 34), Color("#c89b3c"))
 		for k in total:
-			draw_circle(Vector2(50 + k * 50, 87), 9, fc)
+			prop_circle(Vector2(50 + k * 50, 87), 9, fc)
 		bar(Rect2(18, 108, 206, 5), fry_p / 1.4, fc)
 		draw_rect(Rect2(18 + 206 * 0.8 / 1.4, 106, 206 * 0.25 / 1.4, 9), Color(1, 1, 1, 0.25))

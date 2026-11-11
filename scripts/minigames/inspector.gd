@@ -58,9 +58,9 @@ func debug_solve(good: bool) -> void:
 
 func _draw_game() -> void:
 
-	draw_rect(Rect2(150, 30, 20, 26), Color("#3a3a5a"))
-	draw_rect(Rect2(153, 18, 14, 12), Color("#f2d2b4"))
-	draw_rect(Rect2(170, 36, 10, 14), Color("#f0ead8"))
+	prop(Rect2(150, 30, 20, 26), Color("#3a3a5a"))
+	prop(Rect2(153, 18, 14, 12), Color("#f2d2b4"))
+	prop(Rect2(170, 36, 10, 14), Color("#f0ead8"))
 	txt(Vector2(0, 70), "Observation %d/%d:" % [mini(idx + 1, picks.size()), picks.size()], 8, Color(1, 1, 1, 0.6), HORIZONTAL_ALIGNMENT_CENTER, W)
 	if idx < picks.size():
 		mtxt(Vector2(20, 90), OBS[picks[idx]][0], 280, 8, Color.WHITE, 4)

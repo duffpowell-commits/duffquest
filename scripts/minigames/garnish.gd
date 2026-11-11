@@ -144,13 +144,13 @@ func debug_solve(good: bool) -> void:
 
 func _draw_game() -> void:
 	show_cursor = show_cursor or phase != "drizzle"
-	draw_circle(Vector2(160, 92), 74, Color("#f4f4f8"))
+	prop_circle(Vector2(160, 92), 74, Color("#f4f4f8"))
 
-	draw_rect(Rect2(104, 70, 112, 46), Color("#3a1e14"))
+	prop(Rect2(104, 70, 112, 46), Color("#3a1e14"))
 	draw_rect(Rect2(104, 82, 112, 5), Color("#fbf6ec"))
 	draw_rect(Rect2(104, 97, 112, 5), Color("#fbf6ec"))
 	draw_rect(Rect2(104, 84, 112, 2), Color("#a02030"))
-	draw_rect(Rect2(104, 66, 112, 6), Color("#fbf6ec"))
+	prop(Rect2(104, 66, 112, 6), Color("#fbf6ec"))
 	txt(Vector2(0, 26), ["Trace the drizzle along the dotted zigzag (drag / Space)", "Tap the 3 dots to pipe whipped cream", "Tap each rosette to place a cherry"][["drizzle", "cream", "cherry"].find(phase)], 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
 	if phase == "drizzle":
 		for i in guide.size():
@@ -163,8 +163,8 @@ func _draw_game() -> void:
 		if ink[i] != Vector2.INF and ink[i - 1] != Vector2.INF:
 			draw_line(ink[i - 1], ink[i], Color("#2a120a"), 2.0)
 	for c in creams:
-		draw_circle(c, 6, Color("#ffffff"))
+		prop_circle(c, 6, Color("#ffffff"))
 		draw_circle(c + Vector2(0, -3), 4, Color("#f0f0f0"))
 	for c in cherries:
-		draw_circle(c + Vector2(0, -5), 3.5, Color("#c0102a"))
+		prop_circle(c + Vector2(0, -5), 3.5, Color("#c0102a"))
 		draw_line(c + Vector2(0, -8), c + Vector2(3, -13), Color("#3a6a1a"), 1.0)

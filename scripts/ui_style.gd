@@ -119,6 +119,27 @@ static func _widest(lines: PackedStringArray, size: int) -> float:
 		m = maxf(m, _w(l, size))
 	return m
 
+## Style-lock "prop" (STYLE_LOCK.md L1/L2): a play object in a minigame (oil vat, cutting board, plate,
+## tile, skin patch) drawn like the HD art: hard ink drop shadow, flat fill, ONE hard cel-shadow band on
+## the lower part, thick near-black ink outline. `w` = outline width in the caller's units.
+const PROP_INK: = Color("#14121a")
+
+static func prop(ci: CanvasItem, r: Rect2, fill: Color, w: float = 1.0, shade: float = 0.3) -> void:
+	ci.draw_rect(Rect2(r.position + Vector2(w * 1.5, w * 1.5), r.size), Color(PROP_INK, 0.55 * fill.a))
+	ci.draw_rect(r, fill)
+	if shade > 0.0 and r.size.y > 4.0:
+		var sh: = r.size.y * shade
+		ci.draw_rect(Rect2(r.position.x, r.end.y - sh, r.size.x, sh), Color(fill.darkened(0.22), fill.a))
+	ci.draw_rect(r, Color(PROP_INK, fill.a), false, w * 1.3)
+
+static func prop_circle(ci: CanvasItem, c: Vector2, rad: float, fill: Color, w: float = 1.0) -> void:
+	ci.draw_circle(c + Vector2(w * 1.5, w * 1.5), rad, Color(PROP_INK, 0.55 * fill.a))
+	ci.draw_circle(c, rad, fill)
+	# one hard shadow crescent (lower right), no gradient
+	ci.draw_circle(c + Vector2(rad * 0.18, rad * 0.18), rad * 0.82, Color(fill.darkened(0.2), fill.a))
+	ci.draw_circle(c - Vector2(rad * 0.06, rad * 0.06), rad * 0.8, fill)
+	ci.draw_arc(c, rad, 0, TAU, maxi(16, int(rad * 2.0)), Color(PROP_INK, fill.a), w * 1.3)
+
 ## Round touch button: ink ring, flat fill, display-font letter.
 static func round_button(ci: CanvasItem, c: Vector2, r: float, col: Color, text: String, alpha: float = 0.85) -> void:
 	ci.draw_circle(c + Vector2(1.0, 1.0), r, Color(INK, 0.55 * alpha))

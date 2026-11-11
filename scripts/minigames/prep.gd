@@ -283,10 +283,10 @@ func _draw_game() -> void:
 			var pulse: = 1.0 - fmod(t, BEAT) / BEAT
 			draw_circle(Vector2(270, 50), 8 + pulse * 8, Color(1, 0.8, 0.2, 0.3 + pulse * 0.5))
 			txt(Vector2(240, 80), "Chop on the pulse", 8, Color(1, 1, 1, 0.6))
-			draw_rect(Rect2(40, 60, 170, 60), Color("#b8865a"))
-			draw_circle(Vector2(90, 90), 22, Color("#e04a3a"))
+			prop(Rect2(40, 60, 170, 60), Color("#b8865a"))
+			prop_circle(Vector2(90, 90), 22, Color("#e04a3a"))
 			for i in chops:
-				draw_rect(Rect2(120 + i * 6, 76, 4, 28), Color("#e04a3a"))
+				prop(Rect2(120 + i * 6, 76, 4, 28), Color("#e04a3a"))
 			txt(Vector2(40, 140), "%d / 12 chops" % chops, 8)
 			txt(Vector2(0, 28), "Steady beats only. Rushing = cuts.", 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
 		"stock":
@@ -294,7 +294,7 @@ func _draw_game() -> void:
 			for i in pans.size():
 				var p: Dictionary = pans[i]
 				var r: = Rect2(6 + i * 62, 40, 58, 66)
-				draw_rect(r, Color("#9aa0aa"))
+				prop(r, Color("#9aa0aa"))
 				var lv: float = p["level"]
 				draw_rect(Rect2(r.position.x + 4, r.end.y - 4 - 40 * lv, 50, 40 * lv), Color("#6aa04a"))
 				txt(Vector2(r.position.x, r.position.y + 10), p["n"], 8, Color.BLACK, HORIZONTAL_ALIGNMENT_CENTER, 58)
@@ -307,7 +307,7 @@ func _draw_game() -> void:
 			draw_rect(Rect2(6, 112, 308, 4), Color("#888888"))
 			for i in shelf.size():
 				var r: = _slot_rect(i)
-				draw_rect(r, Color("#f4f4f8"))
+				prop(r, Color("#f4f4f8"))
 				draw_rect(Rect2(r.position.x, r.position.y, r.size.x, 10), Color("#3a5fc8"))
 				txt(Vector2(r.position.x, r.position.y + 26), "MILK", 8, Color.BLACK, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
 				txt(Vector2(r.position.x, r.position.y + 40), "use by", 6, Color(0.3, 0.3, 0.3), HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
@@ -322,5 +322,5 @@ func _draw_game() -> void:
 			txt(Vector2(0, 28), "Tool: %s. Drag to wipe (or arrows + hold Space)." % ("SOAPY WATER" if tool == "soap" else "SANITIZER"), 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
 			for i in cells.size():
 				var c: Color = [Color("#7a6a4a"), Color("#b8c0c8"), Color("#e8f4f0")][cells[i]]
-				draw_rect(_cell_rect(i), c)
+				prop(_cell_rect(i), c)
 			draw_rect(Rect2(60, 40, 200, 80), Color(1, 1, 1, 0.3), false, 1.0)
