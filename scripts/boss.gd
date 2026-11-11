@@ -79,22 +79,24 @@ const BOSSES: = {
 		"taunts": ["Is this water or TAP water?", "I'm a food blogger. 14 followers. All bots. All furious.", "Send it back. No, the plate. No, the building.", "My compliments to the chef. They're all complaints."],
 		"rage": "Sir Sends-It-Back: I want a refund. On this FIGHT.",
 		"defeat": "Sir Sends-It-Back: ...This beating is cooked perfectly. Five stars. Still not tipping." },
-	"coupon": {"name": "Coupon Carol", "hp": 150.0, "attacks": ["coins", "update"],
-		"labels": {"coin": "%", "trap": "EXP" }, "tele": {"coins": "These are DEFINITELY still valid!", "update": "Expired? It's EXTENDED. In my heart." },
+	"coupon": {"name": "Coupon Carol", "hp": 150.0, "attacks": ["storm", "coins", "update"],
+		"labels": {"coin": "%", "trap": "EXP", "coupon": "EXP" }, "tele": {"coins": "These are DEFINITELY still valid!", "update": "Expired? It's EXTENDED. In my heart.", "storm": "*upends a purse made entirely of coupons*" },
 		"intro": "Coupon Carol: 46 coupons, sweetie. Every one's for a different restaurant. Honor ALL of them.",
 		"taunts": ["This one's from 2009. It's vintage. It's worth MORE.", "BOGO means the second beating is free.", "I'd like to stack these. Physically. On you.", "Do you price match? I'm matching THIS price: zero."],
 		"rage": "Coupon Carol: Fine! I'm using the NUCLEAR coupon. The one from the phone book!",
 		"defeat": "Coupon Carol: ...Is there a coupon for getting beat up? Asking for me." },
-	"allergy": {"name": "The Allergy Liar", "hp": 160.0, "attacks": ["seen", "vanish", "seen"],
+	"allergy": {"name": "The Allergy Liar", "hp": 160.0, "attacks": ["gluten", "seen", "vanish"],
+		"stun_wave": "\"IS THERE GLUTEN IN THIS?!\" I freeze. Is there? I don't KNOW anymore.",
 		"labels": {"seen": "ONION" }, "pop": "pop", "pop_line": "SURPRISE! Extra onions!",
-		"tele": {"seen": "I'm DEATHLY allergic! Extra please!", "vanish": "*goes to 'check her EpiPen'*", "pop": "SURPRISE! Extra onions!" },
+		"tele": {"gluten": "Excuse me. EXCUSE ME. Quick question...", "seen": "I'm DEATHLY allergic! Extra please!", "vanish": "*goes to 'check her EpiPen'*", "pop": "SURPRISE! Extra onions!" },
 		"intro": "The Allergy Liar: I'm deathly allergic to onions. Anyway, the onion rings, please. Hold the guilt.",
 		"taunts": ["Gluten-free! On a regular bun! Toasted in gluten!", "I'm lactose intolerant. Of your attitude.", "It's not an allergy, it's a PREFERENCE. In red ink.", "Can you make it vegan but with bacon?"],
 		"rage": "The Allergy Liar: You made me break out! In RAGE!",
 		"defeat": "The Allergy Liar: ...Okay. I'm not allergic. I just like the drama. And the free dessert." },
-	"camper": {"name": "The Four-Hour Camper", "hp": 170.0, "attacks": ["flex", "curl", "curl"],
+	"camper": {"name": "The Four-Hour Camper", "hp": 170.0, "attacks": ["lasso", "flex", "curl"],
+		"lasso_line": "Tangled in his charger. He's at 3%. I'm at 0%.",
 		"swap": {"dumbbell": "mug" }, "flex_line": "Still drinking that. (Cup's empty.)",
-		"tele": {"flex": "*opens 47 browser tabs*", "curl": "Refill? And another? And another?" },
+		"tele": {"lasso": "*unspools a 40-foot charger cord*", "flex": "*opens 47 browser tabs*", "curl": "Refill? And another? And another?" },
 		"intro": "The Four-Hour Camper: One coffee. Four hours. Six outlets. I'm building a startup. It's an app that finds outlets.",
 		"taunts": ["What's the wifi password? ...What's the NEW one?", "I'm not loitering, I'm networking. With the outlet.", "Can you turn the music down? I'm on a call. With my mom.", "I'll order when the vibe is right. The vibe is never right."],
 		"rage": "The Four-Hour Camper: My laptop's at 3%! This is a CRISIS!",
@@ -125,6 +127,7 @@ const TELE: = {
 	"drop": [0.9, "Wait for it... wait for it..."], "vape": [0.6, "*long inhale*"],
 	"nft": [0.7, "Minting! Early investors only!"], "rug": [0.4, "Trust the roadmap, bro."],
 	"spray": [0.5, "*ka-chunk*"], "vent": [0.4, "*crawls into the air vent*"],
+	"storm": [0.7, "*rummages in the purse*"], "lasso": [0.55, "*swings the cord*"], "gluten": [0.6, "Quick question..."],
 }
 
 var m: Node = null
@@ -285,7 +288,7 @@ func _minions(k: String) -> int:
 	return n
 
 const AudioScript: = preload("res://scripts/audio.gd")
-const ATTACK_SFX: = {"rocket": "whoosh", "shine": "laser", "spray": "gun", "coins": "coin", "drones": "whoosh", "bsod": "fail", "tariff": "honk", "nft": "coin", "drop": "explosion", "vape": "hiss" }
+const ATTACK_SFX: = {"rocket": "whoosh", "shine": "laser", "spray": "gun", "coins": "coin", "drones": "whoosh", "bsod": "fail", "tariff": "honk", "nft": "coin", "drop": "explosion", "vape": "hiss", "storm": "coin", "lasso": "whoosh", "gluten": "honk" }
 
 func _attack(to: Vector2) -> void:
 	var p: Vector2 = m.player.global_position
@@ -377,6 +380,21 @@ func _attack(to: Vector2) -> void:
 			rg.size = Vector2(70, 40) if not enraged else Vector2(90, 50)
 			rg.fuse = 1.1
 			rg.life = 2.0
+		"storm":   # Coupon Carol's signature: expired coupons rain on shadows; three on Duff, the rest anywhere
+			var nk: = 12 if enraged else 8
+			for i in nk:
+				var at: = p + Vector2.from_angle(TAU * i / 3.0) * 18.0 if i < 3 else \
+					_clamp_arena(m.ARENA_ORIGIN + Vector2(randf_range(20.0, m.ARENA_SIZE.x - 20.0), randf_range(40.0, m.ARENA_SIZE.y - 20.0)))
+				var cp: = _proj("coupon", _clamp_arena(at), Vector2.ZERO, 6.0)
+				cp.fuse = 0.75 + i * 0.09
+				cp.life = cp.fuse + 2.5
+		"lasso":   # the Camper's signature: a charger cord that yanks Duff in and tangles him
+			var cd: = _proj("cord", global_position, aim * (175.0 if enraged else 150.0), 6.0)
+			cd.life = 1.1
+		"gluten":  # the Allergy Liar's signature: a shout ring that stuns unless Duff rolls through it
+			var gw: = _proj("gluten", global_position, Vector2.ZERO, 4.0)
+			gw.fuse = 0.15
+			gw.life = 3.0
 		"spray":
 			var nb: = 14 if enraged else 10
 			for i in nb:

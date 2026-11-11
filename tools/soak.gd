@@ -248,9 +248,9 @@ func _stall_check() -> void:
 
 func _dump() -> String:
 	var ui: Node = m.shift.current if m.in_shift and m.shift else m.overlay_node
-	return "loc=%s clock=%s busy=%s shift=%s ui=%s heading=%s dialog=%d ko=%s loading=%s cal=%s arena=%s/%s boss=%s enemies=%d" % [
+	return "loc=%s clock=%s busy=%s shift=%s ui=%s heading=%s dialog=%d ko=%s loading=%s cal=%s arena=%s/%s boss=%s enemies=%d title=%s tut=%s" % [
 		m.location, m.clock_text(), m.busy(), m.in_shift, _cls(ui), str(ui.get("heading")) if ui else "", m.dialog.size(),
-		m.ko_kind, m.loading_on, m.calendar_on, m.arena_mode, m.arena_id, _cls(m.current_boss()), m.live_enemies().size()]
+		m.ko_kind, m.loading_on, m.calendar_on, m.arena_mode, m.arena_id, _cls(m.current_boss()), m.live_enemies().size(), m.in_title, m.tut != null and m.tut.active()]
 
 func _cls(n: Node) -> String:
 	if n == null:
@@ -287,6 +287,11 @@ func _drive() -> void:
 		cover("ko:" + k)
 		if ko_seen.has(k) and ko_node and float(ko_node.get("bt")) > 1.0:
 			ko_node._next()
+		return
+	if m.tut != null and m.tut.active():   # phone control cards (touch only): a player taps each one away
+		cover("touch_tutorial")
+		if float(m.tut.t) > 0.8:
+			m.tut.next()
 		return
 	if m.loading_on:
 		cover("loading_screen")

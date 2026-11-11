@@ -16,7 +16,7 @@ var used: = false
 var wall_body: StaticBody2D = null
 var size: = Vector2(40, 8)
 var label: = ""
-const SPECIAL: = ["strike", "laser", "wave", "trap", "wall", "bass", "cloud", "rug", "glass"]
+const SPECIAL: = ["strike", "laser", "wave", "trap", "wall", "bass", "cloud", "rug", "glass", "coupon", "cord", "gluten"]
 var tick: = 0.0
 
 func _ready() -> void:
@@ -118,14 +118,33 @@ func _special(delta: float) -> void:
 					m.hurt_player(dmg, global_position - Vector2(0, 30), 260.0, "rug")
 		"glass":
 			pass
-		"wave":
+		"coupon":   # lands when the fuse runs out, then lies on the floor as litter
+			if fuse <= 0.0 and not used:
+				used = true
+				if _hit_check(11.0) and not p.rolling():
+					m.hurt_player(dmg, global_position, 120.0, "coupon")
+		"cord":
+			if not used:
+				position += vel * delta
+				if p and _hit_check(9.0) and not p.rolling():
+					used = true
+					life = 0.3
+					var from_boss: = Vector2.ZERO
+					if is_instance_valid(thrower):
+						from_boss = (p.global_position - thrower.global_position).normalized()
+					# hurt_player knocks AWAY from `from`; put `from` behind Duff so the yank pulls him toward the Camper
+					m.hurt_player(dmg, p.global_position + from_boss * 20.0, 240.0, "lasso")
+					m.stun_player(0.5, _thrower_line("lasso_line", "Tangled in a charger cord."))
+				elif not _in_bounds():
+					life = 0.0
+		"wave", "gluten":
 			if fuse <= 0.0:
 				radius += 110.0 * delta
 				if p and not used and absf(global_position.distance_to(p.global_position) - radius) < 5.0:
 					used = true
 					if not p.rolling():
 						m.stun_player(1.0, _thrower_line("stun_wave", "Your {hero} ran into a problem and needs to restart."))
-						m.hurt_player(dmg, global_position, 0.0, "bsod")
+						m.hurt_player(dmg, global_position, 0.0, "bsod" if kind == "wave" else kind)
 				if radius > 220.0:
 					life = 0.0
 		"trap":
@@ -219,6 +238,54 @@ func _draw() -> void:
 				var o: = Vector2.from_angle(a) * 4.0
 				draw_line(o, o + Vector2.from_angle(a + 1.0) * 3.0, Color("#c8f0ff"), 1.0)
 			draw_circle(Vector2.ZERO, 1.0, Color("#e8ffff"))
+		"coupon":
+			var land: = clampf(fuse, 0.0, 1.6)
+			if fuse > 0.0:   # shadow grows as it falls, paper flutters down from above
+				var sh: = 10.0 * (1.0 - land / 1.6) + 3.0
+				draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.0, 0.45))
+				draw_circle(Vector2.ZERO, sh, Color(0.08, 0.05, 0.1, 0.45))
+				draw_arc(Vector2.ZERO, 12.0, 0, TAU, 20, Color(1, 0.3, 0.3, 0.6 if blink else 0.3), 1.0)
+				draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			var y: = -land * 70.0
+			var wob: = sin(spin * 0.7) * 0.5 if fuse > 0.0 else 0.25
+			draw_set_transform(Vector2(sin(spin * 0.5) * 4.0 * land, y), wob, Vector2.ONE)
+			var cr: = Rect2(-8, -4, 16, 8)
+			draw_rect(Rect2(cr.position + Vector2(1, 1), cr.size), Color(0.08, 0.06, 0.1, 0.5))
+			draw_rect(cr, Color("#fff1d6"))
+			for dx in range(-8, 8, 3):   # dashed cut-here border
+				draw_line(Vector2(dx, -4), Vector2(dx + 1.5, -4), Color("#c0443c"), 1.0)
+				draw_line(Vector2(dx, 4), Vector2(dx + 1.5, 4), Color("#c0443c"), 1.0)
+			draw_rect(cr, Color("#1e1220"), false, 0.8)
+			draw_string(f, Vector2(-7, 2), label if label != "" else "50%", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#c0443c"))
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		"cord":
+			var tail: = Vector2.ZERO
+			if is_instance_valid(thrower):
+				tail = thrower.global_position - global_position
+			var pts: = PackedVector2Array()
+			var n: = 10
+			for i in n + 1:   # a slack, wiggling cable from the Camper's laptop to the plug
+				var k: = float(i) / n
+				var side: = tail.orthogonal().normalized() * sin(k * PI * 3.0 + spin) * 3.0 * (1.0 - k)
+				pts.append(tail * (1.0 - k) + side)
+			draw_polyline(pts, Color("#1e1220"), 2.0)
+			draw_polyline(pts, Color("#5a5a66"), 1.0)
+			draw_rect(Rect2(-3, -2.5, 6, 5), Color("#f0f0f0"))
+			draw_rect(Rect2(-3, -2.5, 6, 5), Color("#1e1220"), false, 0.8)
+			draw_line(Vector2(3, -1.2), Vector2(5, -1.2), Color("#c0c0c8"), 0.8)
+			draw_line(Vector2(3, 1.2), Vector2(5, 1.2), Color("#c0c0c8"), 0.8)
+		"gluten":
+			if fuse > 0.0:
+				draw_arc(Vector2.ZERO, 10.0, 0, TAU, 16, Color("#e8b84a"), 2.0)
+			else:
+				draw_arc(Vector2.ZERO, radius, 0, TAU, 48, Color("#1e1220"), 5.0)
+				draw_arc(Vector2.ZERO, radius, 0, TAU, 48, Color("#e8b84a"), 3.0)
+				for i in 6:   # little wheat-ear ticks riding the ring
+					var a: = TAU * i / 6.0 + radius * 0.01
+					var at: = Vector2.from_angle(a) * radius
+					draw_line(at, at + Vector2.from_angle(a) * 5.0, Color("#c08a2a"), 1.5)
+				if radius < 70.0:
+					draw_string(f, Vector2(-26, -radius - 4), "GLUTEN?!", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color("#e8b84a"))
 		"wave":
 			if fuse > 0.0:
 				draw_arc(Vector2.ZERO, 10.0, 0, TAU, 16, Color("#2050d0"), 2.0)
