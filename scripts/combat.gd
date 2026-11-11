@@ -24,8 +24,8 @@ const SPECIALS: = [
 		"desc": "A plate spins out and comes back. Hits both ways." },
 	{"id": "julienne", "name": "Julienne Jamboree", "short": "Julienne", "lvl": 3, "cost": 25.0,
 		"desc": "Dash through the crowd. A beat later, everyone you passed gets sliced." },
-	{"id": "holler", "name": "Heard-Chef Holler", "short": "Holler", "lvl": 4, "cost": 30.0,
-		"desc": "HEARD, CHEF! Stuns everyone close and swats thrown junk." },
+	{"id": "holler", "name": "Line-Cook Holler", "short": "Holler", "lvl": 4, "cost": 30.0,
+		"desc": "BEHIND!! Stuns everyone close and swats thrown junk." },
 	{"id": "counter", "name": "Cast-Iron Counter", "short": "Counter", "lvl": 5, "cost": 10.0,
 		"desc": "Skillet up. Get hit in the window and it bounces back." },
 	{"id": "brulee", "name": "Brulee Blitz", "short": "Brulee", "lvl": 6, "cost": 30.0,
@@ -474,7 +474,7 @@ func _holler(sp: Dictionary) -> void:
 	AudioScript.sfx("honk", 0.7)
 	if fx:
 		fx.ring(c, 62.0, Color("#ffe080"))
-		fx.text(c + Vector2(0, -30), "HEARD, CHEF!", Color("#ffe080"), 1.2, 9)
+		fx.text(c + Vector2(0, -30), "BEHIND!!", Color("#ffe080"), 1.2, 9)
 	for e in get_tree().get_nodes_in_group("enemy"):
 		if is_instance_valid(e) and e.global_position.distance_to(c) < 62.0:
 			hit(e, (e.global_position - c).normalized(), _atk() * 0.5, "stun", 0.0)

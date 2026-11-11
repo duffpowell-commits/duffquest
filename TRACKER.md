@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (late night)** "Heard." moved into the kitchens only (Duff): stripped from the intro ("That's the whole
+  religion. Amen."), the raccoon gag, the gala, a combat toast, the grocery coupon win and the mirror line; the
+  Heard-Chef Holler skill is now the Line-Cook Holler ("BEHIND!!"). Added where it belongs: the Fork's between-station
+  button reads "Heard.", the 86 warning, and Duff answers about one in three of Dolores's Waffle Haus calls.
+  `test_daily` fails if "Heard." / "HEARD!" shows up outside waffle.gd, shift.gd or the sandwich station.
 - **2026-11-10 (late night)** 4G first boot 55.5 s -> 17.0 s (IGN v2 "~60 s on 4G"), measured in headless Chrome on
   a throttled 9 Mbit/s link against the real web build. First download 61 MB -> 17.6 MB: the game pack drops to
   8.3 MB (KO stills, boss intro cards, 12 loading screens, 9 scene backdrops stream in after boot as extra.pck,

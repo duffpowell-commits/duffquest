@@ -233,9 +233,9 @@ func _next(prev: Dictionary) -> void:
 	if nxt["ctx"].get("steal", false):
 		lines.append("!! I catch Brayden eyeing my sandwich tickets. Not on my line, bud.")
 	if nxt["ctx"].get("eighty_six", false):
-		lines.append("!! Something's about to get 86'd. Leave it off or comp the ticket.")
+		lines.append("!! Something's about to get 86'd. Heard. Leave it off or comp the ticket.")
 	lines.append("NEXT: %s. %s" % [NAMES[k], HELP[k]])
-	var opts: Array = [["go", "Let's go", KEY_SPACE]]
+	var opts: Array = [["go", "Heard.", KEY_SPACE]]
 	if can_autopilot(k) and nxt["ctx"].is_empty():
 		lines.append("I've S'd this station before. I could do it asleep. Basically am.")
 		opts.append(["auto", "Autopilot (B)", KEY_2])

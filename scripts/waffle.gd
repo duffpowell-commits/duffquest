@@ -28,6 +28,8 @@ const MENU: = [
 	["CHEESE N EGG", "Cheese 'n eggs. Scrambled hard, like my soul."],
 ]
 const CALLS: = ["Order in!", "Ticket!", "Hon, you got one!", "Fire it!", "Order up, sugar!"]
+## Duff answers about one call in three. "Heard" lives in the kitchens (Waffle Haus, the Fork) and nowhere else.
+const HEARD: = ["Heard.", "Heard, Dolores.", "Heard. Already on the flat-top.", "HEARD."]
 
 var m: Node = null
 var t: = 0.0
@@ -93,6 +95,8 @@ func _orders(delta: float) -> void:
 			call_line = "%s %s" % [CALLS[randi() % CALLS.size()], it[1]]
 			call_t = 3.5
 			AudioScript.sfx("select")
+			if randi() % 3 == 0:
+				m._toast(HEARD[randi() % HEARD.size()])
 	for i in range(tickets.size() - 1, -1, -1):
 		var tk: Dictionary = tickets[i]
 		match str(tk["state"]):
