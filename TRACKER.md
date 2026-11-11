@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-11** Last teal slabs painted (IGN v3 audit): props sheet K6 (16 props). Kwik-N-Go is a shelf of picture
+  tiles (honey bun, formula can, diapers, cherries...); the temp check grills a real raw cut per protein (chicken,
+  turkey, beef, pork chop, ribeye, salmon; wings reuse the Fork wings, paled while raw) that browns as the core climbs;
+  baby FEED/CHANGE carry the formula and diaper props. `docs/renders/shop_baby_temp_after.png`. IGN review v3: 7.9/10
+  (`docs/reviews/ign_review_2026-11-11_v3.md`). Soak PASS.
 - **2026-11-11** Street ground repainted: the flat tile crossroads is now one detailed pixel painting (lane lines,
   cracks, manhole, slab sidewalks, flowers and leaves in the grass) matched to the home interior's style, its roads
   fitted onto the gameplay roads by `tools/import_street.py`. Soak PASS.

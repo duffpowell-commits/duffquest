@@ -32,9 +32,10 @@ func _setup() -> void:
 	if randf() < 0.3:
 		needs = [needs[0]]
 	needs.append("fussy")
-	add_button("feed", Rect2(6, 150, 100, 24), "FEED (bottle)", KEY_1, Color("#43668e"))
-	add_button("change", Rect2(110, 150, 100, 24), "CHANGE DIAPER", KEY_2, Color("#6a5a3a"))
-	add_button("rock", Rect2(214, 150, 100, 24), "ROCK HER", KEY_SPACE, Color("#a8406a"))
+	add_button("feed", Rect2(6, 150, 100, 24), "FEED", KEY_1, Color("#43668e"))["icon"] = "kf_shop_formula"
+	add_button("change", Rect2(110, 150, 100, 24), "CHANGE", KEY_2, Color("#6a5a3a"))["icon"] = "kf_shop_diapers"
+	var rock: = add_button("rock", Rect2(214, 150, 100, 24), "ROCK HER", KEY_SPACE, Color("#a8406a"))
+	rock["badge"] = "Z"   # no prop for a lullaby; a sleepy badge keeps the row the same card style
 
 func need() -> String:
 	return needs[0] if not needs.is_empty() else ""

@@ -31,6 +31,10 @@ SHEETS = {
     "k5_sheet.png": ["gear_spatula", "gear_skillet", "gear_knife", "gear_tenderizer", "gear_flail", "gear_cleaver",
                      "gear_apron", "gear_clogs", "gear_sleeves", "gear_coat", "gear_dad", "gear_shades",
                      "door", "hand_dry", "hand_wet", "gear_locked"],
+    # Kwik-N-Go shelf + temp-check raw proteins (Nov 11)
+    "k6_sheet.png": ["shop_honey", "shop_formula", "shop_diapers", "shop_cherries", "shop_chocolate", "shop_cream",
+                     "shop_flour", "shop_eggs", "shop_treats", "shop_ensure", "raw_chicken", "raw_turkey",
+                     "raw_beef", "raw_pork", "raw_ribeye", "raw_salmon"],
 }
 
 
