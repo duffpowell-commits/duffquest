@@ -5,6 +5,9 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-11** Street ground repainted: the flat tile crossroads is now one detailed pixel painting (lane lines,
+  cracks, manhole, slab sidewalks, flowers and leaves in the grass) matched to the home interior's style, its roads
+  fitted onto the gameplay roads by `tools/import_street.py`. Soak PASS.
 - **2026-11-11** Boss taunts: the "I'm not X. I'm Y." reframe was 9 of 68 lines; 12 rewritten (Husk films the
   beatdown "in vertical, for the investors", the Regular has been sitting there "since Truman", the crypto bro's wallet
   password was his ex's birthday). New test caps the formula at 2 and bans shared openers. Last slab screens: Gear
