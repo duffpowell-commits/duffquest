@@ -7,7 +7,7 @@ fight exes and porch pirates. Godot 4.5, GDScript, 640×360 viewport (1280×720 
 `CLAUDE_REFERENCE.md` (itch target, art tools, key facts). History: `docs/handoffs/SESSION_LOG.md` (old long log)
 and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
-## Status (Nov 10, 2026 evening)
+## Status (Nov 10, 2026 late night)
 - **main is green and live.** GitHub `duffpowell-commits/duffquest` is the ONLY home. GitLab is dropped for now
   (Duff, Nov 10): don't push there, don't ask for a GitLab token. `.github/workflows/mirror_gitlab.yml` exists and
   skips cleanly without its secret; leave it or delete it, it does nothing.
@@ -31,8 +31,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
    `scripts/touch_tutorial.gd`, render `docs/renders/touch_onboarding.png`). UI style pass 1 DONE
    (Nov 10 night): house-style props in 15 minigames, sunburst behind art-less screens, phone wallpaper, store and
    pharmacy grids moved right so the paintings show. Before/after: `docs/renders/ui_audit_{before,after}.png`.
-   Next: **UI style pass 2** (stealth floor still a checkerboard; quiz/inspector/temp-check answer buttons are full
-   teal slabs; backwalk/blackheads still flat shapes) + sprite-vs-painting scale in arenas. Then one signature move
+   UI style pass 2 DONE (Nov 10 late night): stealth is a night plank floor with warped creaky boards, a crib and
+   a bed, lit step tiles; blackheads is Duff's tattooed back; backwalk is Duff face-down with the real Madison sprite
+   walking him; quiz + inspector answers are index cards with key badges (`UiStyle.card_button`, set `b["badge"]`);
+   temp check has a real grill + sear marks. Render: `docs/renders/ui_pass2_before_after.png`.
+   Next: sprite-vs-painting scale in arenas. Then one signature move
    per bounty boss; 4G first boot (~60 s, 38 MB wasm).
 
 ## Commands (cloud sandbox)

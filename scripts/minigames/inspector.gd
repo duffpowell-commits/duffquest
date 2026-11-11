@@ -30,8 +30,12 @@ func _setup() -> void:
 	var ids: = range(OBS.size())
 	ids.shuffle()
 	picks = ids.slice(0, 4)
-	add_button("ok", Rect2(10, 140, 145, 32), "COMPLIANT", KEY_1, Color("#4e7a3a"))
-	add_button("bad", Rect2(165, 140, 145, 32), "VIOLATION", KEY_2, Color("#a43a2c"))
+	var ok: = add_button("ok", Rect2(10, 140, 145, 32), "COMPLIANT", KEY_1)
+	ok["badge"] = "OK"
+	ok["badge_col"] = Color("#4e9a3a")
+	var bad: = add_button("bad", Rect2(165, 140, 145, 32), "VIOLATION", KEY_2)
+	bad["badge"] = "X"
+	bad["badge_col"] = Color("#c23a2c")
 
 func call_it(violation: bool) -> void:
 	var o: Array = OBS[picks[idx]]
@@ -57,10 +61,13 @@ func debug_solve(good: bool) -> void:
 		call_it(v if good else not v)
 
 func _draw_game() -> void:
-
-	prop(Rect2(150, 30, 20, 26), Color("#3a3a5a"))
-	prop(Rect2(153, 18, 14, 12), Color("#f2d2b4"))
-	prop(Rect2(170, 36, 10, 14), Color("#f0ead8"))
-	txt(Vector2(0, 70), "Observation %d/%d:" % [mini(idx + 1, picks.size()), picks.size()], 8, Color(1, 1, 1, 0.6), HORIZONTAL_ALIGNMENT_CENTER, W)
+	# Tiny the inspector, real sprite, clipboard up
+	draw_set_transform(Vector2(160, 64), 0.0, Vector2(2, 2))
+	Art.person(self, "ch_inspector", Vector2.ZERO, Vector2.DOWN, t, false)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# the observation on a clipboard sheet
+	var cr: = Rect2(30, 70, 260, 62)
+	UiStyle.prop(self, cr, UiStyle.CREAM, 1.0 / 1.5, 0.12)
+	txt(Vector2(36, 82), "Observation %d/%d" % [mini(idx + 1, picks.size()), picks.size()], 7, Color(UiStyle.INK, 0.6))
 	if idx < picks.size():
-		mtxt(Vector2(20, 90), OBS[picks[idx]][0], 280, 8, Color.WHITE, 4)
+		mtxt(Vector2(36, 96), OBS[picks[idx]][0], 248, 9, UiStyle.INK, 3)

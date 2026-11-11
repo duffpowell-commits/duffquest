@@ -234,6 +234,10 @@ func _draw() -> void:
 	_draw_game()
 	for b in buttons:
 		var r: Rect2 = b["rect"]
+		if b.has("badge"):   # answer card (quiz, inspector): the badge already shows the key
+			UiStyle.card_button(self, r, Cast.T(str(b["label"])), str(b["badge"]), b.get("badge_col", UiStyle.TEAL),
+				b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
+			continue
 		UiStyle.button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
 		if int(b["key"]) != 0 and not Cast.touch:   # key chips are keyboard-only; phones never see "Space"/"Escape"
 			txt(r.position + Vector2(2, 7), OS.get_keycode_string(int(b["key"])), 6, Color(1, 1, 1, 0.45))

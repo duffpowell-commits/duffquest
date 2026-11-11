@@ -22,8 +22,11 @@ func _setup() -> void:
 	picks = ids.slice(0, count)
 	var rects: = [Rect2(6, 96, 151, 37), Rect2(163, 96, 151, 37), Rect2(6, 138, 151, 37), Rect2(163, 138, 151, 37)]
 	var keys: = [KEY_1, KEY_2, KEY_3, KEY_4]
+	var badge_cols: = [UiStyle.GOLD, UiStyle.PINK, UiStyle.TEAL, Color("#8a6ad0")]
 	for i in 4:
-		add_button("c%d" % i, rects[i], "", keys[i])
+		var b: = add_button("c%d" % i, rects[i], "", keys[i])
+		b["badge"] = str(i + 1)
+		b["badge_col"] = badge_cols[i]
 	_load_q()
 
 func current() -> Dictionary:
@@ -35,7 +38,7 @@ func _load_q() -> void:
 	var q: = current()
 	for i in 4:
 		var b: = get_button("c%d" % i)
-		b["label"] = _wrap(str(q["a"][order[i]]), 140.0)
+		b["label"] = str(q["a"][order[i]])   # card_button word-wraps with the real font
 		b["col"] = Color("#57504e")
 	phase = "ask"
 	q_t = 0.0
@@ -109,5 +112,9 @@ func _draw_game() -> void:
 	txt(Vector2(4, 24), "Question %d/%d" % [mini(idx + 1, count), count], 8, Color(1, 1, 1, 0.6))
 	if phase == "ask":
 		bar(Rect2(200, 18, 114, 5), 1.0 - q_t / Q_TIME, Color("#e6a640"))
-	mtxt(Vector2(6, 38), str(current()["q"]), 308, 8, Color.WHITE, 5)
+	# the question on the lineup clipboard: cream paper, ink border, gold clip
+	var qr: = Rect2(6, 30, 308, 58)
+	UiStyle.prop(self, qr, UiStyle.CREAM, 1.0 / 1.5, 0.12)
+	prop(Rect2(144, 26, 32, 7), UiStyle.GOLD, 0.0)
+	mtxt(Vector2(12, 46), str(current()["q"]), 296, 9, UiStyle.INK, 4)
 	txt(Vector2(260, 9), "%d correct" % correct, 8, Color("#c0d890"))

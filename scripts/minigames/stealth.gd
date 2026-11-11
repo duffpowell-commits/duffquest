@@ -18,6 +18,8 @@ var cat_t: = 0.0
 func _setup() -> void:
 	title = "BABY'S FINALLY ASLEEP"
 	music = "home"
+	backdrop = "nursery"
+	backdrop_dim = 0.62
 	time_limit = 40.0
 	space_is_pen = false
 	_gen()
@@ -154,21 +156,67 @@ func debug_solve(good: bool) -> void:
 			last_move = -10.0
 			step(Vector2i(1, 0))
 
-func _draw_game() -> void:
-	for x in COLS:
-		for y in ROWS:
-			var v: = Vector2i(x, y)
-			var r: = _tile_rect(v)
-			prop(r, Color("#7a5a3a") if (x + y) % 2 == 0 else Color("#74563a"), 0.18)
-			if creaky.has(v):
-				draw_line(r.position + Vector2(5, 8), r.position + Vector2(13, 14), Color(0, 0, 0, 0.35), 1.0)
-				draw_line(r.position + Vector2(13, 14), r.position + Vector2(19, 10), Color(0, 0, 0, 0.35), 1.0)
-	prop(_tile_rect(Vector2i(0, 2)).grow(-3), Color("#c8b8e8"))
-	prop(_tile_rect(goal).grow(-2), Color("#6a7ab0"))
-	txt(_tile_rect(goal).position + Vector2(2, 16), "BED", 7)
-	Art.frame(self, "baby", _tile_rect(Vector2i(0, 2)).get_center(), 0, 0)
-	for c in cats:
+const WOOD: = [Color("#7a5236"), Color("#6c4830")]
 
+func _draw_game() -> void:
+	var floor: = Rect2(ORIGIN - Vector2(1, 1), Vector2(COLS * TILE + 1, ROWS * TILE + 1))
+	UiStyle.prop(self, floor, WOOD[0], 1.0, 0.0)
+	# one plank per row; board joints staggered every other row, tile seams only as faint grain breaks
+	for y in ROWS:
+		var row: = Rect2(ORIGIN.x, ORIGIN.y + y * TILE, COLS * TILE - 1, TILE - 1)
+		draw_rect(row, WOOD[y % 2])
+		draw_rect(Rect2(row.position.x, row.end.y - 5, row.size.x, 5), WOOD[y % 2].darkened(0.18))
+		for k in 3:   # grain
+			var gy: = row.position.y + 6 + k * 6
+			draw_line(Vector2(row.position.x + 4 + (y * 37 + k * 53) % 40, gy), Vector2(row.end.x - (k * 29) % 50, gy),
+				Color(WOOD[y % 2].darkened(0.28), 0.5), 0.6)
+		for x in range(2 if y % 2 == 0 else 1, COLS, 2):
+			draw_line(Vector2(ORIGIN.x + x * TILE - 0.5, row.position.y), Vector2(ORIGIN.x + x * TILE - 0.5, row.end.y),
+				UiStyle.PROP_INK, 1.0)
+		draw_line(Vector2(row.position.x, row.end.y + 0.5), Vector2(row.end.x, row.end.y + 0.5), UiStyle.PROP_INK, 1.0)
+	for x in COLS:   # faint tile ticks so you can count steps
+		for y in ROWS:
+			var r: = _tile_rect(Vector2i(x, y))
+			draw_rect(r, Color(1, 1, 1, 0.04), false, 0.5)
+	# creaky boards: warped up, lit edge, an ink crack, little creak marks
+	for v in creaky:
+		var r: = _tile_rect(v)
+		draw_rect(Rect2(r.position + Vector2(1, 1), r.size - Vector2(2, 6)), WOOD[v.y % 2].lightened(0.12))
+		draw_line(r.position + Vector2(2, 2), Vector2(r.end.x - 2, r.position.y + 2), Color("#f2c88a", 0.7), 1.0)
+		var crack: = PackedVector2Array([r.position + Vector2(4, 9), r.position + Vector2(10, 14), r.position + Vector2(14, 10),
+			r.position + Vector2(21, 15)])
+		draw_polyline(crack, UiStyle.PROP_INK, 1.2)
+		for k in 2:
+			var a: = r.position + Vector2(18 + k * 3, 3)
+			draw_line(a, a + Vector2(2, -3), Color(UiStyle.CREAM, 0.55), 0.8)
+	# nightlight glow by the crib, cool moonlight on the floor
+	for k in 4:
+		draw_circle(_tile_rect(Vector2i(0, 2)).get_center(), 42.0 - k * 9.0, Color("#ffd27a", 0.05))
+	draw_rect(Rect2(ORIGIN, Vector2(COLS * TILE, ROWS * TILE)), Color("#1a2450", 0.18))
+	# tiles you can step to: dashed cream outline (touch players tap these)
+	if not done:
+		for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			var nv: Vector2i = pos + d
+			if nv.x >= 0 and nv.y >= 0 and nv.x < COLS and nv.y < ROWS:
+				var nr: = _tile_rect(nv).grow(-2)
+				var a: = 0.35 + 0.2 * sin(t * 5.0)
+				draw_rect(nr, Color(UiStyle.CREAM, a), false, 1.0)
+	# crib (start)
+	var cr: = _tile_rect(Vector2i(0, 2)).grow(-1)
+	prop(cr, Color("#e8dcf6"), 0.2)
+	for k in range(1, 5):
+		draw_line(Vector2(cr.position.x + k * cr.size.x / 5.0, cr.position.y + 2), Vector2(cr.position.x + k * cr.size.x / 5.0, cr.end.y - 2),
+			Color("#9a88c0"), 1.0)
+	Art.frame(self, "baby", cr.get_center(), 0, 0)
+	# bed (goal): headboard against the wall, navy blanket, cream pillow
+	var g: = _tile_rect(goal)
+	var bed: = Rect2(g.position.x - 2, g.position.y - 10, W - g.position.x - 2, g.size.y + 20)
+	prop(Rect2(bed.end.x - 6, bed.position.y - 4, 6, bed.size.y + 8), Color("#4a2e22"), 0.2)
+	prop(Rect2(bed.position, bed.size - Vector2(6, 0)), Color("#34407a"), 0.25)
+	prop(Rect2(bed.end.x - 22, bed.position.y + 6, 14, bed.size.y - 12), UiStyle.CREAM, 0.2)
+	draw_line(bed.position + Vector2(8, 4), bed.position + Vector2(8, bed.size.y - 4), Color("#4a58a0"), 2.0)
+	UiStyle.label(self, Vector2(bed.position.x, bed.end.y + 9), "BED", 8, UiStyle.GOLD, bed.size.x, HORIZONTAL_ALIGNMENT_CENTER, 2)
+	for c in cats:
 		var dv: Vector2i = c["d"]
 		var cs: = {"{cat1}": "cat_alastor", "{cat2}": "cat_lucifer" }.get(str(c["n"]), "cat_freya") as String
 		draw_set_transform(_tile_rect(c["p"]).get_center() + Vector2(0, 6), 0.0, Vector2(1.5, 1.5))
@@ -177,6 +225,6 @@ func _draw_game() -> void:
 	var pr: = _tile_rect(pos)
 	var dn: = "duff_%s_red" % (duff_armor if ["apron", "clogs", "sleeves", "coat", "dad"].has(duff_armor) else "apron")
 	Art.person(self, dn, pr.get_center() + Vector2(0, 11), Vector2.RIGHT, t, false)
-	txt(Vector2(30, 24), "Noise", 8)
+	UiStyle.label(self, Vector2(30, 24), "Noise", 8, UiStyle.CREAM, -1.0, HORIZONTAL_ALIGNMENT_LEFT, 2)
 	bar(Rect2(62, 18, 120, 7), noise / 100.0, Color("#e06a4a"))
-	txt(Vector2(30, 172), "Tap a neighbor tile or use arrows. Cracked boards creak. Avoid the cats.", 7, Color(1, 1, 1, 0.6))
+	txt(Vector2(30, 172), "Tap a lit tile or use arrows. Warped boards creak. Avoid the cats.", 7, Color(1, 1, 1, 0.75))

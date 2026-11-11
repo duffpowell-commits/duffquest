@@ -63,35 +63,49 @@ func _on_button(id: String) -> void:
 	else:
 		say = "I go too early. Now she's balancing on one foot."
 
+const SKIN: = Color("#e9b994")
+
 func _draw_game() -> void:
-	prop(Rect2(40, 98, 240, 22), Color("#4a3a6a"))
-
-	prop(Rect2(60, 92, 170, 14), Color("#fbf6ec"))
-	prop(Rect2(230, 90, 18, 16), Color("#f2d2b4"))
-	draw_rect(Rect2(232, 88, 14, 5), Color("#6e5236"))
-	prop(Rect2(30, 94, 30, 10), Color("#3a3a5a"))
-
+	# the bed, side view: frame, mattress, blanket bunched at the foot, pillow at the head
+	prop(Rect2(26, 112, 268, 12), Color("#4a2e22"), 0.3)
+	prop(Rect2(30, 100, 260, 14), Color("#e8e2f2"), 0.25)
+	prop(Rect2(32, 92, 30, 12), Color("#34407a"), 0.3)
+	prop(Rect2(240, 88, 34, 13), UiStyle.CREAM, 0.25)
+	# Duff face-down: jeans, bare back, tattooed arm along his side, head on the pillow
+	prop(Rect2(62, 86, 70, 15), Color("#3a5a8a"), 0.3)
+	prop(Rect2(130, 80, 96, 21), SKIN, 0.3)
+	var arm: = Rect2(144, 92, 66, 7)
+	draw_rect(arm, SKIN.darkened(0.1))
+	for k in 6:
+		draw_arc(Vector2(arm.position.x + 6 + k * 10, arm.position.y + 2.5), 2.5, k * 0.6, k * 0.6 + PI * 1.4, 8,
+			[Color("#2a7f86"), Color("#c0443c"), UiStyle.PROP_INK][k % 3], 1.2)
+	draw_rect(arm, UiStyle.PROP_INK, false, 0.8)
+	prop_circle(Vector2(236, 86), 10.0, SKIN)
+	draw_colored_polygon(PackedVector2Array([Vector2(227, 82), Vector2(236, 75), Vector2(246, 82), Vector2(244, 87),
+		Vector2(229, 87)]), Color("#4a2e1e"))
+	# Madison walking his spine (real sprite, 2x), bobbing on the beat
 	var prog: = clampf((t - LEAD_IN) / (BEAT * STEPS), 0.0, 1.0)
-	var mx: = 80.0 + prog * 140.0
-	var bob: = absf(sin(t * PI / BEAT)) * 4.0
-	draw_rect(Rect2(mx - 4, 60 - bob, 8, 14), Color("#9a78c0"))
-	draw_rect(Rect2(mx - 3, 52 - bob, 6, 7), Color("#f2d2b4"))
-	draw_rect(Rect2(mx - 4, 50 - bob, 8, 3), Color("#5a3a2a"))
-	draw_rect(Rect2(mx - 4, 74 - bob, 3, 16 + bob), Color("#f2d2b4"))
-	draw_rect(Rect2(mx + 1, 74 - bob, 3, 16 + bob), Color("#f2d2b4"))
-
+	var mx: = 140.0 + prog * 76.0
+	var bob: = absf(sin(t * PI / BEAT)) * 3.0
+	draw_set_transform(Vector2(mx, 82 - bob), 0.0, Vector2(2, 2))
+	Art.person(self, "ch_madison", Vector2.ZERO, Vector2.RIGHT, t, true, false, Color.WHITE, false)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	# beat ring closing in over her head
 	var i: = nearest_beat()
 	var dt: = beat_time(i) - t
+	var ring_c: = Vector2(mx, 30)
 	if i >= 0 and dt > -WINDOW and judged[i] == "":
 		var r: = 6.0 + maxf(0.0, dt) * 30.0
-		draw_arc(Vector2(mx, 40), r, 0, TAU, 24, Color("#e6a640"), 2.0)
-		draw_arc(Vector2(mx, 40), 6.0, 0, TAU, 16, Color(1, 1, 1, 0.6), 1.0)
+		draw_arc(ring_c, r + 1.0, 0, TAU, 32, UiStyle.PROP_INK, 3.0)
+		draw_arc(ring_c, r, 0, TAU, 32, UiStyle.GOLD, 2.0)
+		prop_circle(ring_c, 5.0, UiStyle.CREAM)
+	# the eight beats as little cel-shaded lights
 	for k in STEPS:
-		var c: = Color(1, 1, 1, 0.25)
+		var c: = Color("#5a4e6a")
 		if judged[k] == "hit":
-			c = Color("#c0d890")
+			c = Color("#8ccf5a")
 		elif judged[k] == "miss":
 			c = Color("#e06a4a")
-		draw_rect(Rect2(90 + k * 18, 24, 12, 6), c)
-	draw_rect(Rect2(6, 124, 308, 26), Color(0.1, 0.08, 0.15, 0.92))
-	mtxt(Vector2(10, 134), say, 300, 7, Color.WHITE, 2)
+		prop_circle(Vector2(18 + k * 12, 22), 4.0, c)
+	UiStyle.panel(self, Rect2(6, 126, 308, 24), UiStyle.PANEL, 0.94, 1.0 / 1.5)
+	mtxt(Vector2(10, 135), say, 300, 7, Color.WHITE, 2)

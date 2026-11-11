@@ -151,15 +151,22 @@ func debug_solve(good: bool) -> void:
 
 func _draw_game() -> void:
 	txt(Vector2(0, 28), "%s  (round %d/%d)" % [protein.get("n", ""), round_i + 1, rounds], 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
-	prop(Rect2(60, 104, 200, 10), Color("#6a625a"))
-	for x in range(62, 260, 8):
-		draw_rect(Rect2(x, 104, 3, 10), Color("#2a2a2a"))
+	# flat-top grill: steel body, glowing coals under the grate, ink grate bars
+	prop(Rect2(56, 100, 208, 18), Color("#3a3640"), 0.3)
+	draw_rect(Rect2(60, 103, 200, 8), Color("#e0662a", 0.75 + 0.2 * sin(t * 6.0)))
+	for x in range(60, 262, 8):
+		draw_rect(Rect2(x, 102, 3, 10), UiStyle.PROP_INK)
 	var col: = Color(protein.get("c", "#cccccc"))
 	if phase != "probe":
 		col = col.lerp(Color("#6b3a1a"), clampf((core - 38.0) / 200.0, 0, 0.7))
 	draw_set_transform(CENTER, 0, RADII / RADII.x)
 	prop_circle(Vector2.ZERO, RADII.x, col)
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
+	if phase != "probe":   # grill marks darken as it cooks
+		var sear: = Color(UiStyle.PROP_INK, clampf((core - 60.0) / 120.0, 0.15, 0.6))
+		for k in 4:
+			var x0: = CENTER.x - 34.0 + k * 18.0
+			draw_line(Vector2(x0, CENTER.y - 16), Vector2(x0 + 12, CENTER.y + 16), sear, 2.5)
 	if phase == "probe":
 		txt(Vector2(0, 140), "Tap the THICKEST part to probe (Enter = center)", 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
 	else:

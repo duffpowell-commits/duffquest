@@ -45,7 +45,7 @@ func _ready() -> void:
 		["pickles", func(): _clean(); m.debug_station("pickles")],
 		["prep", func(): _clean(); m.debug_station("prep")],
 		["quiz", func(): _clean(); m.debug_station("quiz")],
-		["temp_check", func(): _clean(); m.debug_station("temp_check")],
+		["temp_check", func(): _clean(); m.debug_station("temp")],
 		["inspector", func(): _clean(); m.debug_station("inspector")],
 		["ending", sub.call(m_script("EndingScript"))],
 	]
