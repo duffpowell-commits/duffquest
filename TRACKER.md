@@ -90,9 +90,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Could improve
 
-From the IGN-style review (`docs/reviews/ign_review_2026-11-10.md`) and QA, still open:
+From the IGN v2 review (`docs/reviews/ign_review_2026-11-10_v2.md`) and QA, still open (Nov 11):
 
-- **Gala floor** is still beige tiles; the arenas are painted now.
-- **Three art styles:** chibi pixel sprites, flat cartoon portraits, glossy anime KO panels.
-- Boss taunts lean on one joke formula. (Bounty movesets fixed Nov 10.)
-- **Touch tutorial:** the review wanted a 3-card move / A / roll tutorial on first launch; the help text is phone-worded now but still a text card.
+- **Overworld is still all pixel tiles** (outside street + home): every walk into a painted fight/minigame is a style
+  jump. Duff wants the FULL repaint (painted neighborhood, house, Fork/Waffle Haus exteriors, collision refit).
+- Boss taunts lean on one joke formula.
+- Non-Fork menus still slab-heavy: Gear shop list, door-to-door hustler's NOPE slab, DRY/WET hand boxes in pickles.
+- Nobody has played the gentler week one on a real phone yet (Brittany).
