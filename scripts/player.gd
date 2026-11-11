@@ -8,6 +8,9 @@ const ROLL_SPEED: = 175.0
 const IFRAMES: = 0.8
 
 var facing: = Vector2.DOWN
+## Arenas + gala draw Duff bigger so he matches the 1.45x bosses on the painted floors (IGN v2: "a 32-pixel Duff on
+## a 1280-wide painting"). Visual only: hitbox and footing stay put. Set by main._sync_world().
+var stage_scale: = 1.0
 var frozen: = false
 var joy_vec: = Vector2.ZERO
 var swing_t: = 0.0
@@ -139,6 +142,8 @@ func sheet_name() -> String:
 	return "duff_%s_%s" % [armor_id if ARMORS.has(armor_id) else "apron", shoes if shoes == "black" else "red"]
 
 func _draw() -> void:
+	if stage_scale != 1.0:   # scale around the feet (y = 11) so he doesn't sink into the floor
+		draw_set_transform(Vector2(0, 11.0 * (1.0 - stage_scale)), 0.0, Vector2(stage_scale, stage_scale))
 	var flash: = hurt_t > 0.0 and int(hurt_t * 20.0) % 2 == 0
 	var mod: = Color(1, 0.55, 0.55, 0.75) if flash else Color.WHITE
 	if roll_t > 0.0:

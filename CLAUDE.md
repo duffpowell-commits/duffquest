@@ -35,8 +35,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
    a bed, lit step tiles; blackheads is Duff's tattooed back; backwalk is Duff face-down with the real Madison sprite
    walking him; quiz + inspector answers are index cards with key badges (`UiStyle.card_button`, set `b["badge"]`);
    temp check has a real grill + sear marks. Render: `docs/renders/ui_pass2_before_after.png`.
-   Next: sprite-vs-painting scale in arenas. Then one signature move
-   per bounty boss; 4G first boot (~60 s, 38 MB wasm).
+   Arena sprite scale DONE (Nov 10 late night): on painted fight floors (story/bounty/bet arenas + gala, not the
+   Waffle Haus shift) Duff draws at `STAGE_SCALE` 1.45 like the bosses, regular enemies at 1.3; visual only, hitboxes
+   unchanged (`main.on_fight_floor()`, `player.stage_scale`). Render: `docs/renders/arena_scale_before_after.png`.
+   Next: one signature move per bounty boss (Coupon Carol, Allergy Liar, Camper); 4G first boot (~60 s, 38 MB wasm).
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`
@@ -46,7 +48,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `XDG_DATA_HOME=/tmp/xdg godot --headless --path . --fixed-fps 30 --script tools/soak.gd -- --seed=1` (add `--lazy` for the rent/upset paths)
 - Smoke (what CI runs): `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 --write-movie /tmp/smoke/f.png --quit-after 600`
 - In-engine renders: `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- <id>`
-  (ids: a boss arena, `bounty:sendback`, `waffle`, `title`, `home`, `hint`, `at:X,Y`) → `/tmp/qa/`. Copy keepers into `docs/renders/`.
+  (ids: a boss arena, `bounty:sendback`, `gala:husk`, `waffle`, `title`, `home`, `hint`, `at:X,Y`) → `/tmp/qa/`. Copy keepers into `docs/renders/`.
 - Phone onboarding render: `res://tools/touch_shot.tscn` + `python3 tools/touch_sheet.py` (forces touch mode).
 - UI audit (every menu + minigame, touch mode): `res://tools/ui_audit_shot.tscn` + `python3 tools/ui_audit_sheet.py <tag>`
   -> `docs/renders/ui_audit_<tag>.png`. Play objects use `prop()` / `prop_circle()` (minigame.gd -> UiStyle), never raw

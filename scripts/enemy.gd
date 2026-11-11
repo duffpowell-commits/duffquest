@@ -557,7 +557,9 @@ func _look() -> Vector2:
 	return Vector2.DOWN
 
 func _draw_person() -> void:
-
+	if m != null and m.has_method("on_fight_floor") and m.on_fight_floor():   # match Duff + bosses on painted fight floors
+		var k: float = m.STAGE_SCALE * 0.9
+		draw_set_transform(Vector2(0, 11.0 * (1.0 - k)), 0.0, Vector2(k, k))
 	Art.person(self, sprite_name(), Vector2(0, 11), _look(), t, velocity.length() > 4.0, telegraphing(), _mod())
 	if kind == "pirate" and loot != "":
 		Art.image(self, "package", Vector2(9, 6))

@@ -1765,11 +1765,19 @@ func open_settings() -> void:
 		if was_title:
 			show_title())
 
+## Sprite scale on painted fight floors (arenas, gala); bosses already draw at 1.45 (boss.gd).
+const STAGE_SCALE: = 1.45
+
+## Painted boss floor (story/bounty/bet arenas, gala). Not the Waffle Haus shift: its NPCs stay 1x.
+func on_fight_floor() -> bool:
+	return location == "gala" or (location == "arena" and arena_mode != "waffle")
+
 func _process(delta: float) -> void:
 	t += delta
 	if player != null:
 		player.at_home = location == "home"
 		player.shades = shades
+		player.stage_scale = STAGE_SCALE if on_fight_floor() else 1.0
 	if audio != null:
 		AudioScript.music(music_track())
 	toast_t = maxf(0.0, toast_t - delta)
