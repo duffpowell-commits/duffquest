@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (late night)** Bounty signature moves (IGN v2 "six bounties, three original movesets"): Coupon Carol's
+  coupon storm (expired coupons flutter down onto growing shadows, three on Duff), the Camper's charger-cord lasso
+  (yanks Duff toward him, tangles him half a second; a roll slips it), the Allergy Liar's "IS THERE GLUTEN IN THIS?!"
+  shout ring (stuns unless rolled). New `test_daily` checks for all three. Soak fixed: the bot now taps the phone
+  control cards away (it had been stuck on them since the onboarding milestone); 30-day soak PASS, all three new
+  fights played. `docs/renders/bounty_signature_moves.png`.
 - **2026-11-10 (late night)** Arena sprite scale (IGN v2 "32-pixel Duff on a 1280-wide painting"): on painted
   fight floors Duff draws at 1.45x like the bosses, regular enemies at 1.3x, scaled around the feet; Waffle Haus
   shift stays 1x so Dolores matches. Hitboxes unchanged. Render tool got `gala:<boss>` ids and stops teleporting Duff
@@ -73,5 +79,5 @@ From the IGN-style review (`docs/reviews/ign_review_2026-11-10.md`) and QA, stil
 
 - **Gala floor** is still beige tiles; the arenas are painted now.
 - **Three art styles:** chibi pixel sprites, flat cartoon portraits, glossy anime KO panels.
-- **Bounty bosses reuse story moves** (Coupon Carol, the Allergy Liar, the Camper), and boss taunts lean on one joke formula.
+- Boss taunts lean on one joke formula. (Bounty movesets fixed Nov 10.)
 - **Touch tutorial:** the review wanted a 3-card move / A / roll tutorial on first launch; the help text is phone-worded now but still a text card.

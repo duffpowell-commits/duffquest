@@ -65,6 +65,7 @@ func _init() -> void:
 	_ko_gore_checks()
 	_button_fit_checks()
 	_qa_leftover_checks()
+	_signature_move_checks(main)
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
@@ -671,3 +672,44 @@ func _touch_tut_checks(main: Node) -> void:
 	var T: = preload("res://scripts/touch_controls.gd")
 	check("touch buttons: G, S, swap, D all >= A", T.BTN_G_R >= T.BTN_R and T.BTN_S_R >= T.BTN_R and T.BTN_SW_R >= T.BTN_R and T.BTN_D_R >= T.BTN_R)
 	Cast.touch = was
+
+
+## Bounty signature moves (Nov 10, IGN v2 "six bounties, three original movesets"): each is wired into its boss,
+## and each does its one job through the real projectile code.
+func _signature_move_checks(main: Node) -> void:
+	var B: = preload("res://scripts/boss.gd")
+	for pair in [["coupon", "storm"], ["camper", "lasso"], ["allergy", "gluten"]]:
+		check("signature: %s throws %s" % pair, (B.BOSSES[pair[0]]["attacks"] as Array).has(pair[1]) and B.TELE.has(pair[1]))
+	main.start_bounty("camper")
+	main.dialog.clear()
+	var boss: Node2D = main.arena_boss
+	var pl: CharacterBody2D = main.player
+	boss.position = main.ARENA_ORIGIN + Vector2(160, 60)
+	pl.position = main.ARENA_ORIGIN + Vector2(160, 140)
+	var reset: = func() -> void:
+		pl.frozen = false; pl.hurt_t = 0.0; pl.roll_t = 0.0; pl.stun_t = 0.0; pl.knock = Vector2.ZERO; main.energy = 100.0
+	reset.call()
+	var cord: Node2D = boss._proj("cord", pl.global_position, Vector2.ZERO, 6.0)
+	cord._special(0.016)
+	check("lasso: yanks Duff TOWARD the Camper", pl.knock.dot(boss.global_position - pl.global_position) > 0.0)
+	check("lasso: tangles him", pl.stun_t > 0.0)
+	reset.call()
+	pl.roll_t = 0.3
+	var cord2: Node2D = boss._proj("cord", pl.global_position, Vector2.ZERO, 6.0)
+	cord2._special(0.016)
+	check("lasso: a roll slips it", pl.stun_t == 0.0 and pl.knock == Vector2.ZERO)
+	reset.call()
+	var ring: Node2D = boss._proj("gluten", boss.global_position, Vector2.ZERO, 4.0)
+	ring.radius = boss.global_position.distance_to(pl.global_position) - 1.0
+	ring._special(0.02)
+	check("gluten: the shout ring stuns", pl.stun_t > 0.0)
+	reset.call()
+	var cp: Node2D = boss._proj("coupon", pl.global_position, Vector2.ZERO, 6.0)
+	cp.fuse = 0.5
+	cp._special(0.02)
+	check("storm: no hit while the coupon is still falling", main.energy == 100.0)
+	cp._special(0.5)
+	check("storm: a landed coupon hurts", main.energy < 100.0)
+	for n in [cord, cord2, ring, cp]:
+		if is_instance_valid(n):
+			n.queue_free()

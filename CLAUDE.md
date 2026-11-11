@@ -20,7 +20,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   painting. Renders: `docs/renders/arenas_painted_ingame.png`, `docs/renders/title_tattoos_before_after.png`.
 - Also Nov 10 (late): interact prompt above Duff's head is now a dark pill with cream text (was illegible on the
   teal rug); barks dodge it. Render: `docs/renders/hint_prompt_pill.png` (render id `hint`).
-- Tests: `test_daily` ALL PASS; 30-day soak clean.
+- Tests: `test_daily` ALL PASS; 30-day soak PASS (seed 1, 0 issues). The soak was red from the touch-tutorial
+  milestone until Nov 10 late night: the bot couldn't tap the control cards away. Fixed in `tools/soak.gd`.
 
 ## Next (in order; details in TRACKER.md)
 1. **Itch page:** CI-build switch DONE (Duff, Nov 10). Still: paste `docs/itch/PAGE.md` + images. Duff's step on the itch dashboard; sessions can't reach itch.io.
@@ -38,7 +39,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
    Arena sprite scale DONE (Nov 10 late night): on painted fight floors (story/bounty/bet arenas + gala, not the
    Waffle Haus shift) Duff draws at `STAGE_SCALE` 1.45 like the bosses, regular enemies at 1.3; visual only, hitboxes
    unchanged (`main.on_fight_floor()`, `player.stage_scale`). Render: `docs/renders/arena_scale_before_after.png`.
-   Next: one signature move per bounty boss (Coupon Carol, Allergy Liar, Camper); 4G first boot (~60 s, 38 MB wasm).
+   Bounty signature moves DONE (Nov 10 late night): Coupon Carol `storm` (expired coupons fall on shadows), the
+   Camper `lasso` (charger cord yanks Duff in + 0.5 s tangle), the Allergy Liar `gluten` (shout ring, stuns unless
+   rolled); projectile kinds `coupon` / `cord` / `gluten`. Render: `docs/renders/bounty_signature_moves.png`
+   (render id `move:<bounty>:<attack>:<frames>`).
+   Next: 4G first boot (~60 s, 38 MB wasm); boss taunts still lean on one joke formula.
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`
@@ -48,7 +53,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `XDG_DATA_HOME=/tmp/xdg godot --headless --path . --fixed-fps 30 --script tools/soak.gd -- --seed=1` (add `--lazy` for the rent/upset paths)
 - Smoke (what CI runs): `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 --write-movie /tmp/smoke/f.png --quit-after 600`
 - In-engine renders: `xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- <id>`
-  (ids: a boss arena, `bounty:sendback`, `gala:husk`, `waffle`, `title`, `home`, `hint`, `at:X,Y`) → `/tmp/qa/`. Copy keepers into `docs/renders/`.
+  (ids: a boss arena, `bounty:sendback`, `gala:husk`, `move:coupon:storm:22`, `waffle`, `title`, `home`, `hint`, `at:X,Y`) → `/tmp/qa/`. Copy keepers into `docs/renders/`.
 - Phone onboarding render: `res://tools/touch_shot.tscn` + `python3 tools/touch_sheet.py` (forces touch mode).
 - UI audit (every menu + minigame, touch mode): `res://tools/ui_audit_shot.tscn` + `python3 tools/ui_audit_sheet.py <tag>`
   -> `docs/renders/ui_audit_<tag>.png`. Play objects use `prop()` / `prop_circle()` (minigame.gd -> UiStyle), never raw
