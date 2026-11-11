@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (late night)** Arena sprite scale (IGN v2 "32-pixel Duff on a 1280-wide painting"): on painted
+  fight floors Duff draws at 1.45x like the bosses, regular enemies at 1.3x, scaled around the feet; Waffle Haus
+  shift stays 1x so Dolores matches. Hitboxes unchanged. Render tool got `gala:<boss>` ids and stops teleporting Duff
+  off the gala floor. `docs/renders/arena_scale_before_after.png`.
 - **2026-11-10 (late night)** UI style pass 2: stealth floor is one night-lit plank floor (warped creaky boards with
   ink cracks, crib, bed, pulsing step tiles for touch) over the nursery painting; Blackhead Patrol is Duff's back
   with both tattoo sleeves and the fox at his nape; Back Walk is Duff face-down on the bed with the real Madison
