@@ -160,7 +160,7 @@ func _draw_game() -> void:
 				col = [C_GRAY, C_YELLOW, C_GREEN][int(results[r][c])]
 			elif r == guesses.size() and c < cur.length():
 				ch = cur[c]
-			draw_rect(rect, col)
+			prop(rect, col)
 			if r == guesses.size() and not ended:
 				draw_rect(rect, Color(1, 1, 1, 0.35), false, 1.0)
 			if ch != "":

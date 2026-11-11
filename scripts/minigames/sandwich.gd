@@ -185,7 +185,7 @@ func debug_solve(good: bool) -> void:
 
 func _draw_game() -> void:
 
-	draw_rect(Rect2(4, 16, 120, 86), Color("#f0ead8"))
+	prop(Rect2(4, 16, 120, 86), Color("#f0ead8"), 0.0)
 	var dark: = Color("#2b2218")
 	if stolen and not recovered:
 		mtxt(Vector2(8, 40), "TICKET STOLEN BY GRILL-BOY BRAYDEN", 112, 8, Color("#a43a2c"))
@@ -205,13 +205,13 @@ func _draw_game() -> void:
 			spec += String(ING[id][0]) + ", "
 		mtxt(Vector2(8, y), spec.trim_suffix(", "), 112, 6, Color("#6a625a"), 4)
 
-	draw_rect(Rect2(150, 108, 100, 4), Color("#cccccc"))
+	prop(Rect2(150, 108, 100, 4), Color("#cccccc"))
 	var by: = 106.0
 	for id in built:
 		var h: = 6.0 if id in ["bun_b", "bun_t", "fried", "grilled"] else 3.0
 		if not _layer_sprite(id, by, h):
 			var w: = 50.0 if id != "hot" else 42.0
-			draw_rect(Rect2(200 - w / 2, by - h, w, h), Color(ING[id][1]))
+			prop(Rect2(200 - w / 2, by - h, w, h), Color(ING[id][1]))
 		by -= h + 0.5
 	txt(Vector2(150, 24), "%d layers" % built.size(), 8, Color(1, 1, 1, 0.6))
 

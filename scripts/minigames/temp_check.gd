@@ -151,26 +151,26 @@ func debug_solve(good: bool) -> void:
 
 func _draw_game() -> void:
 	txt(Vector2(0, 28), "%s  (round %d/%d)" % [protein.get("n", ""), round_i + 1, rounds], 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
-	draw_rect(Rect2(60, 104, 200, 10), Color("#6a625a"))
+	prop(Rect2(60, 104, 200, 10), Color("#6a625a"))
 	for x in range(62, 260, 8):
 		draw_rect(Rect2(x, 104, 3, 10), Color("#2a2a2a"))
 	var col: = Color(protein.get("c", "#cccccc"))
 	if phase != "probe":
 		col = col.lerp(Color("#6b3a1a"), clampf((core - 38.0) / 200.0, 0, 0.7))
 	draw_set_transform(CENTER, 0, RADII / RADII.x)
-	draw_circle(Vector2.ZERO, RADII.x, col)
+	prop_circle(Vector2.ZERO, RADII.x, col)
 	draw_set_transform(Vector2.ZERO, 0, Vector2.ONE)
 	if phase == "probe":
 		txt(Vector2(0, 140), "Tap the THICKEST part to probe (Enter = center)", 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
 	else:
 		draw_line(probe_pos, probe_pos + Vector2(30, -40), Color("#dddddd"), 2.0)
 		var reading: = core + bias
-		draw_rect(Rect2(probe_pos + Vector2(24, -58), Vector2(40, 18)), Color("#111111"))
+		prop(Rect2(probe_pos + Vector2(24, -58), Vector2(40, 18)), Color("#111111"))
 		txt(probe_pos + Vector2(26, -45), "%d°F" % int(reading), 12, Color("#c0d890"))
 
 	bar(Rect2(290, 24, 10, 120), 0.0, Color.RED)
 	var frac: = clampf((core + bias - 32.0) / 200.0, 0.0, 1.0)
-	draw_rect(Rect2(290, 24 + 120 * (1.0 - frac), 10, 120 * frac), Color("#e06a4a"))
+	prop(Rect2(290, 24 + 120 * (1.0 - frac), 10, 120 * frac), Color("#e06a4a"))
 	for temp in [100, 150, 200]:
 		var y: float = 24 + 120 * (1.0 - (temp - 32.0) / 200.0)
 		txt(Vector2(262, y + 3), str(temp), 6, Color(1, 1, 1, 0.5))

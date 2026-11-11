@@ -67,7 +67,9 @@ func _find_shift() -> Node:
 
 func _draw_backdrop() -> void:
 	if backdrop == "" or Art.tex("bg_" + backdrop) == null:
-		draw_rect(Rect2(0, 0, W, H), BG)
+		# No painted set: the boss cards' two-tone sunburst in this screen's own colour (STYLE_LOCK sec. 2),
+		# turning slowly, instead of a flat slab. Lightened a touch so the rays read on dark BGs.
+		UiStyle.burst(self, Rect2(0, 0, W, H), BG.lightened(0.12), Vector2(W * 0.5, H * 0.58), 28, t * 0.04)
 		return
 	Art.image(self, "bg_" + backdrop, Vector2.ZERO)
 	if backdrop_dim > 0.0:
@@ -95,6 +97,13 @@ func _pointer_move(_p: Vector2) -> void: pass
 func _key(_e: InputEventKey) -> void: pass
 func _timeout() -> void: finish(0.0)
 func debug_solve(_good: bool) -> void: pass
+
+## House-style play objects (see UiStyle.prop). Minigame coords are 320x180, so 1.0 = a thick line.
+func prop(r: Rect2, col: Color, shade: float = 0.3) -> void:
+	UiStyle.prop(self, r, col, 1.0, shade)
+
+func prop_circle(c: Vector2, rad: float, col: Color) -> void:
+	UiStyle.prop_circle(self, c, rad, col, 1.0)
 
 func is_pen() -> bool:
 	return pen_down or key_pen

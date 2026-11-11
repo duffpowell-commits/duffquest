@@ -136,8 +136,8 @@ func debug_solve(good: bool) -> void:
 
 func _draw_game() -> void:
 
-	draw_rect(Rect2(20, 30, 180, 100), Color("#888c96"))
-	draw_rect(Rect2(28, 38, 164, 70), Color("#c89b3c").darkened(clampf((oil - 340.0) / 120.0, 0, 0.6)))
+	prop(Rect2(20, 30, 180, 100), Color("#888c96"))
+	prop(Rect2(28, 38, 164, 70), Color("#c89b3c").darkened(clampf((oil - 340.0) / 120.0, 0, 0.6)))
 	if oil > 385.0:
 		for i in 5:
 			draw_circle(Vector2(40 + i * 35, 34 - fmod(t * 20.0 + i * 7.0, 14.0)), 4, Color(0.8, 0.8, 0.8, 0.4))
@@ -161,7 +161,7 @@ func _draw_game() -> void:
 			else:
 				draw_rect(Rect2(bx, by, 70, 30), Color(0.2, 0.2, 0.2, 0.6))
 				for k in 6:
-					draw_rect(Rect2(bx + 4 + k * 11, by + 6 + (k % 2) * 6, 8 if b["n"] == "Fries" else 9, 14 if b["n"] == "Fries" else 9), food)
+					prop(Rect2(bx + 4 + k * 11, by + 6 + (k % 2) * 6, 8 if b["n"] == "Fries" else 9, 14 if b["n"] == "Fries" else 9), food)
 		txt(Vector2(bx, 120), b["n"], 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 70)
 		if b["state"] == "in":
 			bar(Rect2(bx, 112, 70, 4), p / 1.4, food)

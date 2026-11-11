@@ -139,7 +139,7 @@ func debug_solve(good: bool) -> void:
 	serve()
 
 func _draw_game() -> void:
-	draw_rect(Rect2(4, 16, 120, 86), Color("#f0ead8"))
+	prop(Rect2(4, 16, 120, 86), Color("#f0ead8"), 0.0)
 	txt(Vector2(8, 26), item.to_upper() + " SALAD", 8, Color("#2b2218"))
 	var y: = 37.0
 	for m in mods:
@@ -154,10 +154,10 @@ func _draw_game() -> void:
 	txt(Vector2(8, y + 4), "Spec:", 6, Color("#6a625a"))
 	mtxt(Vector2(8, y + 12), spec.trim_suffix(", "), 112, 6, Color("#6a625a"), 4)
 
-	draw_circle(Vector2(200, 72), 38, Color("#e8e8f0"))
+	prop_circle(Vector2(200, 72), 38, Color("#e8e8f0"))
 	draw_circle(Vector2(200, 72), 33, Color("#cfd2dc"))
 	for i in built.size():
 		var a: = i * 2.4
-		draw_circle(Vector2(200, 72) + Vector2.from_angle(a) * (6.0 + i * 2.5), 7, Color(ING[built[i]][1]))
+		prop_circle(Vector2(200, 72) + Vector2.from_angle(a) * (6.0 + i * 2.5), 7, Color(ING[built[i]][1]))
 	if gloves:
 		txt(Vector2(150, 24), "Gloves: fresh", 8, Color("#c0d890"))
