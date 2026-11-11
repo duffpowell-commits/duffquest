@@ -109,7 +109,7 @@ func go(s: String) -> void:
 		"aisle":
 			for i in AISLE.size():
 				var it: Array = AISLE[i]
-				add_button("buy_" + str(it[0]), Rect2(6 + (i % 2) * 156, 34 + (i / 2) * 24, 152, 21), "", [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6][i])
+				add_button("buy_" + str(it[0]), Rect2(118 + (i % 2) * 100, 34 + (i / 2) * 24, 96, 21), "", [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6][i])
 			add_button("back", Rect2(6, 154, 100, 22), "Back" if prev_state != "browse" else "Done", KEY_B, Color("#2e5aa8"))
 			_relabel()
 		"done":
@@ -136,7 +136,7 @@ func _relabel() -> void:
 		var b: = get_button("buy_" + str(it[0]))
 		if not b.is_empty():
 			var have: = int(m.inventory.get(it[0], 0)) if m else 0
-			b["label"] = "%s $%d (have %d)" % [it[1], aisle_price(it), have]
+			b["label"] = "%s $%d\nhave %d" % [it[1], aisle_price(it), have]
 
 func _tick(d: float) -> void:
 	match state:

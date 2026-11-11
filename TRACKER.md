@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-10 (night)** UI style pass 1 (Duff: menus + minigames should match the art): every play object in
+  15 minigames drawn as a style-lock prop (ink outline, hard shadow, one cel band); art-less screens (gear, Wordle,
+  settings, mash, stealth) get the cards' sunburst; phone home has a navy/teal wallpaper; store/pharmacy item grids
+  moved right so the paintings show. `docs/renders/ui_audit_before.png` vs `ui_audit_after.png`.
 - **2026-11-10 (night)** Phone onboarding: three tap-through control cards (walk / A / B) on a phone's first new
   game, once per install (`user://touch_tut.cfg`), replay from How to play > Show me the buttons; G/S/swap/D touch
   buttons now as big as A; no keyboard chips or "E /" prompts on touch. `docs/renders/touch_onboarding.png`.
