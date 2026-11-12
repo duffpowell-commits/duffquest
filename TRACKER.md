@@ -5,6 +5,14 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** **Overworld repaint (storefronts):** all 13 exteriors (home, neighbor, Kwik-N-Go, Twisted Fork,
+  HOA HQ, Seen Cafe, Iron Temple, Club Cloud 9, Mining Rig, the tower, Walgrumps, Hy-Whee, Plazmart) repainted as
+  detailed pixel art and imported at 4x density (one texel per screen pixel), filling their lots instead of half of
+  them. Footprints, bottom edges and door x are unchanged, so doors, story triggers and errands still line up.
+  `tools/import_storefront_hd.py SRC NAME [--up N]` (keys magenta, area-downscales, writes the manifest; `--up` lets a
+  roof rise above the lot, negative shrinks it). `_art_rect()` now honours density + origin. Kwik `SHOP_PT` moved to
+  the new centred doors, raccoon spot moved out of the wider Plazmart. Masters (1920 px) live in Drive "97 Gemini art drops" as `sf_<name>_v1.png`; pull them into `grok_art/2026-11-12-storefronts/_work/` (ignored) to re-import.
+  Renders `docs/renders/overworld_storefronts_before_after.png`, `..._night.png`.
 - **2026-11-12** Side quest 4 live, all four now on: **Lost & Found, Omaha** (`ready: true`, from day 3). A flyer
   from Gail comes with the mail (home mail table, before the bills). Three riddles, any order: a ring in the storm
   drain at the crossroads, Mr. Buttons' collar in the recycling bin by the Kwik-N-Go, a left shoe in the pine tree by
