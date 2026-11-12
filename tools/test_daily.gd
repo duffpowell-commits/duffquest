@@ -787,7 +787,8 @@ func _side_quest_checks(main: Node) -> void:
 	check("sq: clean survives non-dicts", SQ.clean(null).is_empty() and SQ.clean([1, 2]).is_empty())
 	# markers + journal: hidden until a quest is "ready"
 	var fresh: = SQ.new_state()
-	check("sq: no markers or journal rows for unready quests", SQ.marker_for(fresh, "madison") == "" and SQ.journal(fresh).is_empty())
+	check("sq: no markers or journal rows for unready quests", SQ.marker_for(fresh, "brittany") == "" and SQ.journal(fresh).is_empty())
+	check("sq: porch is live: '!' over Madison from day 2, not day 1", SQ.marker_for(fresh, "madison") == "!" and SQ.marker_for(fresh, "madison", false, 1) == "" and SQ.offerable(fresh, "porch", 2) and not SQ.offerable(fresh, "porch", 1))
 	check("sq: dev sees the '!' over the porch giver", SQ.marker_for(fresh, "madison", true) == "!")
 	SQ.start(fresh, "porch")
 	check("sq: stage 1 wants Brittany -> '?' over her", SQ.marker_for(fresh, "brittany", true) == "?")
@@ -839,5 +840,37 @@ func _side_quest_checks(main: Node) -> void:
 	main.dev_warp_quest("porch", 9)
 	check("dev warp: past the end = done", SQ.is_done(main.side_quests, "porch"))
 	main.side_quests = {}
+	# the porch mystery, end to end through the real hooks
+	main.dialog.clear()
+	main.show_hidden_quests = false
+	var dc0: int = main.day_count
+	var ck0: float = main.clock
+	main.day_count = 3
+	main.clock = 600.0
+	check("porch: Madison hands it out", main.quest_talk("madison") and SQ.stage(main.side_quests, "porch") == 1)
+	check("porch: Madison doesn't repeat herself", not main.quest_talk("madison"))
+	check("porch: Brittany gives the first clue", main.quest_talk("brittany") and SQ.has_clue(main.side_quests, "porch", "orange fingers") and SQ.stage(main.side_quests, "porch") == 2)
+	check("porch: porch clue spot appears", main.quest_interactables().any(func (it): return it["id"] == "quest_porch"))
+	check("porch: porch gives the receipt", main.quest_talk("porch") and SQ.stage(main.side_quests, "porch") == 3)
+	check("porch: neighbor door appears, porch spot gone", main.quest_interactables().size() == 1 and main.quest_interactables()[0]["id"] == "quest_neighbor")
+	if main.location != "outside":
+		main.leave_home()
+	main.quest_talk("neighbor")
+	var chad: Node = null
+	for e in main.get_tree().get_nodes_in_group("enemy"):
+		if e.has_meta("quest_porch"):
+			chad = e
+	check("porch: knocking flushes out the suspect", chad != null and chad.display_name() == "Cheeto Chad")
+	main.quest_talk("neighbor")
+	check("porch: knocking again doesn't clone him", main.get_tree().get_nodes_in_group("enemy").filter(func (e): return e.has_meta("quest_porch")).size() == 1)
+	var cash0: int = main.money
+	if chad:
+		main.enemy_defeated(chad)
+	check("porch: catching him finishes the quest and pays", SQ.is_done(main.side_quests, "porch") and main.money >= cash0 + 60 and main.achievements.has("Neighborhood Watch"))
+	check("porch: done quest leaves no interactables", main.quest_interactables().is_empty())
+	main.side_quests = {}
+	main.day_count = dc0
+	main.clock = ck0
+	main.dialog.clear()
 	main.show_hidden_quests = false
 	main.dialog.clear()

@@ -97,6 +97,7 @@ const GROC_DOOR: = Vector2(231, 346)
 const RACCOON_HOME: = Vector2(405, 125)
 const RACCOON_SPOTS: = [Vector2(405, 125), Vector2(165, 350), Vector2(625, 225)]
 const PORCH_PT: = Vector2(122, 117)
+const NEIGHBOR_DOOR: = Vector2(230, 104)   # side quest "porch": the suspect's front door
 const PIRATE_NAMES: = ["{pirate_1}", "{pirate_2}", "{pirate_3}", "{pirate_4}", "{pirate_5}", "{pirate_6}"]
 const RACCOON_GIFTS: = [["a dollar (slightly damp)", "money", 1], ["a honey bun, still sealed. Somehow.", "honey buns", 1], ["a cat treat. {cat3} would approve.", "treats", 1], ["a bent fork (1 scrap)", "scrap", 1]]
 const RACCOON_GAGS: = ["The raccoon pats my hand back. Best customer service in Omaha, and it works for trash.", "It shows me a french fry. Found it in the dumpster behind a $19 burger place. Same fry.", "It chitters like a hustle podcast. Pretty sure it's selling me a course.", "It washes my hand. Cleaner than half the line cooks I've worked with."]
@@ -1107,7 +1108,7 @@ func interactables() -> Array:
 		{"id": "pharmacy", "pos": PHARM_DOOR, "r": 16.0, "label": "Enter {pharmacy}" },
 		{"id": "grocery", "pos": GROC_DOOR, "r": 16.0, "label": "Enter {grocery}" },
 		{"id": "plasma", "pos": PLASMA_DOOR, "r": 16.0, "label": "Enter {plasma}" },
-	] + story_doors() + raccoon_spots() + bus_stops()
+	] + story_doors() + raccoon_spots() + bus_stops() + quest_interactables()
 
 func nearest_interactable() -> Dictionary:
 	var best: = {}
@@ -1136,7 +1137,9 @@ func interact(id: String) -> void:
 		return
 	match id:
 		"bounty_board": bounty_menu()
-		"brittany": bet_menu()
+		"brittany":
+			if not quest_talk("brittany"):
+				bet_menu()
 		"waffle_sign": waffle_menu()
 		"home_door": enter_home()
 		"door_out": leave_home()
@@ -1166,6 +1169,8 @@ func interact(id: String) -> void:
 				pet_raccoon(int(id.substr(8)))
 			elif id.begins_with("bus_"):
 				bus_menu(id.substr(4))
+			elif id.begins_with("quest_"):
+				quest_talk(id.substr(6))
 
 func enter_home() -> void:
 	AudioScript.sfx("door")
@@ -1596,6 +1601,8 @@ func _talk_to_madison() -> void:
 	var sl: = story_announce()
 	if not sl.is_empty():
 		_say(sl)
+		return
+	if quest_talk("madison"):
 		return
 	var giving: = errand_deliverable() or int(inventory.get("package", 0)) > 0 or (quest == 1 and has_all(QUEST_NEEDS[quest_kind]))
 	var fussy_fine: = false
@@ -2736,10 +2743,14 @@ func enemy_defeated(e: Node) -> void:
 			lines.append(Gear.grant_piece(gear, false))
 			apply_gear()
 		_say(lines)
+	elif e.has_meta("quest_porch"):
+		_say([msg, porch_quest_won()])
 	else:
 		_toast(msg)
 
 func enemy_gone(e: Node) -> void:
+	if e.has_meta("quest_porch"):
+		_toast("Cheeto Chad clears the fence. He lives next door, genius. Knock again.")
 	if e.kind == "pirate" and str(e.loot) != "":
 		_toast("%s gets away with %s. He's gonna resell it on Marketplace as 'gently loved.'" % [e.display_name(), Cast.T(loot_name(str(e.loot)))])
 	if e.kind == "scammer" and int(e.stolen) > 0:
@@ -3706,6 +3717,76 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 	ci.draw_line(pr.position + Vector2(25, 0), pr.position + Vector2(21, -3), Color("#8c8478"), 1.0 / 1.5)
 	ci.draw_string(f, Vector2(pr.position.x, pr.position.y + 6.3), "CLOSED", HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, 5, Color("#f0ead8"))
 
+## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
+## Talk hooks return true when the quest took over the conversation.
+func quest_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "porch"
+	if npc == "madison" and SideQuests.offerable(st, q, day_count, show_hidden_quests):
+		SideQuests.start(st, q)
+		_say(["{partner}: \"Third package this month. THIRD. The tracking says delivered, the porch says nothing.\"",
+			"{partner}: \"I don't want a doorbell cam. I want a NAME.\"",
+			"New side quest: Who Took The Porch? (phone > Notes). Brittany sees everything on this block. Start there."])
+		save_game()
+		return true
+	if not SideQuests.is_active(st, q):
+		return false
+	match [npc, SideQuests.stage(st, q)]:
+		["brittany", 1]:
+			SideQuests.add_clue(st, q, "orange fingers")
+			SideQuests.advance(st, q)
+			_say(["Brittany: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case.",
+				"Brittany: Didn't see his face. I was filming a reaction video. To a different crime.",
+				"Clue: orange fingers. Go check the porch for crumbs."])
+			return true
+		["porch", 2]:
+			SideQuests.add_clue(st, q, "gas-station receipt")
+			SideQuests.advance(st, q)
+			_say(["Orange dust on the railing. A receipt underneath: one Flamin' Hot bag, two energy drinks, 3:12 AM.",
+				"The receipt's got a loyalty number on it. And an address. The house next door.",
+				"Clue: gas-station receipt. I know who it is. I always knew. I just didn't want to talk to him."])
+			return true
+		["neighbor", 3]:
+			if phase() == "Night":
+				_say(["Lights off next door. He's either asleep or out working. 'Working.' Come back in daylight."])
+				return true
+			if get_tree().get_nodes_in_group("enemy").any(func (e): return e.has_meta("quest_porch")):
+				return true
+			_say(["I knock. The door opens two inches. Orange fingers on the frame.",
+				"Cheeto Chad: \"Packages? Never heard of 'em. ...Is that a RECEIPT?\"",
+				"He bolts. Of course he bolts."])
+			var e: = spawn_enemy("pirate", NEIGHBOR_DOOR + Vector2(0, 4))
+			e.pname = "Cheeto Chad"
+			e.max_hp = 6.0
+			e.hp = 6.0
+			e.set_meta("quest_porch", true)
+			e.state = "flee"
+			e.st = 9.0
+			return true
+	return false
+
+## Only shows up while the porch quest needs it, so the street stays uncluttered.
+func quest_interactables() -> Array:
+	var out: Array = []
+	if not SideQuests.is_active(side_quests, "porch"):
+		return out
+	match SideQuests.stage(side_quests, "porch"):
+		2: out.append({"id": "quest_porch", "pos": PORCH_PT, "r": 14.0, "label": "Check the porch for clues"})
+		3: out.append({"id": "quest_neighbor", "pos": NEIGHBOR_DOOR, "r": 16.0, "label": "Knock next door"})
+	return out
+
+func porch_quest_won() -> String:
+	SideQuests.add_clue(side_quests, "porch", "confession")
+	SideQuests.finish(side_quests, "porch")
+	money += 60
+	gain_happy(12.0)
+	var msg: = "Chad cracks. Six packages in his garage, still sealed. Even he has standards. +$60. {partner} is going to be insufferable about this (+happy). Quest done."
+	if not achievements.has("Neighborhood Watch"):
+		achievements.append("Neighborhood Watch")
+		msg += "  ACHIEVEMENT: Neighborhood Watch"
+	save_game()
+	return msg
+
 ## Where each side-quest NPC/prop stands, so its !/? marker can float over it.
 func quest_spots() -> Dictionary:
 	return {
@@ -3713,6 +3794,8 @@ func quest_spots() -> Dictionary:
 		"mail": ["home", MAIL_PT + Vector2(0, -14)],
 		"brittany": ["outside", BRITT_POS + Vector2(0, -24)],
 		"bounty_board": ["outside", BOARD_PT + Vector2(0, -22)],
+		"porch": ["outside", PORCH_PT + Vector2(0, -16)],
+		"neighbor": ["outside", NEIGHBOR_DOOR + Vector2(0, -26)],
 	}
 
 func draw_quest_markers(ci: CanvasItem) -> void:
@@ -3722,7 +3805,7 @@ func draw_quest_markers(ci: CanvasItem) -> void:
 	for npc in spots:
 		if str(spots[npc][0]) != location:
 			continue
-		var mk: = SideQuests.marker_for(side_quests, str(npc), show_hidden_quests)
+		var mk: = SideQuests.marker_for(side_quests, str(npc), show_hidden_quests, day_count)
 		if mk != "":
 			UiStyle.quest_marker(ci, spots[npc][1] + Vector2(0, sin(t * 3.2) * 1.5), mk)
 

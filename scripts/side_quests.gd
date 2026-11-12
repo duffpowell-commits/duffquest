@@ -13,12 +13,12 @@ extends RefCounted
 
 const LIST: = [
 	{
-		"id": "porch", "kind": "mystery", "title": "Who Took The Porch?", "giver": "madison", "ready": false,
+		"id": "porch", "kind": "mystery", "title": "Who Took The Porch?", "giver": "madison", "ready": true, "from_day": 2,
 		"pitch": "Third package this month. {partner} wants a name.",
 		"stages": [
 			{"text": "Ask around. Somebody on this block saw something.", "at": "brittany"},
-			{"text": "Check the porch. Thieves leave crumbs. Sometimes literal crumbs.", "at": ""},
-			{"text": "I've got a name. Time to knock on a door I shouldn't.", "at": ""},
+			{"text": "Check the porch. Thieves leave crumbs. Sometimes literal crumbs.", "at": "porch"},
+			{"text": "Orange dust, a gas-station receipt, one address. Knock on the neighbor's door.", "at": "neighbor"},
 		],
 	},
 	{
@@ -188,8 +188,12 @@ static func warp(st: Dictionary, id: String, to_stage: int) -> void:
 static func visible(id: String, show_hidden: bool) -> bool:
 	return show_hidden or bool(entry(id).get("ready", false))
 
+## Can a player be offered this quest today? Ready, not started, and past its first day.
+static func offerable(st: Dictionary, id: String, day: int, show_hidden: bool = false) -> bool:
+	return visible(id, show_hidden) and status(st, id) == "" and day >= int(entry(id).get("from_day", 1))
+
 ## "!" = a giver with a quest to hand out, "?" = the active stage wants you to talk here, "" = nothing.
-static func marker_for(st: Dictionary, npc: String, show_hidden: bool = false) -> String:
+static func marker_for(st: Dictionary, npc: String, show_hidden: bool = false, day: int = 1 << 30) -> String:
 	var bang: = false
 	for e in LIST:
 		var id: = str(e["id"])
@@ -202,7 +206,7 @@ static func marker_for(st: Dictionary, npc: String, show_hidden: bool = false) -
 				if at == npc:
 					return "?"
 			"":
-				if str(e.get("giver", "")) == npc:
+				if str(e.get("giver", "")) == npc and day >= int(e.get("from_day", 1)):
 					bang = true
 	return "!" if bang else ""
 
