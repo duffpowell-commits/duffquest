@@ -787,7 +787,8 @@ func _side_quest_checks(main: Node) -> void:
 	check("sq: clean survives non-dicts", SQ.clean(null).is_empty() and SQ.clean([1, 2]).is_empty())
 	# markers + journal: hidden until a quest is "ready"
 	var fresh: = SQ.new_state()
-	check("sq: no markers or journal rows for unready quests", SQ.marker_for(fresh, "mail") == "" and SQ.journal(fresh).is_empty())
+	check("sq: no '!' before a quest's first day, no journal rows for unstarted quests", SQ.marker_for(fresh, "mail", false, 2) == "" and SQ.marker_for(fresh, "mail", false, 3) == "!" and SQ.journal(fresh).is_empty())
+	check("sq: every quest is live", SQ.ids().all(func (i): return SQ.visible(str(i), false)))
 	check("sq: porch is live: '!' over Madison from day 2, not day 1", SQ.marker_for(fresh, "madison") == "!" and SQ.marker_for(fresh, "madison", false, 1) == "" and SQ.offerable(fresh, "porch", 2) and not SQ.offerable(fresh, "porch", 1))
 	check("sq: dev sees the '!' over the porch giver", SQ.marker_for(fresh, "madison", true) == "!")
 	SQ.start(fresh, "porch")
@@ -924,6 +925,35 @@ func _side_quest_checks(main: Node) -> void:
 		check("gig(%s): done = Brittany is back to bets" % pick, not main.quest_talk("brittany"))
 		main.dialog.clear()
 		main.close_overlay()
+	# Lost & Found: flyer in the mail (day 3+) -> three finds outside, any order -> paper box pays out
+	main.side_quests = {}
+	main.dialog.clear()
+	main.close_overlay()
+	main.day_count = 2
+	main.bills.clear()
+	check("alley: no flyer before day 3 (mail is just mail)", not main.quest_talk("mail"))
+	main.dialog.clear()
+	main.day_count = 3
+	check("alley: the flyer comes with the mail", main.quest_talk("mail") and SQ.stage(main.side_quests, "alley") == 1)
+	main.dialog.clear()
+	check("alley: mail is mail again while hunting", not main.quest_talk("mail"))
+	var ids0: Array = main.quest_interactables().map(func (it): return str(it["id"]))
+	check("alley: three things to find outside", ids0.has("quest_ring") and ids0.has("quest_collar") and ids0.has("quest_shoe") and not ids0.has("quest_lostbox"))
+	check("alley: the box does nothing yet", not main.quest_talk("lostbox"))
+	check("alley: a find is a clue", main.quest_talk("shoe") and SQ.has_clue(main.side_quests, "alley", "shoe") and SQ.stage(main.side_quests, "alley") == 1)
+	main.dialog.clear()
+	check("alley: the same thing can't be found twice", not main.quest_talk("shoe"))
+	check("alley: found things leave the street", not main.quest_interactables().any(func (it): return str(it["id"]) == "quest_shoe"))
+	main.quest_talk("ring")
+	main.dialog.clear()
+	check("alley: third find moves to the return", main.quest_talk("collar") and SQ.stage(main.side_quests, "alley") == 2)
+	main.dialog.clear()
+	check("alley: '?' over the paper box", SQ.marker_for(main.side_quests, "lostbox") == "?" and main.quest_interactables().any(func (it): return str(it["id"]) == "quest_lostbox"))
+	var am0: int = main.money
+	check("alley: the box pays and finishes", main.quest_talk("lostbox") and SQ.is_done(main.side_quests, "alley") and main.money == am0 + 50 and main.achievements.has("Omaha's Finest"))
+	main.dialog.clear()
+	check("alley: done = nothing left on the street, mail is mail", main.quest_interactables().is_empty() and not main.quest_talk("mail"))
+	main.dialog.clear()
 	main.side_quests = {}
 	main.day_count = dc0
 	main.clock = ck0
