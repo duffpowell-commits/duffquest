@@ -6,13 +6,14 @@ The painting (Canva repaint of data/town_ground.txt's tile render, grok_art/2026
 but not the exact proportions, so: find both roads' centre lines in the painting and in the layout render (asphalt =
 blue >= green, red < 135), pick ONE uniform scale that still covers the whole map, and line the road centres up.
 Roads land within a few px of the gameplay roads (driver lanes, sidewalks) without stretching the art.
+A final 1-px unsharp pass keeps the shrunk painting as crisp as the 1:1 sprites standing on it.
 scripts/ground.gd uses ground_painted.png when it exists (same size + origin as the tile build).
 """
 import sys
 from pathlib import Path
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFilter
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "grok_art/2026-11-11-street/ground_v1.png"
@@ -46,6 +47,9 @@ def main() -> None:
     big = pnt.resize((round(pnt.width * s), round(pnt.height * s)), Image.LANCZOS)
     out = Image.new("RGB", (W, H))
     out.paste(big, (round(ox), round(oy)))
+    # The LANCZOS shrink leaves the painting soft next to the 1:1 pixel sprites (HD-2D audit, Nov 12):
+    # a 1-px unsharp pass restores crisp slab edges, cracks and lane paint without inventing new colours.
+    out = out.filter(ImageFilter.UnsharpMask(radius=1.2, percent=140, threshold=2))
     out.save(OUT)
     print(f"scale {s:.3f} offset ({ox:.0f},{oy:.0f}); roads painted {pw * s:.0f}/{ph * s:.0f} px vs layout {lw}/{lh}; "
           f"centre error {abs(px * s + ox - lx):.1f},{abs(py * s + oy - ly):.1f} px -> {OUT.name}")

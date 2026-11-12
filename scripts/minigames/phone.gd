@@ -2,6 +2,7 @@ extends "res://scripts/minigames/minigame.gd"
 
 const Market: = preload("res://scripts/market.gd")
 const Errands: = preload("res://scripts/errands.gd")
+const SideQuests: = preload("res://scripts/side_quests.gd")
 const C_ME: = Color("#2f6fd6")
 const C_THEM: = Color("#3a3846")
 const C_UP: = Color("#7aa05a")
@@ -36,6 +37,10 @@ func show_screen(s: String) -> void:
 				add_button("gala_thread", Rect2(10, 88, 300, 26), "THE ELITE GALA  (invitation)", KEY_5, Color("#a08020"))
 			add_button("settings", Rect2(10, 152, 92, 22), "Settings", KEY_6, Color("#57504e"))
 			add_button("close", Rect2(110, 152, 100, 22), "Close", KEY_ESCAPE, Color("#a43a2c"))
+			var n_new: int = SideQuests.unread(m.side_quests, m.show_hidden_quests) if m else 0
+			add_button("notes", Rect2(218, 152, 92, 22), "Notes" + (" (%d)" % n_new if n_new > 0 else ""), KEY_7, Color("#2f8a80"))
+		"notes":
+			add_button("back", Rect2(110, 156, 100, 20), "Back", KEY_ESCAPE)
 		"messages":
 			var ml: = "{partner} <3" + ("   * NEW *" if m and m.unread.get("madison", false) else "") + "\n" + _preview("madison")
 			add_button("thread_madison", Rect2(6, 18, 308, 30), ml, KEY_1, CLEAR)
@@ -113,7 +118,7 @@ func _on_button(id: String) -> void:
 				"asset", "portfolio": show_screen("stonks")
 				"thread_sister", "gala_thread", "thread_madison": show_screen("messages")
 				_: show_screen("home")
-		"messages", "stonks", "fund", "thread_sister", "gala_thread", "thread_madison": show_screen(id)
+		"messages", "stonks", "fund", "thread_sister", "gala_thread", "thread_madison", "notes": show_screen(id)
 		"gear": _close_with("gear")
 		"settings": _close_with("settings")
 		"daily": _close_with("wordle_daily")
@@ -213,6 +218,7 @@ func _draw_game() -> void:
 		"asset": _draw_asset()
 		"portfolio": _draw_portfolio()
 		"fund": _draw_fund()
+		"notes": _draw_notes()
 
 func _draw_home() -> void:
 	txt(Vector2(0, 30), "Home", 9, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
@@ -374,3 +380,36 @@ func _draw_errand_status() -> void:
 	var what: String = "Rx pickup at {pharmacy}" if e.get("kind", "") == "pharmacy" else "{grocery}: " + Errands.list_text(e)
 	draw_rect(Rect2(0, 24, W, 11), Color("#3e2d19"))
 	txt(Vector2(4, 32), "Today: %s  [%s, due %s]" % [what, label, Errands.due_text(e)], 6, Color("#ffb0d8") if st != "missed" else Color("#e06a4a"))
+
+## Notes app = the side-quest journal. NEW rows glow until the screen has been seen once.
+var _notes_rows: Array = []
+
+func _draw_notes() -> void:
+	if _notes_rows.is_empty() or not _notes_seen:
+		_notes_rows = SideQuests.journal(m.side_quests, m.show_hidden_quests)
+		SideQuests.mark_read(m.side_quests)
+		_notes_seen = true
+	draw_rect(Rect2(0, 12, W, 12), Color("#123b38"))
+	txt(Vector2(4, 21), "NOTES  -  stuff I said I'd handle", 7, Color("#9fe8de"))
+	if _notes_rows.is_empty():
+		txt(Vector2(0, 80), "Nothing yet. Somebody on this block always needs something.", 7, Color(1, 1, 1, 0.55), HORIZONTAL_ALIGNMENT_CENTER, W)
+		return
+	var y: = 28.0
+	for row in _notes_rows:
+		if y > 140.0:
+			break
+		var done: = str(row["status"]) == "done"
+		var r: = Rect2(4, y, W - 8, 30)
+		draw_rect(r, Color("#24302c") if not done else Color("#1f1c19"))
+		draw_rect(Rect2(r.position, Vector2(3, r.size.y)), UiStyle.TEAL if not done else Color("#6a6258"))
+		var head: = str(row["title"]) + ("   NEW" if bool(row["new"]) else "")
+		txt(r.position + Vector2(8, 9), head, 8, Color.WHITE if not done else Color(1, 1, 1, 0.5))
+		txt(r.position + Vector2(r.size.x - 34, 9), str(row["progress"]) if not done else "DONE", 7, UiStyle.GOLD if not done else Color(1, 1, 1, 0.4))
+		txt(r.position + Vector2(8, 19), str(row["step"]), 7, Color("#d8f0ea") if not done else Color(1, 1, 1, 0.4))
+		var cl: Array = row["clues"]
+		if not cl.is_empty():
+			var cs: = "Clues: " + ", ".join(cl)
+			txt(r.position + Vector2(8, 28), cs.substr(0, 70) + ("..." if cs.length() > 70 else ""), 6, Color("#f2c66a"))
+		y += 34.0
+
+var _notes_seen: = false

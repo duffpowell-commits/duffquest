@@ -16,6 +16,20 @@ https://docs.google.com/document/d/1lmADUpw6NO0A_rvmwdox_t2oJoh8yZVLc1AXliRUwnE/
 Send it to Claude in chat, share a Drive link, drop it in the Drive Art Inbox, or upload it here
 with the GitHub app (duffquest → grok_art → Add file → Upload). Name it what it is.
 
+## Moved out (Nov 12, 2026)
+657 old drops and scratch files (~625 MB) left this folder. They're NOT gone: git history keeps every one.
+- Browse them on GitHub (works on a phone): https://github.com/duffpowell-commits/duffquest/tree/ee10a96caaa9935ed8a969287202ad1b44bf8ef3/grok_art
+- Restore one in a session: `git checkout ee10a96 -- grok_art/<path>`
+- No Drive copy: git history is the archive (3 test zips sit in Drive "DuffQuest grok_art archive (moved from repo 2026-11-12)").
+What stayed: the files the import tools in `tools/` still read, plus `requests/`.
+
+## Keeping the repo small (sessions read this)
+- The repo is already ~1.1 GB, mostly this folder. History is never rewritten (no force push), so the only fix is
+  to stop adding weight.
+- Commit the **original** drop and the final keeper only. Conversions, crops, quantize tests, contact sheets and
+  other scratch go in `grok_art/<drop>/_work/` (git-ignored) or a `*_tmp*` name.
+- Big batches (over ~20 MB) stay in Drive "97 Gemini art drops"; commit just the files the game imports from.
+
 ## Rules for every image
 - **PNG, not JPG** if Grok offers it (JPG leaves a coloured fringe when the background is cut out).
 - **Background:** flat magenta `#FF00FF` for sprites. For characters wearing pink/magenta (Duff's

@@ -5,6 +5,22 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** HD-2D polish pass: painted street gets a 1-px unsharp after the fit (`tools/import_street.py`).
+  Lighting follows the clock like style board 2: `hd_presentation.gd` grades the world warm morning -> gold dusk ->
+  blue night (replaces the flat night overlay), warm light pools fade in at shop doors after sunset, contact
+  shadows swing and stretch with the sun, and street props now cast them (`dressing.gd`). Dialogue box hugs its
+  text (bottom-anchored, 40 px portrait). `grok_art/**/_work/` + `*_tmp*` are git-ignored; drop rules in
+  `grok_art/README.md`. Renders: `docs/renders/lighting_day_dusk_night.png`, `dialog_box_before_after.png`,
+  `ground_crisp_before_after.png`. `arena_shot at:X,Y,MIN` sets the clock.
+- **2026-11-12** Side-quest backbone (HD-2D plan step 1-2): `scripts/side_quests.gd` holds one save-safe state for
+  hand-made side quests (stages, clues, branch choice, NEW flag); save v8 migrate adds an empty `side_quests`, and
+  `clean()` drops unknown ids / junk so no save can break the loader. Phone gets a **Notes** app (the journal). Gold
+  `!` / teal `?` badges float over quest givers and over whoever the current stage needs. Dialogue now types out
+  (70 chars/s, pre-wrapped so words never jump); the first tap finishes the line, the second moves on. Debug builds
+  get Settings > "Dev: quests" (jump any quest to any stage or branch; Duff warps to the right NPC), and web builds
+  take `#dq=quest:<id>:<stage>`. The 4 quests (porch mystery, Grease Trap bounty, Brittany's side gig, lost & found)
+  are defined but `ready: false`, so players see nothing until their content lands. 32 new checks in test_daily.
+  `docs/renders/side_quests_backbone.png`.
 - **2026-11-11** Last teal slabs painted (IGN v3 audit): props sheet K6 (16 props). Kwik-N-Go is a shelf of picture
   tiles (honey bun, formula can, diapers, cherries...); the temp check grills a real raw cut per protein (chicken,
   turkey, beef, pork chop, ribeye, salmon; wings reuse the Fork wings, paled while raw) that browns as the core climbs;

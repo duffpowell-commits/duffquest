@@ -70,6 +70,9 @@ static func logical_size(name: String) -> Vector2:
 	return Vector2(tx.get_width(), tx.get_height()) / density(info(name))
 
 static var _soft_shadow: Texture2D
+## Set each frame by hd_presentation.gd from the clock: where the sun throws shadows, and how long they get.
+static var sun_shift: = Vector2.ZERO
+static var sun_stretch: = 1.0
 static func shadow(ci: CanvasItem, foot: Vector2, w: float = 7.0, h: float = 2.4, a: float = 0.32) -> void:
 	if _soft_shadow == null:
 		var image := Image.create(64,24,false,Image.FORMAT_RGBA8)
@@ -78,7 +81,9 @@ static func shadow(ci: CanvasItem, foot: Vector2, w: float = 7.0, h: float = 2.4
 				var d := Vector2((x-32.0)/32.0,(y-12.0)/12.0).length()
 				image.set_pixel(x,y,Color(0.12,0.13,0.17,pow(maxf(0.0,1.0-d),1.6)))
 		_soft_shadow = ImageTexture.create_from_image(image)
-	ci.draw_texture_rect(_soft_shadow,Rect2((foot+Vector2(1,0)).round()-Vector2(w*1.3,h*1.7),Vector2(w*2.6,h*3.4)),false,Color(1,1,1,a))
+	var sw: = w * sun_stretch
+	var c: = foot + Vector2(1, 0) + sun_shift * (w / 6.0)
+	ci.draw_texture_rect(_soft_shadow,Rect2(c.round()-Vector2(sw*1.3,h*1.7),Vector2(sw*2.6,h*3.4)),false,Color(1,1,1,a))
 
 const DUFF_MOODS: = ["smirk", "tired", "happy"]
 const HAPPY_WORDS: = ["!", "<3", "love", "yes", "great", "nice", "happy", "+", "win", "best", "achievement", "thank", "hero", "perfect", "bravo", "heck yeah", "hell yeah", "baby", "promoted", "victory"]
