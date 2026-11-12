@@ -1,9 +1,10 @@
 extends RefCounted
 
-const VERSION: = 7
+const VERSION: = 8
 const MAX_THREAD: = 60
 const Market: = preload("res://scripts/market.gd")
 const Errands: = preload("res://scripts/errands.gd")
+const SideQuests: = preload("res://scripts/side_quests.gd")
 const DEFAULT_PATH: = "user://duffquest_save.json"
 
 static func exists(path: String = DEFAULT_PATH) -> bool:
@@ -120,6 +121,10 @@ static func migrate(d: Dictionary) -> Dictionary:
 		d["bus_pass_until"] = -1
 		d["bus_rides"] = 0
 		v = 7
+	if v < 8:
+		# side quests + phone Notes journal: nothing started yet
+		d["side_quests"] = SideQuests.clean(d.get("side_quests", {}))
+		v = 8
 	d["version"] = v
 	return d
 

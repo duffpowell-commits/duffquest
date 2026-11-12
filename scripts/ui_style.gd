@@ -36,6 +36,20 @@ static func panel(ci: CanvasItem, r: Rect2, fill: Color = PANEL, alpha: float = 
 	ci.draw_rect(r.grow(-w * 1.6), Color(CREAM, 0.16 * alpha), false, w * 0.5)
 	ci.draw_rect(r, Color(INK, alpha), false, w * 1.4)
 
+## Side-quest marker over an NPC: "!" (gold, has a quest for you) or "?" (teal, your quest wants you here).
+## Ink-bordered badge with a hard shadow and a little tail, in world pixels. `p` = the tail's tip.
+static func quest_marker(ci: CanvasItem, p: Vector2, mark: String) -> void:
+	install()
+	var col: = GOLD if mark == "!" else TEAL
+	var r: = Rect2(p + Vector2(-4.5, -13.0), Vector2(9.0, 10.0))
+	ci.draw_rect(Rect2(r.position + Vector2(1, 1), r.size), Color(INK, 0.6))
+	ci.draw_colored_polygon(PackedVector2Array([p + Vector2(-2.5, -3.5), p + Vector2(2.5, -3.5), p]), INK)
+	ci.draw_rect(r, INK)
+	ci.draw_rect(r.grow(-1.0), col)
+	ci.draw_rect(Rect2(r.position + Vector2(1, 1), Vector2(r.size.x - 2.0, 3.0)), col.lightened(0.25))
+	ci.draw_string_outline(display, Vector2(r.position.x, r.end.y - 1.6), mark, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 9, 2, INK)
+	ci.draw_string(display, Vector2(r.position.x, r.end.y - 1.6), mark, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 9, CREAM)
+
 ## Cream lettering with an ink outline, in the display font.
 static func label(ci: CanvasItem, pos: Vector2, text: String, size: int, col: Color = CREAM, width: float = -1.0,
 		align: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT, outline: int = 3) -> void:
