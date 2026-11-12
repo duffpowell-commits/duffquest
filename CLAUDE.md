@@ -22,6 +22,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Side quests (Nov 12):** `scripts/side_quests.gd` + phone Notes journal + `!`/`?` markers + typewriter dialogue.
   New quests: add to `SideQuests.LIST`, wire triggers in main.gd, then flip `ready: true`. Dev: Settings > "Dev:
   quests" (debug builds), `#dq=quest:<id>:<stage>` (web), `arena_shot` ids `quest` / `type` / `notes`.
+  **Live: porch mystery** (day 2+, ends fighting Cheeto Chad; `arena_shot` `porch` / `chad`). Still `ready: false`:
+  Grease Trap bounty, Brittany's gig, lost & found.
 - **Lighting (Nov 12):** time of day lives in `hd_presentation.gd` (`SKY` keyframes, door pools, sun-driven
   `Art.sun_shift`). Render any hour with `arena_shot -- at:X,Y,MIN`. Grok art scratch goes in `grok_art/<drop>/_work/`
   (ignored); the 674 MB already there stays (no history rewrites).
