@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** Side quest 1 live: **porch mystery** (`ready: true`, offered from day 2). Madison asks Duff to find
+  who keeps taking the packages; Brittany saw orange fingers; the porch yields a gas-station receipt; knocking on the
+  neighbor's door (daytime only) flushes out Cheeto Chad, a 6 HP pirate who bolts. Catch him: +$60, +12 happy,
+  achievement "Neighborhood Watch". Let him over the fence and the quest waits for the next knock. Triggers live in
+  `main.gd` `quest_talk()` / `quest_interactables()` / `porch_quest_won()`. End-to-end check in test_daily.
+  `arena_shot` ids `porch` / `chad`; render `docs/renders/quest_porch_mystery.png`. Other 3 quests still `ready: false`.
 - **2026-11-12** HD-2D polish pass: painted street gets a 1-px unsharp after the fit (`tools/import_street.py`).
   Lighting follows the clock like style board 2: `hd_presentation.gd` grades the world warm morning -> gold dusk ->
   blue night (replaces the flat night overlay), warm light pools fade in at shop doors after sunset, contact
