@@ -39,6 +39,13 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   (it rewrites the old fences). Phone app icons, Wordle tiles, grocery goods/kiosks/people, symphony mirror/bus/notes/snacks
   and show & tell pillows come from the `k7_sheet` (`kf_*`, `tools/import_kitchen_props.py`). Cards: `b["stack"] = true`
   puts an icon above the label. UI audit now has `symphony_bus/_concert/_snacks` shots.
+- **Characters (Nov 12):** all 20 v1 chibi walk sheets (inspector, pete, karen + buddy, hoa, butler, drunk, heckler,
+  kid, hustler, scammer, cashier, chef, pharmacist, sushi chef, phlebotomist, sitter, usher, waitress, madison_dress)
+  repainted in the Sea of Stars style of `ch_brittany`; the Grease Trap boss has its own `ch_grease` (no tint).
+  Phone avatars (`av_*`) are head crops of the new sheets. Re-do one: Canva sheet (4x4, magenta) ->
+  `tools/fix_sheet_cells.py` for backwards frames -> `tools/prep_canva_sheet.py SRC OUT --mirror-left` (strips grid
+  lines, row 4 = mirrored row 3) -> `tools/import_big_sheet.py OUT ch_<name>`. Masters: Drive "97 Gemini art drops",
+  `ch_<name>_v1.png`. Old `ch_grillboy` is unused. HD dialogue portraits were already current.
 - **Lighting (Nov 12):** time of day lives in `hd_presentation.gd` (`SKY` keyframes, door pools, sun-driven
   `Art.sun_shift`). Render any hour with `arena_shot -- at:X,Y,MIN`. Grok art scratch goes in `grok_art/<drop>/_work/`
   (ignored); the 674 MB already there stays (no history rewrites).
@@ -46,7 +53,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
-3. **Grease boss art:** `grease` still reuses Grill-Boy tinted; give it its own sprite + arena.
+3. **Grease boss art:** done Nov 12 (own sprite `ch_grease`, alley arena already its own). Left: nothing unless Duff asks.
 4. **Boot under 10 s** (17.0 s now): move the next-biggest chunk of index.pck to `extra.pck`.
 5. **Balance re-check** after the playtest (gates 45-65, wait drain floor 40).
 History of everything built: `TRACKER.md` (newest first).
