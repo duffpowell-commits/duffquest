@@ -86,6 +86,28 @@ jobs:
           # pre-gzipped engine: index.html unzips it in the browser (export_presets.cfg html/head_include)
           gzip -9 -k -n build/web/index.wasm
           ls -la build/web
+      - name: Export web as a home-screen app (GitHub Pages)
+        # Same game, exported with the PWA switched on so iPhone players can Share -> Add to Home Screen
+        # and launch it full screen with no Safari bars (iPhone Safari has no fullscreen API for games,
+        # and itch's iframe can't be installed). Only this copy gets the service worker; itch is untouched.
+        run: |
+          cp export_presets.cfg /tmp/presets.bak
+          sed -i '0,/progressive_web_app\/enabled=false/s//progressive_web_app\/enabled=true\nprogressive_web_app\/display=1\nprogressive_web_app\/orientation=1\nprogressive_web_app\/background_color=Color(0, 0, 0, 1)/' export_presets.cfg
+          mkdir -p build/pages
+          godot --headless --path . --export-release "Web" build/pages/index.html
+          cp /tmp/presets.bak export_presets.cfg
+          cp build/web/extra.pck build/pages/extra.pck
+          gzip -9 -k -n build/pages/index.wasm
+          # iOS reads these from the page, not only the manifest
+          sed -i 's#<head>#<head><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Duff Quest">#' build/pages/index.html
+          sed -i 's#<meta name="viewport" content="#<meta name="viewport" content="viewport-fit=cover, #' build/pages/index.html
+          touch build/pages/.nojekyll
+          ls -la build/pages
+          grep -o '<head>.\{0,400\}' build/pages/index.html | head -c 600; echo
+          test -s build/pages/index.manifest.json
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/pages
       - name: Export Android (debug APK)
         env:
           GODOT_ANDROID_KEYSTORE_DEBUG_PATH: ${{ github.workspace }}/debug.keystore
@@ -133,3 +155,21 @@ jobs:
           unzip -qo butler.zip -d butler && chmod +x butler/butler
           ./butler/butler push build/web "$target:html" --userversion "${GITHUB_SHA::7}"
           ./butler/butler status "$target:html"
+
+  pages:
+    # Publishes the home-screen web build to https://duffpowell-commits.github.io/duffquest/
+    # One-time setup on GitHub: Settings -> Pages -> Source: "GitHub Actions". Until then this job
+    # fails softly and nothing else is affected.
+    needs: export
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
