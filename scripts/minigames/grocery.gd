@@ -14,6 +14,8 @@ const SPOTS: = {
 const ICON: = {"honey buns": "#d9a441", "flour": "#f4f0e0", "chocolate": "#5a3220", "cherries": "#c0182a", "eggs": "#f6ead0",
 	"cream": "#eef4ff", "formula": "#7ab0e0", "diapers": "#a0d0a0", "ensure": "#e6e6f0", "treats": "#e08a2a" }
 const KIOSK: = Rect2(18, 134, 44, 14)
+const STOCK: = ["kf_shop_honey", "kf_shop_flour", "kf_shop_chocolate", "kf_shop_cherries", "kf_shop_eggs",
+	"kf_shop_cream", "kf_shop_formula", "kf_shop_diapers", "kf_shop_ensure", "kf_shop_treats"]
 const COUPON: = Rect2(258, 134, 44, 14)
 const START: = Vector2(160, 140)
 const ACCEL: = 260.0
@@ -497,8 +499,12 @@ func _draw_game() -> void:
 		var s: Rect2 = SHELVES[i]
 		draw_rect(Rect2(s.position + Vector2(2, 2), s.size), Color(0, 0, 0, 0.2))
 		draw_rect(s, Color("#8a6a4a"))
+		var k: = i * 3
 		for x in range(int(s.position.x) + 4, int(s.end.x) - 4, 9):
-			draw_rect(Rect2(x, s.position.y + 1, 6, 6), Color.from_hsv(fmod(x * 0.137 + i * 0.3, 1.0), 0.45, 0.85))
+			# stocked shelf: the painted shop goods, dimmed so the list items still pop
+			if not pic(str(STOCK[k % STOCK.size()]), Vector2(x + 3, s.position.y + 3.5), 7.0, Color(0.72, 0.72, 0.78)):
+				draw_rect(Rect2(x, s.position.y + 1, 6, 6), Color.from_hsv(fmod(x * 0.137 + i * 0.3, 1.0), 0.45, 0.85))
+			k += 7
 	for i in SHELVES.size():
 		_aisle_tag(i)
 	for id in items:
@@ -507,8 +513,9 @@ func _draw_game() -> void:
 		var sp: Vector2 = SPOTS[id]
 		var got: = cart.has(id)
 		var gone: = skipped.has(id)
-		draw_rect(Rect2(sp + Vector2(-4, -4), Vector2(8, 8)), Color(ICON.get(id, "#ffffff")) if not gone else Color(0.5, 0.5, 0.5, 0.4))
-		draw_rect(Rect2(sp + Vector2(-4, -4), Vector2(8, 8)), Color(0, 0, 0, 0.6), false, 1.0)
+		if not pic(_icon(id), sp, 12.0, Color.WHITE if not gone else Color(0.5, 0.5, 0.5, 0.4)):
+			draw_rect(Rect2(sp + Vector2(-4, -4), Vector2(8, 8)), Color(ICON.get(id, "#ffffff")) if not gone else Color(0.5, 0.5, 0.5, 0.4))
+			draw_rect(Rect2(sp + Vector2(-4, -4), Vector2(8, 8)), Color(0, 0, 0, 0.6), false, 1.0)
 		if id == oos and not got:
 			txt(sp + Vector2(-10, -6), "OUT", 6, Color("#a43a2c"))
 		elif not got and not gone:
@@ -517,12 +524,26 @@ func _draw_game() -> void:
 		else:
 			txt(sp + Vector2(-3, 3), "x" if gone else "ok", 6, Color.WHITE)
 
-	draw_rect(KIOSK, Color("#2a2a3a"))
-	txt(KIOSK.position + Vector2(0, 10), "SELF-CHECK", 6, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, KIOSK.size.x)
-	draw_rect(COUPON, Color("#c8a83a") if not coupons_done else Color("#6a6a5a"))
-	txt(COUPON.position + Vector2(0, 10), "COUPONS", 6, Color.BLACK, HORIZONTAL_ALIGNMENT_CENTER, COUPON.size.x)
+	_station(KIOSK, "kf_kiosk_self", "SELF-CHECK", Color("#2a2a3a"), Color("#c0d890"), true)
+	_station(COUPON, "kf_kiosk_coupon", "COUPONS", Color("#c8a83a"), Color.BLACK, not coupons_done)
 	if karen_on:
 		var kp: = Vector2(karen_x, KAREN_Y)
+		if not _people(kp, karen_dir):
+			_karen_rects(kp)
+
+	var cp: = pos + face * 7.0
+	var front: = face.y > 0.3   # pushing toward the camera: the cart is drawn over Duff
+	if front:
+		_draw_duff()
+	if not _cart(cp):
+		_cart_rects(cp)
+	if not front:
+		_draw_duff()
+	if stun_t > 0.0:
+		txt(pos + Vector2(-6, -11), "!?", 7, Color("#c8573a"))
+	_draw_overlay()
+
+func _karen_rects(kp: Vector2) -> void:
 		draw_rect(Rect2(kp + Vector2(karen_dir * 6 - 5, -3), Vector2(10, 7)), Color("#9a9aa8"))
 		draw_rect(Rect2(kp + Vector2(-3, -4), Vector2(6, 8)), Color("#c86aa0"))
 		draw_rect(Rect2(kp + Vector2(-3, -10), Vector2(6, 6)), Color("#f2d2b4"))
@@ -530,17 +551,68 @@ func _draw_game() -> void:
 		draw_rect(Rect2(kp + Vector2(-karen_dir * 9 - 2, -2), Vector2(5, 7)), Color("#6a8ac0"))
 		draw_rect(Rect2(kp + Vector2(-karen_dir * 9 - 2, -7), Vector2(5, 5)), Color("#dcae8e"))
 
-	var cp: = pos + face * 7.0
+func _draw_duff() -> void:
+	if not _duff(pos):
+		draw_rect(Rect2(pos + Vector2(-3, -2), Vector2(6, 7)), Color("#fbf6ec"))
+		draw_rect(Rect2(pos + Vector2(-3, -8), Vector2(6, 6)), Color("#f2d2b4"))
+
+func _cart_rects(cp: Vector2) -> void:
 	draw_rect(Rect2(cp + Vector2(-5, -4), Vector2(10, 8)), Color("#b0b0c0"))
 	draw_rect(Rect2(cp + Vector2(-5, -4), Vector2(10, 8)), Color("#5a5a6a"), false, 1.0)
 	var n: = 0
 	for id in cart:
 		draw_rect(Rect2(cp + Vector2(-4 + (n % 3) * 3, -3 + (n / 3) * 3), Vector2(3, 3)), Color(ICON.get(id, "#ffffff")))
 		n += 1
-	draw_rect(Rect2(pos + Vector2(-3, -2), Vector2(6, 7)), Color("#fbf6ec"))
-	draw_rect(Rect2(pos + Vector2(-3, -8), Vector2(6, 6)), Color("#f2d2b4"))
-	if stun_t > 0.0:
-		txt(pos + Vector2(-6, -11), "!?", 7, Color("#c8573a"))
+
+## Painted shelf items: kf_shop_* (tools/import_kitchen_props.py k6 sheet).
+func _icon(id: String) -> String:
+	return "kf_shop_honey" if id == "honey buns" else "kf_shop_" + id
+
+## Self-check / coupon station: painted kiosk standing on its spot with a name plate; flat box if the art is missing.
+func _station(r: Rect2, art: String, label: String, col: Color, ink: Color, lit: bool) -> void:
+	if Art.tex(art) == null:
+		draw_rect(r, col if lit else Color("#6a6a5a"))
+		txt(r.position + Vector2(0, 10), label, 6, ink, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+		return
+	Art.shadow(self, Vector2(r.get_center().x, r.end.y - 1.0), 10.0, 2.5, 0.35)
+	pic(art, Vector2(r.get_center().x, r.end.y - 14.0), 24.0, Color.WHITE if lit else Color(0.55, 0.55, 0.55))
+	var plate: = Rect2(r.position.x + 2.0, r.end.y - 6.0, r.size.x - 4.0, 7.0)
+	draw_rect(plate, Color(0.08, 0.07, 0.1, 0.85))
+	txt(plate.position + Vector2(0, 6), label, 5, Color("#f2c66a") if lit else Color(1, 1, 1, 0.5), HORIZONTAL_ALIGNMENT_CENTER, plate.size.x)
+
+const PEOPLE_SCALE: = 0.5   # overworld sprites (32 tall) shrunk to the shop map's scale
+
+## Karen with her cart, plus the buddy she dragged along, as their overworld sprites. False if the art is missing.
+func _people(kp: Vector2, dir: float) -> bool:
+	if Art.tex("ch_karen") == null:
+		return false
+	_small_person("ch_karen_buddy", kp + Vector2(-dir * 9.0, 5.0), Vector2(dir, 0), true)
+	pic("sd_shopping_cart", kp + Vector2(dir * 8.0, -2.0), 11.0)
+	_small_person("ch_karen", kp + Vector2(0, 5.0), Vector2(dir, 0), true)
+	return true
+
+func _small_person(name: String, foot: Vector2, dir: Vector2, moving: bool) -> void:
+	draw_set_transform(foot, 0.0, Vector2(PEOPLE_SCALE, PEOPLE_SCALE))
+	Art.person(self, name, Vector2.ZERO, dir, t, moving)
+	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+func _cart(cp: Vector2) -> bool:
+	if Art.tex("sd_shopping_cart") == null:
+		return false
+	pic("sd_shopping_cart", cp + Vector2(0, -1), 12.0)
+	var n: = 0
+	for id in cart:   # what's in the basket peeks over the rim
+		pic(_icon(id), cp + Vector2(-3.5 + (n % 3) * 3.5, -6.0 - (n / 3) * 2.5), 5.0)
+		n += 1
+	return true
+
+func _duff(p: Vector2) -> bool:
+	if Art.tex("duff_home") == null:
+		return false
+	_small_person("duff_home", p + Vector2(0, 6.0), face, vel.length() > 5.0)
+	return true
+
+func _draw_overlay() -> void:
 	if state == "shop":
 		_list_bar()
 		return
@@ -587,7 +659,8 @@ func _draw_kiosk() -> void:
 	draw_rect(Rect2(mx - 1, r.position.y - 3, 3, r.size.y + 6), Color("#c8573a"))
 	if scan_i < scan_list.size():
 		var id: = str(scan_list[scan_i])
-		draw_rect(Rect2(150, 82, 20, 20), Color(ICON.get(id, "#ffffff")))
+		if not pic(_icon(id), Vector2(160, 92), 22.0):
+			draw_rect(Rect2(150, 82, 20, 20), Color(ICON.get(id, "#ffffff")))
 		txt(Vector2(0, 112), str(Errands.LABELS.get(id, id)), 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
 
 func _draw_receipt() -> void:
