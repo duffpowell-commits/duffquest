@@ -787,7 +787,7 @@ func _side_quest_checks(main: Node) -> void:
 	check("sq: clean survives non-dicts", SQ.clean(null).is_empty() and SQ.clean([1, 2]).is_empty())
 	# markers + journal: hidden until a quest is "ready"
 	var fresh: = SQ.new_state()
-	check("sq: no markers or journal rows for unready quests", SQ.marker_for(fresh, "brittany") == "" and SQ.journal(fresh).is_empty())
+	check("sq: no markers or journal rows for unready quests", SQ.marker_for(fresh, "mail") == "" and SQ.journal(fresh).is_empty())
 	check("sq: porch is live: '!' over Madison from day 2, not day 1", SQ.marker_for(fresh, "madison") == "!" and SQ.marker_for(fresh, "madison", false, 1) == "" and SQ.offerable(fresh, "porch", 2) and not SQ.offerable(fresh, "porch", 1))
 	check("sq: dev sees the '!' over the porch giver", SQ.marker_for(fresh, "madison", true) == "!")
 	SQ.start(fresh, "porch")
@@ -890,6 +890,40 @@ func _side_quest_checks(main: Node) -> void:
 	check("grease: doesn't burn today's 86 List bounty", main.bounties["day"] == bday0)
 	main.dialog.clear()
 	check("grease: done = board opens the normal 86 List again", not main.quest_talk("bounty_board"))
+	# Brittany's Side Gig, both branches: offer (day 5+, daytime) -> pitch -> pick -> next-day payoff
+	for pick in ["cover", "rat"]:
+		main.side_quests = {}
+		main.dialog.clear()
+		main.close_overlay()
+		main.day_count = 4
+		main.clock = 600.0
+		check("gig(%s): not offered before day 5 (bets instead)" % pick, not main.quest_talk("brittany"))
+		main.dialog.clear()
+		main.close_overlay()
+		main.day_count = 5
+		main.clock = 1400.0
+		check("gig(%s): night = she's gone, quest not started" % pick, main.quest_talk("brittany") and SQ.status(main.side_quests, "gig") == "")
+		main.dialog.clear()
+		main.clock = 600.0
+		check("gig(%s): Brittany offers it" % pick, main.quest_talk("brittany") and SQ.stage(main.side_quests, "gig") == 1)
+		main.dialog.clear()
+		check("gig(%s): the pitch moves to the choice" % pick, main.quest_talk("brittany") and SQ.stage(main.side_quests, "gig") == 2)
+		main.dialog.clear()
+		main.gig_choose("nope")
+		check("gig(%s): junk choice ignored" % pick, SQ.stage(main.side_quests, "gig") == 2)
+		main.gig_choose(pick)
+		check("gig(%s): choice stored, stage 3" % pick, SQ.choice(main.side_quests, "gig") == pick and SQ.stage(main.side_quests, "gig") == 3)
+		main.dialog.clear()
+		check("gig(%s): same day = not yet" % pick, main.quest_talk("brittany") and SQ.is_active(main.side_quests, "gig"))
+		main.dialog.clear()
+		main.day_count = 6
+		var gm0: int = main.money
+		check("gig(%s): next day pays off and finishes" % pick, main.quest_talk("brittany") and SQ.is_done(main.side_quests, "gig") and SQ.choice(main.side_quests, "gig") == pick and main.money == gm0 + (60 if pick == "cover" else 40))
+		check("gig(%s): its achievement" % pick, main.achievements.has("Ranch Cartel" if pick == "cover" else "Narc of the Fork"))
+		main.dialog.clear()
+		check("gig(%s): done = Brittany is back to bets" % pick, not main.quest_talk("brittany"))
+		main.dialog.clear()
+		main.close_overlay()
 	main.side_quests = {}
 	main.day_count = dc0
 	main.clock = ck0

@@ -3722,7 +3722,86 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
 func quest_talk(npc: String) -> bool:
-	return _porch_talk(npc) or _grease_talk(npc)
+	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc)
+
+## Brittany's Side Gig: she's selling the Fork's house ranch on Marketplace. Cover for her or tell Chef.
+## The pick is stored as the quest's choice; the payoff lands the next day.
+func _gig_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "gig"
+	if npc != "brittany":
+		return false
+	var wants: = SideQuests.offerable(st, q, day_count, show_hidden_quests) or SideQuests.is_active(st, q)
+	if not wants:
+		return false
+	if phase() == "Night":
+		_say(["Brittany's gone home. Her car's still here, though. The trunk smells like ranch. Come back in the daytime."])
+		return true
+	if SideQuests.offerable(st, q, day_count, show_hidden_quests):
+		SideQuests.start(st, q)
+		_say(["Brittany: Okay. Don't freak out. I have a side hustle.",
+			"Brittany: It's a business. It has a logo. It has a PowerPoint. Talk to me again when you're ready to have your mind blown.",
+			"New side quest: Brittany's Side Gig (phone > Notes)."])
+		save_game()
+		return true
+	match SideQuests.stage(st, q):
+		1:
+			SideQuests.advance(st, q)
+			_say(["Brittany turns her phone sideways. Slide one: BRITT'S ARTISANAL RANCH. Slide two: a picture of the Fork's ranch bucket.",
+				"Brittany: I fill mason jars from the walk-in. Hand-lettered labels. Eight bucks a jar on Marketplace. I've moved ninety jars.",
+				"Brittany: Chef's counting the ranch buckets. He thinks it's the dishwasher. I need you to say you saw the dishwasher take it. Or don't. Your call. I'm watching."])
+			return true
+		2:
+			_menu("BRITTANY'S SIDE GIG", ["Brittany is staring at me. She hasn't blinked in a while.",
+				"Chef thinks Manny the dishwasher is stealing ranch. Manny has three kids and a bad knee."],
+				[["cover", "Cover for her", KEY_1], ["rat", "Tell Chef the truth", KEY_2], ["later", "Not yet", KEY_ESCAPE]],
+				func (ch: String) -> void:
+					gig_choose(ch))
+			return true
+		3:
+			if SideQuests.has_clue(st, q, "day:%d" % day_count):
+				_say(["Brittany: It's been, like, an hour. Give it a day. Let the ranch settle."])
+				return true
+			_say(gig_payoff())
+			return true
+	return false
+
+func gig_choose(ch: String) -> void:
+	if not ch in ["cover", "rat"] or not SideQuests.is_active(side_quests, "gig") or SideQuests.stage(side_quests, "gig") != 2:
+		return
+	SideQuests.set_choice(side_quests, "gig", ch)
+	SideQuests.add_clue(side_quests, "gig", "day:%d" % day_count)
+	SideQuests.advance(side_quests, "gig")
+	if ch == "cover":
+		_say(["I tell Chef I didn't see anything. Which is technically true. I wasn't looking.",
+			"Brittany mouths 'thank you' and makes a heart with her hands. It's a little ranch-sticky."])
+	else:
+		_say(["I tell Chef. Chef says nothing. Chef goes very quiet and very red and walks into the walk-in and shuts the door.",
+			"Brittany saw the whole thing. She's not mad. She's taking notes."])
+	save_game()
+
+func gig_payoff() -> Array:
+	var ch: = SideQuests.choice(side_quests, "gig")
+	SideQuests.finish(side_quests, "gig", ch)
+	var lines: Array = []
+	var ach: = ""
+	if ch == "rat":
+		money += 40
+		bet["day"] = day_count  # she's not betting with a narc today
+		lines = ["Chef slips me $40 in an envelope marked 'LOYALTY'. Manny keeps his job. Brittany keeps... nothing. The ranch empire has fallen.",
+			"Brittany: I respect it. I hate it, but I respect it. No bets today. I need to grieve.", "+$40. Quest done."]
+		ach = "Narc of the Fork"
+	else:
+		money += 60
+		gain_happy(5.0)
+		lines = ["Brittany hands me $60 and a mason jar with my name on it. Hand-lettered. 'DUFF'S RESERVE.'",
+			"Brittany: Silent partner. Very silent. If Chef asks, you're allergic to ranch now.", "+$60, one jar of ranch. {partner} loves it on everything (+happy). Quest done."]
+		ach = "Ranch Cartel"
+	if not achievements.has(ach):
+		achievements.append(ach)
+		lines.append("ACHIEVEMENT UNLOCKED: %s" % ach)
+	save_game()
+	return lines
 
 ## The Grease Trap: the 86 List grows an unsigned entry; after close the board sends Duff out back to fight it.
 func _grease_talk(npc: String) -> bool:
