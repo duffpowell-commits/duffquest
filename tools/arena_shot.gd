@@ -1,6 +1,6 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
-##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "porch"/"chad" (porch mystery: '?' on the neighbor door / the suspect fleeing), "at:X,Y[,MIN]" (outdoors at a world point, optional clock minute), or "fryer"/"sandwich" = the kitchen station with food in it)
+##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "porch"/"chad" (porch mystery: '?' on the neighbor door / the suspect fleeing), "grease86" (Grease Trap '?' on the 86 List at night; the fight itself is "bounty:grease"), "at:X,Y[,MIN]" (outdoors at a world point, optional clock minute), or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var game: Node
@@ -49,6 +49,9 @@ func _process(_d: float) -> void:
 			m.SideQuests.add_clue(m.side_quests, "porch", "orange crumbs")
 			m.SideQuests.start(m.side_quests, "gig")
 			m.dialog.clear()
+		elif id == "grease86":  # Grease Trap stage 2: '?' over the 86 List
+			m.dev_warp_quest("grease", 2)
+			m.dialog.clear()
 		elif id in ["porch", "chad"]:  # porch mystery stage 3: '?' on the neighbor's door / Cheeto Chad bolting
 			m.clock = 600.0
 			m.dev_warp_quest("porch", 3)
@@ -85,9 +88,13 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 	if frame == 236 and id == "chad":
 		m.quest_talk("neighbor")
+	if frame >= 236 and id == "grease86":
+		m.clock = 1380.0
+		m.dialog.clear()
+		m.player.position = m.BOARD_PT + Vector2(-4, 6)
 	if frame == 262 and id == "chad":
 		m.dialog.clear()
-	if frame >= 240 and id in ["quest", "type", "porch", "chad"]:
+	if frame >= 240 and id in ["quest", "type", "porch", "chad", "grease86"]:
 		m.toast_t = 0.0   # the DEV warp toast would sit on top of the marker
 	if frame == 250 and id == "type":
 		m._say(["Brittany: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case."])
@@ -97,7 +104,7 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad"] and not id.begins_with("at:"):
+	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86"] and not id.begins_with("at:"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
