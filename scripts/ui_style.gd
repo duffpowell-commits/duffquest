@@ -158,7 +158,7 @@ static func prop_circle(ci: CanvasItem, c: Vector2, rad: float, fill: Color, w: 
 ## a coloured badge tab on the left holding the key letter, ink lettering. `col` tints the result:
 ## low saturation = neutral cream card; anything saturated (green right / red wrong) floods the card.
 static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, badge_col: Color, col: Color,
-		enabled: bool = true, pressed: bool = false, w: float = 1.0, size: int = 8, icon: Texture2D = null) -> void:
+		enabled: bool = true, pressed: bool = false, w: float = 1.0, size: int = 8, icon: Texture2D = null, stack: bool = false) -> void:
 	var neutral: = col.s < 0.25
 	var fill: = CREAM if neutral else col.lightened(0.1)
 	var ink_text: = INK if neutral else CREAM
@@ -195,7 +195,7 @@ static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, b
 	ci.draw_rect(rr, INK, false, w * 1.4)
 	var tx: = badge_r.end.x + 3 * w
 	var tw: = rr.end.x - tx - 3 * w
-	if icon != null and tw < 17.0:   # narrow picture tile: re-lay it as icon on top, name underneath
+	if icon != null and (tw < 17.0 or stack):   # narrow (or app-style) picture tile: icon on top, name underneath
 		var ih2: = rr.size.y - 9.0
 		var iw2: = minf(ih2 * icon.get_width() / float(icon.get_height()), rr.size.x - 6.0)
 		ih2 = iw2 * icon.get_height() / float(icon.get_width())

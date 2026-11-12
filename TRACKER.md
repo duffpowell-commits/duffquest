@@ -5,6 +5,15 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** **Fences + the last 5 flat screens painted.** Fences: red brick, privacy wood, chain link and white
+  picket repainted at 4x density. Each segment is cut from one master as left post + panel + right post, 39 units post
+  to post, so runs tile with no seam and need no end piece (`tools/import_fence_hd.py`; `sd_*_end` removed).
+  Screens, from one 16-prop sheet (`k7_sheet`, `kf_*`): phone home app icons (Messages, Stonks, Fund, Gear, Settings,
+  Notes); Wordle grid and keyboard on wooden letter tiles tinted by result; grocery shelf goods, list items,
+  self-check and coupon kiosks, Karen + buddy + Duff as their sprites, a painted cart; symphony mirror, the #18 bus,
+  painted notes and snack icons; show & tell pillows and a cel-shaded patchwork quilt. Every painted piece falls back
+  to the old shape if its art is missing. Renders `docs/renders/flat_screens_fences_2026-11-12.png`,
+  `docs/renders/ui_audit_2026-11-12_flat_screens.png`.
 - **2026-11-12** **Overworld repaint (street props):** the 17 trees and street clutter (oak, maple, pine, ash,
   lilac, hedge, hydrant, mailbox, newspaper box, bench, cone, bike rack, recycling bin, shopping cart, leaves, Huskers
   flag, little free library) repainted as detailed pixel art and imported at 4x density with the same world footprint

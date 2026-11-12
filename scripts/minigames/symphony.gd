@@ -14,6 +14,7 @@ const DRESS: = {
 	"shoes": [["Dress shoes", 1.0], ["Work clogs", 0.5], ["Crocs (sport mode)", 0.1]],
 	"extra": [["A tie", 1.0], ["Spritz of {cologne}", 1.0], ["Nothing", 0.3]],
 }
+const SNACK_ICON: = {"wine": "kf_wine", "pretzels": "kf_pretzels", "bun": "kf_shop_honey"}
 const SNACKS: = [["wine", "Glass of wine for her ($12)", 12], ["pretzels", "Chocolate pretzels to share ($8)", 8], ["bun", "The honey bun in your coat pocket", 0], ["line", "Stand in the bathroom line (free)", 0]]
 const RUN_T: = 6.0
 const RUN_STEP: = 0.075
@@ -118,6 +119,8 @@ func go(s: String) -> void:
 				var b: = add_button("snack_" + str(sn[0]), Rect2(6 + (i % 2) * 156, 112 + (i / 2) * 22, 152, 20), str(sn[1]), [KEY_1, KEY_2, KEY_3, KEY_4][i])
 				if sn[0] == "bun":
 					b["enabled"] = m != null and int(m.inventory.get("honey buns", 0)) > 0
+				if SNACK_ICON.has(sn[0]) and Art.tex(SNACK_ICON[sn[0]]) != null:
+					b["icon"] = SNACK_ICON[sn[0]]
 		"bravo":
 			say = "The last chord rings out. NOW is when I clap."
 			add_button("clap", Rect2(60, 154, 200, 22), "BRAVO! Clap! (C / Space)", KEY_SPACE, Color("#4e7a3a"))
@@ -411,9 +414,10 @@ func _draw_game() -> void:
 		txt(Vector2(8, 106), "Lobby snack bar", 8, Color("#f2c66a"))
 
 func _draw_mirror() -> void:
-	draw_rect(Rect2(170, 90, 60, 60), Color("#7a6e8e"))
-	draw_rect(Rect2(172, 92, 56, 56), Color("#a8e0ff"))
-	draw_rect(Rect2(176, 96, 4, 20), Color(1, 1, 1, 0.35))
+	if not pic("kf_mirror", Vector2(200, 110), 78.0):
+		draw_rect(Rect2(170, 90, 60, 60), Color("#7a6e8e"))
+		draw_rect(Rect2(172, 92, 56, 56), Color("#a8e0ff"))
+		draw_rect(Rect2(176, 96, 4, 20), Color(1, 1, 1, 0.35))
 
 	draw_set_transform(Vector2(200, 146), 0.0, Vector2(2, 2))
 	Art.frame(self, "duff_dress", Vector2.ZERO, dress_cell().x, dress_cell().y)
@@ -426,10 +430,19 @@ func _draw_busrun() -> void:
 	draw_rect(Rect2(0, 84, W, 34), Color("#3a3a40"))
 	draw_rect(Rect2(0, 116, W, 6), Color("#bdb5a6"))
 	var bx: = 200.0 + run_t * 6.0
-	draw_rect(Rect2(bx, 86, 110, 28), Color("#2a6ab0"))
-	for i in 5:
-		draw_rect(Rect2(bx + 6 + i * 20, 90, 14, 9), Color("#a8d8f0"))
-	txt(Vector2(bx + 80, 110), "#18", 7, Color.WHITE)
+	var bus: = Art.tex("kf_bus")
+	if bus != null:   # the #18 pulling away, painted (kf_bus); its back bumper is at bx
+		var bh: = 44.0
+		var bw: = bh * bus.get_width() / float(bus.get_height())
+		Art.shadow(self, Vector2(bx + bw * 0.5, 116), bw * 0.45, 3.0, 0.35)
+		draw_texture_rect(bus, Rect2(bx, 118.0 - bh, bw, bh), false)
+		draw_rect(Rect2(bx + 4, 78, 18, 9), UiStyle.INK)
+		txt(Vector2(bx + 4, 85), "#18", 7, Color("#f2c66a"), HORIZONTAL_ALIGNMENT_CENTER, 18)
+	else:
+		draw_rect(Rect2(bx, 86, 110, 28), Color("#2a6ab0"))
+		for i in 5:
+			draw_rect(Rect2(bx + 6 + i * 20, 90, 14, 9), Color("#a8d8f0"))
+		txt(Vector2(bx + 80, 110), "#18", 7, Color.WHITE)
 	var px: = 20.0 + dist * (bx - 30.0)
 	Art.person(self, "ch_duff_suit", Vector2(px + 3.0, 116), Vector2.RIGHT, t * 1.6, true)
 	bar(Rect2(20, 74, 120, 5), dist, Color("#c0d890"))
@@ -457,5 +470,6 @@ func _draw_staff() -> void:
 			c = Color("#c0ffc0")
 		elif j[i] == "miss":
 			c = Color("#e06a4a")
-		draw_circle(Vector2(x, y), 3.0, c)
-		draw_line(Vector2(x + 3, y), Vector2(x + 3, y - 10), c, 1.0)
+		if not pic("kf_note", Vector2(x + 2.0, y - 4.0), 15.0, c):
+			draw_circle(Vector2(x, y), 3.0, c)
+			draw_line(Vector2(x + 3, y), Vector2(x + 3, y - 10), c, 1.0)
