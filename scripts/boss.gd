@@ -80,7 +80,7 @@ const BOSSES: = {
 		"rage": "Sir Sends-It-Back: I want a refund. On this FIGHT.",
 		"defeat": "Sir Sends-It-Back: ...This beating is cooked perfectly. Five stars. Still not tipping." },
 	# Side quest "The Grease Trap" (side_quests.gd): fought in the alley at night, never on the 86 List menu.
-	"grease": {"name": "The Grease Trap", "hp": 180.0, "attacks": ["posting", "charge"], "sprite": "grillboy", "tint": Color(0.78, 0.6, 0.22),
+	"grease": {"name": "The Grease Trap", "hp": 180.0, "attacks": ["posting", "charge"], "sprite": "grease",
 		"labels": {"post": "OIL" }, "tele": {"posting": "*gurgles a ladle of fryer oil*", "charge": "*slides across the floor. It IS the floor.*" },
 		"intro": "The Grease Trap: Eleven years under that fryer. Every fry you dropped, I caught. Every one. I KEPT them.",
 		"taunts": ["Smell that? That's me. That's always been me.", "Health inspector came by in 2019. I ate him. Kidding. Mostly.", "Change the oil? Change the OIL? I AM the oil.", "Your mop is a toothbrush to me."],

@@ -5,6 +5,13 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** **Character style pass.** The 20 NPC/enemy walk sheets still on the v1 chibi template (same body,
+  hair and shirt swapped) are repainted as distinct Sea of Stars-style characters matching `ch_brittany`: health
+  inspector, Pete, Karen + buddy, HOA, butler, drunk, heckler, kid, hustler, scammer, cashier, chef, pharmacist, sushi
+  chef, phlebotomist, sitter, usher, waitress and Madison's gala dress. The Grease Trap boss gets its own sprite
+  (`ch_grease`) instead of a tinted Grill-Boy. Phone avatars rebuilt from the new sheets. New
+  `tools/prep_canva_sheet.py` (grid-line removal, mirrored left row). Renders
+  `docs/renders/char_pass_before_after_2026-11-12.png`, `docs/renders/grease_boss_sprite_2026-11-12.png`.
 - **2026-11-12** **Fences + the last 5 flat screens painted.** Fences: red brick, privacy wood, chain link and white
   picket repainted at 4x density. Each segment is cut from one master as left post + panel + right post, 39 units post
   to post, so runs tile with no seam and need no end piece (`tools/import_fence_hd.py`; `sd_*_end` removed).
