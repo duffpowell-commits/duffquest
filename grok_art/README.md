@@ -20,7 +20,7 @@ with the GitHub app (duffquest → grok_art → Add file → Upload). Name it wh
 657 old drops and scratch files (~625 MB) left this folder. They're NOT gone: git history keeps every one.
 - Browse them on GitHub (works on a phone): https://github.com/duffpowell-commits/duffquest/tree/ee10a96caaa9935ed8a969287202ad1b44bf8ef3/grok_art
 - Restore one in a session: `git checkout ee10a96 -- grok_art/<path>`
-- Drive copy (partial): "DuffQuest grok_art archive (moved from repo 2026-11-12)".
+- No Drive copy: git history is the archive (3 test zips sit in Drive "DuffQuest grok_art archive (moved from repo 2026-11-12)").
 What stayed: the files the import tools in `tools/` still read, plus `requests/`.
 
 ## Keeping the repo small (sessions read this)
