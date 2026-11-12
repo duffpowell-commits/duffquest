@@ -87,15 +87,15 @@ const AUTO_DOORS: = ["home_door", "door_out", "shop", "fork", "pharmacy", "groce
 const AUTO_DOOR_R: = 9.0
 const AUTO_REARM_R: = 20.0
 const HOME_DOOR: = Vector2(95, 118)
-const SHOP_PT: = Vector2(557, 124)   # Kwik glass doors (Nov 9: was 535, left of the door art)
+const SHOP_PT: = Vector2(536, 124)   # Kwik glass doors (centre of the Nov 12 painted storefront)
 const BUNS_POS: = SHOP_PT
 const ENSURE_POS: = Vector2(172, 212)
 const PHARM_R: = Rect2(345, 306, 76, 38)
 const GROC_R: = Rect2(176, 290, 110, 48)
 const PHARM_DOOR: = Vector2(383, 352)
 const GROC_DOOR: = Vector2(231, 346)
-const RACCOON_HOME: = Vector2(405, 125)
-const RACCOON_SPOTS: = [Vector2(405, 125), Vector2(165, 350), Vector2(625, 225)]
+const RACCOON_HOME: = Vector2(384, 128)
+const RACCOON_SPOTS: = [Vector2(384, 128), Vector2(165, 350), Vector2(625, 225)]
 const PORCH_PT: = Vector2(122, 117)
 const NEIGHBOR_DOOR: = Vector2(230, 104)   # side quest "porch": the suspect's front door
 ## Side quest "alley" (Lost & Found): the three hidden things and the return box (Seen Cafe paper box).
@@ -2619,7 +2619,11 @@ func _art_rect(b: Dictionary) -> Rect2:
 	var used: = tx.get_image().get_used_rect()
 	if used.size.x == 0:
 		return r
-	return Rect2(r.position + Vector2(used.position) / 2.0, Vector2(used.size) / 2.0)
+	var inf: = Art.info(str(b["art"]))
+	var k: = Art.density(inf)
+	var org: Array = inf.get("origin", [0, 0])
+	var top: = r.position - Vector2(float(org[0]), float(org[1])) / k
+	return Rect2(top + Vector2(used.position) / k, Vector2(used.size) / k)
 
 func _random_spawn_point() -> Vector2:
 	for _i in 40:
