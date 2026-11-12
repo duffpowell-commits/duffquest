@@ -25,7 +25,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   **Live: porch mystery** (day 2+, ends fighting Cheeto Chad; `arena_shot` `porch` / `chad`) and **The Grease Trap**
   (day 4+, 86 List after 10 PM, boss `grease` reuses Grill-Boy tinted; `arena_shot` `grease86` / `bounty:grease`).
   **Brittany's Side Gig** (day 5+, cover-or-rat choice card, payoff next day; `arena_shot` `gig`).
-  Still `ready: false`: lost & found.
+  **Lost & Found, Omaha** (day 3+, flyer at the home mail table, 3 glinting finds outside, return to the Seen Cafe
+  paper box; `arena_shot` `lost`). All four quests are live.
 - **Lighting (Nov 12):** time of day lives in `hd_presentation.gd` (`SKY` keyframes, door pools, sun-driven
   `Art.sun_shift`). Render any hour with `arena_shot -- at:X,Y,MIN`. Grok art scratch goes in `grok_art/<drop>/_work/`
   (ignored); the 674 MB already there stays (no history rewrites).
