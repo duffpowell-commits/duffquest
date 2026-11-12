@@ -2266,32 +2266,19 @@
       "s": 4
     },
     "sd_chain_link_straight": {
-      "w": 96,
-      "h": 96,
+      "w": 175,
+      "h": 102,
       "cell": [
-        96,
-        96
+        175,
+        102
       ],
       "origin": [
-        6,
-        87
+        0,
+        102
       ],
-      "s": 2
+      "s": 4
     },
     "sd_chain_link_gate": {
-      "w": 96,
-      "h": 96,
-      "cell": [
-        96,
-        96
-      ],
-      "origin": [
-        6,
-        87
-      ],
-      "s": 2
-    },
-    "sd_chain_link_end": {
       "w": 96,
       "h": 96,
       "cell": [
@@ -2318,32 +2305,19 @@
       "s": 2
     },
     "sd_white_picket_straight": {
-      "w": 96,
-      "h": 96,
+      "w": 180,
+      "h": 91,
       "cell": [
-        96,
-        96
+        180,
+        91
       ],
       "origin": [
-        6,
-        87
+        0,
+        91
       ],
-      "s": 2
+      "s": 4
     },
     "sd_white_picket_gate": {
-      "w": 96,
-      "h": 96,
-      "cell": [
-        96,
-        96
-      ],
-      "origin": [
-        6,
-        87
-      ],
-      "s": 2
-    },
-    "sd_white_picket_end": {
       "w": 96,
       "h": 96,
       "cell": [
@@ -2370,32 +2344,19 @@
       "s": 2
     },
     "sd_privacy_wood_straight": {
-      "w": 96,
-      "h": 96,
+      "w": 177,
+      "h": 115,
       "cell": [
-        96,
-        96
+        177,
+        115
       ],
       "origin": [
-        6,
-        87
+        0,
+        115
       ],
-      "s": 2
+      "s": 4
     },
     "sd_privacy_wood_gate": {
-      "w": 96,
-      "h": 96,
-      "cell": [
-        96,
-        96
-      ],
-      "origin": [
-        6,
-        87
-      ],
-      "s": 2
-    },
-    "sd_privacy_wood_end": {
       "w": 96,
       "h": 96,
       "cell": [
@@ -2422,32 +2383,19 @@
       "s": 2
     },
     "sd_red_brick_straight": {
-      "w": 96,
-      "h": 96,
+      "w": 197,
+      "h": 80,
       "cell": [
-        96,
-        96
+        197,
+        80
       ],
       "origin": [
-        6,
-        87
+        0,
+        80
       ],
-      "s": 2
+      "s": 4
     },
     "sd_red_brick_gate": {
-      "w": 96,
-      "h": 96,
-      "cell": [
-        96,
-        96
-      ],
-      "origin": [
-        6,
-        87
-      ],
-      "s": 2
-    },
-    "sd_red_brick_end": {
       "w": 96,
       "h": 96,
       "cell": [
@@ -3799,6 +3747,230 @@
       "origin": [
         40,
         31
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_app_messages": {
+      "w": 78,
+      "h": 80,
+      "cell": [
+        78,
+        80
+      ],
+      "origin": [
+        39,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_app_stonks": {
+      "w": 79,
+      "h": 80,
+      "cell": [
+        79,
+        80
+      ],
+      "origin": [
+        39,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_app_fund": {
+      "w": 79,
+      "h": 80,
+      "cell": [
+        79,
+        80
+      ],
+      "origin": [
+        39,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_app_gear": {
+      "w": 79,
+      "h": 80,
+      "cell": [
+        79,
+        80
+      ],
+      "origin": [
+        39,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_app_settings": {
+      "w": 78,
+      "h": 80,
+      "cell": [
+        78,
+        80
+      ],
+      "origin": [
+        39,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_app_notes": {
+      "w": 64,
+      "h": 80,
+      "cell": [
+        64,
+        80
+      ],
+      "origin": [
+        32,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_letter_tile": {
+      "w": 80,
+      "h": 79,
+      "cell": [
+        80,
+        79
+      ],
+      "origin": [
+        40,
+        39
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_kiosk_self": {
+      "w": 62,
+      "h": 80,
+      "cell": [
+        62,
+        80
+      ],
+      "origin": [
+        31,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_kiosk_coupon": {
+      "w": 52,
+      "h": 80,
+      "cell": [
+        52,
+        80
+      ],
+      "origin": [
+        26,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_mirror": {
+      "w": 53,
+      "h": 80,
+      "cell": [
+        53,
+        80
+      ],
+      "origin": [
+        26,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_bus": {
+      "w": 80,
+      "h": 55,
+      "cell": [
+        80,
+        55
+      ],
+      "origin": [
+        40,
+        27
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_wine": {
+      "w": 42,
+      "h": 80,
+      "cell": [
+        42,
+        80
+      ],
+      "origin": [
+        21,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_pretzels": {
+      "w": 72,
+      "h": 80,
+      "cell": [
+        72,
+        80
+      ],
+      "origin": [
+        36,
+        40
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_pillow": {
+      "w": 80,
+      "h": 67,
+      "cell": [
+        80,
+        67
+      ],
+      "origin": [
+        40,
+        33
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_quilt": {
+      "w": 80,
+      "h": 62,
+      "cell": [
+        80,
+        62
+      ],
+      "origin": [
+        40,
+        31
+      ],
+      "kind": "prop",
+      "s": 2
+    },
+    "kf_note": {
+      "w": 59,
+      "h": 80,
+      "cell": [
+        59,
+        80
+      ],
+      "origin": [
+        29,
+        40
       ],
       "kind": "prop",
       "s": 2

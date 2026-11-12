@@ -29,16 +29,16 @@ func show_screen(s: String) -> void:
 	match s:
 		"home":
 			var n_unread: int = m.unread_count() if m else 0
-			add_button("messages", Rect2(10, 40, 70, 40), "Messages" + (" (%d)" % n_unread if n_unread > 0 else ""), KEY_1, Color("#4e7a3a"))
-			add_button("stonks", Rect2(88, 40, 70, 40), "Stonks", KEY_2, Color("#3a5a2c"))
-			add_button("fund", Rect2(166, 40, 70, 40), "{baby}'s\nFund", KEY_3, Color("#6a4a96"))
-			add_button("gear", Rect2(244, 40, 66, 40), "Gear", KEY_4, Color("#7a5a2a"))
+			_app(add_button("messages", Rect2(10, 40, 70, 40), "Messages" + (" (%d)" % n_unread if n_unread > 0 else ""), KEY_1, Color("#4e7a3a")), "kf_app_messages", true)
+			_app(add_button("stonks", Rect2(88, 40, 70, 40), "Stonks", KEY_2, Color("#3a5a2c")), "kf_app_stonks", true)
+			_app(add_button("fund", Rect2(166, 40, 70, 40), "{baby}'s Fund", KEY_3, Color("#6a4a96")), "kf_app_fund", true)
+			_app(add_button("gear", Rect2(244, 40, 66, 40), "Gear", KEY_4, Color("#7a5a2a")), "kf_app_gear", true)
 			if m and m.gala_unlocked:
 				add_button("gala_thread", Rect2(10, 88, 300, 26), "THE ELITE GALA  (invitation)", KEY_5, Color("#a08020"))
-			add_button("settings", Rect2(10, 152, 92, 22), "Settings", KEY_6, Color("#57504e"))
+			_app(add_button("settings", Rect2(10, 152, 92, 22), "Settings", KEY_6, Color("#57504e")), "kf_app_settings", false)
 			add_button("close", Rect2(110, 152, 100, 22), "Close", KEY_ESCAPE, Color("#a43a2c"))
 			var n_new: int = SideQuests.unread(m.side_quests, m.show_hidden_quests) if m else 0
-			add_button("notes", Rect2(218, 152, 92, 22), "Notes" + (" (%d)" % n_new if n_new > 0 else ""), KEY_7, Color("#2f8a80"))
+			_app(add_button("notes", Rect2(218, 152, 92, 22), "Notes" + (" (%d)" % n_new if n_new > 0 else ""), KEY_7, Color("#2f8a80")), "kf_app_notes", false)
 		"notes":
 			add_button("back", Rect2(110, 156, 100, 20), "Back", KEY_ESCAPE)
 		"messages":
@@ -197,6 +197,12 @@ func _status_bar() -> void:
 	txt(Vector2(0, 9), m.clock_text() if m else "", 7, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
 	draw_rect(Rect2(296, 3, 16, 6), Color(1, 1, 1, 0.7), false, 1.0)
 	draw_rect(Rect2(297, 4, 11, 4), Color("#7aa05a"))
+
+## Home-screen app tile: painted icon (kf_app_*, tools/import_kitchen_props.py); plain tile if the art is missing.
+func _app(b: Dictionary, icon: String, stack: bool) -> void:
+	if Art.tex(icon) != null:
+		b["icon"] = icon
+		b["stack"] = stack
 
 func _draw_game() -> void:
 	if screen == "home":   # wallpaper: STYLE_LOCK Duff-frame navy/teal sunburst

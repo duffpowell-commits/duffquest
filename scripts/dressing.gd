@@ -4,7 +4,7 @@ extends RefCounted
 ## tucked behind a storefront ("behind_building", tagged in main._ready) are drawn by main._draw_outside.
 
 const Art: = preload("res://scripts/art.gd")
-const FENCE_SEG: = 39.0   # world units per fence segment (tools/import_dressing.py FENCE_STRIDE / 2)
+const FENCE_SEG: = 39.0   # world units post to post; each segment carries both posts (tools/import_fence_hd.py)
 
 ## [{a, p, s, wall (Rect2 or null), tree}] sorted by ground y.
 static func load_items(path: String = "res://data/town_dressing.json") -> Array:
@@ -28,7 +28,6 @@ static func load_items(path: String = "res://data/town_dressing.json") -> Array:
 		var kind: = str(f["kind"])
 		for i in n:
 			out.append({"a": "sd_%s_straight" % kind, "p": p0 + Vector2(i * FENCE_SEG, 0), "s": 1.0, "wall": null, "tree": false})
-		out.append({"a": "sd_%s_end" % kind, "p": p0 + Vector2(n * FENCE_SEG - FENCE_SEG / 2.0 + 1.0, 0), "s": 1.0, "wall": null, "tree": false, "end": true})
 		out.append({"a": "", "p": p0, "s": 1.0, "wall": Rect2(p0 - Vector2(0, 5), Vector2(n * FENCE_SEG + 4.0, 5)), "tree": false})
 	out.sort_custom(func(x, y): return x["p"].y < y["p"].y)
 	return out
@@ -44,9 +43,7 @@ static func draw_item(ci: CanvasItem, it: Dictionary, mod: Color = Color.WHITE) 
 	if str(it["a"]) == "":
 		return
 	var p: Vector2 = it["p"]
-	if it.get("end", false):
-		p -= Vector2(FENCE_SEG / 2.0 - 1.0, 0)   # end post art sits mid-cell
-	elif casts_shadow(it):
+	if casts_shadow(it):
 		# soft contact shadow so props sit ON the street instead of floating (HD-2D pass, Nov 12)
 		var w: = clampf(art_rect(it).size.x * (0.32 if it.get("tree", false) else 0.42), 4.0, 22.0)
 		Art.shadow(ci, p, w, w * 0.32, 0.26 * mod.a)
