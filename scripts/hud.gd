@@ -141,6 +141,26 @@ static func wrap_words(f: Font, s: String, width: float, size: int) -> String:
 		i += 1
 	return out
 
+## Portrait size (HUD units) in the dialogue box; hd_portrait_overlay.gd reads it too.
+const DLG_PORT: = 40.0
+
+## The dialogue box hugs its text: bottom-anchored, only as tall as the wrapped line needs (and the portrait,
+## when someone is talking), so one-liners stop covering a third of the screen.
+func dialog_rect() -> Rect2:
+	var r: Rect2 = layout()["dialog"]
+	if m == null or m.dialog.is_empty():
+		return r
+	var f: = ThemeDB.fallback_font
+	var line: String = Cast.T(str(m.dialog[0]))
+	var who: = Art.portrait_for(line, Cast.T("{hero}"), Cast.T("{partner}"), Cast.T("{baby}"))
+	var tw: = r.size.x - (DLG_PORT + 16.0 if who != "" else 14.0)
+	var rows: = mini(wrap_words(f, line, tw, 7).count("\n") + 1, 6)
+	var h: = 13.0 + float(rows - 1) * f.get_height(7) + 12.0
+	if who != "":
+		h = maxf(h, DLG_PORT + 15.0)
+	h = minf(h, r.size.y)
+	return Rect2(r.position.x, r.end.y - h, r.size.x, h)
+
 func typed(f: Font, line: String, width: float, size: int) -> String:
 	var n: = int(m.dlg_chars)
 	var wrapped: = wrap_words(f, line, width, size)
@@ -204,22 +224,24 @@ func _draw() -> void:
 		var line: String = Cast.T(str(m.dialog[0]))
 		var who: = Art.portrait_for(line, Cast.T("{hero}"), Cast.T("{partner}"), Cast.T("{baby}"))
 		var duff: = who != ""
-		var r: Rect2 = L["dialog"]
+		var r: = dialog_rect()
 		_panel(r, 0.95)
 		if duff:
 
-			var pr: = Rect2(r.position + Vector2(6, 9), Vector2(48, 48))
+			var pr: = Rect2(r.position + Vector2(6, 9), Vector2(DLG_PORT, DLG_PORT))
 			draw_rect(pr, Color("#3e2d19"))
-			draw_rect(Rect2(pr.position, Vector2(48, 16)), Color("#5a3f24"))
+			draw_rect(Rect2(pr.position, Vector2(DLG_PORT, DLG_PORT / 3.0)), Color("#5a3f24"))
 			var mood: = Art.duff_mood(line, float(m.energy))
 			if who == "madison":
 				mood = Art.madison_mood(line, float(m.happiness), str(m.mood_kind()))
 			elif who == "octavia":
 				mood = Art.octavia_mood(line)
 			if not Art.hd_enabled:
-				Art.family_portrait(self, who, pr.position, mood, bool(m.shades))
+				draw_set_transform(pr.position, 0.0, Vector2.ONE * (DLG_PORT / 48.0))   # pixel portraits are 48 px
+				Art.family_portrait(self, who, Vector2.ZERO, mood, bool(m.shades))
+				draw_set_transform(Vector2.ZERO)
 			draw_rect(pr, UiStyle.INK, false, PX * 1.4)
-			_mt(f, r.position + Vector2(59, 13), typed(f, line, r.size.x - 64, 7), r.size.x - 64, 7, 6, w)
+			_mt(f, r.position + Vector2(DLG_PORT + 11.0, 13), typed(f, line, r.size.x - DLG_PORT - 16.0, 7), r.size.x - DLG_PORT - 16.0, 7, 6, w)
 		else:
 			_mt(f, r.position + Vector2(7, 13), typed(f, line, r.size.x - 14, 7), r.size.x - 14, 7, 6, w)
 		if int(m.dlg_chars) >= line.length():
