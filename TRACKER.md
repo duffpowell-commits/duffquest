@@ -5,6 +5,13 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** **Overworld repaint (street props):** the 17 trees and street clutter (oak, maple, pine, ash,
+  lilac, hedge, hydrant, mailbox, newspaper box, bench, cone, bike rack, recycling bin, shopping cart, leaves, Huskers
+  flag, little free library) repainted as detailed pixel art and imported at 4x density with the same world footprint
+  and ground point, so placements, walls and depth sorting are unchanged. `tools/import_dressing_hd.py`;
+  `Dressing.art_rect()` now honours density + origin (it assumed s:2). Fences are still the Nov 8 art. Masters in
+  Drive "97 Gemini art drops" as `sd_<name>_v1.png`. Renders `docs/renders/props_repaint_before_after.png`,
+  `docs/renders/street_dressing_depth.png`.
 - **2026-11-12** **Overworld repaint (storefronts):** all 13 exteriors (home, neighbor, Kwik-N-Go, Twisted Fork,
   HOA HQ, Seen Cafe, Iron Temple, Club Cloud 9, Mining Rig, the tower, Walgrumps, Hy-Whee, Plazmart) repainted as
   detailed pixel art and imported at 4x density (one texel per screen pixel), filling their lots instead of half of
