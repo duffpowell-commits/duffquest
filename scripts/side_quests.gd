@@ -22,11 +22,11 @@ const LIST: = [
 		],
 	},
 	{
-		"id": "grease", "kind": "bounty", "title": "The Grease Trap", "giver": "bounty_board", "ready": false,
+		"id": "grease", "kind": "bounty", "title": "The Grease Trap", "giver": "bounty_board", "ready": true, "from_day": 4,
 		"pitch": "Something lives behind the Fork's fryer. It has opinions.",
 		"stages": [
 			{"text": "Read the 86 List entry. Nobody signed it.", "at": "bounty_board"},
-			{"text": "Clock out late. It only comes out after close.", "at": ""},
+			{"text": "Come back to the 86 List after close (10 PM to 5 AM). It only comes out at night.", "at": "bounty_board"},
 		],
 	},
 	{
