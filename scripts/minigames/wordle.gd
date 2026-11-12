@@ -148,6 +148,30 @@ func debug_solve(good: bool) -> void:
 				tries += 1
 	_finish_now()
 
+## Painted letter tile (kf_letter_tile): plain wood when unscored, tinted grey / yellow / green once scored.
+## st = -1 unscored, else 0 gray, 1 yellow, 2 green. False if the art is missing (caller draws the flat prop).
+func _tile(r: Rect2, st: int, ch: String, size: int) -> bool:
+	var tx: = Art.tex("kf_letter_tile")
+	if tx == null:
+		return false
+	var mod: Color = [Color.WHITE, Color(0.5, 0.5, 0.56), C_YELLOW.lightened(0.35), C_GREEN.lightened(0.3)][st + 1]
+	draw_texture_rect(tx, r.grow(1.0), false, mod)
+	if ch != "":
+		var ink: = UiStyle.INK if st < 0 or st == 1 else Color.WHITE
+		txt(Vector2(r.position.x, r.position.y + r.size.y * 0.5 + size * 0.36), ch, size, ink, HORIZONTAL_ALIGNMENT_CENTER, r.size.x)
+	return true
+
+## Letter keys wear the same tile, in the colour Wordle has learned for that letter.
+func _draw_top() -> void:
+	for b in buttons:
+		var id: = str(b["id"])
+		if id.length() != 1:
+			continue
+		var r: Rect2 = b["rect"]
+		if b.get("down", false):
+			r.position += Vector2(1, 1)
+		_tile(r, int(letter_state[id]) if letter_state.has(id) else -1, id, 9)
+
 func _draw_game() -> void:
 	var x0: = 8.0 + (sin(shake_t * 60.0) * 3.0 if shake_t > 0.0 else 0.0)
 	for r in 6:
@@ -160,11 +184,13 @@ func _draw_game() -> void:
 				col = [C_GRAY, C_YELLOW, C_GREEN][int(results[r][c])]
 			elif r == guesses.size() and c < cur.length():
 				ch = cur[c]
-			prop(rect, col)
+			var st: = int(results[r][c]) if r < guesses.size() else -1
+			if not _tile(rect, st, ch, 9):
+				prop(rect, col)
+				if ch != "":
+					txt(Vector2(rect.position.x, rect.position.y + 10), ch, 9, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 13)
 			if r == guesses.size() and not ended:
 				draw_rect(rect, Color(1, 1, 1, 0.35), false, 1.0)
-			if ch != "":
-				txt(Vector2(rect.position.x, rect.position.y + 10), ch, 9, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 13)
 
 	Art.image(self, "av_jen", Vector2(90, 16))
 	var quip: String = QUIPS[mini(guesses.size(), 5)]

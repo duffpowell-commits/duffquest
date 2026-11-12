@@ -163,8 +163,12 @@ func _draw_bed() -> void:
 
 	prop(Rect2(92, 34, 136, 34), Color("#6a4630"))
 	draw_rect(Rect2(92, 34, 136, 3), Color("#8a6040"))
-	prop(Rect2(98, 58, 56, 14), Color("#f0ead8"))
-	prop(Rect2(166, 58, 56, 14), Color("#f0ead8"))
+	for px in [98.0, 166.0]:
+		var pr: = Rect2(px - 3.0, 52, 62, 22)
+		if Art.tex("kf_pillow") != null:   # painted pillows (kf_pillow), squashed flat on the mattress
+			draw_texture_rect(Art.tex("kf_pillow"), pr, false)
+		else:
+			prop(Rect2(px, 58, 56, 14), Color("#f0ead8"))
 
 	var talking: = int(t * 6.0) % 2 == 0 and t > lead_in
 	var cur: = _current()
@@ -180,10 +184,7 @@ func _draw_bed() -> void:
 		draw_rect(Rect2(178, 82, 9, 13), Color("#202030"))
 		draw_rect(Rect2(179, 83, 7, 11), Color(0.75, 0.9, 1.0, 0.9))
 
-	prop(Rect2(86, 92, 148, 28), Color("#5a6ab0"))
-	draw_rect(Rect2(86, 92, 148, 3), Color("#7a8ad0"))
-	for x in range(94, 230, 14):
-		draw_line(Vector2(x, 97), Vector2(x + 6, 118), Color("#4a5a9a"), 1.0)
+	_quilt(Rect2(86, 92, 148, 28))
 
 	if duff_react_t > 0.0:
 		var c: Color = REACT_COL.get(duff_react, Color.WHITE)
@@ -193,6 +194,28 @@ func _draw_bed() -> void:
 	for h in hearts:
 		var a: float = 1.0 - float(h["t"]) / 1.2
 		_heart(h["p"], Color(1.0, 0.45, 0.7, a))
+
+## Patchwork quilt in the palette of the painted kf_quilt prop: cel-shaded squares, stitched seams, a dot of print on each.
+const QUILT: = [Color("#c8402e"), Color("#2e6ab0"), Color("#e8c050"), Color("#f0e2c4"), Color("#d8762e"), Color("#3a8a6a")]
+
+func _quilt(r: Rect2) -> void:
+	draw_rect(Rect2(r.position + Vector2(2, 2), r.size), Color(UiStyle.INK, 0.8))
+	var pw: = r.size.x / 10.0
+	var ph: = r.size.y / 3.0
+	for row in 3:
+		for col in 10:
+			var c: Color = QUILT[(col * 2 + row * 5 + col / 3) % QUILT.size()]
+			var pr: = Rect2(r.position.x + col * pw, r.position.y + row * ph, pw, ph)
+			draw_rect(pr, c)
+			draw_rect(Rect2(pr.position.x, pr.end.y - ph * 0.3, pw, ph * 0.3), c.darkened(0.15))   # cel band
+			var dot: Color = QUILT[(col + row * 3 + 2) % QUILT.size()]
+			draw_rect(Rect2(pr.get_center() - Vector2(1.5, 1.5), Vector2(3, 3)), dot.lightened(0.15))
+	for col in range(1, 10):
+		draw_line(Vector2(r.position.x + col * pw, r.position.y), Vector2(r.position.x + col * pw, r.end.y), Color(UiStyle.INK, 0.55), 0.6)
+	for row in range(1, 3):
+		draw_line(Vector2(r.position.x, r.position.y + row * ph), Vector2(r.end.x, r.position.y + row * ph), Color(UiStyle.INK, 0.55), 0.6)
+	draw_rect(Rect2(r.position, Vector2(r.size.x, 3)), Color(1, 1, 1, 0.2))
+	draw_rect(r, UiStyle.INK, false, 1.0)
 
 func _big_sprite(sheet: String, feet: Vector2, col: int, row: int) -> void:
 	draw_set_transform(feet, 0.0, Vector2(3, 3))

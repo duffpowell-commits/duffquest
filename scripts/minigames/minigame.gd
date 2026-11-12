@@ -246,7 +246,7 @@ func _draw() -> void:
 		if b.has("badge") or b.has("icon"):   # answer card (quiz, inspector) or picture tile (Fork ingredients)
 			var ic: Texture2D = Art.tex(str(b["icon"])) if b.has("icon") else null
 			UiStyle.card_button(self, r, Cast.T(str(b["label"])), str(b.get("badge", "")), b.get("badge_col", UiStyle.TEAL),
-				b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8, ic)
+				b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8, ic, bool(b.get("stack", false)))
 			continue
 		UiStyle.button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
 		if int(b["key"]) != 0 and not Cast.touch:   # key chips are keyboard-only; phones never see "Space"/"Escape"

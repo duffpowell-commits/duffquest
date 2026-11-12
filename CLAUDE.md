@@ -33,6 +33,12 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Street props (Nov 12):** 17 trees/clutter (`sd_*`, not fences) repainted at 4x density, same footprints. Re-import
   with `python3 tools/import_dressing_hd.py grok_art/2026-11-12-props/_work [name ...]` (masters: Drive "97 Gemini art
   drops", `sd_<name>_v1.png`; `BOX` in the script = max world size). `Dressing.art_rect()` honours density + origin.
+- **Fences + flat screens (Nov 12):** the 4 fence kinds are painted at 4x (`sd_<kind>_straight`, each segment carries
+  both posts, 39 units post to post, no end piece). Re-import: `python3 tools/import_fence_hd.py
+  grok_art/2026-11-12-props/_work` (masters `sd_fence_<kind>_v1.png` in Drive). Don't re-run `tools/import_dressing.py`
+  (it rewrites the old fences). Phone app icons, Wordle tiles, grocery goods/kiosks/people, symphony mirror/bus/notes/snacks
+  and show & tell pillows come from the `k7_sheet` (`kf_*`, `tools/import_kitchen_props.py`). Cards: `b["stack"] = true`
+  puts an icon above the label. UI audit now has `symphony_bus/_concert/_snacks` shots.
 - **Lighting (Nov 12):** time of day lives in `hd_presentation.gd` (`SKY` keyframes, door pools, sun-driven
   `Art.sun_shift`). Render any hour with `arena_shot -- at:X,Y,MIN`. Grok art scratch goes in `grok_art/<drop>/_work/`
   (ignored); the 674 MB already there stays (no history rewrites).
@@ -40,12 +46,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
-3. **Overworld repaint, part 3: fences.** Storefronts and the 17 street props are painted (Nov 12). Left: the four
-   fence families (`sd_{red_brick,privacy_wood,chain_link,white_picket}_{straight,end}`, from `tools/import_dressing.py`)
-   still read as old pixel art; they tile at a 39-unit stride, so new art must join seamlessly.
-4. **The last 5 flat screens:** phone, symphony, show & tell, grocery map, wordle keyboard (one props sheet).
-5. **Boot under 10 s** (17.0 s now): move the next-biggest chunk of index.pck to `extra.pck`.
-6. **Balance re-check** after the playtest (gates 45-65, wait drain floor 40).
+3. **Grease boss art:** `grease` still reuses Grill-Boy tinted; give it its own sprite + arena.
+4. **Boot under 10 s** (17.0 s now): move the next-biggest chunk of index.pck to `extra.pck`.
+5. **Balance re-check** after the playtest (gates 45-65, wait drain floor 40).
 History of everything built: `TRACKER.md` (newest first).
 
 ## Commands (cloud sandbox)

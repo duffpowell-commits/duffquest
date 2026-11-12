@@ -1,5 +1,5 @@
 {
-  "_doc": "Street dressing on the town map (scripts/dressing.gd). p = ground contact point in world units (bottom centre; fences: left end of the run). s = scale. wall = blocks walking. Fence runs: n segments of 39 units, then an end post. Art: sd_* from tools/import_dressing.py.",
+  "_doc": "Street dressing on the town map (scripts/dressing.gd). p = ground contact point in world units (bottom centre; fences: left end of the run). s = scale. wall = blocks walking. Fence runs: n segments of 39 units post to post (each segment draws both posts). Art: sd_* from tools/import_dressing_hd.py, fences from tools/import_fence_hd.py.",
   "objects": [
     {"a": "sd_maple", "p": [28, 120], "tree": true},
     {"a": "sd_oak", "p": [170, 112], "tree": true},

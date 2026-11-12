@@ -35,6 +35,10 @@ SHEETS = {
     "k6_sheet.png": ["shop_honey", "shop_formula", "shop_diapers", "shop_cherries", "shop_chocolate", "shop_cream",
                      "shop_flour", "shop_eggs", "shop_treats", "shop_ensure", "raw_chicken", "raw_turkey",
                      "raw_beef", "raw_pork", "raw_ribeye", "raw_salmon"],
+    # the five flat screens: phone apps, wordle tile, grocery kiosks, symphony, show & tell bed (Nov 12)
+    "k7_sheet.png": ["app_messages", "app_stonks", "app_fund", "app_gear", "app_settings", "app_notes",
+                     "letter_tile", "kiosk_self", "kiosk_coupon", "mirror", "bus", "wine",
+                     "pretzels", "pillow", "quilt", "note"],
 }
 
 
