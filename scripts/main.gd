@@ -98,6 +98,9 @@ const RACCOON_HOME: = Vector2(405, 125)
 const RACCOON_SPOTS: = [Vector2(405, 125), Vector2(165, 350), Vector2(625, 225)]
 const PORCH_PT: = Vector2(122, 117)
 const NEIGHBOR_DOOR: = Vector2(230, 104)   # side quest "porch": the suspect's front door
+## Side quest "alley" (Lost & Found): the three hidden things and the return box (Seen Cafe paper box).
+const LOST_SPOTS: = {"ring": Vector2(327, 168), "collar": Vector2(500, 136), "shoe": Vector2(186, 262)}
+const LOSTBOX_PT: = Vector2(258, 156)
 const PIRATE_NAMES: = ["{pirate_1}", "{pirate_2}", "{pirate_3}", "{pirate_4}", "{pirate_5}", "{pirate_6}"]
 const RACCOON_GIFTS: = [["a dollar (slightly damp)", "money", 1], ["a honey bun, still sealed. Somehow.", "honey buns", 1], ["a cat treat. {cat3} would approve.", "treats", 1], ["a bent fork (1 scrap)", "scrap", 1]]
 const RACCOON_GAGS: = ["The raccoon pats my hand back. Best customer service in Omaha, and it works for trash.", "It shows me a french fry. Found it in the dumpster behind a $19 burger place. Same fry.", "It chitters like a hustle podcast. Pretty sure it's selling me a course.", "It washes my hand. Cleaner than half the line cooks I've worked with."]
@@ -1159,7 +1162,9 @@ func interact(id: String) -> void:
 		"couch": couch_time()
 		"backwalk": start_backwalk()
 		"mirror": mirror_menu()
-		"mail": mail_menu()
+		"mail":
+			if not quest_talk("mail"):
+				mail_menu()
 		"plasma": open_plasma()
 		"bowls": feed_cats()
 		"pharmacy": open_pharmacy()
@@ -3722,7 +3727,61 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
 func quest_talk(npc: String) -> bool:
-	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc)
+	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc)
+
+## Lost & Found, Omaha: a flyer in the mail, three things hidden around the block, returned to the Seen Cafe paper box.
+## Each find is a clue named after the thing ("ring", "collar", "shoe"); all three advance to the return stage.
+const LOST_LINES: = {
+	"ring": ["I kneel at the storm drain. Something gold is caught in the grate, just above the dark.",
+		"I fish it out with two fingers and a prayer. A wedding ring. Inside it says 'G + R, 1979. NO TAKEBACKS.'"],
+	"collar": ["I lift the recycling bin lid. Cans, a pizza box, and a jingle.",
+		"A pink cat collar with a bell and a tag: 'MR. BUTTONS. If found, he did this on purpose.'"],
+	"shoe": ["I look up. There's a shoe in the pine tree. A left one. Size 11. Laces tied in a perfect bow.",
+		"I climb. A branch takes some skin. The shoe is a Sketcher. Somebody's walking in circles out there."],
+}
+
+func _alley_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "alley"
+	if npc == "mail" and SideQuests.offerable(st, q, day_count, show_hidden_quests):
+		SideQuests.start(st, q)
+		_say(["Under the bills: a flyer. Handwritten. Photocopied so many times the letters are going fuzzy.",
+			"'LOST. 1) My ring. It went down where the street drinks. 2) Mr. Buttons' collar. Last heard jingling in the bin by the gas station. 3) My LEFT shoe. Long story. Look up, by the bus stop.'",
+			"'Bring it all to the green paper box outside the Seen Cafe. There's a reward. It's not much. It's sincere. -- Gail'",
+			"New side quest: Lost & Found, Omaha (phone > Notes)."])
+		save_game()
+		return true
+	if not SideQuests.is_active(st, q):
+		return false
+	if LOST_SPOTS.has(npc) and SideQuests.stage(st, q) == 1 and not SideQuests.has_clue(st, q, npc):
+		SideQuests.add_clue(st, q, npc)
+		var lines: Array = (LOST_LINES[npc] as Array).duplicate()
+		var found: = LOST_SPOTS.keys().filter(func (k): return SideQuests.has_clue(st, q, k)).size()
+		if found >= LOST_SPOTS.size():
+			SideQuests.advance(st, q)
+			lines.append("That's all three. Ring, collar, shoe. Gail's whole bad week in my pockets. Now: the green paper box at the Seen Cafe.")
+		else:
+			lines.append("Found %d of 3." % found)
+		_say(lines)
+		save_game()
+		return true
+	if npc == "lostbox" and SideQuests.stage(st, q) == 2:
+		_say(alley_payoff())
+		return true
+	return false
+
+func alley_payoff() -> Array:
+	SideQuests.finish(side_quests, "alley")
+	money += 50
+	gain_happy(6.0)
+	var lines: Array = ["I open the paper box. No papers. Just an envelope with my name spelled wrong. 'DUF.'",
+		"I put the ring, the collar and the shoe in. Under the envelope there's $50 and a Polaroid of an old lady and a fat cat, both giving a thumbs up.",
+		"On the back: 'Mr. Buttons says thank you. The right shoe is still missing. Don't worry about the right shoe.' +$50, and {partner} wants the Polaroid on the fridge (+happy). Quest done."]
+	if not achievements.has("Omaha's Finest"):
+		achievements.append("Omaha's Finest")
+		lines.append("ACHIEVEMENT UNLOCKED: Omaha's Finest")
+	save_game()
+	return lines
 
 ## Brittany's Side Gig: she's selling the Fork's house ranch on Marketplace. Cover for her or tell Chef.
 ## The pick is stored as the quest's choice; the payoff lands the next day.
@@ -3905,6 +3964,14 @@ func _porch_talk(npc: String) -> bool:
 ## Only shows up while the porch quest needs it, so the street stays uncluttered.
 func quest_interactables() -> Array:
 	var out: Array = []
+	if SideQuests.is_active(side_quests, "alley"):
+		if SideQuests.stage(side_quests, "alley") == 1:
+			var labels: = {"ring": "Something glints in the storm drain", "collar": "Something jingles in the recycling", "shoe": "Is that a shoe in the tree?"}
+			for k in LOST_SPOTS:
+				if not SideQuests.has_clue(side_quests, "alley", k):
+					out.append({"id": "quest_" + k, "pos": LOST_SPOTS[k], "r": 14.0, "label": labels[k]})
+		else:
+			out.append({"id": "quest_lostbox", "pos": LOSTBOX_PT, "r": 12.0, "label": "Green paper box (Gail's drop)"})
 	if not SideQuests.is_active(side_quests, "porch"):
 		return out
 	match SideQuests.stage(side_quests, "porch"):
@@ -3933,6 +4000,7 @@ func quest_spots() -> Dictionary:
 		"bounty_board": ["outside", BOARD_PT + Vector2(0, -22)],
 		"porch": ["outside", PORCH_PT + Vector2(0, -16)],
 		"neighbor": ["outside", NEIGHBOR_DOOR + Vector2(0, -26)],
+		"lostbox": ["outside", LOSTBOX_PT + Vector2(0, -24)],
 	}
 
 func draw_quest_markers(ci: CanvasItem) -> void:
@@ -3945,6 +4013,22 @@ func draw_quest_markers(ci: CanvasItem) -> void:
 		var mk: = SideQuests.marker_for(side_quests, str(npc), show_hidden_quests, day_count)
 		if mk != "":
 			UiStyle.quest_marker(ci, spots[npc][1] + Vector2(0, sin(t * 3.2) * 1.5), mk)
+	# Lost & Found has no '?' while hunting: each unfound thing just glints now and then.
+	if location == "outside" and SideQuests.is_active(side_quests, "alley") and SideQuests.stage(side_quests, "alley") == 1:
+		var i: = 0
+		for k in LOST_SPOTS:
+			i += 1
+			if SideQuests.has_clue(side_quests, "alley", k):
+				continue
+			var a: = clampf(sin(t * 2.4 + i * 2.1) * 1.6 - 0.6, 0.0, 1.0)
+			if a <= 0.0:
+				continue
+			var p: Vector2 = LOST_SPOTS[k] + Vector2(0, -6)
+			var c: = Color(1.0, 0.95, 0.6, a)
+			var s: = 2.0 + a * 2.0
+			ci.draw_line(p - Vector2(s, 0), p + Vector2(s, 0), c, 1.0)
+			ci.draw_line(p - Vector2(0, s), p + Vector2(0, s), c, 1.0)
+			ci.draw_rect(Rect2(p - Vector2(0.5, 0.5), Vector2(1, 1)), Color(1, 1, 1, a))
 
 func draw_world_labels(ci: CanvasItem) -> void:
 	var f: = ThemeDB.fallback_font
