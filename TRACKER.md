@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** Side quest 3 live: **Brittany's Side Gig** (`ready: true`, from day 5, daytime). She's selling the
+  Fork's ranch on Marketplace in hand-lettered mason jars and Chef blames Manny the dishwasher. Pick on a card: cover
+  for her (next day +$60, +5 happy, "Ranch Cartel") or tell Chef (next day +$40, no bet that day, "Narc of the
+  Fork"). The pick is the quest's saved `choice`. `main.gd` `_gig_talk()` / `gig_choose()` / `gig_payoff()`. Both
+  branches tested end to end. `arena_shot gig`; render `docs/renders/quest_brittany_gig.png`.
 - **2026-11-12** Side quest 2 live: **The Grease Trap** (`ready: true`, from day 4). An unsigned entry appears on
   the 86 List; after 10 PM the board sends Duff out back, where the floor drain stands up (new boss `grease` in
   `boss.gd`: 180 HP, posting + charge, Grill-Boy sprite tinted amber with an oil slick and drips until it gets its own

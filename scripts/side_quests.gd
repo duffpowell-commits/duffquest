@@ -30,12 +30,12 @@ const LIST: = [
 		],
 	},
 	{
-		"id": "gig", "kind": "character", "title": "Brittany's Side Gig", "giver": "brittany", "ready": false,
+		"id": "gig", "kind": "character", "title": "Brittany's Side Gig", "giver": "brittany", "ready": true, "from_day": 5,
 		"pitch": "Brittany needs a favor. It's probably legal.",
 		"stages": [
 			{"text": "Hear Brittany out. All of it. Even the PowerPoint.", "at": "brittany"},
 			{"text": "Pick a side. She's watching which one.", "at": "brittany"},
-			{"text": "Tell her how it went.", "at": "brittany"},
+			{"text": "Sleep on it. Tomorrow, tell Brittany how it went.", "at": "brittany"},
 		],
 		"choices": ["cover", "rat"],
 	},
