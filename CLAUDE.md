@@ -13,6 +13,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Every push to main ships:** `.github/workflows/build.yml` parses scripts, runs the smoke test, exports web +
   debug APK, refreshes the `dev` release, and butler-pushes the web build to itch `dufftkyosht/duff-quest:html`
   (secret `BUTLER_API_KEY`). A red CI = nothing ships.
+- **iPhone full screen:** iPhone Safari has no fullscreen API, and itch's iframe can't be installed. CI also exports a
+  PWA copy (`build/pages`) and deploys it to https://duffpowell-commits.github.io/duffquest/ (job `pages`, main only;
+  needs Settings > Pages > Source: GitHub Actions). Players open it in Safari, Share > Add to Home Screen, then launch
+  from the icon: no Safari bars. Native iOS builds are out (no Mac, no Apple developer account).
 - **IGN review v3: 7.9/10** (`docs/reviews/ign_review_2026-11-11_v3.md`). Duff + Brittany played it Nov 11: "it's
   come a long way."
 - **Last session's handoff (read it): `docs/handoffs/2026-11-11_painted_minigames_ign_v3.md`.** It covers what
