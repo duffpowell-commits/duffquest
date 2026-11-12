@@ -1,6 +1,6 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
-##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "at:X,Y" (outdoors at a world point), or "fryer"/"sandwich" = the kitchen station with food in it)
+##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "at:X,Y[,MIN]" (outdoors at a world point, optional clock minute), or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var game: Node
@@ -76,6 +76,9 @@ func _process(_d: float) -> void:
 			g.baskets[0]["prog"] = 0.8
 			g.baskets[1]["prog"] = 1.5
 
+	if frame >= 200 and id.begins_with("at:") and id.count(",") == 2:  # at:X,Y,MIN = also set the clock
+		m.clock = float(id.split(",")[2])
+		m.dialog.clear()
 	if frame >= 240 and id in ["quest", "type"]:
 		m.toast_t = 0.0   # the DEV warp toast would sit on top of the marker
 	if frame == 250 and id == "type":

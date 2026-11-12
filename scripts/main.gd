@@ -2365,9 +2365,7 @@ func _draw_outside() -> void:
 	if ensure_respawn <= 0.0:
 		Art.image(self, "ensure", ENSURE_POS + Vector2(0, 4))
 
-	var ph: = phase()
-	if ph == "Night" or ph == "Evening":
-		draw_rect(Rect2(Vector2.ZERO, WORLD), Color(0.05, 0.05, 0.2, 0.35 if ph == "Night" else 0.15))
+	# dusk/night darkening now lives in hd_presentation.gd (clock-driven grade + door lights)
 	# the inspector and Brittany are drawn outdoors by y-sorted proxies (dressing_front.gd)
 
 func _draw_inspector() -> void:
