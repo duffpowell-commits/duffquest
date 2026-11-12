@@ -868,6 +868,28 @@ func _side_quest_checks(main: Node) -> void:
 		main.enemy_defeated(chad)
 	check("porch: catching him finishes the quest and pays", SQ.is_done(main.side_quests, "porch") and main.money >= cash0 + 60 and main.achievements.has("Neighborhood Watch"))
 	check("porch: done quest leaves no interactables", main.quest_interactables().is_empty())
+	# the Grease Trap, end to end: 86 List entry -> night -> alley fight -> paid, achievement, bounty day untouched
+	main.side_quests = {}
+	main.dialog.clear()
+	main.day_count = 3
+	check("grease: not on the 86 List before day 4", not main.quest_talk("bounty_board"))
+	main.day_count = 4
+	main.clock = 600.0
+	check("grease: the 86 List hands it out", main.quest_talk("bounty_board") and SQ.stage(main.side_quests, "grease") == 2)
+	main.dialog.clear()
+	check("grease: daytime = come back later, no fight", main.quest_talk("bounty_board") and main.location == "outside" and main.arena_boss == null)
+	main.dialog.clear()
+	main.clock = 1380.0
+	main.energy = 100.0
+	var bday0 = main.bounties["day"]
+	var gcash0: int = main.money
+	check("grease: after 10 PM the board starts the fight", main.quest_talk("bounty_board") and main.location == "arena" and main.arena_boss != null and str(main.arena_boss.kind) == "grease")
+	if main.arena_boss != null:
+		main.boss_defeated(main.arena_boss)
+	check("grease: beating it finishes the quest and pays", SQ.is_done(main.side_quests, "grease") and main.money >= gcash0 + 90 and main.achievements.has("Fryer Exorcist") and main.location == "outside")
+	check("grease: doesn't burn today's 86 List bounty", main.bounties["day"] == bday0)
+	main.dialog.clear()
+	check("grease: done = board opens the normal 86 List again", not main.quest_talk("bounty_board"))
 	main.side_quests = {}
 	main.day_count = dc0
 	main.clock = ck0

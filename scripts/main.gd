@@ -1136,7 +1136,9 @@ func interact(id: String) -> void:
 		waffle_node.use_grill(int(id.substr(6)))
 		return
 	match id:
-		"bounty_board": bounty_menu()
+		"bounty_board":
+			if not quest_talk("bounty_board"):
+				bounty_menu()
 		"brittany":
 			if not quest_talk("brittany"):
 				bet_menu()
@@ -3108,7 +3110,7 @@ func boss_defeated(b: Node) -> void:
 		return
 	if b == arena_boss and arena_boss != null:
 		match arena_mode:
-			"bounty": bounty_defeated(b)
+			"bounty": grease_defeated(b) if str(b.kind) == "grease" else bounty_defeated(b)
 			"waffle": waffle_regular_defeated(b)
 			_: story_boss_defeated(b)
 		return
@@ -3720,6 +3722,62 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
 func quest_talk(npc: String) -> bool:
+	return _porch_talk(npc) or _grease_talk(npc)
+
+## The Grease Trap: the 86 List grows an unsigned entry; after close the board sends Duff out back to fight it.
+func _grease_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "grease"
+	if npc != "bounty_board":
+		return false
+	if SideQuests.offerable(st, q, day_count, show_hidden_quests):
+		SideQuests.start(st, q)
+		SideQuests.advance(st, q)
+		_say(["New entry on the 86 List. No name. No signature. Just a grease stain shaped like a man.",
+			"Chef's handwriting under it: 'Not a customer. Comes out after close. Lives behind the fryer. DO NOT FEED.'",
+			"New side quest: The Grease Trap (phone > Notes). Come back after 10 PM."])
+		save_game()
+		return true
+	if not SideQuests.is_active(st, q) or SideQuests.stage(st, q) != 2:
+		return false
+	if phase() != "Night":
+		_say(["The grease stain on the 86 List is dry. Whatever it is, it's sleeping. Come back after 10 PM. (It's %s.)" % clock_text()])
+		return true
+	if energy < 25.0:
+		_say(["I'm too wiped to fight a drain. Eat something. Sleep. The grease will wait. Grease always waits."])
+		return true
+	start_grease_fight()
+	return true
+
+func start_grease_fight() -> void:
+	if busy():
+		return
+	start_bounty("grease")
+	_say(["Out back after close. The fryer's off but the floor drain is bubbling. Then it stands up.", str(BossScript.BOSSES["grease"]["intro"])])
+
+func grease_defeated(_b: Node) -> void:
+	kills["grease"] = int(kills.get("grease", 0)) + 1
+	combat.gain_xp("boss_bounty", maxi(4, combat.level - 1))
+	clear_enemies()
+	arena_boss = null
+	money += 90
+	gear["scraps"] = int(gear["scraps"]) + 3
+	SideQuests.finish(side_quests, "grease")
+	var lines: Array = [str(BossScript.BOSSES["grease"]["defeat"]),
+		"It slides back down the drain. Chef leaves $90 and 3 scrap on the pass with a note: 'Told you. DO NOT FEED.' Quest done."]
+	if not achievements.has("Fryer Exorcist"):
+		achievements.append("Fryer Exorcist")
+		lines.append("ACHIEVEMENT UNLOCKED: Fryer Exorcist")
+	apply_gear()
+	arena_id = ""
+	bounty_id = ""
+	_leave_arena()
+	player.position = BOARD_PT + Vector2(0, 8)
+	_set_camera()
+	_say(lines)
+	save_game()
+
+func _porch_talk(npc: String) -> bool:
 	var st: = side_quests
 	var q: = "porch"
 	if npc == "madison" and SideQuests.offerable(st, q, day_count, show_hidden_quests):
@@ -4782,7 +4840,8 @@ func start_bounty(id: String) -> void:
 	add_child(b)
 	arena_boss = b
 	b.set_physics_process(not busy())
-	_say(["Out back of the Fork. Dumpster, puddles, a guy from the 86 List. Romantic.", str(BossScript.BOSSES[id]["intro"])])
+	if id != "grease":  # the side-quest boss brings its own intro (start_grease_fight)
+		_say(["Out back of the Fork. Dumpster, puddles, a guy from the 86 List. Romantic.", str(BossScript.BOSSES[id]["intro"])])
 	_sync_world()
 
 func bounty_defeated(b: Node) -> void:
@@ -4816,15 +4875,21 @@ func bounty_defeated(b: Node) -> void:
 	save_game()
 
 func bounty_lose() -> void:
+	var was_grease: = bounty_id == "grease"
 	clear_enemies()
 	arena_boss = null
 	arena_id = ""
 	bounty_id = ""
-	bounties["day"] = day_count
+	if not was_grease:
+		bounties["day"] = day_count
 	_leave_arena()
 	player.position = BOARD_PT + Vector2(0, 8)
 	_set_camera()
 	energy = 35.0
+	if was_grease:
+		_say(["I wake up face-down by the drain, glazed like a donut. It's gone back under. The stain on the 86 List is still wet.", "Try again another night."])
+		save_game()
+		return
 	_say(["I end up laid out by the dumpster. Grill-Boy finds me on his smoke break and takes a selfie. With me. Not for me.", "Bounty's still up. Try again tomorrow."])
 	save_game()
 
