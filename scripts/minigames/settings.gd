@@ -8,6 +8,8 @@ const STEP: = 0.1
 
 var audio: Node = null
 var dragging: = ""
+var dev: = false        # main.gd: debug builds only -> "Dev: quests" button
+var action: = ""
 
 func _setup() -> void:
 	title = "SETTINGS"
@@ -26,6 +28,8 @@ func _setup() -> void:
 	add_button("back", Rect2(110, 163, 100, 15), "Back", KEY_ESCAPE, Color("#a43a2c"))
 	if _guard():
 		add_button("gfx", Rect2(214, 163, 98, 15), _gfx_label(), KEY_V, Color("#3a5a8a"))
+	if dev:
+		add_button("dev_quests", Rect2(8, 163, 98, 15), "Dev: quests", KEY_Q, Color("#8a6a1a"))
 
 ## perf_guard.gd (game.gd's child): Lite graphics = no HD-2D screen shader / window lights, for slow phones.
 func _guard() -> Node:
@@ -54,6 +58,10 @@ func sfx_vol() -> float:
 	return float(audio.sfx_vol) if audio else 0.0
 
 func _on_button(id: String) -> void:
+	if id == "dev_quests":
+		action = "dev_quests"
+		finish(1.0)
+		return
 	if audio == null:
 		if id == "back":
 			finish(1.0)

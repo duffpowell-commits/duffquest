@@ -68,6 +68,7 @@ func _init() -> void:
 	_signature_move_checks(main)
 	_heard_checks()
 	_taunt_variety_checks()
+	_side_quest_checks(main)
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
@@ -757,3 +758,86 @@ func _taunt_variety_checks() -> void:
 			openers[head] = id
 	check("taunts: 'I'm not X, I'm Y' used at most twice (%d)" % formula, formula <= 2)
 	check("taunts: no shared openers across bosses (%s)" % ", ".join(dupes), dupes.is_empty())
+
+
+## Side quests (Nov 12): save-safe state, v7 -> v8 migrate, journal, markers, typewriter dialogue, dev warp.
+func _side_quest_checks(main: Node) -> void:
+	var SQ: = preload("res://scripts/side_quests.gd")
+	var st: Dictionary = SQ.new_state()
+	check("sq: every quest has an id, title, giver and stages", SQ.LIST.all(func (e): return str(e.get("id", "")) != "" and str(e.get("title", "")) != "" and str(e.get("giver", "")) != "" and (e.get("stages", []) as Array).size() > 0))
+	check("sq: unknown quest can't start", not SQ.start(st, "nope") and st.is_empty())
+	check("sq: start -> active stage 1, NEW", SQ.start(st, "porch") and SQ.stage(st, "porch") == 1 and SQ.is_active(st, "porch") and SQ.unread(st, true) == 1)
+	check("sq: can't start twice", not SQ.start(st, "porch"))
+	check("sq: clue added once", SQ.add_clue(st, "porch", "crumbs") and not SQ.add_clue(st, "porch", "crumbs") and SQ.has_clue(st, "porch", "crumbs"))
+	SQ.advance(st, "porch")
+	check("sq: advance -> stage 2", SQ.stage(st, "porch") == 2)
+	for i in 5:
+		SQ.advance(st, "porch")
+	check("sq: advancing past the end finishes", SQ.is_done(st, "porch") and SQ.stage(st, "porch") == SQ.stage_count("porch"))
+	check("sq: bad branch choice refused", not SQ.set_choice(st, "gig", "explode"))
+	SQ.start(st, "gig")
+	SQ.finish(st, "gig", "rat")
+	check("sq: branch choice kept", SQ.choice(st, "gig") == "rat" and SQ.is_done(st, "gig"))
+	var dirty: = {"porch": {"stage": 99, "status": "active", "clues": ["a", "a", 3], "choice": "x"}, "ghost": {"stage": 1}, "gig": "junk",
+		"grease": {"status": "lol", "stage": 2}, "alley": {"status": "active", "stage": 0}}
+	var c: = SQ.clean(dirty)
+	check("sq: clean drops unknown ids and junk", not c.has("ghost") and not c.has("gig"))
+	check("sq: clean clamps stage, dedupes clues, drops bad choice", int(c["porch"]["stage"]) == SQ.stage_count("porch") and c["porch"]["clues"] == ["a", "3"] and str(c["porch"]["choice"]) == "")
+	check("sq: clean resets bad status, fixes active stage 0", str(c["grease"]["status"]) == "" and int(c["grease"]["stage"]) == 0 and int(c["alley"]["stage"]) == 1)
+	check("sq: clean survives non-dicts", SQ.clean(null).is_empty() and SQ.clean([1, 2]).is_empty())
+	# markers + journal: hidden until a quest is "ready"
+	var fresh: = SQ.new_state()
+	check("sq: no markers or journal rows for unready quests", SQ.marker_for(fresh, "madison") == "" and SQ.journal(fresh).is_empty())
+	check("sq: dev sees the '!' over the porch giver", SQ.marker_for(fresh, "madison", true) == "!")
+	SQ.start(fresh, "porch")
+	check("sq: stage 1 wants Brittany -> '?' over her", SQ.marker_for(fresh, "brittany", true) == "?")
+	check("sq: journal lists the active quest with its step", SQ.journal(fresh, true).size() == 1 and str(SQ.journal(fresh, true)[0]["step"]).length() > 0)
+	SQ.mark_read(fresh)
+	check("sq: mark_read clears NEW", SQ.unread(fresh, true) == 0)
+	SQ.warp(fresh, "porch", 0)
+	check("sq: warp 0 resets", SQ.status(fresh, "porch") == "")
+	SQ.warp(fresh, "gig", 99)
+	check("sq: warp past the end = done", SQ.is_done(fresh, "gig"))
+	# save: an old v7 save loads with empty side quests; state round-trips
+	var old: = SaveGame.migrate({"version": 7, "money": 12})
+	check("save v8: v7 save gains empty side_quests", int(old["version"]) == SaveGame.VERSION and SaveGame.VERSION >= 8 and old.has("side_quests") and (old["side_quests"] as Dictionary).is_empty())
+	main.from_dict({"version": 7})
+	check("save v8: from_dict without side_quests is safe", main.side_quests.is_empty())
+	SQ.start(main.side_quests, "alley")
+	SQ.add_clue(main.side_quests, "alley", "bike")
+	var dd: Dictionary = JSON.parse_string(JSON.stringify(main.to_dict()))
+	main.side_quests = {}
+	main.from_dict(dd)
+	check("save v8: side quest + clue survive save/load", SQ.is_active(main.side_quests, "alley") and SQ.has_clue(main.side_quests, "alley", "bike"))
+	main.side_quests = {}
+	# typewriter: the first tap finishes the line, the second moves on
+	main.dialog.clear()
+	main.dialog.append_array(["One two three four five six seven eight nine ten.", "Second."])
+	main._tick_dialog(0.05)
+	check("typewriter: a line starts partly hidden", main.dlg_chars < main.dialog_len())
+	main.advance_dialog()
+	check("typewriter: first tap reveals the whole line", main.dialog.size() == 2 and main.dlg_chars >= main.dialog_len())
+	main.advance_dialog()
+	check("typewriter: second tap moves on", main.dialog.size() == 1)
+	main._tick_dialog(0.0)
+	check("typewriter: next line restarts the reveal", main.dlg_chars < main.dialog_len())
+	main.dialog.clear()
+	var H: = preload("res://scripts/hud.gd")
+	var f: Font = ThemeDB.fallback_font
+	var line: = "Keep Madison happy. Pay the rent. Guard the porch. That's the whole religion."
+	var wr: String = H.wrap_words(f, line, 120.0, 7)
+	check("typewriter: pre-wrap keeps length, adds breaks", wr.length() == line.length() and wr.count("\n") >= 1)
+	var fits: = true
+	for row in wr.split("\n"):
+		fits = fits and f.get_string_size(row, HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x <= 120.0
+	check("typewriter: every wrapped row fits", fits)
+	# dev warp: jumps the quest and walks Duff to whoever the stage needs
+	main.dev_warp_quest("porch", 1)
+	check("dev warp: porch stage 1 -> outside by Brittany", SQ.stage(main.side_quests, "porch") == 1 and main.location == "outside" and main.player.position.distance_to(main.BRITT_POS) < 60.0)
+	main.dev_warp_quest("porch", 0)
+	check("dev warp: reset sends Duff to the giver (home)", SQ.status(main.side_quests, "porch") == "" and main.location == "home")
+	main.dev_warp_quest("porch", 9)
+	check("dev warp: past the end = done", SQ.is_done(main.side_quests, "porch"))
+	main.side_quests = {}
+	main.show_hidden_quests = false
+	main.dialog.clear()

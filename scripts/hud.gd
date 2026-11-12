@@ -120,6 +120,32 @@ func _t(f: Font, p: Vector2, s: String, size: int, col: Color, width: float = -1
 	draw_string(f, p + Vector2(PX, PX), s, align as HorizontalAlignment, width, size, Color(INK.r, INK.g, INK.b, 0.8 * col.a))
 	draw_string(f, p, s, align as HorizontalAlignment, width, size, col)
 
+## Typewriter: wrap the WHOLE line first (spaces become newlines, same length), then cut it at the
+## revealed count, so words never jump to the next row mid-reveal.
+static func wrap_words(f: Font, s: String, width: float, size: int) -> String:
+	var out: = s
+	var row_start: = 0
+	var last_space: = -1
+	var i: = 0
+	while i < out.length():
+		var ch: = out[i]
+		if ch == "\n":
+			row_start = i + 1
+			last_space = -1
+		elif ch == " ":
+			last_space = i
+		if f.get_string_size(out.substr(row_start, i - row_start + 1), HORIZONTAL_ALIGNMENT_LEFT, -1, size).x > width and last_space > row_start:
+			out[last_space] = "\n"
+			row_start = last_space + 1
+			last_space = -1
+		i += 1
+	return out
+
+func typed(f: Font, line: String, width: float, size: int) -> String:
+	var n: = int(m.dlg_chars)
+	var wrapped: = wrap_words(f, line, width, size)
+	return wrapped if n >= wrapped.length() else wrapped.substr(0, n)
+
 func _mt(f: Font, p: Vector2, s: String, width: float, size: int, lines: int, col: Color, align: int = HORIZONTAL_ALIGNMENT_LEFT) -> void:
 	draw_multiline_string(f, p + Vector2(PX, PX), s, align as HorizontalAlignment, width, size, lines, Color(INK.r, INK.g, INK.b, 0.8 * col.a))
 	draw_multiline_string(f, p, s, align as HorizontalAlignment, width, size, lines, col)
@@ -193,10 +219,11 @@ func _draw() -> void:
 			if not Art.hd_enabled:
 				Art.family_portrait(self, who, pr.position, mood, bool(m.shades))
 			draw_rect(pr, UiStyle.INK, false, PX * 1.4)
-			_mt(f, r.position + Vector2(59, 13), line, r.size.x - 64, 7, 6, w)
+			_mt(f, r.position + Vector2(59, 13), typed(f, line, r.size.x - 64, 7), r.size.x - 64, 7, 6, w)
 		else:
-			_mt(f, r.position + Vector2(7, 13), line, r.size.x - 14, 7, 6, w)
-		UiStyle.label(self, r.position + Vector2(r.size.x - 30, r.size.y - 3), "E / A >", 6, Color(UiStyle.GOLD, 0.9), -1.0, HORIZONTAL_ALIGNMENT_LEFT, 2)
+			_mt(f, r.position + Vector2(7, 13), typed(f, line, r.size.x - 14, 7), r.size.x - 14, 7, 6, w)
+		if int(m.dlg_chars) >= line.length():
+			UiStyle.label(self, r.position + Vector2(r.size.x - 30, r.size.y - 3), "E / A >", 6, Color(UiStyle.GOLD, 0.9), -1.0, HORIZONTAL_ALIGNMENT_LEFT, 2)
 
 func _draw_phone(f: Font) -> void:
 	var k: = 0.75                                   # phone.png is 12x20 HUD units at 1.0
