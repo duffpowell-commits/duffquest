@@ -4,3 +4,8 @@ build/
 .env
 .env.*
 .godot/editor/
+
+# grok_art: scratch from conversions/repaints never gets committed (the repo is already 1.1 GB and
+# history is never rewritten). Work in grok_art/<drop>/_work/ or any *_tmp* path; keep originals + keepers only.
+grok_art/**/_work/
+grok_art/**/*_tmp*
