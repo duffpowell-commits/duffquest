@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** Side quest 2 live: **The Grease Trap** (`ready: true`, from day 4). An unsigned entry appears on
+  the 86 List; after 10 PM the board sends Duff out back, where the floor drain stands up (new boss `grease` in
+  `boss.gd`: 180 HP, posting + charge, Grill-Boy sprite tinted amber with an oil slick and drips until it gets its own
+  art). Win: +$90, 3 scrap, achievement "Fryer Exorcist". Lose: try another night; it never uses up the day's 86 List
+  bounty. `main.gd` `_grease_talk()` / `start_grease_fight()` / `grease_defeated()`. End-to-end check in test_daily.
+  `arena_shot` ids `grease86` / `bounty:grease`; render `docs/renders/quest_grease_trap.png`.
 - **2026-11-12** Side quest 1 live: **porch mystery** (`ready: true`, offered from day 2). Madison asks Duff to find
   who keeps taking the packages; Brittany saw orange fingers; the porch yields a gas-station receipt; knocking on the
   neighbor's door (daytime only) flushes out Cheeto Chad, a 6 HP pirate who bolts. Catch him: +$60, +12 happy,

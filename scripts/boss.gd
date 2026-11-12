@@ -79,6 +79,13 @@ const BOSSES: = {
 		"taunts": ["Is this water or TAP water?", "I'm a food blogger. 14 followers. All bots. All furious.", "Send it back. No, the plate. No, the building.", "My compliments to the chef. They're all complaints."],
 		"rage": "Sir Sends-It-Back: I want a refund. On this FIGHT.",
 		"defeat": "Sir Sends-It-Back: ...This beating is cooked perfectly. Five stars. Still not tipping." },
+	# Side quest "The Grease Trap" (side_quests.gd): fought in the alley at night, never on the 86 List menu.
+	"grease": {"name": "The Grease Trap", "hp": 180.0, "attacks": ["posting", "charge"], "sprite": "grillboy", "tint": Color(0.78, 0.6, 0.22),
+		"labels": {"post": "OIL" }, "tele": {"posting": "*gurgles a ladle of fryer oil*", "charge": "*slides across the floor. It IS the floor.*" },
+		"intro": "The Grease Trap: Eleven years under that fryer. Every fry you dropped, I caught. Every one. I KEPT them.",
+		"taunts": ["Smell that? That's me. That's always been me.", "Health inspector came by in 2019. I ate him. Kidding. Mostly.", "Change the oil? Change the OIL? I AM the oil.", "Your mop is a toothbrush to me."],
+		"rage": "The Grease Trap: Fine. Deep fry mode. 375 degrees of feelings.",
+		"defeat": "The Grease Trap: ...Okay. Okay. I'll go back down the drain. Tell Chef to call a plumber. A real one this time." },
 	"coupon": {"name": "Coupon Carol", "hp": 150.0, "attacks": ["storm", "coins", "update"],
 		"labels": {"coin": "%", "trap": "EXP", "coupon": "EXP" }, "tele": {"coins": "These are DEFINITELY still valid!", "update": "Expired? It's EXTENDED. In my heart.", "storm": "*upends a purse made entirely of coupons*" },
 		"intro": "Coupon Carol: 46 coupons, sweetie. Every one's for a different restaurant. Honor ALL of them.",
@@ -504,7 +511,14 @@ func _draw_sprite() -> void:
 		mod = Color(1, 0.45, 0.45, mod.a)
 	var moving: = velocity.length() > 5.0 or dash_t > 0.0
 	var atk: = state == "tele" or flex_t > 0.0
-	Art.person(self, "ch_" + kind, Vector2(0, 11), _look(), t, moving, atk, mod)
+	if kind == "grease":  # oil slick under him, drawn before the sprite
+		draw_set_transform(Vector2(0, 11 * 1.45), 0.0, Vector2(1.45, 0.5))
+		draw_circle(Vector2.ZERO, 11.0 + sin(t * 2.0), Color(0.36, 0.24, 0.04, 0.6))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.45, 1.45))
+	var tint = BOSSES[kind].get("tint", Color.WHITE)
+	if flash <= 0.0:
+		mod = Color(mod.r * tint.r, mod.g * tint.g, mod.b * tint.b, mod.a)
+	Art.person(self, "ch_" + str(BOSSES[kind].get("sprite", kind)), Vector2(0, 11), _look(), t, moving, atk, mod)
 	var f: = ThemeDB.fallback_font
 	match kind:
 		"bozos":
@@ -522,6 +536,10 @@ func _draw_sprite() -> void:
 		"camper":
 			if flex_t > 0.0:
 				draw_string(f, Vector2(-11, -15), "ON A CALL", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#8ad0ff"))
+		"grease":  # an oil slick under him and amber drips running off
+			for i in 4:
+				var ph: = fmod(t * 0.9 + i * 0.27, 1.0)
+				draw_circle(Vector2(-6 + i * 4, -4 + ph * 14.0), 0.9, Color(1.0, 0.72, 0.18, 0.85 * (1.0 - ph)))
 		"djvape":
 			draw_circle(Vector2(10, -2), 1.5 + sin(t * 4.0), Color(1, 1, 1, 0.5))
 
