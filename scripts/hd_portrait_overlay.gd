@@ -81,7 +81,7 @@ func _draw() -> void:
 		_splash_boss = ""
 		return
 	var line: String = Cast.T(str(main.dialog[0]))
-	var r: Rect2 = main.hud.layout()["dialog"]
+	var r: Rect2 = main.hud.dialog_rect()
 	var intro: = Art.boss_intro_for(line)
 	if intro != "":
 		_draw_splash(intro, Rect2(r.position * UI_SCALE, r.size * UI_SCALE))
@@ -93,7 +93,7 @@ func _draw() -> void:
 	var tex: = _portrait(who)
 	if tex == null:
 		return
-	var pr: = Rect2((r.position + Vector2(6, 9)) * UI_SCALE, Vector2(48, 48) * UI_SCALE)
+	var pr: = Rect2((r.position + Vector2(6, 9)) * UI_SCALE, Vector2(main.hud.DLG_PORT, main.hud.DLG_PORT) * UI_SCALE)
 	var mood: = Art.hd_mood(who, line, float(main.energy), float(main.happiness), str(main.mood_kind()))
 	var cell: = float(tex.get_height())
 	# face a touch bigger than the box and rising out of its top edge, like a cartoon cut-in

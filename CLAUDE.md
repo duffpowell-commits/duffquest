@@ -19,6 +19,13 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   shipped, the step-by-step prop-art pipeline, the ranked next list and the gotchas.
 - Tests: `test_daily` ALL PASS; 30-day soak PASS (seed 1, 0 issues).
 
+- **Side quests (Nov 12):** `scripts/side_quests.gd` + phone Notes journal + `!`/`?` markers + typewriter dialogue.
+  New quests: add to `SideQuests.LIST`, wire triggers in main.gd, then flip `ready: true`. Dev: Settings > "Dev:
+  quests" (debug builds), `#dq=quest:<id>:<stage>` (web), `arena_shot` ids `quest` / `type` / `notes`.
+- **Lighting (Nov 12):** time of day lives in `hd_presentation.gd` (`SKY` keyframes, door pools, sun-driven
+  `Art.sun_shift`). Render any hour with `arena_shot -- at:X,Y,MIN`. Grok art scratch goes in `grok_art/<drop>/_work/`
+  (ignored); the 674 MB already there stays (no history rewrites).
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).

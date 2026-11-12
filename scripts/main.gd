@@ -31,6 +31,8 @@ const BossScript: = preload("res://scripts/boss.gd")
 const KnockoutScript: = preload("res://scripts/knockout.gd")
 const WaffleScript: = preload("res://scripts/waffle.gd")
 const Bounties: = preload("res://scripts/bounties.gd")
+const SideQuests: = preload("res://scripts/side_quests.gd")
+const UiStyle: = preload("res://scripts/ui_style.gd")
 const Errands: = preload("res://scripts/errands.gd")
 const Buffs: = preload("res://scripts/buffs.gd")
 const Dates: = preload("res://scripts/dates.gd")
@@ -360,6 +362,11 @@ var _arena_extra_bodies: = {}
 var arena_mode: = ""
 var bounty_id: = ""
 var bounties: = {"beaten": [], "day": -1 }
+var side_quests: = {}                  # side_quests.gd state (journal = phone Notes)
+var show_hidden_quests: = false        # dev only: list + mark quests that aren't "ready" yet
+var dlg_line: = ""                     # dialog typewriter: the line being revealed ...
+var dlg_chars: = 0.0                   # ... and how many characters show so far
+const DLG_CPS: = 70.0
 var waffle_data: = {"shifts": 0, "regular_beaten": 0, "best": 0 }
 var waffle_node: Node = null
 var bet: = {"day": -1, "won": 0, "lost": 0 }
@@ -662,7 +669,7 @@ func to_dict() -> Dictionary:
 		"gear": gear.duplicate(true), "shades": shades, "wordle": wordle.duplicate(true), "wordle_seed": wordle_seed, "kills": kills.duplicate(),
 		"pete_last_spawn_day": pete_last_spawn_day, "pete_defeated_day": pete_defeated_day,
 		"raccoon_gift_day": raccoon_gift_day, "raccoon_pets": raccoon_pets, "porch_pkg": porch_pkg, "porch_day": porch_day,
-		"story": story.duplicate(true), "bounties": bounties.duplicate(true), "waffle": waffle_data.duplicate(), "bet": bet.duplicate(),
+		"story": story.duplicate(true), "bounties": bounties.duplicate(true), "side_quests": side_quests.duplicate(true), "waffle": waffle_data.duplicate(), "bet": bet.duplicate(),
 		"errand": errand.duplicate(true), "errand_stats": errand_stats.duplicate(),
 		"buffs": buffs.duplicate(true), "buff_days": buff_days.duplicate(), "meal_day": meal_day, "cha_line_day": cha_line_day,
 		"date_invite": date_invite.duplicate(), "date_stats": date_stats.duplicate(), "glow_day": glow_day,
@@ -720,6 +727,7 @@ func from_dict(d: Dictionary) -> void:
 	kills = {}
 	story = SaveGame.clean_story(d.get("story", {}))
 	bounties = Bounties.clean(d.get("bounties", {}))
+	side_quests = SideQuests.clean(d.get("side_quests", {}))
 	daily = Daily.clean(d.get("daily", {}))
 	var sb = d.get("station_best", {})
 	station_best = sb.duplicate() if typeof(sb) == TYPE_DICTIONARY else {}
@@ -964,11 +972,32 @@ func _unhandled_input(e: InputEvent) -> void:
 	elif e.is_action_pressed("settings"):
 		open_settings()
 
+## One tap on a talking line: finish the typewriter first, then move to the next line.
+func advance_dialog() -> void:
+	if dialog.is_empty():
+		return
+	if dlg_line == str(dialog[0]) and dlg_chars < dialog_len():
+		dlg_chars = 100000.0
+		return
+	dialog.pop_front()
+
+func dialog_len() -> int:
+	return Cast.T(str(dialog[0])).length() if not dialog.is_empty() else 0
+
+func _tick_dialog(delta: float) -> void:
+	if dialog.is_empty():
+		dlg_line = ""
+		return
+	if str(dialog[0]) != dlg_line:
+		dlg_line = str(dialog[0])
+		dlg_chars = 0.0
+	dlg_chars += DLG_CPS * delta
+
 func _on_attack() -> void:
 	if busy():
 		return
 	if not dialog.is_empty():
-		dialog.pop_front()
+		advance_dialog()
 		return
 	if combat.locked_out():
 		return
@@ -979,7 +1008,7 @@ func _on_a() -> void:
 	if busy():
 		return
 	if not dialog.is_empty():
-		dialog.pop_front()
+		advance_dialog()
 		return
 	var it: = nearest_interactable()
 	if not it.is_empty():
@@ -991,7 +1020,7 @@ func _on_roll() -> void:
 	if busy():
 		return
 	if not dialog.is_empty():
-		dialog.pop_front()
+		advance_dialog()
 		return
 	player.roll()
 
@@ -1094,7 +1123,7 @@ func _on_interact() -> void:
 	if busy():
 		return
 	if not dialog.is_empty():
-		dialog.pop_front()
+		advance_dialog()
 		return
 	var it: = nearest_interactable()
 	if it.is_empty():
@@ -1761,9 +1790,76 @@ func open_settings() -> void:
 	var was_title: = in_title
 	var g: = SettingsScript.new()
 	g.audio = audio
-	_run_game(g, func (_n: Node, _s: float, _x: Array) -> void:
+	g.dev = dev_tools_on() and not was_title
+	_run_game(g, func (n: Node, _s: float, _x: Array) -> void:
 		if was_title:
-			show_title())
+			show_title()
+		elif str(n.get("action")) == "dev_quests":
+			dev_quest_menu())
+
+## Dev tools exist only in debug builds (running from the Godot editor, phone or desktop). Export
+## builds (itch, the dev APK release preset) never show them.
+func dev_tools_on() -> bool:
+	return OS.is_debug_build()
+
+## Dev: pick a side quest, then a stage; the quest jumps there and Duff warps to whoever the stage needs.
+func dev_quest_menu() -> void:
+	var opts: Array = []
+	var keys: = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8]
+	var i: = 0
+	for e in SideQuests.LIST:
+		var id: = str(e["id"])
+		var stv: = SideQuests.status(side_quests, id)
+		opts.append([id, "%s %s %d/%d" % [str(e["title"]).substr(0, 18), {"": "-", "active": ">", "done": "OK"}[stv], SideQuests.stage(side_quests, id), SideQuests.stage_count(id)], keys[i]])
+		i += 1
+	opts.append(["hidden", "Hidden quests: %s" % ("SHOWN" if show_hidden_quests else "hidden"), KEY_H])
+	opts.append(["leave", "Close", KEY_ESCAPE])
+	_menu("DEV: SIDE QUESTS", ["Jump any side quest to any stage and test every branch."], opts, func (id: String) -> void:
+		if id == "hidden":
+			show_hidden_quests = not show_hidden_quests
+			dev_quest_menu()
+		elif id != "leave":
+			_dev_quest_stage_menu(id))
+
+func _dev_quest_stage_menu(id: String) -> void:
+	var e: = SideQuests.entry(id)
+	var opts: Array = [["0", "Reset (not started)", KEY_0]]
+	var st: Array = e["stages"]
+	for i in st.size():
+		opts.append([str(i + 1), "%d: %s" % [i + 1, str(st[i]["text"]).substr(0, 24)], [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6][mini(i, 5)]])
+	opts.append([str(st.size() + 1), "Done", KEY_D])
+	for ch in e.get("choices", []):
+		opts.append(["c_" + str(ch), "Done, chose '%s'" % str(ch), KEY_NONE])
+	opts.append(["leave", "Back", KEY_ESCAPE])
+	_menu("DEV: " + str(e["title"]), [str(e["pitch"])], opts, func (pick: String) -> void:
+		if pick == "leave":
+			dev_quest_menu()
+		elif pick.begins_with("c_"):
+			SideQuests.finish(side_quests, id, pick.substr(2))
+			_toast("DEV: %s done, choice %s" % [id, pick.substr(2)])
+		else:
+			dev_warp_quest(id, int(pick)))
+
+func dev_warp_quest(id: String, to_stage: int) -> void:
+	if SideQuests.entry(id).is_empty():
+		_toast("DEV: no side quest '%s'" % id)
+		return
+	show_hidden_quests = true
+	SideQuests.warp(side_quests, id, to_stage)
+	var who: = str(SideQuests.entry(id).get("giver", ""))
+	if SideQuests.is_active(side_quests, id):
+		var at: = str((SideQuests.entry(id)["stages"] as Array)[SideQuests.stage(side_quests, id) - 1].get("at", ""))
+		if at != "":
+			who = at
+	var spot = quest_spots().get(who)
+	if spot != null:
+		if str(spot[0]) == "home" and location != "home":
+			enter_home()
+		elif str(spot[0]) == "outside" and location == "home":
+			leave_home()
+		if str(spot[0]) == location:
+			player.position = (spot[1] as Vector2) + Vector2(0, 40)
+	_toast("DEV: %s -> %s %d/%d" % [id, SideQuests.status(side_quests, id) if SideQuests.status(side_quests, id) != "" else "reset", SideQuests.stage(side_quests, id), SideQuests.stage_count(id)])
 
 ## Sprite scale on painted fight floors (arenas, gala); bosses already draw at 1.45 (boss.gd).
 const STAGE_SCALE: = 1.45
@@ -1784,6 +1880,7 @@ func _process(delta: float) -> void:
 	ping_t = maxf(0.0, ping_t - delta)
 	sigh_t = maxf(0.0, sigh_t - delta)
 	save_flash_t = maxf(0.0, save_flash_t - delta)
+	_tick_dialog(delta)
 	_update_world_cover()
 	if location != _drawn_loc:
 		queue_redraw()
@@ -1975,6 +2072,10 @@ func _check_debug_hash() -> bool:
 
 func debug_station(k: String) -> void:
 	dialog.clear()
+	if k.begins_with("quest:"):   # #dq=quest:<id>:<stage>  (stage 0 = reset, past the end = done)
+		var parts: = k.split(":")
+		dev_warp_quest(parts[1] if parts.size() > 1 else "", int(parts[2]) if parts.size() > 2 else 1)
+		return
 	match k:
 		"home":
 			enter_home()
@@ -2264,9 +2365,7 @@ func _draw_outside() -> void:
 	if ensure_respawn <= 0.0:
 		Art.image(self, "ensure", ENSURE_POS + Vector2(0, 4))
 
-	var ph: = phase()
-	if ph == "Night" or ph == "Evening":
-		draw_rect(Rect2(Vector2.ZERO, WORLD), Color(0.05, 0.05, 0.2, 0.35 if ph == "Night" else 0.15))
+	# dusk/night darkening now lives in hd_presentation.gd (clock-driven grade + door lights)
 	# the inspector and Brittany are drawn outdoors by y-sorted proxies (dressing_front.gd)
 
 func _draw_inspector() -> void:
@@ -3586,10 +3685,12 @@ class WorldLabels extends Node2D:
 
 	var m: Node
 	func _process(_d: float) -> void:
-		visible = m.location == "outside"
+		visible = m.location == "outside" or m.location == "home"
 		queue_redraw()
 	func _draw() -> void:
-		m.draw_world_labels(self)
+		if m.location == "outside":
+			m.draw_world_labels(self)
+		m.draw_quest_markers(self)
 
 func _label(ci: CanvasItem, f: Font, pos: Vector2, s: String, w: float, size: int, col: Color) -> void:
 	ci.draw_string(f, pos + Vector2(1.0 / 1.5, 1.0 / 1.5), s, HORIZONTAL_ALIGNMENT_CENTER, w, size, Color(0.07, 0.05, 0.04, 0.75 * col.a))
@@ -3604,6 +3705,26 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 	ci.draw_line(pr.position + Vector2(5, 0), pr.position + Vector2(9, -3), Color("#8c8478"), 1.0 / 1.5)
 	ci.draw_line(pr.position + Vector2(25, 0), pr.position + Vector2(21, -3), Color("#8c8478"), 1.0 / 1.5)
 	ci.draw_string(f, Vector2(pr.position.x, pr.position.y + 6.3), "CLOSED", HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, 5, Color("#f0ead8"))
+
+## Where each side-quest NPC/prop stands, so its !/? marker can float over it.
+func quest_spots() -> Dictionary:
+	return {
+		"madison": ["home", MADISON_POS + Vector2(0, -25)],
+		"mail": ["home", MAIL_PT + Vector2(0, -14)],
+		"brittany": ["outside", BRITT_POS + Vector2(0, -24)],
+		"bounty_board": ["outside", BOARD_PT + Vector2(0, -22)],
+	}
+
+func draw_quest_markers(ci: CanvasItem) -> void:
+	if not dialog.is_empty():
+		return
+	var spots: = quest_spots()
+	for npc in spots:
+		if str(spots[npc][0]) != location:
+			continue
+		var mk: = SideQuests.marker_for(side_quests, str(npc), show_hidden_quests)
+		if mk != "":
+			UiStyle.quest_marker(ci, spots[npc][1] + Vector2(0, sin(t * 3.2) * 1.5), mk)
 
 func draw_world_labels(ci: CanvasItem) -> void:
 	var f: = ThemeDB.fallback_font

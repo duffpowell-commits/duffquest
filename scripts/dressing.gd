@@ -46,7 +46,16 @@ static func draw_item(ci: CanvasItem, it: Dictionary, mod: Color = Color.WHITE) 
 	var p: Vector2 = it["p"]
 	if it.get("end", false):
 		p -= Vector2(FENCE_SEG / 2.0 - 1.0, 0)   # end post art sits mid-cell
+	elif casts_shadow(it):
+		# soft contact shadow so props sit ON the street instead of floating (HD-2D pass, Nov 12)
+		var w: = clampf(art_rect(it).size.x * (0.32 if it.get("tree", false) else 0.42), 4.0, 22.0)
+		Art.shadow(ci, p, w, w * 0.32, 0.26 * mod.a)
 	Art.image(ci, str(it["a"]), p, mod, float(it["s"]))
+
+## Flat ground litter (leaves) and fence runs don't get a blob shadow.
+static func casts_shadow(it: Dictionary) -> bool:
+	var a: = str(it["a"])
+	return not ("leaves" in a or "fence" in a or it.has("n"))
 
 const SEE_THROUGH_ALPHA: = 0.45
 
