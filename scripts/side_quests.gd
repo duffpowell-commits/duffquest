@@ -40,11 +40,11 @@ const LIST: = [
 		"choices": ["cover", "rat"],
 	},
 	{
-		"id": "alley", "kind": "explore", "title": "Lost & Found, Omaha", "giver": "mail", "ready": false,
+		"id": "alley", "kind": "explore", "title": "Lost & Found, Omaha", "giver": "mail", "ready": true, "from_day": 3,
 		"pitch": "A flyer in the mail. Someone lost something in this neighborhood. Three somethings.",
 		"stages": [
-			{"text": "Find what the flyer's talking about. Look where nobody looks.", "at": ""},
-			{"text": "Bring it all back to where the flyer says.", "at": ""},
+			{"text": "Find Gail's three things: a ring 'where the street drinks', a cat collar 'in the bin by the gas station', a left shoe 'look up, by the bus stop'.", "at": ""},
+			{"text": "Bring it all to the green paper box outside the Seen Cafe.", "at": "lostbox"},
 		],
 	},
 ]

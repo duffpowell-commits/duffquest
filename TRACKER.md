@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-12** Side quest 4 live, all four now on: **Lost & Found, Omaha** (`ready: true`, from day 3). A flyer
+  from Gail comes with the mail (home mail table, before the bills). Three riddles, any order: a ring in the storm
+  drain at the crossroads, Mr. Buttons' collar in the recycling bin by the Kwik-N-Go, a left shoe in the pine tree by
+  the bus stop. No '?' while hunting; each unfound thing glints now and then. Return to the green paper box outside
+  the Seen Cafe ('?' marker): +$50, +6 happy, "Omaha's Finest". `main.gd` `_alley_talk()` / `alley_payoff()`,
+  `LOST_SPOTS` / `LOSTBOX_PT`. Tested end to end. `arena_shot lost`; render `docs/renders/quest_lost_found.png`.
 - **2026-11-12** Side quest 3 live: **Brittany's Side Gig** (`ready: true`, from day 5, daytime). She's selling the
   Fork's ranch on Marketplace in hand-lettered mason jars and Chef blames Manny the dishwasher. Pick on a card: cover
   for her (next day +$60, +5 happy, "Ranch Cartel") or tell Chef (next day +$40, no bet that day, "Narc of the
