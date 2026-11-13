@@ -115,7 +115,7 @@ const GALA_DAY: = 24
 const ARENA_ORIGIN: = Vector2(760, 440)
 const ARENA_SIZE: = Vector2(320, 180)
 const ARENA_SPAWN: = Vector2(920, 590)
-const FINAL_TIME: = 210.0
+const FINAL_TIME: = 250.0   # was 210; Willnot has +20% HP since Nov 13
 
 const STORY: = [
 	{"id": "ghoster", "name": "{ex_1}", "day": 2, "happy": 45.0, "place": "SEEN CAFE", "r": Rect2(205, 108, 60, 40), "c": "#5a6a8a",
@@ -2496,6 +2496,9 @@ func apply_gear() -> void:
 	player.combo_len = 4 if Gear.w_special(gear) in ["quick", "golden"] else 3
 	player.iframe_len = 1.2 if asp in ["goalie", "trust"] else 0.8
 
+## Difficulty pass Nov 13 (Duff: "combat is pretty easy"): every hit on Duff lands 25% harder.
+const DMG_TAKEN: = 1.25
+
 func hurt_player(amount: float, from: Vector2, kb: float, kind: String) -> bool:
 
 	if busy() or combat.cinematic:
@@ -2505,7 +2508,7 @@ func hurt_player(amount: float, from: Vector2, kb: float, kind: String) -> bool:
 		return false
 	if player.invulnerable() or (player.frozen and combat.feast_t <= 0.0):
 		return false
-	var dmg: float = amount * (1.0 - Gear.reduction(gear)) * combat.taken_mult()
+	var dmg: float = amount * DMG_TAKEN * (1.0 - Gear.reduction(gear)) * combat.taken_mult()
 	if buff_active("defense"):
 		dmg *= Buffs.DEF_MULT
 	if glow_active():
@@ -2591,7 +2594,7 @@ func spawn_driver() -> Node:
 	return spawn_enemy("driver", pos, {"lane": {"axis": axis, "dir": dir } })
 
 func spawn_cap() -> int:
-	return mini(6, 1 + day_count / 2) + (2 if phase() == "Night" else 0)
+	return mini(6, 1 + day_count / 2) + (3 if phase() == "Night" else 0)   # night +3 (was +2, Nov 13)
 
 func spawn_interval() -> float:
 	var base: = maxf(10.0, 28.0 - 2.0 * day_count) / Daily.spawn(today_event())
