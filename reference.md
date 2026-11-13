@@ -152,6 +152,15 @@ stay raw.
 - **Happiness** (0-100, starts at 60): drains 0.2/s while a quest is open. Hits 0 → couch night, reset to 30.
   Gains go through `gain_happy(x)` (×1.25 with CHA, ×`Dates.GLOW_HAPPY` during the date glow). It gates the story
   bosses (`STORY[i].happy`) and date invites (`INVITE_HAPPY` 50).
+- **Madison's mornings** (`mornings.gd`, state `main.morning`, save key `morning`). She has Ehlers-Danlos syndrome
+  (hip is the big joint) and migraines. **Every line was approved by Duff; don't change one without his OK.** Rolled at
+  wake (`morning_new_day`), day 2+, never two in a row, never on a fussy/upset/couch/calendar-special morning:
+  `slow` (0.26) / `migraine` (0.14) = she's in bed (`madison_in_bed`, drawn on the pillow under the quilt, a wince at the
+  hip, the room dark on a migraine); `!` walks you crib (bottle) -> kitchen (two coffees) -> her (`morning_talk`, +8,
+  she's up 90 min later with one "later" line). Not done by 10 AM: she gets herself up and texts, no penalty
+  (`morning_tick`). `good` (0.15): she's making the coffee; card Sit down (+5) / Take over (she says she's got it).
+  Pain lines use her deadpan portrait (`Mornings.pained`). Renders: `arena_shot` `morning_slow|migraine|bring|good`.
+  Off-limits (Duff): the mess of her stuff, and that she's on disability.
 - **Madison's moods** (`moods.gd`): fussy days (`FUSSY_CHANCE` 0.15, 3-day gap, she swaps the request mid-quest),
   upset (causes rent, promise, ...; `make_up`/`bounce`), couch night (`COUCH_ENERGY` 70 next morning).
   `QUEST_WARN` [240,360,480] min: a quest left open too long makes her upset ("promise").
@@ -690,6 +699,7 @@ stay raw.
 | `loading_screen.gd` | Random loading-screen art + caption |
 | `market.gd` | Stock market sim, accounts, college fund goal |
 | `moods.gd` | Madison's fussy/upset/couch states and lines |
+| `mornings.gd` | Madison's slow / migraine / good mornings (EDS), approved lines |
 | `player.gd` | Duff: movement, roll, combo, outfits, shades |
 | `player_shot.gd` | Duff's projectiles (grease, plate, reflect, hashbrown) |
 | `projectile.gd` | Enemy/boss projectiles and specials (laser, wave, rug, glass...) |

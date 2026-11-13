@@ -48,6 +48,7 @@ const JuiceScript: = preload("res://scripts/juice.gd")
 const CombatUI: = preload("res://scripts/combat_ui.gd")
 const Life: = preload("res://scripts/life.gd")
 const Moods: = preload("res://scripts/moods.gd")
+const Mornings: = preload("res://scripts/mornings.gd")
 const SymphonyScript: = preload("res://scripts/minigames/symphony.gd")
 const AkaruiScript: = preload("res://scripts/minigames/akarui.gd")
 const PlasmaScript: = preload("res://scripts/minigames/plasma.gd")
@@ -299,6 +300,7 @@ var glow_day: = -1
 var plasma: Dictionary = Life.new_plasma()
 var mood: Dictionary = Moods.new_mood()
 var couch_night: = false
+var morning: Dictionary = Mornings.new_state()   # Madison's slow / migraine / good mornings (mornings.gd)
 var quest_wait: = 0.0
 var restless_seen: Dictionary = {}
 var restless_level: = 0
@@ -746,7 +748,7 @@ func to_dict() -> Dictionary:
 		"errand": errand.duplicate(true), "errand_stats": errand_stats.duplicate(),
 		"buffs": buffs.duplicate(true), "buff_days": buff_days.duplicate(), "meal_day": meal_day, "cha_line_day": cha_line_day,
 		"date_invite": date_invite.duplicate(), "date_stats": date_stats.duplicate(), "glow_day": glow_day,
-		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "routine_played": routine_played, "quest_wait": quest_wait,
+		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "morning": morning.duplicate(), "routine_played": routine_played, "quest_wait": quest_wait,
 		"bills": bills.duplicate(true), "owed": owed.duplicate(true), "plans": plans.duplicate(true), "rent_bump": rent_bump,
 		"formula_spike_day": formula_spike_day, "event_days": event_days.duplicate(), "phone_cracked": phone_cracked, "bills_paid": bills_paid,
 		"has_car": has_car, "bus_pass_until": bus_pass_until, "bus_rides": bus_rides,
@@ -829,6 +831,7 @@ func from_dict(d: Dictionary) -> void:
 	plasma = Life.clean_plasma(d.get("plasma", {}))
 	mood = Moods.clean_mood(d.get("mood", {}))
 	couch_night = bool(d.get("couch_night", false))
+	morning = Mornings.clean(d.get("morning", {}))
 	routine_played = bool(d.get("routine_played", int(d.get("day_count", 1)) > 1))   # old saves: past night one
 	quest_wait = float(d.get("quest_wait", 0.0))
 	bills = Life.clean_list(d.get("bills", []), ["day", "due"])
@@ -1163,7 +1166,7 @@ func interactables() -> Array:
 		return []
 	if location == "home":
 		return [
-			{"id": "madison", "pos": MADISON_POS, "r": 22.0, "label": "Talk to {partner}" },
+			{"id": "madison", "pos": madison_spot(), "r": 22.0, "label": "Talk to {partner}" },
 			{"id": "bed", "pos": BED_PT, "r": 16.0, "label": "Bed (sleep / save)" },
 			{"id": "freya", "pos": FREYA_PT, "r": 14.0, "label": "{cat3} (under the bed)" },
 			{"id": "crib", "pos": CRIB_PT, "r": 16.0, "label": "Check on {baby}" },
@@ -1287,6 +1290,13 @@ func shower() -> void:
 		_toast("I'm already clean, man. Water bill's high enough.")
 
 func check_crib() -> void:
+	if morning_hard_pending() and not bool(morning["fed"]):
+		morning["fed"] = true
+		if crib_day != day_count:
+			crib_day = day_count
+			energy = minf(energy_cap(), energy + energy_gain(5.0))
+		_say([Mornings.feed_line(str(morning["kind"]))])
+		return
 	if crib_day != day_count:
 		crib_day = day_count
 		energy = minf(energy_cap(), energy + energy_gain(5.0))
@@ -1319,6 +1329,10 @@ func feed_cats() -> void:
 	_toast("{cat1} and {cat2} inhale it. {cat3} waits till I leave the room.")
 
 func kitchen() -> void:
+	if morning_hard_pending() and not bool(morning["coffee"]):
+		morning["coffee"] = true
+		_say([Mornings.COFFEE])
+		return
 	var opts: Array = []
 	if int(inventory.get("cake", 0)) > 0:
 		opts.append(["cake", "Eat Black Forest cake (+60 Energy)", KEY_1])
@@ -1534,7 +1548,8 @@ func _wake(energy_penalty: int) -> void:
 	lines.append_array(daily_new_day())
 	lines.append_array(couch_lines)
 	lines.append_array(mood_new_day())
-	if couch_lines.is_empty():
+	lines.append_array(morning_new_day(not couch_lines.is_empty()))
+	if couch_lines.is_empty() and str(morning["kind"]) == "":
 		lines.append_array(kindness_new_day())
 	if day_i % 7 == 0:
 		lines.append_array(market_week())
@@ -1557,6 +1572,8 @@ func _wake(energy_penalty: int) -> void:
 	lines = lines.filter(func (l): return str(l) != "")
 	if calendar_event() == "falcor" and str(daily["falcor"]) == "":
 		falcor_scene(lines)
+	elif morning_today() == "good" and str(morning["done"]) == "":
+		good_morning_scene(lines)
 	else:
 		_say(lines)
 	_sync_world()
@@ -1680,6 +1697,8 @@ func advance_clock(minutes: float) -> void:
 	clock += minutes
 
 func _talk_to_madison() -> void:
+	if morning_talk():
+		return
 	var pre: Array = []
 	var sl: = story_announce()
 	if not sl.is_empty():
@@ -2005,6 +2024,7 @@ func _process(delta: float) -> void:
 		if drained() and energy > Life.DRAIN_MAX:
 			energy = Life.DRAIN_MAX
 		fussy_swap()
+		morning_tick()
 		restless_t -= delta
 		if restless_t <= 0.0:
 			restless_t = 1.0
@@ -2497,10 +2517,13 @@ func _draw_inside() -> void:
 
 	Art.image(self, "freya_peek", Vector2(68, 517))
 
-	var mp: = MADISON_POS
-	var look: = (player.global_position - mp) if player and location == "home" else Vector2.DOWN
-	Art.person(self, "ch_madison", mp + Vector2(0, 11), look if look.length() < 120.0 else Vector2.DOWN)
-	if quest != 1 or has_all(QUEST_NEEDS.get(quest_kind, {})):
+	var mp: = BED_HEAD if madison_in_bed() else madison_spot()
+	if madison_in_bed():
+		_draw_madison_in_bed()
+	else:
+		var look: = (player.global_position - mp) if player and location == "home" else Vector2.DOWN
+		Art.person(self, "ch_madison", mp + Vector2(0, 11), look if look.length() < 120.0 else Vector2.DOWN)
+	if (quest != 1 or has_all(QUEST_NEEDS.get(quest_kind, {}))) and not morning_hard_pending():
 		var bob: = sin(t * 4.0) * 1.5
 		draw_string(f, mp + Vector2(-2, -14 + bob), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#ffe08a"))
 	if (sigh_t > 0.0 or restless_level >= 2) and hint == "":
@@ -2510,6 +2533,8 @@ func _draw_inside() -> void:
 		draw_string(f, mp + Vector2(6, -14), "~", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#d0b0ff"))
 	if phase() == "Night":
 		draw_rect(Rect2(o, INT_SIZE), Color(0.05, 0.05, 0.2, 0.3))
+	elif madison_in_bed() and str(morning["kind"]) == "migraine":
+		draw_rect(Rect2(o, INT_SIZE), Color(0.03, 0.03, 0.1, 0.58))   # blinds down
 	if inspector_follow and location == "home":
 		_draw_inspector()
 
@@ -4092,7 +4117,7 @@ func porch_quest_won() -> String:
 ## Where each side-quest NPC/prop stands, so its !/? marker can float over it.
 func quest_spots() -> Dictionary:
 	return {
-		"madison": ["home", MADISON_POS + Vector2(0, -25)],
+		"madison": ["home", madison_spot() + Vector2(0, -25)],
 		"mail": ["home", MAIL_PT + Vector2(0, -14)],
 		"brittany": ["outside", BRITT_POS + Vector2(0, -24)],
 		"bounty_board": ["outside", BOARD_PT + Vector2(0, -22)],
@@ -5525,3 +5550,124 @@ func falcor_scene(after: Array) -> void:
 		_say(out + after), "living_night")
 	if overlay_node:
 		overlay_node.set("backdrop_dim", 0.45)   # quiet room, no party burst
+
+# ---------------------------------------------------------------- Madison's mornings (mornings.gd)
+
+## Today's morning kind, or "".
+func morning_today() -> String:
+	return str(morning["kind"]) if int(morning["day"]) == day_count else ""
+
+## A slow or migraine morning she hasn't had her coffee on yet.
+func morning_hard_pending() -> bool:
+	return Mornings.hard(morning_today()) and str(morning["done"]) == ""
+
+## She's in bed: hard morning, coffee not brought yet, or brought and the meds haven't kicked in.
+func madison_in_bed() -> bool:
+	if not Mornings.hard(morning_today()):
+		return false
+	return str(morning["done"]) == "" or (str(morning["done"]) == "brought" and clock < float(morning["up_at"]))
+
+## Where Madison is (and where you talk to her): her side of the bed on a hard morning.
+func madison_spot() -> Vector2:
+	return Vector2(54, 522) if madison_in_bed() else MADISON_POS
+
+const BED_HEAD: = Vector2(28, 484)   # her pillow, in the painted bed
+
+## Morning roll at wake-up. `couch` = Duff slept on the couch last night (no morning scene on top of that).
+func morning_new_day(couch: bool) -> Array:
+	if int(morning["day"]) == day_count:
+		return []
+	var ok: = not couch and life_events and mood_kind() == "" and calendar_event() == "" and not falcor_grief() \
+		and not bool(Daily.entry(day_count).get("headline", false))
+	var last: = int(morning["day"]) if str(morning["kind"]) != "" else -99
+	var kind: = Mornings.roll(day_count, wordle_seed, ok, last)
+	morning = Mornings.new_state()
+	if kind == "":
+		return []
+	morning["day"] = day_count
+	morning["kind"] = kind
+	morning["pick"] = (day_count + wordle_seed) % 2
+	return Mornings.wake_lines(kind, int(morning["pick"]))
+
+## Good morning: she's making the coffee. Sit down (let her) or take over (she still has it).
+func good_morning_scene(after: Array) -> void:
+	_menu("GOOD MORNING", after + [Mornings.GOOD_ASK], [["sit", "Sit down", KEY_1], ["takeover", "Take over", KEY_2]], func (id: String) -> void:
+		morning["done"] = id
+		var out: Array = []
+		if id == "sit":
+			gain_happy(Mornings.GOOD_HAPPY)
+			out = Mornings.GOOD_SIT.duplicate()
+			out[-1] = str(out[-1]) + " (+%d Happiness)" % int(Mornings.GOOD_HAPPY)
+		else:
+			out = Mornings.GOOD_TAKEOVER.duplicate()
+		save_game()
+		_say(out))
+
+## Talking to her on a hard morning. Returns true if the morning took the conversation.
+func morning_talk() -> bool:
+	var kind: = morning_today()
+	if not Mornings.hard(kind):
+		return false
+	if str(morning["done"]) == "":
+		if not bool(morning["fed"]):
+			_say([Mornings.bed_line(kind, int(morning["pick"]))])
+		elif not bool(morning["coffee"]):
+			_say(["(Coffee first. Kitchen.)"])
+		else:
+			morning["done"] = "brought"
+			morning["up_at"] = clock + Mornings.UP_DELAY
+			gain_happy(Mornings.SLOW_HAPPY)
+			var bl: = Mornings.bring_lines(kind)
+			bl[-1] = str(bl[-1]) + " (+%d Happiness)" % int(Mornings.SLOW_HAPPY)
+			_say(bl)
+			save_game()
+		return true
+	if str(morning["done"]) == "brought" and not bool(morning["later_said"]) and clock >= float(morning["up_at"]):
+		morning["later_said"] = true
+		_say([Mornings.later_line(kind, int(morning["pick"]))])
+		return true
+	return false
+
+## 10 AM and nobody brought the coffee: she gets herself up and texts. No penalty.
+func morning_tick() -> void:
+	if morning_hard_pending() and clock >= Mornings.SELF_UP_AT:
+		morning["done"] = "self"
+		morning["later_said"] = true
+		text("madison", "madison", Mornings.skip_text(morning_today()))
+		unread["madison"] = true
+		ping_t = 2.0
+
+## Her in bed: sprite with the head on the pillow, the bed's own quilt redrawn over her, and the pain showing.
+func _draw_madison_in_bed() -> void:
+	var head: = BED_HEAD
+	Art.person(self, "ch_madison", head + Vector2(0, 22), Vector2.DOWN, 0.0, false, false, Color.WHITE, false)
+	var quilt: = Rect2(BED_R.position.x + 2, head.y + 6, BED_R.size.x - 4, 511.0 - head.y - 6)
+	_redraw_interior(quilt)
+	if str(morning["done"]) == "" and morning_today() == "slow":
+		var a: = clampf(sin(t * 2.4) * 1.6 - 0.6, 0.0, 1.0)   # a wince now and then, at the hip
+		if a > 0.0:
+			var hp: = Vector2(head.x + 9, quilt.position.y + 8)
+			for k in 3:
+				var ang: = -0.9 + k * 0.9
+				draw_line(hp + Vector2(cos(ang), sin(ang)) * 3.0, hp + Vector2(cos(ang), sin(ang)) * 6.0, Color(1.0, 0.45, 0.35, a), 1.0)
+	if morning_hard_pending():
+		var tgt: = CRIB_PT if not bool(morning["fed"]) else (KITCHEN_PT if not bool(morning["coffee"]) else head)
+		UiStyle.quest_marker(self, tgt + Vector2(0, (-14 if tgt == head else -22) + sin(t * 3.2) * 1.5), "!")
+
+## Repaint one world rect of the home interior art on top (tucks her under the quilt).
+func _redraw_interior(r: Rect2) -> void:
+	var tx: = Art.tex("home_interior")
+	if tx == null:
+		return
+	var inf: = Art.info("home_interior")
+	var org: Array = inf.get("origin", [0, 0])
+	var k: = Art.density(inf)
+	var top_left: = INT_ORIGIN - Vector2(float(org[0]), float(org[1])) / k
+	draw_texture_rect_region(tx, r, Rect2((r.position - top_left) * k, r.size * k))
+
+## Dev/render: force a morning kind for today (arena_shot morning_*).
+func dev_morning(kind: String) -> void:
+	morning = Mornings.new_state()
+	morning["day"] = day_count
+	morning["kind"] = kind
+	clock = 450.0
