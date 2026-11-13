@@ -1,11 +1,20 @@
 # Headless-Chrome boot timer for the web build: python3 tools/web_boot_test.py <build_dir> <port> <label>
 # Throttles to "decent 4G" (9 Mbit/s, 70 ms), prints seconds until the engine is running, bytes per file, and
 # when world.pck (gates New Game) and extra.pck mounted. Needs playwright + /usr/bin/google-chrome (cloud sandbox has both).
-import asyncio, sys, time, threading, functools, http.server, socketserver
+import asyncio, sys, time, threading, functools, http.server, socketserver, gzip, os
 from playwright.async_api import async_playwright
 root, port, label = sys.argv[1], int(sys.argv[2]), sys.argv[3]
 class Q(http.server.SimpleHTTPRequestHandler):
     def log_message(self,*a): pass
+    def do_GET(self):
+        # serve the deferred packs gzip-encoded like itch's CDN does (Nov 13: that broke them on the live build)
+        p=self.path.split('?')[0]
+        if p in ('/world.pck','/extra.pck'):
+            data=gzip.compress(open(os.path.join(root,p[1:]),'rb').read(),1)
+            self.send_response(200); self.send_header('Content-Type','application/octet-stream')
+            self.send_header('Content-Encoding','gzip'); self.send_header('Content-Length',str(len(data))); self.end_headers()
+            self.wfile.write(data); return
+        return super().do_GET()
 socketserver.TCPServer.allow_reuse_address=True
 srv=socketserver.ThreadingTCPServer(("127.0.0.1",port),functools.partial(Q,directory=root))
 threading.Thread(target=srv.serve_forever,daemon=True).start()
