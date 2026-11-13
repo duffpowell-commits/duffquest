@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Madison's mornings (EDS + migraines).** Duff approved every line. About two hard mornings a week
+  she's in bed hurting (hip, or a migraine with the blinds down): bottle for Octavia, two coffees (hers cream and sugar,
+  his honey), bring hers for her meds (+8). Skip it and she gets herself up and texts; no penalty. About one good
+  morning a week she makes the coffee herself: Sit down (+5) or Take over. `scripts/mornings.gd`, save key `morning`
+  (old saves load as no morning), 12 test_daily checks, render `docs/renders/madison_mornings.png`. Next in this arc
+  (each pitched to Duff first): her diagnosis story, an autism quest, her ADHD made visible.
 - **2026-11-13** **Two editions: public vs family.** One codebase. Default export = public (itch, Pages root,
   `duffquest-public.apk`): `data/cast_public.json` renames the Twisted Fork (The Busted Spatula), Wordle (Word Brawl),
   the Hy-Whee slogan, Gucchi (Eau de Fryer), Brittany (Mazikeen, `{coworker}` token) and the real-ex final boss (Rex Tankton, Glasshaus Tower), and `Art.pub()`
