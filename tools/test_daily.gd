@@ -73,6 +73,7 @@ func _init() -> void:
 	_heard_checks()
 	_taunt_variety_checks()
 	_side_quest_checks(main)
+	_morning_checks(main)
 	_spatter_cut_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
@@ -1010,4 +1011,58 @@ func _side_quest_checks(main: Node) -> void:
 	main.clock = ck0
 	main.dialog.clear()
 	main.show_hidden_quests = false
+	main.dialog.clear()
+
+## Madison's mornings (mornings.gd): rolls, the slow-morning chores, the 10 AM self-up text, saves.
+func _morning_checks(main: Node) -> void:
+	var M: = preload("res://scripts/mornings.gd")
+	var counts: = {"slow": 0, "migraine": 0, "good": 0, "": 0}
+	var last: = -99
+	var back_to_back: = false
+	for d in range(2, 702):
+		var k: = M.roll(d, 7, true, last)
+		counts[k] += 1
+		if k != "":
+			back_to_back = back_to_back or last == d - 1
+			last = d
+	check("mornings: about 2 hard + 1 good a week (slow %d, migraine %d, good %d per 700 days)" % [counts["slow"], counts["migraine"], counts["good"]],
+		counts["slow"] + counts["migraine"] > 140 and counts["slow"] + counts["migraine"] < 240 and counts["good"] > 40 and counts["good"] < 110)
+	check("mornings: never two in a row", not back_to_back)
+	check("mornings: none on day 1 or when not eligible", M.roll(1, 7, true, -99) == "" and M.roll(5, 7, false, -99) == "")
+	check("mornings: old save without the key loads as no morning", M.clean(null) == M.new_state() and M.clean({"kind": "bogus"})["kind"] == "")
+	check("mornings: pain lines get the hurting face", M.pained(M.SLOW_BED[0]) and M.pained(M.MIGRAINE_BED) and not M.pained(M.SLOW_LATER[0]))
+	var dc0: int = main.day_count
+	var ck0: float = main.clock
+	main.no_loading = true
+	main.close_overlay()
+	main.dialog.clear()
+	main.dev_morning("slow")
+	var h0: float = main.happiness
+	check("slow morning: she's in bed", main.madison_in_bed() and main.madison_spot() != main.MADISON_POS)
+	main._talk_to_madison()
+	check("slow morning: talking before the bottle repeats her ask, no coffee yet", str(main.morning["done"]) == "" and main.happiness == h0)
+	main.dialog.clear()
+	main.check_crib()
+	main.dialog.clear()
+	main.kitchen()
+	main.dialog.clear()
+	check("slow morning: crib then kitchen = fed + coffee", bool(main.morning["fed"]) and bool(main.morning["coffee"]))
+	main.happiness = 50.0
+	main._talk_to_madison()
+	main.dialog.clear()
+	check("slow morning: coffee brought, +8, still in bed till the meds kick in", str(main.morning["done"]) == "brought" and is_equal_approx(main.happiness, 58.0) and main.madison_in_bed())
+	main.clock += 100.0
+	check("slow morning: up after 90 min", not main.madison_in_bed())
+	main._talk_to_madison()
+	check("slow morning: one 'later' line", bool(main.morning["later_said"]))
+	main.dialog.clear()
+	main.dev_morning("migraine")
+	main.clock = 610.0
+	main.morning_tick()
+	check("migraine skipped: she gets herself up at 10 AM and texts, no happiness hit", str(main.morning["done"]) == "self" and not main.madison_in_bed())
+	var dd: Dictionary = main.to_dict()
+	check("mornings: state survives a save", str(dd.get("morning", {}).get("kind", "")) == "migraine")
+	main.morning = M.new_state()
+	main.day_count = dc0
+	main.clock = ck0
 	main.dialog.clear()
