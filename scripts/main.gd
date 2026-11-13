@@ -656,7 +656,7 @@ func _after_world(cb: Callable) -> void:
 	var c: = Card.new()
 	c.backdrop = "title"
 	c.heading = "Loading Omaha..."
-	c.lines = ["Unpacking the neighbors. 0%"]
+	c.lines = ["Unpacking the neighbors..."]
 	c.opts = [["back", "Back", KEY_1]]
 	c.chosen.connect(func (_id: String) -> void:
 		close_overlay()
@@ -669,7 +669,8 @@ func _after_world(cb: Callable) -> void:
 			close_overlay()
 			cb.call()
 			return
-		c.lines = ["Unpacking the neighbors. %d%%" % int(ExtraPack.progress * 100.0)]
+		var pr: float = ExtraPack.progress
+		c.lines = ["Unpacking the neighbors. " + ("%d%%" % int(pr * 100.0) if pr >= 0.0 else "%.1f MB" % ExtraPack.got_mb)]
 		c.queue_redraw()
 		get_tree().create_timer(0.25).timeout.connect(tk.bind(tk))
 	get_tree().create_timer(0.25).timeout.connect(tick.bind(tick))
@@ -2646,10 +2647,7 @@ func _director(delta: float) -> void:
 ## Walls, labels and plaques use this so you can't bump into empty grass.
 func _art_rect(b: Dictionary) -> Rect2:
 	var r: Rect2 = b["r"]
-	var tx: = Art.tex(str(b.get("art", "")))
-	if tx == null:
-		return r
-	var used: = tx.get_image().get_used_rect()
+	var used: = Art.used_rect(str(b.get("art", "")))
 	if used.size.x == 0:
 		return r
 	var inf: = Art.info(str(b["art"]))

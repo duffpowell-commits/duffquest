@@ -8,9 +8,9 @@ extends SceneTree
 ##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck [late]
 ## Every packed texture = its .import remap + the imported .ctex it points to, same as a normal export.
 
-## Globs (also in the Web preset's exclude_filter) that go in world.pck. Storefronts (sf_*) and street props
-## (sd_*) stay in index.pck: main.gd builds the walls from their opaque pixels at startup.
-const WORLD: = ["assets/art/ch_*", "assets/art/portraits_hd/*", "assets/art/kf_*", "assets/art/kp_*",
+## Globs (also in the Web preset's exclude_filter) that go in world.pck. Storefront/prop walls come from
+## data/art_rects.json (tools/bake_art_rects.gd), so their art can wait here too.
+const WORLD: = ["assets/art/ch_*", "assets/art/sf_*", "assets/art/sd_*", "assets/art/portraits_hd/*", "assets/art/kf_*", "assets/art/kp_*",
 	"assets/art/arena_*", "assets/art/duff_*", "assets/art/gala*", "assets/art/home_*", "assets/art/bg_kitchen*",
 	"assets/art/ground_painted*", "assets/art/loading/*", "assets/audio/mus_*", "assets/sfx/ko/*"]
 

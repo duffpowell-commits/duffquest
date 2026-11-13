@@ -18,7 +18,8 @@ const RETRIES: = 3
 
 static var world_ready: = not OS.has_feature("web")   # world.pck mounted (or not needed): safe to start playing
 static var loaded: = not OS.has_feature("web")        # every pack mounted
-static var progress: = 0.0        # 0..1 of world.pck, for the loading card
+static var progress: = 0.0        # 0..1 of world.pck, for the loading card (-1 while its size is unknown)
+static var got_mb: = 0.0          # MB of world.pck downloaded so far
 var _http: HTTPRequest
 var _i: = 0
 var _tries: = 0
@@ -42,8 +43,8 @@ func _ready() -> void:
 func _process(_d: float) -> void:
 	if _http and _i == 0:
 		var total: = _http.get_body_size()
-		if total > 0:
-			progress = clampf(float(_http.get_downloaded_bytes()) / total, 0.0, 1.0)
+		got_mb = _http.get_downloaded_bytes() / 1048576.0
+		progress = clampf(float(_http.get_downloaded_bytes()) / total, 0.0, 1.0) if total > 0 else -1.0
 
 func _local() -> String:
 	return "user://" + str(PACKS[_i][0])
