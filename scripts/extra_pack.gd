@@ -20,6 +20,7 @@ static var world_ready: = not OS.has_feature("web")   # world.pck mounted (or no
 static var loaded: = not OS.has_feature("web")        # every pack mounted
 static var progress: = 0.0        # 0..1 of world.pck, for the loading card (-1 while its size is unknown)
 static var got_mb: = 0.0          # MB of world.pck downloaded so far
+static var retrying: = ""         # set while world.pck is between failed tries, for the loading card
 var _http: HTTPRequest
 var _i: = 0
 var _tries: = 0
@@ -36,6 +37,9 @@ func _ready() -> void:
 	_i = 0 if not world_ready else 1
 	_http = HTTPRequest.new()
 	_http.use_threads = false
+	# The browser already undoes Content-Encoding: gzip (itch's CDN gzips .pck). With accept_gzip on, Godot then
+	# tries to inflate the plain bytes again and every download dies with RESULT_BODY_DECOMPRESS_FAILED.
+	_http.accept_gzip = false
 	add_child(_http)
 	_http.request_completed.connect(_on_done)
 	_fetch()
@@ -65,14 +69,20 @@ func _on_done(result: int, code: int, _h: PackedStringArray, _b: PackedByteArray
 		_next()
 		return
 	push_warning("%s: download failed (result %d, http %d), try %d" % [name, result, code, _tries])
-	if _tries < RETRIES:
+	if _i == 0:
+		# world.pck holds Duff, the cast and the town: playing without it is an empty map. Never give up on it;
+		# the loading card shows the retry and keeps its Back button.
+		retrying = "Bad signal (%d/%d). Trying again..." % [result, code]
+		get_tree().create_timer(minf(4.0 * _tries, 20.0)).timeout.connect(_fetch)
+	elif _tries < RETRIES:
 		get_tree().create_timer(4.0 * _tries).timeout.connect(_fetch)
 	else:
-		_next()   # give up on this pack: play on with the fallbacks rather than wait forever
+		_next()   # late art only: play on with the fallbacks rather than wait forever
 
 func _next() -> void:
 	if _i == 0:
 		progress = 1.0
+		retrying = ""
 		world_ready = true
 	mount_done()
 	_i += 1
