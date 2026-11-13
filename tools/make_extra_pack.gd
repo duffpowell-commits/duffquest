@@ -1,23 +1,48 @@
 extends SceneTree
-## Builds the web build's second pack: art the first minutes don't need (knockout stills, boss intro cards,
-## most loading screens, minigame backdrops). The Web export preset excludes exactly these from index.pck
-## (its exclude_filter entries that start with "assets/"), so first boot downloads far less; game.gd fetches
-## this pack in the background and mounts it (scripts/extra_pack.gd).
-##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck
+## Builds the web build's after-boot packs. The Web export preset leaves out of index.pck every asset glob in
+## its exclude_filter (entries that start with "assets/"); this tool packs those files into two tiers:
+##   world  the globs listed in WORLD (characters, portraits, music...): fetched first, gates "New Game"
+##   late   every other excluded glob (knockout stills, boss cards, most loading screens, backdrops)
+## scripts/extra_pack.gd downloads world.pck then extra.pck after boot and mounts them.
+##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/world.pck world
+##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck [late]
 ## Every packed texture = its .import remap + the imported .ctex it points to, same as a normal export.
+
+## Globs (also in the Web preset's exclude_filter) that go in world.pck. Storefronts (sf_*) and street props
+## (sd_*) stay in index.pck: main.gd builds the walls from their opaque pixels at startup.
+const WORLD: = ["assets/art/ch_*", "assets/art/portraits_hd/*", "assets/art/kf_*", "assets/art/kp_*",
+	"assets/art/arena_*", "assets/art/duff_*", "assets/art/gala*", "assets/art/home_*", "assets/art/bg_kitchen*",
+	"assets/art/ground_painted*", "assets/art/loading/*", "assets/audio/mus_*", "assets/sfx/ko/*"]
 
 func _init() -> void:
 	var out: = "build/web/extra.pck"
+	var tier: = "late"
 	var args: = OS.get_cmdline_user_args()
 	if args.size() > 0:
 		out = args[0]
+	if args.size() > 1:
+		tier = args[1]
 	var pats: = deferred_patterns()
-	if pats.is_empty():
-		push_error("make_extra_pack: no assets/ patterns in the Web preset's exclude_filter")
+	for g in WORLD:
+		if not pats.has(g):
+			push_error("make_extra_pack: WORLD glob %s is missing from the Web preset's exclude_filter" % g)
+			quit(1)
+			return
+	var late: = PackedStringArray()
+	for g in pats:
+		if not WORLD.has(g):
+			late.append(g)
+	if late.is_empty():
+		push_error("make_extra_pack: no late assets/ patterns in the Web preset's exclude_filter")
 		quit(1)
 		return
 	var files: Array = []
-	_walk("res://assets", pats, files)
+	_walk("res://assets", late, files)   # late globs win (loading/* overlaps the late loading screens)
+	if tier == "world":
+		var late_files: = files
+		files = []
+		_walk("res://assets", PackedStringArray(WORLD), files)
+		files = files.filter(func(f): return not late_files.has(f))
 	var pk: = PCKPacker.new()
 	if pk.pck_start(out) != OK:
 		push_error("make_extra_pack: can't write " + out)
@@ -35,7 +60,7 @@ func _init() -> void:
 		pk.add_file(dest, dest)
 		bytes += FileAccess.get_file_as_bytes(dest).size()
 	pk.flush(false)
-	print("extra pack: %d textures, %.1f MB -> %s" % [files.size(), bytes / 1048576.0, out])
+	print("%s pack: %d files, %.1f MB -> %s" % [tier, files.size(), bytes / 1048576.0, out])
 	quit(0)
 
 ## The asset globs the Web preset leaves out of index.pck (export_presets.cfg, preset "Web").
