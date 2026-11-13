@@ -81,7 +81,9 @@ jobs:
           mkdir -p build/web && touch build/.gdignore
           godot --headless --path . --export-release "Web" build/web/index.html
           # second pack: the art the Web preset leaves out of index.pck; game streams it after boot (extra_pack.gd)
-          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/world.pck world
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck late
+          test -s build/web/world.pck
           test -s build/web/extra.pck
           # pre-gzipped engine: index.html unzips it in the browser (export_presets.cfg html/head_include)
           gzip -9 -k -n build/web/index.wasm
@@ -96,7 +98,7 @@ jobs:
           mkdir -p build/pages
           godot --headless --path . --export-release "Web" build/pages/index.html
           cp /tmp/presets.bak export_presets.cfg
-          cp build/web/extra.pck build/pages/extra.pck
+          cp build/web/world.pck build/web/extra.pck build/pages/
           gzip -9 -k -n build/pages/index.wasm
           # iOS reads these from the page, not only the manifest
           sed -i 's#<head>#<head><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Duff Quest">#' build/pages/index.html

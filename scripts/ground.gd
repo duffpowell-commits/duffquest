@@ -21,6 +21,10 @@ static func origin() -> Vector2:
 ## built once so the origin/layout parse stays the single source of truth, then the painting replaces them.
 const PAINTED: = "res://assets/art/ground_painted.png"
 
+## Web: the painted street arrives with the world pack; rebuild on the next texture() call.
+static func clear_cache() -> void:
+	_tex = null
+
 static func texture() -> Texture2D:
 	if _tex == null:
 		_tex = _build()
