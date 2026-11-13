@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **The Zebra (Madison's diagnosis story).** Duff approved every line; facts from Madison (hypermobile
+  joint syndrome as a kid, Ehlers-Danlos in 2020, Beighton test). Her zebras are in the room for good: a plush on the
+  shelf over the bed and a framed print. Day 4+, once, at the foot of the bed: 8 lines, +5, happy face throughout.
+  `scripts/zebra.gd`, save key `zebra_seen`, 6 test_daily checks, render `docs/renders/madison_zebra.png`.
 - **2026-11-13** **Madison's mornings (EDS + migraines).** Duff approved every line. About two hard mornings a week
   she's in bed hurting (hip, or a migraine with the blinds down): bottle for Octavia, two coffees (hers cream and sugar,
   his honey), bring hers for her meds (+8). Skip it and she gets herself up and texts; no penalty. About one good
