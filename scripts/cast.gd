@@ -23,6 +23,7 @@ const DEFAULTS: = {
 	"date_spot_sushi": "Akarui", "date_spot_symphony": "Holland Performing Arts Center",
 	"symphony_hall": "the Holland Center", "orchestra": "Omaha Symphony", "sushi_area": "downtown Omaha",
 	"fork": "The Twisted Fork", "fork_short": "the Twisted Fork", "wordle": "Wordle",
+	"coworker": "Brittany", "coworker_short": "Britt",
 	"sitter_app": "SitterSnap", "plasma": "PlazMart Donor Center", "plasma_sign": "PLAZMART PLASMA", "phlebotomist": "Phlebotomist Phil",
 }
 static var _names: Dictionary = {}
