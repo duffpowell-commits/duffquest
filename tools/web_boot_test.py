@@ -1,6 +1,6 @@
 # Headless-Chrome boot timer for the web build: python3 tools/web_boot_test.py <build_dir> <port> <label>
 # Throttles to "decent 4G" (9 Mbit/s, 70 ms), prints seconds until the engine is running, bytes per file, and
-# when world.pck (gates New Game) and extra.pck mounted. Needs playwright + /usr/bin/google-chrome (cloud sandbox has both).
+# when street.pck (gates New Game), world.pck (gates Continue) and extra.pck mounted. Needs playwright + /usr/bin/google-chrome (cloud sandbox has both).
 import asyncio, sys, time, threading, functools, http.server, socketserver, gzip, os
 from playwright.async_api import async_playwright
 root, port, label = sys.argv[1], int(sys.argv[2]), sys.argv[3]
@@ -9,7 +9,7 @@ class Q(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         # serve the deferred packs gzip-encoded like itch's CDN does (Nov 13: that broke them on the live build)
         p=self.path.split('?')[0]
-        if p in ('/world.pck','/extra.pck'):
+        if p in ('/street.pck','/world.pck','/extra.pck'):
             data=gzip.compress(open(os.path.join(root,p[1:]),'rb').read(),1)
             self.send_response(200); self.send_header('Content-Type','application/octet-stream')
             self.send_header('Content-Encoding','gzip'); self.send_header('Content-Length',str(len(data))); self.end_headers()
@@ -52,7 +52,10 @@ async def main():
             tot+=n
         print(f"   total {tot/1e6:.1f} MB; gz loader used: {await pg.evaluate('!!window.__dq_wasm_gz')}")
         errs=[t for _,t in logs if "ERROR" in t or "rror" in t]
-        print(f"   world.pck mounted (New Game ready) at {when('world.pck: mounted')}s, extra.pck at {when('extra.pck: mounted')}s")
+        st=when('street.pck: mounted'); wo=when('world.pck: mounted')
+        print(f"   street.pck mounted at {st}s, world.pck at {wo}s, extra.pck at {when('extra.pck: mounted')}s")
+        ng=max(boot or 0, st if st is not None else (wo or 0))
+        print(f"   New Game playable at {ng}s (title up at {boot}s; New Game waits on {'street' if st is not None else 'world'}.pck)")
         print("   console errors:", errs[:5])
         await b.close()
 asyncio.run(main())

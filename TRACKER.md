@@ -5,6 +5,14 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Cold open + street pack.** A new game opens on a porch fight: one line, then a porch pirate
+  (Package Pauly) runs at {partner}'s package on the porch and you chase him down; the rules come after
+  (`main.gd cold_open()` / `cold_open_rules()`, save flag `story.cold_open`). Web: a 2.9 MB `street.pck` (the
+  street, Duff, pirates, home, Duff's portrait) now comes before world.pck, and New Game waits only on it. Throttled
+  4G: New Game playable 21.9 s -> 14.3 s; tapping New Game at the title puts you in ~17 s (was ~25 s), with
+  someone to hit ~2 s later (was a rules wall and no enemy for 20+ s). The Fork, arenas, gala and minigames wait on
+  world.pck behind a loading card (`_world_gate`). `docs/renders/cold_open_before_after.png`;
+  `arena_shot -- cold` (with `--fixed-fps 30`).
 - **2026-11-13** **CrazyGames-ready zip.** CI now also ships `duffquest-crazygames.zip` (dev release): no plain
   index.wasm (29 MB total vs the 50 MB no-SDK cap), `window.DQ_PORTAL` makes new players start clean + gore off
   (PEGI 12). Checklist + what's left (covers, preview video, SDK for Full Launch, GameDistribution gameId):
