@@ -241,6 +241,8 @@ static func portrait_for(text: String, hero: String, partner: String, baby: Stri
 static func madison_mood(text: String, happiness: float, kind: String = "") -> int:
 	if kind == "upset" or happiness < 40.0:
 		return 2
+	if preload("res://scripts/mornings.gd").pained(text):
+		return 1                                                  # hurting, not mad (EDS / migraine mornings)
 	var l: = text.to_lower()
 	if kind == "fussy" or happiness < 70.0:
 		return 0 if (l.contains("<3") or l.contains("love") or l.contains("!!")) else 1

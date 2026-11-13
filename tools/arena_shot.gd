@@ -68,6 +68,19 @@ func _process(_d: float) -> void:
 			m.clock = 600.0
 			m.dev_warp_quest("porch", 3)
 			m.dialog.clear()
+		elif id.begins_with("morning_"):  # Madison's mornings: morning_slow / _migraine / _good / _bring (coffee lines)
+			m.debug_station("home")
+			m.dialog.clear()
+			var mk: = id.substr(8)
+			m.dev_morning("slow" if mk == "bring" else mk)
+			if mk == "good":
+				m.good_morning_scene(m.Mornings.wake_lines("good", 0))
+			elif mk == "bring":
+				m.morning["fed"] = true
+				m.morning["coffee"] = true
+				m.player.position = m.madison_spot() + Vector2(22, 4)
+			else:
+				m.player.position = m.CRIB_PT + Vector2(10, 14)
 		elif id == "dolores":
 			m._say(["Dolores (31 years in): \"Three grills, hon. Fire 'em, plate 'em, don't let 'em burn. And don't let the drunks hug you. They mean it.\""])
 		elif id == "waffle":  # Waffle Haus shift (Dolores behind the counter)
@@ -115,11 +128,13 @@ func _process(_d: float) -> void:
 		m._say(["Brittany: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case."])
 	if frame == 230 and id == "notes":
 		m.open_phone("notes")
+	if frame == 236 and id == "morning_bring":
+		m.morning_talk()
 	if frame == 230 and id in ["home", "waffle", "hint"]:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost"] and not id.begins_with("at:"):
+	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost"] and not id.begins_with("at:") and not id.begins_with("morning_"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
