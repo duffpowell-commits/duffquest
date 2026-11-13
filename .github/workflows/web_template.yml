@@ -34,7 +34,7 @@ jobs:
         run: |
           pip install scons
           cd godot
-          scons profile=../tools/web_template/custom.py -j$(nproc)
+          scons platform=web target=template_release threads=no profile=../tools/web_template/custom.py -j$(nproc)
           ls -la bin
       - name: Publish (main -> "web-template-2d", other branches -> "web-template-2d-preview")
         env:
