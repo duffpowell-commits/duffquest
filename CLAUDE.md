@@ -88,6 +88,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
   Render either edition: `arena_shot.tscn -- <id> --family`.
 
+- **Web portals (Nov 13):** `duffquest-crazygames.zip` in the dev release is the CrazyGames upload (no plain
+  index.wasm; `window.DQ_PORTAL` = clean + gore off for new players). Checklist: `docs/portals/SUBMIT.md`.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
