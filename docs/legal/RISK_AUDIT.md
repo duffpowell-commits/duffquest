@@ -20,8 +20,8 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
    Saying a real person committed a crime against a real business is the classic defamation fact pattern, even as a
    joke, and the restaurant (or her real manager) didn't consent. PROPOSE: rename the restaurant (new name + new
    sign art) and either make the thief a made-up coworker or get Brittany's written OK. **LAWYER** if both stay real.
-   PUBLIC: restaurant renamed; Brittany is "Mazikeen" (`{coworker}` token) everywhere in the public build. Her sprite
-   and portrait are still drawn from Brittany: get her written OK anyway, or repaint them before paid ads.
+   PUBLIC: restaurant renamed; Brittany is "Mazikeen" (`{coworker}` token, her own chosen persona) everywhere in the
+   public build. Sprite and portrait still look like her, so keep her written OK on file.
 2. **The Twisted Fork in general.** Real business name and a look-alike green sign, shown with a health
    inspector, ranch theft, a villain buying it, "Nobody tips the fry cook". Even if Duff works there, the owner can
    object to its name in a game sold or advertised to the public, and an employer can discipline staff for it.
@@ -31,8 +31,8 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
    PUBLIC: "Word Brawl" everywhere players see it (`{wordle}` token); internal ids kept.
 4. **Madison's exes.** The itch page says "Madison's exes. All of them." Madison is real and named, so if any boss
    is drawn from a real ex, people in Omaha who know them can identify them, and the game shows them beaten bloody.
-   ASK: are all five story exes (and the four gala exes) invented? If any is based on a real person, change the
-   identifying details. The new notice ("every other character is invented") only helps if that's true.
+   ANSWERED (Nov 13): Willnot was based on a real ex (renamed and redrawn in the public edition, item 10); the
+   other four story exes and the four gala exes are invented. The notice is accurate.
 5. **Consent from real people.** Madison, Jen, Brittany, Octavia (a minor: both parents' OK) and anyone else real
    (Chef, Manny, Earl, Deb, Gail?). A verbal "sure" isn't proof. FIX ON DUFF'S SIDE: get a text or email from each
    adult: "I'm OK with my name, likeness and story appearing in Duff Quest, a public game that will be advertised."
@@ -54,7 +54,7 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
     building. No likeness in the art (made-up face, long blond hair). Low odds, but it's the only boss named after a
     real person. Duff: he is based on Madison's real ex (they allegedly looked alike), which makes this item 4, not a
     celebrity riff. PUBLIC: "Rex Tankton" in "Glasshaus Tower", dark hair and a charcoal tank top in all of his art.
-    The other four story exes and the gala exes: ASK whether any is a real person.
+    The other four story exes and the gala exes: Duff says all invented. OK.
 
 ## Low
 
