@@ -197,3 +197,8 @@ func _draw_game() -> void:
 	for temp in [100, 150, 200]:
 		var y: float = 24 + 120 * (1.0 - (temp - 32.0) / 200.0)
 		txt(Vector2(262, y + 3), str(temp), 6, Color(1, 1, 1, 0.5))
+	if round_i >= 1:   # round 1 is the test; after that the safe temp is on the thermometer
+		var tt: int = protein.get("t", 165)
+		var ty: float = 24 + 120 * (1.0 - (tt - 32.0) / 200.0)
+		draw_rect(Rect2(286, ty - 1, 18, 2), Color("#c0d890"))
+		tag(Vector2(236, ty - 4), "safe %d°F" % tt, 6, Color("#c0d890"))
