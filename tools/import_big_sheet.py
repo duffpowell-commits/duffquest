@@ -1,6 +1,6 @@
 """Import a 4x4 character sheet drawn at any size (e.g. ChatGPT's 1254 px sheets) into the game's 256x256 format.
 
-    python3 tools/import_big_sheet.py SRC TARGET_ID [--height 52] [--feet 60]
+    python3 tools/import_big_sheet.py SRC TARGET_ID [--height 52] [--feet 60] [--tol 160]
 
 Keys the corner colour, scales every cell by ONE factor so the row-0 stand frame is --height px tall (Duff's
 stand frames are 52 px: y 9..60), keeps each figure's position in its cell relative to the stand frame's feet
@@ -21,6 +21,7 @@ def main():
     ap.add_argument("target")
     ap.add_argument("--height", type=int, default=52)
     ap.add_argument("--feet", type=int, default=60)
+    ap.add_argument("--tol", type=int, default=160, help="key distance; lower it for grey art on a purple key")
     a = ap.parse_args()
     im = np.asarray(Image.open(a.src).convert("RGB")).astype(int)
     key = np.median(np.concatenate([im[:8, :8].reshape(-1, 3), im[-8:, -8:].reshape(-1, 3)]), 0)
@@ -29,7 +30,7 @@ def main():
     r, g, b = im[..., 0], im[..., 1], im[..., 2]
     d = np.abs(im - key).sum(-1)
     magish = (r - g > 100) & (b - g > 100)
-    alpha = np.where((d < 160) | magish, 0, 255).astype(np.uint8)
+    alpha = np.where((d < a.tol) | magish, 0, 255).astype(np.uint8)
     spill = (r > g + 50) & (b > g + 50)
     rgb = im.copy()
     rgb[spill, 0] = (rgb[spill, 0] + rgb[spill, 1]) // 2
