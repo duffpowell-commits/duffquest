@@ -15,6 +15,7 @@ const CatScript: = preload("res://scripts/cat.gd")
 const SaveGame: = preload("res://scripts/save_game.gd")
 const Cast: = preload("res://scripts/cast.gd")
 const Card: = preload("res://scripts/minigames/card.gd")
+const ExtraPack: = preload("res://scripts/extra_pack.gd")
 const ShopScript: = preload("res://scripts/minigames/shop.gd")
 const BabyScript: = preload("res://scripts/minigames/baby.gd")
 const StealthScript: = preload("res://scripts/minigames/stealth.gd")
@@ -529,7 +530,7 @@ func _ready() -> void:
 	if _check_debug_hash():
 		return
 	if skip_title:
-		new_game(false)
+		_after_world(func () -> void: new_game(false))
 	else:
 		show_title()
 
@@ -628,19 +629,51 @@ func show_title() -> void:
 				else:
 					show_title())
 		elif id == "continue":
-			in_title = false
-			load_game()
+			_after_world(func () -> void:
+				in_title = false
+				load_game())
 		elif SaveGame.exists(save_path):
 			_menu("Start over?", ["This overwrites your saved game. {partner} will not remember the honey buns."], [["yes", "Yes, new game", KEY_1], ["no", "Never mind", KEY_2]],
 				func (id2: String) -> void:
 					if id2 == "yes":
-						in_title = false
-						new_game(true)
+						_after_world(func () -> void:
+							in_title = false
+							new_game(true))
 					else:
 						show_title())
 		else:
-			in_title = false
-			new_game(true), "title")
+			_after_world(func () -> void:
+				in_title = false
+				new_game(true)), "title")
+
+## Web: characters, portraits and music come in world.pck right after boot (scripts/extra_pack.gd). Starting
+## before it lands would mean an invisible Duff, so hold on a "Loading Omaha" card until it's mounted.
+## Everywhere else (and once it's in) this just runs cb.
+func _after_world(cb: Callable) -> void:
+	if ExtraPack.world_ready:
+		cb.call()
+		return
+	var c: = Card.new()
+	c.backdrop = "title"
+	c.heading = "Loading Omaha..."
+	c.lines = ["Unpacking the neighbors..."]
+	c.opts = [["back", "Back", KEY_1]]
+	c.chosen.connect(func (_id: String) -> void:
+		close_overlay()
+		show_title())
+	open_overlay(c)
+	var tick: = func (tk: Callable) -> void:
+		if not is_instance_valid(c) or not c.is_inside_tree():
+			return   # backed out to the title
+		if ExtraPack.world_ready:
+			close_overlay()
+			cb.call()
+			return
+		var pr: float = ExtraPack.progress
+		c.lines = ["Unpacking the neighbors. " + ("%d%%" % int(pr * 100.0) if pr >= 0.0 else "%.1f MB" % ExtraPack.got_mb)]
+		c.queue_redraw()
+		get_tree().create_timer(0.25).timeout.connect(tk.bind(tk))
+	get_tree().create_timer(0.25).timeout.connect(tick.bind(tick))
 
 func new_game(write_save: bool = true) -> void:
 	from_dict({})
@@ -2080,8 +2113,9 @@ func _check_debug_hash() -> bool:
 	var h: = str(JavaScriptBridge.eval("window.location.hash"))
 	if not h.begins_with("#dq="):
 		return false
-	new_game(false)
-	call_deferred("debug_station", h.substr(4))
+	_after_world(func () -> void:
+		new_game(false)
+		debug_station.call_deferred(h.substr(4)))
 	return true
 
 func debug_station(k: String) -> void:
@@ -2613,10 +2647,7 @@ func _director(delta: float) -> void:
 ## Walls, labels and plaques use this so you can't bump into empty grass.
 func _art_rect(b: Dictionary) -> Rect2:
 	var r: Rect2 = b["r"]
-	var tx: = Art.tex(str(b.get("art", "")))
-	if tx == null:
-		return r
-	var used: = tx.get_image().get_used_rect()
+	var used: = Art.used_rect(str(b.get("art", "")))
 	if used.size.x == 0:
 		return r
 	var inf: = Art.info(str(b["art"]))

@@ -53,12 +53,24 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Lighting (Nov 12):** time of day lives in `hd_presentation.gd` (`SKY` keyframes, door pools, sun-driven
   `Art.sun_shift`). Render any hour with `arena_shot -- at:X,Y,MIN`. Grok art scratch goes in `grok_art/<drop>/_work/`
   (ignored); the 674 MB already there stays (no history rewrites).
+- **Web packs + slim engine (Nov 13):** web boot 19.9 s -> 9.3 s (title, throttled 4G). Three packs: `index.pck`
+  (1.8 MB: scripts, data, fonts, sfx, small UI), `world.pck` (10 MB, fetched first after boot; characters, portraits,
+  music, storefronts, props, kitchen/home/gala/arena art) and `extra.pck` (late art). Both built by
+  `tools/make_extra_pack.gd -- OUT world|late`; `scripts/extra_pack.gd` mounts them. Continue/New Game wait on a
+  "Loading Omaha..." card until world.pck lands (~23 s cold, cached after). Anything new under `assets/` that the
+  title doesn't need: add its glob to the Web preset `exclude_filter` and to `WORLD` in make_extra_pack.gd.
+  The engine is a trimmed 2D-only Godot 4.5 web template (`tools/web_template/custom.py`, built by
+  `.github/workflows/web_template.yml` into release `web-template-2d`; branches use `web-template-2d-preview`).
+  No 3D nodes, no `Image.create` (use `create_empty`), WorldEnvironment via ClassDB only. Changed the profile? Run
+  that workflow and play-test the build. Storefront/prop sizes are baked in `data/art_rects.json`
+  (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
+  Branch builds publish to the `web-preview` release (sessions can't download Actions artifacts).
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
 3. **Grease boss art:** done Nov 12 (own sprite `ch_grease`, alley arena already its own). Left: nothing unless Duff asks.
-4. **Boot under 10 s** (17.0 s now): move the next-biggest chunk of index.pck to `extra.pck`.
+4. **Boot:** done Nov 13 (title in 9.3 s on throttled 4G, was 19.9 s). See the Web packs note above.
 5. **Balance re-check** after the playtest (gates 45-65, wait drain floor 40).
 History of everything built: `TRACKER.md` (newest first).
 
