@@ -670,7 +670,8 @@ func _after_world(cb: Callable) -> void:
 			cb.call()
 			return
 		var pr: float = ExtraPack.progress
-		c.lines = ["Unpacking the neighbors. " + ("%d%%" % int(pr * 100.0) if pr >= 0.0 else "%.1f MB" % ExtraPack.got_mb)]
+		c.lines = [ExtraPack.retrying if ExtraPack.retrying != "" else
+			"Unpacking the neighbors. " + ("%d%%" % int(pr * 100.0) if pr >= 0.0 else "%.1f MB" % ExtraPack.got_mb)]
 		c.queue_redraw()
 		get_tree().create_timer(0.25).timeout.connect(tk.bind(tk))
 	get_tree().create_timer(0.25).timeout.connect(tick.bind(tick))
