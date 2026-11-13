@@ -43,7 +43,7 @@
   },
   "donald": {
     "move": "HOSTILE TAKEOVER",
-    "stance": "Q1: he buys the Twisted Fork. Q2: he decides he wants her back too. He's never cooked an egg. I take my apron off. Technically it's company property now.",
+    "stance": "Q1: he buys {fork_short}. Q2: he decides he wants her back too. He's never cooked an egg. I take my apron off. Technically it's company property now.",
     "slip": "Q2: cost-cutting. He throws the budget at me and it blows apart into layoffs. I slip through. I've outlasted four owners. I know where the gaps are.",
     "xray": "Q3: restructuring. Twenty-seven bones in a hand. His have only ever signed things. My fist reorganizes all twenty-seven.",
     "finisher": "Q4: I'm letting you go.",

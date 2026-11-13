@@ -4,8 +4,13 @@
 **LAWYER** deserve a real lawyer before paid ads or a paid release. Ranked by how likely each is to cause actual
 trouble (a takedown, a cease-and-desist letter or a lawsuit), not by how bad the worst case is.
 
-Status key: FIXED (in PR "Credits & legal screen"), PROPOSE (needs Duff's yes; renames and story changes), ASK (needs
-a fact from Duff), OK (checked, no action).
+Status key: FIXED (in PR "Credits & legal screen"), PUBLIC (fixed in the public edition; the family edition keeps the
+original, see "Editions" below), PROPOSE (needs Duff's yes), ASK (needs a fact from Duff), OK (checked, no action).
+
+**Editions (Nov 13).** Duff approved the renames for the advertised game and asked to keep a separate family game as
+is. Default exports (itch, GitHub Pages root, `duffquest-public.apk`) are the public edition; the family edition
+(Pages `/family/`, `duffquest.apk`) is unlisted and never advertised. Note: the public packs still contain the
+family art files (unused), so a data-miner could find them; low risk, fixable later with per-edition pack filters.
 
 ## High
 
@@ -15,13 +20,14 @@ a fact from Duff), OK (checked, no action).
    Saying a real person committed a crime against a real business is the classic defamation fact pattern, even as a
    joke, and the restaurant (or her real manager) didn't consent. PROPOSE: rename the restaurant (new name + new
    sign art) and either make the thief a made-up coworker or get Brittany's written OK. **LAWYER** if both stay real.
+   PUBLIC: restaurant renamed. Thief: waiting on Duff's pick (made-up coworker vs Brittany's written OK).
 2. **The Twisted Fork in general.** Real business name and a look-alike green sign, shown with a health
    inspector, ranch theft, a villain buying it, "Nobody tips the fry cook". Even if Duff works there, the owner can
    object to its name in a game sold or advertised to the public, and an employer can discipline staff for it.
-   PROPOSE: rename (e.g. "The Bent Fork") and repaint `sf_fork`. ASK: does Duff work there, and does management know?
+   PUBLIC: "The Busted Spatula", new sign (`sf_fork_pub`). Duff does work there; ASK: does management know?
 3. **"Wordle".** The New York Times owns the WORDLE trademark and has had clones pulled from app stores and GitHub.
    The name appears 100+ times ("Play today's Wordle", Jen's texts, credits). The game mechanic itself is fine.
-   PROPOSE: rename the minigame (e.g. "Jen's Five-Letter Fight") everywhere players see it; keep internal ids.
+   PUBLIC: "Word Brawl" everywhere players see it (`{wordle}` token); internal ids kept.
 4. **Madison's exes.** The itch page says "Madison's exes. All of them." Madison is real and named, so if any boss
    is drawn from a real ex, people in Omaha who know them can identify them, and the game shows them beaten bloody.
    ASK: are all five story exes (and the four gala exes) invented? If any is based on a real person, change the
@@ -35,17 +41,19 @@ a fact from Duff), OK (checked, no action).
 ## Medium
 
 6. **Walgrumps sign = Walgreens trade dress.** Red sign, white script "W". The parody name is fine; copying the
-   look is what gets letters. PROPOSE: repaint `sf_walgrumps` in a different color and block lettering.
+   look is what gets letters. PUBLIC: teal band, mustard block letters (`sf_walgrumps_pub`).
 7. **Hy-Whee slogan.** "A helpful smile in every aisle-ish" is Hy-Vee's real slogan with "-ish" on it, plus a red
-   heart sign. Hy-Vee is huge in Omaha. PROPOSE: new slogan (`grocery_slogan` in `data/cast.json`); keep the name.
+   heart sign. Hy-Vee is huge in Omaha. PUBLIC: "Groceries, mostly. Smiles, sometimes."; name kept.
 8. **Music provenance.** `assets/audio/manifest.json` says every track came from `tools/audio/gen_audio.py`, but that
    script isn't in the repo or its history. If any track came from an AI music service, check its terms (several free
-   tiers ban commercial use). ASK: where did the `mus_*.ogg` tracks come from? Until then, don't claim "synthesized
-   by code" in ads.
-9. **"Gucchi Eau de Duff".** Gucci polices its name hard. Cheap fix. PROPOSE: "Eau de Fryer" or similar.
+   tiers ban commercial use). RESOLVED: Duff says the music is his own. Credits, itch page and the audio manifest
+   now say "Music by Duff". If any of it was made with an AI music tool, check that tool's commercial terms.
+9. **"Gucchi Eau de Duff".** Gucci polices its name hard. PUBLIC: "Eau de Fryer".
 10. **Bruce Willnot in Nakatomeh Plaza.** A riff on a real actor's name (right of publicity) and on Die Hard's
     building. No likeness in the art (made-up face, long blond hair). Low odds, but it's the only boss named after a
-    real person. PROPOSE: a fully made-up name; keep the 80s-action-hero joke.
+    real person. Duff: he is based on Madison's real ex (they allegedly looked alike), which makes this item 4, not a
+    celebrity riff. PUBLIC: "Rex Tankton" in "Glasshaus Tower", dark hair and a charcoal tank top in all of his art.
+    The other four story exes and the gala exes: ASK whether any is a real person.
 
 ## Low
 

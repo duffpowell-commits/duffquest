@@ -3,6 +3,7 @@ extends RefCounted
 
 const DIR: = "res://assets/art/"
 const Manifest: = preload("res://scripts/art_manifest.gd")
+const CastScript: = preload("res://scripts/cast.gd")
 const WALK: = [1, 0, 2, 0]
 
 static var _tex: = {}
@@ -15,9 +16,17 @@ static func info(name: String) -> Dictionary:
 static func names() -> Array:
 	return Manifest.ASSETS.keys()
 
+## Public edition: `<file>_pub.<ext>` replaces `<file>.<ext>` when it exists (renamed signs, the made-up final
+## boss). The family edition (Cast.family) always gets the original.
+static func pub(p: String) -> String:
+	if CastScript.family:
+		return p
+	var alt: = p.get_basename() + "_pub." + p.get_extension()
+	return alt if ResourceLoader.exists(alt) else p
+
 static func tex(name: String) -> Texture2D:
 	if not _tex.has(name):
-		var p: = DIR + name + ".png"
+		var p: = pub(DIR + name + ".png")
 		_tex[name] = load(p) as Texture2D if ResourceLoader.exists(p) else null
 	return _tex[name]
 

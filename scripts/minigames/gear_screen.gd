@@ -79,7 +79,7 @@ func _on_button(id: String) -> void:
 				if m:
 					m.apply_gear()
 			else:
-				flash("I don't have enough scrap. {sister}'s Wordle pays the best.", Color("#e06a4a"))
+				flash("I don't have enough scrap. {sister}'s {wordle} pays the best.", Color("#e06a4a"))
 		_:
 			sel = id
 	_relabel()
@@ -94,9 +94,9 @@ func _draw_game() -> void:
 		txt(Vector2(6, 140), str(it["desc"]), 7, Color(1, 1, 1, 0.8))
 	else:
 		txt(Vector2(6, 128), "Locked. Tier %d %s." % [int(it["tier"]), "weapon" if it.has("atk") else "armor"], 8, Color("#f2c66a"))
-		var how: = "Win {sister}'s Wordle in 1-2 guesses to unlock the next piece."
+		var how: = "Win {sister}'s {wordle} in 1-2 guesses to unlock the next piece."
 		if sel == "cleaver":
-			how = "Endgame. Only {sister} has it. Win her Wordle."
+			how = "Endgame. Only {sister} has it. Win her {wordle}."
 		elif bool(it.get("gala", false)):
 			how = "??? Rumor says the very rich keep the best kitchenware."
 		txt(Vector2(6, 140), how, 7, Color(1, 1, 1, 0.8))
