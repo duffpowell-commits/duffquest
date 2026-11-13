@@ -155,8 +155,15 @@ func _draw_game() -> void:
 		prop(Rect2(104, 66, 112, 6), Color("#fbf6ec"))
 	txt(Vector2(0, 26), ["Trace the drizzle along the dotted zigzag (drag / Space)", "Tap the 3 dots to pipe whipped cream", "Tap each rosette to place a cherry"][["drizzle", "cream", "cherry"].find(phase)], 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
 	if phase == "drizzle":
+		# the zigzag has to read on dark ganache: dashed cream line, ink-ringed dots, green once traced
+		for i in guide.size() - 1:
+			var a: Vector2 = guide[i]
+			var b: Vector2 = guide[i + 1]
+			for k in 4:
+				draw_line(a.lerp(b, k / 4.0), a.lerp(b, (k + 0.5) / 4.0), Color(UiStyle.CREAM, 0.7), 1.0)
 		for i in guide.size():
-			draw_circle(guide[i], 1.5, Color("#c0d890") if covered[i] else Color(0, 0, 0, 0.5))
+			draw_circle(guide[i], 2.6, UiStyle.INK)
+			draw_circle(guide[i], 1.8, Color("#c0d890") if covered[i] else UiStyle.CREAM)
 	if phase == "cream":
 		for i in CREAM_TARGETS.size():
 			if not cream_used.has(i):

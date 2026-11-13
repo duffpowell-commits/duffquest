@@ -65,13 +65,16 @@ func _draw_game() -> void:
 
 	var squish: = 1.0 - clampf(t - last_sq, 0.0, 0.2) * 1.5
 	prop_circle(Vector2(46, 66), 6.0 * (0.7 + 0.3 * (1.0 - squish)), Color("#e6a640"))
+	tag(Vector2(28, 82), "stress ball", 6)
 
 	prop(Rect2(220, 30, 34, 60), Color("#ffffff"))
 	draw_rect(Rect2(220, 30 + 60 * (1.0 - bag), 34, 60 * bag), Color("#f0c050"))
 	draw_rect(Rect2(220, 30, 34, 60), Color("#8a8a9a"), false, 1.0)
-	txt(Vector2(212, 100), "Bag %d%%" % int(bag * 100.0), 7, Color("#333333"))
+	tag(Vector2(220, 26), "YOUR BAG", 6)
+	tag(Vector2(212, 100), "Bag %d%%" % int(bag * 100.0), 7)
 
-	txt(Vector2(30, 116), "FLOW", 7, Color("#333333"))
+	tag(Vector2(14, 104), "FLOW: keep the red line in the green to fill the bag", 6, Color("#c0d890"))
+	tag(Vector2(28, 117), "FLOW", 7)
 	prop(Rect2(60, 110, 150, 8), Color("#c0c0c8"))
 	draw_rect(Rect2(60 + 150 * BAND.x / 1.2, 110, 150 * (BAND.y - BAND.x) / 1.2, 8), Color("#8ad08a"))
 	draw_rect(Rect2(60 + 150 * clampf(flow / 1.2, 0.0, 1.0) - 1, 107, 3, 14), Color("#c03030"))
