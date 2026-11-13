@@ -69,6 +69,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Raccoon + Jen (Nov 13):** `raccoon` re-import: `python3 tools/import_critter_strip.py <strip.png> raccoon`
   (4 frames facing right on a key colour; row 1 is the mirror). `ch_jen` re-import: prep_canva_sheet (no mirror) ->
   `import_big_sheet.py OUT ch_jen --tol 70` (grey hair on Canva's purple key needs the low tolerance).
+- **Hy-Whee floor (Nov 13):** top-down store, shelves baked into `bg_grocery` on the `SHELVES` rects by
+  `python3 tools/grocery_floor_compose.py <old bg_grocery from git 88c80a8> assets/art/bg_grocery.png`. Move a shelf
+  in grocery.gd -> re-run it. Items sit on the shelf top (`SPOTS` y = shelf y - 3), grabbed from the lane above.
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
