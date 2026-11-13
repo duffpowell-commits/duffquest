@@ -97,6 +97,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Madison's mornings (Nov 13):** EDS slow / migraine / good mornings, `scripts/mornings.gd` (see reference.md).
   Madison is a real person: Duff approves EVERY line about her EDS, autism and ADHD before it ships. One pitch at a
   time. Off-limits: the mess of her stuff, and that she's on disability.
+- **Portal fit (Nov 13 late):** windows where integer scaling wastes >10% now scale fractionally (`HdPresentation.use_fractional`), so CrazyGames' 907x510 iframe is filled. Touch pad on the web shows up front only on iOS/Android browsers, else on the first real touch (`TouchControls.default_visible()/real_touch()`; mouse-emulated touches have device -1). Listing copy: `docs/portals/LISTING.md`.
 - **Web portals (Nov 13):** `duffquest-crazygames.zip` in the dev release is the CrazyGames upload (no plain
   index.wasm; `window.DQ_PORTAL` = clean + gore off for new players). Checklist: `docs/portals/SUBMIT.md`.
 - **Marketing footage (Nov 13):** `tools/promo_shot.tscn` plays scripted takes (`fight:<boss>`, `walk:X,Y,MIN,DX`,

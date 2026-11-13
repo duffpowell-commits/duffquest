@@ -991,7 +991,7 @@ func close_overlay() -> void:
 	if not in_shift:
 		hud.visible = true
 		touch.set_process_input(true)
-		touch.visible = DisplayServer.is_touchscreen_available() or OS.has_feature("web_ios") or OS.has_feature("web_android") or bool(touch.get("used"))
+		touch.visible = TouchScript.default_visible() or bool(touch.get("used"))
 		Cast.touch = touch.visible
 	_sync_world()
 

@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **CrazyGames polish.** The game now fills portal iframes: below 1280x720 (and anywhere integer scaling
+  leaves >10% unused) it scales fractionally instead of drawing a 640x360 box in black; 1280x720/1920x1080 stay
+  integer. Touch pad no longer pops up on desktop from mouse clicks or touchscreen laptops (CrazyGames rule): web
+  shows it up front only on iOS/Android browsers, else on the first real touch. Paste-ready listing
+  `docs/portals/LISTING.md`. 6 new test_daily checks. Render `docs/renders/portal_iframe_fit_before_after.jpg`.
 - **2026-11-13** **Ad assets.** CrazyGames preview clips (`docs/portals/preview/`: 16:9 1080p 18.3 s, 2:3 1080x1620
   15.2 s, silent, open on the cover, gore off), knockout GIF re-cut to 5.7 s / 630 px, new `boss_intro.gif`, and
   1080p screens (town recapture, Gala landlord ex, sandwich + fryer, fridge calendar day 24, Madison line, street at

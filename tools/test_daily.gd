@@ -1066,3 +1066,15 @@ func _morning_checks(main: Node) -> void:
 	main.day_count = dc0
 	main.clock = ck0
 	main.dialog.clear()
+	# portal iframe fit (CrazyGames): fractional when integer scale wastes >10% of the window
+	var HdP: = preload("res://scripts/hd_presentation.gd")
+	check("fit: 907x510 iframe fills (fractional)", HdP.use_fractional(Vector2i(907, 510)))
+	check("fit: 800x450 phone iframe fills (fractional)", HdP.use_fractional(Vector2i(800, 450)))
+	check("fit: 1280x720 stays integer 2x", not HdP.use_fractional(Vector2i(1280, 720)))
+	check("fit: 1920x1080 stays integer 3x", not HdP.use_fractional(Vector2i(1920, 1080)))
+	check("fit: portrait phone 360x640 fractional", HdP.use_fractional(Vector2i(360, 640)))
+	var TouchS: = preload("res://scripts/touch_controls.gd")
+	var emu: = InputEventScreenTouch.new()
+	emu.device = InputEvent.DEVICE_ID_EMULATION
+	var fing: = InputEventScreenTouch.new()
+	check("touch pad: a mouse click (emulated touch) doesn't count as a finger", not TouchS.real_touch(emu) and TouchS.real_touch(fing))
