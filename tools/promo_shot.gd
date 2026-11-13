@@ -80,6 +80,10 @@ func _process(_d: float) -> void:
 		m.close_overlay()
 		m.dialog.clear()
 		m.no_loading = true
+		m.clear_enemies()              # skip the new-game cold open (porch pirate + its toast)
+		m.story["cold_open"] = false
+		m.porch_pkg = false
+		m.toast_t = 0.0
 		var ls: = _find(game, "res://scripts/loading_screen.gd")
 		if ls:
 			ls._finish()
