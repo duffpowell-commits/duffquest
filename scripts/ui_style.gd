@@ -57,6 +57,27 @@ static func label(ci: CanvasItem, pos: Vector2, text: String, size: int, col: Co
 	ci.draw_string_outline(display, pos, text, align, width, size, outline, Color(INK, col.a))
 	ci.draw_string(display, pos, text, align, width, size, col)
 
+## Name tag: text on a dark ink plate with a thin border, so it reads on any painted backdrop.
+## `pos` is the text baseline, laid out like draw_string (align within `width`). `w` = line width
+## in the caller's units (1/1.5 in the overworld, 1.0 in minigames). Returns the plate rect.
+static func tag(ci: CanvasItem, pos: Vector2, text: String, size: int, col: Color = CREAM, width: float = -1.0,
+		align: HorizontalAlignment = HORIZONTAL_ALIGNMENT_LEFT, w: float = 1.0, font: Font = null) -> Rect2:
+	install()
+	var f: = font if font else body
+	var tw: = f.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+	var x: = pos.x
+	if width > 0.0 and align == HORIZONTAL_ALIGNMENT_CENTER:
+		x = pos.x + (width - tw) * 0.5
+	elif width > 0.0 and align == HORIZONTAL_ALIGNMENT_RIGHT:
+		x = pos.x + width - tw
+	var padx: = maxf(2.0, size * 0.35)
+	var r: = Rect2(x - padx, pos.y - size * 0.86, tw + padx * 2.0, size * 1.2)
+	ci.draw_rect(Rect2(r.position + Vector2(w, w), r.size), Color(INK, 0.45 * col.a))
+	ci.draw_rect(r, Color(INK, 0.82 * col.a))
+	ci.draw_rect(r, Color(CREAM, 0.28 * col.a), false, w * 0.75)
+	ci.draw_string(f, Vector2(x, pos.y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, col)
+	return r
+
 ## Chunky button: saturated fill, light top band, thick ink border, hard shadow that the button
 ## sinks into when pressed.
 static func button(ci: CanvasItem, r: Rect2, text: String, col: Color, enabled: bool = true, pressed: bool = false,
