@@ -9,6 +9,7 @@ var vel: = Vector2.ZERO
 var think: = 0.0
 var bubble: = ""
 var bubble_t: = 0.0
+var m: Node   # main; the cat keeps quiet while an interact prompt is up
 
 func say(s: String, dur: float = 2.0) -> void:
 	bubble = preload("res://scripts/cast.gd").T(s)
@@ -47,7 +48,7 @@ func _draw() -> void:
 		fr = 3
 	Art.shadow(self, Vector2(0, 5), 5.0, 1.6, 0.26)
 	Art.frame(self, sheet_name(), Vector2(0, 5), fr, 0 if vel.x >= 0 else 1)
-	if bubble_t > 0.0:
+	if bubble_t > 0.0 and not (m and str(m.hint) != ""):
 		var f: = ThemeDB.fallback_font
 		var w: = f.get_string_size(bubble, HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x + 6
 		draw_rect(Rect2(-w / 2, -22, w, 10), Color(1, 1, 1, 0.9))

@@ -459,6 +459,7 @@ func _ready() -> void:
 		c.col = spec[1]
 		c.position = spec[2]
 		c.target = player
+		c.m = self
 		c.room = Rect2(20, 535, 280, 60)
 		add_child(c)
 		cats.append(c)
@@ -2452,7 +2453,7 @@ func _draw_inside() -> void:
 	if quest != 1 or has_all(QUEST_NEEDS.get(quest_kind, {})):
 		var bob: = sin(t * 4.0) * 1.5
 		draw_string(f, mp + Vector2(-2, -14 + bob), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#ffe08a"))
-	if sigh_t > 0.0 or restless_level >= 2:
+	if (sigh_t > 0.0 or restless_level >= 2) and hint == "":
 		draw_rect(Rect2(mp + Vector2(6, -24), Vector2(30, 10)), Color(1, 1, 1, 0.9))
 		draw_string(f, mp + Vector2(8, -16), "*sigh*", HORIZONTAL_ALIGNMENT_LEFT, -1, 7, Color("#333333"))
 	elif mood_kind() == "fussy":
@@ -3735,6 +3736,8 @@ func _after_grocery(n: Node, _s: float, _x: Array) -> void:
 	_sync_world()
 	save_game()
 
+const CLOSED_NEAR: = 110.0
+
 class WorldLabels extends Node2D:
 
 	var m: Node
@@ -3747,10 +3750,12 @@ class WorldLabels extends Node2D:
 		m.draw_quest_markers(self)
 
 func _label(ci: CanvasItem, f: Font, pos: Vector2, s: String, w: float, size: int, col: Color) -> void:
-	ci.draw_string(f, pos + Vector2(1.0 / 1.5, 1.0 / 1.5), s, HORIZONTAL_ALIGNMENT_CENTER, w, size, Color(0.07, 0.05, 0.04, 0.75 * col.a))
-	ci.draw_string(f, pos, s, HORIZONTAL_ALIGNMENT_CENTER, w, size, col)
+	UiStyle.tag(ci, pos, s, size, col, w, HORIZONTAL_ALIGNMENT_CENTER, 1.0 / 1.5, f)
 
 func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
+	# only the shop you're walking up to says CLOSED; a whole street of them was noise
+	if player == null or player.position.distance_to(Vector2(r.get_center().x, r.end.y + 22.0)) > CLOSED_NEAR:
+		return
 
 	var pr: = Rect2(r.get_center().x - 15.0, r.position.y + 12.0, 30.0, 8.0)
 	ci.draw_rect(Rect2(pr.position + Vector2(1.0 / 1.5, 1.0 / 1.5), pr.size), Color(0, 0, 0, 0.35))
@@ -4086,7 +4091,7 @@ func draw_world_labels(ci: CanvasItem) -> void:
 			else:
 				_closed_plaque(ci, r, f)
 	var fork: Rect2 = buildings[3].get("vis", buildings[3]["r"])
-	_label(ci, f, Vector2(fork.position.x, fork.position.y - 3), "NOW HIRING (you)", fork.size.x, 7, Color(1, 1, 1, 0.8))
+	_label(ci, f, Vector2(fork.position.x, fork.position.y - 3), "NOW HIRING (you)", fork.size.x, 7, UiStyle.CREAM)
 
 func _draw_errand_sign(ci: CanvasItem, b: Dictionary, r: Rect2, f: Font) -> void:
 	var kind: String = b["errand"]
