@@ -159,11 +159,21 @@ func _process(_d: float) -> void:
   Art.sun_shift = Vector2.ZERO
   Art.sun_stretch = 1.0
 
+## True when integer scaling would leave more than 10% of the window unused (or the
+## window can't fit a 640x360 frame at all).
+static func use_fractional(size: Vector2i) -> bool:
+ var fit := minf(size.x / 640.0, size.y / 360.0)
+ if fit < 1.0:
+  return true
+ return floorf(fit) / fit < 0.9
+
 func _fit_small_window() -> void:
  var window := get_window()
- # Integer upscaling normally; allow nearest-filtered downscaling only when
- # the screen cannot fit a 640x360 frame (e.g. a phone held in portrait).
- var tiny := window.size.x < 640 or window.size.y < 360
- var target := Window.CONTENT_SCALE_STRETCH_FRACTIONAL if tiny else Window.CONTENT_SCALE_STRETCH_INTEGER
+ # Integer upscaling when it fills most of the screen; otherwise fractional, so the
+ # frame fills the window. Without this a 907x510 portal iframe (CrazyGames' default
+ # desktop size) or any window under 1280x720 drew the game at 1x, 640x360, in a sea
+ # of black. canvas_items stretch draws text and the 4x art at screen resolution, so
+ # fractional scales stay sharp.
+ var target := Window.CONTENT_SCALE_STRETCH_FRACTIONAL if use_fractional(window.size) else Window.CONTENT_SCALE_STRETCH_INTEGER
  if window.content_scale_stretch != target:
   window.content_scale_stretch = target
