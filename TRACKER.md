@@ -9,6 +9,20 @@ One page: what's built, what's next, what could be better. Updated at every mile
   15.2 s, silent, open on the cover, gore off), knockout GIF re-cut to 5.7 s / 630 px, new `boss_intro.gif`, and
   1080p screens (town recapture, Gala landlord ex, sandwich + fryer, fridge calendar day 24, Madison line, street at
   night). New `tools/promo_shot.tscn` drives the takes. Upload order in `docs/itch/PAGE.md`.
+- **2026-11-13** **Cold open + street pack.** A new game opens on a porch fight: one line, then a porch pirate
+  (Package Pauly) runs at {partner}'s package on the porch and you chase him down; the rules come after
+  (`main.gd cold_open()` / `cold_open_rules()`, save flag `story.cold_open`). Web: a 2.9 MB `street.pck` (the
+  street, Duff, pirates, home, Duff's portrait) now comes before world.pck, and New Game waits only on it. Throttled
+  4G: New Game playable 21.9 s -> 14.3 s; tapping New Game at the title puts you in ~17 s (was ~25 s), with
+  someone to hit ~2 s later (was a rules wall and no enemy for 20+ s). The Fork, arenas, gala and minigames wait on
+  world.pck behind a loading card (`_world_gate`). `docs/renders/cold_open_before_after.png`;
+  `arena_shot -- cold` (with `--fixed-fps 30`).
+- **2026-11-13** **Madison's mornings (EDS + migraines).** Duff approved every line. About two hard mornings a week
+  she's in bed hurting (hip, or a migraine with the blinds down): bottle for Octavia, two coffees (hers cream and sugar,
+  his honey), bring hers for her meds (+8). Skip it and she gets herself up and texts; no penalty. About one good
+  morning a week she makes the coffee herself: Sit down (+5) or Take over. `scripts/mornings.gd`, save key `morning`
+  (old saves load as no morning), 12 test_daily checks, render `docs/renders/madison_mornings.png`. Next in this arc
+  (each pitched to Duff first): her diagnosis story, an autism quest, her ADHD made visible.
 - **2026-11-13** **CrazyGames-ready zip.** CI now also ships `duffquest-crazygames.zip` (dev release): no plain
   index.wasm (29 MB total vs the 50 MB no-SDK cap), `window.DQ_PORTAL` makes new players start clean + gore off
   (PEGI 12). Checklist + what's left (covers, preview video, SDK for Full Launch, GameDistribution gameId):

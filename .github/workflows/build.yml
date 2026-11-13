@@ -93,9 +93,11 @@ jobs:
         run: |
           mkdir -p build/web && touch build/.gdignore
           godot --headless --path . --export-release "Web" build/web/index.html
-          # second pack: the art the Web preset leaves out of index.pck; game streams it after boot (extra_pack.gd)
+          # after-boot packs: the art the Web preset leaves out of index.pck; game streams them after boot (extra_pack.gd)
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/street.pck street
           godot --headless --path . --script tools/make_extra_pack.gd -- build/web/world.pck world
           godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck late
+          test -s build/web/street.pck
           test -s build/web/world.pck
           test -s build/web/extra.pck
           # pre-gzipped engine: index.html unzips it in the browser (export_presets.cfg html/head_include)
@@ -117,7 +119,7 @@ jobs:
           godot --headless --path . --export-release "Web" build/pages/family/index.html
           cp /tmp/presets.bak export_presets.cfg
           for d in build/pages build/pages/family; do
-            cp build/web/world.pck build/web/extra.pck $d/
+            cp build/web/street.pck build/web/world.pck build/web/extra.pck $d/
             gzip -9 -k -n $d/index.wasm
             # iOS reads these from the page, not only the manifest
             title="Duff Quest"; [ "$d" = build/pages/family ] && title="Duff Quest Family"
