@@ -167,8 +167,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           (cd build/web && zip -qr ../duffquest-web.zip .)
+          # Portal zip (CrazyGames/GameDistribution): no plain index.wasm, so the total stays under 50 MB
+          # (index.html streams index.wasm.gz); flags window.DQ_PORTAL so settings start clean + gore off
+          # (PEGI 12), and stops long-press text selection on tablets.
+          rm -rf build/portal && cp -r build/web build/portal && rm build/portal/index.wasm
+          sed -i 's#<head>#<head><script>window.DQ_PORTAL=1</script><style>body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}</style>#' build/portal/index.html
+          grep -q DQ_PORTAL build/portal/index.html
+          (cd build/portal && zip -qr ../duffquest-crazygames.zip .)
+          ls -la build/duffquest-crazygames.zip
           gh release view dev >/dev/null 2>&1 || gh release create dev --prerelease --title "Latest dev build" --notes "Rebuilt on every push to main."
-          gh release upload dev build/android/duffquest.apk build/android/duffquest-public.apk build/duffquest-web.zip --clobber
+          gh release upload dev build/android/duffquest.apk build/android/duffquest-public.apk build/duffquest-web.zip build/duffquest-crazygames.zip --clobber
           gh release edit dev --notes "Rebuilt on every push to main. Last: ${GITHUB_SHA::7}"
       - name: Publish a branch preview of the web build (pushes off main)
         # So a session can boot-test a branch on throttled 4G (artifact storage is not reachable from sessions).

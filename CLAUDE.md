@@ -91,6 +91,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Madison's mornings (Nov 13):** EDS slow / migraine / good mornings, `scripts/mornings.gd` (see reference.md).
   Madison is a real person: Duff approves EVERY line about her EDS, autism and ADHD before it ships. One pitch at a
   time. Off-limits: the mess of her stuff, and that she's on disability.
+- **Web portals (Nov 13):** `duffquest-crazygames.zip` in the dev release is the CrazyGames upload (no plain
+  index.wasm; `window.DQ_PORTAL` = clean + gore off for new players). Checklist: `docs/portals/SUBMIT.md`.
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
