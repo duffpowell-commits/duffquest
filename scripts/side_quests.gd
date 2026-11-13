@@ -1,4 +1,5 @@
 extends RefCounted
+const Cast: = preload("res://scripts/cast.gd")
 ## Side quests: one save-safe state dict for every hand-made side quest.
 ## Pure data + static helpers (same pattern as bounties.gd / errands.gd), so tests can drive it headless.
 ##
@@ -30,12 +31,12 @@ const LIST: = [
 		],
 	},
 	{
-		"id": "gig", "kind": "character", "title": "Brittany's Side Gig", "giver": "brittany", "ready": true, "from_day": 5,
-		"pitch": "Brittany needs a favor. It's probably legal.",
+		"id": "gig", "kind": "character", "title": "{coworker}'s Side Gig", "giver": "brittany", "ready": true, "from_day": 5,
+		"pitch": "{coworker} needs a favor. It's probably legal.",
 		"stages": [
-			{"text": "Hear Brittany out. All of it. Even the PowerPoint.", "at": "brittany"},
+			{"text": "Hear {coworker} out. All of it. Even the PowerPoint.", "at": "brittany"},
 			{"text": "Pick a side. She's watching which one.", "at": "brittany"},
-			{"text": "Sleep on it. Tomorrow, tell Brittany how it went.", "at": "brittany"},
+			{"text": "Sleep on it. Tomorrow, tell {coworker} how it went.", "at": "brittany"},
 		],
 		"choices": ["cover", "rat"],
 	},
@@ -222,10 +223,10 @@ static func journal(st: Dictionary, show_hidden: bool = false) -> Array:
 		if stv == "":
 			continue
 		var q: = get_q(st, id)
-		var row: = {"id": id, "title": str(e["title"]), "status": stv, "new": bool(q["new"]),
+		var row: = {"id": id, "title": Cast.T(str(e["title"])), "status": stv, "new": bool(q["new"]),
 			"step": "", "clues": (q["clues"] as Array).duplicate(), "progress": "%d/%d" % [int(q["stage"]), stage_count(id)]}
 		if stv == "active":
-			row["step"] = str((e["stages"] as Array)[int(q["stage"]) - 1]["text"])
+			row["step"] = Cast.T(str((e["stages"] as Array)[int(q["stage"]) - 1]["text"]))
 			act.append(row)
 		else:
 			row["step"] = "Done." + ((" (%s)" % str(q["choice"])) if str(q["choice"]) != "" else "")

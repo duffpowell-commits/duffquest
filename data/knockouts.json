@@ -6,7 +6,7 @@
     "slip": "Viewers: 9,000. He calls a scooter drop. Branded. Code TYLER. I lean left and it takes out the shrimp tower. Viewers: 12,000. The shrimp is trending.",
     "xray": "Viewers: 40,000. The jaw is the only bone in the skull that moves. He's been running his since college. My elbow gives it the night off.",
     "finisher": "Like. Subscribe. Lie down.",
-    "crowd": "Brittany: \"Viewers are tanking, Duff! Forty thousand. Four hundred. Okay, it's just his mom now.\"",
+    "crowd": "{coworker}: \"Viewers are tanking, Duff! Forty thousand. Four hundred. Okay, it's just his mom now.\"",
     "closer": "Viewers: 1. Stream ended. I fix my shirt. College Tyler pivots to the floor. First thing he's ever stuck with.",
     "live": true
   },
@@ -43,7 +43,7 @@
   },
   "donald": {
     "move": "HOSTILE TAKEOVER",
-    "stance": "Q1: he buys the Twisted Fork. Q2: he decides he wants her back too. He's never cooked an egg. I take my apron off. Technically it's company property now.",
+    "stance": "Q1: he buys {fork_short}. Q2: he decides he wants her back too. He's never cooked an egg. I take my apron off. Technically it's company property now.",
     "slip": "Q2: cost-cutting. He throws the budget at me and it blows apart into layoffs. I slip through. I've outlasted four owners. I know where the gaps are.",
     "xray": "Q3: restructuring. Twenty-seven bones in a hand. His have only ever signed things. My fist reorganizes all twenty-seven.",
     "finisher": "Q4: I'm letting you go.",
@@ -68,7 +68,7 @@
     "slip": "His curl comes around like a wrecking ball. I'm not where the ball lands. I never was. I'm already under his elbow, where the muscle ends and the guy begins.",
     "xray": "Fun fact: a bicep is just a tendon with a marketing budget. Mine finds the tendon. It snaps like a ticket off the rail.",
     "finisher": "You train for mirrors. I train for Saturday brunch. Brunch has never once skipped leg day.",
-    "crowd": "Brittany: \"PAY ME. Everybody who bet on the abs, PAY ME.\"",
+    "crowd": "{coworker}: \"PAY ME. Everybody who bet on the abs, PAY ME.\"",
     "closer": "He's crying. Not from pain. From missing a post. I let him have it. Grief is a muscle too.",
     "impact": {"xray": {"at": [0.57, 0.48], "mouth": [0.89, 0.20], "dir": -20}},
     "live": true
@@ -101,7 +101,7 @@
     "slip": "Sprinklers. Vents. A fire axe. Bad attitude. He throws all of it. I go low, then lower, then I'm behind him, like a server sneaking a plate out of the window.",
     "xray": "Twenty-six bones in each foot, and he walked across broken glass on all of them. I'm not cruel. I aim higher. The jaw goes up. So does he.",
     "finisher": "Yippee. Whatever. Just fall down.",
-    "crowd": "{partner}: \"Is it over? Can we go home? I left the baby with Brittany.\"",
+    "crowd": "{partner}: \"Is it over? Can we go home? I left the baby with {coworker}.\"",
     "closer": "The tower goes quiet. Every ex, defeated. Every elevator, out of order. I take the stairs. Forty floors. It's still easier than brunch.",
     "b_anchor": 0.0,
     "impact": {"xray": {"at": [0.52, 0.33], "mouth": [0.56, 0.30], "dir": -30}},
@@ -135,7 +135,7 @@
     "slip": "She throws the binder. Coupons everywhere, like confetti at a sad wedding. I walk through it. Half of them are expired. All of them are hers.",
     "xray": "There's a muscle in the forearm called the flexor. It's the one that clips. Hers is the size of a ham. I tap it, and her whole hand forgets coupons exist.",
     "finisher": "The first one's full price. The second one's free.",
-    "crowd": "Brittany: \"She's got a coupon for the ambulance. Duff. She has a coupon for the AMBULANCE.\"",
+    "crowd": "{coworker}: \"She's got a coupon for the ambulance. Duff. She has a coupon for the AMBULANCE.\"",
     "closer": "She asks if there's a coupon for this. There isn't. There never is for the things that hurt.",
     "impact": {"xray": {"at": [0.51, 0.40], "mouth": [0.78, 0.20], "dir": -20}},
     "live": true
@@ -157,7 +157,7 @@
     "slip": "He swings his laptop bag like a flail. I let it pass, close enough to read the stickers. One says 'disrupt.' I plan to.",
     "xray": "Four hours in a booth shortens the hip flexors by about the length of a grudge. One knee to the hip and his snap like a gas-station charging cable.",
     "finisher": "We close at two. It's two.",
-    "crowd": "Brittany: \"He was on the wifi the whole fight. He's still on the wifi.\"",
+    "crowd": "{coworker}: \"He was on the wifi the whole fight. He's still on the wifi.\"",
     "closer": "He leaves. He goes to the library. It's quieter there. It's free there. Nobody there will ever hit him.",
     "impact": {"xray": {"at": [0.49, 0.52], "mouth": [0.13, 0.08], "dir": -150}},
     "live": true

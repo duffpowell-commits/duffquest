@@ -78,6 +78,16 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Combat (Nov 13):** Searing Spatter cut; S + swap hide until the first special (Pinwheel Lv 2). Duff said combat
   was easy: `main.DMG_TAKEN` 1.25, story exes +20% HP (`boss.STORY_HP_MULT`, Willnot timer 250 s), night spawn cap +3.
 
+- **Legal (Nov 13):** ranked risks in `docs/legal/RISK_AUDIT.md` (not legal advice). In-game Settings > Credits &
+  legal carries the parody notice + Godot/OFL licenses; keep it, `docs/itch/PAGE.md` Legal and the end credits in
+  sync. Privacy policy: `docs/legal/PRIVACY.md`.
+- **Editions (Nov 13):** public = default export (itch, Pages root, `duffquest-public.apk`): `data/cast_public.json`
+  overrides cast.json and `Art.pub()` loads `<name>_pub.<ext>` art. Family = feature tag `family` (Pages
+  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (public: Mazikeen; write `{coworker}`, never her name, in new lines). New real brand or
+  real person? Put the family name in cast.json, the public one in cast_public.json, add a test_daily leak word.
+  Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
+  Render either edition: `arena_shot.tscn -- <id> --family`.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).

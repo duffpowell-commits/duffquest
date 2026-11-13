@@ -29,7 +29,7 @@ var solved_in: = 0
 var shake_t: = 0.0
 
 func _setup() -> void:
-	title = "JEN'S WORDLE - %s" % ("PRACTICE" if practice else "DAILY")
+	title = "{SISTER}'S {WORDLE} - %s" % ("PRACTICE" if practice else "DAILY")
 	time_limit = 0.0
 	space_is_pen = false
 	answer = answer.to_upper()
