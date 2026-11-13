@@ -22,16 +22,16 @@ Checked 2026-11-13 against https://docs.crazygames.com/requirements/intro/ and t
 | English, readable at 907x510 and 800x450 | Pass at 907x510 (render); 800x450 phone not checked yet |
 | Mouse + keyboard + touch | Touch controls exist; CrazyGames says don't pick mobile controls from touch detection alone |
 | Covers: 1920x1080, 800x1200, 800x800, title only, no borders/logos | Done: `docs/portals/covers/` (`tools/make_portal_covers.py`; Duff portrait upscaled ~2x, fine at card size) |
-| Preview video: 15-20 s, landscape 1080p + portrait 2:3, no sound | TODO |
+| Preview video: 15-20 s, landscape 1080p + portrait 2:3, no sound | Done: `docs/portals/preview/` (16:9 1920x1080 18.3 s, 2:3 1080x1620 15.2 s, silent, open on the cover; real footage, gore off, from `tools/promo_shot.tscn`) |
 | Mobile homepage (<= 20 MB initial) | Not eligible without the SDK. With SDK + gameplayStart after world.pck it is ~20 MB |
 
 Full Launch (ads, revenue share) comes after Basic Launch metrics, and needs the CrazyGames SDK (gameplay start/stop,
 ads through the SDK, saves through the Data module, land in gameplay within one click). Not started.
 
 ## GameDistribution
-Needs its SDK in index.html with a gameId from Duff's GD dashboard before upload. Blocked on Duff making the account.
+Needs its SDK in index.html with a gameId from Duff's GD dashboard before upload. Duff registered (studio "Wild Dreams", Nov 13); account review takes 3-5 business days, then a gameId.
 
 ## Duff's steps (phone)
 1. developer.crazygames.com: sign up, Submit game, upload `duffquest-crazygames.zip` from the `dev` release.
 2. Orientation: landscape. Mobile: on.
-3. Upload the 3 covers + 2 videos (once made).
+3. Upload the 3 covers + the 2 videos in `docs/portals/preview/`.

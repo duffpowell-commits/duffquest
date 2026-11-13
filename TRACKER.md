@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Ad assets.** CrazyGames preview clips (`docs/portals/preview/`: 16:9 1080p 18.3 s, 2:3 1080x1620
+  15.2 s, silent, open on the cover, gore off), knockout GIF re-cut to 5.7 s / 630 px, new `boss_intro.gif`, and
+  1080p screens (town recapture, Gala landlord ex, sandwich + fryer, fridge calendar day 24, Madison line, street at
+  night). New `tools/promo_shot.tscn` drives the takes. Upload order in `docs/itch/PAGE.md`.
 - **2026-11-13** **Cold open + street pack.** A new game opens on a porch fight: one line, then a porch pirate
   (Package Pauly) runs at {partner}'s package on the porch and you chase him down; the rules come after
   (`main.gd cold_open()` / `cold_open_rules()`, save flag `story.cold_open`). Web: a 2.9 MB `street.pck` (the
