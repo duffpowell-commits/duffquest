@@ -66,6 +66,12 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
   Branch builds publish to the `web-preview` release (sessions can't download Actions artifacts).
 
+- **Cold open (Nov 13):** new game = porch-pirate fight first, rules after (`main.gd cold_open()`, flag
+  `story.cold_open`). Web packs are now street -> world -> extra: `street.pck` (STREET globs in
+  `tools/make_extra_pack.gd`, 2.9 MB) gates New Game; world.pck gates Continue and, via `_world_gate`, the Fork,
+  arenas, gala and minigames. New outdoor art a day-1 player sees: add its glob to STREET. Render:
+  `arena_shot.tscn -- cold` with `--fixed-fps 30`. Browser timing: `tools/web_boot_test.py` reports all three packs.
+
 - **Raccoon + Jen (Nov 13):** `raccoon` re-import: `python3 tools/import_critter_strip.py <strip.png> raccoon`
   (4 frames facing right on a key colour; row 1 is the mirror). `ch_jen` re-import: prep_canva_sheet (no mirror) ->
   `import_big_sheet.py OUT ch_jen --tol 70` (grey hair on Canva's purple key needs the low tolerance).

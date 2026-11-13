@@ -204,4 +204,5 @@ static func clean_story(st) -> Dictionary:
 					(out[k] as Array).append(str(x))
 	out["ending_seen"] = bool(st.get("ending_seen", false))
 	out["attempts"] = int(st.get("attempts", 0))
+	out["cold_open"] = bool(st.get("cold_open", false))   # Nov 13: new game's porch fight still running (old saves: no)
 	return out
