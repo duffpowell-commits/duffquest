@@ -2,9 +2,7 @@
 # Built by .github/workflows/web_template.yml (emscripten 4.0.11, threads=no to match the Web preset's
 # nothreads variant) and published to the "web-template-2d" release; build.yml exports with it when present.
 # The game is pure 2D, draws its own UI, ships English text, wav/ogg audio and png/jpg/webp art.
-platform = "web"
-target = "template_release"
-threads = "no"
+# platform/target/threads are passed on the scons command line (the profile does not set them)
 optimize = "size"
 lto = "full"
 deprecated = "no"
