@@ -207,7 +207,7 @@ var buildings: = [
 	{"r": Rect2(40, 40, 110, 70), "c": Color("#8a5a44"), "n": "HOME", "art": "sf_home" },
 	{"r": Rect2(190, 40, 80, 60), "c": Color("#6b6b6b"), "n": "NEIGHBOR", "art": "sf_neighbor" },
 	{"r": Rect2(470, 40, 130, 70), "c": Color("#3f6fb0"), "n": "KWIK-N-GO", "art": "sf_kwik" },
-	{"r": Rect2(460, 240, 150, 70), "c": Color("#a03a3a"), "n": "THE TWISTED FORK", "art": "sf_fork" },
+	{"r": Rect2(460, 240, 150, 70), "c": Color("#a03a3a"), "n": "{FORK}", "art": "sf_fork" },
 	{"r": Rect2(40, 240, 120, 70), "c": Color("#5d4a7a"), "n": "HOA HQ", "art": "sf_hoa" },
 	{"r": Rect2(205, 108, 60, 40), "c": Color("#5a6a8a"), "n": "SEEN CAFE", "art": "sf_seen", "story": "ghoster" },
 	{"r": Rect2(400, 40, 55, 50), "c": Color("#8a3a5a"), "n": "IRON TEMPLE", "art": "sf_iron", "story": "gymbro" },
@@ -687,7 +687,7 @@ func new_game(write_save: bool = true) -> void:
 	daily_new_day()
 	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Amen.",
 		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
-		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. This first Monday it's prorated to $%d. The Twisted Fork (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))]])
+		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. This first Monday it's prorated to $%d. {fork} (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))]])
 	if write_save:
 		save_game()
 	maybe_touch_tutorial()
@@ -1140,7 +1140,7 @@ func interactables() -> Array:
 	return [
 		{"id": "home_door", "pos": HOME_DOOR, "r": 16.0, "label": "Go inside" },
 		{"id": "shop", "pos": SHOP_PT, "r": 16.0, "label": "Shop at Kwik-N-Go" },
-		{"id": "fork", "pos": FORK_DOOR, "r": 16.0, "label": "Clock in at The Twisted Fork" },
+		{"id": "fork", "pos": FORK_DOOR, "r": 16.0, "label": "Clock in at {fork}" },
 		{"id": "brittany", "pos": BRITT_POS, "r": 16.0, "label": "Brittany (she's got a bet)" if int(bet["day"]) != day_count else "Brittany" },
 		{"id": "bounty_board", "pos": BOARD_PT, "r": 14.0, "label": "The 86 List (bounty board)" },
 		{"id": "waffle_sign", "pos": WAFFLE_SIGN_PT, "r": 16.0, "label": "Waffle Haus (graveyard shift)" },
@@ -2817,11 +2817,11 @@ func enemy_gone(e: Node) -> void:
 	e.queue_free()
 
 const JEN_DAILY: = [
-	"Daily Wordle's up, family disappointment. Try not to embarrass us.",
-	"You cook for a living and still can't spell SAUTE. Prove me wrong. Wordle's up.",
-	"{partner} says a porch pirate outran you. Again. Anyway, new Wordle.",
+	"Daily {wordle}'s up, family disappointment. Try not to embarrass us.",
+	"You cook for a living and still can't spell SAUTE. Prove me wrong. {wordle}'s up.",
+	"{partner} says a porch pirate outran you. Again. Anyway, new {wordle}.",
 	"New word. I'll go easy on you. That's a lie. I won't.",
-	"Mom called. She asked about me. Not you. Anyway, Wordle?",
+	"Mom called. She asked about me. Not you. Anyway, {wordle}?",
 	"Wake up, nerd. Today's word is ready and so is my roast.",
 ]
 
@@ -2959,14 +2959,14 @@ func jen_text_daily() -> bool:
 		text("sister", "sister", "Streak's at %d. Don't choke." % int(wordle["streak"]))
 	unread["sister"] = true
 	ping_t = 2.0
-	_toast("*bzzt* {sister} texts me: today's Wordle is up. (P = phone)")
+	_toast("*bzzt* {sister} texts me: today's {wordle} is up. (P = phone)")
 	return true
 
 func _after_wordle(n: Node, _s: float, _x: Array) -> void:
 	var solved: = int(n.solved_in)
 	var practice: = bool(n.practice)
 	var grid: Array = (n.results as Array).duplicate(true)
-	text("sister", "me", "%s %s/6" % ["Practice" if practice else "Wordle day %d" % day_count, str(solved) if solved > 0 else "X"], grid)
+	text("sister", "me", "%s %s/6" % ["Practice" if practice else "{wordle} day %d" % day_count, str(solved) if solved > 0 else "X"], grid)
 	for l in finish_wordle(solved, practice, str(n.answer)):
 		var line: = str(l)
 		if line.begins_with("{sister}: "):
@@ -3459,7 +3459,7 @@ func _after_ending(_n: Node, _s: float, _x: Array) -> void:
 	player.position = INT_SPAWN
 	_set_camera()
 	_sync_world()
-	_say(["Post-game: the days keep going. Rent keeps coming. Stonks and {sister}'s Wordle are all still here.", "Tomorrow morning there's a gold envelope coming. The real final round is a black-tie party. (Beaten bosses stay beaten.)"])
+	_say(["Post-game: the days keep going. Rent keeps coming. Stonks and {sister}'s {wordle} are all still here.", "Tomorrow morning there's a gold envelope coming. The real final round is a black-tie party. (Beaten bosses stay beaten.)"])
 	if not has_car:
 		text("madison", "madison", "we're officially a family now. families have minivans. a used one is $%d. start saving, chef <3 (buy it at any bus stop)" % Transit.CAR_PRICE)
 		unread["madison"] = true
@@ -3480,7 +3480,7 @@ func _draw_arena() -> void:
 			if arena_mode == "bet":
 				_draw_bet_hud(f, o)
 			else:
-				_arena_caption(f, o, "BEHIND THE TWISTED FORK  -  86 LIST ENFORCEMENT ZONE", Color("#ffd23f"))
+				_arena_caption(f, o, "BEHIND {FORK}  -  86 LIST ENFORCEMENT ZONE", Color("#ffd23f"))
 	if finale_t > 0.0:
 		var rng: = RandomNumberGenerator.new()
 		rng.seed = int(t * 12.0)
@@ -3493,7 +3493,7 @@ func _draw_arena() -> void:
 ## One-line joke caption on a dark strip across the back wall, just under the HUD bar (never on the floor).
 func _arena_caption(f: Font, o: Vector2, line: String, c: Color) -> void:
 	draw_rect(Rect2(o + Vector2(0, 18), Vector2(ARENA_SIZE.x, 9)), Color(0, 0, 0, 0.55))
-	draw_string(f, o + Vector2(0, 25), line, HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 6, c)
+	draw_string(f, o + Vector2(0, 25), Cast.T(line), HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 6, c)
 
 const ERRAND_THANKS: = {
 	"pharmacy": ["You got it?! You waited in THE line? Marry me. Again. Hypothetically.", "My hero. My prescription hero. Here's your copay back, plus bus fare.", "You survived {pharmacy}. Honestly, that's a story boss."],
@@ -4467,7 +4467,7 @@ func date_menu() -> void:
 	if k == "symphony":
 		lines.append("Tickets: $%d (I pay at the door)." % Dates.TICKETS)
 	_menu("DATE NIGHT", lines, [
-		["jen", "Text {sister} to babysit (%s)" % ("free: you did her Wordle" if jen_fee() == 0 else "$%d: you didn't do her Wordle" % jen_fee()), KEY_1],
+		["jen", "Text {sister} to babysit (%s)" % ("free: you did her {wordle}" if jen_fee() == 0 else "$%d: you didn't do her {wordle}" % jen_fee()), KEY_1],
 		["sitter", "Book {sitter_app} ($%d)" % Dates.SITTER_COST, KEY_2],
 		["none", "No sitter? Just go!", KEY_3],
 		["later", "Not yet", KEY_ESCAPE]], func (id: String) -> void:
@@ -4491,7 +4491,7 @@ func start_date(kind: String, how: String, extra: Dictionary = {}) -> bool:
 	money -= sitter_cost(how)
 	if how == "jen":
 		text("sister", "me", "can you watch {baby} tonight? date night")
-		text("sister", "sister", "Did you do my Wordle today? Yes? Fine. Free. She's my favorite person anyway. Not you. Her." if jen_fee() == 0 else "Did you do my Wordle? No? $%d. And you're doing it tomorrow. On your way, I'm bringing snacks." % Dates.JEN_FEE)
+		text("sister", "sister", "Did you do my {wordle} today? Yes? Fine. Free. She's my favorite person anyway. Not you. Her." if jen_fee() == 0 else "Did you do my {wordle}? No? $%d. And you're doing it tomorrow. On your way, I'm bringing snacks." % Dates.JEN_FEE)
 	date_stats["sitter_day"] = day_count
 	date_stats["sitter"] = how
 	if kind == "symphony":

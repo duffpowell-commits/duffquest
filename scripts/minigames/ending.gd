@@ -28,7 +28,7 @@ static func credits_lines() -> Array:
 	var c: Array = [
 		"{GAME_TITLE}", "",
 		"STARRING", "{hero} ... as himself", "{partner} ... his whole heart", "{baby} ... the boss of everyone",
-		"{cat1} and {cat2} ... chaos, 3 AM division", "{cat3} ... (refused to sign the release)", "{sister_full} ... texts, Wordle, roasts", "",
+		"{cat1} and {cat2} ... chaos, 3 AM division", "{cat3} ... (refused to sign the release)", "{sister_full} ... texts, {wordle}, roasts", "",
 		"THE EXES (parody nicknames)", "{ex_1}", "{ex_2}", "{ex_3}", "{ex_4}", "",
 		"FINAL BOSS", "{ex_final} ... an affectionate parody of every 80s action hero", "",
 		"ALSO FEATURING", "Grill-Boy Brayden, Palm Beach Pete, the porch pirates,", "the raccoons (friends now), every Karen in {city},", "and The Elite Gala", "",

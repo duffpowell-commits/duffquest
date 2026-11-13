@@ -1,6 +1,12 @@
 extends RefCounted
 
 const PATH: = "res://data/cast.json"
+## Public edition (itch, GitHub Pages, the advertised builds): data/cast_public.json overrides cast.json, and
+## Art swaps in `<name>_pub` art where it exists (Art.pub). The family edition is exported with the "family"
+## feature tag (CI: family web at /family/ + duffquest.apk; the public APK is duffquest-public.apk) and keeps
+## the real names untouched. Renders/tests can pass `-- --family` to see the family edition.
+const PUBLIC_PATH: = "res://data/cast_public.json"
+static var family: bool = OS.has_feature("family") or "--family" in OS.get_cmdline_user_args()
 const DEFAULTS: = {
 	"game_title": "Duff Quest", "hero": "Duff", "partner": "Madison", "baby": "Octavia", "sister": "Jen",
 	"sister_full": "Jennifer", "cat1": "Alastor", "cat2": "Lucifer", "cat3": "Freya", "city": "Omaha",
@@ -16,6 +22,7 @@ const DEFAULTS: = {
 	"cologne": "Gucchi Eau de Duff",
 	"date_spot_sushi": "Akarui", "date_spot_symphony": "Holland Performing Arts Center",
 	"symphony_hall": "the Holland Center", "orchestra": "Omaha Symphony", "sushi_area": "downtown Omaha",
+	"fork": "The Twisted Fork", "fork_short": "the Twisted Fork", "wordle": "Wordle",
 	"sitter_app": "SitterSnap", "plasma": "PlazMart Donor Center", "plasma_sign": "PLAZMART PLASMA", "phlebotomist": "Phlebotomist Phil",
 }
 static var _names: Dictionary = {}
@@ -24,19 +31,26 @@ static var _pairs: Array = []
 static func names() -> Dictionary:
 	if _names.is_empty():
 		_names = DEFAULTS.duplicate()
-		var f: = FileAccess.open(PATH, FileAccess.READ)
-		if f:
-			var d = JSON.parse_string(f.get_as_text())
-			f.close()
-			if typeof(d) == TYPE_DICTIONARY:
-				for k in d:
-					if not str(k).begins_with("_"):
-						_names[str(k)] = str(d[k])
+		for path in ([PATH] if family else [PATH, PUBLIC_PATH]):
+			var f: = FileAccess.open(path, FileAccess.READ)
+			if f:
+				var d = JSON.parse_string(f.get_as_text())
+				f.close()
+				if typeof(d) == TYPE_DICTIONARY:
+					for k in d:
+						if not str(k).begins_with("_"):
+							_names[str(k)] = str(d[k])
 		_pairs = []
 		for k in _names:
 			_pairs.append(["{%s}" % k, _names[k]])
 			_pairs.append(["{%s}" % str(k).to_upper(), str(_names[k]).to_upper()])
 	return _names
+
+## Tests / dev: switch edition at runtime (clears the name cache).
+static func set_family(on: bool) -> void:
+	family = on
+	_names = {}
+	_pairs = []
 
 static func lookup(key: String) -> String:
 	return str(names().get(key, key))

@@ -16,6 +16,7 @@ func _init() -> void:
 	# web: walls come from baked rects (world.pck carries the art); they must match the textures
 	check("data/art_rects.json matches sf_/sd_ art (re-run tools/bake_art_rects.gd)",
 		FileAccess.get_file_as_string("res://data/art_rects.json") == JSON.stringify(preload("res://tools/bake_art_rects.gd").measure(), "\t", true) + "\n")
+	_edition_checks()
 	# full shift: quiz first, same 8 stations, order changes across shifts
 	var orders: = {}
 	for i in 30:
@@ -383,6 +384,34 @@ func _review_fix_checks(main: Node) -> void:
 	var phone: = Cast.T("PULL (Space)")
 	Cast.touch = false
 	check("touch: keyboard hints become tap words", phone == "PULL IT" and Cast.T("PULL (Space)") == "PULL (Space)")
+
+## Editions (docs/legal/RISK_AUDIT.md): the public build (default, no feature tag) renames real brands and the
+## real-ex final boss and swaps in *_pub art; the family build ("family" tag) keeps every original.
+func _edition_checks() -> void:
+	var C: = preload("res://scripts/cast.gd")
+	var A: = preload("res://scripts/art.gd")
+	var was: bool = C.family
+	C.set_family(false)
+	var shown: = " ".join(PackedStringArray(C.names().values().map(func(v): return str(v))))
+	var leaked: = []
+	for w in ["Twisted Fork", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh"]:
+		if w in shown:
+			leaked.append(w)
+	check("public edition: no real brand / real-ex names in cast (%s)" % ", ".join(leaked), leaked.is_empty())
+	check("public edition: {FORK} and {wordle} tokens renamed", C.T("{FORK} / {wordle}") == "THE BUSTED SPATULA / Word Brawl")
+	var pubs: = ["sf_fork.png", "sf_walgrumps.png", "ch_willnot.png", "portraits_hd/willnot.png", "boss_intro/willnot.png",
+		"ko/willnot_a.jpg", "ko/willnot_b.jpg", "ko/willnot_c.jpg"]
+	var bad: = []
+	for f in pubs:
+		var p: String = "res://assets/art/" + f
+		var q: = A.pub(p)
+		if q == p or (load(q) as Texture2D).get_size() != (load(p) as Texture2D).get_size():
+			bad.append(f)
+	check("public edition: *_pub art exists at the original size (%s)" % ", ".join(bad), bad.is_empty())
+	C.set_family(true)
+	check("family edition: real names kept", C.T("{fork} {wordle} {ex_final}") == "The Twisted Fork Wordle Bruce Willnot")
+	check("family edition: original art kept", A.pub("res://assets/art/sf_fork.png") == "res://assets/art/sf_fork.png")
+	C.set_family(was)
 
 func _falcor_checks(main: Node) -> void:
 	main.no_loading = true

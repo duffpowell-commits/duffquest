@@ -57,7 +57,7 @@ func show_screen(s: String) -> void:
 			if m:
 				m.unread["sister"] = false
 			if m and not m.wordle_daily_done():
-				add_button("daily", Rect2(6, 154, 200, 22), "Play today's Wordle", KEY_1, Color("#4e7a3a"))
+				add_button("daily", Rect2(6, 154, 200, 22), "Play today's {wordle}", KEY_1, Color("#4e7a3a"))
 			elif m and not m.wordle_practice_done():
 				add_button("practice", Rect2(6, 154, 200, 22), "Practice round (small rewards)", KEY_1, Color("#2e5aa8"))
 			add_button("back", Rect2(212, 154, 102, 22), "Back", KEY_ESCAPE)

@@ -81,7 +81,7 @@ One line cook. One phone. No computer.
 
 - **Code:** written with Claude (Anthropic), in Godot 4.5.
 - **Art:** AI-generated with Grok, Gemini, ChatGPT and Canva AI from Duff's own photos and references, then fixed and finished in code. Logo built in code from the game's fonts.
-- **Music and sound:** synthesized by code. The date-night theme is Brahms' Lullaby (public domain).
+- **Music:** by Duff. The date-night theme is Brahms' Lullaby (public domain). **Sound effects:** synthesized by code.
 - **Writing:** Duff's real life and jokes, drafted and edited with AI help.
 - **Fonts:** Baloo 2, Nunito, Caveat, Patrick Hand (SIL Open Font License).
 
