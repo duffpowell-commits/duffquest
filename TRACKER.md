@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Raccoons + Jen repainted.** The raccoon (read as a flat grey cat) is a warm-brown raccoon with a
+  black mask and ringed tail, same 192x64 sheet (4 frames x 48x32, origin unchanged), 1 px dark outline so it reads
+  on grass. Row 0 now faces right as `raccoon.gd` expects (the old sheet had it walking backwards). Jen's walk sheet
+  (`ch_jen`) and phone avatar (`av_jen`) repainted in the Sea of Stars cast style. New `tools/import_critter_strip.py`
+  (Canva strip -> small 2-row critter sheet); `tools/import_big_sheet.py --tol` for grey art on a purple key. Masters:
+  Drive "97 Gemini art drops" `raccoon_v1.png`, `ch_jen_v1.png`. Render `docs/renders/raccoon_jen_before_after.png`.
 - **2026-11-13** **Fix: web build had no sprites.** itch serves the packs gzip-encoded; the browser unzips them and
   Godot's HTTPRequest tried to unzip again, so world.pck failed 3 times and the game started with no art.
   `accept_gzip = false`, world.pck now retries forever behind the loading card instead of giving up, and

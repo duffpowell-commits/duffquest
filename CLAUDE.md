@@ -66,6 +66,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
   Branch builds publish to the `web-preview` release (sessions can't download Actions artifacts).
 
+- **Raccoon + Jen (Nov 13):** `raccoon` re-import: `python3 tools/import_critter_strip.py <strip.png> raccoon`
+  (4 frames facing right on a key colour; row 1 is the mirror). `ch_jen` re-import: prep_canva_sheet (no mirror) ->
+  `import_big_sheet.py OUT ch_jen --tol 70` (grey hair on Canva's purple key needs the low tolerance).
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
