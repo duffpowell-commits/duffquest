@@ -7,7 +7,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 - **2026-11-13** **Two editions: public vs family.** One codebase. Default export = public (itch, Pages root,
   `duffquest-public.apk`): `data/cast_public.json` renames the Twisted Fork (The Busted Spatula), Wordle (Word Brawl),
-  the Hy-Whee slogan, Gucchi (Eau de Fryer) and the real-ex final boss (Rex Tankton, Glasshaus Tower), and `Art.pub()`
+  the Hy-Whee slogan, Gucchi (Eau de Fryer), Brittany (Mazikeen, `{coworker}` token) and the real-ex final boss (Rex Tankton, Glasshaus Tower), and `Art.pub()`
   swaps in `*_pub` art (Fork sign, Walgrumps sign in teal block letters, Rex's dark hair + charcoal tank on the walk
   sheet, portraits, intro card and KO stills; made by `tools/make_public_art.py`). Family export (feature tag `family`,
   CI: Pages `/family/` + `duffquest.apk`) keeps everything. `-- --family` shows it in renders. Music credited to Duff.

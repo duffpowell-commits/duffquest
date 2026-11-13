@@ -394,11 +394,11 @@ func _edition_checks() -> void:
 	C.set_family(false)
 	var shown: = " ".join(PackedStringArray(C.names().values().map(func(v): return str(v))))
 	var leaked: = []
-	for w in ["Twisted Fork", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh"]:
+	for w in ["Twisted Fork", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh", "Brittany"]:
 		if w in shown:
 			leaked.append(w)
 	check("public edition: no real brand / real-ex names in cast (%s)" % ", ".join(leaked), leaked.is_empty())
-	check("public edition: {FORK} and {wordle} tokens renamed", C.T("{FORK} / {wordle}") == "THE BUSTED SPATULA / Word Brawl")
+	check("public edition: {FORK} and {wordle} tokens renamed", C.T("{FORK} / {wordle} / {coworker}") == "THE BUSTED SPATULA / Word Brawl / Mazikeen")
 	var pubs: = ["sf_fork.png", "sf_walgrumps.png", "ch_willnot.png", "portraits_hd/willnot.png", "boss_intro/willnot.png",
 		"ko/willnot_a.jpg", "ko/willnot_b.jpg", "ko/willnot_c.jpg"]
 	var bad: = []
@@ -409,7 +409,7 @@ func _edition_checks() -> void:
 			bad.append(f)
 	check("public edition: *_pub art exists at the original size (%s)" % ", ".join(bad), bad.is_empty())
 	C.set_family(true)
-	check("family edition: real names kept", C.T("{fork} {wordle} {ex_final}") == "The Twisted Fork Wordle Bruce Willnot")
+	check("family edition: real names kept", C.T("{fork} {wordle} {ex_final} {coworker}") == "The Twisted Fork Wordle Bruce Willnot Brittany")
 	check("family edition: original art kept", A.pub("res://assets/art/sf_fork.png") == "res://assets/art/sf_fork.png")
 	C.set_family(was)
 

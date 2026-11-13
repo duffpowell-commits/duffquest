@@ -749,6 +749,9 @@ func from_dict(d: Dictionary) -> void:
 	var old_ach: int = achievements.find("Yippee-Ki-Yay, Chef")
 	if old_ach >= 0:
 		achievements[old_ach] = "Forty Floors, Zero Shoes"
+	var britt_ach: int = achievements.find("Brittany Owes Me")   # stored by name before the {coworker} token
+	if britt_ach >= 0:
+		achievements[britt_ach] = "{coworker} Owes Me"
 	fryer_smell = bool(d.get("fryer_smell", false))
 	shifts_worked = int(d.get("shifts_worked", 0))
 	rent_debt = int(d.get("rent_debt", 0))
@@ -1141,7 +1144,7 @@ func interactables() -> Array:
 		{"id": "home_door", "pos": HOME_DOOR, "r": 16.0, "label": "Go inside" },
 		{"id": "shop", "pos": SHOP_PT, "r": 16.0, "label": "Shop at Kwik-N-Go" },
 		{"id": "fork", "pos": FORK_DOOR, "r": 16.0, "label": "Clock in at {fork}" },
-		{"id": "brittany", "pos": BRITT_POS, "r": 16.0, "label": "Brittany (she's got a bet)" if int(bet["day"]) != day_count else "Brittany" },
+		{"id": "brittany", "pos": BRITT_POS, "r": 16.0, "label": "{coworker} (she's got a bet)" if int(bet["day"]) != day_count else "{coworker}" },
 		{"id": "bounty_board", "pos": BOARD_PT, "r": 14.0, "label": "The 86 List (bounty board)" },
 		{"id": "waffle_sign", "pos": WAFFLE_SIGN_PT, "r": 16.0, "label": "Waffle Haus (graveyard shift)" },
 		{"id": "pharmacy", "pos": PHARM_DOOR, "r": 16.0, "label": "Enter {pharmacy}" },
@@ -3848,24 +3851,24 @@ func _gig_talk(npc: String) -> bool:
 	if not wants:
 		return false
 	if phase() == "Night":
-		_say(["Brittany's gone home. Her car's still here, though. The trunk smells like ranch. Come back in the daytime."])
+		_say(["{coworker}'s gone home. Her car's still here, though. The trunk smells like ranch. Come back in the daytime."])
 		return true
 	if SideQuests.offerable(st, q, day_count, show_hidden_quests):
 		SideQuests.start(st, q)
-		_say(["Brittany: Okay. Don't freak out. I have a side hustle.",
-			"Brittany: It's a business. It has a logo. It has a PowerPoint. Talk to me again when you're ready to have your mind blown.",
-			"New side quest: Brittany's Side Gig (phone > Notes)."])
+		_say(["{coworker}: Okay. Don't freak out. I have a side hustle.",
+			"{coworker}: It's a business. It has a logo. It has a PowerPoint. Talk to me again when you're ready to have your mind blown.",
+			"New side quest: {coworker}'s Side Gig (phone > Notes)."])
 		save_game()
 		return true
 	match SideQuests.stage(st, q):
 		1:
 			SideQuests.advance(st, q)
-			_say(["Brittany turns her phone sideways. Slide one: BRITT'S ARTISANAL RANCH. Slide two: a picture of the Fork's ranch bucket.",
-				"Brittany: I fill mason jars from the walk-in. Hand-lettered labels. Eight bucks a jar on Marketplace. I've moved ninety jars.",
-				"Brittany: Chef's counting the ranch buckets. He thinks it's the dishwasher. I need you to say you saw the dishwasher take it. Or don't. Your call. I'm watching."])
+			_say(["{coworker} turns her phone sideways. Slide one: {COWORKER_SHORT}'S ARTISANAL RANCH. Slide two: a picture of the Fork's ranch bucket.",
+				"{coworker}: I fill mason jars from the walk-in. Hand-lettered labels. Eight bucks a jar on Marketplace. I've moved ninety jars.",
+				"{coworker}: Chef's counting the ranch buckets. He thinks it's the dishwasher. I need you to say you saw the dishwasher take it. Or don't. Your call. I'm watching."])
 			return true
 		2:
-			_menu("BRITTANY'S SIDE GIG", ["Brittany is staring at me. She hasn't blinked in a while.",
+			_menu("{COWORKER}'S SIDE GIG", ["{coworker} is staring at me. She hasn't blinked in a while.",
 				"Chef thinks Manny the dishwasher is stealing ranch. Manny has three kids and a bad knee."],
 				[["cover", "Cover for her", KEY_1], ["rat", "Tell Chef the truth", KEY_2], ["later", "Not yet", KEY_ESCAPE]],
 				func (ch: String) -> void:
@@ -3873,7 +3876,7 @@ func _gig_talk(npc: String) -> bool:
 			return true
 		3:
 			if SideQuests.has_clue(st, q, "day:%d" % day_count):
-				_say(["Brittany: It's been, like, an hour. Give it a day. Let the ranch settle."])
+				_say(["{coworker}: It's been, like, an hour. Give it a day. Let the ranch settle."])
 				return true
 			_say(gig_payoff())
 			return true
@@ -3887,10 +3890,10 @@ func gig_choose(ch: String) -> void:
 	SideQuests.advance(side_quests, "gig")
 	if ch == "cover":
 		_say(["I tell Chef I didn't see anything. Which is technically true. I wasn't looking.",
-			"Brittany mouths 'thank you' and makes a heart with her hands. It's a little ranch-sticky."])
+			"{coworker} mouths 'thank you' and makes a heart with her hands. It's a little ranch-sticky."])
 	else:
 		_say(["I tell Chef. Chef says nothing. Chef goes very quiet and very red and walks into the walk-in and shuts the door.",
-			"Brittany saw the whole thing. She's not mad. She's taking notes."])
+			"{coworker} saw the whole thing. She's not mad. She's taking notes."])
 	save_game()
 
 func gig_payoff() -> Array:
@@ -3901,14 +3904,14 @@ func gig_payoff() -> Array:
 	if ch == "rat":
 		money += 40
 		bet["day"] = day_count  # she's not betting with a narc today
-		lines = ["Chef slips me $40 in an envelope marked 'LOYALTY'. Manny keeps his job. Brittany keeps... nothing. The ranch empire has fallen.",
-			"Brittany: I respect it. I hate it, but I respect it. No bets today. I need to grieve.", "+$40. Quest done."]
+		lines = ["Chef slips me $40 in an envelope marked 'LOYALTY'. Manny keeps his job. {coworker} keeps... nothing. The ranch empire has fallen.",
+			"{coworker}: I respect it. I hate it, but I respect it. No bets today. I need to grieve.", "+$40. Quest done."]
 		ach = "Narc of the Fork"
 	else:
 		money += 60
 		gain_happy(5.0)
-		lines = ["Brittany hands me $60 and a mason jar with my name on it. Hand-lettered. 'DUFF'S RESERVE.'",
-			"Brittany: Silent partner. Very silent. If Chef asks, you're allergic to ranch now.", "+$60, one jar of ranch. {partner} loves it on everything (+happy). Quest done."]
+		lines = ["{coworker} hands me $60 and a mason jar with my name on it. Hand-lettered. 'DUFF'S RESERVE.'",
+			"{coworker}: Silent partner. Very silent. If Chef asks, you're allergic to ranch now.", "+$60, one jar of ranch. {partner} loves it on everything (+happy). Quest done."]
 		ach = "Ranch Cartel"
 	if not achievements.has(ach):
 		achievements.append(ach)
@@ -3976,7 +3979,7 @@ func _porch_talk(npc: String) -> bool:
 		SideQuests.start(st, q)
 		_say(["{partner}: \"Third package this month. THIRD. The tracking says delivered, the porch says nothing.\"",
 			"{partner}: \"I don't want a doorbell cam. I want a NAME.\"",
-			"New side quest: Who Took The Porch? (phone > Notes). Brittany sees everything on this block. Start there."])
+			"New side quest: Who Took The Porch? (phone > Notes). {coworker} sees everything on this block. Start there."])
 		save_game()
 		return true
 	if not SideQuests.is_active(st, q):
@@ -3985,8 +3988,8 @@ func _porch_talk(npc: String) -> bool:
 		["brittany", 1]:
 			SideQuests.add_clue(st, q, "orange fingers")
 			SideQuests.advance(st, q)
-			_say(["Brittany: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case.",
-				"Brittany: Didn't see his face. I was filming a reaction video. To a different crime.",
+			_say(["{coworker}: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case.",
+				"{coworker}: Didn't see his face. I was filming a reaction video. To a different crime.",
 				"Clue: orange fingers. Go check the porch for crumbs."])
 			return true
 		["porch", 2]:
@@ -5256,32 +5259,32 @@ const BETS: = {
 		"lose": "Time! You were SO close. Just kidding, you weren't. Venmo me." },
 }
 const BET_ORDER: = ["nohit", "combo", "speed"]
-const BET_INTRO: = ["Brittany: Okay, chef. I've got a bet. You're gonna lose. I'm gonna film it.",
-	"Brittany: Bet you can't. That's it. That's the whole sentence. Bet you can't.",
-	"Brittany: My phone's at 80% and my faith in you is at 12%. Let's go."]
+const BET_INTRO: = ["{coworker}: Okay, chef. I've got a bet. You're gonna lose. I'm gonna film it.",
+	"{coworker}: Bet you can't. That's it. That's the whole sentence. Bet you can't.",
+	"{coworker}: My phone's at 80% and my faith in you is at 12%. Let's go."]
 
 func bet_today() -> String:
 	return BET_ORDER[day_count % BET_ORDER.size()]
 
 func bet_menu() -> void:
 	if int(bet["day"]) == day_count:
-		_say(["Brittany: We already did one today. I'm editing the video. It's got music now. Sad music. Come back tomorrow."])
+		_say(["{coworker}: We already did one today. I'm editing the video. It's got music now. Sad music. Come back tomorrow."])
 		return
 	if phase() == "Night":
-		_say(["Brittany's gone home. She left me a text: \"tomorrow ur going DOWN\""])
+		_say(["{coworker}'s gone home. She left me a text: \"tomorrow ur going DOWN\""])
 		return
 	var b: Dictionary = BETS[bet_today()]
 	var lines: Array = [BET_INTRO[day_count % BET_INTRO.size()], "TODAY: %s. %s" % [b["name"], b["pitch"]],
-		"Win and she pays double. Lose and she keeps the stake. Record vs Brittany: %d-%d." % [int(bet["won"]), int(bet["lost"])]]
+		"Win and she pays double. Lose and she keeps the stake. Record vs {coworker}: %d-%d." % [int(bet["won"]), int(bet["lost"])]]
 	var opts: Array = []
 	if money >= 10:
 		opts.append(["10", "Bet $10", KEY_1])
 	if money >= 25:
 		opts.append(["25", "Bet $25 (she'll scream)", KEY_2])
 	if opts.is_empty():
-		lines.append("Brittany: You have $%d. I'm not betting against your lunch money. That's too sad, even for me." % money)
+		lines.append("{coworker}: You have $%d. I'm not betting against your lunch money. That's too sad, even for me." % money)
 	opts.append(["no", "Nah", KEY_ESCAPE])
-	_menu("BRITTANY'S BET", lines, opts, func (ch: String) -> void:
+	_menu("{COWORKER}'S BET", lines, opts, func (ch: String) -> void:
 		if ch in ["10", "25"]:
 			start_bet(bet_today(), int(ch)))
 
@@ -5304,7 +5307,7 @@ func start_bet(kind: String, stake: int) -> void:
 	player.stun_t = 0.0
 	_set_camera()
 	energy = 100.0
-	_say(["Brittany drags me behind the Fork. \"Best lighting in town. It's the dumpster. The dumpster's the lighting.\"", "Brittany: %s Go!" % str(BETS[kind]["name"]).to_upper()])
+	_say(["{coworker} drags me behind the Fork. \"Best lighting in town. It's the dumpster. The dumpster's the lighting.\"", "{coworker}: %s Go!" % str(BETS[kind]["name"]).to_upper()])
 	_sync_world()
 
 func _bet_progress() -> int:
@@ -5314,7 +5317,7 @@ func _bet_process(delta: float) -> void:
 	var b: Dictionary = BETS[bet_kind]
 	bet_t += delta
 	if energy <= 0.0:
-		_end_bet(false, "Knocked out. Brittany: \"Okay that one's going in the blooper reel AND the main reel.\"")
+		_end_bet(false, "Knocked out. {coworker}: \"Okay that one's going in the blooper reel AND the main reel.\"")
 		return
 	if bet_kind == "nohit" and bet_hurt > 0:
 		_end_bet(false, "")
@@ -5346,17 +5349,17 @@ func _end_bet(won: bool, extra: String) -> void:
 	if won:
 		money += bet_stake * 2
 		bet["won"] = int(bet["won"]) + 1
-		lines.append("Brittany: " + str(b["win"]))
-		lines.append("She pays me $%d. Record vs Brittany: %d-%d." % [bet_stake * 2, int(bet["won"]), int(bet["lost"])])
+		lines.append("{coworker}: " + str(b["win"]))
+		lines.append("She pays me $%d. Record vs {coworker}: %d-%d." % [bet_stake * 2, int(bet["won"]), int(bet["lost"])])
 		combat.gain_xp("boss_bounty", combat.level)
-		if int(bet["won"]) >= 5 and not achievements.has("Brittany Owes Me"):
-			achievements.append("Brittany Owes Me")
-			lines.append("ACHIEVEMENT UNLOCKED: Brittany Owes Me (5 bets won. She says it's rigged.)")
+		if int(bet["won"]) >= 5 and not achievements.has("{coworker} Owes Me"):
+			achievements.append("{coworker} Owes Me")
+			lines.append("ACHIEVEMENT UNLOCKED: {coworker} Owes Me (5 bets won. She says it's rigged.)")
 	else:
 		money = maxi(0, money - bet_stake)
 		bet["lost"] = int(bet["lost"]) + 1
-		lines.append("Brittany: " + str(b["lose"]))
-		lines.append("-$%d. Record vs Brittany: %d-%d." % [bet_stake, int(bet["won"]), int(bet["lost"])])
+		lines.append("{coworker}: " + str(b["lose"]))
+		lines.append("-$%d. Record vs {coworker}: %d-%d." % [bet_stake, int(bet["won"]), int(bet["lost"])])
 	bet_kind = ""
 	energy = maxf(30.0, energy)
 	_say(lines)
@@ -5366,13 +5369,13 @@ func _draw_bet_hud(f: Font, o: Vector2) -> void:
 	if bet_kind == "":
 		return
 	var b: Dictionary = BETS[bet_kind]
-	var txt: = "BRITTANY'S BET: %s   %d / %d" % [str(b["name"]).to_upper(), _bet_progress(), int(b["goal"])]
+	var txt: = "{COWORKER}'S BET: %s   %d / %d" % [str(b["name"]).to_upper(), _bet_progress(), int(b["goal"])]
 	if float(b["time"]) > 0.0:
 		txt += "   %ds" % int(ceil(maxf(0.0, float(b["time"]) - bet_t)))
 	if bet_kind == "nohit":
 		txt += "   DON'T GET HIT"
 	draw_rect(Rect2(o + Vector2(40, 62), Vector2(240, 10)), Color(0, 0, 0, 0.6))
-	draw_string(f, o + Vector2(40, 70), txt, HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
+	draw_string(f, o + Vector2(40, 70), Cast.T(txt), HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
 
 	var bp: = o + Vector2(296, 96)
 	Art.person(self, "ch_brittany", bp, player.position - bp, t, false, true)

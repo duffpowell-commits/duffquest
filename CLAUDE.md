@@ -83,7 +83,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   sync. Privacy policy: `docs/legal/PRIVACY.md`.
 - **Editions (Nov 13):** public = default export (itch, Pages root, `duffquest-public.apk`): `data/cast_public.json`
   overrides cast.json and `Art.pub()` loads `<name>_pub.<ext>` art. Family = feature tag `family` (Pages
-  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot. New real brand or
+  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (public: Mazikeen; write `{coworker}`, never her name, in new lines). New real brand or
   real person? Put the family name in cast.json, the public one in cast_public.json, add a test_daily leak word.
   Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
   Render either edition: `arena_shot.tscn -- <id> --family`.

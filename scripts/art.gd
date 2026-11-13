@@ -182,7 +182,7 @@ static func is_duff_line(text: String, hero: String) -> bool:
 	var who: = text.substr(0, c)
 	if who == hero or who == "You" or who.to_lower() == "me":
 		return true
-	if who in NPC_SPEAKERS or who in boss_names():
+	if who in NPC_SPEAKERS or who == CastScript.T("{coworker}") or who in boss_names():
 		return false
 	return not (who in preload("res://scripts/cast.gd").names().values())
 
@@ -223,7 +223,7 @@ static func boss_intro_for(text: String) -> String:
 	return k if text == preload("res://scripts/cast.gd").T(str(b["intro"])) else ""
 
 static func portrait_for(text: String, hero: String, partner: String, baby: String) -> String:
-	if hd_enabled and text.begins_with("Brittany: "):
+	if hd_enabled and (text.begins_with("Brittany: ") or text.begins_with(CastScript.T("{coworker}: "))):
 		return "brittany"
 	if hd_enabled and text.begins_with("Dolores"):      # 'Dolores leans in: "..."', 'Dolores (31 years in): ...'
 		return "dolores"
