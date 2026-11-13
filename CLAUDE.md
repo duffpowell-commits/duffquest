@@ -106,6 +106,14 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `docs/portals/preview/` (CrazyGames clips) and `docs/itch/` (GIFs, 1080p screens). ~3 fps under llvmpipe.
   GameDistribution: Duff registered as "Wild Dreams" (Nov 13), gameId after review.
 
+- **HD sprite pilot (Nov 13, PR open, not merged):** `duff_apron_red/black` redrawn at 2x (512x512, 128 cells,
+  manifest "s": 4, origin [64,120]; same world size and hitbox). Master: Drive "97 Gemini art drops",
+  `ch_duff_hd_v1.png` (Canva generate-image with the old sheet + HD portrait as references). Import:
+  `import_big_sheet.py SRC <id> --cell 128 --height 104 --feet 120 --smooth --auto-grid --row-feet`, then recolour
+  magenta outline fringe (hue 295-348 -> brown). Rim light: `shaders/sprite_rim.gdshader` via `Art.rim_material()` on
+  player + bosses, colour/direction set per room in `hd_presentation._update_rim()`. `Art.shadow()` now adds a tight
+  contact core under every character. Other Duff outfits still 1x.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).

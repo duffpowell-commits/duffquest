@@ -47,6 +47,7 @@ var dash_t: = 0.0
 var buffered: = false
 
 func _ready() -> void:
+	material = Art.rim_material()   # room-coloured rim light (hd_presentation.gd drives it)
 	collision_layer = 2
 	collision_mask = 1
 	var cs: = CollisionShape2D.new()
