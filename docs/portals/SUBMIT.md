@@ -21,7 +21,7 @@ Checked 2026-11-13 against https://docs.crazygames.com/requirements/intro/ and t
 | No cross-promo / external links | Pass (no outbound links in game) |
 | English, readable at 907x510 and 800x450 | Pass at 907x510 (render); 800x450 phone not checked yet |
 | Mouse + keyboard + touch | Touch controls exist; CrazyGames says don't pick mobile controls from touch detection alone |
-| Covers: 1920x1080, 800x1200, 800x800, title only, no borders/logos | TODO: only `docs/itch/cover.png` exists |
+| Covers: 1920x1080, 800x1200, 800x800, title only, no borders/logos | Done: `docs/portals/covers/` (`tools/make_portal_covers.py`; Duff portrait upscaled ~2x, fine at card size) |
 | Preview video: 15-20 s, landscape 1080p + portrait 2:3, no sound | TODO |
 | Mobile homepage (<= 20 MB initial) | Not eligible without the SDK. With SDK + gameplayStart after world.pck it is ~20 MB |
 
