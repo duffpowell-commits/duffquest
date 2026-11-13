@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Ad assets.** CrazyGames preview clips (`docs/portals/preview/`: 16:9 1080p 18.3 s, 2:3 1080x1620
+  15.2 s, silent, open on the cover, gore off), knockout GIF re-cut to 5.7 s / 630 px, new `boss_intro.gif`, and
+  1080p screens (town recapture, Gala landlord ex, sandwich + fryer, fridge calendar day 24, Madison line, street at
+  night). New `tools/promo_shot.tscn` drives the takes. Upload order in `docs/itch/PAGE.md`.
 - **2026-11-13** **CrazyGames-ready zip.** CI now also ships `duffquest-crazygames.zip` (dev release): no plain
   index.wasm (29 MB total vs the 50 MB no-SDK cap), `window.DQ_PORTAL` makes new players start clean + gore off
   (PEGI 12). Checklist + what's left (covers, preview video, SDK for Full Launch, GameDistribution gameId):
