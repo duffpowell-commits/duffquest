@@ -5,6 +5,15 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Hy-Whee shopping floor redone.** The store is now top-down with the four aisles running
+  sideways, painted exactly on the shelf collision rects (`bg_grocery`, built by `tools/grocery_floor_compose.py`
+  from the old backdrop's end-cap goods, wall and sign). The repeated icon strips are gone: each list item is one
+  big painted item on its shelf with a yellow shelf tag (price), a bobbing arrow while it's needed, a tick once
+  it's in the cart. Shelves y-sort with Duff and Karen. People are drawn at 0.75 (was 0.5) with an ink outline.
+  Karen's hit is a speech bubble over her head (no more banner across the aisles); "Got it" and "CLANG!" float as
+  small text. The title bar hides in the shop so the painted HY-WHEE sign shows, with Budget/Cart chips either
+  side. The list is two rows of picture chips with ticks/crosses instead of ASCII `[x]`. Checkout, bagging and
+  receipt untouched. Render: `docs/renders/hywhee_floor_before_after.png`.
 - **2026-11-13** **Raccoons + Jen repainted.** The raccoon (read as a flat grey cat) is a warm-brown raccoon with a
   black mask and ringed tail, same 192x64 sheet (4 frames x 48x32, origin unchanged), 1 px dark outline so it reads
   on grass. Row 0 now faces right as `raccoon.gd` expects (the old sheet had it walking backwards). Jen's walk sheet
