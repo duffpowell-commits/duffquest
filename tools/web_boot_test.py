@@ -1,6 +1,6 @@
 # Headless-Chrome boot timer for the web build: python3 tools/web_boot_test.py <build_dir> <port> <label>
 # Throttles to "decent 4G" (9 Mbit/s, 70 ms), prints seconds until the engine is running, bytes per file, and
-# when extra.pck mounted. Needs playwright + /usr/bin/google-chrome (cloud sandbox has both).
+# when world.pck (gates New Game) and extra.pck mounted. Needs playwright + /usr/bin/google-chrome (cloud sandbox has both).
 import asyncio, sys, time, threading, functools, http.server, socketserver
 from playwright.async_api import async_playwright
 root, port, label = sys.argv[1], int(sys.argv[2]), sys.argv[3]
@@ -31,21 +31,19 @@ async def main():
             await pg.wait_for_timeout(250)
         await pg.wait_for_timeout(4000)
         await pg.screenshot(path=f"/tmp/bt/{label}_boot.png")
-        mounted=None
-        for _ in range(120):
-            if any("extra pack: mounted" in t for _,t in logs): break
+        for _ in range(240):
+            if any("extra.pck: mounted" in t for _,t in logs): break
             await pg.wait_for_timeout(500)
-        for ts,t in logs:
-            if "extra pack" in t: mounted=(ts,t)
+        when=lambda k: next((ts for ts,t in logs if k in t), None)
         print(f"[{label}] engine + game pack running after {boot}s on throttled 4G")
         tot=0
         for rid,n in got.items():
             nm=urls.get(rid,"?")
             if n>200000: print(f"   {nm:22s} {n/1e6:6.1f} MB on the wire")
             tot+=n
-        print(f"   total {tot/1e6:.1f} MB; gz loader used: {await pg.evaluate('!!window.__dq_wasm_gz')}; extra pack: {mounted}")
+        print(f"   total {tot/1e6:.1f} MB; gz loader used: {await pg.evaluate('!!window.__dq_wasm_gz')}")
         errs=[t for _,t in logs if "ERROR" in t or "rror" in t]
-        print("   extra mounted at", [ts for ts,t in logs if "extra pack: mounted" in t])
+        print(f"   world.pck mounted (New Game ready) at {when('world.pck: mounted')}s, extra.pck at {when('extra.pck: mounted')}s")
         print("   console errors:", errs[:5])
         await b.close()
 asyncio.run(main())

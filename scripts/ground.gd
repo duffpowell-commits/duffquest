@@ -21,6 +21,10 @@ static func origin() -> Vector2:
 ## built once so the origin/layout parse stays the single source of truth, then the painting replaces them.
 const PAINTED: = "res://assets/art/ground_painted.png"
 
+## Web: the painted street arrives with the world pack; rebuild on the next texture() call.
+static func clear_cache() -> void:
+	_tex = null
+
 static func texture() -> Texture2D:
 	if _tex == null:
 		_tex = _build()
@@ -50,7 +54,7 @@ static func _build() -> Texture2D:
 			grid.append(l)
 	var rows: = grid.size()
 	var ncols: = (grid[0] as String).length()
-	var img: = Image.create((ncols - 1) * tile, (rows - 1) * tile, false, Image.FORMAT_RGBA8)
+	var img: = Image.create_empty((ncols - 1) * tile, (rows - 1) * tile, false, Image.FORMAT_RGBA8)
 	warnings.clear()
 	var rng: = RandomNumberGenerator.new()
 	rng.seed = 1890

@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Web boot under 10 s.** Title screen on throttled 4G: 19.9 s -> 9.3 s. The first download is now a
+  1.8 MB core pack plus a trimmed 2D-only engine (7.2 MB gzipped, was 9.3). Characters, portraits, music, storefronts
+  and props moved to `world.pck`, fetched right after boot; Continue/New Game show a "Loading Omaha..." card until
+  it lands. Custom web template built in CI (`web_template.yml`). Render `docs/renders/web_boot_2026-11-13.png`.
 - **2026-11-12** **Character style pass.** The 20 NPC/enemy walk sheets still on the v1 chibi template (same body,
   hair and shirt swapped) are repainted as distinct Sea of Stars-style characters matching `ch_brittany`: health
   inspector, Pete, Karen + buddy, HOA, butler, drunk, heckler, kid, hustler, scammer, cashier, chef, pharmacist, sushi

@@ -63,10 +63,10 @@ static func body(feet: Vector2, w: float, h: float) -> Rect2:
 ## Screen area an item's sprite covers, in world units.
 static func art_rect(it: Dictionary) -> Rect2:
 	var a: = str(it["a"])
-	var tx: = Art.tex(a)
-	if tx == null:
+	var sz: = Art.tex_size(a)
+	if sz == Vector2.ZERO:
 		return Rect2()
 	var inf: = Art.info(a)
 	var k: = Art.density(inf) / float(it["s"])
-	var org: Array = inf.get("origin", [tx.get_width() / 2, tx.get_height()])
-	return Rect2(it["p"] - Vector2(float(org[0]), float(org[1])) / k, Vector2(tx.get_size()) / k)
+	var org: Array = inf.get("origin", [int(sz.x) / 2, int(sz.y)])
+	return Rect2(it["p"] - Vector2(float(org[0]), float(org[1])) / k, sz / k)

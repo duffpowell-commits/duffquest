@@ -29,6 +29,10 @@ static func stream(path: String) -> AudioStream:
 		_streams[path] = load(path) as AudioStream if ResourceLoader.exists(path) else null
 	return _streams[path]
 
+## Web: forget "missing" answers once a late pack (music) is mounted (scripts/extra_pack.gd).
+static func clear_cache() -> void:
+	_streams.clear()
+
 static func sfx(name: String, pitch: float = 1.0) -> void:
 	if inst != null and is_instance_valid(inst):
 		inst.play_sfx(name, pitch)
@@ -157,6 +161,7 @@ func play_music(name: String) -> void:
 		return
 	var s: = stream(DIR + "mus_" + name + ".ogg")
 	if s == null:
+		current = ""   # not here yet (web world pack still downloading): ask again next time
 		return
 	if s is AudioStreamOggVorbis:
 		(s as AudioStreamOggVorbis).loop = true

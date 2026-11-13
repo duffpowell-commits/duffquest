@@ -1,0 +1,52 @@
+name: web template (2D)
+# Builds a size-trimmed Godot web export template from tools/web_template/custom.py and publishes it to the
+# "web-template-2d" release. build.yml swaps it in for the stock web_nothreads_release.zip when it exists,
+# so the engine download shrinks. Runs only when the profile changes (or by hand); it takes ~30 min.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - tools/web_template/**
+      - .github/workflows/web_template.yml
+
+env:
+  GODOT_TAG: 4.5-stable
+  EM_VERSION: 4.0.11
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: godotengine/godot
+          ref: ${{ env.GODOT_TAG }}
+          path: godot
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: ${{ env.EM_VERSION }}
+          no-cache: true
+      - name: Build template
+        run: |
+          pip install scons
+          cd godot
+          scons platform=web target=template_release threads=no profile=../tools/web_template/custom.py -j$(nproc)
+          ls -la bin
+      - name: Publish (main -> "web-template-2d", other branches -> "web-template-2d-preview")
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=web-template-2d; [ "$GITHUB_REF" = refs/heads/main ] || tag=web-template-2d-preview
+          cp godot/bin/godot.web.template_release.wasm32.nothreads.zip web_nothreads_release.zip
+          gh release view $tag >/dev/null 2>&1 || gh release create $tag --prerelease \
+            --title "Web export template (2D, trimmed) $tag" --notes "Built by .github/workflows/web_template.yml."
+          gh release upload $tag web_nothreads_release.zip --clobber
+          gh release edit $tag --notes "Godot ${GODOT_TAG}, tools/web_template/custom.py at ${GITHUB_SHA::7} (${GITHUB_REF_NAME})"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-template-2d
+          path: godot/bin/godot.web.template_release.wasm32.nothreads.zip

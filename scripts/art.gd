@@ -24,6 +24,35 @@ static func tex(name: String) -> Texture2D:
 static func clear_cache() -> void :
 	_tex.clear()
 
+## Pixel size + opaque rect of every storefront (sf_*) and street prop (sd_*), baked into data/art_rects.json by
+## tools/bake_art_rects.gd. main.gd builds the walls from these at startup, so on the web the walls are right
+## before world.pck (which carries the art itself) has arrived. test_daily checks they match the textures.
+const RECTS: = "res://data/art_rects.json"
+static var _rects: Variant = null
+
+static func _baked(name: String) -> Dictionary:
+	if _rects == null:
+		var d: Variant = JSON.parse_string(FileAccess.get_file_as_string(RECTS)) if FileAccess.file_exists(RECTS) else null
+		_rects = d if d is Dictionary else {}
+	return (_rects as Dictionary).get(name, {})
+
+## Texture size in pixels: the texture's own, else the baked one, else zero.
+static func tex_size(name: String) -> Vector2:
+	var tx: = tex(name)
+	if tx != null:
+		return Vector2(tx.get_size())
+	var b: = _baked(name)
+	return Vector2(b["size"][0], b["size"][1]) if b.has("size") else Vector2.ZERO
+
+## Opaque pixels of the texture: baked when known (no get_image() at startup), else measured, else empty.
+static func used_rect(name: String) -> Rect2i:
+	var b: = _baked(name)
+	if b.has("used"):
+		var u: Array = b["used"]
+		return Rect2i(int(u[0]), int(u[1]), int(u[2]), int(u[3]))
+	var tx: = tex(name)
+	return tx.get_image().get_used_rect() if tx != null else Rect2i()
+
 static func row_for(v: Vector2) -> int:
 	if absf(v.x) > absf(v.y):
 		return 2 if v.x > 0.0 else 3
@@ -75,7 +104,7 @@ static var sun_shift: = Vector2.ZERO
 static var sun_stretch: = 1.0
 static func shadow(ci: CanvasItem, foot: Vector2, w: float = 7.0, h: float = 2.4, a: float = 0.32) -> void:
 	if _soft_shadow == null:
-		var image := Image.create(64,24,false,Image.FORMAT_RGBA8)
+		var image := Image.create_empty(64,24,false,Image.FORMAT_RGBA8)
 		for y in 24:
 			for x in 64:
 				var d := Vector2((x-32.0)/32.0,(y-12.0)/12.0).length()
