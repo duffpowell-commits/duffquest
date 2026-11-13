@@ -2,7 +2,7 @@ extends RefCounted
 
 const MAX_LEVEL: = 5
 const WEAPONS: = [
-	{"id": "spatula", "name": "Spatula", "tier": 1, "atk": 1.25, "special": "flip", "desc": "Flip: extra knockback" },
+	{"id": "spatula", "name": "Spatula", "tier": 1, "atk": 1.0, "special": "flip", "desc": "Flip: extra knockback" },
 	{"id": "skillet", "name": "Cast Iron Skillet", "tier": 2, "atk": 2.0, "special": "stun", "desc": "BONK: stuns enemies" },
 	{"id": "knife", "name": "Chef's Knife", "tier": 3, "atk": 2.5, "special": "quick", "desc": "Quick: faster swings" },
 	{"id": "tenderizer", "name": "Meat Tenderizer", "tier": 4, "atk": 3.0, "special": "pierce", "desc": "Tenderize: ignores HOA armor" },

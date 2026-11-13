@@ -233,7 +233,7 @@ stay raw.
 ### 3.5 Combat (`combat.gd`, `player.gd`, `enemy.gd`, `projectile.gd`, `player_shot.gd`, `juice.gd`, `combat_fx.gd`, `combat_ui.gd`)
 - `player.gd`: `SPEED` 70, roll 0.32 s at 175 with 0.8 s i-frames, 3-hit combo, attack column frame. `ARMORS` apron/clogs/
   sleeves/coat/dad set the outfit sheet. `shoes` red (street) / black (work).
-- **Gear** (`gear.gd`, `gear_screen.gd`): weapons spatula (atk 1.25, was 1.0 before the Spatter cut), skillet, knife, tenderizer, flail, cleaver,
+- **Gear** (`gear.gd`, `gear_screen.gd`): weapons spatula, skillet, knife, tenderizer, flail, cleaver,
   golden_spatula; armor apron, clogs, sleeves, coat, dad, trust_fund. Upgrade level max 5 using scraps. Story wins
   grant pieces (`Gear.grant_piece`). The starter spatula passes special `"flip"` on every swing, so **flip is
   not a heavy hit**. Cleaver and Golden crits pass `"crit"`.
