@@ -240,7 +240,7 @@ stay raw.
 - **Heat** (resource): `HEAT_BASE` 100 (+10 per HEAT point), regen 3/s, +5 per hit, +10 per finisher.
   **Demon Time** (R/D): unlocks at Lv 10 or after beating any story boss. ×1.5 damage, ×1.3 speed, drains 10/s, half-cost
   specials, then a crash (×0.7 speed for 4 s).
-- **Specials** (`SPECIALS`, unlocked by level): Spatter L1, Pinwheel L2, Julienne L3, Holler L4, Counter L5,
+- **Specials** (`SPECIALS`, unlocked by level): none at L1 (Searing Spatter cut Nov 13; S + swap buttons stay hidden until the first special), Pinwheel L2, Julienne L3, Holler L4, Counter L5,
   Brulee L6, Feast L7, Salamander L8 (hold to charge), Sous-Vide Snare L9, Tempura L10, Eighty-Six Execution L12 (100
   Heat, cinematic). Hash Brown Hurricane L1, but only after Earl's first defeat (`extra_unlocks`).
 - **Combat level ("Seniority Lv"):** `MAX_LEVEL` 20, `xp_to_next = 15 + 10*level`, `POINTS_PER_LEVEL` 3. XP comes from
@@ -249,7 +249,7 @@ stay raw.
 - **Stats** (T or the card): **STR** +8% damage/pt; **DEF** -4% damage taken/pt (max -50%); **HEAT** +10 max Heat,
   +10% regen/pt; **GRIT** +1 Energy per non-boss kill/pt and quicker rolls (`roll_mult` min 0.6). Button labels fit
   through `UiStyle.fit_text` (`tools/stat_shot.tscn`).
-- **Damage taken:** `hurt_player`: amount × (1 - gear reduction) × `taken_mult` × DEF buff 0.75 × glow/drain
+- **Damage taken:** `hurt_player`: amount × `DMG_TAKEN` 1.25 (Nov 13) × (1 - gear reduction) × `taken_mult` × DEF buff 0.75 × glow/drain
   modifiers → subtracted from energy. Counter window reflects the hit.
 - **Juice** (`juice.gd`, node "Juice"): hit-stop = `Engine.time_scale` `STOP_SCALE` 0.05 for real-time seconds
   LIGHT 0.07 / HEAVY 0.085 / KILL 0.12 / HURT 0.07 (+0.02 boss). Shake px 1.2/2.6/3.6/3.2 (×1.25 boss), trauma on
@@ -258,7 +258,7 @@ stay raw.
   beam/brulee/tempura ticks. `combat_fx`: spark bursts, a ring on heavy hits, popping numbers.
 - **Street enemies** (`enemy.gd STATS`): scammer, karen (+ karen_buddy Linda), hoa, driver, hustler (mash trap),
   pete (Palm Beach Pete: first day 7, rare), drone, butler, nft, pirate (porch pirates steal the package), drunk,
-  heckler, kid. `main._director` spawns them (`spawn_pool`, `spawn_interval`, `spawn_cap`, × the daily `spawn`).
+  heckler, kid. `main._director` spawns them (`spawn_pool`, `spawn_interval`, `spawn_cap` (night +3), × the daily `spawn`).
   Loot comes from `DROPS` and `DEFEAT_LINES`. Raccoons (`raccoon.gd`) are friendly: pet them for gifts.
 - **Test/render:** `tools/combat_shot.tscn` (movie writer) → `python3 tools/combat_sheet.py` →
   `docs/renders/combat_feel.png/.gif`. Hit-stop doesn't show in movie-writer frames, so judge it on a device.
@@ -270,7 +270,7 @@ stay raw.
 | gymbro | {ex_2} Gym Bro Supreme | story d4, ≥60, Iron Temple | curl, flex (don't hit while he flexes), charge | yes |
 | djvape | {ex_3} DJ Vape Lord | story d6, ≥65, Club Cloud 9 | drop (bass wave), vape cloud | yes |
 | crypto | {ex_4} Mr. Crypto | story d9, ≥70, Mining Rig | nft, rug (don't stand on rugs) | yes |
-| willnot | {ex_final} Bruce Willnot | story d12, ≥75, Nakatomeh Plaza | spray (gun), vent crawl, glass floor, `FINAL_TIME` 210 s timer, then the floor explodes → ending | yes |
+| willnot | {ex_final} Bruce Willnot | story d12, ≥75, Nakatomeh Plaza | spray (gun), vent crawl, glass floor, `FINAL_TIME` 250 s timer, then the floor explodes → ending | yes |
 | husk | Elon Husk | gala 1 | posting, rocket | yes |
 | bozos | Jeff Bozos | gala 2 | drones, shine | yes |
 | fences | Bill Fences | gala 3 | bsod, update | yes |
@@ -283,6 +283,7 @@ stay raw.
 | camper | The Four-Hour Camper | 86 List, Lv 6 | flex, curl | no |
 | bdaydad | Birthday Party Dad | 86 List, Lv 8 | hire, coins, charge; kid minions | no |
 | dasher | The Dine-and-Dasher | 86 List, Lv 10, after all the others | charge, vanish, rug | no |
+- Story exes get `boss.STORY_HP_MULT` 1.2 on top of the table HP (Nov 13).
 - The story is `main.STORY`, in order. Madison announces each boss (`story_announce`) when the day and Happiness
   conditions are met. Fight via the building door (`story_doors`) → `start_story_fight` (arena `arena_<id>`, energy
   refilled). The reward is cash + scrap + a gear piece + an achievement + 15 Happiness. Losing → `story_lose`.

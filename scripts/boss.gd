@@ -163,11 +163,15 @@ var flex_t: = 0.0
 var dash_t: = 0.0
 var dash_v: = Vector2.ZERO
 
+## Difficulty pass Nov 13 (Duff: "combat is pretty easy"): the five story exes get +20% HP.
+const STORY_HP_MULT: = 1.2
+const STORY_KINDS: = ["ghoster", "gymbro", "djvape", "crypto", "willnot"]
+
 func _ready() -> void:
 	add_to_group("hostile")
 	add_to_group("enemy")
 	add_to_group("boss")
-	max_hp = float(BOSSES[kind]["hp"])
+	max_hp = float(BOSSES[kind]["hp"]) * (STORY_HP_MULT if kind in STORY_KINDS else 1.0)
 	hp = max_hp
 	collision_layer = 4
 	collision_mask = 1
