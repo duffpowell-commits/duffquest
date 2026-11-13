@@ -88,6 +88,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
   Render either edition: `arena_shot.tscn -- <id> --family`.
 
+- **Madison's mornings (Nov 13):** EDS slow / migraine / good mornings, `scripts/mornings.gd` (see reference.md).
+  Madison is a real person: Duff approves EVERY line about her EDS, autism and ADHD before it ships. One pitch at a
+  time. Off-limits: the mess of her stuff, and that she's on disability.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
