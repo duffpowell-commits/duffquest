@@ -59,6 +59,16 @@ jobs:
           mkdir -p ~/.local/share/godot/export_templates
           unzip -q tpl.tpz -d /tmp/tpl
           mv /tmp/tpl/templates ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+      - name: Use the trimmed 2D web template when it exists (web_template.yml)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release download web-template-2d -p web_nothreads_release.zip -D /tmp/wt 2>/dev/null; then
+            cp /tmp/wt/web_nothreads_release.zip ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}/web_nothreads_release.zip
+            echo "using the trimmed 2D web template"
+          else
+            echo "no web-template-2d release yet: stock web template"
+          fi
       - name: Android SDK paths + debug keystore
         run: |
           keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey \

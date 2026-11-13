@@ -1,0 +1,52 @@
+name: web template (2D)
+# Builds a size-trimmed Godot web export template from tools/web_template/custom.py and publishes it to the
+# "web-template-2d" release. build.yml swaps it in for the stock web_nothreads_release.zip when it exists,
+# so the engine download shrinks. Runs only when the profile changes (or by hand); it takes ~30 min.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - tools/web_template/**
+      - .github/workflows/web_template.yml
+
+env:
+  GODOT_TAG: 4.5-stable
+  EM_VERSION: 4.0.11
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: godotengine/godot
+          ref: ${{ env.GODOT_TAG }}
+          path: godot
+      - uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: ${{ env.EM_VERSION }}
+          no-cache: true
+      - name: Build template
+        run: |
+          pip install scons
+          cd godot
+          scons profile=../tools/web_template/custom.py -j$(nproc)
+          ls -la bin
+      - name: Publish to the "web-template-2d" release (main only)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp godot/bin/godot.web.template_release.wasm32.nothreads.zip web_nothreads_release.zip
+          gh release view web-template-2d >/dev/null 2>&1 || gh release create web-template-2d --prerelease \
+            --title "Web export template (2D, trimmed)" --notes "Built by .github/workflows/web_template.yml."
+          gh release upload web-template-2d web_nothreads_release.zip --clobber
+          gh release edit web-template-2d --notes "Godot ${GODOT_TAG}, tools/web_template/custom.py at ${GITHUB_SHA::7}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-template-2d
+          path: godot/bin/godot.web.template_release.wasm32.nothreads.zip
