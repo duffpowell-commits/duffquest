@@ -73,6 +73,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `python3 tools/grocery_floor_compose.py <old bg_grocery from git 88c80a8> assets/art/bg_grocery.png`. Move a shelf
   in grocery.gd -> re-run it. Items sit on the shelf top (`SPOTS` y = shelf y - 3), grabbed from the lane above.
 
+- **Labels (Nov 13):** any text over painted art goes through `UiStyle.tag()` (minigames: `tag()`), never bare dark
+  `txt()`. Audit + open list in `TRACKER.md` (PRs #48, #49).
 - **Combat (Nov 13):** Searing Spatter cut; S + swap hide until the first special (Pinwheel Lv 2). Duff said combat
   was easy: `main.DMG_TAKEN` 1.25, story exes +20% HP (`boss.STORY_HP_MULT`, Willnot timer 250 s), night spawn cap +3.
 
