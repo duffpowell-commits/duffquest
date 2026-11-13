@@ -65,7 +65,7 @@ func _input(e: InputEvent) -> void:
 			elif not dialog_open() and _on_hud(tp):
 				drawer_pressed.emit()
 				get_viewport().set_input_as_handled()
-			elif not dialog_open() and tp.distance_to(BTN_S) < BTN_S_R + 4.0:
+			elif not dialog_open() and _special_shown() and tp.distance_to(BTN_S) < BTN_S_R + 4.0:
 				s_idx = t.index
 				s_pressed.emit()
 				get_viewport().set_input_as_handled()
@@ -153,9 +153,9 @@ func _draw() -> void:
 		var c = m.combat if m != null and m.get("combat") != null else null
 		if c != null:
 			var sp: Dictionary = c.current()
-			var ok: bool = not sp.is_empty() and c.heat >= c.cost_of(sp)
-			_btn(BTN_S, BTN_S_R, Color("#e0702a") if ok else Color("#6a4a3a"), "S", f)
-			if not sp.is_empty():
+			if not sp.is_empty():   # no special before Pinwheel (Lv 2): just A and B
+				var ok: bool = c.heat >= c.cost_of(sp)
+				_btn(BTN_S, BTN_S_R, Color("#e0702a") if ok else Color("#6a4a3a"), "S", f)
 				_hint(BTN_S + Vector2(0, 17), str(sp["short"]))
 			if c.unlocked().size() > 1:
 				_btn(BTN_SW, BTN_SW_R, Color("#7a6a8a"), "", f)
@@ -171,6 +171,9 @@ func _hint(at: Vector2, s: String) -> void:
 	var f: = ThemeDB.fallback_font
 	draw_string_outline(f, at - Vector2(20, 0), s, HORIZONTAL_ALIGNMENT_CENTER, 40, 6, 2, Color(0, 0, 0, 0.7))
 	draw_string(f, at - Vector2(20, 0), s, HORIZONTAL_ALIGNMENT_CENTER, 40, 6, Color(1, 1, 1, 0.92))
+
+func _special_shown() -> bool:
+	return m != null and m.get("combat") != null and not m.combat.current().is_empty()
 
 func _near_thing() -> bool:
 	return m != null and m.has_method("nearest_interactable") and not (m.nearest_interactable() as Dictionary).is_empty()
