@@ -348,7 +348,7 @@ var pete_defeated_day: = -99
 var last_wordle: Node = null
 var gala_stage: = -1
 var gala_boss: Node = null
-var story: = {"beaten": [], "announced": [], "ending_seen": false, "attempts": 0 }
+var story: = {"beaten": [], "announced": [], "ending_seen": false, "attempts": 0, "cold_open": false }
 var arena_id: = "":
 	set(v):
 		arena_id = v
@@ -532,7 +532,7 @@ func _ready() -> void:
 	if _check_debug_hash():
 		return
 	if skip_title:
-		_after_world(func () -> void: new_game(false))
+		_after_world(func () -> void: new_game(false), 0)
 	else:
 		show_title()
 
@@ -640,34 +640,35 @@ func show_title() -> void:
 					if id2 == "yes":
 						_after_world(func () -> void:
 							in_title = false
-							new_game(true))
+							new_game(true), 0)
 					else:
 						show_title())
 		else:
 			_after_world(func () -> void:
 				in_title = false
-				new_game(true)), "title")
+				new_game(true), 0), "title")
 
-## Web: characters, portraits and music come in world.pck right after boot (scripts/extra_pack.gd). Starting
-## before it lands would mean an invisible Duff, so hold on a "Loading Omaha" card until it's mounted.
-## Everywhere else (and once it's in) this just runs cb.
-func _after_world(cb: Callable) -> void:
-	if ExtraPack.world_ready:
+## Web: the art comes in packs right after boot (scripts/extra_pack.gd). New Game needs only street.pck (need 0:
+## the cold open's street, Duff and the porch pirates); a saved game, the Fork, arenas and minigames need world.pck
+## too (need 1). Starting before the pack lands would mean an invisible Duff, so hold on a "Loading Omaha" card
+## until it's mounted. Back runs `back` (the title by default). Everywhere else (and once it's in) this just runs cb.
+func _after_world(cb: Callable, need: int = 1, back: Callable = show_title) -> void:
+	if ExtraPack.ready_for(need):
 		cb.call()
 		return
 	var c: = Card.new()
-	c.backdrop = "title"
+	c.backdrop = "title" if in_title else ""
 	c.heading = "Loading Omaha..."
 	c.lines = ["Unpacking the neighbors..."]
 	c.opts = [["back", "Back", KEY_1]]
 	c.chosen.connect(func (_id: String) -> void:
 		close_overlay()
-		show_title())
+		back.call())
 	open_overlay(c)
 	var tick: = func (tk: Callable) -> void:
 		if not is_instance_valid(c) or not c.is_inside_tree():
-			return   # backed out to the title
-		if ExtraPack.world_ready:
+			return   # backed out
+		if ExtraPack.ready_for(need):
 			close_overlay()
 			cb.call()
 			return
@@ -678,6 +679,14 @@ func _after_world(cb: Callable) -> void:
 		get_tree().create_timer(0.25).timeout.connect(tk.bind(tk))
 	get_tree().create_timer(0.25).timeout.connect(tick.bind(tick))
 
+## Web, right after a new game: world.pck may still be streaming in. The Fork, arenas, the gala and minigames
+## need it, so they wait on the loading card (Back just closes it). True = held; the caller returns.
+func _world_gate(cb: Callable) -> bool:
+	if ExtraPack.world_ready:
+		return false
+	_after_world(cb, 1, func () -> void: pass)
+	return true
+
 func new_game(write_save: bool = true) -> void:
 	from_dict({})
 	wordle_seed = randi()
@@ -685,12 +694,36 @@ func new_game(write_save: bool = true) -> void:
 	jen_text_daily()
 	errand_new_day()
 	daily_new_day()
-	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Amen.",
-		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
-		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. This first Monday it's prorated to $%d. {fork} (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))]])
+	cold_open()
 	if write_save:
 		save_game()
 	maybe_touch_tutorial()
+
+## Nov 13: a new game opens on a fight, not a rules dump. A porch pirate jogs at {partner}'s package; one line
+## says so, then the player has control. The rules come after he's down (or gone). On the web this plays on
+## street.pck alone while world.pck streams in (extra_pack.gd). story.cold_open marks it running, so a save made
+## mid-fight still gets the rules on Continue.
+const COLD_OPEN_FROM: = Vector2(196, 152)   # sidewalk under the Seen Cafe: on screen, a clear run at the porch
+func cold_open() -> void:
+	porch_pkg = true
+	porch_day = day_count
+	story["cold_open"] = true
+	var e: = spawn_enemy("pirate", COLD_OPEN_FROM)
+	e.pname = PIRATE_NAMES[0]
+	e.set_meta("cold_open", true)
+	toast_t = 0.0   # the morning's "*bzzt* texts" toast can wait; the phone badge still shows it
+	_say(["7 AM, day one. {partner}'s package is on the porch. A guy in a hoodie and sunglasses is jogging straight at it. Not today. %s to bonk him." % ("Tap A" if Cast.touch else "Space")])
+
+## The rules, after the cold open's pirate is down (won) or gone with the package.
+func cold_open_rules(won: bool) -> Array:
+	story["cold_open"] = false
+	var lines: Array = []
+	if not won and not porch_pkg:
+		lines.append("He's gone. With the package. Great start. {partner} is going to hear about this.")
+	lines.append("So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Amen.")
+	lines.append("{partner}'s inside on the couch, top-left house, and she's got that look." + (" Bring her that package." if won or porch_pkg else " She wants something. Probably a honey bun."))
+	lines.append("Every Monday, rent, bills and the family basics: $%d. This first Monday it's prorated to $%d. {fork} (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))])
+	return lines
 
 ## First new game on a phone: the three control cards, before the intro talk. Once per install.
 func maybe_touch_tutorial() -> void:
@@ -871,6 +904,8 @@ func load_game() -> bool:
 		return false
 	from_dict(d)
 	_say(["So where was I. Day %d, %s, %s." % [day_count, DAY_NAMES[day_i % 7], clock_text()], next_fact()])
+	if bool(story.get("cold_open", false)):
+		_say(cold_open_rules(false))
 	jen_text_daily()
 	_say(errand_new_day())
 	return true
@@ -974,6 +1009,8 @@ func _menu(heading: String, lines: Array, opts: Array, cb: Callable, backdrop: S
 	open_overlay(c)
 
 func _run_game(node: Node, cb: Callable) -> void:
+	if not node is SettingsScript and _world_gate(func () -> void: _run_game(node, cb)):
+		return
 	node.finished.connect(func (score: float, notes: Array) -> void:
 		close_overlay()
 		cb.call(node, score, notes))
@@ -2029,7 +2066,7 @@ func first_weekend() -> bool:
 	return day_count <= 3
 
 func start_shift() -> void:
-	if in_shift:
+	if in_shift or _world_gate(start_shift):
 		return
 	show_loading()
 	in_shift = true
@@ -2805,6 +2842,8 @@ func enemy_defeated(e: Node) -> void:
 		_say(lines)
 	elif e.has_meta("quest_porch"):
 		_say([msg, porch_quest_won()])
+	elif e.has_meta("cold_open"):
+		_say([msg] + cold_open_rules(true))
 	else:
 		_toast(msg)
 
@@ -2813,6 +2852,8 @@ func enemy_gone(e: Node) -> void:
 		_toast("Cheeto Chad clears the fence. He lives next door, genius. Knock again.")
 	if e.kind == "pirate" and str(e.loot) != "":
 		_toast("%s gets away with %s. He's gonna resell it on Marketplace as 'gently loved.'" % [e.display_name(), Cast.T(loot_name(str(e.loot)))])
+	if e.has_meta("cold_open"):
+		_say(cold_open_rules(false))
 	if e.kind == "scammer" and int(e.stolen) > 0:
 		_toast("Scammer gets away with $%d. Do I learn my lesson? I do not." % int(e.stolen))
 	e.remove_from_group("enemy")
@@ -3136,7 +3177,7 @@ func gala_new_day() -> Array:
 	return ["A gold envelope's under the door. THE ELITE GALA. {partner}'s already holding up the green dress. (P = phone: 'Take the limo' any night.)"]
 
 func start_gala(first: int = 0) -> void:
-	if not gala_unlocked or busy():
+	if not gala_unlocked or busy() or _world_gate(func () -> void: start_gala(first)):
 		return
 	clear_enemies()
 	location = "gala"
@@ -3316,7 +3357,7 @@ func _on_story_menu(choice: String, id: String) -> void:
 		start_story_fight(id)
 
 func start_story_fight(id: String) -> void:
-	if busy():
+	if busy() or _world_gate(func () -> void: start_story_fight(id)):
 		return
 	show_loading()
 	clear_enemies()
@@ -4217,7 +4258,7 @@ func pirate_snatch(e: Node, where: String) -> void:
 		return
 	e.loot = item
 	e.state = "flee"
-	e.st = 10.0
+	e.st = 16.0 if e.has_meta("cold_open") else 10.0   # a new player's first chase: room to catch him
 	e.say(PIRATE_TAUNTS[randi() % PIRATE_TAUNTS.size()])
 	player.carrying = int(inventory.get("honey buns", 0)) > 0
 	_toast("%s snatches %s! Oh hell no. I give chase." % [e.display_name(), Cast.T(loot_name(item))])
@@ -5041,7 +5082,7 @@ func _on_bounty_menu(id: String) -> void:
 	start_bounty(id)
 
 func start_bounty(id: String) -> void:
-	if busy():
+	if busy() or _world_gate(func () -> void: start_bounty(id)):
 		return
 	show_loading()
 	clear_enemies()
@@ -5141,7 +5182,7 @@ func waffle_menu() -> void:
 			start_waffle())
 
 func start_waffle() -> void:
-	if busy():
+	if busy() or _world_gate(func () -> void: start_waffle()):
 		return
 	show_loading()
 	clear_enemies()
@@ -5289,7 +5330,7 @@ func bet_menu() -> void:
 			start_bet(bet_today(), int(ch)))
 
 func start_bet(kind: String, stake: int) -> void:
-	if busy():
+	if busy() or _world_gate(func () -> void: start_bet(kind, stake)):
 		return
 	clear_enemies()
 	arena_id = "alley"
