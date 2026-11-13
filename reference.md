@@ -233,14 +233,14 @@ stay raw.
 ### 3.5 Combat (`combat.gd`, `player.gd`, `enemy.gd`, `projectile.gd`, `player_shot.gd`, `juice.gd`, `combat_fx.gd`, `combat_ui.gd`)
 - `player.gd`: `SPEED` 70, roll 0.32 s at 175 with 0.8 s i-frames, 3-hit combo, attack column frame. `ARMORS` apron/clogs/
   sleeves/coat/dad set the outfit sheet. `shoes` red (street) / black (work).
-- **Gear** (`gear.gd`, `gear_screen.gd`): weapons spatula, skillet, knife, tenderizer, flail, cleaver,
+- **Gear** (`gear.gd`, `gear_screen.gd`): weapons spatula (atk 1.25, was 1.0 before the Spatter cut), skillet, knife, tenderizer, flail, cleaver,
   golden_spatula; armor apron, clogs, sleeves, coat, dad, trust_fund. Upgrade level max 5 using scraps. Story wins
   grant pieces (`Gear.grant_piece`). The starter spatula passes special `"flip"` on every swing, so **flip is
   not a heavy hit**. Cleaver and Golden crits pass `"crit"`.
 - **Heat** (resource): `HEAT_BASE` 100 (+10 per HEAT point), regen 3/s, +5 per hit, +10 per finisher.
   **Demon Time** (R/D): unlocks at Lv 10 or after beating any story boss. ×1.5 damage, ×1.3 speed, drains 10/s, half-cost
   specials, then a crash (×0.7 speed for 4 s).
-- **Specials** (`SPECIALS`, unlocked by level): Spatter L1, Pinwheel L2, Julienne L3, Holler L4, Counter L5,
+- **Specials** (`SPECIALS`, unlocked by level): none at L1 (Searing Spatter cut Nov 13; S + swap buttons stay hidden until the first special), Pinwheel L2, Julienne L3, Holler L4, Counter L5,
   Brulee L6, Feast L7, Salamander L8 (hold to charge), Sous-Vide Snare L9, Tempura L10, Eighty-Six Execution L12 (100
   Heat, cinematic). Hash Brown Hurricane L1, but only after Earl's first defeat (`extra_unlocks`).
 - **Combat level ("Seniority Lv"):** `MAX_LEVEL` 20, `xp_to_next = 15 + 10*level`, `POINTS_PER_LEVEL` 3. XP comes from

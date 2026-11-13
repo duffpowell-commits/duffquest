@@ -599,8 +599,8 @@ func _spawn_raccoons() -> void:
 		rc.set_physics_process(location == "outside")
 		raccoons.append(rc)
 
-const TITLE_HELP_TOUCH: = ["Move: drag anywhere on the left half.  A: talk or use when someone's close, otherwise bonk (tap fast for a 3-hit combo).  B: dodge roll.  G: gear.  Phone: the phone icon up top.", " ", "S: special (hold to charge).  <>: swap special.  D: Demon Time.  Tap the top bar for money, bills and stats."]
-const TITLE_HELP: = ["Move: WASD / arrows / joystick.  Use: E or A.  Bonk: Space (or A), mash for a 3-hit combo.  Dodge roll: Shift or B.  Gear: I or G.  Phone: P or the phone icon.", " ", "Special: F or S (hold to charge).  Swap special: Q or <>.  Demon Time: R or D.  Spend stat points: T."]
+const TITLE_HELP_TOUCH: = ["Move: drag anywhere on the left half.  A: talk or use when someone's close, otherwise bonk (tap fast for a 3-hit combo).  B: dodge roll.  G: gear.  Phone: the phone icon up top.", " ", "S: special, from Seniority Lv 2 (hold to charge).  <>: swap special.  D: Demon Time.  Tap the top bar for money, bills and stats."]
+const TITLE_HELP: = ["Move: WASD / arrows / joystick.  Use: E or A.  Bonk: Space (or A), mash for a 3-hit combo.  Dodge roll: Shift or B.  Gear: I or G.  Phone: P or the phone icon.", " ", "Special (from Lv 2): F or S (hold to charge).  Swap special: Q or <>.  Demon Time: R or D.  Spend stat points: T."]
 
 func show_title() -> void:
 	in_title = true
