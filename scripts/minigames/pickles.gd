@@ -123,6 +123,8 @@ func _draw_game() -> void:
 			draw_rect(Rect2(x + 4, 74, 46, 26), bins[i][1])
 		if phase == "bread" and step == i:
 			draw_rect(Rect2(x - 2, 68, 58, 38), Color("#c0d890"), false, 1.0)
+		var need: String = NEEDS[STEPS[i]]
+		tag(Vector2(x, 113), "%s hand" % need.to_upper(), 6, Color("#f2c66a") if need == "wet" else UiStyle.CREAM, HORIZONTAL_ALIGNMENT_CENTER, 54)
 	txt(Vector2(8, 28), "Pickles battered: %d / %d" % [battered, total], 8)
 	txt(Vector2(8, 40), "Current pickle: %s" % (["needs flour", "needs egg wash", "needs breading", "ready for the basket"][step] if phase == "bread" else "frying"), 8, Color("#c0d890"))
 
