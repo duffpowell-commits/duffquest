@@ -324,10 +324,10 @@ func _buy(id: String) -> void:
 
 func _draw_game() -> void:
 
-	txt(Vector2(90, 24), "PHARMACY  (drop-off / pick-up / despair)", 6, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, 140)
+	tag(Vector2(4, 74), "PHARMACY  (drop-off / pick-up / despair)", 6)
 	_person(Vector2(160, 36), Color("#ffffff"), Color("#c68642"), true)
-	txt(Vector2(236, 22), "{pharmacist}", 6, Color("#7a2a2a"))
-	txt(Vector2(4, 84), "FORMULA / ENSURE", 6, Color(0, 0, 0, 0.6))
+	tag(Vector2(236, 22), "{pharmacist}", 6, Color("#ffb0a0"))
+	tag(Vector2(4, 84), "FORMULA / ENSURE", 6)
 	if state == "aisle":
 		draw_rect(Rect2(0, 12, W, 140), Color(0.95, 0.94, 0.9, 0.97))
 		txt(Vector2(6, 26), "Aisle 3: baby formula, Ensure, and one (1) dusty foot spa.   Cash $%d" % (m.money if m else 0), 7, Color(0.1, 0.1, 0.1))
@@ -342,15 +342,15 @@ func _draw_game() -> void:
 				_person(p, [Color("#5a7ab0"), Color("#9a5a8a"), Color("#6a8a4a"), Color("#b08a3a")][i % 4], Color("#dcae8e"), false)
 			var dp: = Vector2(160, 60 + mini(ahead, 6) * 9)
 			if ahead > 6:
-				txt(Vector2(172, 100), "+%d more" % (ahead - 6), 6, Color(0.2, 0.2, 0.2))
+				tag(Vector2(172, 100), "+%d more" % (ahead - 6), 6)
 			_person(dp, Color("#fbf6ec"), Color("#f2d2b4"), false)
-			txt(dp + Vector2(8, 2), "you", 6, Color(0.2, 0.2, 0.6))
+			tag(dp + Vector2(8, 2), "you", 6, Color("#a8d8ff"))
 			if cut_on > 0.0:
 				var cp: = Vector2(184, 70)
 				_person(cp, Color("#b03030"), Color("#dcae8e"), false)
 				txt(cp + Vector2(-2, -12), "!", 12, Color("#c8573a"))
 				bar(Rect2(200, 60, 60, 4), cut_on / CUT_WINDOW, Color("#ff7a3a"))
-			txt(Vector2(236, 64), "Ahead of you: %d" % ahead, 7, Color(0.1, 0.1, 0.1))
+			tag(Vector2(236, 64), "Ahead of you: %d" % ahead, 7)
 			bar(Rect2(236, 68, 76, 4), 1.0 - serve_t / SERVE_T, Color("#4e7a3a"))
 		"counter", "pay", "done":
 			_person(Vector2(160, 60), Color("#fbf6ec"), Color("#f2d2b4"), false)
@@ -361,12 +361,12 @@ func _draw_game() -> void:
 		"wait":
 			draw_rect(Rect2(20, 92, 40, 10), Color("#4a6a9a"))
 			_person(Vector2(40, 88), Color("#fbf6ec"), Color("#f2d2b4"), false)
-			txt(Vector2(10, 108), "the chair", 6, Color(0, 0, 0, 0.5))
+			tag(Vector2(10, 108), "the chair", 6)
 			_wait_meter(Rect2(90, 70, 220, 6))
 		"phone":
 			_person(Vector2(160, 62), Color("#fbf6ec"), Color("#f2d2b4"), false)
 			draw_rect(Rect2(166, 52, 4, 8), Color("#2b2218"))
-			txt(Vector2(236, 64), "Menu %d/%d" % [tree_i + 1, tree.size()], 7, Color(0.1, 0.1, 0.1))
+			tag(Vector2(236, 64), "Menu %d/%d" % [tree_i + 1, tree.size()], 7)
 			if hold_t > 0.0:
 				txt(Vector2(150, 80), "~ hold music ~", 9, Color("#3a3a8a"))
 				bar(Rect2(200, 70, 100, 4), 1.0 - hold_t / 4.0, Color("#2e5aa8"))

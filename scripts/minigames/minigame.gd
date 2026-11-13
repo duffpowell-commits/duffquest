@@ -228,6 +228,10 @@ func ui_point(p: Vector2) -> Vector2:
 func txt(p: Vector2, s: String, size: int = 8, col: Color = Color.WHITE, align: int = HORIZONTAL_ALIGNMENT_LEFT, width: float = -1.0) -> void:
 	draw_string(font, p, Cast.T(s), align as HorizontalAlignment, width, size, col)
 
+## Text on a dark plate (UiStyle.tag), for labels that sit on top of painted backdrops.
+func tag(p: Vector2, s: String, size: int = 7, col: Color = UiStyle.CREAM, align: int = HORIZONTAL_ALIGNMENT_LEFT, width: float = -1.0) -> void:
+	UiStyle.tag(self, p, Cast.T(s), size, col, width, align as HorizontalAlignment, 1.0, font)
+
 func mtxt(p: Vector2, s: String, width: float, size: int = 8, col: Color = Color.WHITE, max_lines: int = -1) -> void:
 	draw_multiline_string(font, p, Cast.T(s), HORIZONTAL_ALIGNMENT_LEFT, width, size, max_lines, col)
 
