@@ -49,6 +49,7 @@ const CombatUI: = preload("res://scripts/combat_ui.gd")
 const Life: = preload("res://scripts/life.gd")
 const Moods: = preload("res://scripts/moods.gd")
 const Mornings: = preload("res://scripts/mornings.gd")
+const Zebra: = preload("res://scripts/zebra.gd")
 const SymphonyScript: = preload("res://scripts/minigames/symphony.gd")
 const AkaruiScript: = preload("res://scripts/minigames/akarui.gd")
 const PlasmaScript: = preload("res://scripts/minigames/plasma.gd")
@@ -300,6 +301,7 @@ var glow_day: = -1
 var plasma: Dictionary = Life.new_plasma()
 var mood: Dictionary = Moods.new_mood()
 var couch_night: = false
+var zebra_seen: = false   # "The Zebra" diagnosis story played (zebra.gd)
 var morning: Dictionary = Mornings.new_state()   # Madison's slow / migraine / good mornings (mornings.gd)
 var quest_wait: = 0.0
 var restless_seen: Dictionary = {}
@@ -715,7 +717,7 @@ func to_dict() -> Dictionary:
 		"errand": errand.duplicate(true), "errand_stats": errand_stats.duplicate(),
 		"buffs": buffs.duplicate(true), "buff_days": buff_days.duplicate(), "meal_day": meal_day, "cha_line_day": cha_line_day,
 		"date_invite": date_invite.duplicate(), "date_stats": date_stats.duplicate(), "glow_day": glow_day,
-		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "morning": morning.duplicate(), "routine_played": routine_played, "quest_wait": quest_wait,
+		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "morning": morning.duplicate(), "zebra_seen": zebra_seen, "routine_played": routine_played, "quest_wait": quest_wait,
 		"bills": bills.duplicate(true), "owed": owed.duplicate(true), "plans": plans.duplicate(true), "rent_bump": rent_bump,
 		"formula_spike_day": formula_spike_day, "event_days": event_days.duplicate(), "phone_cracked": phone_cracked, "bills_paid": bills_paid,
 		"has_car": has_car, "bus_pass_until": bus_pass_until, "bus_rides": bus_rides,
@@ -799,6 +801,7 @@ func from_dict(d: Dictionary) -> void:
 	mood = Moods.clean_mood(d.get("mood", {}))
 	couch_night = bool(d.get("couch_night", false))
 	morning = Mornings.clean(d.get("morning", {}))
+	zebra_seen = bool(d.get("zebra_seen", false))
 	routine_played = bool(d.get("routine_played", int(d.get("day_count", 1)) > 1))   # old saves: past night one
 	quest_wait = float(d.get("quest_wait", 0.0))
 	bills = Life.clean_list(d.get("bills", []), ["day", "due"])
@@ -1142,7 +1145,7 @@ func interactables() -> Array:
 			{"id": "mail", "pos": MAIL_PT, "r": 12.0, "label": "Mail table (%d)" % bills.size() if not bills.is_empty() else "Mail table" },
 			{"id": "bowls", "pos": BOWLS_PT, "r": 16.0, "label": "Feed the cats" },
 			{"id": "door_out", "pos": INT_DOOR_PT, "r": 16.0, "label": "Go outside" },
-		]
+		] + zebra_spot()
 	return [
 		{"id": "home_door", "pos": HOME_DOOR, "r": 16.0, "label": "Go inside" },
 		{"id": "shop", "pos": SHOP_PT, "r": 16.0, "label": "Shop at Kwik-N-Go" },
@@ -1203,6 +1206,7 @@ func interact(id: String) -> void:
 		"kitchen": kitchen()
 		"couch": couch_time()
 		"backwalk": start_backwalk()
+		"zebra": zebra_story()
 		"mirror": mirror_menu()
 		"mail":
 			if not quest_talk("mail"):
@@ -2479,6 +2483,7 @@ func _draw_inside() -> void:
 		draw_rect(Rect2(BOWLS_R.position + Vector2(12, 2), Vector2(4, 2)), Color("#8a5a2a"))
 
 	Art.image(self, "freya_peek", Vector2(68, 517))
+	_draw_zebras()
 
 	var mp: = BED_HEAD if madison_in_bed() else madison_spot()
 	if madison_in_bed():
@@ -5630,3 +5635,55 @@ func dev_morning(kind: String) -> void:
 	morning["day"] = day_count
 	morning["kind"] = kind
 	clock = 450.0
+
+## ---- "The Zebra" (zebra.gd): her diagnosis story, told at the zebra plush on the shelf over the bed ----
+const ZEBRA_PLUSH: = Vector2(39, 465)    # bottom-left of the plush, on the wall shelf over the bed (next to the teddy)
+const ZEBRA_PIC: = Vector2(234, 455)     # framed zebra print on the wall by the shower
+const ZEBRA_PT: = Vector2(46, 532)       # stand at the foot of the bed, under the shelf
+
+func zebra_spot() -> Array:
+	if not Zebra.available(day_count, zebra_seen):
+		return []
+	return [{"id": "zebra", "pos": ZEBRA_PT, "r": 14.0, "label": "{partner}'s zebra" }]
+
+func zebra_story() -> void:
+	if not Zebra.available(day_count, zebra_seen):
+		return
+	zebra_seen = true
+	gain_happy(Zebra.HAPPY)
+	var ls: Array = Zebra.LINES.duplicate()
+	ls[-1] = str(ls[-1]) + " (+%d Happiness)" % int(Zebra.HAPPY)
+	_say(ls)
+	save_game()
+
+## Her zebras: a plush on the shelf over the bed (one stripe crooked) and a framed print. Chunky pixels to sit in the painted room.
+func _draw_zebras() -> void:
+	var ink: = Color("#1c1a22")
+	var hide: = Color("#f4f0e6")
+	# framed print: the same zebra on cream, in a wood frame
+	draw_rect(Rect2(ZEBRA_PIC, Vector2(17, 12)), Color("#6b3f22"))
+	draw_rect(Rect2(ZEBRA_PIC + Vector2(1, 1), Vector2(15, 10)), Color("#e8d8b0"))
+	_draw_pix(ZEBRA_PIC + Vector2(1, 1), ZEBRA_ART, {"W": Color("#fbf8f0"), "k": ink, "p": Color("#c98a8a")})
+	# plush, sitting on the shelf: W hide, k stripes/mane/hooves, p nose. Column 7's stripe is the crooked one.
+	_draw_pix(ZEBRA_PLUSH - Vector2(0, ZEBRA_ART.size()), ZEBRA_ART, {"W": hide, "k": ink, "p": Color("#c98a8a")})
+
+const ZEBRA_ART: = [
+	"...........kk..",
+	"..........kWWk.",
+	".........kWkWWp",
+	"........kWWWWW.",
+	".kWWkWWkWWkW...",
+	"kWWkWWkWWkWW...",
+	".WWkWWkWWkWW...",
+	".WWkWWWkWWWW...",
+	"..W.W....W.W...",
+	"..k.k....k.k...",
+]
+
+func _draw_pix(top_left: Vector2, rows: Array, pal: Dictionary) -> void:
+	for y in rows.size():
+		var row: String = rows[y]
+		for x in row.length():
+			var ch: = row[x]
+			if pal.has(ch):
+				draw_rect(Rect2(top_left + Vector2(x, y), Vector2.ONE), pal[ch])
