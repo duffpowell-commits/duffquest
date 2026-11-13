@@ -163,7 +163,7 @@ stay raw.
   Off-limits (Duff): the mess of her stuff, and that she's on disability.
 - **The Zebra** (`zebra.gd`, flag `main.zebra_seen`, save key `zebra_seen`): her diagnosis story, lines approved by
   Duff (hypermobile joint syndrome as a kid, Ehlers-Danlos named in 2020, the Beighton test). She loves zebras: a plush
-  on the shelf over the bed (`ZEBRA_PLUSH`) and a framed print by the shower (`ZEBRA_PIC`), drawn from `ZEBRA_ART`.
+  on the shelf over the bed (`ZEBRA_PLUSH`) and a framed print by the shower (`ZEBRA_PIC`), painted art `home_zebra_plush` / `home_zebra_print` (Canva, keyed; plush drawn at 0.75 so it clears the HUD).
   Day 4+, stand at the foot of the bed (`ZEBRA_PT`) once: 8 lines, +5. Her story lines always use her happy face
   (`Zebra.warm`). Renders: `arena_shot` `zebra|zebra_talk`.
 - **Madison's moods** (`moods.gd`): fussy days (`FUSSY_CHANCE` 0.15, 3-day gap, she swaps the request mid-quest),

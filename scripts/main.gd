@@ -5638,7 +5638,7 @@ func dev_morning(kind: String) -> void:
 
 ## ---- "The Zebra" (zebra.gd): her diagnosis story, told at the zebra plush on the shelf over the bed ----
 const ZEBRA_PLUSH: = Vector2(39, 465)    # bottom-left of the plush, on the wall shelf over the bed (next to the teddy)
-const ZEBRA_PIC: = Vector2(234, 455)     # framed zebra print on the wall by the shower
+const ZEBRA_PIC: = Vector2(238, 454)     # top-left of the framed zebra print on the wall by the shower
 const ZEBRA_PT: = Vector2(46, 532)       # stand at the foot of the bed, under the shelf
 
 func zebra_spot() -> Array:
@@ -5656,34 +5656,7 @@ func zebra_story() -> void:
 	_say(ls)
 	save_game()
 
-## Her zebras: a plush on the shelf over the bed (one stripe crooked) and a framed print. Chunky pixels to sit in the painted room.
+## Her zebras: a painted plush on the shelf over the bed and a framed print by the shower (art: home_zebra_plush / _print).
 func _draw_zebras() -> void:
-	var ink: = Color("#1c1a22")
-	var hide: = Color("#f4f0e6")
-	# framed print: the same zebra on cream, in a wood frame
-	draw_rect(Rect2(ZEBRA_PIC, Vector2(17, 12)), Color("#6b3f22"))
-	draw_rect(Rect2(ZEBRA_PIC + Vector2(1, 1), Vector2(15, 10)), Color("#e8d8b0"))
-	_draw_pix(ZEBRA_PIC + Vector2(1, 1), ZEBRA_ART, {"W": Color("#fbf8f0"), "k": ink, "p": Color("#c98a8a")})
-	# plush, sitting on the shelf: W hide, k stripes/mane/hooves, p nose. Column 7's stripe is the crooked one.
-	_draw_pix(ZEBRA_PLUSH - Vector2(0, ZEBRA_ART.size()), ZEBRA_ART, {"W": hide, "k": ink, "p": Color("#c98a8a")})
-
-const ZEBRA_ART: = [
-	"...........kk..",
-	"..........kWWk.",
-	".........kWkWWp",
-	"........kWWWWW.",
-	".kWWkWWkWWkW...",
-	"kWWkWWkWWkWW...",
-	".WWkWWkWWkWW...",
-	".WWkWWWkWWWW...",
-	"..W.W....W.W...",
-	"..k.k....k.k...",
-]
-
-func _draw_pix(top_left: Vector2, rows: Array, pal: Dictionary) -> void:
-	for y in rows.size():
-		var row: String = rows[y]
-		for x in row.length():
-			var ch: = row[x]
-			if pal.has(ch):
-				draw_rect(Rect2(top_left + Vector2(x, y), Vector2.ONE), pal[ch])
+	Art.image(self, "home_zebra_print", ZEBRA_PIC)
+	Art.image(self, "home_zebra_plush", ZEBRA_PLUSH, Color.WHITE, 0.75)  # 0.75: its head clears the HUD bar
