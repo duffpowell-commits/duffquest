@@ -13,6 +13,9 @@ func check(name: String, ok: bool) -> void:
 		fails += 1
 
 func _init() -> void:
+	# web: walls come from baked rects (world.pck carries the art); they must match the textures
+	check("data/art_rects.json matches sf_/sd_ art (re-run tools/bake_art_rects.gd)",
+		FileAccess.get_file_as_string("res://data/art_rects.json") == JSON.stringify(preload("res://tools/bake_art_rects.gd").measure(), "\t", true) + "\n")
 	# full shift: quiz first, same 8 stations, order changes across shifts
 	var orders: = {}
 	for i in 30:

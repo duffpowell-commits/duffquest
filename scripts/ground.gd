@@ -54,7 +54,7 @@ static func _build() -> Texture2D:
 			grid.append(l)
 	var rows: = grid.size()
 	var ncols: = (grid[0] as String).length()
-	var img: = Image.create((ncols - 1) * tile, (rows - 1) * tile, false, Image.FORMAT_RGBA8)
+	var img: = Image.create_empty((ncols - 1) * tile, (rows - 1) * tile, false, Image.FORMAT_RGBA8)
 	warnings.clear()
 	var rng: = RandomNumberGenerator.new()
 	rng.seed = 1890

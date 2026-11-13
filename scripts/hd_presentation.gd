@@ -31,16 +31,18 @@ func _ready() -> void:
  grade.name = "WarmWorldGrade"
  grade.color = Color(1.0, 0.98, 0.94, 1.0)
  add_child(grade)
- var env := WorldEnvironment.new()
- env.name = "HDEnvironment"
- env.environment = Environment.new()
  # Godot 4.4 Web requires GL Compatibility and cannot render HDR 2D.
  # The screen shader supplies gentle LDR bloom there, instead of silently failing HDR glow.
- if RenderingServer.get_current_rendering_method() != "gl_compatibility":
+ # Built by name: the trimmed web engine (tools/web_template) has no 3D classes, WorldEnvironment included.
+ if RenderingServer.get_current_rendering_method() != "gl_compatibility" and ClassDB.class_exists("WorldEnvironment"):
   get_viewport().use_hdr_2d = true
-  env.environment.glow_enabled = true
-  env.environment.glow_intensity = 0.15
- add_child(env)
+  var env: Node = ClassDB.instantiate("WorldEnvironment")
+  env.name = "HDEnvironment"
+  var e: Resource = ClassDB.instantiate("Environment")
+  e.set("glow_enabled", true)
+  e.set("glow_intensity", 0.15)
+  env.set("environment", e)
+  add_child(env)
  post = CanvasLayer.new()
  post.name = "WorldOnlyPostProcess"
  post.layer = 0
@@ -54,7 +56,7 @@ func _ready() -> void:
  rect.material = mat
  post.add_child(rect)
  get_viewport().size_changed.connect(func() -> void: rect.size = get_viewport_rect().size)
- var image := Image.create(96, 96, false, Image.FORMAT_RGBA8)
+ var image := Image.create_empty(96, 96, false, Image.FORMAT_RGBA8)
  for y in 96:
   for x in 96:
    var d := Vector2(x-48,y-48).length()/48.0
