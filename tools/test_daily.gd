@@ -72,6 +72,7 @@ func _init() -> void:
 	_heard_checks()
 	_taunt_variety_checks()
 	_side_quest_checks(main)
+	_spatter_cut_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
@@ -417,6 +418,24 @@ const Knockout: = preload("res://scripts/knockout.gd")
 const Combat: = preload("res://scripts/combat.gd")
 const UiStyle: = preload("res://scripts/ui_style.gd")
 const Cast: = preload("res://scripts/cast.gd")
+
+## Searing Spatter was cut (Nov 13). Old saves stored the special as an index with Spatter first.
+func _spatter_cut_checks() -> void:
+	var c: Node = Combat.new()
+	c.from_dict({})
+	check("no special at Lv 1", c.current().is_empty())
+	c.from_dict({"level": 5, "selected": 2})          # old list: spatter, pinwheel, julienne, ...
+	check("old save index 2 still means Julienne", str(c.current().get("id", "")) == "julienne")
+	c.from_dict({"level": 5, "selected": 0})          # had Spatter picked
+	check("old Spatter pick falls back to Pinwheel", str(c.current().get("id", "")) == "pinwheel")
+	c.from_dict({"level": 3, "selected": 1, "extra_unlocks": ["hashbrown"]})   # old: spatter, pinwheel, julienne, hashbrown
+	check("old save index 1 still means Pinwheel", str(c.current().get("id", "")) == "pinwheel")
+	c.from_dict({"level": 3, "selected": 3, "extra_unlocks": ["hashbrown"]})
+	check("old save index 3 still means Hash Brown", str(c.current().get("id", "")) == "hashbrown")
+	var d: Dictionary = c.to_dict()
+	c.from_dict(JSON.parse_string(JSON.stringify(d)))
+	check("special pick survives save/load by id", str(c.current().get("id", "")) == "hashbrown")
+	c.free()
 
 func _ko_sfx_checks() -> void:
 	var missing: = []
