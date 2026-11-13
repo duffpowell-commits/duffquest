@@ -5,6 +5,15 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Label plates + confusion fixes (PRs #48, #49).** New `UiStyle.tag()` (text on a dark ink plate);
+  minigames call `tag()`. Overworld labels (house names, CLEARED, NOW HIRING) and every pharmacy label use it.
+  Madison's sigh and the cats' food bubbles hide while an interact prompt is up. CLOSED plaques only within 110 px
+  of Duff (`CLOSED_NEAR`). Garnish drizzle guide is visible (dashed cream line, ringed dots). Plasma labels the bag,
+  stress ball and flow goal. Temp check shows the safe temp from round 2. Station cards explain 86'd / COMP IT /
+  GLOVES+SANITIZE; pickles tags DRY/WET hand under each bowl. Renders: `docs/renders/label_plates_before_after.png`,
+  `docs/renders/confusion_fixes_before_after.png`. Still open from the audit: pharmacy clone queue, errand drawer
+  rebuild, symphony bus backdrop, sandwich toast over the ticket card, beat indicators far from the action
+  (backwalk/concert/prep), Show & Tell mosaic unexplained, G button + HUD bars unlabeled (waits on the specials work).
 - **2026-11-13** **Hy-Whee shopping floor redone.** The store is now top-down with the four aisles running
   sideways, painted exactly on the shelf collision rects (`bg_grocery`, built by `tools/grocery_floor_compose.py`
   from the old backdrop's end-cap goods, wall and sign). The repeated icon strips are gone: each list item is one
