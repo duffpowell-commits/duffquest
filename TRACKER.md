@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Legal pass before ads.** Settings > "Credits & legal" (`scripts/minigames/credits.gd`): parody/fiction
+  notice, how it was made, privacy, OFL font notices, Godot's MIT license + third-party notices + license texts (from
+  `Engine.get_*` at runtime). End credits carry a short notice. `docs/legal/PRIVACY.md` (collects nothing) and
+  `docs/legal/RISK_AUDIT.md` (ranked risks: Twisted Fork + Brittany's ranch quest, Wordle name, exes, consent,
+  Walgrumps sign, Hy-Vee slogan, music provenance). Renames wait on Duff's yes. UI audit has `credits` shots.
 - **2026-11-13** **Label plates + confusion fixes (PRs #48, #49).** New `UiStyle.tag()` (text on a dark ink plate);
   minigames call `tag()`. Overworld labels (house names, CLEARED, NOW HIRING) and every pharmacy label use it.
   Madison's sigh and the cats' food bubbles hide while an interact prompt is up. CLOSED plaques only within 110 px
