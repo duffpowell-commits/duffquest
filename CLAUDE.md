@@ -73,6 +73,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `python3 tools/grocery_floor_compose.py <old bg_grocery from git 88c80a8> assets/art/bg_grocery.png`. Move a shelf
   in grocery.gd -> re-run it. Items sit on the shelf top (`SPOTS` y = shelf y - 3), grabbed from the lane above.
 
+- **Combat (Nov 13):** Searing Spatter cut; S + swap hide until the first special (Pinwheel Lv 2). Duff said combat
+  was easy: `main.DMG_TAKEN` 1.25, story exes +20% HP (`boss.STORY_HP_MULT`, Willnot timer 250 s), night spawn cap +3.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).

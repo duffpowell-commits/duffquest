@@ -7,7 +7,8 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 - **2026-11-13** **Searing Spatter cut (Duff: "unnecessary").** No special at Lv 1 now: the S and swap buttons
   stay hidden until Pinwheel unlocks at Lv 2 (the level-up toast says to tap S). Spatula stays at 1.0
-  (Duff: combat is too easy). Saves keep their picked special: `combat.to_dict` stores `selected_id`, and old index-only
+  (Duff: combat is too easy). Harder fights: `main.DMG_TAKEN` 1.25 on every hit Duff takes, story exes
+  +20% HP (`boss.STORY_HP_MULT`, Willnot's timer 210 -> 250 s to match), night spawn cap +3 (was +2). Saves keep their picked special: `combat.to_dict` stores `selected_id`, and old index-only
   saves are remapped through `LEGACY_ORDER`. test_daily checks the remap. Render: `docs/renders/touch_lv1_no_special.png`.
 
 - **2026-11-13** **Hy-Whee shopping floor redone.** The store is now top-down with the four aisles running
