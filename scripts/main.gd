@@ -56,6 +56,7 @@ const BlackheadScript: = preload("res://scripts/minigames/blackheads.gd")
 const PharmacyScript: = preload("res://scripts/minigames/pharmacy.gd")
 const GroceryScript: = preload("res://scripts/minigames/grocery.gd")
 const SettingsScript: = preload("res://scripts/minigames/settings.gd")
+const CreditsScript: = preload("res://scripts/minigames/credits.gd")
 const ShowTellScript: = preload("res://scripts/minigames/show_tell.gd")
 
 const DAY_NAMES: = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
@@ -1841,10 +1842,19 @@ func open_settings() -> void:
 	g.audio = audio
 	g.dev = dev_tools_on() and not was_title
 	_run_game(g, func (n: Node, _s: float, _x: Array) -> void:
-		if was_title:
+		if str(n.get("action")) == "credits":
+			open_credits(was_title)
+		elif was_title:
 			show_title()
 		elif str(n.get("action")) == "dev_quests":
 			dev_quest_menu())
+
+## Settings > "Credits & legal" (credits.gd): Back returns to Settings (and from there to the title, if
+## that's where Settings was opened).
+func open_credits(from_title: bool = false) -> void:
+	_run_game(CreditsScript.new(), func (_n: Node, _s: float, _x: Array) -> void:
+		in_title = from_title
+		open_settings())
 
 ## Dev tools exist only in debug builds (running from the Godot editor, phone or desktop). Export
 ## builds (itch, the dev APK release preset) never show them.
