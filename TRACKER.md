@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-13** **Fix: web build had no sprites.** itch serves the packs gzip-encoded; the browser unzips them and
+  Godot's HTTPRequest tried to unzip again, so world.pck failed 3 times and the game started with no art.
+  `accept_gzip = false`, world.pck now retries forever behind the loading card instead of giving up, and
+  `tools/web_boot_test.py` serves the packs gzip-encoded so this is caught next time.
 - **2026-11-13** **Web boot under 10 s.** Title screen on throttled 4G: 19.9 s -> 9.3 s. The first download is now a
   1.8 MB core pack plus a trimmed 2D-only engine (7.2 MB gzipped, was 9.3). Characters, portraits, music, storefronts
   and props moved to `world.pck`, fetched right after boot; Continue/New Game show a "Loading Omaha..." card until
