@@ -125,8 +125,11 @@ func load_settings() -> void:
 	music_vol = clampf(float(d.get("music", 0.7)), 0.0, 1.0)
 	sfx_vol = clampf(float(d.get("sfx", 0.8)), 0.0, 1.0)
 	muted = bool(d.get("mute", false))
-	CastScript.clean = bool(d.get("clean", false))
-	gore = bool(d.get("gore", true))
+	# Web portals (CrazyGames etc.) are PEGI 12: CI marks that build with window.DQ_PORTAL, and new players
+	# start with clean language on and cartoon gore off. Both stay switchable in Settings.
+	var portal: = OS.has_feature("web") and str(JavaScriptBridge.eval("window.DQ_PORTAL ? 1 : 0", true)) == "1"
+	CastScript.clean = bool(d.get("clean", portal))
+	gore = bool(d.get("gore", not portal))
 	JuiceScript.shake_on = bool(d.get("screen_shake", true))
 	apply()
 
