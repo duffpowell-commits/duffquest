@@ -18,8 +18,6 @@ const CRASH_SPEED: = 0.7
 const DEMON_UNLOCK_LEVEL: = 10
 
 const SPECIALS: = [
-	{"id": "spatter", "name": "Searing Spatter", "short": "Spatter", "lvl": 1, "cost": 15.0,
-		"desc": "Flick three drops of fryer grease. Ranged." },
 	{"id": "pinwheel", "name": "Platter Pinwheel", "short": "Pinwheel", "lvl": 2, "cost": 20.0,
 		"desc": "A plate spins out and comes back. Hits both ways." },
 	{"id": "julienne", "name": "Julienne Jamboree", "short": "Julienne", "lvl": 3, "cost": 25.0,
@@ -43,6 +41,12 @@ const SPECIALS: = [
 	{"id": "hashbrown", "name": "Hash Brown Hurricane", "short": "Hash Brown", "lvl": 1, "cost": 30.0, "unlock": "hashbrown",
 		"desc": "Scattered (ring of shreds), smothered (slows them), covered (second ring). Earned at Waffle Haus." },
 ]
+
+## Special order before Searing Spatter was cut (Nov 13). Old saves stored `selected` as an index into the
+## unlocked list built from this order; from_dict maps it to an id. New saves store "selected_id".
+const LEGACY_ORDER: = [["spatter", 1, ""], ["pinwheel", 2, ""], ["julienne", 3, ""], ["holler", 4, ""], ["counter", 5, ""],
+	["brulee", 6, ""], ["feast", 7, ""], ["salamander", 8, ""], ["snare", 9, ""], ["tempura", 10, ""], ["eightysix", 12, ""],
+	["hashbrown", 1, "hashbrown"]]
 
 const XP: = {
 	"scammer": 5, "karen": 8, "karen_buddy": 4, "hoa": 12, "hustler": 3, "pete": 50, "drone": 3, "butler": 4,
@@ -93,7 +97,7 @@ func _ready() -> void:
 
 func to_dict() -> Dictionary:
 	return {"level": level, "xp": xp, "points": points, "stats": stats.duplicate(), "heat": heat,
-		"selected": selected, "demon_unlocked": demon_unlocked, "extra_unlocks": extra_unlocks.duplicate() }
+		"selected": selected, "selected_id": str(current().get("id", "")), "demon_unlocked": demon_unlocked, "extra_unlocks": extra_unlocks.duplicate() }
 
 func from_dict(d) -> void:
 	if typeof(d) != TYPE_DICTIONARY:
@@ -106,11 +110,29 @@ func from_dict(d) -> void:
 		for k in stats:
 			stats[k] = maxi(0, int(s.get(k, 0)))
 	heat = clampf(float(d.get("heat", 50.0)), 0.0, heat_max())
-	selected = int(d.get("selected", 0))
 	demon_unlocked = bool(d.get("demon_unlocked", false)) or level >= DEMON_UNLOCK_LEVEL
 	var xu = d.get("extra_unlocks", [])
 	extra_unlocks = (xu as Array).duplicate() if typeof(xu) == TYPE_ARRAY else []
-	_fix_selected()
+	var sid: = str(d.get("selected_id", ""))
+	if sid == "":
+		sid = _legacy_id(int(d.get("selected", 0)))
+	selected = _index_of(sid)
+
+## Old saves: `selected` indexed the unlocked list in LEGACY_ORDER (Spatter first).
+func _legacy_id(idx: int) -> String:
+	var u: Array = []
+	for row in LEGACY_ORDER:
+		if level >= int(row[1]) and (str(row[2]) == "" or extra_unlocks.has(str(row[2]))):
+			u.append(str(row[0]))
+	return str(u[idx]) if idx >= 0 and idx < u.size() else ""
+
+## Index of a special in unlocked(); falls back to the first one (Spatter and unknown ids land there).
+func _index_of(id: String) -> int:
+	var u: = unlocked()
+	for i in u.size():
+		if str(u[i]["id"]) == id:
+			return i
+	return 0
 
 func reset() -> void:
 	from_dict({})
@@ -281,6 +303,8 @@ func _level_up() -> void:
 	for s in SPECIALS:
 		if int(s["lvl"]) == level:
 			msg += " NEW MOVE: %s." % s["name"]
+			if unlocked().size() == 1:
+				msg += " Tap S (or press F) to use it. Costs Heat."
 	if level == DEMON_UNLOCK_LEVEL and not demon_unlocked:
 		demon_unlocked = true
 		msg += " Something in me wakes up at 2am... DEMON TIME unlocked (full Heat, press R / D)."
@@ -354,7 +378,6 @@ func special_pressed() -> void:
 			fx.text(m.player.global_position + Vector2(0, -24), "Need %d Heat" % int(cost_of(sp)), Color("#ff8060"))
 		return
 	match str(sp["id"]):
-		"spatter": _spatter(sp)
 		"pinwheel": _pinwheel(sp)
 		"holler": _holler(sp)
 		"counter": _counter(sp)
@@ -427,15 +450,6 @@ func _shot(kind: String, pos: Vector2, vel: Vector2, dmg: float) -> Node2D:
 	s.global_position = pos
 	m.add_child(s)
 	return s
-
-func _spatter(sp: Dictionary) -> void:
-	_pay(sp)
-	var p: Node = m.player
-	var f: Vector2 = p.facing.normalized()
-	for a in [-0.22, 0.0, 0.22]:
-		_shot("grease", p.global_position + f * 8.0, f.rotated(a) * 170.0, _atk() * 1.0)
-	AudioScript.sfx("fryer", 1.4)
-	p.swing_t = 0.12
 
 func _hashbrown(sp: Dictionary) -> void:
 	_pay(sp)

@@ -128,7 +128,7 @@ func _draw_panel(f: Font) -> void:
 	var sname: String = sp.get("short", "") if not sp.is_empty() else ""
 	var cost: = int(c.cost_of(sp)) if not sp.is_empty() else 0
 	var ready: bool = not sp.is_empty() and c.heat >= c.cost_of(sp)
-	draw_string(f, r.position + Vector2(18, 5.5), "%s %d" % [sname, cost], HORIZONTAL_ALIGNMENT_LEFT, 38, 5,
+	draw_string(f, r.position + Vector2(18, 5.5), ("%s %d" % [sname, cost]) if sname != "" else "", HORIZONTAL_ALIGNMENT_LEFT, 38, 5,
 		Color("#f0ead8") if ready else Color(1, 1, 1, 0.45))
 	var hb: = Rect2(r.position + Vector2(2, 7), Vector2(r.size.x - 4, 2.5))
 	draw_rect(hb, Color(0, 0, 0, 0.65))
