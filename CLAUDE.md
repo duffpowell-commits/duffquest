@@ -99,6 +99,12 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   time. Off-limits: the mess of her stuff, and that she's on disability.
 - **Web portals (Nov 13):** `duffquest-crazygames.zip` in the dev release is the CrazyGames upload (no plain
   index.wasm; `window.DQ_PORTAL` = clean + gore off for new players). Checklist: `docs/portals/SUBMIT.md`.
+- **Marketing footage (Nov 13):** `tools/promo_shot.tscn` plays scripted takes (`fight:<boss>`, `walk:X,Y,MIN,DX`,
+  `still:gala|madison|at:X,Y,MIN`) with fake input, no damage, KO beats on a timer, touch UI hidden. Record with
+  `--fixed-fps 30 --resolution 1920x1080 --write-movie DIR/f.png` (1080p is native, integer 3x). Point XDG_DATA_HOME at
+  a folder whose `godot/app_userdata/Duff Quest/settings.json` says `{"clean":true,"gore":false}`. Outputs live in
+  `docs/portals/preview/` (CrazyGames clips) and `docs/itch/` (GIFs, 1080p screens). ~3 fps under llvmpipe.
+  GameDistribution: Duff registered as "Wild Dreams" (Nov 13), gameId after review.
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
