@@ -24,6 +24,8 @@ func _ready() -> void:
 		["dialogue", func(): _clean(); m._say(["{partner}: You said you'd be home by six. It is nine. The baby has learned three new words and two of them are about you."])],
 		["phone", func(): _clean(); m.open_phone()],
 		["settings", func(): _clean(); m.open_settings()],
+		["credits", sub.call(m_script("CreditsScript"))],
+		["credits_licenses", func(): m.overlay_node.scroll = 160.0 * 8.0],
 		["gear", func(): _clean(); m.debug_station("gear")],
 		["wordle", func(): _clean(); m.debug_station("wordle")],
 		["shop", func(): _clean(); m.open_shop()],

@@ -110,12 +110,21 @@ jobs:
           sed -i '0,/progressive_web_app\/enabled=false/s//progressive_web_app\/enabled=true\nprogressive_web_app\/display=1\nprogressive_web_app\/orientation=1\nprogressive_web_app\/background_color=Color(0, 0, 0, 1)/' export_presets.cfg
           mkdir -p build/pages
           godot --headless --path . --export-release "Web" build/pages/index.html
+          # Family edition (real names and places, docs/legal/RISK_AUDIT.md): same export with the "family"
+          # feature tag, at the unlisted /family/ path. The packs are art only, so both editions share them.
+          sed -i 's/^custom_features=""/custom_features="family"/' export_presets.cfg
+          mkdir -p build/pages/family
+          godot --headless --path . --export-release "Web" build/pages/family/index.html
           cp /tmp/presets.bak export_presets.cfg
-          cp build/web/world.pck build/web/extra.pck build/pages/
-          gzip -9 -k -n build/pages/index.wasm
-          # iOS reads these from the page, not only the manifest
-          sed -i 's#<head>#<head><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Duff Quest">#' build/pages/index.html
-          sed -i 's#<meta name="viewport" content="#<meta name="viewport" content="viewport-fit=cover, #' build/pages/index.html
+          for d in build/pages build/pages/family; do
+            cp build/web/world.pck build/web/extra.pck $d/
+            gzip -9 -k -n $d/index.wasm
+            # iOS reads these from the page, not only the manifest
+            title="Duff Quest"; [ "$d" = build/pages/family ] && title="Duff Quest Family"
+            sed -i "s#<head>#<head><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\"><meta name=\"apple-mobile-web-app-title\" content=\"$title\">#" $d/index.html
+            sed -i 's#<meta name="viewport" content="#<meta name="viewport" content="viewport-fit=cover, #' $d/index.html
+          done
+          test -s build/pages/family/index.pck
           touch build/pages/.nojekyll
           ls -la build/pages
           grep -o '<head>.\{0,400\}' build/pages/index.html | head -c 600; echo
@@ -130,9 +139,18 @@ jobs:
           GODOT_ANDROID_KEYSTORE_DEBUG_PASSWORD: android
         run: |
           mkdir -p build/android
+          # duffquest.apk = family edition (keeps the package id, so installed copies and their saves carry on).
+          cp export_presets.cfg /tmp/presets.bak
+          sed -i 's/^custom_features=""/custom_features="family"/' export_presets.cfg
           godot --headless --path . --export-debug "Android" build/android/duffquest.apk 2>&1 | tee export.log
+          cp /tmp/presets.bak export_presets.cfg
+          # duffquest-public.apk = the advertised edition, its own package id so both can sit on one phone.
+          sed -i 's/^package\/unique_name="com.duffpowell.duffquest"/package\/unique_name="com.duffpowell.duffquest.pub"/' export_presets.cfg
+          godot --headless --path . --export-debug "Android" build/android/duffquest-public.apk 2>&1 | tee -a export.log
+          cp /tmp/presets.bak export_presets.cfg
           grep -A8 "configuration errors" export.log || true
           test -f build/android/duffquest.apk
+          test -f build/android/duffquest-public.apk
           ls -la build/android
       - uses: actions/upload-artifact@v4
         with:
@@ -141,7 +159,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: duffquest-apk
-          path: build/android/duffquest.apk
+          path: build/android/*.apk
       - name: Publish to the "dev" release (main only)
         # One fixed release Duff can open on his phone: Releases -> dev -> tap the APK.
         if: github.ref == 'refs/heads/main'
@@ -150,7 +168,7 @@ jobs:
         run: |
           (cd build/web && zip -qr ../duffquest-web.zip .)
           gh release view dev >/dev/null 2>&1 || gh release create dev --prerelease --title "Latest dev build" --notes "Rebuilt on every push to main."
-          gh release upload dev build/android/duffquest.apk build/duffquest-web.zip --clobber
+          gh release upload dev build/android/duffquest.apk build/android/duffquest-public.apk build/duffquest-web.zip --clobber
           gh release edit dev --notes "Rebuilt on every push to main. Last: ${GITHUB_SHA::7}"
       - name: Publish a branch preview of the web build (pushes off main)
         # So a session can boot-test a branch on throttled 4G (artifact storage is not reachable from sessions).

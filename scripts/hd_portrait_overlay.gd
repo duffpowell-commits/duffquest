@@ -28,7 +28,7 @@ func _splash(boss: String) -> Texture2D:
 	var key: = "intro_" + boss
 	if not _tex.has(key):
 		var p: = "res://assets/art/boss_intro/%s.png" % boss
-		_tex[key] = load(p) if Art.has_intro_card(boss) else null
+		_tex[key] = load(Art.pub(p)) if Art.has_intro_card(boss) else null
 	return _tex[key]
 
 ## Boss intro card: Place's full-bleed "burst" card (Duff's pick, Nov 8) fills the screen and slides
@@ -73,7 +73,7 @@ func _blit(tex: Texture2D, card: Rect2, clip: Rect2) -> void:
 func _portrait(who: String) -> Texture2D:
 	if not _tex.has(who):
 		var p: = "res://assets/art/portraits_hd/%s.png" % who
-		_tex[who] = load(p) if ResourceLoader.exists(p) else null
+		_tex[who] = load(Art.pub(p)) if ResourceLoader.exists(p) else null
 	return _tex[who]
 
 func _draw() -> void:

@@ -12,6 +12,7 @@ extends Node2D
 ## on the SFX bus so the settings volume / mute apply. SFX_CUES = [seconds into beat, file, volume dB,
 ## bed?]; a bed (drone, crowd murmur) stops when the beat is skipped, one-shots ring out.
 const Cast: = preload("res://scripts/cast.gd")
+const ArtScript: = preload("res://scripts/art.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
 const GoreScript: = preload("res://scripts/ko_gore.gd")   # cartoon blood / spit / teeth (art rule H2)
 const SFX_DIR: = "res://assets/sfx/ko/"
@@ -228,7 +229,8 @@ func extra_pack_loaded() -> void:
 
 func _load(p: String) -> Texture2D:
 	if not _tex.has(p):
-		_tex[p] = load(p) if ResourceLoader.exists(p) else null
+		var src: = ArtScript.pub(p)
+		_tex[p] = load(src) if ResourceLoader.exists(src) else null
 	return _tex[p]
 
 ## A 16:9 still, or null if it isn't drawn yet.

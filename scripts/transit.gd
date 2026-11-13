@@ -11,7 +11,7 @@ const CAR_MIN: = 4.0
 const STOPS: = {
 	"home": {"name": "Home (Elm St)", "pos": Vector2(132, 150) },
 	"kwik": {"name": "Kwik-N-Go / {plasma}", "pos": Vector2(560, 150) },
-	"fork": {"name": "The Twisted Fork", "pos": Vector2(600, 202) },
+	"fork": {"name": "{fork}", "pos": Vector2(600, 202) },
 	"market": {"name": "{grocery} / {pharmacy}", "pos": Vector2(250, 202) },
 }
 const ORDER: = ["home", "kwik", "fork", "market"]

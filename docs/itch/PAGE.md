@@ -1,6 +1,6 @@
 # Duff Quest: itch page copy (Nov 9, 2026)
 
-Page: https://dufftkyosht.itch.io/duff-quest. Paste-ready. Real names are approved for public (Nov 9).
+Page: https://dufftkyosht.itch.io/duff-quest. Paste-ready. Real names are approved for public (Nov 9); get each real person's OK in writing before ads go out (docs/legal/RISK_AUDIT.md).
 Not entering the itch "2026 Jam" (it bans AI art). Images: `cover.png`, `logo_banner.png`, `icon_512.png`, `screens/`, `knockout.gif`.
 
 ## Short description (itch "tagline")
@@ -81,9 +81,24 @@ One line cook. One phone. No computer.
 
 - **Code:** written with Claude (Anthropic), in Godot 4.5.
 - **Art:** AI-generated with Grok, Gemini, ChatGPT and Canva AI from Duff's own photos and references, then fixed and finished in code. Logo built in code from the game's fonts.
-- **Music and sound:** synthesized by code. The date-night theme is Brahms' Lullaby (public domain).
+- **Music:** by Duff. The date-night theme is Brahms' Lullaby (public domain). **Sound effects:** synthesized by code.
 - **Writing:** Duff's real life and jokes, drafted and edited with AI help.
 - **Fonts:** Baloo 2, Nunito, Caveat, Patrick Hand (SIL Open Font License).
+
+## Privacy
+
+No accounts, no ads, no analytics, no tracking. Your save stays in your browser (or on your phone). Full policy:
+https://github.com/duffpowell-commits/duffquest/blob/main/docs/legal/PRIVACY.md
+
+## Legal
+
+Duff Quest is a comedy and a work of parody and fiction. Stores, restaurants, brands and products in the game are
+made-up parodies or used only for jokes; none of them made, sponsored or endorsed this game. The family and friends
+in it appear with their permission. Every other character is invented, and every event is made up or exaggerated
+for laughs. Any resemblance to other real people is a coincidence.
+
+Made with the Godot Engine (MIT License). Fonts under the SIL Open Font License. Full credits and licenses are in
+the game: Settings > Credits & legal.
 
 ## itch settings checklist
 - Kind: HTML. "This file will be played in the browser" = **duff-quest-html.zip** ONLY (delete `duffquest-web.zip`).

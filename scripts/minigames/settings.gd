@@ -28,6 +28,7 @@ func _setup() -> void:
 	add_button("back", Rect2(110, 163, 100, 15), "Back", KEY_ESCAPE, Color("#a43a2c"))
 	if _guard():
 		add_button("gfx", Rect2(214, 163, 98, 15), _gfx_label(), KEY_V, Color("#3a5a8a"))
+	add_button("credits", Rect2(214, 22, 98, 13), "Credits & legal", KEY_L, Color("#5a5a5a"))
 	if dev:
 		add_button("dev_quests", Rect2(8, 163, 98, 15), "Dev: quests", KEY_Q, Color("#8a6a1a"))
 
@@ -58,8 +59,8 @@ func sfx_vol() -> float:
 	return float(audio.sfx_vol) if audio else 0.0
 
 func _on_button(id: String) -> void:
-	if id == "dev_quests":
-		action = "dev_quests"
+	if id == "dev_quests" or id == "credits":
+		action = id
 		finish(1.0)
 		return
 	if audio == null:
@@ -141,4 +142,4 @@ func _draw_game() -> void:
 	txt(Vector2(26, 119), "Clean language", 8)
 	txt(Vector2(26, 137), "Cartoon gore (KOs)", 8)
 	txt(Vector2(26, 155), "Screen shake", 8)
-	txt(Vector2(0, 32), "Saved automatically. Music + SFX are original chiptune (see README).", 6, Color(1, 1, 1, 0.55), HORIZONTAL_ALIGNMENT_CENTER, W)
+	txt(Vector2(14, 32), "Saved automatically.", 6, Color(1, 1, 1, 0.55))

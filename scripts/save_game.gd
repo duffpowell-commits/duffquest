@@ -67,7 +67,7 @@ static func migrate(d: Dictionary) -> Dictionary:
 		d["market"] = Market.new_state(sd + 7)
 		d["brokerage"] = Market.new_account(true)
 		d["college"] = Market.new_account(true)
-		d["threads"] = {"sister": [{"from": "sister", "text": "I moved. Not telling you where. Wordle's on your phone now, nerd. Same streak, same roasts.", "day": int(d.get("day_count", 1)) }], "gala": [] }
+		d["threads"] = {"sister": [{"from": "sister", "text": "I moved. Not telling you where. {wordle}'s on your phone now, nerd. Same streak, same roasts.", "day": int(d.get("day_count", 1)) }], "gala": [] }
 		d["unread"] = {"sister": true, "gala": false }
 		d["last_text_day"] = -1
 		d["gala_unlocked"] = false
