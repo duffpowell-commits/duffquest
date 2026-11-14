@@ -100,10 +100,14 @@ func _center(f: Font, pos: Vector2, width: float, s: String, size: int, col: Col
 ## something about it is worth seeing: heat refilling, points to spend, demon time).
 const PANEL_R: = Rect2(240, 92, 78, 12)          # touch: above the attack buttons
 const PANEL_R_KEYS: = Rect2(238, 163, 78, 12)    # keyboard/mouse: no buttons there, so tuck it into the bottom-right corner
+const PANEL_R_KEYS_BOSS: = Rect2(238, 139, 78, 12)  # boss fights: the boss bar (hud layout "boss", y 154-176) owns that corner
 
 func panel_rect() -> Rect2:
 	var tc = m.get("touch")
-	return PANEL_R if (tc != null and tc.visible) else PANEL_R_KEYS
+	if tc != null and tc.visible:
+		return PANEL_R
+	var b = m.current_boss()
+	return PANEL_R_KEYS_BOSS if (b != null and is_instance_valid(b)) else PANEL_R_KEYS
 const COMBAT_HOLD: = 4.0
 var fight_t: = 0.0
 
