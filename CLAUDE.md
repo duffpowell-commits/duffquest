@@ -134,7 +134,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   origin [64,120], s 4 in manifest.json AND art_manifest.gd). Batches of four, before/after via
   `res://tools/cast_shot.tscn -- OLD_DIR id[:Label] ...` (old PNGs from git in OLD_DIR) -> `/tmp/qa/cast.png`. Batch 1
   (home crew): `ch_madison` done (8% slimmer per Duff; AI ghost/beard frames replaced by mirrors); dress, Mazikeen
-  (`ch_brittany`), Lance (`ch_fences`) next. Order after: exes/bosses, street, Fork customers, errand NPCs. Duff approves
+  (`ch_brittany`), Lance (`ch_fences`) next. Order after: exes/bosses (include Marketplace Mike, the first-bet boss: today he borrows `ch_hustler` tinted; Duff wants him in the 2x pass, ideally as his own `ch_mike` with `"sprite": "mike"` in boss.gd and no tint), street, Fork customers, errand NPCs. Duff approves
   every batch before merge.
 
 ## Next (in order)
