@@ -1252,18 +1252,18 @@ const ASSETS = {
     "s": 4
   },
   "ch_phlebotomist": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "ch_pirate0": {
     "w": 512,
@@ -1336,18 +1336,18 @@ const ASSETS = {
     "s": 4
   },
   "ch_sitter": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "ch_sushi_chef": {
     "w": 512,
