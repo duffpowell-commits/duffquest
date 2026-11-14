@@ -158,6 +158,26 @@ func _process(_d: float) -> void:
  else:
   Art.sun_shift = Vector2.ZERO
   Art.sun_stretch = 1.0
+ _update_rim(loc, c)
+
+## Rim light colour/direction from the room's light: the sun (warm by day, cool moonlight at night), the gala
+## chandeliers overhead, home lamps. Lite graphics turns it off.
+func _update_rim(loc: String, c: float) -> void:
+ if low:
+  Art.set_rim(Color.WHITE, Vector2(0, -1), 0.0)
+  return
+ match loc:
+  "outside":
+   var sun := Color(1.0, 0.9, 0.7).lerp(sky_at(c), 0.5)
+   var moon := Color(0.62, 0.72, 1.0)
+   var dir := Vector2(-Art.sun_shift.x * 0.25, -1.0) if dark < 0.5 else Vector2(0.35, -1.0)
+   Art.set_rim(sun.lerp(moon, dark), dir, lerpf(0.55, 0.4, dark))
+  "gala":
+   Art.set_rim(Color(1.0, 0.8, 0.48), Vector2(-0.3, -1.0), 0.7)
+  "home":
+   Art.set_rim(Color(1.0, 0.82, 0.6), Vector2(-0.6, -0.8), 0.5)
+  _:
+   Art.set_rim(Color(1.0, 0.9, 0.75), Vector2(-0.5, -0.85), 0.45)
 
 ## True when integer scaling would leave more than 10% of the window unused (or the
 ## window can't fit a 640x360 frame at all).
