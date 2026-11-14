@@ -258,6 +258,8 @@ static func portrait_for(text: String, hero: String, partner: String, baby: Stri
 
 
 static func madison_mood(text: String, happiness: float, kind: String = "") -> int:
+	if preload("res://scripts/zebra.gd").warm(text):
+		return 0                                                  # her diagnosis story: proud, not mad
 	if kind == "upset" or happiness < 40.0:
 		return 2
 	if preload("res://scripts/mornings.gd").pained(text):

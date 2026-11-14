@@ -72,6 +72,12 @@ func _process(_d: float) -> void:
 			m.clock = 600.0
 			m.dev_warp_quest("porch", 3)
 			m.dialog.clear()
+		elif id in ["zebra", "zebra_talk"]:  # "The Zebra": plush + print at home / her diagnosis lines
+			m.debug_station("home")
+			m.dialog.clear()
+			m.day_count = m.Zebra.FIRST_DAY
+			m.zebra_seen = false
+			m.player.position = m.ZEBRA_PT + Vector2(0, 2)
 		elif id.begins_with("morning_"):  # Madison's mornings: morning_slow / _migraine / _good / _bring (coffee lines)
 			m.debug_station("home")
 			m.dialog.clear()
@@ -132,13 +138,18 @@ func _process(_d: float) -> void:
 		m._say(["Brittany: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case."])
 	if frame == 230 and id == "notes":
 		m.open_phone("notes")
+	if frame == 236 and id == "zebra_talk":
+		m.zebra_story()
+	if frame == 250 and id == "zebra_talk":
+		for i in 3:
+			m.advance_dialog()
 	if frame == 236 and id == "morning_bring":
 		m.morning_talk()
 	if frame == 230 and id in ["home", "waffle", "hint"]:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost"] and not id.begins_with("at:") and not id.begins_with("morning_"):
+	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):

@@ -161,6 +161,11 @@ stay raw.
   (`morning_tick`). `good` (0.15): she's making the coffee; card Sit down (+5) / Take over (she says she's got it).
   Pain lines use her deadpan portrait (`Mornings.pained`). Renders: `arena_shot` `morning_slow|migraine|bring|good`.
   Off-limits (Duff): the mess of her stuff, and that she's on disability.
+- **The Zebra** (`zebra.gd`, flag `main.zebra_seen`, save key `zebra_seen`): her diagnosis story, lines approved by
+  Duff (hypermobile joint syndrome as a kid, Ehlers-Danlos named in 2020, the Beighton test). She loves zebras: a plush
+  on the shelf over the bed (`ZEBRA_PLUSH`) and a framed print by the shower (`ZEBRA_PIC`), pixel art `home_zebra_plush` / `home_zebra_print` at the room's s:2 density (plush `tools/zebra_plush_pixels.py`, after her Wild Republic plush; print `tools/zebra_pixels.py`).
+  Day 4+, stand at the foot of the bed (`ZEBRA_PT`) once: 8 lines, +5. Her story lines always use her happy face
+  (`Zebra.warm`). Renders: `arena_shot` `zebra|zebra_talk`.
 - **Madison's moods** (`moods.gd`): fussy days (`FUSSY_CHANCE` 0.15, 3-day gap, she swaps the request mid-quest),
   upset (causes rent, promise, ...; `make_up`/`bounce`), couch night (`COUCH_ENERGY` 70 next morning).
   `QUEST_WARN` [240,360,480] min: a quest left open too long makes her upset ("promise").
@@ -700,6 +705,7 @@ stay raw.
 | `market.gd` | Stock market sim, accounts, college fund goal |
 | `moods.gd` | Madison's fussy/upset/couch states and lines |
 | `mornings.gd` | Madison's slow / migraine / good mornings (EDS), approved lines |
+| `zebra.gd` | "The Zebra": Madison's diagnosis story (EDS), approved lines |
 | `player.gd` | Duff: movement, roll, combo, outfits, shades |
 | `player_shot.gd` | Duff's projectiles (grease, plate, reflect, hashbrown) |
 | `projectile.gd` | Enemy/boss projectiles and specials (laser, wave, rug, glass...) |
