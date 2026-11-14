@@ -107,13 +107,18 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `docs/portals/preview/` (CrazyGames clips) and `docs/itch/` (GIFs, 1080p screens). ~3 fps under llvmpipe.
   GameDistribution: Duff registered as "Wild Dreams" (Nov 13), gameId after review.
 
-- **HD sprite pilot (Nov 13, PR open, not merged):** `duff_apron_red/black` redrawn at 2x (512x512, 128 cells,
-  manifest "s": 4, origin [64,120]; same world size and hitbox). Master: Drive "97 Gemini art drops",
-  `ch_duff_hd_v1.png` (Canva generate-image with the old sheet + HD portrait as references). Import:
-  `import_big_sheet.py SRC <id> --cell 128 --height 104 --feet 120 --smooth --auto-grid --row-feet`, then recolour
-  magenta outline fringe (hue 295-348 -> brown). Rim light: `shaders/sprite_rim.gdshader` via `Art.rim_material()` on
-  player + bosses, colour/direction set per room in `hd_presentation._update_rim()`. `Art.shadow()` now adds a tight
-  contact core under every character. Other Duff outfits still 1x.
+- **Duff in HD (Nov 13-14, PR #58 open, not merged):** every Duff sheet is 2x (512x512, 128 cells, manifest "s": 4,
+  origin [64,120]; same world size and hitbox): `duff_apron/clogs/sleeves/coat/dad_red|black`, `duff_home` +
+  `duff_home_black`, `duff_roll_*` (512x128, origin [64,88], rotations of the casual idle). The apron is work clothes:
+  `player.sheet_name()` shows the casual tee (`duff_home*`) for apron armour off the line and at home; minigame
+  `work_duff` (the kitchen line) still uses `duff_<armor>_black`. Shades: one overlay per outfit (`duff_shades` = apron,
+  `duff_shades_<outfit>`), built from each sheet's face positions. Masters: Drive "97 Gemini art drops",
+  `ch_duff_<outfit>_hd_v1.png` (apron v2). Rebuild: Canva generate-image with the HD apron sheet + old outfit sheet +
+  HD portrait as references -> `import_big_sheet.py SRC <id> --cell 128 --height 104 --feet 120 --smooth --auto-grid
+  --row-feet`, recolour magenta fringe to brown, row 1 col 2 = col 1's legs mirrored (the AI draws walk-away B like
+  idle), black shoes by recolouring red in the bottom 24 px. Before/after: `tools/outfit_shot.tscn -- OLD_DIR`.
+  Rim light: `shaders/sprite_rim.gdshader` via `Art.rim_material()` on player + bosses, per room in
+  `hd_presentation._update_rim()`. `Art.shadow()` adds a contact core under every character.
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.

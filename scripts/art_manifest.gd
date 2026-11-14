@@ -1418,88 +1418,88 @@ const ASSETS = {
     "s": 4
   },
   "duff_clogs_black": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "duff_clogs_red": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "duff_coat_black": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "duff_coat_red": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "duff_dad_black": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "duff_dad_red": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "duff_dress": {
     "w": 384,
@@ -1516,88 +1516,172 @@ const ASSETS = {
     "s": 2
   },
   "duff_home": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
+  },
+  "duff_home_black": {
+    "w": 512,
+    "h": 512,
+    "cell": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      120
+    ],
+    "kind": "humanoid",
+    "s": 4
   },
   "duff_roll_black": {
-    "w": 256,
-    "h": 64,
+    "w": 512,
+    "h": 128,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      44
+      64,
+      88
     ],
     "kind": "anim",
-    "s": 2
+    "s": 4
   },
   "duff_roll_red": {
-    "w": 256,
-    "h": 64,
+    "w": 512,
+    "h": 128,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      44
+      64,
+      88
     ],
     "kind": "anim",
-    "s": 2
+    "s": 4
   },
   "duff_shades": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "overlay",
-    "s": 2
+    "s": 4
+  },
+  "duff_shades_home": {
+    "w": 512,
+    "h": 512,
+    "cell": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      120
+    ],
+    "kind": "overlay",
+    "s": 4
+  },
+  "duff_shades_clogs": {
+    "w": 512,
+    "h": 512,
+    "cell": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      120
+    ],
+    "kind": "overlay",
+    "s": 4
+  },
+  "duff_shades_sleeves": {
+    "w": 512,
+    "h": 512,
+    "cell": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      120
+    ],
+    "kind": "overlay",
+    "s": 4
+  },
+  "duff_shades_coat": {
+    "w": 512,
+    "h": 512,
+    "cell": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      120
+    ],
+    "kind": "overlay",
+    "s": 4
+  },
+  "duff_shades_dad": {
+    "w": 512,
+    "h": 512,
+    "cell": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      120
+    ],
+    "kind": "overlay",
+    "s": 4
   },
   "duff_sleeves_black": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "duff_sleeves_red": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "ensure": {
     "w": 16,
