@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **Play stats + play alerts.** `.github/workflows/play_stats.yml` reads itch view/download/purchase
+  counts every 3 hours (same `BUTLER_API_KEY`) into the `stats` branch (`stats/history.jsonl`, `latest.json`). Once
+  `.github/play_alerts.json` is `"armed": true` (flip it at debut) it opens a closed GitHub issue @mentioning Duff for
+  first traffic (10 views since debut), view milestones, 24 h spikes (>= 25 and 2x a normal day) and new purchases.
+  Rules + local test: `tools/play_stats.py`. A Monday report reads the stats branch.
 - **2026-11-14** **{coworker}'s first bet: a second fight in minute two.** Portal review: after the cold-open pirate the
   game slowed to rules and errands. Now the pirate's KO (or escape) opens {coworker}'s bet card: Marketplace Mike, the
   guy the pirates sell to, is out back of the {fork_nick}. She fronts the stake; win = +$60 and 1-0 on her bet record,
