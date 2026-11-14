@@ -97,6 +97,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Madison's mornings (Nov 13):** EDS slow / migraine / good mornings, `scripts/mornings.gd` (see reference.md).
   Madison is a real person: Duff approves EVERY line about her EDS, autism and ADHD before it ships. One pitch at a
   time. Off-limits: the mess of her stuff, and that she's on disability.
+  Her diagnosis story "The Zebra" is `scripts/zebra.gd` (same approval rule). Her autism: "Too Loud"
+  (`scripts/too_loud.gd` + `minigames/noise.gd`): first Saturday grocery trip from day 6, noise overload, her headphones,
+  home crash. Facts from Duff: noise is the trigger, headphones help, she masks then crashes, she info-dumps about herself.
 - **Portal fit (Nov 13 late):** windows where integer scaling wastes >10% now scale fractionally (`HdPresentation.use_fractional`), so CrazyGames' 907x510 iframe is filled. Touch pad on the web shows up front only on iOS/Android browsers, else on the first real touch (`TouchControls.default_visible()/real_touch()`; mouse-emulated touches have device -1). Listing copy: `docs/portals/LISTING.md`.
 - **Portal polish (Nov 14):** keyboard/mouse players: the cold-open line says "WASD or arrows to walk, Space to bonk"; the level/heat panel sits bottom-right (`combat_ui.PANEL_R_KEYS`) instead of floating where the touch buttons would be; enemy name + Lv labels are on ink plates. The sandwich ticket's house item is `{house_sandwich}` (public: Spatula Classic). Renders in keyboard mode: add `--keys` after the id (xvfb reports a touchscreen).
 - **Web portals (Nov 13):** `duffquest-crazygames.zip` in the dev release is the CrazyGames upload (no plain
