@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **Portal polish (keyboard players).** First 30 s checked at 907x510 in keyboard mode: the cold-open line
+  now says how to walk (WASD/arrows) as well as bonk; the level/heat panel moved from mid-screen (where the touch
+  buttons sit) to the bottom-right corner when there are no touch buttons; pirate names and enemy Lv tags got ink
+  plates (were faint peach text on the sidewalk). Public edition: the sandwich ticket's "Twisted Classic" is now
+  "Spatula Classic" (`{house_sandwich}`), and the leak test checks for "Twisted". Renders: `--keys` flag for
+  keyboard mode. `docs/renders/portal_polish_keyboard_before_after.jpg`. All menus re-shot at 907x510: fine.
 - **2026-11-13** **CrazyGames polish.** The game now fills portal iframes: below 1280x720 (and anywhere integer scaling
   leaves >10% unused) it scales fractionally instead of drawing a 640x360 box in black; 1280x720/1920x1080 stay
   integer. Touch pad no longer pops up on desktop from mouse clicks or touchscreen laptops (CrazyGames rule): web
