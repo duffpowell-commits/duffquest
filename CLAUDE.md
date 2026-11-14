@@ -117,7 +117,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `ch_duff_<outfit>_hd_v1.png` (apron v2). Rebuild: Canva generate-image with the HD apron sheet + old outfit sheet +
   HD portrait as references -> `import_big_sheet.py SRC <id> --cell 128 --height 104 --feet 120 --smooth --auto-grid
   --row-feet`, recolour magenta fringe to brown, row 1 col 2 = col 1's legs mirrored (the AI draws walk-away B like
-  idle), black shoes by recolouring red in the bottom 24 px. Before/after: `tools/outfit_shot.tscn -- OLD_DIR`.
+  idle), black shoes by recolouring red in the bottom 24 px, then `python3 tools/duff_eyes_narrow.py SHEET SHEET` once (hooded, less chibi eyes; Duff asked Nov 14). Before/after: `tools/outfit_shot.tscn -- OLD_DIR`.
   Rim light: `shaders/sprite_rim.gdshader` via `Art.rim_material()` on player + bosses, per room in
   `hd_presentation._update_rim()`. `Art.shadow()` adds a contact core under every character.
 
