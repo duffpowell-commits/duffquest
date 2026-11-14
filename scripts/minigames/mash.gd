@@ -7,7 +7,7 @@ const PITCH: = [
 	"Your neighbors are already passive-income kings!",
 	"Is this a bad time? Great, I'll be quick.",
 	"Steak-of-the-Month. It's vegan. Don't ask.",
-	"Be your own boss! Starter kit's just $900!",
+	"Quit your job! Starter kit's just $900!",
 ]
 const NEED: = 14
 

@@ -314,7 +314,7 @@ func _buy(id: String) -> void:
 		if it[0] == id:
 			price = aisle_price(it)
 	if m == null or m.money < price:
-		flash("Not enough cash. The gum rack judges me.", Color("#e06a4a"))
+		flash("Not enough cash. I put the gum back like it's evidence.", Color("#e06a4a"))
 		return
 	m.money -= price
 	m.inventory[id] = int(m.inventory.get(id, 0)) + (3 if id == "cologne" else 1)

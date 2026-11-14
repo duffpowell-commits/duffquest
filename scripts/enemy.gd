@@ -19,7 +19,7 @@ const STATS: = {
 	"kid": {"hp": 2.0, "speed": 48.0, "contact": 4.0, "name": "Sugar-High Kid" },
 }
 const LINES: = {
-	"scammer": ["Psst. Rolex? It's a Rolecks.", "Your extended warranty is expiring!", "HoneyBunCoin. Whitepaper's a napkin.", "I'm a prince. Of {nearby_town}.", "Gift cards only. For tax reasons."],
+	"scammer": ["Psst. Rolex? It's a Rolecks.", "Your extended warranty is expiring!", "Crypto? Crypto-adjacent. Crypto-curious.", "I'm a prince. Of {nearby_town}.", "Gift cards only. For tax reasons."],
 	"karen": ["Excuse me. EXCUSE ME.", "Is that a WORKER? In PUBLIC?", "One star. For this whole SIDEWALK.", "I know the mayor's dentist.", "I'd like to speak to your landlord."],
 	"karen_buddy": ["Linda's here. Linda has NOTES.", "We're BOTH calling corporate.", "My husband's a lawyer. Of brand."],
 	"hoa": ["Grass: 0.4 inches too free.", "Citation 14-B: unlicensed joy.", "That mailbox is a crime.", "Bylaw 9: no fun after 8 PM.", "I don't make rules. I laminate them."],
@@ -32,7 +32,7 @@ const LINES: = {
 	"drunk": ["I'm not drunk, YOU'RE drunk. Respectfully.", "Hash browns. ALL the hash browns.", "Do you know who I am? ...Do YOU?", "I love you, man. Fight me.", "Is this the bathroom? This is the bathroom now."],
 	"heckler": ["WOOOO! BACHELOR PARTY!", "Kyle's getting MARRIED, bro!", "Chef! Chef! Do a flip!", "Our Uber's 40 minutes out. We live here now."],
 	"kid": ["IT'S MY BIRTHDAYYYY", "I had FOUR sodas!", "Tag, you're it! FOREVER!", "My dad says you're the help!"],
-	"pete": ["I'M PALM BEACH PETE! FEAR THE TAN!", "SPF is a psyop, bro!", "Banned from 3 Waffle Houses. Respectfully.", "These flip-flops have SEEN things.", "I wrestled a gator once! Lost! Twice!", "I'm here for the tax haven!"],
+	"pete": ["I'M PALM BEACH PETE! FEAR THE TAN!", "SPF is a psyop, bro!", "Banned from 3 Waffle Hauses. Allegedly.", "These flip-flops have SEEN things.", "I wrestled a gator once! Lost! Twice!", "I'm here for the tax haven!"],
 }
 const TELE_LINES: = {"flipflop": "CATCH, BUDDY!", "charge": "SPRING BREAK!!!", "fireworks": "HOLD MY ENERGY DRINK!" }
 
