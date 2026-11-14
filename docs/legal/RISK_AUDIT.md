@@ -25,7 +25,8 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
 2. **The Twisted Fork in general.** Real business name and a look-alike green sign, shown with a health
    inspector, ranch theft, a villain buying it, "Nobody tips the fry cook". Even if Duff works there, the owner can
    object to its name in a game sold or advertised to the public, and an employer can discipline staff for it.
-   PUBLIC: "The Busted Spatula", new sign (`sf_fork_pub`). Duff does work there; ASK: does management know?
+   PUBLIC: "The Busted Spatula", new sign (`sf_fork_pub`); the alley arena's dumpster stencil "FORK" is painted
+   out too (`arena_alley_pub`, Nov 14: it was the first fight a new public player sees). Duff does work there; ASK: does management know?
 3. **"Wordle".** The New York Times owns the WORDLE trademark and has had clones pulled from app stores and GitHub.
    The name appears 100+ times ("Play today's Wordle", Jen's texts, credits). The game mechanic itself is fine.
    PUBLIC: "Word Brawl" everywhere players see it (`{wordle}` token); internal ids kept.
@@ -43,6 +44,9 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
 
 6. **Walgrumps sign = Walgreens trade dress.** Red sign, white script "W". The parody name is fine; copying the
    look is what gets letters. PUBLIC: teal band, mustard block letters (`sf_walgrumps_pub`).
+   Open (Nov 14 pre-debut audit): the pharmacy interior `bg_pharmacy` still says WALGRUMPS in red block letters on
+   white, and its shelves show real cold-medicine brands (DayQuil, NyQuil, Mucinex, Theraflu, Vicks). Low: no
+   script W, and brand boxes on a shelf are incidental. Recolour the sign to teal/mustard if ads ever show that room.
 7. **Hy-Whee slogan.** "A helpful smile in every aisle-ish" is Hy-Vee's real slogan with "-ish" on it, plus a red
    heart sign. Hy-Vee is huge in Omaha. PUBLIC: "Groceries, mostly. Smiles, sometimes."; name kept.
 8. **Music provenance.** `assets/audio/manifest.json` says every track came from `tools/audio/gen_audio.py`, but that

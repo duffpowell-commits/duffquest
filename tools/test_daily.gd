@@ -488,7 +488,7 @@ func _edition_checks() -> void:
 	check("public edition: the Fork nickname and club sandwich follow the rename", C.T("{fork_nick} / {club_sandwich}") == "Spatula / Club Spatula")
 	var bare: = _bare_fork_lines()
 	check("public edition: no bare 'Fork' left in player-facing strings (%s)" % ", ".join(bare), bare.is_empty())
-	var pubs: = ["sf_fork.png", "sf_walgrumps.png", "ch_willnot.png", "portraits_hd/willnot.png", "boss_intro/willnot.png",
+	var pubs: = ["sf_fork.png", "sf_walgrumps.png", "arena_alley.png", "ch_willnot.png", "portraits_hd/willnot.png", "boss_intro/willnot.png",
 		"ko/willnot_a.jpg", "ko/willnot_b.jpg", "ko/willnot_c.jpg"]
 	var bad: = []
 	for f in pubs:

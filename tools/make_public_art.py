@@ -202,6 +202,36 @@ def willnot_set():
     return out
 
 
+# --- Alley arena (first-bet fight behind the restaurant): the dumpster is stencilled "FORK" -> blank -------------
+def alley_dumpster():
+    """Paint the stencilled FORK off the green dumpster by diffusing the panel colour in and adding back its grain."""
+    import numpy as np
+    im = np.array(Image.open(os.path.join(ART, "arena_alley.png")).convert("RGB")).astype(float)
+    x0, x1, y0, y1 = 240, 360, 150, 194
+    box = im[y0:y1, x0:x1]
+    m = np.zeros(im.shape[:2], bool)
+    m[y0:y1, x0:x1] = (box[:, :, 0] > box[:, :, 1] * 0.85) & (box.mean(axis=2) > 45)   # beige letters on green
+    for _ in range(3):
+        g = m.copy()
+        g[1:] |= m[:-1]; g[:-1] |= m[1:]; g[:, 1:] |= m[:, :-1]; g[:, :-1] |= m[:, 1:]
+        m = g
+    m[:y0 - 2] = False; m[y1 + 2:] = False; m[:, :x0 - 2] = False; m[:, x1 + 2:] = False
+    f = im.copy()
+    f[m] = np.nan
+    import warnings
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", RuntimeWarning)
+        for _ in range(600):
+            p = np.pad(f, ((1, 1), (1, 1), (0, 0)), mode="edge")
+            avg = np.nanmean(np.stack([p[:-2, 1:-1], p[2:, 1:-1], p[1:-1, :-2], p[1:-1, 2:]]), axis=0)
+            f[m] = avg[m]
+    panel = im[196:206, 245:355]
+    grain = panel - panel.mean(axis=(0, 1))
+    ys, xs = np.where(m)
+    f[ys, xs] += grain[ys % grain.shape[0], xs % grain.shape[1]] * 0.8
+    return Image.fromarray(np.clip(np.nan_to_num(f), 0, 255).astype(np.uint8))
+
+
 def pub_path(rel):
     base, ext = os.path.splitext(rel)
     return os.path.join(ART, base + "_pub" + ext)
@@ -221,6 +251,7 @@ def save(rel, im):
 def main():
     save("sf_fork.png", fork_sign())
     save("sf_walgrumps.png", walgrumps_sign())
+    save("arena_alley.png", alley_dumpster())
     for rel, im in willnot_set().items():
         save(rel, im)
 
