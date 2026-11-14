@@ -722,7 +722,7 @@ func cold_open_rules(won: bool) -> Array:
 	var lines: Array = []
 	if not won and not porch_pkg:
 		lines.append("He's gone. With the package. Great start. {partner} is going to hear about this.")
-	lines.append("So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Amen.")
+	lines.append("So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. Three rules. I'm already 0 for 1.")
 	lines.append("{partner}'s inside on the couch, top-left house, and she's got that look." + (" Bring her that package." if won or porch_pkg else " She wants something. Probably a honey bun."))
 	lines.append("Every Monday, rent, bills and the family basics: $%d. This first Monday it's prorated to $%d. {fork} (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))])
 	return lines
@@ -1518,7 +1518,7 @@ func _after_baby(b: Node, score: float, notes: Array) -> void:
 	var s: = StealthScript.new()
 	_run_game(s, func (_n: Node, sc: float, _notes: Array) -> void:
 		if sc <= 0.0:
-			night_report.append("CREAK. She's up. I sleep on the floor by the crib. My back files a complaint. -15 Energy tomorrow")
+			night_report.append("CREAK. She's up. I sleep on the floor by the crib. My back and I are no longer speaking. -15 Energy tomorrow")
 			_wake(penalty + 15)
 		else:
 			night_report.append("I make it to bed like a ninja. Full night's sleep. Write that down, it won't happen again.")
@@ -1582,12 +1582,12 @@ func _wake(energy_penalty: int) -> void:
 const KINDNESS: = [
 	["lunch", "{partner} packed my lunch. Note on the bag: \"Don't let them 86 you. Love, {partner}\" +15 Energy"],
 	["coffee", "{partner} makes my coffee exactly how I like it. Doesn't even ask. +10 Energy"],
-	["mirror", "I find a sticky note on the mirror: \"You're doing great, babe. The landlord is a goblin.\" Hell of a girl. +5 Energy"],
+	["mirror", "I find a sticky note on the mirror: \"You're doing great, babe. The landlord is a goblin.\" I keep it in my wallet. Next to no money. +5 Energy"],
 	["kiss", "{partner} kisses me on the way out. \"Go get 'em, chef.\" (Heat starts full today.)"],
 	["proud", ""],
 ]
 const PROUD_TEXTS: = [
-	"proud of you. that's it. that's the text",
+	"proud of you. no follow-up question. just that",
 	"thinking about you. also we need paper towels. mostly the first thing",
 	"you're a good dad. i know you're tired. i see it",
 	"don't work too hard babe. ok work a little hard. rent",
@@ -1806,7 +1806,7 @@ func complete_quest() -> Array:
 	match quest_kind:
 		"honey buns":
 			gain_happy(30.0)
-			lines = ["{partner}: HONEY BUNS! You're my favorite person. Don't tell {baby}.", "{cat3} watches from under the bed. Not impressed. At all.", "+30 Happiness"]
+			lines = ["{partner}: HONEY BUNS! I'd fight a landlord for you. Don't tell {baby}.", "{cat3} watches from under the bed. Not impressed. At all.", "+30 Happiness"]
 		"formula":
 			inventory["formula"] = int(inventory.get("formula", 0)) + 1
 			gain_happy(15.0)
@@ -2073,7 +2073,7 @@ func try_shift() -> void:
 		_say(["Fork's closed. Even Grill-Boy went home, and he lives in the walk-in. (Open 6 AM - 10 PM)"])
 		return
 	if calendar_event() == "thanksgiving":
-		_say(["The Fork's closed for Thanksgiving. First time in history. Chef's 'with family,' which means his boat."])
+		_say(["The Fork's closed for Thanksgiving. First time in history. Chef's 'with family,' which means golf."])
 		return
 	if Daily.is_weekend(day_i % 7) and not first_weekend():
 		_say(["It's the weekend. The schedule says I'm off. The Fork can lose money without me for once."])
@@ -2547,7 +2547,7 @@ const HIT_LINES: = {
 	"karen": "Karen jabs me with her phone. She's going live.", "hoa": "Bonked with bylaw 4.2.c: 'No joy.'",
 	"post": "Hit by a hot take. 400k likes, zero facts.", "rocket": "A sponsored e-scooter lands on me. Use code TYLER for 10% off my spine.",
 	"drone": "Tip drone to the face. It asks how my experience was.", "laser": "Blinded by a tip screen. Suggested: 30%.", "bsod": "", "update": "",
-	"butler": "A butler pummels me. He's paid $9 an hour to do it. Respect.", "coin": "Pelted with gold coins. First money's trickled down in years.",
+	"butler": "A butler pummels me. He's paid $9 an hour to do it. Honestly? Same.", "coin": "Pelted with gold coins. First money's trickled down in years.",
 	"tariff": "Cost-cut. Right in the ribs. They're 'lean' now.", "tariff_bit": "Shrapnel from a restructuring.", "wall": "Bonked by a wall of NDAs. Can't say how much it hurt.",
 	"boss": "Body-checked by a boss. Classic. They never touch anything they can't buy.",
 	"seen": "Left on read. Stings worse than a fryer burn.", "dumbbell": "Dumbbell to the dome. Bro.", "charge": "Bro-charged! He didn't even warm up.",
@@ -3442,7 +3442,7 @@ func _arena_process(delta: float) -> void:
 			_finish_final()
 		return
 	if energy <= 0.0:
-		story_lose("I get knocked out. Me and the sidewalk get acquainted. {partner} scrapes me off the curb. Again. Hell of a girl.")
+		story_lose("I get knocked out. Me and the sidewalk get acquainted. {partner} scrapes me off the curb. Again. She doesn't even ask anymore. She just brings the wipes.")
 		return
 	if arena_id == "willnot" and final_timer > 0.0:
 		var before: = final_timer
@@ -3501,7 +3501,7 @@ func story_boss_defeated(b: Node) -> void:
 		save_game()
 		return
 	gain_happy(15.0)
-	lines.append("{partner}: You did WHAT? ...That's kind of hot. +15 Happiness")
+	lines.append("{partner}: You did WHAT? ...Never do that again. Tell me everything. +15 Happiness")
 	arena_id = ""
 	_leave_arena()
 	_say(lines)
@@ -3565,7 +3565,7 @@ func _arena_caption(f: Font, o: Vector2, line: String, c: Color) -> void:
 	draw_string(f, o + Vector2(0, 25), Cast.T(line), HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 6, c)
 
 const ERRAND_THANKS: = {
-	"pharmacy": ["You got it?! You waited in THE line? Marry me. Again. Hypothetically.", "My hero. My prescription hero. Here's your copay back, plus bus fare.", "You survived {pharmacy}. Honestly, that's a story boss."],
+	"pharmacy": ["You got it?! You waited in THE line? I'm telling everyone. I'm telling the cats.", "My hero. My prescription hero. Here's your copay back, plus bus fare.", "You survived {pharmacy}. Honestly, that's a story boss."],
 	"grocery": ["You got everything?! Look at you, a whole adult.", "The fridge has FOOD in it. I could cry.", "You even got the right eggs. Who ARE you?"],
 }
 const ERRAND_MISS: = {
@@ -3666,7 +3666,7 @@ func errand_deliver() -> Array:
 			for c in Errands.CAKE:
 				inventory[c] -= 1
 			inventory["cake"] = int(inventory.get("cake", 0)) + 1
-			lines.append("She bakes a Black Forest cake. For ME. (Kitchen: +60 Energy.)")
+			lines.append("She bakes a Black Forest cake. Cherries everywhere. A crime scene, but delicious. (Kitchen: +60 Energy.)")
 		lines.append_array(errand["sub_notes"])
 	var h: = Errands.reward(errand, frac, clock)
 	if late:
@@ -4445,7 +4445,7 @@ func spritz_cologne() -> void:
 	grant_buff("charisma", Buffs.CHARISMA_MINS)
 	advance_clock(1.0)
 	var lines: Array = ["*psst psst* I hit myself with {cologne}. Notes of leather, venture capital and Applebee's parking lot. CHARISMA 6 hrs: 20% off stores, bigger tips, +25% {partner} happiness."]
-	text("madison", "madison", "Why does the whole house smell like a department store?? ...Not mad. Come here.")
+	text("madison", "madison", "who are you trying to impress. it's working. come home")
 	unread["madison"] = true
 	ping_t = 2.0
 	var a: = _unlock("Smells Like Money")
@@ -4924,7 +4924,7 @@ func resolve_bill(id: String, choice: String) -> Array:
 		"plan":
 			var pl: Array = e["plan"]
 			plans.append({"id": id, "per": int(pl[1]), "left": int(pl[0]) })
-			out.append("Payment plan: $%d every Monday for %d weeks ($%d total, $%d 'convenience' tax on being broke)." % [int(pl[1]), int(pl[0]), int(pl[0]) * int(pl[1]), int(pl[0]) * int(pl[1]) - int(e["cost"])])
+			out.append("Payment plan: $%d every Monday for %d weeks ($%d total; $%d of that is them being 'patient' with me)." % [int(pl[1]), int(pl[0]), int(pl[0]) * int(pl[1]), int(pl[0]) * int(pl[1]) - int(e["cost"])])
 		"ignore":
 			var ig: Dictionary = e["ignore"]
 			if id == "phone":
@@ -4958,7 +4958,7 @@ func resolve_bill(id: String, choice: String) -> Array:
 				out.append("I negotiate%s. Landlord: \"Fine. $5, not $15. Don't tell the other units.\"" % (" (and smell incredible)" if charisma() > 0 else ""))
 			else:
 				rent_bump += int(e["hike"])
-				out.append("He raises it anyway. 'Market rate.' The market is him.")
+				out.append("He raises it anyway. Says it hurts him more than me. Says it from the boat.")
 		"decline":
 			out.append("I pass on the gig. My feet send their regards.")
 	bills = bills.filter(func (x): return str(x["id"]) != id)
@@ -4981,7 +4981,7 @@ func bus_stops() -> Array:
 
 func bus_menu(from: String) -> void:
 	if not has_car and not Transit.running(clock):
-		_say(["Next bus is 5:30 AM. City budget went to a stadium. Bench is cold. Walking's free."])
+		_say(["Next bus is 5:30 AM. City budget went to a stadium. Bench is cold. Guess I'm a walker now."])
 		return
 	var opts: Array = []
 	var keys: = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]
@@ -5187,7 +5187,7 @@ func waffle_regular_tonight() -> bool:
 
 func waffle_menu() -> void:
 	if shifts_worked < WAFFLE_MIN_SHIFTS:
-		_say(["There's a Waffle Haus sign out by the interstate: 'NOW HIRING graveyard cook. Experience required.' Never closes. Never has.",
+		_say(["There's a Waffle Haus sign out by the interstate: 'NOW HIRING graveyard cook. Experience required.' They mean the life kind.",
 			"(I gotta work %d more shift%s at the Fork first. They want a resume. My resume is a burn scar.)" % [WAFFLE_MIN_SHIFTS - shifts_worked, "" if WAFFLE_MIN_SHIFTS - shifts_worked == 1 else "s"]])
 		return
 	var c: = fmod(clock, 1440.0)
@@ -5317,7 +5317,7 @@ const BETS: = {
 		"lose": "AND THERE IT IS. Posted. 40 views already. One of them is your mom." },
 	"combo": {"name": "Hit Parade", "goal": 45, "time": 45.0, "pitch": "Land 45 hits in 45 seconds. On the HOA guys. They're basically drywall with clipboards.",
 		"pool": ["hoa"], "cap": 3,
-		"win": "45 hits. You punch like you're mad at a parking ticket. Respect.",
+		"win": "45 hits. You punch like you're mad at a parking ticket. Fine. Take it.",
 		"lose": "You swing like a guy opening a pickle jar. Pay up, chef." },
 	"speed": {"name": "Speed Run", "goal": 12, "time": 50.0, "pitch": "12 knockouts in 50 seconds. I've got the stopwatch. And the camera. And your $.",
 		"pool": ["scammer", "hustler", "drunk", "heckler", "karen"], "cap": 4,
@@ -5326,7 +5326,7 @@ const BETS: = {
 }
 const BET_ORDER: = ["nohit", "combo", "speed"]
 const BET_INTRO: = ["{coworker}: Okay, chef. I've got a bet. You're gonna lose. I'm gonna film it.",
-	"{coworker}: Bet you can't. That's it. That's the whole sentence. Bet you can't.",
+	"{coworker}: Bet you can't. I'm not elaborating. Bet. You. Can't.",
 	"{coworker}: My phone's at 80% and my faith in you is at 12%. Let's go."]
 
 func bet_today() -> String:
