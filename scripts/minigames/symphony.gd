@@ -177,7 +177,7 @@ func _on_button(id: String) -> void:
 			_finish_dress()
 		"bus":
 			if m != null and bool(m.has_car):
-				flash("The minivan. I use my blinker. {partner} does her makeup at a red light.", Color("#c0d890"), 1.8)
+				flash("The minivan. A sippy cup rolls under the brake. {partner} does her makeup at a red light.", Color("#c0d890"), 1.8)
 				_seat()
 			else:
 				go("busrun")
@@ -286,7 +286,7 @@ func clap() -> void:
 				go("done")
 		"concert":
 			clapped_mid += 1
-			flash("I clap mid-music. Bold. Wrong, but bold.", Color("#e06a4a"), 1.4)
+			flash("I clap mid-music. The cellist does not.", Color("#e06a4a"), 1.4)
 
 func _sound_noise() -> void:
 	if audio and not players.is_empty():
@@ -326,7 +326,7 @@ func _tick(d: float) -> void:
 		"between":
 			if phase_t >= BETWEEN_T:
 				if not clapped_between:
-					flash("I sit in reverent silence. (I'm thinking about the fryer.) Classy.", Color("#c0d890"), 1.6)
+					flash("I sit in reverent silence. (I'm thinking about the fryer.) Culture.", Color("#c0d890"), 1.6)
 				mv = 1
 				go("concert")
 		"bravo":

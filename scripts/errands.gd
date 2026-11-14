@@ -27,7 +27,7 @@ const LABELS: = {
 const SUBS: = {
 	"honey buns": [["{grocery} Honey Swirls (store brand)", -1, "Store brand? ...Damn, they're fine. Don't tell anyone."], ["Artisanal honey buns, hand-glazed by a guy named Theo", 4, "These cost HOW much? Theo, you bastard. ...Okay they're incredible."]],
 	"cherries": [["Canned cherries", -1, "Canned cherries. Bold. The cake will survive."], ["Organic heirloom cherries", 3, "Heirloom cherries. Look at me, fancy as hell."]],
-	"eggs": [["Store-brand eggs (one is suspiciously small)", -1, "One of these eggs is tiny. It's the baby egg."], ["Free-range eggs from very happy chickens", 2, "Happy chickens. Happier than the Fork staff."]],
+	"eggs": [["Store-brand eggs (one is suspiciously small)", -1, "One of these eggs is tiny. It's the baby egg."], ["Free-range eggs from very happy chickens", 2, "Happy chickens. Happier than the {fork_nick} staff."]],
 	"cream": [["Half and half (close enough?)", -1, "Half and half is not heavy cream, babe. We'll make it work."], ["Fancy grass-fed cream", 2, "Grass-fed. The cows have better health insurance than me."]],
 	"formula": [["Store-brand formula (same stuff, says the pediatrician)", -3, "Same ingredients, $3 cheaper. Brand-name tax: 86'd."], ["Premium organic formula", 4, "She'll be the fanciest baby on the block."]],
 	"diapers": [["Store-brand diapers", -2, "Store brand diapers. Fingers crossed for no blowouts."], ["The ones with the cartoon she likes", 2, "THE CARTOON ONES. She's going to giggle."]],

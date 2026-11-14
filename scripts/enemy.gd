@@ -1,4 +1,5 @@
 extends CharacterBody2D
+const UiStyle: = preload("res://scripts/ui_style.gd")
 
 const Proj: = preload("res://scripts/projectile.gd")
 
@@ -18,7 +19,7 @@ const STATS: = {
 	"kid": {"hp": 2.0, "speed": 48.0, "contact": 4.0, "name": "Sugar-High Kid" },
 }
 const LINES: = {
-	"scammer": ["Psst. Rolex? It's a Rolecks.", "Your extended warranty is expiring!", "HoneyBunCoin. Whitepaper's a napkin.", "I'm a prince. Of {nearby_town}.", "Gift cards only. For tax reasons."],
+	"scammer": ["Psst. Rolex? It's a Rolecks.", "Your extended warranty is expiring!", "Crypto? Crypto-adjacent. Crypto-curious.", "I'm a prince. Of {nearby_town}.", "Gift cards only. For tax reasons."],
 	"karen": ["Excuse me. EXCUSE ME.", "Is that a WORKER? In PUBLIC?", "One star. For this whole SIDEWALK.", "I know the mayor's dentist.", "I'd like to speak to your landlord."],
 	"karen_buddy": ["Linda's here. Linda has NOTES.", "We're BOTH calling corporate.", "My husband's a lawyer. Of brand."],
 	"hoa": ["Grass: 0.4 inches too free.", "Citation 14-B: unlicensed joy.", "That mailbox is a crime.", "Bylaw 9: no fun after 8 PM.", "I don't make rules. I laminate them."],
@@ -31,7 +32,7 @@ const LINES: = {
 	"drunk": ["I'm not drunk, YOU'RE drunk. Respectfully.", "Hash browns. ALL the hash browns.", "Do you know who I am? ...Do YOU?", "I love you, man. Fight me.", "Is this the bathroom? This is the bathroom now."],
 	"heckler": ["WOOOO! BACHELOR PARTY!", "Kyle's getting MARRIED, bro!", "Chef! Chef! Do a flip!", "Our Uber's 40 minutes out. We live here now."],
 	"kid": ["IT'S MY BIRTHDAYYYY", "I had FOUR sodas!", "Tag, you're it! FOREVER!", "My dad says you're the help!"],
-	"pete": ["I'M PALM BEACH PETE! FEAR THE TAN!", "SPF is a psyop, bro!", "Banned from 3 Waffle Houses. Respectfully.", "These flip-flops have SEEN things.", "I wrestled a gator once! Lost! Twice!", "I'm here for the tax haven!"],
+	"pete": ["I'M PALM BEACH PETE! FEAR THE TAN!", "SPF is a psyop, bro!", "Banned from 3 Waffle Hauses. Allegedly.", "These flip-flops have SEEN things.", "I wrestled a gator once! Lost! Twice!", "I'm here for the tax haven!"],
 }
 const TELE_LINES: = {"flipflop": "CATCH, BUDDY!", "charge": "SPRING BREAK!!!", "fireworks": "HOLD MY ENERGY DRINK!" }
 
@@ -499,13 +500,13 @@ func _draw() -> void:
 		if m != null and m.get("combat") != null:
 			var lv: int = int(m.combat.ENEMY_LEVEL.get(kind, 3))
 			var lc: Color = Color("#ff6060") if lv > m.combat.level + 2 else (Color("#a0a0a0") if lv < m.combat.level - 3 else Color("#f0ead8"))
-			draw_string(f, Vector2(-8, 19), "Lv%d" % lv, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, lc)
+			UiStyle.tag(self, Vector2(-8, 20), "Lv%d" % lv, 5, lc, -1.0, HORIZONTAL_ALIGNMENT_LEFT, 0.5)
 		draw_rect(Rect2(-8, 12, 16, 2), Color(0, 0, 0, 0.6))
 		draw_rect(Rect2(-8, 12, 16.0 * clampf(hp / max_hp, 0, 1), 2), Color("#ff5050") if kind != "pete" else Color("#ff9020"))
 	if kind == "pirate" and hp >= max_hp and pname != "":
 		var nm: = display_name()
-		var nw: = f.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 5).x
-		draw_string(f, Vector2(-nw / 2.0, 19), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#ffd0a0"))
+		# on an ink plate (UiStyle.tag): bare peach text vanished on the sidewalk at portal sizes
+		UiStyle.tag(self, Vector2(-40, 21), nm, 6, Color("#ffd0a0"), 80.0, HORIZONTAL_ALIGNMENT_CENTER, 0.5)
 	# speech bubble: drawn by main's Barks node (scripts/barks.gd), laid out with everyone else's
 	if w.a > 0.0:
 		pass

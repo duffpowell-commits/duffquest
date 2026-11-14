@@ -13,7 +13,7 @@ const RUNAROUND: = [
 	"{partner}: \"Can you put it over there? No, there. ...Sorry. Thank you for being patient with me, hon.\"",
 	"{partner}: \"Actually, I wanted the other thing. There is no other thing. I KNOW.\"",
 ]
-const FUSSY_FINE: = "{partner}: \"Thank you, babe. Sorry. It's one of those days. You're the good part of it.\""
+const FUSSY_FINE: = "{partner}: \"Thank you, babe. Sorry. Today's a lot. You're the good part of it.\""
 const FUSSY_TEXTS: = [
 	"idk. nothing. everything. not you, just one of those days",
 	"sorry in advance for today. my brain is soup",

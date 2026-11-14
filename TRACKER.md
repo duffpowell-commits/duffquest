@@ -5,9 +5,41 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **Public build: "the Fork" is now "the Spatula".** 27 strings used a bare "Fork" while the public sign
+  says Busted Spatula. New token `{fork_nick}` (family Fork, public Spatula), Club Fork shows as `{club_sandwich}`
+  (Club Spatula), and the "Narc of the Fork" achievement migrates on load. test_daily scans every quoted string for a
+  bare "Fork". Family edition reads exactly as before.
+- **2026-11-14** **Humor audit: repeated jokes cut.** All 2,310 player-facing lines checked for repeats. 63 rewritten
+  ("That's the whole X" x7, "The body keeps the receipts" x3, "Hell of a girl" x3, boats now the landlord's alone,
+  Earl/Dolores years made consistent, "Respect." x7, barks that copied boss lines). Running gags that escalate stay.
+  Madison lines (moods, mornings, her shows) only flagged, not touched. List + flagged pitches:
+  `docs/reviews/humor_audit_2026-11-14.md`. Text only, saves unaffected.
+- **2026-11-14** **Portal polish (keyboard players).** First 30 s checked at 907x510 in keyboard mode: the cold-open line
+  now says how to walk (WASD/arrows) as well as bonk; the level/heat panel moved from mid-screen (where the touch
+  buttons sit) to the bottom-right corner when there are no touch buttons; pirate names and enemy Lv tags got ink
+  plates (were faint peach text on the sidewalk). Public edition: the sandwich ticket's "Twisted Classic" is now
+  "Spatula Classic" (`{house_sandwich}`), and the leak test checks for "Twisted". Renders: `--keys` flag for
+  keyboard mode. `docs/renders/portal_polish_keyboard_before_after.jpg`. All menus re-shot at 907x510: fine.
+- **2026-11-13** **CrazyGames polish.** The game now fills portal iframes: below 1280x720 (and anywhere integer scaling
+  leaves >10% unused) it scales fractionally instead of drawing a 640x360 box in black; 1280x720/1920x1080 stay
+  integer. Touch pad no longer pops up on desktop from mouse clicks or touchscreen laptops (CrazyGames rule): web
+  shows it up front only on iOS/Android browsers, else on the first real touch. Paste-ready listing
+  `docs/portals/LISTING.md`. 6 new test_daily checks. Render `docs/renders/portal_iframe_fit_before_after.jpg`.
+- **2026-11-13** **Ad assets.** CrazyGames preview clips (`docs/portals/preview/`: 16:9 1080p 18.3 s, 2:3 1080x1620
+  15.2 s, silent, open on the cover, gore off), knockout GIF re-cut to 5.7 s / 630 px, new `boss_intro.gif`, and
+  1080p screens (town recapture, Gala landlord ex, sandwich + fryer, fridge calendar day 24, Madison line, street at
+  night). New `tools/promo_shot.tscn` drives the takes. Upload order in `docs/itch/PAGE.md`.
+- **2026-11-13** **Cold open + street pack.** A new game opens on a porch fight: one line, then a porch pirate
+  (Package Pauly) runs at {partner}'s package on the porch and you chase him down; the rules come after
+  (`main.gd cold_open()` / `cold_open_rules()`, save flag `story.cold_open`). Web: a 2.9 MB `street.pck` (the
+  street, Duff, pirates, home, Duff's portrait) now comes before world.pck, and New Game waits only on it. Throttled
+  4G: New Game playable 21.9 s -> 14.3 s; tapping New Game at the title puts you in ~17 s (was ~25 s), with
+  someone to hit ~2 s later (was a rules wall and no enemy for 20+ s). The Fork, arenas, gala and minigames wait on
+  world.pck behind a loading card (`_world_gate`). `docs/renders/cold_open_before_after.png`;
+  `arena_shot -- cold` (with `--fixed-fps 30`).
 - **2026-11-13** **The Zebra (Madison's diagnosis story).** Duff approved every line; facts from Madison (hypermobile
   joint syndrome as a kid, Ehlers-Danlos in 2020, Beighton test). Her zebras are in the room for good: a plush on the
-  shelf over the bed and a framed print. Day 4+, once, at the foot of the bed: 8 lines, +5, happy face throughout.
+  shelf over the bed and a zebra picture in the frame by the shower, both in the room's warm palette. Day 4+, once, at the foot of the bed: 8 lines, +5, happy face throughout.
   `scripts/zebra.gd`, save key `zebra_seen`, 6 test_daily checks, render `docs/renders/madison_zebra.png`.
 - **2026-11-13** **Madison's mornings (EDS + migraines).** Duff approved every line. About two hard mornings a week
   she's in bed hurting (hip, or a migraine with the blinds down): bottle for Octavia, two coffees (hers cream and sugar,

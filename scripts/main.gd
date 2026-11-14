@@ -352,7 +352,7 @@ var pete_defeated_day: = -99
 var last_wordle: Node = null
 var gala_stage: = -1
 var gala_boss: Node = null
-var story: = {"beaten": [], "announced": [], "ending_seen": false, "attempts": 0 }
+var story: = {"beaten": [], "announced": [], "ending_seen": false, "attempts": 0, "cold_open": false }
 var arena_id: = "":
 	set(v):
 		arena_id = v
@@ -536,7 +536,7 @@ func _ready() -> void:
 	if _check_debug_hash():
 		return
 	if skip_title:
-		_after_world(func () -> void: new_game(false))
+		_after_world(func () -> void: new_game(false), 0)
 	else:
 		show_title()
 
@@ -644,34 +644,35 @@ func show_title() -> void:
 					if id2 == "yes":
 						_after_world(func () -> void:
 							in_title = false
-							new_game(true))
+							new_game(true), 0)
 					else:
 						show_title())
 		else:
 			_after_world(func () -> void:
 				in_title = false
-				new_game(true)), "title")
+				new_game(true), 0), "title")
 
-## Web: characters, portraits and music come in world.pck right after boot (scripts/extra_pack.gd). Starting
-## before it lands would mean an invisible Duff, so hold on a "Loading Omaha" card until it's mounted.
-## Everywhere else (and once it's in) this just runs cb.
-func _after_world(cb: Callable) -> void:
-	if ExtraPack.world_ready:
+## Web: the art comes in packs right after boot (scripts/extra_pack.gd). New Game needs only street.pck (need 0:
+## the cold open's street, Duff and the porch pirates); a saved game, the Fork, arenas and minigames need world.pck
+## too (need 1). Starting before the pack lands would mean an invisible Duff, so hold on a "Loading Omaha" card
+## until it's mounted. Back runs `back` (the title by default). Everywhere else (and once it's in) this just runs cb.
+func _after_world(cb: Callable, need: int = 1, back: Callable = show_title) -> void:
+	if ExtraPack.ready_for(need):
 		cb.call()
 		return
 	var c: = Card.new()
-	c.backdrop = "title"
+	c.backdrop = "title" if in_title else ""
 	c.heading = "Loading Omaha..."
 	c.lines = ["Unpacking the neighbors..."]
 	c.opts = [["back", "Back", KEY_1]]
 	c.chosen.connect(func (_id: String) -> void:
 		close_overlay()
-		show_title())
+		back.call())
 	open_overlay(c)
 	var tick: = func (tk: Callable) -> void:
 		if not is_instance_valid(c) or not c.is_inside_tree():
-			return   # backed out to the title
-		if ExtraPack.world_ready:
+			return   # backed out
+		if ExtraPack.ready_for(need):
 			close_overlay()
 			cb.call()
 			return
@@ -682,6 +683,14 @@ func _after_world(cb: Callable) -> void:
 		get_tree().create_timer(0.25).timeout.connect(tk.bind(tk))
 	get_tree().create_timer(0.25).timeout.connect(tick.bind(tick))
 
+## Web, right after a new game: world.pck may still be streaming in. The Fork, arenas, the gala and minigames
+## need it, so they wait on the loading card (Back just closes it). True = held; the caller returns.
+func _world_gate(cb: Callable) -> bool:
+	if ExtraPack.world_ready:
+		return false
+	_after_world(cb, 1, func () -> void: pass)
+	return true
+
 func new_game(write_save: bool = true) -> void:
 	from_dict({})
 	wordle_seed = randi()
@@ -689,12 +698,36 @@ func new_game(write_save: bool = true) -> void:
 	jen_text_daily()
 	errand_new_day()
 	daily_new_day()
-	_say(["So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. That's the whole religion. Amen.",
-		"{partner}'s inside on the couch, top-left house, and she's got that look. She wants something. Probably a honey bun.",
-		"Every Monday, rent, bills and the family basics: $%d. Rent is due. Rent is always due. This first Monday it's prorated to $%d. {fork} (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))]])
+	cold_open()
 	if write_save:
 		save_game()
 	maybe_touch_tutorial()
+
+## Nov 13: a new game opens on a fight, not a rules dump. A porch pirate jogs at {partner}'s package; one line
+## says so, then the player has control. The rules come after he's down (or gone). On the web this plays on
+## street.pck alone while world.pck streams in (extra_pack.gd). story.cold_open marks it running, so a save made
+## mid-fight still gets the rules on Continue.
+const COLD_OPEN_FROM: = Vector2(196, 152)   # sidewalk under the Seen Cafe: on screen, a clear run at the porch
+func cold_open() -> void:
+	porch_pkg = true
+	porch_day = day_count
+	story["cold_open"] = true
+	var e: = spawn_enemy("pirate", COLD_OPEN_FROM)
+	e.pname = PIRATE_NAMES[0]
+	e.set_meta("cold_open", true)
+	toast_t = 0.0   # the morning's "*bzzt* texts" toast can wait; the phone badge still shows it
+	_say(["7 AM, day one. {partner}'s package is on the porch. A guy in a hoodie and sunglasses is jogging straight at it. Not today. %s" % ("Tap A to bonk him." if Cast.touch else "WASD or arrows to walk, Space to bonk him.")])
+
+## The rules, after the cold open's pirate is down (won) or gone with the package.
+func cold_open_rules(won: bool) -> Array:
+	story["cold_open"] = false
+	var lines: Array = []
+	if not won and not porch_pkg:
+		lines.append("He's gone. With the package. Great start. {partner} is going to hear about this.")
+	lines.append("So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. Three rules. I'm already 0 for 1.")
+	lines.append("{partner}'s inside on the couch, top-left house, and she's got that look." + (" Bring her that package." if won or porch_pkg else " She wants something. Probably a honey bun."))
+	lines.append("Every Monday, rent, bills and the family basics: $%d. This first Monday it's prorated to $%d. {fork} (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))])
+	return lines
 
 ## First new game on a phone: the three control cards, before the intro talk. Once per install.
 func maybe_touch_tutorial() -> void:
@@ -756,6 +789,9 @@ func from_dict(d: Dictionary) -> void:
 	var britt_ach: int = achievements.find("Brittany Owes Me")   # stored by name before the {coworker} token
 	if britt_ach >= 0:
 		achievements[britt_ach] = "{coworker} Owes Me"
+	var narc_ach: int = achievements.find("Narc of the Fork")   # stored by name before the {fork_nick} token
+	if narc_ach >= 0:
+		achievements[narc_ach] = "Narc of the {fork_nick}"
 	fryer_smell = bool(d.get("fryer_smell", false))
 	shifts_worked = int(d.get("shifts_worked", 0))
 	rent_debt = int(d.get("rent_debt", 0))
@@ -877,6 +913,8 @@ func load_game() -> bool:
 		return false
 	from_dict(d)
 	_say(["So where was I. Day %d, %s, %s." % [day_count, DAY_NAMES[day_i % 7], clock_text()], next_fact()])
+	if bool(story.get("cold_open", false)):
+		_say(cold_open_rules(false))
 	jen_text_daily()
 	_say(errand_new_day())
 	return true
@@ -959,7 +997,7 @@ func close_overlay() -> void:
 	if not in_shift:
 		hud.visible = true
 		touch.set_process_input(true)
-		touch.visible = DisplayServer.is_touchscreen_available() or OS.has_feature("web_ios") or OS.has_feature("web_android") or bool(touch.get("used"))
+		touch.visible = TouchScript.default_visible() or bool(touch.get("used"))
 		Cast.touch = touch.visible
 	_sync_world()
 
@@ -980,6 +1018,8 @@ func _menu(heading: String, lines: Array, opts: Array, cb: Callable, backdrop: S
 	open_overlay(c)
 
 func _run_game(node: Node, cb: Callable) -> void:
+	if not node is SettingsScript and _world_gate(func () -> void: _run_game(node, cb)):
+		return
 	node.finished.connect(func (score: float, notes: Array) -> void:
 		close_overlay()
 		cb.call(node, score, notes))
@@ -1485,7 +1525,7 @@ func _after_baby(b: Node, score: float, notes: Array) -> void:
 	var s: = StealthScript.new()
 	_run_game(s, func (_n: Node, sc: float, _notes: Array) -> void:
 		if sc <= 0.0:
-			night_report.append("CREAK. She's up. I sleep on the floor by the crib. My back files a complaint. -15 Energy tomorrow")
+			night_report.append("CREAK. She's up. I sleep on the floor by the crib. My back and I are no longer speaking. -15 Energy tomorrow")
 			_wake(penalty + 15)
 		else:
 			night_report.append("I make it to bed like a ninja. Full night's sleep. Write that down, it won't happen again.")
@@ -1549,12 +1589,12 @@ func _wake(energy_penalty: int) -> void:
 const KINDNESS: = [
 	["lunch", "{partner} packed my lunch. Note on the bag: \"Don't let them 86 you. Love, {partner}\" +15 Energy"],
 	["coffee", "{partner} makes my coffee exactly how I like it. Doesn't even ask. +10 Energy"],
-	["mirror", "I find a sticky note on the mirror: \"You're doing great, babe. The landlord is a goblin.\" Hell of a girl. +5 Energy"],
+	["mirror", "I find a sticky note on the mirror: \"You're doing great, babe. The landlord is a goblin.\" I keep it in my wallet. Next to no money. +5 Energy"],
 	["kiss", "{partner} kisses me on the way out. \"Go get 'em, chef.\" (Heat starts full today.)"],
 	["proud", ""],
 ]
 const PROUD_TEXTS: = [
-	"proud of you. that's it. that's the text",
+	"proud of you. no follow-up question. just that",
 	"thinking about you. also we need paper towels. mostly the first thing",
 	"you're a good dad. i know you're tired. i see it",
 	"don't work too hard babe. ok work a little hard. rent",
@@ -1699,7 +1739,7 @@ func _talk_to_madison() -> void:
 	if mood_kind() == "upset":
 		pre.append(str(Moods.UPSET.get(str(mood["cause"]), {}).get("line", "{partner}'s upset with me.")))
 	elif mood_kind() == "fussy":
-		pre.append(Moods.FUSSY_FINE if fussy_fine else "{partner}: \"I don't know what I want. Don't ask me what I want.\" (One of those days. Not your fault.)")
+		pre.append(Moods.FUSSY_FINE if fussy_fine else "{partner}: \"I don't know what I want. Don't ask me what I want.\" (Not about me. Not fixable with a question.)")
 	if charisma() > 0 and cha_line_day != day_count:
 		cha_line_day = day_count
 		pre.append(CHA_LINES[day_count % CHA_LINES.size()])
@@ -1773,7 +1813,7 @@ func complete_quest() -> Array:
 	match quest_kind:
 		"honey buns":
 			gain_happy(30.0)
-			lines = ["{partner}: HONEY BUNS! You're my favorite person. Don't tell {baby}.", "{cat3} watches from under the bed. Not impressed. At all.", "+30 Happiness"]
+			lines = ["{partner}: HONEY BUNS! I'd fight a landlord for you. Don't tell {baby}.", "{cat3} watches from under the bed. Not impressed. At all.", "+30 Happiness"]
 		"formula":
 			inventory["formula"] = int(inventory.get("formula", 0)) + 1
 			gain_happy(15.0)
@@ -2037,13 +2077,13 @@ func _process(delta: float) -> void:
 func try_shift() -> void:
 	var c: = fmod(clock, 1440.0)
 	if c >= 1320.0 or c < 360.0:
-		_say(["Fork's closed. Even Grill-Boy went home, and he lives in the walk-in. (Open 6 AM - 10 PM)"])
+		_say(["{fork_nick}'s closed. Even Grill-Boy went home, and he lives in the walk-in. (Open 6 AM - 10 PM)"])
 		return
 	if calendar_event() == "thanksgiving":
-		_say(["The Fork's closed for Thanksgiving. First time in history. Chef's 'with family,' which means his boat."])
+		_say(["The {fork_nick}'s closed for Thanksgiving. First time in history. Chef's 'with family,' which means golf."])
 		return
 	if Daily.is_weekend(day_i % 7) and not first_weekend():
-		_say(["It's the weekend. The schedule says I'm off. The Fork can lose money without me for once."])
+		_say(["It's the weekend. The schedule says I'm off. The {fork_nick} can lose money without me for once."])
 		return
 	start_shift()
 
@@ -2053,7 +2093,7 @@ func first_weekend() -> bool:
 	return day_count <= 3
 
 func start_shift() -> void:
-	if in_shift:
+	if in_shift or _world_gate(start_shift):
 		return
 	show_loading()
 	in_shift = true
@@ -2117,7 +2157,7 @@ func apply_shift_result(r: Dictionary) -> void:
 	var old_title: = pay_title()
 	shifts_worked += 1
 	if pay_title() != old_title:
-		_say(["PROMOTED! I'm %s at the Fork now. Pay x%.1f. HR calls it 'a growth journey.' I call it a raise." % [pay_title(), pay_mult()], "Rent hasn't gone up. Yet. Landlords smell a raise the way sharks smell blood. I gotta invest it fast."])
+		_say(["PROMOTED! I'm %s at the {fork_nick} now. Pay x%.1f. HR calls it 'a growth journey.' I call it a raise." % [pay_title(), pay_mult()], "Rent hasn't gone up. Yet. Landlords smell a raise the way sharks smell blood. I gotta invest it fast."])
 	if r["achievement"] != "" and not achievements.has(r["achievement"]):
 		achievements.append(r["achievement"])
 	if r["inspector"] == "fail":
@@ -2236,7 +2276,7 @@ func debug_station(k: String) -> void:
 				enter_home()
 			shades = k == "say_shades"
 			Cast.clean = k == "say_clean"
-			_say([{"say_smirk": "Fork's 86'd on honey buns again. I'll handle it.",
+			_say([{"say_smirk": "{fork_nick}'s 86'd on honey buns again. I'll handle it.",
 				"say_tired": "Landlord raised rent. Insurance denied the claim. Bus is late. Damn.",
 				"say_happy": "PROMOTED! Lead Line Cook! Love you, Madison!",
 				"say_shades": "Round shades on. Cosmetic only. Still the coolest line cook in Omaha.",
@@ -2515,7 +2555,7 @@ const HIT_LINES: = {
 	"karen": "Karen jabs me with her phone. She's going live.", "hoa": "Bonked with bylaw 4.2.c: 'No joy.'",
 	"post": "Hit by a hot take. 400k likes, zero facts.", "rocket": "A sponsored e-scooter lands on me. Use code TYLER for 10% off my spine.",
 	"drone": "Tip drone to the face. It asks how my experience was.", "laser": "Blinded by a tip screen. Suggested: 30%.", "bsod": "", "update": "",
-	"butler": "A butler pummels me. He's paid $9 an hour to do it. Respect.", "coin": "Pelted with gold coins. First money's trickled down in years.",
+	"butler": "A butler pummels me. He's paid $9 an hour to do it. Honestly? Same.", "coin": "Pelted with gold coins. First money's trickled down in years.",
 	"tariff": "Cost-cut. Right in the ribs. They're 'lean' now.", "tariff_bit": "Shrapnel from a restructuring.", "wall": "Bonked by a wall of NDAs. Can't say how much it hurt.",
 	"boss": "Body-checked by a boss. Classic. They never touch anything they can't buy.",
 	"seen": "Left on read. Stings worse than a fryer burn.", "dumbbell": "Dumbbell to the dome. Bro.", "charge": "Bro-charged! He didn't even warm up.",
@@ -2835,6 +2875,8 @@ func enemy_defeated(e: Node) -> void:
 		_say(lines)
 	elif e.has_meta("quest_porch"):
 		_say([msg, porch_quest_won()])
+	elif e.has_meta("cold_open"):
+		_say([msg] + cold_open_rules(true))
 	else:
 		_toast(msg)
 
@@ -2843,6 +2885,8 @@ func enemy_gone(e: Node) -> void:
 		_toast("Cheeto Chad clears the fence. He lives next door, genius. Knock again.")
 	if e.kind == "pirate" and str(e.loot) != "":
 		_toast("%s gets away with %s. He's gonna resell it on Marketplace as 'gently loved.'" % [e.display_name(), Cast.T(loot_name(str(e.loot)))])
+	if e.has_meta("cold_open"):
+		_say(cold_open_rules(false))
 	if e.kind == "scammer" and int(e.stolen) > 0:
 		_toast("Scammer gets away with $%d. Do I learn my lesson? I do not." % int(e.stolen))
 	e.remove_from_group("enemy")
@@ -3166,7 +3210,7 @@ func gala_new_day() -> Array:
 	return ["A gold envelope's under the door. THE ELITE GALA. {partner}'s already holding up the green dress. (P = phone: 'Take the limo' any night.)"]
 
 func start_gala(first: int = 0) -> void:
-	if not gala_unlocked or busy():
+	if not gala_unlocked or busy() or _world_gate(func () -> void: start_gala(first)):
 		return
 	clear_enemies()
 	location = "gala"
@@ -3346,7 +3390,7 @@ func _on_story_menu(choice: String, id: String) -> void:
 		start_story_fight(id)
 
 func start_story_fight(id: String) -> void:
-	if busy():
+	if busy() or _world_gate(func () -> void: start_story_fight(id)):
 		return
 	show_loading()
 	clear_enemies()
@@ -3406,7 +3450,7 @@ func _arena_process(delta: float) -> void:
 			_finish_final()
 		return
 	if energy <= 0.0:
-		story_lose("I get knocked out. Me and the sidewalk get acquainted. {partner} scrapes me off the curb. Again. Hell of a girl.")
+		story_lose("I get knocked out. Me and the sidewalk get acquainted. {partner} scrapes me off the curb. Again. She doesn't even ask anymore. She just brings the wipes.")
 		return
 	if arena_id == "willnot" and final_timer > 0.0:
 		var before: = final_timer
@@ -3461,11 +3505,11 @@ func story_boss_defeated(b: Node) -> void:
 		finale_t = 4.0
 		AudioScript.sfx("explosion")
 		_toast("THE WHOLE FLOOR IS GOING UP. BEHIND! BEHIND! RUN!")
-		_say(lines + ["Detonator clicks. I tie a garden hose around my waist and jump. Normal Tuesday at the Fork, honestly."])
+		_say(lines + ["Detonator clicks. I tie a garden hose around my waist and jump. Normal Tuesday at the {fork_nick}, honestly."])
 		save_game()
 		return
 	gain_happy(15.0)
-	lines.append("{partner}: You did WHAT? ...That's kind of hot. +15 Happiness")
+	lines.append("{partner}: You did WHAT? ...Never do that again. Tell me everything. +15 Happiness")
 	arena_id = ""
 	_leave_arena()
 	_say(lines)
@@ -3529,7 +3573,7 @@ func _arena_caption(f: Font, o: Vector2, line: String, c: Color) -> void:
 	draw_string(f, o + Vector2(0, 25), Cast.T(line), HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 6, c)
 
 const ERRAND_THANKS: = {
-	"pharmacy": ["You got it?! You waited in THE line? Marry me. Again. Hypothetically.", "My hero. My prescription hero. Here's your copay back, plus bus fare.", "You survived {pharmacy}. Honestly, that's a story boss."],
+	"pharmacy": ["You got it?! You waited in THE line? I'm telling everyone. I'm telling the cats.", "My hero. My prescription hero. Here's your copay back, plus bus fare.", "You survived {pharmacy}. Honestly, that's a story boss."],
 	"grocery": ["You got everything?! Look at you, a whole adult.", "The fridge has FOOD in it. I could cry.", "You even got the right eggs. Who ARE you?"],
 }
 const ERRAND_MISS: = {
@@ -3630,7 +3674,7 @@ func errand_deliver() -> Array:
 			for c in Errands.CAKE:
 				inventory[c] -= 1
 			inventory["cake"] = int(inventory.get("cake", 0)) + 1
-			lines.append("She bakes a Black Forest cake. For ME. (Kitchen: +60 Energy.)")
+			lines.append("She bakes a Black Forest cake. Cherries everywhere. A crime scene, but delicious. (Kitchen: +60 Energy.)")
 		lines.append_array(errand["sub_notes"])
 	var h: = Errands.reward(errand, frac, clock)
 	if late:
@@ -3893,7 +3937,7 @@ func _gig_talk(npc: String) -> bool:
 	match SideQuests.stage(st, q):
 		1:
 			SideQuests.advance(st, q)
-			_say(["{coworker} turns her phone sideways. Slide one: {COWORKER_SHORT}'S ARTISANAL RANCH. Slide two: a picture of the Fork's ranch bucket.",
+			_say(["{coworker} turns her phone sideways. Slide one: {COWORKER_SHORT}'S ARTISANAL RANCH. Slide two: a picture of the {fork_nick}'s ranch bucket.",
 				"{coworker}: I fill mason jars from the walk-in. Hand-lettered labels. Eight bucks a jar on Marketplace. I've moved ninety jars.",
 				"{coworker}: Chef's counting the ranch buckets. He thinks it's the dishwasher. I need you to say you saw the dishwasher take it. Or don't. Your call. I'm watching."])
 			return true
@@ -3936,7 +3980,7 @@ func gig_payoff() -> Array:
 		bet["day"] = day_count  # she's not betting with a narc today
 		lines = ["Chef slips me $40 in an envelope marked 'LOYALTY'. Manny keeps his job. {coworker} keeps... nothing. The ranch empire has fallen.",
 			"{coworker}: I respect it. I hate it, but I respect it. No bets today. I need to grieve.", "+$40. Quest done."]
-		ach = "Narc of the Fork"
+		ach = "Narc of the {fork_nick}"
 	else:
 		money += 60
 		gain_happy(5.0)
@@ -4247,7 +4291,7 @@ func pirate_snatch(e: Node, where: String) -> void:
 		return
 	e.loot = item
 	e.state = "flee"
-	e.st = 10.0
+	e.st = 16.0 if e.has_meta("cold_open") else 10.0   # a new player's first chase: room to catch him
 	e.say(PIRATE_TAUNTS[randi() % PIRATE_TAUNTS.size()])
 	player.carrying = int(inventory.get("honey buns", 0)) > 0
 	_toast("%s snatches %s! Oh hell no. I give chase." % [e.display_name(), Cast.T(loot_name(item))])
@@ -4409,7 +4453,7 @@ func spritz_cologne() -> void:
 	grant_buff("charisma", Buffs.CHARISMA_MINS)
 	advance_clock(1.0)
 	var lines: Array = ["*psst psst* I hit myself with {cologne}. Notes of leather, venture capital and Applebee's parking lot. CHARISMA 6 hrs: 20% off stores, bigger tips, +25% {partner} happiness."]
-	text("madison", "madison", "Why does the whole house smell like a department store?? ...Not mad. Come here.")
+	text("madison", "madison", "who are you trying to impress. it's working. come home")
 	unread["madison"] = true
 	ping_t = 2.0
 	var a: = _unlock("Smells Like Money")
@@ -4715,7 +4759,7 @@ func fussy_swap() -> void:
 	text("madison", "madison", Moods.FUSSY_SWAP % [str(Errands.LABELS.get(in_id, in_id)).to_lower(), str(Errands.LABELS.get(out_id, out_id)).to_lower()])
 	unread["madison"] = true
 	ping_t = 2.0
-	_toast("*bzzt* {partner} changes the list. Again. (No penalty. It's one of those days.)")
+	_toast("*bzzt* {partner} changes the list. Again. (No penalty. The list is a living document today.)")
 
 const QUEST_HINTS: = {"honey buns": "She keeps eyeing the empty honey bun box. Like it owes her money.", "formula": "She keeps shaking the formula can. Sounds empty, man.",
 	"diapers": "She's counting diapers. Out loud. There are two.", "cake": "She's watching a baking show. Aggressively." }
@@ -4888,7 +4932,7 @@ func resolve_bill(id: String, choice: String) -> Array:
 		"plan":
 			var pl: Array = e["plan"]
 			plans.append({"id": id, "per": int(pl[1]), "left": int(pl[0]) })
-			out.append("Payment plan: $%d every Monday for %d weeks ($%d total, $%d 'convenience' tax on being broke)." % [int(pl[1]), int(pl[0]), int(pl[0]) * int(pl[1]), int(pl[0]) * int(pl[1]) - int(e["cost"])])
+			out.append("Payment plan: $%d every Monday for %d weeks ($%d total; $%d of that is them being 'patient' with me)." % [int(pl[1]), int(pl[0]), int(pl[0]) * int(pl[1]), int(pl[0]) * int(pl[1]) - int(e["cost"])])
 		"ignore":
 			var ig: Dictionary = e["ignore"]
 			if id == "phone":
@@ -4922,7 +4966,7 @@ func resolve_bill(id: String, choice: String) -> Array:
 				out.append("I negotiate%s. Landlord: \"Fine. $5, not $15. Don't tell the other units.\"" % (" (and smell incredible)" if charisma() > 0 else ""))
 			else:
 				rent_bump += int(e["hike"])
-				out.append("He raises it anyway. 'Market rate.' The market is him.")
+				out.append("He raises it anyway. Says it hurts him more than me. Says it from the boat.")
 		"decline":
 			out.append("I pass on the gig. My feet send their regards.")
 	bills = bills.filter(func (x): return str(x["id"]) != id)
@@ -4945,7 +4989,7 @@ func bus_stops() -> Array:
 
 func bus_menu(from: String) -> void:
 	if not has_car and not Transit.running(clock):
-		_say(["Next bus is 5:30 AM. City budget went to a stadium. Bench is cold. Walking's free."])
+		_say(["Next bus is 5:30 AM. City budget went to a stadium. Bench is cold. Guess I'm a walker now."])
 		return
 	var opts: Array = []
 	var keys: = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5]
@@ -5071,7 +5115,7 @@ func _on_bounty_menu(id: String) -> void:
 	start_bounty(id)
 
 func start_bounty(id: String) -> void:
-	if busy():
+	if busy() or _world_gate(func () -> void: start_bounty(id)):
 		return
 	show_loading()
 	clear_enemies()
@@ -5091,7 +5135,7 @@ func start_bounty(id: String) -> void:
 	arena_boss = b
 	b.set_physics_process(not busy())
 	if id != "grease":  # the side-quest boss brings its own intro (start_grease_fight)
-		_say(["Out back of the Fork. Dumpster, puddles, a guy from the 86 List. Romantic.", str(BossScript.BOSSES[id]["intro"])])
+		_say(["Out back of the {fork_nick}. Dumpster, puddles, a guy from the 86 List. Romantic.", str(BossScript.BOSSES[id]["intro"])])
 	_sync_world()
 
 func bounty_defeated(b: Node) -> void:
@@ -5151,8 +5195,8 @@ func waffle_regular_tonight() -> bool:
 
 func waffle_menu() -> void:
 	if shifts_worked < WAFFLE_MIN_SHIFTS:
-		_say(["There's a Waffle Haus sign out by the interstate: 'NOW HIRING graveyard cook. Experience required.' Never closes. Never has.",
-			"(I gotta work %d more shift%s at the Fork first. They want a resume. My resume is a burn scar.)" % [WAFFLE_MIN_SHIFTS - shifts_worked, "" if WAFFLE_MIN_SHIFTS - shifts_worked == 1 else "s"]])
+		_say(["There's a Waffle Haus sign out by the interstate: 'NOW HIRING graveyard cook. Experience required.' They mean the life kind.",
+			"(I gotta work %d more shift%s at the {fork_nick} first. They want a resume. My resume is a burn scar.)" % [WAFFLE_MIN_SHIFTS - shifts_worked, "" if WAFFLE_MIN_SHIFTS - shifts_worked == 1 else "s"]])
 		return
 	var c: = fmod(clock, 1440.0)
 	if not (c >= 1260.0 or c < 60.0):
@@ -5171,7 +5215,7 @@ func waffle_menu() -> void:
 			start_waffle())
 
 func start_waffle() -> void:
-	if busy():
+	if busy() or _world_gate(func () -> void: start_waffle()):
 		return
 	show_loading()
 	clear_enemies()
@@ -5281,7 +5325,7 @@ const BETS: = {
 		"lose": "AND THERE IT IS. Posted. 40 views already. One of them is your mom." },
 	"combo": {"name": "Hit Parade", "goal": 45, "time": 45.0, "pitch": "Land 45 hits in 45 seconds. On the HOA guys. They're basically drywall with clipboards.",
 		"pool": ["hoa"], "cap": 3,
-		"win": "45 hits. You punch like you're mad at a parking ticket. Respect.",
+		"win": "45 hits. You punch like you're mad at a parking ticket. Fine. Take it.",
 		"lose": "You swing like a guy opening a pickle jar. Pay up, chef." },
 	"speed": {"name": "Speed Run", "goal": 12, "time": 50.0, "pitch": "12 knockouts in 50 seconds. I've got the stopwatch. And the camera. And your $.",
 		"pool": ["scammer", "hustler", "drunk", "heckler", "karen"], "cap": 4,
@@ -5290,7 +5334,7 @@ const BETS: = {
 }
 const BET_ORDER: = ["nohit", "combo", "speed"]
 const BET_INTRO: = ["{coworker}: Okay, chef. I've got a bet. You're gonna lose. I'm gonna film it.",
-	"{coworker}: Bet you can't. That's it. That's the whole sentence. Bet you can't.",
+	"{coworker}: Bet you can't. I'm not elaborating. Bet. You. Can't.",
 	"{coworker}: My phone's at 80% and my faith in you is at 12%. Let's go."]
 
 func bet_today() -> String:
@@ -5319,7 +5363,7 @@ func bet_menu() -> void:
 			start_bet(bet_today(), int(ch)))
 
 func start_bet(kind: String, stake: int) -> void:
-	if busy():
+	if busy() or _world_gate(func () -> void: start_bet(kind, stake)):
 		return
 	clear_enemies()
 	arena_id = "alley"
@@ -5337,7 +5381,7 @@ func start_bet(kind: String, stake: int) -> void:
 	player.stun_t = 0.0
 	_set_camera()
 	energy = 100.0
-	_say(["{coworker} drags me behind the Fork. \"Best lighting in town. It's the dumpster. The dumpster's the lighting.\"", "{coworker}: %s Go!" % str(BETS[kind]["name"]).to_upper()])
+	_say(["{coworker} drags me behind the {fork_nick}. \"Best lighting in town. It's the dumpster. The dumpster's the lighting.\"", "{coworker}: %s Go!" % str(BETS[kind]["name"]).to_upper()])
 	_sync_world()
 
 func _bet_progress() -> int:
@@ -5489,7 +5533,7 @@ func calendar_day_lines() -> Array:
 		daily["thanks_day"] = day_count
 		gain_happy(10.0)
 		energy = minf(100.0, energy + 20.0)
-		out.append("Waffle Haus at noon. Dolores brings a pie she says is 'from the case.' It's not from the case. (+10 Happiness, +20 Energy. The Fork's closed.)")
+		out.append("Waffle Haus at noon. Dolores brings a pie she says is 'from the case.' It's not from the case. (+10 Happiness, +20 Energy. The {fork_nick}'s closed.)")
 	return out
 
 ## Day 10: Falcor. Approved text (Duff, Nov 9). Sincere: no jokes at his expense.

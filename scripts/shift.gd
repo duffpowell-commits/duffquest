@@ -85,7 +85,7 @@ static func grade_rank(g: String) -> int:
 
 ## Muscle memory: a station Duff has S'd before can be autopiloted for a flat B.
 const AUTOPILOT_SCORE: = 0.72
-const AUTOPILOT_NOTE: = "Muscle memory. My hands run the station. My brain files a complaint."
+const AUTOPILOT_NOTE: = "Muscle memory. My hands run the station. My brain watches from the break room."
 
 func can_autopilot(k: String) -> bool:
 	if m == null or not (k in FULL):
@@ -105,10 +105,10 @@ static func grade_color(g: String) -> Color:
 static func quip(g: String) -> String:
 	match g:
 		"S": return "Chef's kiss. And then corporate takes the credit."
-		"A": return "Clean. Chef nods. That's the whole bonus."
+		"A": return "Clean. Chef nods. I'll live off that nod for a week."
 		"B": return "Solid. Nobody gets sick. Legally."
 		"C": return "Eh. Expo sighs loud enough to bill me. Nobody tips the fry cook."
-	return "Disaster. Some influencer's filming a 14-part TikTok about it. Nobody tips the fry cook."
+	return "Disaster. Some influencer's filming a 14-part TikTok about it. Part 9 is just my face."
 
 static func compute_pay(md: String, n_stations: int, grade: String, bonus: int, rpay: float, walked: int) -> Dictionary:
 	var base: = int(round(rpay)) if md == "rush" else BASE_PER_STATION * n_stations
@@ -152,9 +152,9 @@ func _card(heading: String, lines: Array, lines2: Array, big: String, opts: Arra
 
 func start() -> void:
 	_card("{FORK}  -  %s" % day_name,
-		["Clock in. The Fork is a family (unpaid overtime). Grade sets pay: S = double, F = docked.",
+		["Clock in. The {fork_nick} is a family (unpaid overtime). Grade sets pay: S = double, F = docked.",
 		"Full Shift: all 8 stations, new order every night. Quick Shift: 4 random ones. S a station once and you can autopilot it for a B.",
-		"Friday Night Rush: tickets pile on the rail. Chain good grades for a combo. Tips go to 'the pool' (Chef's boat)."],
+		"Friday Night Rush: tickets pile on the rail. Chain good grades for a combo. Tips go to 'the pool' (Chef's actual pool)."],
 		[], "", menu_opts(), _on_menu)
 
 func menu_opts() -> Array:

@@ -31,6 +31,9 @@ func _process(_d: float) -> void:
 			get_viewport().get_texture().get_image().save_png("/tmp/qa/title.png")
 			get_tree().quit()
 		return
+	if id.begins_with("cold"):
+		_cold()
+		return
 	if frame in [40, 80, 110, 140]:
 		_key(KEY_1 if frame == 40 else KEY_ENTER)
 	if frame == 200:
@@ -38,6 +41,7 @@ func _process(_d: float) -> void:
 		m.close_overlay()
 		m.dialog.clear()
 		m.no_loading = true
+		m.clear_enemies()   # the new game's cold-open pirate (shoot it with id "cold")
 		if id.begins_with("at:"):  # at:X,Y = stand Duff at that outdoor world point
 			var xy: = id.substr(3).split(",")
 			if m.location != "outside":
@@ -161,6 +165,43 @@ func _process(_d: float) -> void:
 		return
 	if frame == 280:
 		get_viewport().get_texture().get_image().save_png("/tmp/qa/arena_%s.png" % id)  # fryer/sandwich: the station
+		get_tree().quit()
+
+## id "cold": the new game's cold open (run with --fixed-fps 30). Saves cold_0 (phone: first control card),
+## cold_1 (the one line, the pirate on screen), cold_2 (he has the package and runs, Duff on him), cold_3 (he's
+## down, the rules start).
+var _snatch: = -1
+func _cold() -> void:
+	if frame == 40:
+		_key(KEY_1)
+	if frame == 100:
+		m = game.get_child(0).get_child(0).get_child(0)
+		m.no_loading = true
+		get_viewport().get_texture().get_image().save_png("/tmp/qa/cold_0.png")
+		if m.tut != null and m.tut.active():
+			m.tut.finish()
+	if frame == 110:
+		get_viewport().get_texture().get_image().save_png("/tmp/qa/cold_1.png")
+		m.dialog.clear()
+	if frame > 110 and _snatch < 0 and m.live_enemies().size() > 0 and str(m.live_enemies()[0].loot) != "":
+		_snatch = frame
+		print("cold open: package snatched %.1f s after the line" % ((frame - 110) / 30.0))
+	if _snatch > 0 and frame == _snatch + 12:
+		var e: Node = m.live_enemies()[0]
+		m.player.position = e.position + Vector2(-22, 2)
+		m.cam.reset_smoothing()
+	if _snatch > 0 and frame == _snatch + 16:
+		get_viewport().get_texture().get_image().save_png("/tmp/qa/cold_2.png")
+		for e in m.live_enemies():
+			e.hp = 0.1
+			e.take_hit(Vector2.RIGHT, 1.0)
+	if _snatch > 0 and frame == _snatch + 40:
+		m.toast_t = 0.0
+		get_viewport().get_texture().get_image().save_png("/tmp/qa/cold_3.png")
+		print("cold open: dialog after the fight = ", m.dialog)
+		get_tree().quit()
+	if frame == 600:
+		print("cold open: no snatch in 16 s")
 		get_tree().quit()
 
 func _find_game(n: Node) -> Node:

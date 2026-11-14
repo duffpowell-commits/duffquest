@@ -23,7 +23,7 @@ const ACCEL: = 260.0
 const MAX_V: = 85.0
 const R: = 5.0
 const KAREN_Y: = 53.0
-const DECOYS: = [["$0.50 off Bigfoot repellent", "Bigfoot has not been spotted in {city}. Yet."], ["EXPIRED: eggnog, 2009", "Expired in 2009. The eggnog has evolved."], ["BOGO garden gnome", "Nobody needs a gnome. The economy needs you to need a gnome."], ["10% off a $400 blender", "Saving $40 by spending $400. Finance bros call this 'alpha.'"], ["Free sample: mystery dip", "Not a coupon. A data-harvesting agreement with a dip."]]
+const DECOYS: = [["$0.50 off Bigfoot repellent", "Bigfoot has not been spotted in {city}. Yet."], ["EXPIRED: eggnog, 1998", "Expired in 1998. The eggnog has evolved."], ["BOGO garden gnome", "Nobody needs a gnome. The economy needs you to need a gnome."], ["10% off a $400 blender", "Saving $40 by spending $400. Finance bros call this 'alpha.'"], ["Free sample: mystery dip", "Not a coupon. A data-harvesting agreement with a dip."]]
 const KAREN_LINES: = ["Karen: \"Excuse me. I need to speak to your MANAGER.\" (You don't have one here.)", "Karen: \"Do you WORK here?\" (No. Nobody does. They replaced everyone with a kiosk.)", "Linda: \"She's right, you know.\" (About what?)", "Karen: \"This aisle is MINE. I have a premium membership.\""]
 
 var m: Node = null
@@ -349,7 +349,7 @@ func buy_cologne() -> bool:
 
 	var p: = cologne_price()
 	if m == null or m.money < p:
-		flash("Not enough cash. The cologne rack sneers at me.", Color("#e06a4a"))
+		flash("Not enough cash. I sniff the tester. That's as close as I get.", Color("#e06a4a"))
 		return false
 	m.money -= p
 	m.inventory["cologne"] = int(m.inventory.get("cologne", 0)) + Buffs.COLOGNE_SPRAYS
@@ -393,7 +393,7 @@ func pay() -> void:
 		if card_strain:
 			lines += " My wallet runs dry; her card takes the rest. She'll notice."
 	if not put_back.is_empty():
-		lines += " Card declined. I put back the %s with dignity. What's left of it." % ", ".join(put_back)
+		lines += " Card declined. I put back the %s. We had a good run." % ", ".join(put_back)
 	say = lines
 	go("receipt")
 
