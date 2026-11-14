@@ -70,8 +70,8 @@ These sit in `moods.gd` (fussy days), `mornings.gd` or her real-shows file. Noth
 
 ## Other things spotted (not humor, not fixed here)
 
-- Public build still calls the restaurant "the Fork" in ~40 lines while the sign says Busted Spatula. Reads like a
-  nickname, but a public player never learns why. Fix would be `{fork_short}` in those lines.
+- Fixed in the follow-up PR: every bare "the Fork" (27 strings) now uses `{fork_nick}` (family: Fork, public: Spatula),
+  the Club Fork sandwich shows as `{club_sandwich}`, and the "Narc of the Fork" achievement migrates in old saves.
 - `baby.gd` hardcodes "OCTAVIA IS CRYING" instead of `{BABY}` (same name in both editions today, so harmless).
 - `main.gd` dev render line `say_happy` hardcodes "Love you, Madison!" (dev shots only).
 

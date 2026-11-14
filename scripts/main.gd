@@ -787,6 +787,9 @@ func from_dict(d: Dictionary) -> void:
 	var britt_ach: int = achievements.find("Brittany Owes Me")   # stored by name before the {coworker} token
 	if britt_ach >= 0:
 		achievements[britt_ach] = "{coworker} Owes Me"
+	var narc_ach: int = achievements.find("Narc of the Fork")   # stored by name before the {fork_nick} token
+	if narc_ach >= 0:
+		achievements[narc_ach] = "Narc of the {fork_nick}"
 	fryer_smell = bool(d.get("fryer_smell", false))
 	shifts_worked = int(d.get("shifts_worked", 0))
 	rent_debt = int(d.get("rent_debt", 0))
@@ -2070,13 +2073,13 @@ func _process(delta: float) -> void:
 func try_shift() -> void:
 	var c: = fmod(clock, 1440.0)
 	if c >= 1320.0 or c < 360.0:
-		_say(["Fork's closed. Even Grill-Boy went home, and he lives in the walk-in. (Open 6 AM - 10 PM)"])
+		_say(["{fork_nick}'s closed. Even Grill-Boy went home, and he lives in the walk-in. (Open 6 AM - 10 PM)"])
 		return
 	if calendar_event() == "thanksgiving":
-		_say(["The Fork's closed for Thanksgiving. First time in history. Chef's 'with family,' which means golf."])
+		_say(["The {fork_nick}'s closed for Thanksgiving. First time in history. Chef's 'with family,' which means golf."])
 		return
 	if Daily.is_weekend(day_i % 7) and not first_weekend():
-		_say(["It's the weekend. The schedule says I'm off. The Fork can lose money without me for once."])
+		_say(["It's the weekend. The schedule says I'm off. The {fork_nick} can lose money without me for once."])
 		return
 	start_shift()
 
@@ -2150,7 +2153,7 @@ func apply_shift_result(r: Dictionary) -> void:
 	var old_title: = pay_title()
 	shifts_worked += 1
 	if pay_title() != old_title:
-		_say(["PROMOTED! I'm %s at the Fork now. Pay x%.1f. HR calls it 'a growth journey.' I call it a raise." % [pay_title(), pay_mult()], "Rent hasn't gone up. Yet. Landlords smell a raise the way sharks smell blood. I gotta invest it fast."])
+		_say(["PROMOTED! I'm %s at the {fork_nick} now. Pay x%.1f. HR calls it 'a growth journey.' I call it a raise." % [pay_title(), pay_mult()], "Rent hasn't gone up. Yet. Landlords smell a raise the way sharks smell blood. I gotta invest it fast."])
 	if r["achievement"] != "" and not achievements.has(r["achievement"]):
 		achievements.append(r["achievement"])
 	if r["inspector"] == "fail":
@@ -2269,7 +2272,7 @@ func debug_station(k: String) -> void:
 				enter_home()
 			shades = k == "say_shades"
 			Cast.clean = k == "say_clean"
-			_say([{"say_smirk": "Fork's 86'd on honey buns again. I'll handle it.",
+			_say([{"say_smirk": "{fork_nick}'s 86'd on honey buns again. I'll handle it.",
 				"say_tired": "Landlord raised rent. Insurance denied the claim. Bus is late. Damn.",
 				"say_happy": "PROMOTED! Lead Line Cook! Love you, Madison!",
 				"say_shades": "Round shades on. Cosmetic only. Still the coolest line cook in Omaha.",
@@ -3497,7 +3500,7 @@ func story_boss_defeated(b: Node) -> void:
 		finale_t = 4.0
 		AudioScript.sfx("explosion")
 		_toast("THE WHOLE FLOOR IS GOING UP. BEHIND! BEHIND! RUN!")
-		_say(lines + ["Detonator clicks. I tie a garden hose around my waist and jump. Normal Tuesday at the Fork, honestly."])
+		_say(lines + ["Detonator clicks. I tie a garden hose around my waist and jump. Normal Tuesday at the {fork_nick}, honestly."])
 		save_game()
 		return
 	gain_happy(15.0)
@@ -3929,7 +3932,7 @@ func _gig_talk(npc: String) -> bool:
 	match SideQuests.stage(st, q):
 		1:
 			SideQuests.advance(st, q)
-			_say(["{coworker} turns her phone sideways. Slide one: {COWORKER_SHORT}'S ARTISANAL RANCH. Slide two: a picture of the Fork's ranch bucket.",
+			_say(["{coworker} turns her phone sideways. Slide one: {COWORKER_SHORT}'S ARTISANAL RANCH. Slide two: a picture of the {fork_nick}'s ranch bucket.",
 				"{coworker}: I fill mason jars from the walk-in. Hand-lettered labels. Eight bucks a jar on Marketplace. I've moved ninety jars.",
 				"{coworker}: Chef's counting the ranch buckets. He thinks it's the dishwasher. I need you to say you saw the dishwasher take it. Or don't. Your call. I'm watching."])
 			return true
@@ -3972,7 +3975,7 @@ func gig_payoff() -> Array:
 		bet["day"] = day_count  # she's not betting with a narc today
 		lines = ["Chef slips me $40 in an envelope marked 'LOYALTY'. Manny keeps his job. {coworker} keeps... nothing. The ranch empire has fallen.",
 			"{coworker}: I respect it. I hate it, but I respect it. No bets today. I need to grieve.", "+$40. Quest done."]
-		ach = "Narc of the Fork"
+		ach = "Narc of the {fork_nick}"
 	else:
 		money += 60
 		gain_happy(5.0)
@@ -5127,7 +5130,7 @@ func start_bounty(id: String) -> void:
 	arena_boss = b
 	b.set_physics_process(not busy())
 	if id != "grease":  # the side-quest boss brings its own intro (start_grease_fight)
-		_say(["Out back of the Fork. Dumpster, puddles, a guy from the 86 List. Romantic.", str(BossScript.BOSSES[id]["intro"])])
+		_say(["Out back of the {fork_nick}. Dumpster, puddles, a guy from the 86 List. Romantic.", str(BossScript.BOSSES[id]["intro"])])
 	_sync_world()
 
 func bounty_defeated(b: Node) -> void:
@@ -5188,7 +5191,7 @@ func waffle_regular_tonight() -> bool:
 func waffle_menu() -> void:
 	if shifts_worked < WAFFLE_MIN_SHIFTS:
 		_say(["There's a Waffle Haus sign out by the interstate: 'NOW HIRING graveyard cook. Experience required.' They mean the life kind.",
-			"(I gotta work %d more shift%s at the Fork first. They want a resume. My resume is a burn scar.)" % [WAFFLE_MIN_SHIFTS - shifts_worked, "" if WAFFLE_MIN_SHIFTS - shifts_worked == 1 else "s"]])
+			"(I gotta work %d more shift%s at the {fork_nick} first. They want a resume. My resume is a burn scar.)" % [WAFFLE_MIN_SHIFTS - shifts_worked, "" if WAFFLE_MIN_SHIFTS - shifts_worked == 1 else "s"]])
 		return
 	var c: = fmod(clock, 1440.0)
 	if not (c >= 1260.0 or c < 60.0):
@@ -5373,7 +5376,7 @@ func start_bet(kind: String, stake: int) -> void:
 	player.stun_t = 0.0
 	_set_camera()
 	energy = 100.0
-	_say(["{coworker} drags me behind the Fork. \"Best lighting in town. It's the dumpster. The dumpster's the lighting.\"", "{coworker}: %s Go!" % str(BETS[kind]["name"]).to_upper()])
+	_say(["{coworker} drags me behind the {fork_nick}. \"Best lighting in town. It's the dumpster. The dumpster's the lighting.\"", "{coworker}: %s Go!" % str(BETS[kind]["name"]).to_upper()])
 	_sync_world()
 
 func _bet_progress() -> int:
@@ -5525,7 +5528,7 @@ func calendar_day_lines() -> Array:
 		daily["thanks_day"] = day_count
 		gain_happy(10.0)
 		energy = minf(100.0, energy + 20.0)
-		out.append("Waffle Haus at noon. Dolores brings a pie she says is 'from the case.' It's not from the case. (+10 Happiness, +20 Energy. The Fork's closed.)")
+		out.append("Waffle Haus at noon. Dolores brings a pie she says is 'from the case.' It's not from the case. (+10 Happiness, +20 Energy. The {fork_nick}'s closed.)")
 	return out
 
 ## Day 10: Falcor. Approved text (Duff, Nov 9). Sincere: no jokes at his expense.

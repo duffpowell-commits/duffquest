@@ -10,7 +10,7 @@ const ORDER: = ["bun_b", "mayo", "fried", "grilled", "hot", "cheese", "bacon", "
 const KEYS: = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS]
 ## How a menu item reads on the ticket. The house sandwich carries the restaurant's name, so it goes through
 ## cast.json ("house_sandwich"; the public edition renames it with the restaurant).
-const SHOWN: = {"Twisted Classic": "{house_sandwich}"}
+const SHOWN: = {"Twisted Classic": "{house_sandwich}", "Club Fork": "{club_sandwich}"}
 const MENU: = {
 	"Twisted Classic": ["bun_b", "mayo", "fried", "pickles", "bun_t"],
 	"Deluxe": ["bun_b", "mayo", "fried", "cheese", "lettuce", "tomato", "pickles", "bun_t"],

@@ -32,11 +32,11 @@ const BOSSES: = {
 		"rage": "{gala_baron}: Jeeves! Hire MORE help! Minimum wage, maximum loyalty!",
 		"defeat": "{gala_baron}: My monocle! My yacht slip! Mummy will hear of this!" },
 	"donald": {"name": "{gala_ex_4}", "hp": 360.0, "attacks": ["tariff", "wall"], "labels": {"tariff": "CUTS", "wall": "NDA"},
-		"setup": "{partner}: Is that Chip? It's Chip. Babe, Chip bought the Fork. You work for my ex now. I'm gonna be sick.",
+		"setup": "{partner}: Is that Chip? It's Chip. Babe, Chip bought the {fork_nick}. You work for my ex now. I'm gonna be sick.",
 		"intro": "{gala_ex_4}: Bought {fork_short} this morning. So I'm her ex AND your boss. Love a vertical integration.",
 		"taunts": ["Congrats on your promotion to Unpaid Shift Lead.", "We're cutting the fries. Not the price. The fries.", "I don't run restaurants. I run them into the ground. Profitably.", "Your pension is a pizza party. You're buying the pizza."],
 		"rage": "{gala_ex_4}: Restructuring! EVERYBODY gets restructured! Starting with your face!",
-		"defeat": "{gala_ex_4}: ...I'm selling the Fork back. At a loss. Don't tell my investors." },
+		"defeat": "{gala_ex_4}: ...I'm selling the {fork_nick} back. At a loss. Don't tell my investors." },
 
 	"ghoster": {"name": "{ex_1}", "hp": 32.0, "attacks": ["seen", "vanish"],
 		"intro": "{ex_1}: hey! been sooo busy. with what? ...growth. personal growth. mostly naps.",

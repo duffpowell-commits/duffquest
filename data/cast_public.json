@@ -1,6 +1,8 @@
 {
   "_readme": "Public edition overrides (itch, GitHub Pages, advertised builds). Loaded on top of cast.json unless the build has the 'family' feature tag. See docs/legal/RISK_AUDIT.md for why each one exists.",
   "fork": "The Busted Spatula",
+  "fork_nick": "Spatula",
+  "club_sandwich": "Club Spatula",
   "fork_short": "the Busted Spatula",
   "house_sandwich": "Spatula Classic",
   "wordle": "Word Brawl",
