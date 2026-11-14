@@ -888,18 +888,18 @@ const ASSETS = {
     "s": 2
   },
   "ch_baron": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "ch_bozos": {
     "w": 256,
@@ -1056,18 +1056,18 @@ const ASSETS = {
     "s": 2
   },
   "ch_grease": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "ch_gymbro": {
     "w": 512,
@@ -1098,18 +1098,18 @@ const ASSETS = {
     "s": 2
   },
   "ch_husk": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "ch_hustler": {
     "w": 256,
@@ -1124,6 +1124,20 @@ const ASSETS = {
     ],
     "kind": "humanoid",
     "s": 2
+  },
+  "ch_mike": {
+    "w": 512,
+    "h": 512,
+    "cell": [
+      128,
+      128
+    ],
+    "origin": [
+      64,
+      120
+    ],
+    "kind": "humanoid",
+    "s": 4
   },
   "ch_inspector": {
     "w": 256,
@@ -1364,18 +1378,18 @@ const ASSETS = {
     "s": 2
   },
   "ch_willnot": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "drone": {
     "w": 80,
