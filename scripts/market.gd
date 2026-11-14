@@ -10,7 +10,7 @@ const ASSETS: = [
 	{"t": "BUNZ", "name": "Honey Bun Holdings", "kind": "dividend stock", "mu": 0.016, "sig": 0.08, "div": 0.011, "start": 40.0,
 		"blurb": "One company, sweet dividend. A single stock wobbles more than a fund." },
 	{"t": "BONDZ", "name": "Boring Bond Fund", "kind": "bonds", "mu": 0.007, "sig": 0.015, "div": 0.011, "start": 10.0,
-		"blurb": "Lend money to the government. They'll spend it on a stadium. Steady. Cushions crashes." },
+		"blurb": "Lend money to the government. They'll spend it on a parade. Steady. Cushions crashes." },
 	{"t": "GTS", "name": "Grand Theft Stock Studios", "kind": "growth", "mu": 0.02, "sig": 0.16, "div": 0.0, "start": 80.0,
 		"blurb": "One giant game a decade, made by crunch. Trailer drops = rockets. Delays = ouch." },
 	{"t": "GMSTP", "name": "GameStomp", "kind": "meme", "mu": -0.08, "sig": 0.35, "div": 0.0, "start": 20.0,

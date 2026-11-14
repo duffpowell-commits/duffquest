@@ -11,7 +11,7 @@ const QUIPS: = [
 	"{sister}: Clock's not ticking. Unlike your metabolism.",
 	"{sister}: Bold opener. Wrong, but bold.",
 	"{sister}: You're cooking. Like, badly, but cooking.",
-	"{sister}: Halfway. {baby} could do this. She eats crayons.",
+	"{sister}: Halfway. I've watched you read a menu. This tracks.",
 	"{sister}: Two left. I'm already typing the group chat.",
 	"{sister}: Last one. No pressure. (So much pressure.)",
 ]
