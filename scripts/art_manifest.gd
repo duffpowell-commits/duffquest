@@ -160,18 +160,18 @@ const ASSETS = {
   "sf_hywhee": {"w": 440, "h": 192, "cell": [440, 192], "origin": [0, 0], "s": 4},
   "sf_plazmart": {"w": 288, "h": 160, "cell": [288, 160], "origin": [0, 0], "s": 4},
   "ch_brittany": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "arena_waffle": {
     "w": 1280,
@@ -1014,18 +1014,18 @@ const ASSETS = {
     "s": 2
   },
   "ch_fences": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "ch_ghoster": {
     "w": 256,
@@ -1182,18 +1182,18 @@ const ASSETS = {
     "s": 2
   },
   "ch_madison": {
-    "w": 256,
-    "h": 256,
+    "w": 512,
+    "h": 512,
     "cell": [
-      64,
-      64
+      128,
+      128
     ],
     "origin": [
-      32,
-      60
+      64,
+      120
     ],
     "kind": "humanoid",
-    "s": 2
+    "s": 4
   },
   "ch_madison_dress": {
     "w": 256,

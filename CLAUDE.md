@@ -123,9 +123,16 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `ch_duff_<outfit>_hd_v1.png` (apron v2). Rebuild: Canva generate-image with the HD apron sheet + old outfit sheet +
   HD portrait as references -> `import_big_sheet.py SRC <id> --cell 128 --height 104 --feet 120 --smooth --auto-grid
   --row-feet`, recolour magenta fringe to brown, row 1 col 2 = col 1's legs mirrored (the AI draws walk-away B like
-  idle), black shoes by recolouring red in the bottom 24 px, then `python3 tools/duff_eyes_narrow.py SHEET SHEET` once and `... SHEET SHEET --brow` once (hooded, dark-lidded eyes; Duff asked Nov 14). The dad jacket skips `--brow`: Duff called it perfect as is. Before/after: `tools/outfit_shot.tscn -- OLD_DIR`.
+  idle), black shoes by recolouring red in the bottom 24 px, then `python3 tools/duff_eyes_narrow.py SHEET SHEET` once and `... SHEET SHEET --brow` once (hooded, dark-lidded eyes; Duff asked Nov 14). The dad jacket skips `--brow`: Duff called it perfect as is. Then `python3 tools/duff_smirk.py SHEET SHEET` once (cocked screen-left brow + lopsided smirk on the front walk frames; Duff asked for "more smug" Nov 14, all outfits). Before/after: `tools/outfit_shot.tscn -- OLD_DIR`.
   Rim light: `shaders/sprite_rim.gdshader` via `Art.rim_material()` on player + bosses, per room in
   `hd_presentation._update_rim()`. `Art.shadow()` adds a contact core under every character.
+
+- **Cast 2x overhaul (Nov 14, in progress):** every `ch_*` sheet moves to 2x like Duff (512x512, cell 128,
+  origin [64,120], s 4 in manifest.json AND art_manifest.gd). Batches of four, before/after via
+  `res://tools/cast_shot.tscn -- OLD_DIR id[:Label] ...` (old PNGs from git in OLD_DIR) -> `/tmp/qa/cast.png`. Batch 1
+  (home crew): `ch_madison` done (8% slimmer per Duff; AI ghost/beard frames replaced by mirrors); dress, Mazikeen
+  (`ch_brittany`), Lance (`ch_fences`) next. Order after: exes/bosses, street, Fork customers, errand NPCs. Duff approves
+  every batch before merge.
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
