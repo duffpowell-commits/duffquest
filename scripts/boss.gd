@@ -80,8 +80,8 @@ const BOSSES: = {
 		"rage": "Sir Sends-It-Back: I want a refund. On this FIGHT.",
 		"defeat": "Sir Sends-It-Back: ...This beating is cooked perfectly. Five stars. Still not tipping." },
 	# Day one (Nov 14): {coworker}'s first bet, right after the cold open's pirate (main.first_bet_pitch). Alley
-	# arena; the street hustler's sprite, tinted. Easy on purpose: a new player at Lv 1.
-	"mike": {"name": "Marketplace Mike", "hp": 70.0, "attacks": ["posting", "charge"], "sprite": "hustler", "tint": Color(1.0, 0.86, 0.72),
+	# arena; his own sprite (ch_mike). Easy on purpose: a new player at Lv 1.
+	"mike": {"name": "Marketplace Mike", "hp": 70.0, "attacks": ["posting", "charge"], "sprite": "mike",
 		"labels": {"post": "OBO" }, "tele": {"posting": "*lists you. 'Used. Fair condition.'*", "charge": "Cash only! No lowballers!" },
 		"intro": "Marketplace Mike: That pirate was my best guy. You know what a porch box goes for? Twelve bucks. Or best offer.",
 		"taunts": ["Is this still available? You are. Barely.", "Local pickup only. I'm picking you up. Off the ground.", "Gently loved. Like your face after this.", "Four hundred five-star ratings. All from my cousins."],
