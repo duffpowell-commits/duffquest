@@ -16,7 +16,7 @@
     "slip": "Tip drones. A whole fleet, all asking how my experience was. I duck the first. The second clips the third. The fourth leaves me one star and quits.",
     "xray": "Tip status: processing. Two hinges hold a jaw on. My knee comes up from below and takes thirty percent of each. Platform fee.",
     "finisher": "Tip status: delivered. One hundred percent. All of it, right here.",
-    "crowd": "Dolores: \"Thirty years of tables. First tip I ever enjoyed watching.\"",
+    "crowd": "Dolores: \"Thirty-one years of tables. First tip I ever enjoyed watching.\"",
     "closer": "Tip status: refunded. He's on the carpet. I tuck a twenty in Dolores's apron. Somebody at this party should get tipped.",
     "live": true
   },
@@ -26,7 +26,7 @@
     "slip": "NOTICE: Late fees incoming. He throws them like confetti. Carpet fee. Air fee. A fee for the fee. I walk right through. I've been paying these since June.",
     "xray": "NOTICE: Entry without warning. He never gave us any. The spine is thirty-three vertebrae, stacked like overdue notices. My palm serves every one.",
     "finisher": "Consider this your notice. Effective immediately.",
-    "crowd": "Earl: \"Kid just evicted the landlord. Thirty-one years I've seen everything. Not that.\"",
+    "crowd": "Earl: \"Kid just evicted the landlord. Since '94 I've seen everything in here. Not that.\"",
     "closer": "NOTICE: Deposit withheld. He's face-down on a brochure for his third boat. {partner} texts him 'k.' Same font. Same template.",
     "live": true
   },
@@ -36,7 +36,7 @@
     "slip": "Coins, thirty-seven cents at a time. I catch a quarter out of the air. Pocket it. That's one load of laundry.",
     "xray": "Old money lives in the lower back. Three generations of good posture. One kidney shot and every generation bows.",
     "finisher": "This is what work feels like. I wanted you to know, just once, before you die old.",
-    "crowd": "{partner}: \"Babe. BABE. Don't break the champagne tower, we can't afford the tower.\"",
+    "crowd": "{partner}: \"Don't break the champagne tower! We can't afford the TOWER!\"",
     "closer": "He calls for Mummy. Mummy doesn't come. Welcome to the rest of us.",
     "impact": {"xray": {"at": [0.57, 0.60], "mouth": [0.78, 0.04], "dir": -30}},
     "live": true
@@ -109,11 +109,11 @@
   },
   "regular": {
     "move": "LAST CALL",
-    "stance": "Earl has been coming here for thirty-one years. He's outlived three owners and a fire. He stands up slow. I give him the respect of standing still.",
+    "stance": "Earl has been coming here since before the grill. He's outlived three owners and a fire. He stands up slow. I give him the respect of standing still.",
     "slip": "He swings like a man who learned in a war nobody remembers. I slip it and it still rings my ear. The coffee cups shiver on the counter.",
     "xray": "An old man's heart is a fist that never unclenched. I don't hit it. I hit everything around it, so it can finally rest.",
     "finisher": "Order up. Hash browns, scattered, smothered, covered. And you, Earl. Plated.",
-    "crowd": "Dolores: \"Thirty-one years. Nobody's ever plated Earl.\"",
+    "crowd": "Dolores: \"Nobody's ever plated Earl. I'm framing the ticket.\"",
     "closer": "He sits back down. He tips. Exact change. And one piece of advice I'm still trying to understand.",
     "impact": {"xray": {"at": [0.22, 0.64], "mouth": [0.14, 0.12], "dir": -60}},
     "live": true
@@ -122,7 +122,7 @@
     "move": "EIGHTY-SIX",
     "stance": "Ticket. Table nine. Sent back: nine plates. Plate ten: me. No garnish. No substitutions.",
     "slip": "He shoves the plate at me. I take it, turn, set it down on the pass without breaking stride. Twelve years on the line. Plates don't scare me.",
-    "xray": "Ten thousand taste buds, give or take. His have only ever tasted complaints. One uppercut and he tries something new. Humility. Medium rare.",
+    "xray": "Ten thousand taste buds, give or take. Every one of them has filed a complaint. One uppercut and he tries something new. Humility. Medium rare.",
     "finisher": "Your order is eighty-sixed. Forever.",
     "crowd": "Dolores: \"Told you to stop sending it back, hon.\"",
     "closer": "Five stars. Still no tip. Some things you can't beat out of a man. I try anyway, a little, in my heart.",

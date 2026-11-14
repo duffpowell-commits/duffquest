@@ -5,6 +5,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **Humor audit: repeated jokes cut.** All 2,310 player-facing lines checked for repeats. 63 rewritten
+  ("That's the whole X" x7, "The body keeps the receipts" x3, "Hell of a girl" x3, boats now the landlord's alone,
+  Earl/Dolores years made consistent, "Respect." x7, barks that copied boss lines). Running gags that escalate stay.
+  Madison lines (moods, mornings, her shows) only flagged, not touched. List + flagged pitches:
+  `docs/reviews/humor_audit_2026-11-14.md`. Text only, saves unaffected.
 - **2026-11-14** **Portal polish (keyboard players).** First 30 s checked at 907x510 in keyboard mode: the cold-open line
   now says how to walk (WASD/arrows) as well as bonk; the level/heat panel moved from mid-screen (where the touch
   buttons sit) to the bottom-right corner when there are no touch buttons; pirate names and enemy Lv tags got ink

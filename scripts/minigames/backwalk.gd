@@ -4,7 +4,7 @@ const BEAT: = 0.8
 const STEPS: = 8
 const WINDOW: = 0.17
 const LEAD_IN: = 1.2
-const GOOD: = ["CRACK. Vertebra 4 says thank you.", "*pop* That one was from 2019.", "{partner}: Ooh, I felt that one.", "CRUNCH. I can see colors now.", "My spine sounds like bubble wrap. Good bubble wrap."]
+const GOOD: = ["CRACK. Vertebra 4 says thank you.", "*pop* That one was from my last job.", "{partner}: Ooh, I felt that one.", "CRUNCH. I can see colors now.", "My spine sounds like bubble wrap. Good bubble wrap."]
 const BAD: = ["Ow. That was a kidney.", "{partner}: Sorry! Was that your ribs?", "She wobbles. I see my life flash.", "Off-beat. Now she's standing on my elbow."]
 
 var hits: = 0
