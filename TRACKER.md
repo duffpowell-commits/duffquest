@@ -5,6 +5,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **Cast 2x overhaul complete.** Every character sheet in use is redrawn at 2x (Canva, batches 1-21, PRs #58-#92); Duff's gala suit was last. Review stills of every screen and menu: `docs/renders/screens_final_2x.png` (overworld, kitchen, arenas, quests) and `docs/renders/ui_audit_final_2x.png` (every menu + minigame).
 - **2026-11-14** **Play stats + play alerts.** `.github/workflows/play_stats.yml` reads itch view/download/purchase
   counts every 3 hours (same `BUTLER_API_KEY`) into the `stats` branch (`stats/history.jsonl`, `latest.json`). Once
   `.github/play_alerts.json` is `"armed": true` (flip it at debut) it opens a closed GitHub issue @mentioning Duff for
