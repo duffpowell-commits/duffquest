@@ -33,7 +33,7 @@ const UPSET: = {
 const MAKEUP: = "{partner}: \"...Okay. We're okay. Don't do it again.\" (Made up.)"
 
 const MAKEUP_LINES: = [
-	"{partner}: \"...Okay. We're okay. Don't do it again, babe.\" (Made up.)",
+	"{partner}: \"...Okay. We're okay. You're making my coffee tomorrow. Cream and sugar. We're square.\" (Made up.)",
 	"{partner}: \"I'm sorry too. I snapped at you and you didn't deserve all of it.\" (Made up.)",
 	"{partner}: \"C'mere. We're a team. Teams fight about dumb stuff.\" (Made up.)",
 	"{partner}: \"I missed you. Even while I was mad. ESPECIALLY while I was mad.\" (Made up.)",
