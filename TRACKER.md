@@ -5,6 +5,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **Public build: "the Fork" is now "the Spatula".** 27 strings used a bare "Fork" while the public sign
+  says Busted Spatula. New token `{fork_nick}` (family Fork, public Spatula), Club Fork shows as `{club_sandwich}`
+  (Club Spatula), and the "Narc of the Fork" achievement migrates on load. test_daily scans every quoted string for a
+  bare "Fork". Family edition reads exactly as before.
 - **2026-11-14** **Humor audit: repeated jokes cut.** All 2,310 player-facing lines checked for repeats. 63 rewritten
   ("That's the whole X" x7, "The body keeps the receipts" x3, "Hell of a girl" x3, boats now the landlord's alone,
   Earl/Dolores years made consistent, "Respect." x7, barks that copied boss lines). Running gags that escalate stay.
