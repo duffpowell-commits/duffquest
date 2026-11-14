@@ -90,4 +90,51 @@ def process(path,out,cut=2):
         for col in range(4):
             tot+=do_cell(a[row*C:(row+1)*C,col*C:(col+1)*C],dy,{0:'front',2:'right',3:'left'}[row],cut)
     Image.fromarray(a).save(out); return tot
-if __name__=='__main__': print(process(sys.argv[1],sys.argv[2],int(sys.argv[3]) if len(sys.argv)>3 else 2))
+if __name__=='__main__' and not (len(sys.argv)>3 and sys.argv[3]=='--brow'): print(process(sys.argv[1],sys.argv[2],int(sys.argv[3]) if len(sys.argv)>3 else 2))
+
+# --- harder pass (Duff, Nov 14: "go harder on the eyes") -------------------------------------------
+# Thicken the upper lash line up into the lid crease (eyeliner-heavy), shadow the lid up to the brow and
+# dull the eye whites, so the eyes sit under a dark scowl. Usage: tools/duff_eyes_narrow.py SRC OUT --brow
+LASH=np.array([30,17,13])
+def brow_cell(c, dy, face):
+    al=np.where(c[...,3].max(1)>0)[0]
+    if not len(al): return 0
+    top=al.min(); ey=top+dy
+    band=skin(c[ey-3:ey+4]); xs=np.where(band.any(0))[0]
+    if not len(xs): return 0
+    x0,x1=max(0,xs.min()-1),min(C,xs.max()+2); y0,y1=ey-12,ey+6
+    sub=c[y0:y1,x0:x1]
+    scl,iris=eye_mask(sub); lab,n=label(scl|iris)
+    fcx=sub.shape[1]/2; done=0
+    for i in range(1,n+1):
+        m=lab==i; ys,xx=np.where(m)
+        if len(ys)<3 or not iris[m].any(): continue
+        ty,ex0,ex1=ys.min(),xx.min(),xx.max(); cx=(ex0+ex1)/2
+        inner_right=(cx<fcx) if face=='front' else (face=='right')
+        for x in range(max(0,ex0-1),min(sub.shape[1],ex1+2)):
+            frac=(x-ex0)/max(1,ex1-ex0)
+            inner=frac>0.6 if inner_right else frac<0.4
+            col=sub[:,x].astype(int)
+            # lash line: lowest dark pixel above the eye
+            lash=[y for y in range(max(0,ty-3),ty+1) if col[y,3]>200 and col[y,0]<110 and not m[y,x]]
+            lt=min(lash) if lash else ty
+            # paint upward from the lash line until we hit the brow (dark) or 3 rows
+            for k,y in enumerate(range(lt-1, max(-1,lt-4), -1)):
+                p_=col[y]
+                if p_[3]<200 or (p_[0]<95 and p_[1]<75): break      # reached the brow
+                if k==0 or (k==1 and inner):
+                    sub[y,x,:3]=LASH                                 # heavier lid line, thicker toward the nose
+                else:
+                    sub[y,x,:3]=(p_[:3]*0.72).astype(int)            # lid shadow up to the brow
+        for yy,xx2 in zip(ys,xx):
+            if scl[yy,xx2]: sub[yy,xx2,:3]=[196,184,176]
+        done+=1
+    return done
+def brow_process(path,out):
+    a=np.array(Image.open(path).convert('RGBA')); tot=0
+    for row,dy in ((0,36),(2,28),(3,28)):
+        for col in range(4):
+            tot+=brow_cell(a[row*C:(row+1)*C,col*C:(col+1)*C],dy,{0:'front',2:'right',3:'left'}[row])
+    Image.fromarray(a).save(out); return tot
+if __name__=='__main__' and len(sys.argv)>3 and sys.argv[3]=='--brow':
+    print('brow', brow_process(sys.argv[1],sys.argv[2]))
