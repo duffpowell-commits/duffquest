@@ -5637,8 +5637,8 @@ func dev_morning(kind: String) -> void:
 	clock = 450.0
 
 ## ---- "The Zebra" (zebra.gd): her diagnosis story, told at the zebra plush on the shelf over the bed ----
-const ZEBRA_PLUSH: = Vector2(39, 465)    # bottom-left of the plush, on the wall shelf over the bed (next to the teddy)
-const ZEBRA_PIC: = Vector2(238, 454)     # top-left of the framed zebra print on the wall by the shower
+const ZEBRA_PLUSH: = Vector2(38.5, 466)    # bottom-left of the plush, on the wall shelf over the bed (next to the teddy)
+const ZEBRA_PIC: = Vector2(239, 453.5)     # top-left of the framed zebra print on the wall by the shower
 const ZEBRA_PT: = Vector2(46, 532)       # stand at the foot of the bed, under the shelf
 
 func zebra_spot() -> Array:
@@ -5656,7 +5656,8 @@ func zebra_story() -> void:
 	_say(ls)
 	save_game()
 
-## Her zebras: a painted plush on the shelf over the bed and a framed print by the shower (art: home_zebra_plush / _print).
+## Her zebras: a plush on the shelf over the bed and a framed print by the shower, pixel art at the room's own
+## density (s:2) so they sit in home_interior (art: home_zebra_plush / _print, made by tools/zebra_pixels.py).
 func _draw_zebras() -> void:
 	Art.image(self, "home_zebra_print", ZEBRA_PIC)
-	Art.image(self, "home_zebra_plush", ZEBRA_PLUSH, Color.WHITE, 0.75)  # 0.75: its head clears the HUD bar
+	Art.image(self, "home_zebra_plush", ZEBRA_PLUSH)
