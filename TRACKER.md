@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **Too Loud (Madison's autism).** Duff approved the lines. First Saturday trip to {grocery} from day 6:
+  the store gets loud, she masks ("Totally good."), you dig her headphones out of her bag before the noise meter fills
+  (`minigames/noise.gd`; meter full = leave the cart, no fail state), then home for the crash and "Ask me about my day.
+  All of it. In order." +5. `scripts/too_loud.gd`, save key `too_loud_seen`, 11 test_daily checks, render
+  `docs/renders/madison_too_loud.png` (`arena_shot` `loud` / `loud_bag` / `loud_home`). `main.after_dialog` runs a
+  callable when the dialog queue empties (lines, then a game).
 - **2026-11-14** **Public build: "the Fork" is now "the Spatula".** 27 strings used a bare "Fork" while the public sign
   says Busted Spatula. New token `{fork_nick}` (family Fork, public Spatula), Club Fork shows as `{club_sandwich}`
   (Club Spatula), and the "Narc of the Fork" achievement migrates on load. test_daily scans every quoted string for a

@@ -75,6 +75,7 @@ func _init() -> void:
 	_side_quest_checks(main)
 	_morning_checks(main)
 	_zebra_checks(main)
+	_too_loud_checks(main)
 	_spatter_cut_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
@@ -1134,3 +1135,48 @@ func _zebra_checks(main: Node) -> void:
 	main.zebra_seen = seen0
 	main.day_count = dc0
 	main.dialog.clear()
+
+func _too_loud_checks(main: Node) -> void:
+	var TL: = preload("res://scripts/too_loud.gd")
+	var A: = preload("res://scripts/art.gd")
+	var N: = preload("res://scripts/minigames/noise.gd")
+	var dc0: int = main.day_count
+	var di0: int = main.day_i
+	var seen0: bool = main.too_loud_seen
+	var loc0: String = main.location
+	main.dialog.clear()
+	main.too_loud_seen = false
+	main.day_count = TL.FIRST_DAY
+	main.day_i = TL.SATURDAY - 1
+	check("too loud: not on a Friday", not TL.available(main.day_count, main.day_i, false))
+	main.day_i = TL.SATURDAY
+	main.day_count = TL.FIRST_DAY - 1
+	check("too loud: not before day 6", not TL.available(main.day_count, main.day_i, false))
+	main.day_count = TL.FIRST_DAY
+	check("too loud: first Saturday from day 6", TL.available(main.day_count, main.day_i, false))
+	main.happiness = 50.0
+	main.too_loud_story()
+	check("too loud: store lines first", main.dialog.size() == TL.STORE.size() and main.after_dialog.is_valid())
+	main._after_noise(null, 1.0, [])
+	check("too loud: headphones found = calm lines", main.dialog.size() == TL.STORE.size() + TL.CALM.size())
+	main.dialog.clear()
+	main._after_noise(null, 0.0, [])
+	check("too loud: meter full = they leave the cart", main.dialog.size() == TL.BAIL.size())
+	main.dialog.clear()
+	main._too_loud_home()
+	check("too loud: home, crash, +5, once", main.location == "home" and main.too_loud_seen and is_equal_approx(main.happiness, 55.0) and main.dialog.size() == TL.HOME.size())
+	check("too loud: never twice", not TL.available(main.day_count, main.day_i, main.too_loud_seen))
+	check("too loud: survives a save", bool(main.to_dict().get("too_loud_seen", false)))
+	check("too loud: her lines use her happy face even when happiness is low",
+		A.madison_mood(Cast.T(TL.STORE[1]), 20.0) == 0 and A.madison_mood(Cast.T(TL.CALM[1]), 20.0) == 0 and A.madison_mood(Cast.T(TL.HOME[1]), 20.0) == 0)
+	var g: = N.new()
+	g._setup()
+	check("too loud: the bag holds her headphones", not g.get_button("headphones").is_empty() and g.buttons.size() == N.ITEMS.size())
+	g.free()
+	main.dialog.clear()
+	main.after_dialog = Callable()
+	main.too_loud_seen = seen0
+	main.day_count = dc0
+	main.day_i = di0
+	if loc0 != "home":
+		main.leave_home()
