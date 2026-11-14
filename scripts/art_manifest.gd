@@ -114,6 +114,8 @@ const ASSETS = {
   "kp_thermometer": {"w": 28, "h": 43, "cell": [28, 43], "origin": [14, 21], "kind": "prop", "s": 2},
   "kp_ticket": {"w": 38, "h": 26, "cell": [38, 26], "origin": [19, 13], "kind": "prop", "s": 2},
   "kp_tomato": {"w": 92, "h": 75, "cell": [92, 75], "origin": [46, 37], "kind": "prop", "s": 2},
+  "home_zebra_plush": {"w": 22, "h": 26, "cell": [22, 26], "origin": [0, 24], "s": 2},
+  "home_zebra_print": {"w": 7, "h": 10, "cell": [7, 10], "origin": [0, 0], "s": 2},
   "sd_bike_rack": {"w": 64, "h": 33, "cell": [64, 33], "origin": [32, 33], "s": 4},
   "sd_bus_bench": {"w": 78, "h": 41, "cell": [78, 41], "origin": [39, 41], "s": 4},
   "sd_chain_link_corner": {"w": 96, "h": 96, "cell": [96, 96], "origin": [6, 87], "s": 2},

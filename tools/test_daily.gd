@@ -74,6 +74,7 @@ func _init() -> void:
 	_taunt_variety_checks()
 	_side_quest_checks(main)
 	_morning_checks(main)
+	_zebra_checks(main)
 	_spatter_cut_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
@@ -1109,3 +1110,27 @@ func _morning_checks(main: Node) -> void:
 	emu.device = InputEvent.DEVICE_ID_EMULATION
 	var fing: = InputEventScreenTouch.new()
 	check("touch pad: a mouse click (emulated touch) doesn't count as a finger", not TouchS.real_touch(emu) and TouchS.real_touch(fing))
+
+func _zebra_checks(main: Node) -> void:
+	var Z: = preload("res://scripts/zebra.gd")
+	var A: = preload("res://scripts/art.gd")
+	var dc0: int = main.day_count
+	var seen0: bool = main.zebra_seen
+	main.dialog.clear()
+	main.zebra_seen = false
+	main.day_count = Z.FIRST_DAY - 1
+	check("zebra: not before day 4", main.zebra_spot().is_empty())
+	main.day_count = Z.FIRST_DAY
+	check("zebra: offered from day 4", main.zebra_spot().size() == 1)
+	main.happiness = 50.0
+	main.zebra_story()
+	check("zebra: story plays once, +5", main.zebra_seen and is_equal_approx(main.happiness, 55.0) and main.dialog.size() == Z.LINES.size())
+	main.dialog.clear()
+	main.zebra_story()
+	check("zebra: never twice", main.dialog.is_empty() and main.zebra_spot().is_empty())
+	check("zebra: survives a save", bool(main.to_dict().get("zebra_seen", false)))
+	check("zebra: her story lines use her happy face even when happiness is low",
+		A.madison_mood(Cast.T(Z.LINES[1]), 20.0) == 0 and A.madison_mood(Cast.T(Z.LINES[6]), 20.0) == 0)
+	main.zebra_seen = seen0
+	main.day_count = dc0
+	main.dialog.clear()
