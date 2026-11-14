@@ -248,8 +248,8 @@ static func portrait_for(text: String, hero: String, partner: String, baby: Stri
 		return "dolores"
 	if hd_enabled:
 		var boss: = boss_speaker(text)
-		if boss != "":
-			return boss                                    # HD only: no pixel boss portraits
+		if boss != "" and ResourceLoader.exists("res://assets/art/portraits_hd/%s.png" % boss):
+			return boss                                    # HD only: no pixel boss portraits; no art (mike, grease) = no frame
 	if text.begins_with(partner + ": ") or text.begins_with(partner + " texts"):
 		return "madison"
 	if text.begins_with(baby + " ") or text.begins_with(baby + "'s ") or text.begins_with(baby + ": "):
