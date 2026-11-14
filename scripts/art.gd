@@ -111,6 +111,21 @@ static var _soft_shadow: Texture2D
 ## Set each frame by hd_presentation.gd from the clock: where the sun throws shadows, and how long they get.
 static var sun_shift: = Vector2.ZERO
 static var sun_stretch: = 1.0
+## Rim light shared by character nodes (player, bosses): one material, uniforms driven by hd_presentation.gd
+## from the room's lights (gala chandeliers, the sun, home lamps). Off in lite graphics.
+static var _rim_mat: ShaderMaterial
+static func rim_material() -> ShaderMaterial:
+	if _rim_mat == null:
+		_rim_mat = ShaderMaterial.new()
+		_rim_mat.shader = load("res://shaders/sprite_rim.gdshader")
+	return _rim_mat
+
+static func set_rim(col: Color, dir: Vector2, strength: float) -> void:
+	var mat: = rim_material()
+	mat.set_shader_parameter("rim_color", col)
+	mat.set_shader_parameter("light_dir", dir)
+	mat.set_shader_parameter("strength", strength)
+
 static func shadow(ci: CanvasItem, foot: Vector2, w: float = 7.0, h: float = 2.4, a: float = 0.32) -> void:
 	if _soft_shadow == null:
 		var image := Image.create_empty(64,24,false,Image.FORMAT_RGBA8)
@@ -122,6 +137,10 @@ static func shadow(ci: CanvasItem, foot: Vector2, w: float = 7.0, h: float = 2.4
 	var sw: = w * sun_stretch
 	var c: = foot + Vector2(1, 0) + sun_shift * (w / 6.0)
 	ci.draw_texture_rect(_soft_shadow,Rect2(c.round()-Vector2(sw*1.3,h*1.7),Vector2(sw*2.6,h*3.4)),false,Color(1,1,1,a))
+	# contact shadow: a tight dark core right under the feet (no sun offset) so feet sit on the floor
+	var cw: = w * 0.62
+	var chh: = h * 0.5
+	ci.draw_texture_rect(_soft_shadow, Rect2(foot + Vector2(0.5, 0.2) - Vector2(cw * 1.3, chh * 1.7), Vector2(cw * 2.6, chh * 3.4)), false, Color(1, 1, 1, minf(1.0, a * 1.9)))
 
 const DUFF_MOODS: = ["smirk", "tired", "happy"]
 const HAPPY_WORDS: = ["!", "<3", "love", "yes", "great", "nice", "happy", "+", "win", "best", "achievement", "thank", "hero", "perfect", "bravo", "heck yeah", "hell yeah", "baby", "promoted", "victory"]

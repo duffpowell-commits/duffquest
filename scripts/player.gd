@@ -47,6 +47,7 @@ var dash_t: = 0.0
 var buffered: = false
 
 func _ready() -> void:
+	material = Art.rim_material()   # room-coloured rim light (hd_presentation.gd drives it)
 	collision_layer = 2
 	collision_mask = 1
 	var cs: = CollisionShape2D.new()
@@ -137,9 +138,20 @@ var at_home: = false
 var shades: = false
 
 func sheet_name() -> String:
-	if at_home and shoes != "black" and armor_id != "dad":
-		return "duff_home"
+	# The apron is work clothes: Duff only wears it on the kitchen line (minigames, `work_duff`).
+	# Off the line an apron-armour Duff (and Duff at home, unless he's in the dad jacket) is in his
+	# casual tee. Same body, hitbox and frames; only the sheet changes.
+	if armor_id == "apron" or not ARMORS.has(armor_id) or (at_home and armor_id != "dad"):
+		return "duff_home_black" if shoes == "black" else "duff_home"
 	return "duff_%s_%s" % [armor_id if ARMORS.has(armor_id) else "apron", shoes if shoes == "black" else "red"]
+
+## Each 2x outfit has its own shades overlay, fitted to that sheet's faces.
+func shades_sheet() -> String:
+	var sheet: = sheet_name()
+	for o in ["home", "clogs", "sleeves", "coat", "dad"]:
+		if sheet.begins_with("duff_%s" % o):
+			return "duff_shades_" + o
+	return "duff_shades"
 
 func _draw() -> void:
 	if stage_scale != 1.0:   # scale around the feet (y = 11) so he doesn't sink into the floor
@@ -191,7 +203,7 @@ func _draw() -> void:
 		draw_string(ThemeDB.fallback_font, Vector2(-6.5, 4), "86", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(1.0, 0.25 * g + 0.2, 0.1, 1.0))
 		draw_arc(Vector2(0, 0), 12.0 + 2.0 * g, 0.0, TAU, 24, Color(1.0, 0.4, 0.1, 0.35 * g), 1.5)
 	if shades:
-		Art.person(self, "duff_shades", Vector2(0, 11), facing, anim_t, moving, swing_t > 0.0, mod, false)
+		Art.person(self, shades_sheet(), Vector2(0, 11), facing, anim_t, moving, swing_t > 0.0, mod, false)
 	if stun_t > 0.0:
 		var st: = Time.get_ticks_msec() / 120.0
 		for i in 3:

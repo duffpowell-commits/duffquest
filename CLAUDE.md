@@ -109,6 +109,19 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `docs/portals/preview/` (CrazyGames clips) and `docs/itch/` (GIFs, 1080p screens). ~3 fps under llvmpipe.
   GameDistribution: Duff registered as "Wild Dreams" (Nov 13), gameId after review.
 
+- **Duff in HD (Nov 13-14, PR #58 open, not merged):** every Duff sheet is 2x (512x512, 128 cells, manifest "s": 4,
+  origin [64,120]; same world size and hitbox): `duff_apron/clogs/sleeves/coat/dad_red|black`, `duff_home` +
+  `duff_home_black`, `duff_roll_*` (512x128, origin [64,88], rotations of the casual idle). The apron is work clothes:
+  `player.sheet_name()` shows the casual tee (`duff_home*`) for apron armour off the line and at home; minigame
+  `work_duff` (the kitchen line) still uses `duff_<armor>_black`. Shades: one overlay per outfit (`duff_shades` = apron,
+  `duff_shades_<outfit>`), built from each sheet's face positions. Masters: Drive "97 Gemini art drops",
+  `ch_duff_<outfit>_hd_v1.png` (apron v2). Rebuild: Canva generate-image with the HD apron sheet + old outfit sheet +
+  HD portrait as references -> `import_big_sheet.py SRC <id> --cell 128 --height 104 --feet 120 --smooth --auto-grid
+  --row-feet`, recolour magenta fringe to brown, row 1 col 2 = col 1's legs mirrored (the AI draws walk-away B like
+  idle), black shoes by recolouring red in the bottom 24 px, then `python3 tools/duff_eyes_narrow.py SHEET SHEET` once and `... SHEET SHEET --brow` once (hooded, dark-lidded eyes; Duff asked Nov 14). The dad jacket skips `--brow`: Duff called it perfect as is. Before/after: `tools/outfit_shot.tscn -- OLD_DIR`.
+  Rim light: `shaders/sprite_rim.gdshader` via `Art.rim_material()` on player + bosses, per room in
+  `hd_presentation._update_rim()`. `Art.shadow()` adds a contact core under every character.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
