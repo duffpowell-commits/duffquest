@@ -92,6 +92,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (public: Mazikeen; write `{coworker}`, never her name, in new lines). The kitchen's nickname is `{fork_nick}` (family Fork, public Spatula; test_daily fails on a bare "Fork" in any string). New real brand or
   real person? Put the family name in cast.json, the public one in cast_public.json, add a test_daily leak word.
   Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
+  The `_pub` set: Fork + Walgrumps signs, the alley dumpster (`arena_alley`), every Willnot image. test_daily fails if a
+  `_pub` file is a byte copy of its original (redraw the original -> re-run the script).
   Render either edition: `arena_shot.tscn -- <id> --family`.
 
 - **Madison's mornings (Nov 13):** EDS slow / migraine / good mornings, `scripts/mornings.gd` (see reference.md).
