@@ -37,8 +37,22 @@ var joy_knob: = Vector2.ZERO
 var joy_idx: = -1
 var used: = false
 
+## Show the touch pad up front only on a phone or tablet. On the web that means the browser says it is iOS or
+## Android: a touchscreen laptop also reports a touchscreen, and portals (CrazyGames) reject games that pick mobile
+## controls from touch detection. Anyone who really touches the screen gets the pad on that first touch (_input).
+static func default_visible() -> bool:
+	if "--keys" in OS.get_cmdline_user_args():   # renders: keyboard/mouse player (xvfb reports a touchscreen)
+		return false
+	if OS.has_feature("web"):
+		return OS.has_feature("web_ios") or OS.has_feature("web_android")
+	return DisplayServer.is_touchscreen_available()
+
+## A real finger, not a mouse click turned into a touch by pointing/emulate_touch_from_mouse.
+static func real_touch(e: InputEvent) -> bool:
+	return e is InputEventScreenTouch and e.device != InputEvent.DEVICE_ID_EMULATION
+
 func _ready() -> void:
-	visible = DisplayServer.is_touchscreen_available() or OS.has_feature("web_ios") or OS.has_feature("web_android")
+	visible = default_visible()
 	if visible:
 		Cast.touch = true
 
@@ -46,9 +60,12 @@ func _input(e: InputEvent) -> void:
 	if e is InputEventScreenTouch:
 		var t: = e as InputEventScreenTouch
 		var tp: = get_canvas_transform().affine_inverse() * t.position
-		visible = true
-		used = true
-		Cast.touch = true
+		if real_touch(t):
+			visible = true
+			used = true
+			Cast.touch = true
+		if not visible:
+			return
 		if t.pressed:
 			if tp.distance_to(BTN_A) < BTN_R + 5.0:
 				a_pressed.emit()

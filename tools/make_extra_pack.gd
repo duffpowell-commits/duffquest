@@ -1,9 +1,12 @@
 extends SceneTree
 ## Builds the web build's after-boot packs. The Web export preset leaves out of index.pck every asset glob in
-## its exclude_filter (entries that start with "assets/"); this tool packs those files into two tiers:
-##   world  the globs listed in WORLD (characters, portraits, music...): fetched first, gates "New Game"
-##   late   every other excluded glob (knockout stills, boss cards, most loading screens, backdrops)
-## scripts/extra_pack.gd downloads world.pck then extra.pck after boot and mounts them.
+## its exclude_filter (entries that start with "assets/"); this tool packs those files into three tiers:
+##   street  the WORLD files that also match STREET (the cold open's street, Duff, porch pirates): fetched
+##           first, gates "New Game"
+##   world   the rest of the WORLD globs (cast, portraits, music...): fetched second, gates "Continue"
+##   late    every other excluded glob (knockout stills, boss cards, most loading screens, backdrops)
+## scripts/extra_pack.gd downloads street.pck, world.pck, then extra.pck after boot and mounts them.
+##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/street.pck street
 ##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/world.pck world
 ##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck [late]
 ## Every packed texture = its .import remap + the imported .ctex it points to, same as a normal export.
@@ -13,6 +16,13 @@ extends SceneTree
 const WORLD: = ["assets/art/ch_*", "assets/art/sf_*", "assets/art/sd_*", "assets/art/portraits_hd/*", "assets/art/kf_*", "assets/art/kp_*",
 	"assets/art/arena_*", "assets/art/duff_*", "assets/art/gala*", "assets/art/home_*", "assets/art/bg_kitchen*",
 	"assets/art/ground_painted*", "assets/art/loading/*", "assets/audio/mus_*", "assets/sfx/ko/*"]
+
+## Subset of WORLD the cold open needs (main.gd cold_open): the street outside home, Duff's walk/roll layers,
+## the street's day-1/2 walkers and porch pirates, the home interior and Duff's dialogue portrait. Keep it small: it's the wait between
+## tapping New Game and the first punch. Duff's finisher stills (duff_*.jpg) wait for world.pck.
+const STREET: = ["assets/art/sf_*", "assets/art/sd_*", "assets/art/ground_painted*", "assets/art/home_*", "assets/art/duff_*.png",
+	"assets/art/ch_pirate*", "assets/art/ch_scammer*", "assets/art/ch_hustler*", "assets/art/ch_karen*", "assets/art/ch_madison.png",
+	"assets/art/portraits_hd/duff.png"]   # the cold open's one line is Duff's: no empty portrait frame
 
 func _init() -> void:
 	var out: = "build/web/extra.pck"
@@ -38,11 +48,17 @@ func _init() -> void:
 		return
 	var files: Array = []
 	_walk("res://assets", late, files)   # late globs win (loading/* overlaps the late loading screens)
-	if tier == "world":
+	if tier == "world" or tier == "street":
 		var late_files: = files
 		files = []
 		_walk("res://assets", PackedStringArray(WORLD), files)
 		files = files.filter(func(f): return not late_files.has(f))
+		var street_files: Array = []
+		_walk("res://assets", PackedStringArray(STREET), street_files)
+		if tier == "street":
+			files = files.filter(func(f): return street_files.has(f))
+		else:
+			files = files.filter(func(f): return not street_files.has(f))
 	var pk: = PCKPacker.new()
 	if pk.pck_start(out) != OK:
 		push_error("make_extra_pack: can't write " + out)

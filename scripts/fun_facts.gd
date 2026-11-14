@@ -36,7 +36,7 @@ const FACTS: = [
 	"Fun fact: pay only the minimum on a credit card and the balance can take decades to clear. Not a bug. The product.",
 	"Fun fact: a cat's purr runs about 25 to 150 hertz. Some scientists think that helps bones heal. {cat1} uses it for tuna.",
 	"Fun fact: an octopus has three hearts. I have one, and it works doubles.",
-	"Fun fact: Kool-Aid was invented in Hastings, Nebraska, in 1927. Our proudest export is sugar water. Respect.",
+	"Fun fact: Kool-Aid was invented in Hastings, Nebraska, in 1927. Our proudest export is sugar water. OH YEAH.",
 	"Fun fact: your skin sheds tens of thousands of cells a minute. Every shift, I leave a little of me on the line.",
 	"Fun fact: line cooks stand eight hours or more a shift. The chair in the break room is for decoration.",
 	"Fun fact: self-checkout was sold as 'saving you time.' It saves THEM a cashier. You're the cashier now. Unpaid.",

@@ -66,6 +66,12 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
   Branch builds publish to the `web-preview` release (sessions can't download Actions artifacts).
 
+- **Cold open (Nov 13):** new game = porch-pirate fight first, rules after (`main.gd cold_open()`, flag
+  `story.cold_open`). Web packs are now street -> world -> extra: `street.pck` (STREET globs in
+  `tools/make_extra_pack.gd`, 2.9 MB) gates New Game; world.pck gates Continue and, via `_world_gate`, the Fork,
+  arenas, gala and minigames. New outdoor art a day-1 player sees: add its glob to STREET. Render:
+  `arena_shot.tscn -- cold` with `--fixed-fps 30`. Browser timing: `tools/web_boot_test.py` reports all three packs.
+
 - **Raccoon + Jen (Nov 13):** `raccoon` re-import: `python3 tools/import_critter_strip.py <strip.png> raccoon`
   (4 frames facing right on a key colour; row 1 is the mirror). `ch_jen` re-import: prep_canva_sheet (no mirror) ->
   `import_big_sheet.py OUT ch_jen --tol 70` (grey hair on Canva's purple key needs the low tolerance).
@@ -83,7 +89,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   sync. Privacy policy: `docs/legal/PRIVACY.md`.
 - **Editions (Nov 13):** public = default export (itch, Pages root, `duffquest-public.apk`): `data/cast_public.json`
   overrides cast.json and `Art.pub()` loads `<name>_pub.<ext>` art. Family = feature tag `family` (Pages
-  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (public: Mazikeen; write `{coworker}`, never her name, in new lines). New real brand or
+  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (public: Mazikeen; write `{coworker}`, never her name, in new lines). The kitchen's nickname is `{fork_nick}` (family Fork, public Spatula; test_daily fails on a bare "Fork" in any string). New real brand or
   real person? Put the family name in cast.json, the public one in cast_public.json, add a test_daily leak word.
   Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
   Render either edition: `arena_shot.tscn -- <id> --family`.
@@ -92,8 +98,16 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   Madison is a real person: Duff approves EVERY line about her EDS, autism and ADHD before it ships. One pitch at a
   time. Off-limits: the mess of her stuff, and that she's on disability.
   Her diagnosis story "The Zebra" is `scripts/zebra.gd` (same approval rule).
+- **Portal fit (Nov 13 late):** windows where integer scaling wastes >10% now scale fractionally (`HdPresentation.use_fractional`), so CrazyGames' 907x510 iframe is filled. Touch pad on the web shows up front only on iOS/Android browsers, else on the first real touch (`TouchControls.default_visible()/real_touch()`; mouse-emulated touches have device -1). Listing copy: `docs/portals/LISTING.md`.
+- **Portal polish (Nov 14):** keyboard/mouse players: the cold-open line says "WASD or arrows to walk, Space to bonk"; the level/heat panel sits bottom-right (`combat_ui.PANEL_R_KEYS`) instead of floating where the touch buttons would be; enemy name + Lv labels are on ink plates. The sandwich ticket's house item is `{house_sandwich}` (public: Spatula Classic). Renders in keyboard mode: add `--keys` after the id (xvfb reports a touchscreen).
 - **Web portals (Nov 13):** `duffquest-crazygames.zip` in the dev release is the CrazyGames upload (no plain
   index.wasm; `window.DQ_PORTAL` = clean + gore off for new players). Checklist: `docs/portals/SUBMIT.md`.
+- **Marketing footage (Nov 13):** `tools/promo_shot.tscn` plays scripted takes (`fight:<boss>`, `walk:X,Y,MIN,DX`,
+  `still:gala|madison|at:X,Y,MIN`) with fake input, no damage, KO beats on a timer, touch UI hidden. Record with
+  `--fixed-fps 30 --resolution 1920x1080 --write-movie DIR/f.png` (1080p is native, integer 3x). Point XDG_DATA_HOME at
+  a folder whose `godot/app_userdata/Duff Quest/settings.json` says `{"clean":true,"gore":false}`. Outputs live in
+  `docs/portals/preview/` (CrazyGames clips) and `docs/itch/` (GIFs, 1080p screens). ~3 fps under llvmpipe.
+  GameDistribution: Duff registered as "Wild Dreams" (Nov 13), gameId after review.
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.

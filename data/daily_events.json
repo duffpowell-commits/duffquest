@@ -4,7 +4,7 @@
   "chance": 0.75,
   "events": [
     {"id": "inspector", "pool": "weekday", "weight": 3, "inspector": true, "shift_pay": 1.25,
-      "card": "Health inspector at the Fork today. Clipboard energy.",
+      "card": "Health inspector at the {fork_nick} today. Clipboard energy.",
       "note": {"from": "hero", "text": "Inspector's coming. Hide the good tongs."}, "effect": "Inspector shows up at work. Shift pay x1.25."},
     {"id": "outage", "pool": "weekday", "weight": 2, "energy": -15,
       "card": "Power's out on the block. The fridge is a coffin now.",
@@ -16,7 +16,7 @@
       "card": "{cat1} and {cat2} knock the coffee off the counter. Unprovoked. Probably.",
       "note": {"from": "cat2", "text": "the cup was in the way. we stand by it."}, "effect": "Coffee's on the floor. -10 Energy."},
     {"id": "boss_tips", "pool": "weekday", "weight": 2, "needs_beaten": 1, "shift_pay": 1.5,
-      "card": "One of the bosses I beat comes into the Fork. Tips like it's an apology.",
+      "card": "One of the bosses I beat comes into the {fork_nick}. Tips like it's an apology.",
       "note": {"from": "hero", "text": "Guess who's at table six tonight. Big tipper. Bigger loser."}, "effect": "Shift pay x1.5."},
     {"id": "double_tips", "pool": "weekday", "weight": 3, "shift_pay": 1.25,
       "card": "Somebody's grandma is tipping in two-dollar bills.",

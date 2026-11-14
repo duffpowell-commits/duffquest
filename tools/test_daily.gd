@@ -387,6 +387,32 @@ func _review_fix_checks(main: Node) -> void:
 	Cast.touch = false
 	check("touch: keyboard hints become tap words", phone == "PULL IT" and Cast.T("PULL (Space)") == "PULL (Space)")
 
+## Every quoted string in scripts/ and data/ (cast files aside) that says "Fork" outside a {token}. The menu id
+## "Club Fork" is shown through {club_sandwich}, and old achievement names are only looked up to migrate them.
+func _bare_fork_lines() -> Array:
+	var rx: = RegEx.new()
+	rx.compile("\"(?:[^\"\\\\]|\\\\.)*\"")
+	var word: = RegEx.new()
+	word.compile("\\bFork\\b")
+	var out: = []
+	var files: = []
+	for dir in ["res://scripts", "res://scripts/minigames", "res://scripts/iso", "res://data"]:
+		for f in DirAccess.get_files_at(dir):
+			if (f.ends_with(".gd") or f.ends_with(".json")) and not f.begins_with("cast"):
+				files.append(dir + "/" + f)
+	for path in files:
+		var lines: = FileAccess.get_file_as_string(path).split("\n")
+		for i in lines.size():
+			var line: String = lines[i]
+			if line.strip_edges().begins_with("#") or "achievements.find(" in line:   # comments, old-save migration ids
+				continue
+			for m in rx.search_all(line):
+				var q: String = m.get_string().replace("Club Fork", "")
+				if word.search(q):
+					out.append("%s:%d" % [path.get_file(), i + 1])
+	return out
+
+
 ## Editions (docs/legal/RISK_AUDIT.md): the public build (default, no feature tag) renames real brands and the
 ## real-ex final boss and swaps in *_pub art; the family build ("family" tag) keeps every original.
 func _edition_checks() -> void:
@@ -396,11 +422,15 @@ func _edition_checks() -> void:
 	C.set_family(false)
 	var shown: = " ".join(PackedStringArray(C.names().values().map(func(v): return str(v))))
 	var leaked: = []
-	for w in ["Twisted Fork", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh", "Brittany"]:
+	for w in ["Twisted", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh", "Brittany"]:
 		if w in shown:
 			leaked.append(w)
 	check("public edition: no real brand / real-ex names in cast (%s)" % ", ".join(leaked), leaked.is_empty())
+	check("public edition: the house sandwich is renamed with the restaurant", C.T("{HOUSE_SANDWICH}") == "SPATULA CLASSIC")
 	check("public edition: {FORK} and {wordle} tokens renamed", C.T("{FORK} / {wordle} / {coworker}") == "THE BUSTED SPATULA / Word Brawl / Mazikeen")
+	check("public edition: the Fork nickname and club sandwich follow the rename", C.T("{fork_nick} / {club_sandwich}") == "Spatula / Club Spatula")
+	var bare: = _bare_fork_lines()
+	check("public edition: no bare 'Fork' left in player-facing strings (%s)" % ", ".join(bare), bare.is_empty())
 	var pubs: = ["sf_fork.png", "sf_walgrumps.png", "ch_willnot.png", "portraits_hd/willnot.png", "boss_intro/willnot.png",
 		"ko/willnot_a.jpg", "ko/willnot_b.jpg", "ko/willnot_c.jpg"]
 	var bad: = []
@@ -412,6 +442,7 @@ func _edition_checks() -> void:
 	check("public edition: *_pub art exists at the original size (%s)" % ", ".join(bad), bad.is_empty())
 	C.set_family(true)
 	check("family edition: real names kept", C.T("{fork} {wordle} {ex_final} {coworker}") == "The Twisted Fork Wordle Bruce Willnot Brittany")
+	check("family edition: the Fork nickname kept", C.T("{fork_nick} / {club_sandwich}") == "Fork / Club Fork")
 	check("family edition: original art kept", A.pub("res://assets/art/sf_fork.png") == "res://assets/art/sf_fork.png")
 	C.set_family(was)
 
@@ -973,7 +1004,7 @@ func _side_quest_checks(main: Node) -> void:
 		main.day_count = 6
 		var gm0: int = main.money
 		check("gig(%s): next day pays off and finishes" % pick, main.quest_talk("brittany") and SQ.is_done(main.side_quests, "gig") and SQ.choice(main.side_quests, "gig") == pick and main.money == gm0 + (60 if pick == "cover" else 40))
-		check("gig(%s): its achievement" % pick, main.achievements.has("Ranch Cartel" if pick == "cover" else "Narc of the Fork"))
+		check("gig(%s): its achievement" % pick, main.achievements.has("Ranch Cartel" if pick == "cover" else "Narc of the {fork_nick}"))
 		main.dialog.clear()
 		check("gig(%s): done = Brittany is back to bets" % pick, not main.quest_talk("brittany"))
 		main.dialog.clear()
@@ -1067,6 +1098,18 @@ func _morning_checks(main: Node) -> void:
 	main.day_count = dc0
 	main.clock = ck0
 	main.dialog.clear()
+	# portal iframe fit (CrazyGames): fractional when integer scale wastes >10% of the window
+	var HdP: = preload("res://scripts/hd_presentation.gd")
+	check("fit: 907x510 iframe fills (fractional)", HdP.use_fractional(Vector2i(907, 510)))
+	check("fit: 800x450 phone iframe fills (fractional)", HdP.use_fractional(Vector2i(800, 450)))
+	check("fit: 1280x720 stays integer 2x", not HdP.use_fractional(Vector2i(1280, 720)))
+	check("fit: 1920x1080 stays integer 3x", not HdP.use_fractional(Vector2i(1920, 1080)))
+	check("fit: portrait phone 360x640 fractional", HdP.use_fractional(Vector2i(360, 640)))
+	var TouchS: = preload("res://scripts/touch_controls.gd")
+	var emu: = InputEventScreenTouch.new()
+	emu.device = InputEvent.DEVICE_ID_EMULATION
+	var fing: = InputEventScreenTouch.new()
+	check("touch pad: a mouse click (emulated touch) doesn't count as a finger", not TouchS.real_touch(emu) and TouchS.real_touch(fing))
 
 func _zebra_checks(main: Node) -> void:
 	var Z: = preload("res://scripts/zebra.gd")
