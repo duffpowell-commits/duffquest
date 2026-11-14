@@ -1,75 +1,50 @@
-extends Node
-## Outfit check: boots game.tscn, new game, then shows Duff outdoors in every armor/shoes combo
-## (and the shades gag + a street fight) and saves one screenshot each.
-##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/outfit_shot.tscn
-## Output: /tmp/outfits/*.png -> python3 tools/outfit_sheet.py -> docs/renders/duff_outfits_ingame.png
+extends Node2D
+const Art: = preload("res://scripts/art.gd")
+## Before/after sheet of every Duff outfit (4 facings each). Old sheets are read from OLD_DIR (PNG files
+## exported from git), the new ones through Art like the game does.
+## xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 2560x1440 res://tools/outfit_shot.tscn -- OLD_DIR
+## -> /tmp/qa/outfits.png
 
-const OUT: = "/tmp/outfits/"
-const ARMORS: = ["apron", "clogs", "sleeves", "coat", "dad"]
-
-var frame: = 0
-var game: Node
-var m: Node
-var steps: Array = []
-var wait: = 0
-var shot_name: = ""
+const OUTFITS: = [["apron", "duff_apron_red", "Apron (kitchen line only)"], ["home", "duff_home", "Casual tee (default, home)"],
+	["clogs", "duff_clogs_red", "Clogs"], ["sleeves", "duff_sleeves_red", "Sleeves"], ["coat", "duff_coat_red", "Chef coat"],
+	["dad", "duff_dad_red", "Dad jacket"]]
+var old_dir: = "/tmp/claude-0/sp/old"
+var frames: = 0
+var old_tx: = {}   # textures must outlive _draw, or the canvas draws them white
 
 func _ready() -> void:
-	DirAccess.make_dir_recursive_absolute(OUT)
-	game = load("res://game.tscn").instantiate()
-	add_child(game)
-	for a in ARMORS:
-		for s in ["red", "black"]:
-			steps.append(["%s_%s" % [a, s], _outfit.bind(a, s, false)])
-	steps.append(["shades", _outfit.bind("apron", "red", true)])
-	steps.append(["fight", func():
-		_outfit("coat", "black", false)
-		for k in ["scammer", "pete", "pirate"]:
-			m.spawn_enemy(k, m.player.position + Vector2(randf_range(-40, 40), randf_range(-25, 25)))])
-
-func _outfit(a: String, s: String, shades: bool) -> void:
-	m.close_overlay()
-	m.dialog.clear()
-	m.toast_t = 0.0
-	if m.location != "outside":
-		m.leave_home()
-		m.dialog.clear()
-	m.player.position = Vector2(180, 150)
-	m._set_camera()
-	m.player.armor_id = a
-	m.player.shoes = s
-	m.shades = shades
-	m.player.shades = shades
-	m.player.at_home = false
-	m.player.facing = Vector2(0, 1)
-	m.player.queue_redraw()
-
-func _key(k: int) -> void:
-	for p in [true, false]:
-		var e: = InputEventKey.new()
-		e.keycode = k
-		e.physical_keycode = k
-		e.pressed = p
-		Input.parse_input_event(e)
+	var a: = OS.get_cmdline_user_args()
+	if a.size() > 0:
+		old_dir = a[0]
+	for o in OUTFITS:
+		var img: = Image.load_from_file("%s/duff_%s.png" % [old_dir, "home" if o[0] == "home" else o[0] + "_red"])
+		if img != null:
+			old_tx[o[0]] = ImageTexture.create_from_image(img)
 
 func _process(_d: float) -> void:
-	frame += 1
-	if frame in [40, 80, 110, 140]:
-		_key(KEY_1 if frame == 40 else KEY_ENTER)
-	if frame < 200:
-		return
-	if m == null:
-		m = game.get_child(0).get_child(0).get_child(0)
-	if wait > 0:
-		wait -= 1
-		if wait == 0:
-			get_viewport().get_texture().get_image().save_png(OUT + shot_name + ".png")
-		return
-	if steps.is_empty():
-		print("outfit_shot: done")
+	frames += 1
+	queue_redraw()
+	if frames == 8:
+		DirAccess.make_dir_recursive_absolute("/tmp/qa")
+		get_viewport().get_texture().get_image().save_png("/tmp/qa/outfits.png")
 		get_tree().quit()
-		return
-	var st: Array = steps.pop_front()
-	shot_name = st[0]
-	(st[1] as Callable).call()
-	wait = 30
+
+func _draw() -> void:
+	draw_rect(Rect2(0, 0, 640, 360), Color("#2b2838"))
+	var f: = ThemeDB.fallback_font
+	draw_string(f, Vector2(8, 12), "Duff outfits: top row = old sheet, bottom row = new 2x", HORIZONTAL_ALIGNMENT_LEFT, -1, 9, Color(1, 1, 1, 0.85))
+	for i in OUTFITS.size():
+		var o: Array = OUTFITS[i]
+		var bx: = 8.0 + float(i % 3) * 210.0
+		var by: = 22.0 + float(i / 3) * 168.0
+		draw_rect(Rect2(bx - 3, by - 2, 204, 164), Color(1, 1, 1, 0.05))
+		draw_string(f, Vector2(bx, by + 8), str(o[2]), HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#f2c66a"))
+		var tx: ImageTexture = old_tx.get(o[0])
+		for d in 4:
+			var feet: = Vector2(bx + 24.0 + d * 50.0, by + 78.0)
+			draw_set_transform(feet, 0.0, Vector2(2, 2))
+			if tx != null:   # old: 64 px cells, origin (32, 60), 2 texels per unit
+				draw_texture_rect_region(tx, Rect2(Vector2(-16, -30), Vector2(32, 32)), Rect2(0, d * 64, 64, 64))
+			draw_set_transform(feet + Vector2(0, 74), 0.0, Vector2(2, 2))
+			Art.frame(self, str(o[1]), Vector2.ZERO, 0, d)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
