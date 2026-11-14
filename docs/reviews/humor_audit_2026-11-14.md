@@ -53,7 +53,7 @@ else gets cut down to its best use.
 | Show & Tell: "extremely fluffy", plush resale price, "That's literally X / This is you" | 2 + 2 + 8 | the family file (her real shows) | the generic file only: moth, limited plush, raccoon, fitted sheet |
 | "Babe. BABE." | 4 | home, texts, Show & Tell | gala crowd line |
 
-## Flagged, NOT changed (Madison: needs Duff's yes, one at a time)
+## Flagged for Madison (each approved by Duff, one at a time; all four done Nov 14, PRs #61 and #63)
 
 These sit in `moods.gd` (fussy days), `mornings.gd` or her real-shows file. Nothing here was touched.
 

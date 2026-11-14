@@ -5,6 +5,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **Look At This (Nov 14):** Madison's ADHD. Home talk from day 3, once: Duff starts a story, she cuts in with a reel and a text, phone popup over the dialogue (+3 Happiness). Lines approved by Duff. Render `docs/renders/madison_look_at_this.png`.
 - **2026-11-14** **Too Loud (Madison's autism).** Duff approved the lines. First Saturday trip to {grocery} from day 6:
   the store gets loud, she masks ("Totally good."), you dig her headphones out of her bag before the noise meter fills
   (`minigames/noise.gd`; meter full = leave the cart, no fail state), then home for the crash and "Ask me about my day.
