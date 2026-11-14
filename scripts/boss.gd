@@ -79,6 +79,14 @@ const BOSSES: = {
 		"taunts": ["Is this water or TAP water?", "I'm a food blogger. 14 followers. All bots. All furious.", "Send it back. No, the plate. No, the building.", "My compliments to the chef. They're all complaints."],
 		"rage": "Sir Sends-It-Back: I want a refund. On this FIGHT.",
 		"defeat": "Sir Sends-It-Back: ...This beating is cooked perfectly. Five stars. Still not tipping." },
+	# Day one (Nov 14): {coworker}'s first bet, right after the cold open's pirate (main.first_bet_pitch). Alley
+	# arena; the street hustler's sprite, tinted. Easy on purpose: a new player at Lv 1.
+	"mike": {"name": "Marketplace Mike", "hp": 70.0, "attacks": ["posting", "charge"], "sprite": "hustler", "tint": Color(1.0, 0.86, 0.72),
+		"labels": {"post": "OBO" }, "tele": {"posting": "*lists you. 'Used. Fair condition.'*", "charge": "Cash only! No lowballers!" },
+		"intro": "Marketplace Mike: That pirate was my best guy. You know what a porch box goes for? Twelve bucks. Or best offer.",
+		"taunts": ["Is this still available? You are. Barely.", "Local pickup only. I'm picking you up. Off the ground.", "Gently loved. Like your face after this.", "Four hundred five-star ratings. All from my cousins."],
+		"rage": "Marketplace Mike: Price drop! Everything must go! Starting with YOU!",
+		"defeat": "Marketplace Mike: ...Okay. Okay. Mark me as sold. Tell her she can keep the package." },
 	# Side quest "The Grease Trap" (side_quests.gd): fought in the alley at night, never on the 86 List menu.
 	"grease": {"name": "The Grease Trap", "hp": 180.0, "attacks": ["posting", "charge"], "sprite": "grease",
 		"labels": {"post": "OIL" }, "tele": {"posting": "*gurgles a ladle of fryer oil*", "charge": "*slides across the floor. It IS the floor.*" },

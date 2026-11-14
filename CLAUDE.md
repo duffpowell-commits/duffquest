@@ -105,6 +105,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   shows him her phone screen constantly (reels, texts) and finds it hard to let him finish. `arena_shot` `look` / `look_text`.
 - **Portal fit (Nov 13 late):** windows where integer scaling wastes >10% now scale fractionally (`HdPresentation.use_fractional`), so CrazyGames' 907x510 iframe is filled. Touch pad on the web shows up front only on iOS/Android browsers, else on the first real touch (`TouchControls.default_visible()/real_touch()`; mouse-emulated touches have device -1). Listing copy: `docs/portals/LISTING.md`.
 - **Portal polish (Nov 14):** keyboard/mouse players: the cold-open line says "WASD or arrows to walk, Space to bonk"; the level/heat panel sits bottom-right (`combat_ui.PANEL_R_KEYS`) instead of floating where the touch buttons would be; enemy name + Lv labels are on ink plates. The sandwich ticket's house item is `{house_sandwich}` (public: Spatula Classic). Renders in keyboard mode: add `--keys` after the id (xvfb reports a touchscreen).
+- **First bet (Nov 14):** the cold-open pirate's KO/escape -> `main.first_bet_pitch()` -> {coworker}'s bet card ->
+  `start_first_bet()` (arena_mode `firstbet`, alley, boss `mike`) -> +$`FIRST_BET_PAY` -> the rules. Pitched once
+  (`story.first_bet`); a loss costs nothing. Needs world.pck like every arena (web shows the loading card if it isn't in).
 - **Web portals (Nov 13):** `duffquest-crazygames.zip` in the dev release is the CrazyGames upload (no plain
   index.wasm; `window.DQ_PORTAL` = clean + gore off for new players). Checklist: `docs/portals/SUBMIT.md`.
 - **Marketing footage (Nov 13):** `tools/promo_shot.tscn` plays scripted takes (`fight:<boss>`, `walk:X,Y,MIN,DX`,
@@ -131,7 +134,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   origin [64,120], s 4 in manifest.json AND art_manifest.gd). Batches of four, before/after via
   `res://tools/cast_shot.tscn -- OLD_DIR id[:Label] ...` (old PNGs from git in OLD_DIR) -> `/tmp/qa/cast.png`. Batch 1
   (home crew): `ch_madison` done (8% slimmer per Duff; AI ghost/beard frames replaced by mirrors); dress, Mazikeen
-  (`ch_brittany`), Lance (`ch_fences`) next. Order after: exes/bosses, street, Fork customers, errand NPCs. Duff approves
+  (`ch_brittany`), Lance (`ch_fences`) next. Order after: exes/bosses (include Marketplace Mike, the first-bet boss: today he borrows `ch_hustler` tinted; Duff wants him in the 2x pass, ideally as his own `ch_mike` with `"sprite": "mike"` in boss.gd and no tint), street, Fork customers, errand NPCs. Duff approves
   every batch before merge.
 
 ## Next (in order)
