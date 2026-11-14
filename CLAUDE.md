@@ -131,7 +131,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   origin [64,120], s 4 in manifest.json AND art_manifest.gd). Batches of four, before/after via
   `res://tools/cast_shot.tscn -- OLD_DIR id[:Label] ...` (old PNGs from git in OLD_DIR) -> `/tmp/qa/cast.png`. Batch 1
   (home crew): `ch_madison` done (8% slimmer per Duff; AI ghost/beard frames replaced by mirrors); dress, Mazikeen
-  (`ch_brittany`), Lance (`ch_fences`) done too (PRs #62, #66, #67 merged). Batch 1 complete. Order after: exes/bosses, street, Fork customers, errand NPCs. Duff approves
+  (`ch_brittany`), Lance (`ch_fences`) done too (PRs #62, #66, #67 merged). Batch 1 complete. Batch 2 (story exes) in progress on branch `claude/project-thread-y94m2x`: Ghoster done (bcab25e), Gym Bro / DJ Vape / Crypto next, then a draft PR for Duff's yes. Action-frame FX trails (purple) get purged and small islands dropped after import. Order after: Willnot/Grease/Husk/Baron, then, street, Fork customers, errand NPCs. Duff approves
   every batch before merge.
 
 ## Next (in order)
