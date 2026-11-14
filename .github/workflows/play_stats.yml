@@ -1,0 +1,66 @@
+name: play_stats
+
+# Every 3 hours: read view/download/purchase counts for Duff's itch games (same BUTLER_API_KEY
+# the build uses), append a snapshot to the `stats` branch (stats/history.jsonl, latest.json),
+# and, once .github/play_alerts.json says "armed": true, open a GitHub issue that @mentions Duff
+# for first traffic, view milestones, 24 h spikes and new purchases. Rules: tools/play_stats.py.
+# Pushes made with GITHUB_TOKEN don't trigger other workflows, so the stats commits never rebuild.
+on:
+  schedule:
+    - cron: '23 */3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: play_stats
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out the stats branch
+        run: |
+          if git ls-remote --exit-code --heads origin stats >/dev/null; then
+            git fetch --depth 1 origin stats
+            git worktree add stats_wt origin/stats
+          else
+            git worktree add --detach stats_wt
+            (cd stats_wt && git checkout --orphan stats && git rm -rfq . && mkdir -p stats)
+          fi
+      - name: Fetch itch counts
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          if [ -z "$BUTLER_API_KEY" ]; then echo "::error::BUTLER_API_KEY secret not set"; exit 1; fi
+          curl -sf "https://itch.io/api/1/$BUTLER_API_KEY/my-games" -o games.json || { echo "::error::itch API rejected the key"; exit 1; }
+          python3 tools/play_stats.py --games games.json --stats stats_wt/stats --config .github/play_alerts.json --alerts alerts.txt
+          rm -f games.json
+      - name: Save snapshot
+        run: |
+          cd stats_wt
+          git config user.name "play-stats bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add stats
+          git commit -qm "stats: snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q origin HEAD:stats
+      - name: Send play alerts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [ -s alerts.txt ] || { echo "No alerts."; exit 0; }
+          gh label create play-alert --color 2ea44f --description "Automatic play alerts" 2>/dev/null || true
+          while IFS= read -r line; do
+            title=$(echo "$line" | sed -E 's/\[([^]]*)\]\([^)]*\)/\1/g' | cut -c1-120)
+            url=$(gh issue create --title "Play alert: $title" --label play-alert --assignee duffpowell-commits \
+              --body "@duffpowell-commits $line
+
+          Counts come from itch every 3 hours. History: \`stats\` branch, \`stats/history.jsonl\`.")
+            gh issue close "$url" >/dev/null
+            echo "Sent: $url"
+          done < alerts.txt

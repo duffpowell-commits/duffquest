@@ -137,6 +137,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   (`ch_brittany`), Lance (`ch_fences`) done too (PRs #62, #66, #67 merged). Batch 1 complete. Batch 2 (story exes: Ghoster, Gym Bro, DJ Vape, Crypto) done on branch `claude/project-thread-i5tf4g`, draft PR for Duff's yes (render `docs/renders/cast_batch2_exes_before_after.png`). DJ Vape + Crypto came from Grok (Duff ran it; prompt + refs in project files `renders/grok/`). Sheet row 3 faces RIGHT, row 4 LEFT: check against cast_shot, AI sheets often come swapped. Canva allows about one generation per 40 min. Import with `--tol 90` (reds survive the key) and `--fit-action` (keeps attack swings inside the cell). Action-frame FX trails (purple) get purged and small islands dropped after import. Batch 3 (Willnot, Grease, Husk, Baron, Marketplace Mike as his own `ch_mike`, no tint) done on branch `claude/project-thread-sm8r6f`, draft PR for Duff's yes (render `docs/renders/cast_batch3_bosses_before_after.png`). Canva takes TWO characters per shot (LANDSCAPE_2_1, 8x4 sheet, split into two 2048 halves before import). Batch 4 (porch pirates 0-3) done, render `docs/renders/cast_batch4_pirates_before_after.png`. Order after: Fork customers, then street, Fork customers, errand NPCs. Duff approves Marketplace Mike (first-bet boss) borrows `ch_hustler` tinted today; Duff wants him in the 2x pass as his own `ch_mike` with `"sprite": "mike"` in boss.gd and no tint.
   every batch before merge.
 
+- **Play stats (Nov 14):** `play_stats.yml` snapshots itch counts every 3 h into the `stats` branch; alerts (GitHub
+  issues @mentioning Duff) start when `.github/play_alerts.json` says `"armed": true`, set it the day DuffQuest debuts.
+  itch's API gives views/downloads/purchases, not browser plays. CrazyGames/GameDistribution have no stats API.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
