@@ -1735,7 +1735,7 @@ func _talk_to_madison() -> void:
 	if mood_kind() == "upset":
 		pre.append(str(Moods.UPSET.get(str(mood["cause"]), {}).get("line", "{partner}'s upset with me.")))
 	elif mood_kind() == "fussy":
-		pre.append(Moods.FUSSY_FINE if fussy_fine else "{partner}: \"I don't know what I want. Don't ask me what I want.\" (One of those days. Not your fault.)")
+		pre.append(Moods.FUSSY_FINE if fussy_fine else "{partner}: \"I don't know what I want. Don't ask me what I want.\" (Not about me. Not fixable with a question.)")
 	if charisma() > 0 and cha_line_day != day_count:
 		cha_line_day = day_count
 		pre.append(CHA_LINES[day_count % CHA_LINES.size()])
@@ -4754,7 +4754,7 @@ func fussy_swap() -> void:
 	text("madison", "madison", Moods.FUSSY_SWAP % [str(Errands.LABELS.get(in_id, in_id)).to_lower(), str(Errands.LABELS.get(out_id, out_id)).to_lower()])
 	unread["madison"] = true
 	ping_t = 2.0
-	_toast("*bzzt* {partner} changes the list. Again. (No penalty. It's one of those days.)")
+	_toast("*bzzt* {partner} changes the list. Again. (No penalty. The list is a living document today.)")
 
 const QUEST_HINTS: = {"honey buns": "She keeps eyeing the empty honey bun box. Like it owes her money.", "formula": "She keeps shaking the formula can. Sounds empty, man.",
 	"diapers": "She's counting diapers. Out loud. There are two.", "cake": "She's watching a baking show. Aggressively." }
