@@ -152,7 +152,7 @@ func _card(heading: String, lines: Array, lines2: Array, big: String, opts: Arra
 
 func start() -> void:
 	_card("{FORK}  -  %s" % day_name,
-		["Clock in. The Fork is a family (unpaid overtime). Grade sets pay: S = double, F = docked.",
+		["Clock in. The {fork_nick} is a family (unpaid overtime). Grade sets pay: S = double, F = docked.",
 		"Full Shift: all 8 stations, new order every night. Quick Shift: 4 random ones. S a station once and you can autopilot it for a B.",
 		"Friday Night Rush: tickets pile on the rail. Chain good grades for a combo. Tips go to 'the pool' (Chef's actual pool)."],
 		[], "", menu_opts(), _on_menu)

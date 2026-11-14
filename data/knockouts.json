@@ -47,8 +47,8 @@
     "slip": "Q2: cost-cutting. He throws the budget at me and it blows apart into layoffs. I slip through. I've outlasted four owners. I know where the gaps are.",
     "xray": "Q3: restructuring. Twenty-seven bones in a hand. His have only ever signed things. My fist reorganizes all twenty-seven.",
     "finisher": "Q4: I'm letting you go.",
-    "crowd": "{partner}: \"That's for the Fork, Chip. And for making me split the check at prom.\"",
-    "closer": "Year end: he sells the Fork back on his way to the floor. At a loss. Monday I clock in. Same line. Same burns. My boss, for once, is nobody's ex.",
+    "crowd": "{partner}: \"That's for the {fork_nick}, Chip. And for making me split the check at prom.\"",
+    "closer": "Year end: he sells the {fork_nick} back on his way to the floor. At a loss. Monday I clock in. Same line. Same burns. My boss, for once, is nobody's ex.",
     "live": true
   },
   "ghoster": {
