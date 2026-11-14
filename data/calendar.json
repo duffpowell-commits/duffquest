@@ -2,7 +2,7 @@
   "_readme": "Fridge calendar (scripts/daily.gd + scripts/fridge_calendar.gd). One entry per day of the month; day 1 is a Friday. 'card' = Duff's line on the wake splash (bar voice, present tense). 'tag' = scribble in the grid square. 'notes' = sticky notes on the fridge: from hero | partner | baby | cat1 | cat2 | cat3. 'headline': true blocks the random daily event and the bill roll that morning. 'event' = special handler in main (falcor, gala, thanksgiving). 'tag_from' = the tag only shows from that day on (the gala tag appears once the invite lands). Tokens like {partner} come from data/cast.json. Days past the end of the month have no entry: the daily event pool carries them.",
   "month": "NOVEMBER",
   "days": {
-    "1": {"tag": "PAYDAY", "card": "Friday. Payday is a rumor I heard once.",
+    "1": {"tag": "PAYDAY", "card": "Friday. Payday. It's already gone. I just got to hold it.",
       "notes": [{"from": "partner", "text": "Milk. Wipes. You. In that order. <3"}, {"from": "cat1", "text": "the bowl is half empty. fix it."}]},
     "2": {"tag": "your ex??", "card": "Saturday. No shift. Just me and my unfinished business.",
       "notes": [{"from": "partner", "text": "Why is someone called 'The Ghoster' at the Seen Cafe asking for you. Handle it. Home for dinner."}, {"from": "hero", "text": "Handling it. I'm the dinner."}]},
@@ -44,7 +44,7 @@
       "notes": [{"from": "hero", "text": "Fixed the cabinet. Don't open it."}, {"from": "partner", "text": "i opened it"}]},
     "21": {"tag": "", "card": "The fryer at work is making a new noise. So am I.",
       "notes": [{"from": "partner", "text": "Date night Sat?? Sitter's booked. Don't make me wear the outfit alone."}]},
-    "22": {"tag": "PAYDAY", "card": "Payday. Date night's tomorrow. I iron a shirt like it owes me money.",
+    "22": {"tag": "PAYDAY", "card": "Payday. Date night's tomorrow. I iron a shirt like it's a ticket on the rail.",
       "notes": [{"from": "hero", "text": "Reservation at 7. Wearing the good shirt."}, {"from": "partner", "text": "The GOOD good shirt?"}]},
     "23": {"tag": "DATE <3", "card": "Date night. {partner} gets her eyeliner in one try. A miracle on a Saturday.",
       "notes": [{"from": "cat2", "text": "you were gone three hours. we have filed a complaint."}]},
