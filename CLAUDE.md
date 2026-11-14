@@ -131,7 +131,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   origin [64,120], s 4 in manifest.json AND art_manifest.gd). Batches of four, before/after via
   `res://tools/cast_shot.tscn -- OLD_DIR id[:Label] ...` (old PNGs from git in OLD_DIR) -> `/tmp/qa/cast.png`. Batch 1
   (home crew): `ch_madison` done (8% slimmer per Duff; AI ghost/beard frames replaced by mirrors); dress, Mazikeen
-  (`ch_brittany`), Lance (`ch_fences`) next. Order after: exes/bosses, street, Fork customers, errand NPCs. Duff approves
+  (`ch_brittany`), Lance (`ch_fences`) done too (PRs #62, #66, #67 merged). Batch 1 complete. Order after: exes/bosses, street, Fork customers, errand NPCs. Duff approves
   every batch before merge.
 
 ## Next (in order)
