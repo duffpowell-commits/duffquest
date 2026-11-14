@@ -1,11 +1,14 @@
-# Duff Quest: itch page copy (Nov 9, 2026)
+# Duff Quest: itch page copy (updated Nov 14, 2026)
 
-Page: https://dufftkyosht.itch.io/duff-quest. Paste-ready. Real names are approved for public (Nov 9); get each real person's OK in writing before ads go out (docs/legal/RISK_AUDIT.md).
+Page: https://dufftkyosht.itch.io/duff-quest. Paste-ready. itch gets the public edition (Nov 13): The Busted Spatula, Mazikeen,
+Rex Tankton. Never put the family names (the real restaurant, coworkers, exes) on this page. Madison, Octavia and Duff
+are in both editions; get each real person's OK in writing before ads go out (docs/legal/RISK_AUDIT.md).
+Phone paste version (plain text, no tables): `docs/itch/PAGE_paste.txt`.
 Not entering the itch "2026 Jam" (it bans AI art). Images: `cover.png`, `logo_banner.png`, `icon_512.png`, `screens/`, `knockout.gif`, `boss_intro.gif`.
-Upload order (first image shows biggest): `knockout.gif`, `boss_intro.gif`, `screens/07_gala_landlord_ex.png`, `04_kitchen_sandwich_station.png`, `05_fridge_calendar.png`, `06_dialogue_madison.png`, `08_street_night.png`, then `01`, `09`, `02`, `03`. Screens are 1920x1080 engine renders (Nov 13), clean language, gore off.
+Upload order (first image shows biggest): `knockout.gif`, `boss_intro.gif`, `screens/07_gala_landlord_ex.png`, `04_kitchen_sandwich_station.png`, `05_fridge_calendar.png`, `06_dialogue_madison.png`, `08_street_night.png`, then `01`, `09`, `02`, `03`. Screens are 1920x1080 engine renders, clean language, gore off; 01, 08 and 09 re-rendered Nov 14 with HD Duff.
 
 ## Short description (itch "tagline")
-> Thirty days. One rent check. Seventeen people who need a spatula to the face.
+> Thirty days. One rent check. Eighteen people who need a spatula to the face.
 
 (alt: "Rent's due. Madison's watching. Punch the problem.")
 
@@ -21,7 +24,9 @@ They don't pay rent. You pay rent.
 
 Barely.
 
-Every morning the fridge calendar tells you what kind of day it is. Thirty days of November. Thirty chances to get it right. You'll get maybe twelve.
+Day one starts at 7 AM with a stranger in a hoodie jogging straight at Madison's package. You bonk him. That's the tutorial.
+
+Every morning after that, the fridge calendar tells you what kind of day it is. Thirty days of November. Thirty chances to get it right. You'll get maybe twelve.
 
 You can work the line. You can run Madison's errand before 8 PM. You can sell your plasma for gas money, which is a sentence you will say out loud and mean.
 
@@ -45,11 +50,12 @@ Hell of a girl, though.
 
 - **A real life, played as an RPG.** Rent on Monday. Payday Friday. A partner's mood bar that notices when you skip the couch. A college fund that laughs at you.
 - **Brawl the block.** Three-hit combos, dodge rolls, a charged special, and Demon Time. Spatula first. Questions never.
-- **17 bosses, 17 knockouts.** Burst intro cards, their own arenas, their own trash talk, and a comic-panel finisher with an x-ray of the bone you just broke.
+- **18 bosses, 18 knockouts.** Burst intro cards, their own arenas, their own trash talk, and a comic-panel finisher with an x-ray of the bone you just broke.
 - **The Gala.** Day 24. Four of Madison's exes and the man hosting them. Black tie. You brought the brown one.
 - **Work the line.** Fryer, sandwich builds, prep, a lineup quiz. S-rank a station and your hands remember it.
 - **The fridge calendar.** Thirty handwritten days. Sticky notes from Madison, the baby, and the cats. Thanksgiving at the Waffle Haus.
 - **Side hustles.** A $15 grocery run. The pharmacy. Plasma. A Waffle Haus night shift.
+- **Side quests.** Who keeps stealing the packages. A grease trap at the back door after 10 PM. A coworker's side gig you can cover for or rat out. A lost-and-found flyer. Tracked in the Notes app on Duff's phone.
 - **Plays on your phone.** Landscape, touch controls, saves in your browser. Keyboard works too.
 - **Toggles for the squeamish:** clean language, cartoon gore, screen shake, and Lite graphics for older phones.
 
@@ -70,7 +76,7 @@ Hell of a girl, though.
 | Settings / back | O or Esc | |
 | Skip a cutscene beat | Any key | Tap |
 
-Best in landscape: tap **Run game**, then fullscreen. First load is about 56 MB.
+Best in landscape: tap **Run game**, then fullscreen. The title loads in about 10 seconds on a phone; the rest of Omaha streams in while you play. On iPhone, the full-screen version is https://duffpowell-commits.github.io/duffquest/ (Safari > Share > Add to Home Screen).
 
 ## Content warning
 
@@ -104,6 +110,7 @@ the game: Settings > Credits & legal.
 ## itch settings checklist
 - Kind: HTML. "This file will be played in the browser" = **duff-quest-html.zip** ONLY (delete `duffquest-web.zip`).
 - Embed: 1280x720, Mobile friendly (landscape), Fullscreen button, Click to launch in fullscreen (optional).
-- Genre: Role Playing. Tags: comedy, beat-em-up, life-simulation, pixel-art, short, funny, godot, mobile, singleplayer.
+- Genre: Role Playing. Tags (10 max): comedy, beat-em-up, life-simulation, funny, story-rich, minigames, cooking, singleplayer, mobile, godot.
+  Not `pixel-art` (the art is AI-painted; that tag's crowd will report it) and not `short` (it's thirty in-game days).
 - AI disclosure: yes (itch "AI generation" field: graphics + code + text).
 - Content: blood (cartoon), violence, strong language.
