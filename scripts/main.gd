@@ -3218,7 +3218,7 @@ func start_gala(first: int = 0) -> void:
 	_set_camera()
 	energy = 100.0
 	gala_stage = first
-	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. Charity thing. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "{partner} reads the guest list and goes pale. Four of the names are her exes. All four 'made it.'", "{partner}: Babe. I am SO sorry. In advance. For all of them.", "Four exes. One rich host. One line cook. Alright. Let's fucking cook."])
+	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. Charity thing. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "{partner} reads the guest list and goes pale. Four of the names are her exes. All four 'made it.'", "{partner}: Babe. Four of them. One room. Hold my hand and don't let go of my drink.", "Four exes. One rich host. One line cook. Alright. Let's fucking cook."])
 	_spawn_boss()
 	_sync_world()
 
