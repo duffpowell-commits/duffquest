@@ -246,6 +246,48 @@ func _draw() -> void:
 			_mt(f, r.position + Vector2(7, 13), typed(f, line, r.size.x - 14, 7), r.size.x - 14, 7, 6, w)
 		if int(m.dlg_chars) >= line.length():
 			UiStyle.label(self, r.position + Vector2(r.size.x - 30, r.size.y - 3), "E / A >", 6, Color(UiStyle.GOLD, 0.9), -1.0, HORIZONTAL_ALIGNMENT_LEFT, 2)
+		var shown: = preload("res://scripts/look_at_this.gd").screen(line)
+		if shown != "":
+			_draw_her_screen(Rect2(r.end.x - 34, r.position.y - 50, 28, 48), shown)
+
+## "Look At This": the phone she's holding up at me, over the dialogue box (a reel, or a text thread).
+func _draw_her_screen(pr: Rect2, kind: String) -> void:
+	var tilt: = sin(float(m.t) * 5.0) * 0.6   # she's waving it a little
+	pr.position.y += tilt
+	draw_rect(Rect2(pr.position + Vector2(1.5, 1.5), pr.size), Color(INK, 0.5))
+	draw_rect(pr, Color("#e88aa8"))                        # her pink case
+	draw_rect(pr, INK, false, PX * 1.4)
+	var sc: = pr.grow(-2.0)
+	sc.position.y += 2.0
+	sc.size.y -= 4.0
+	draw_rect(sc, Color("#14121a"))
+	draw_rect(Rect2(pr.position.x + pr.size.x * 0.5 - 3, pr.position.y + 1, 6, 1), INK)
+	if kind == "reel":
+		var water: = Rect2(sc.position.x + 2, sc.position.y + sc.size.y * 0.55, sc.size.x - 4, 8)
+		draw_rect(water.grow(1.0), Color("#f2c14e"))       # the kiddie pool's rim
+		draw_rect(water, Color("#5fb8e8"))
+		var c: = water.position + Vector2(water.size.x * 0.5, 0)
+		draw_circle(c + Vector2(0, -7), 1.6, Color("#f0c8a0"))   # the guy, mid-cannonball
+		draw_rect(Rect2(c + Vector2(-2, -5.5), Vector2(4, 3)), Color("#d9567a"))
+		for k in 3:
+			var a: = -2.4 + k * 0.8
+			draw_line(c + Vector2(cos(a), sin(a)) * 3.0, c + Vector2(cos(a), sin(a)) * 6.5, Color("#bfe8ff"), 1.0)
+			draw_line(c + Vector2(-cos(a), sin(a)) * 3.0, c + Vector2(-cos(a), sin(a)) * 6.5, Color("#bfe8ff"), 1.0)
+		var hp: = Vector2(sc.end.x - 4, sc.position.y + 5)       # reel heart + progress bar
+		draw_circle(hp + Vector2(-1, 0), 1.2, Color("#ff3b5c"))
+		draw_circle(hp + Vector2(1, 0), 1.2, Color("#ff3b5c"))
+		draw_colored_polygon(PackedVector2Array([hp + Vector2(-2.2, 0.3), hp + Vector2(2.2, 0.3), hp + Vector2(0, 2.6)]), Color("#ff3b5c"))
+		draw_rect(Rect2(sc.position.x + 2, sc.end.y - 3, sc.size.x - 4, 1), Color(1, 1, 1, 0.25))
+		draw_rect(Rect2(sc.position.x + 2, sc.end.y - 3, (sc.size.x - 4) * fmod(float(m.t) * 0.3, 1.0), 1), Color.WHITE)
+	else:
+		var y: = sc.position.y + 3.0
+		for b in [[true, 14.0], [false, 18.0], [true, 10.0], [false, 15.0], [false, 8.0]]:
+			var mine: bool = b[0]
+			var bw: float = minf(float(b[1]), sc.size.x - 4.0)
+			var bx: = sc.end.x - 2.0 - bw if mine else sc.position.x + 2.0
+			draw_rect(Rect2(bx, y, bw, 5), Color("#3a8cff") if mine else Color("#5a5560"))
+			draw_rect(Rect2(bx + 1.5, y + 2, bw - 3, 1), Color(1, 1, 1, 0.55))
+			y += 7.0
 
 func _draw_phone(f: Font) -> void:
 	var k: = 0.75                                   # phone.png is 12x20 HUD units at 1.0
