@@ -51,6 +51,7 @@ const Moods: = preload("res://scripts/moods.gd")
 const Mornings: = preload("res://scripts/mornings.gd")
 const Zebra: = preload("res://scripts/zebra.gd")
 const TooLoud: = preload("res://scripts/too_loud.gd")
+const LookAtThis: = preload("res://scripts/look_at_this.gd")
 const NoiseScript: = preload("res://scripts/minigames/noise.gd")
 const SymphonyScript: = preload("res://scripts/minigames/symphony.gd")
 const AkaruiScript: = preload("res://scripts/minigames/akarui.gd")
@@ -304,6 +305,7 @@ var plasma: Dictionary = Life.new_plasma()
 var mood: Dictionary = Moods.new_mood()
 var couch_night: = false
 var zebra_seen: = false   # "The Zebra" diagnosis story played (zebra.gd)
+var look_seen: = false   # "Look At This" (look_at_this.gd) played: her phone, his story
 var too_loud_seen: = false   # "Too Loud" (too_loud.gd) played: her Saturday overload at the grocery
 var after_dialog: = Callable()   # run once when the current dialog runs out (scene beats: lines, then a game)
 var morning: Dictionary = Mornings.new_state()   # Madison's slow / migraine / good mornings (mornings.gd)
@@ -754,7 +756,7 @@ func to_dict() -> Dictionary:
 		"errand": errand.duplicate(true), "errand_stats": errand_stats.duplicate(),
 		"buffs": buffs.duplicate(true), "buff_days": buff_days.duplicate(), "meal_day": meal_day, "cha_line_day": cha_line_day,
 		"date_invite": date_invite.duplicate(), "date_stats": date_stats.duplicate(), "glow_day": glow_day,
-		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "morning": morning.duplicate(), "zebra_seen": zebra_seen, "too_loud_seen": too_loud_seen, "routine_played": routine_played, "quest_wait": quest_wait,
+		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "morning": morning.duplicate(), "zebra_seen": zebra_seen, "too_loud_seen": too_loud_seen, "look_seen": look_seen, "routine_played": routine_played, "quest_wait": quest_wait,
 		"bills": bills.duplicate(true), "owed": owed.duplicate(true), "plans": plans.duplicate(true), "rent_bump": rent_bump,
 		"formula_spike_day": formula_spike_day, "event_days": event_days.duplicate(), "phone_cracked": phone_cracked, "bills_paid": bills_paid,
 		"has_car": has_car, "bus_pass_until": bus_pass_until, "bus_rides": bus_rides,
@@ -843,6 +845,7 @@ func from_dict(d: Dictionary) -> void:
 	morning = Mornings.clean(d.get("morning", {}))
 	zebra_seen = bool(d.get("zebra_seen", false))
 	too_loud_seen = bool(d.get("too_loud_seen", false))
+	look_seen = bool(d.get("look_seen", false))
 	routine_played = bool(d.get("routine_played", int(d.get("day_count", 1)) > 1))   # old saves: past night one
 	quest_wait = float(d.get("quest_wait", 0.0))
 	bills = Life.clean_list(d.get("bills", []), ["day", "due"])
@@ -1723,6 +1726,9 @@ func _talk_to_madison() -> void:
 	if quest_talk("madison"):
 		return
 	var giving: = errand_deliverable() or int(inventory.get("package", 0)) > 0 or (quest == 1 and has_all(QUEST_NEEDS[quest_kind]))
+	if not giving and location == "home" and LookAtThis.available(day_count, look_seen):
+		look_story()
+		return
 	var fussy_fine: = false
 	if giving and mood_kind() == "fussy":
 		var bnc: = bounce()
@@ -5691,6 +5697,15 @@ func dev_morning(kind: String) -> void:
 	morning["day"] = day_count
 	morning["kind"] = kind
 	clock = 450.0
+
+## ---- "Look At This" (look_at_this.gd): her ADHD. Duff starts a story, she has a reel and a text to show him ----
+func look_story() -> void:
+	look_seen = true
+	gain_happy(LookAtThis.HAPPY)
+	var ls: Array = LookAtThis.LINES.duplicate()
+	ls[-1] = str(ls[-1]) + " (+%d Happiness)" % int(LookAtThis.HAPPY)
+	_say(ls)
+	save_game()
 
 ## ---- "The Zebra" (zebra.gd): her diagnosis story, told at the zebra plush on the shelf over the bed ----
 const ZEBRA_PLUSH: = Vector2(38.5, 466)    # bottom-left of the plush, on the wall shelf over the bed (next to the teddy)

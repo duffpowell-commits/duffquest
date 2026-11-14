@@ -262,6 +262,8 @@ static func madison_mood(text: String, happiness: float, kind: String = "") -> i
 		return 0                                                  # her diagnosis story: proud, not mad
 	if preload("res://scripts/too_loud.gd").warm(text):
 		return 0                                                  # Too Loud: the masking smile, then relief
+	if preload("res://scripts/look_at_this.gd").warm(text):
+		return 0                                                  # Look At This: delighted with her reel
 	if kind == "upset" or happiness < 40.0:
 		return 2
 	if preload("res://scripts/mornings.gd").pained(text):
