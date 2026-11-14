@@ -29,6 +29,7 @@ def main():
     ap.add_argument("--smooth", action="store_true", help="box-filter downsample instead of nearest")
     ap.add_argument("--row-feet", action="store_true", help="put every row's stand frame on the feet line, not just row 0's")
     ap.add_argument("--auto-grid", action="store_true", help="cut rows/columns at the emptiest gaps (figures that cross the even grid)")
+    ap.add_argument("--fit-action", action="store_true", help="slide each column-4 (action) frame so the whole swing stays inside its cell")
     a = ap.parse_args()
     im = np.asarray(Image.open(a.src).convert("RGB")).astype(int)
     key = np.median(np.concatenate([im[:8, :8].reshape(-1, 3), im[-8:, -8:].reshape(-1, 3)]), 0)
@@ -86,6 +87,14 @@ def main():
             s[..., 3] = np.where(s[..., 3] >= 128, 255, 0)
             dx, dy = xs_cut[cl] - cl * cw, ys_cut[rw] - rw * ch   # cut shift vs the even grid
             ox = round(cl * C + C // 2 - (cx_src - dx) * scale)
+            if a.fit_action and cl == 3:
+                fx = np.where(s[..., 3] > 0)[1]
+                if len(fx):
+                    lo, hi = ox + fx.min(), ox + fx.max()
+                    if lo < cl * C + 1:
+                        ox += cl * C + 1 - lo
+                    elif hi > cl * C + C - 2:
+                        ox -= hi - (cl * C + C - 2)
             oy = round(rw * C + a.feet - (feet_src + row_dy - dy) * scale)
             tile = Image.new("RGBA", (C * 4, C * 4), (0, 0, 0, 0))
             tile.paste(Image.fromarray(s, "RGBA"), (ox, oy))
