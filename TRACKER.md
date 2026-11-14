@@ -5,6 +5,12 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **Too Loud (Madison's autism).** Duff approved the lines. First Saturday trip to {grocery} from day 6:
+  the store gets loud, she masks ("Totally good."), you dig her headphones out of her bag before the noise meter fills
+  (`minigames/noise.gd`; meter full = leave the cart, no fail state), then home for the crash and "Ask me about my day.
+  All of it. In order." +5. `scripts/too_loud.gd`, save key `too_loud_seen`, 11 test_daily checks, render
+  `docs/renders/madison_too_loud.png` (`arena_shot` `loud` / `loud_bag` / `loud_home`). `main.after_dialog` runs a
+  callable when the dialog queue empties (lines, then a game).
 - **2026-11-14** **Public build: "the Fork" is now "the Spatula".** 27 strings used a bare "Fork" while the public sign
   says Busted Spatula. New token `{fork_nick}` (family Fork, public Spatula), Club Fork shows as `{club_sandwich}`
   (Club Spatula), and the "Narc of the Fork" achievement migrates on load. test_daily scans every quoted string for a
@@ -37,6 +43,10 @@ One page: what's built, what's next, what could be better. Updated at every mile
   someone to hit ~2 s later (was a rules wall and no enemy for 20+ s). The Fork, arenas, gala and minigames wait on
   world.pck behind a loading card (`_world_gate`). `docs/renders/cold_open_before_after.png`;
   `arena_shot -- cold` (with `--fixed-fps 30`).
+- **2026-11-13** **The Zebra (Madison's diagnosis story).** Duff approved every line; facts from Madison (hypermobile
+  joint syndrome as a kid, Ehlers-Danlos in 2020, Beighton test). Her zebras are in the room for good: a plush on the
+  shelf over the bed and a zebra picture in the frame by the shower, both in the room's warm palette. Day 4+, once, at the foot of the bed: 8 lines, +5, happy face throughout.
+  `scripts/zebra.gd`, save key `zebra_seen`, 6 test_daily checks, render `docs/renders/madison_zebra.png`.
 - **2026-11-13** **Madison's mornings (EDS + migraines).** Duff approved every line. About two hard mornings a week
   she's in bed hurting (hip, or a migraine with the blinds down): bottle for Octavia, two coffees (hers cream and sugar,
   his honey), bring hers for her meds (+8). Skip it and she gets herself up and texts; no penalty. About one good
