@@ -5657,7 +5657,7 @@ func zebra_story() -> void:
 	save_game()
 
 ## Her zebras: a plush on the shelf over the bed and a framed print by the shower, pixel art at the room's own
-## density (s:2) so they sit in home_interior (art: home_zebra_plush / _print, made by tools/zebra_pixels.py).
+## density (s:2) so they sit in home_interior (art: home_zebra_plush / _print, tools/zebra_plush_pixels.py + tools/zebra_pixels.py).
 func _draw_zebras() -> void:
 	Art.image(self, "home_zebra_print", ZEBRA_PIC)
 	Art.image(self, "home_zebra_plush", ZEBRA_PLUSH)

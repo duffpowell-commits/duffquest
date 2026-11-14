@@ -1,4 +1,4 @@
-# Hand-placed pixel art for Madison's zebras (plush + framed print), same density as home_interior (s:2).
+# Hand-placed pixel art for Madison's framed zebra print, same density as home_interior (s:2).
 # Run: python3 tools/zebra_pixels.py assets/art   then touch the pngs and godot --import.
 import sys
 from PIL import Image
@@ -47,7 +47,7 @@ def grid(rows,pal):
         for x,c in enumerate(r):
             if c in pal: im.putpixel((x,y),pal[c]+(255,))
     return im
-grid(PLUSH,PAL).save(OUT+"/home_zebra_plush.png")
+# plush now comes from tools/zebra_plush_pixels.py
 fw,fh=len(FACE[0])+6,len(FACE)+6
 F=Image.new("RGBA",(fw,fh+3),(0,0,0,0))
 dark=(108,34,26,255); mid=(178,64,42,255); hi=(220,120,70,255); mat=(206,180,134,255)
@@ -74,6 +74,6 @@ def shade(path, shadow):
         o[:h,:w][out[...,3]>0]=out[out[...,3]>0]
         out=o
     Image.fromarray(out,"RGBA").save(path)
-shade(OUT+"/home_zebra_plush.png",True)
+
 shade(OUT+"/home_zebra_print.png",False)
-print(Image.open(OUT+"/home_zebra_plush.png").size)
+
