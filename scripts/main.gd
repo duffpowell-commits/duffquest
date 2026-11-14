@@ -50,6 +50,8 @@ const Life: = preload("res://scripts/life.gd")
 const Moods: = preload("res://scripts/moods.gd")
 const Mornings: = preload("res://scripts/mornings.gd")
 const Zebra: = preload("res://scripts/zebra.gd")
+const TooLoud: = preload("res://scripts/too_loud.gd")
+const NoiseScript: = preload("res://scripts/minigames/noise.gd")
 const SymphonyScript: = preload("res://scripts/minigames/symphony.gd")
 const AkaruiScript: = preload("res://scripts/minigames/akarui.gd")
 const PlasmaScript: = preload("res://scripts/minigames/plasma.gd")
@@ -302,6 +304,8 @@ var plasma: Dictionary = Life.new_plasma()
 var mood: Dictionary = Moods.new_mood()
 var couch_night: = false
 var zebra_seen: = false   # "The Zebra" diagnosis story played (zebra.gd)
+var too_loud_seen: = false   # "Too Loud" (too_loud.gd) played: her Saturday overload at the grocery
+var after_dialog: = Callable()   # run once when the current dialog runs out (scene beats: lines, then a game)
 var morning: Dictionary = Mornings.new_state()   # Madison's slow / migraine / good mornings (mornings.gd)
 var quest_wait: = 0.0
 var restless_seen: Dictionary = {}
@@ -750,7 +754,7 @@ func to_dict() -> Dictionary:
 		"errand": errand.duplicate(true), "errand_stats": errand_stats.duplicate(),
 		"buffs": buffs.duplicate(true), "buff_days": buff_days.duplicate(), "meal_day": meal_day, "cha_line_day": cha_line_day,
 		"date_invite": date_invite.duplicate(), "date_stats": date_stats.duplicate(), "glow_day": glow_day,
-		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "morning": morning.duplicate(), "zebra_seen": zebra_seen, "routine_played": routine_played, "quest_wait": quest_wait,
+		"plasma": plasma.duplicate(true), "mood": mood.duplicate(), "couch_night": couch_night, "morning": morning.duplicate(), "zebra_seen": zebra_seen, "too_loud_seen": too_loud_seen, "routine_played": routine_played, "quest_wait": quest_wait,
 		"bills": bills.duplicate(true), "owed": owed.duplicate(true), "plans": plans.duplicate(true), "rent_bump": rent_bump,
 		"formula_spike_day": formula_spike_day, "event_days": event_days.duplicate(), "phone_cracked": phone_cracked, "bills_paid": bills_paid,
 		"has_car": has_car, "bus_pass_until": bus_pass_until, "bus_rides": bus_rides,
@@ -838,6 +842,7 @@ func from_dict(d: Dictionary) -> void:
 	couch_night = bool(d.get("couch_night", false))
 	morning = Mornings.clean(d.get("morning", {}))
 	zebra_seen = bool(d.get("zebra_seen", false))
+	too_loud_seen = bool(d.get("too_loud_seen", false))
 	routine_played = bool(d.get("routine_played", int(d.get("day_count", 1)) > 1))   # old saves: past night one
 	quest_wait = float(d.get("quest_wait", 0.0))
 	bills = Life.clean_list(d.get("bills", []), ["day", "due"])
@@ -1069,6 +1074,10 @@ func advance_dialog() -> void:
 		dlg_chars = 100000.0
 		return
 	dialog.pop_front()
+	if dialog.is_empty() and after_dialog.is_valid():
+		var cb: = after_dialog
+		after_dialog = Callable()
+		cb.call()
 
 func dialog_len() -> int:
 	return Cast.T(str(dialog[0])).length() if not dialog.is_empty() else 0
@@ -3765,6 +3774,9 @@ func open_grocery(extra: Dictionary = {}) -> void:
 	if not Errands.is_open("grocery", clock):
 		_say(["{grocery}'s closed (6 AM - 11 PM). One lone cart rolls across the lot, freer than any of us."])
 		return
+	if TooLoud.available(day_count, day_i, too_loud_seen):
+		too_loud_story()
+		return
 	if errand["kind"] == "grocery" and errand["status"] == "active":
 		_start_grocery(true, extra)
 		return
@@ -5705,3 +5717,26 @@ func zebra_story() -> void:
 func _draw_zebras() -> void:
 	Art.image(self, "home_zebra_print", ZEBRA_PIC)
 	Art.image(self, "home_zebra_plush", ZEBRA_PLUSH)
+
+## ---- "Too Loud" (too_loud.gd): her autism, approved line by line. First Saturday trip to the grocery from day 6:
+## the store gets loud, she masks, you dig her headphones out of her bag (noise.gd), then home for the crash. ----
+func too_loud_story() -> void:
+	_say(TooLoud.STORE)
+	after_dialog = func () -> void:
+		var g: = NoiseScript.new()
+		g.ctx = {"seed": hash(wordle_seed + day_count * 23) }
+		_run_game(g, _after_noise)
+
+func _after_noise(_n: Node, score: float, _x: Array) -> void:
+	advance_clock(30.0)
+	_say(TooLoud.CALM if score >= 0.5 else TooLoud.BAIL)
+	after_dialog = _too_loud_home
+
+func _too_loud_home() -> void:
+	enter_home()
+	too_loud_seen = true
+	gain_happy(TooLoud.HAPPY)
+	var ls: Array = TooLoud.HOME.duplicate()
+	ls[-1] = str(ls[-1]) + " (+%d Happiness)" % int(TooLoud.HAPPY)
+	_say(ls)
+	save_game()

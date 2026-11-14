@@ -72,6 +72,17 @@ func _process(_d: float) -> void:
 			m.clock = 600.0
 			m.dev_warp_quest("porch", 3)
 			m.dialog.clear()
+		elif id in ["loud", "loud_bag", "loud_home"]:  # "Too Loud": store lines / the noise game mid-climb / the couch crash
+			m.dialog.clear()
+			m.day_count = m.TooLoud.FIRST_DAY
+			m.day_i = m.TooLoud.SATURDAY
+			m.too_loud_seen = false
+			if id == "loud_home":
+				m.debug_station("home")
+			else:
+				if m.location != "outside":
+					m.leave_home()
+				m.player.position = m.GROC_DOOR + Vector2(0, 14)
 		elif id in ["zebra", "zebra_talk"]:  # "The Zebra": plush + print at home / her diagnosis lines
 			m.debug_station("home")
 			m.dialog.clear()
@@ -138,6 +149,21 @@ func _process(_d: float) -> void:
 		m._say(["Brittany: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case."])
 	if frame == 230 and id == "notes":
 		m.open_phone("notes")
+	if frame == 232 and id == "loud":
+		m.too_loud_story()
+	if frame == 232 and id == "loud_bag":
+		m.too_loud_story()
+		m.dialog.clear()
+		m.after_dialog.call()
+		m.after_dialog = Callable()
+	if frame == 240 and id == "loud_bag" and m.overlay_node != null:
+		m.overlay_node.t = 7.0
+	if frame == 262 and id == "loud_bag" and m.overlay_node != null:
+		m.overlay_node.get_button("diapers")["enabled"] = false   # one wrong grab already, no flash over the shot
+	if frame == 232 and id == "loud_home":
+		m._too_loud_home()
+		for i in 1:
+			m.advance_dialog()
 	if frame == 236 and id == "zebra_talk":
 		m.zebra_story()
 	if frame == 250 and id == "zebra_talk":
@@ -149,7 +175,7 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra"):
+	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
