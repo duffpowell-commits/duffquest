@@ -4536,7 +4536,7 @@ func jen_fee() -> int:
 func date_menu() -> void:
 	var k: = str(date_invite["kind"])
 	if mood_kind() == "fussy":
-		var bnc: = bounce("{partner}: \"Actually... I don't know if I want to go out. No, I do. Ask me again in five minutes.\"")
+		var bnc: = bounce("{partner}: \"Actually... I don't know if I want to go out. No, I do. You pick. No, not that one.\"")
 		if bnc != "":
 			_say([bnc])
 			return
