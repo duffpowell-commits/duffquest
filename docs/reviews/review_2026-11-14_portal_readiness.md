@@ -68,8 +68,8 @@ soak covers that path.
 | Asset | Status |
 |---|---|
 | Covers (`docs/portals/covers/`) | Current. HD portrait matches HD Duff. |
-| `knockout.gif`, `boss_intro.gif` | Stale: the walk-in and last hit show the old Duff sprite and the old floating level panel. Re-cut Nov 14. |
-| Preview clips (`docs/portals/preview/`) | Stale for the same reason. Re-recorded Nov 14. |
+| `knockout.gif`, `boss_intro.gif` | Stale: the walk-in and last hit show the old Duff sprite and the old floating level panel. Re-cut Nov 14 from a new Gym Bro take. |
+| Preview clips (`docs/portals/preview/`) | Stale for the same reason. Re-recorded Nov 14 (same cut: cover, intro card, fight, KO panels, night walk). |
 | Screens 01, 08, 09 | Stale (old Duff, old level panel). Re-rendered Nov 14. |
 | Screens 04, 05, 06 | Current. |
 | Screen 07 (gala) | Matches the build today, but Lance is still the old low-res sprite. Re-render after the cast 2x batch. |
