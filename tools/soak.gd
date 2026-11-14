@@ -184,7 +184,8 @@ func _process(_delta: float) -> bool:
 		_recover()
 		if not m.busy():
 			m.go_to_sleep(false)
-	if frame > 30 * 60 * 60 * 3:
+	# 4 h of game time: Nov 13 combat got harder (DMG_TAKEN 1.25, story exes +20% HP), so the bot needs ~3.1 h for 30 days.
+	if frame > 30 * 60 * 60 * 4:
 		issue("budget", "frame budget exhausted at day %d" % int(m.day_count))
 		return _finish()
 	_stall_check()
