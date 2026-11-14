@@ -8,6 +8,9 @@ const ING: = {
 }
 const ORDER: = ["bun_b", "mayo", "fried", "grilled", "hot", "cheese", "bacon", "lettuce", "tomato", "pickles", "bun_t"]
 const KEYS: = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_0, KEY_MINUS]
+## How a menu item reads on the ticket. The house sandwich carries the restaurant's name, so it goes through
+## cast.json ("house_sandwich"; the public edition renames it with the restaurant).
+const SHOWN: = {"Twisted Classic": "{house_sandwich}"}
 const MENU: = {
 	"Twisted Classic": ["bun_b", "mayo", "fried", "pickles", "bun_t"],
 	"Deluxe": ["bun_b", "mayo", "fried", "cheese", "lettuce", "tomato", "pickles", "bun_t"],
@@ -193,7 +196,7 @@ func _draw_game() -> void:
 	if stolen and not recovered:
 		mtxt(Vector2(8, 40), "TICKET STOLEN BY GRILL-BOY BRAYDEN", 112, 8, Color("#a43a2c"))
 	else:
-		txt(Vector2(8, 26), item.to_upper(), 8, dark)
+		txt(Vector2(8, 26), String(SHOWN.get(item, item)).to_upper(), 8, dark)   # txt() runs Cast.T: {HOUSE_SANDWICH}
 		var y: = 36.0
 		for m in mods:
 			txt(Vector2(8, y), "** " + str(m), 8, Color("#a43a2c"))

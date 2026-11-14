@@ -395,10 +395,11 @@ func _edition_checks() -> void:
 	C.set_family(false)
 	var shown: = " ".join(PackedStringArray(C.names().values().map(func(v): return str(v))))
 	var leaked: = []
-	for w in ["Twisted Fork", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh", "Brittany"]:
+	for w in ["Twisted", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh", "Brittany"]:
 		if w in shown:
 			leaked.append(w)
 	check("public edition: no real brand / real-ex names in cast (%s)" % ", ".join(leaked), leaked.is_empty())
+	check("public edition: the house sandwich is renamed with the restaurant", C.T("{HOUSE_SANDWICH}") == "SPATULA CLASSIC")
 	check("public edition: {FORK} and {wordle} tokens renamed", C.T("{FORK} / {wordle} / {coworker}") == "THE BUSTED SPATULA / Word Brawl / Mazikeen")
 	var pubs: = ["sf_fork.png", "sf_walgrumps.png", "ch_willnot.png", "portraits_hd/willnot.png", "boss_intro/willnot.png",
 		"ko/willnot_a.jpg", "ko/willnot_b.jpg", "ko/willnot_c.jpg"]

@@ -41,6 +41,8 @@ var used: = false
 ## Android: a touchscreen laptop also reports a touchscreen, and portals (CrazyGames) reject games that pick mobile
 ## controls from touch detection. Anyone who really touches the screen gets the pad on that first touch (_input).
 static func default_visible() -> bool:
+	if "--keys" in OS.get_cmdline_user_args():   # renders: keyboard/mouse player (xvfb reports a touchscreen)
+		return false
 	if OS.has_feature("web"):
 		return OS.has_feature("web_ios") or OS.has_feature("web_android")
 	return DisplayServer.is_touchscreen_available()
