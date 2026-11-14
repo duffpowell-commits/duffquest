@@ -1,4 +1,5 @@
 extends CharacterBody2D
+const UiStyle: = preload("res://scripts/ui_style.gd")
 
 const Proj: = preload("res://scripts/projectile.gd")
 
@@ -499,13 +500,13 @@ func _draw() -> void:
 		if m != null and m.get("combat") != null:
 			var lv: int = int(m.combat.ENEMY_LEVEL.get(kind, 3))
 			var lc: Color = Color("#ff6060") if lv > m.combat.level + 2 else (Color("#a0a0a0") if lv < m.combat.level - 3 else Color("#f0ead8"))
-			draw_string(f, Vector2(-8, 19), "Lv%d" % lv, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, lc)
+			UiStyle.tag(self, Vector2(-8, 20), "Lv%d" % lv, 5, lc, -1.0, HORIZONTAL_ALIGNMENT_LEFT, 0.5)
 		draw_rect(Rect2(-8, 12, 16, 2), Color(0, 0, 0, 0.6))
 		draw_rect(Rect2(-8, 12, 16.0 * clampf(hp / max_hp, 0, 1), 2), Color("#ff5050") if kind != "pete" else Color("#ff9020"))
 	if kind == "pirate" and hp >= max_hp and pname != "":
 		var nm: = display_name()
-		var nw: = f.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 5).x
-		draw_string(f, Vector2(-nw / 2.0, 19), nm, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#ffd0a0"))
+		# on an ink plate (UiStyle.tag): bare peach text vanished on the sidewalk at portal sizes
+		UiStyle.tag(self, Vector2(-40, 21), nm, 6, Color("#ffd0a0"), 80.0, HORIZONTAL_ALIGNMENT_CENTER, 0.5)
 	# speech bubble: drawn by main's Barks node (scripts/barks.gd), laid out with everyone else's
 	if w.a > 0.0:
 		pass

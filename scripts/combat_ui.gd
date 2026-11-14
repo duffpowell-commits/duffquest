@@ -98,7 +98,12 @@ func _center(f: Font, pos: Vector2, width: float, s: String, size: int, col: Col
 
 ## Level / special / heat: a slim bar above the attack buttons, only while fighting (or while
 ## something about it is worth seeing: heat refilling, points to spend, demon time).
-const PANEL_R: = Rect2(240, 92, 78, 12)
+const PANEL_R: = Rect2(240, 92, 78, 12)          # touch: above the attack buttons
+const PANEL_R_KEYS: = Rect2(238, 163, 78, 12)    # keyboard/mouse: no buttons there, so tuck it into the bottom-right corner
+
+func panel_rect() -> Rect2:
+	var tc = m.get("touch")
+	return PANEL_R if (tc != null and tc.visible) else PANEL_R_KEYS
 const COMBAT_HOLD: = 4.0
 var fight_t: = 0.0
 
@@ -120,7 +125,7 @@ func _draw_panel(f: Font) -> void:
 	fight_t = COMBAT_HOLD if in_fight() else maxf(0.0, fight_t - get_process_delta_time())
 	if not panel_shown():
 		return
-	var r: = PANEL_R
+	var r: = panel_rect()
 	draw_rect(Rect2(r.position + Vector2(PX * 2, PX * 2), r.size), Color(0, 0, 0, 0.2))
 	draw_rect(r, Color(PANEL.r, PANEL.g, PANEL.b, 0.82))
 	var sp: Dictionary = c.current()
