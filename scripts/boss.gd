@@ -9,7 +9,7 @@ const BOSSES: = {
 	"husk": {"name": "{gala_ex_1}", "hp": 260.0, "attacks": ["posting", "rocket"], "labels": {"post": "#GRIND"},
 		"setup": "{partner}: Oh no. Tyler. College Tyler. He livestreamed our dates. Nine viewers. Eight were his mom.",
 		"intro": "{gala_ex_1}: We're LIVE, fam. Say hi to my ex's new guy. He cooks. Like, for money. Wild.",
-		"taunts": ["Smash that like before he smashes me.", "Hold on, I need this beatdown in vertical. For the investors.", "My startup is Uber for apologies. We're pivoting.", "Chat says your apron is giving 'hourly.'"],
+		"taunts": ["Smash that like before he smashes me.", "Hold on, I need this beatdown in vertical. For the investors.", "My startup is apologies-as-a-service. Pre-revenue.", "Chat says your apron is giving 'hourly.'"],
 		"rage": "{gala_ex_1}: Chat, clip this. CLIP IT. We're pivoting to violence.",
 		"defeat": "{gala_ex_1}: Ending stream. Not 'cause I lost. Bandwidth issues. Emotional bandwidth." },
 	"bozos": {"name": "{gala_ex_2}", "hp": 280.0, "attacks": ["drones", "shine"],
@@ -45,7 +45,7 @@ const BOSSES: = {
 		"defeat": "{ex_1}: k. (And poof, he vanishes. Like always. At least he's consistent.)" },
 	"gymbro": {"name": "{ex_2}", "hp": 60.0, "attacks": ["curl", "flex", "charge"],
 		"intro": "{ex_2}: Bro. She's with a LINE COOK? I sell a 6-week mindset course. It's 4 weeks long.",
-		"taunts": ["Rise and grind. I don't sleep, I invoice.", "My protein powder sponsors my personality.", "Discipline is just free motivation, bro. Pay me to explain.", "Leg day is for people without a brand."],
+		"taunts": ["I don't sleep. I invoice.", "My protein powder sponsors my personality.", "Discipline is just free motivation, bro. Pay me to explain.", "Leg day is for people without a brand."],
 		"rage": "{ex_2}: BEAST MODE! This is literally content right now!",
 		"defeat": "{ex_2}: My gains... my sponsorship... link in bio..." },
 	"djvape": {"name": "{ex_3}", "hp": 75.0, "attacks": ["drop", "vape"],
@@ -67,9 +67,9 @@ const BOSSES: = {
 
 	"regular": {"name": "The Regular", "hp": 300.0, "attacks": ["curl", "hire", "charge", "curl"],
 		"swap": {"dumbbell": "mug" }, "minion": "drunk",
-		"tele": {"curl": "*slurps coffee. Loudly.*", "hire": "BOYS! BOOTH FOUR! NOW!", "charge": "I've sat on that stool since 1994!" },
+		"tele": {"curl": "*slurps coffee. Loudly.*", "hire": "BOYS! BOOTH FOUR! NOW!", "charge": "That stool has my shape in it!" },
 		"intro": "The Regular: That's MY stool, son. Sat on it since 1994. The stool knows my name. It's Earl. I'm also Earl.",
-		"taunts": ["Refill. REFILL. I've been sitting here since Truman.", "Back in my day hash browns cost a nickel and a war.", "I tip in exact change. And advice.", "The last cook cried. He's a dentist now. Happier, too."],
+		"taunts": ["Refill. REFILL. I've been sitting here since Truman.", "Back in my day hash browns cost a nickel and a war.", "Hurry up, son. I've got a nap at six.", "The last cook cried. He's a dentist now. Happier, too."],
 		"rage": "The Regular: That's it. I'm putting down my coffee. NOBODY has seen me put down my coffee.",
 		"defeat": "The Regular: ...Good hash browns, kid. Real good. Same time tomorrow." },
 
@@ -83,7 +83,7 @@ const BOSSES: = {
 	"grease": {"name": "The Grease Trap", "hp": 180.0, "attacks": ["posting", "charge"], "sprite": "grease",
 		"labels": {"post": "OIL" }, "tele": {"posting": "*gurgles a ladle of fryer oil*", "charge": "*slides across the floor. It IS the floor.*" },
 		"intro": "The Grease Trap: Eleven years under that fryer. Every fry you dropped, I caught. Every one. I KEPT them.",
-		"taunts": ["Smell that? That's me. That's always been me.", "Health inspector came by in 2019. I ate him. Kidding. Mostly.", "Change the oil? Change the OIL? I AM the oil.", "Your mop is a toothbrush to me."],
+		"taunts": ["Smell that? That's me. That's always been me.", "The last health inspector came down here once. He's still down here. Kidding. Mostly.", "Change the oil? Change the OIL? I AM the oil.", "Your mop is a toothbrush to me."],
 		"rage": "The Grease Trap: Fine. Deep fry mode. 375 degrees of feelings.",
 		"defeat": "The Grease Trap: ...Okay. Okay. I'll go back down the drain. Tell Chef to call a plumber. A real one this time." },
 	"coupon": {"name": "Coupon Carol", "hp": 150.0, "attacks": ["storm", "coins", "update"],
@@ -95,7 +95,7 @@ const BOSSES: = {
 	"allergy": {"name": "The Allergy Liar", "hp": 160.0, "attacks": ["gluten", "seen", "vanish"],
 		"stun_wave": "\"IS THERE GLUTEN IN THIS?!\" I freeze. Is there? I don't KNOW anymore.",
 		"labels": {"seen": "ONION" }, "pop": "pop", "pop_line": "SURPRISE! Extra onions!",
-		"tele": {"gluten": "Excuse me. EXCUSE ME. Quick question...", "seen": "I'm DEATHLY allergic! Extra please!", "vanish": "*goes to 'check her EpiPen'*", "pop": "SURPRISE! Extra onions!" },
+		"tele": {"gluten": "Hi. Hi! HI. Quick question...", "seen": "I'm DEATHLY allergic! Extra please!", "vanish": "*goes to 'check her EpiPen'*", "pop": "SURPRISE! Extra onions!" },
 		"intro": "The Allergy Liar: I'm deathly allergic to onions. Anyway, the onion rings, please. Hold the guilt.",
 		"taunts": ["Gluten-free! On a regular bun! Toasted in gluten!", "I'm lactose intolerant. Of your attitude.", "Hold the onions. Hold the sauce. Hold my purse. Hold STILL.", "Can you make it vegan but with bacon?"],
 		"rage": "The Allergy Liar: You made me break out! In RAGE!",
@@ -461,7 +461,7 @@ func _check_glass() -> void:
 			state = "roam"
 			act_cd = maxf(act_cd, 1.6)
 			flash = 0.2
-			say("OW! Glass! Why am I ALWAYS barefoot?!", 1.6)
+			say("OW! Glass! Somebody sweep! I'm MANAGEMENT!", 1.6)
 			return
 
 func take_hit(dir: Vector2, dmg: float, special: String = "") -> float:

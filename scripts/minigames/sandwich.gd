@@ -171,7 +171,7 @@ func _on_button(id: String) -> void:
 			if not built.is_empty(): built.pop_back()
 		"send": send()
 		"comp":
-			notes.append("I comp it after the 86. Manager sighs like it's his money. It's the owner's. He has four boats.")
+			notes.append("I comp it after the 86. Manager sighs like it's his money. It's the owner's. He's in Cabo, comping himself.")
 			finish(0.7)
 		"grab": grab()
 		_: add_ing(id)
