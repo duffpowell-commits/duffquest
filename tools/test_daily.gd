@@ -76,6 +76,7 @@ func _init() -> void:
 	_morning_checks(main)
 	_zebra_checks(main)
 	_too_loud_checks(main)
+	_look_checks(main)
 	_spatter_cut_checks()
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
@@ -1179,4 +1180,35 @@ func _too_loud_checks(main: Node) -> void:
 	main.day_count = dc0
 	main.day_i = di0
 	if loc0 != "home":
+		main.leave_home()
+
+## "Look At This" (look_at_this.gd): her phone, his story. Once, at home, from FIRST_DAY, never in the way of a hand-over.
+func _look_checks(main: Node) -> void:
+	var LA: = preload("res://scripts/look_at_this.gd")
+	var A: = preload("res://scripts/art.gd")
+	var dc0: int = main.day_count
+	var seen0: bool = main.look_seen
+	var loc0: String = main.location
+	main.dialog.clear()
+	check("look: not before day 3", not LA.available(LA.FIRST_DAY - 1, false))
+	check("look: from day 3", LA.available(LA.FIRST_DAY, false))
+	check("look: her reel shows on line 2 and 3", LA.screen(Cast.T(LA.LINES[1])) == "reel" and LA.screen(Cast.T(LA.LINES[2])) == "reel")
+	check("look: the text shows on line 5", LA.screen(Cast.T(LA.LINES[4])) == "text")
+	check("look: no phone on Duff's lines", LA.screen(Cast.T(LA.LINES[0])) == "" and LA.screen(Cast.T(LA.LINES[3])) == "" and LA.screen(Cast.T(LA.LINES[5])) == "")
+	check("look: her lines use her happy face", A.madison_mood(Cast.T(LA.LINES[1]), 20.0) == 0 and A.madison_mood(Cast.T(LA.LINES[4]), 20.0) == 0)
+	main.happiness = 50.0
+	main.look_seen = false
+	main.look_story()
+	check("look: plays all lines, +3, once", main.look_seen and main.dialog.size() == LA.LINES.size() and is_equal_approx(main.happiness, 53.0))
+	check("look: never twice", not LA.available(LA.FIRST_DAY + 5, main.look_seen))
+	check("look: survives a save", bool(main.to_dict().get("look_seen", false)))
+	var bare_ok: = true
+	for l in LA.LINES:
+		if str(l).contains("Facebook") or str(l).contains("Brittany"):
+			bare_ok = false
+	check("look: no real brand or name in her lines", bare_ok)
+	main.dialog.clear()
+	main.look_seen = seen0
+	main.day_count = dc0
+	if loc0 != main.location and loc0 != "home" and main.location == "home":
 		main.leave_home()
