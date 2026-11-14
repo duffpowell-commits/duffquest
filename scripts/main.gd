@@ -358,7 +358,7 @@ var pete_defeated_day: = -99
 var last_wordle: Node = null
 var gala_stage: = -1
 var gala_boss: Node = null
-var story: = {"beaten": [], "announced": [], "ending_seen": false, "attempts": 0, "cold_open": false }
+var story: = {"beaten": [], "announced": [], "ending_seen": false, "attempts": 0, "cold_open": false, "first_bet": false }
 var arena_id: = "":
 	set(v):
 		arena_id = v
@@ -734,6 +734,81 @@ func cold_open_rules(won: bool) -> Array:
 	lines.append("{partner}'s inside on the couch, top-left house, and she's got that look." + (" Bring her that package." if won or porch_pkg else " She wants something. Probably a honey bun."))
 	lines.append("Every Monday, rent, bills and the family basics: $%d. This first Monday it's prorated to $%d. {fork} (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))])
 	return lines
+
+## Nov 14 (portal review: "a second, bigger fight inside the first five minutes"): right after the cold open's
+## pirate, {coworker} pitches her first bet: Marketplace Mike, the guy the pirates sell to, in the alley. She fronts
+## the stake, so day one can't lose money; a win pays FIRST_BET_PAY and counts on her bet record. Pitched once
+## (story.first_bet); "not now" or a loss goes straight to the rules. Her daily bets work as before after this.
+const FIRST_BET_PAY: = 60
+func first_bet_pitch(ko_line: String) -> void:
+	if bool(story.get("first_bet", false)):
+		_say(([ko_line] if ko_line != "" else []) + cold_open_rules(porch_pkg))
+		return
+	story["first_bet"] = true
+	var lines: Array = []
+	if ko_line != "":
+		lines.append(ko_line)
+	lines.append("{coworker} from the {fork_nick} is across the street with her phone up. Of course she filmed that.")
+	lines.append("{coworker}: That guy sells to Marketplace Mike. Mike's out back of the {fork_nick} right now, loading a van full of everybody's porches.")
+	lines.append("{coworker}: Bet you can't drop him. I'll front the stake. You win, I pay you $%d. You lose, I post it." % FIRST_BET_PAY)
+	_menu("{COWORKER}'S BET", lines, [["go", "Take the bet", KEY_1], ["no", "Not today", KEY_2]], func (ch: String) -> void:
+		if ch == "go":
+			start_first_bet()
+		else:
+			_say(["{coworker}: Coward. I'm out front of the {fork_nick} every day with a new one. Bring your own money."] + cold_open_rules(porch_pkg)))
+
+func start_first_bet() -> void:
+	if busy() or _world_gate(start_first_bet):
+		return
+	show_loading()
+	clear_enemies()
+	arena_id = "alley"
+	arena_mode = "firstbet"
+	location = "arena"
+	player.position = ARENA_SPAWN
+	player.stun_t = 0.0
+	_set_camera()
+	energy = 100.0
+	var b: = BossScript.new()
+	b.kind = "mike"
+	b.m = self
+	b.position = ARENA_ORIGIN + Vector2(160, 80)
+	add_child(b)
+	arena_boss = b
+	b.set_physics_process(not busy())
+	_say(["Out back of the {fork_nick}. A van, a dumpster, forty stolen boxes and one guy with a clipboard.", str(BossScript.BOSSES["mike"]["intro"])])
+	_sync_world()
+
+func _first_bet_out() -> void:
+	clear_enemies()
+	arena_boss = null
+	arena_id = ""
+	bet["day"] = day_count   # this was today's bet
+	_leave_arena()
+	player.position = BRITT_POS + Vector2(0, 16)
+	_set_camera()
+
+func first_bet_won(b: Node) -> void:
+	kills["mike"] = int(kills.get("mike", 0)) + 1
+	combat.gain_xp("boss_bounty", combat.level)
+	money += FIRST_BET_PAY
+	bet["won"] = int(bet["won"]) + 1
+	porch_pkg = true   # Mike's van had it
+	_first_bet_out()
+	var lines: Array = [str(BossScript.BOSSES["mike"]["defeat"]),
+		"{coworker} pays up: $%d. \"I fronted the stake, so I'm out sixty AND I have to edit this. Worth it.\"" % FIRST_BET_PAY,
+		"She runs a bet like this every day, out front of the {fork_nick}. Next time it's my money on the line. Record vs {coworker}: %d-%d." % [int(bet["won"]), int(bet["lost"])]]
+	_say(lines + cold_open_rules(true))
+	save_game()
+
+func first_bet_lost() -> void:
+	bet["lost"] = int(bet["lost"]) + 1
+	_first_bet_out()
+	energy = 40.0
+	_say(["I wake up next to the dumpster. Mike's van is gone. {coworker} is already adding music.",
+		"{coworker}: First one's on me. She runs a bet every day out front of the {fork_nick}. Next time it's my money. Record vs {coworker}: %d-%d." % [int(bet["won"]), int(bet["lost"])]]
+		+ cold_open_rules(porch_pkg))
+	save_game()
 
 ## First new game on a phone: the three control cards, before the intro talk. Once per install.
 func maybe_touch_tutorial() -> void:
@@ -2891,7 +2966,7 @@ func enemy_defeated(e: Node) -> void:
 	elif e.has_meta("quest_porch"):
 		_say([msg, porch_quest_won()])
 	elif e.has_meta("cold_open"):
-		_say([msg] + cold_open_rules(true))
+		first_bet_pitch(msg)
 	else:
 		_toast(msg)
 
@@ -2901,7 +2976,7 @@ func enemy_gone(e: Node) -> void:
 	if e.kind == "pirate" and str(e.loot) != "":
 		_toast("%s gets away with %s. He's gonna resell it on Marketplace as 'gently loved.'" % [e.display_name(), Cast.T(loot_name(str(e.loot)))])
 	if e.has_meta("cold_open"):
-		_say(cold_open_rules(false))
+		first_bet_pitch("")
 	if e.kind == "scammer" and int(e.stolen) > 0:
 		_toast("Scammer gets away with $%d. Do I learn my lesson? I do not." % int(e.stolen))
 	e.remove_from_group("enemy")
@@ -3258,6 +3333,7 @@ func boss_defeated(b: Node) -> void:
 	if b == arena_boss and arena_boss != null:
 		match arena_mode:
 			"bounty": grease_defeated(b) if str(b.kind) == "grease" else bounty_defeated(b)
+			"firstbet": first_bet_won(b)
 			"waffle": waffle_regular_defeated(b)
 			_: story_boss_defeated(b)
 		return
@@ -3457,6 +3533,10 @@ func _arena_process(delta: float) -> void:
 	if arena_mode == "bet":
 		_bet_process(delta)
 		return
+	if arena_mode == "firstbet":
+		if energy <= 0.0:
+			first_bet_lost()
+		return
 	if finale_t > 0.0:
 		finale_t -= delta
 		player.frozen = true
@@ -3571,6 +3651,10 @@ func _draw_arena() -> void:
 		"alley":
 			if arena_mode == "bet":
 				_draw_bet_hud(f, o)
+			elif arena_mode == "firstbet":
+				draw_rect(Rect2(o + Vector2(40, 62), Vector2(240, 10)), Color(0, 0, 0, 0.6))
+				draw_string(f, o + Vector2(40, 70), Cast.T("{COWORKER}'S BET: DROP MIKE, WIN $%d" % FIRST_BET_PAY), HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
+				_draw_britt_rec(f, o)
 			else:
 				_arena_caption(f, o, "BEHIND {FORK}  -  86 LIST ENFORCEMENT ZONE", Color("#ffd23f"))
 	if finale_t > 0.0:
@@ -5468,7 +5552,10 @@ func _draw_bet_hud(f: Font, o: Vector2) -> void:
 		txt += "   DON'T GET HIT"
 	draw_rect(Rect2(o + Vector2(40, 62), Vector2(240, 10)), Color(0, 0, 0, 0.6))
 	draw_string(f, o + Vector2(40, 70), Cast.T(txt), HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
+	_draw_britt_rec(f, o)
 
+## {coworker} at the alley's edge, phone up, filming. Daily bets and the first-day bet.
+func _draw_britt_rec(f: Font, o: Vector2) -> void:
 	var bp: = o + Vector2(296, 96)
 	Art.person(self, "ch_brittany", bp, player.position - bp, t, false, true)
 	if int(t * 2.0) % 2 == 0:
