@@ -5638,7 +5638,7 @@ func dev_morning(kind: String) -> void:
 
 ## ---- "The Zebra" (zebra.gd): her diagnosis story, told at the zebra plush on the shelf over the bed ----
 const ZEBRA_PLUSH: = Vector2(38.5, 466)    # bottom-left of the plush, on the wall shelf over the bed (next to the teddy)
-const ZEBRA_PIC: = Vector2(239, 453.5)     # top-left of the framed zebra print on the wall by the shower
+const ZEBRA_PIC: = Vector2(241.5, 459)     # top-left of the picture inside the room's own frame by the shower
 const ZEBRA_PT: = Vector2(46, 532)       # stand at the foot of the bed, under the shelf
 
 func zebra_spot() -> Array:
