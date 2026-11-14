@@ -24,7 +24,7 @@ envelope arrives: the Gala, where every ex who "made it" is waiting in one ballr
 
 Fight with three-hit combos, dodge rolls and charged specials. Level up, gear up, and try to make rent.
 
-- 17 bosses with their own arenas and knockout finishers
+- 18 bosses with their own arenas and knockout finishers
 - Kitchen shifts, a grocery run, a Waffle Haus night shift and more side hustles
 - Side quests, a phone with texts and a notes journal, and a handwritten fridge calendar for all 30 days
 - Plays with keyboard, mouse or touch; your progress saves in the browser
