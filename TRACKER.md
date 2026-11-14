@@ -5,6 +5,13 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-14** **{coworker}'s first bet: a second fight in minute two.** Portal review: after the cold-open pirate the
+  game slowed to rules and errands. Now the pirate's KO (or escape) opens {coworker}'s bet card: Marketplace Mike, the
+  guy the pirates sell to, is out back of the {fork_nick}. She fronts the stake; win = +$60 and 1-0 on her bet record,
+  lose = nothing lost. "Not today" goes straight to the rules. Pitched once (`story.first_bet`); it uses up day one's
+  daily bet. New boss `mike` (alley, 70 HP, hustler sprite tinted). Bosses with no HD portrait (mike, grease) no longer
+  show an empty portrait frame. 14 test_daily checks; `arena_shot -- cold` now runs through the bet
+  (cold_3 card, cold_4 fight, cold_5 payout); render `docs/renders/first_bet.png`.
 - **Look At This (Nov 14):** Madison's ADHD. Home talk from day 3, once: Duff starts a story, she cuts in with a reel and a text, phone popup over the dialogue (+3 Happiness). Lines approved by Duff. Render `docs/renders/madison_look_at_this.png`.
 - **2026-11-14** **Too Loud (Madison's autism).** Duff approved the lines. First Saturday trip to {grocery} from day 6:
   the store gets loud, she masks ("Totally good."), you dig her headphones out of her bag before the noise meter fills

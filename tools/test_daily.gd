@@ -78,11 +78,66 @@ func _init() -> void:
 	_too_loud_checks(main)
 	_look_checks(main)
 	_spatter_cut_checks()
+	_first_bet_checks(main)
 	SaveGame.erase("user://test_daily_save.json")
 	main.queue_free()
 	await process_frame
 	print("%s (%d failed)" % ["ALL PASS" if fails == 0 else "FAILURES", fails])
 	quit(1 if fails > 0 else 0)
+
+## Nov 14 portal review: a second fight inside five minutes. Cold-open pirate down -> {coworker}'s first bet
+## (Marketplace Mike, alley) -> payout -> rules. Pitched once; a loss costs nothing.
+func _first_bet_checks(main: Node) -> void:
+	var B: = preload("res://scripts/boss.gd")
+	check("first bet: Mike is a boss", B.BOSSES.has("mike"))
+	main.new_game(false)
+	main.dialog.clear()
+	var pirate: Node = null
+	for e in main.get_tree().get_nodes_in_group("enemy"):
+		if e.has_meta("cold_open"):
+			pirate = e
+	check("first bet: cold open spawns the pirate", pirate != null)
+	if pirate == null:
+		return
+	main.enemy_defeated(pirate)
+	var cash0: int = main.money   # the pirate's own drop is in
+	check("first bet: pirate KO opens {coworker}'s bet card", main.overlay_node != null)
+	check("first bet: pitched flag set", bool(main.story.get("first_bet", false)))
+	check("first bet: rules held until the bet", bool(main.story.get("cold_open", false)))
+	main.close_overlay()
+	main.dialog.clear()
+	main.start_first_bet()
+	main.dialog.clear()
+	check("first bet: alley arena", main.location == "arena" and main.arena_mode == "firstbet" and main.arena_boss != null)
+	var boss: Node = main.arena_boss
+	main.boss_defeated(boss)
+	if main.arena_mode == "firstbet":   # knockout cutscene ran first
+		main.boss_defeated(boss)
+	check("first bet: back on the street", main.location == "outside" and main.arena_mode == "")
+	check("first bet: pays $%d" % main.FIRST_BET_PAY, main.money == cash0 + main.FIRST_BET_PAY)
+	check("first bet: counts on her record, today's bet used", int(main.bet["won"]) == 1 and int(main.bet["day"]) == main.day_count)
+	check("first bet: rules shown after", not bool(main.story.get("cold_open", true)))
+	var d: Dictionary = main.to_dict()
+	main.from_dict(JSON.parse_string(JSON.stringify(d)))
+	check("first bet: pitched flag survives save/load", bool(main.story.get("first_bet", false)))
+	# never pitched twice: a later cold-open-style call goes straight to rules
+	main.dialog.clear()
+	main.first_bet_pitch("")
+	check("first bet: not pitched twice", main.overlay_node == null)
+	# a loss on a fresh game: no money lost, still to the rules
+	main.dialog.clear()
+	main.new_game(false)
+	main.dialog.clear()
+	cash0 = main.money
+	main.story["first_bet"] = true
+	main.story["cold_open"] = true
+	main.start_first_bet()
+	main.dialog.clear()
+	main.energy = 0.0
+	main._arena_process(0.1)
+	check("first bet: a loss costs nothing", main.money == cash0 and int(main.bet["lost"]) == 1)
+	check("first bet: a loss still ends on the street with rules", main.location == "outside" and not bool(main.story.get("cold_open", true)))
+	main.dialog.clear()
 
 const Daily: = preload("res://scripts/daily.gd")
 const TransitS: = preload("res://scripts/transit.gd")

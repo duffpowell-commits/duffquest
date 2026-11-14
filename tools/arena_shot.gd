@@ -207,7 +207,7 @@ func _process(_d: float) -> void:
 
 ## id "cold": the new game's cold open (run with --fixed-fps 30). Saves cold_0 (phone: first control card),
 ## cold_1 (the one line, the pirate on screen), cold_2 (he has the package and runs, Duff on him), cold_3 (he's
-## down, the rules start).
+## down, {coworker}'s first-bet card), cold_4 (Marketplace Mike in the alley), cold_5 (the payout + rules).
 var _snatch: = -1
 func _cold() -> void:
 	if frame == 40:
@@ -237,6 +237,21 @@ func _cold() -> void:
 		m.toast_t = 0.0
 		get_viewport().get_texture().get_image().save_png("/tmp/qa/cold_3.png")
 		print("cold open: dialog after the fight = ", m.dialog)
+		m.close_overlay()   # {coworker}'s first bet card: take it
+		m.start_first_bet()
+	if _snatch > 0 and frame == _snatch + 50:
+		m.dialog.clear()
+		m.player.position = m.ARENA_ORIGIN + Vector2(120, 110)
+	if _snatch > 0 and frame == _snatch + 110:
+		get_viewport().get_texture().get_image().save_png("/tmp/qa/cold_4.png")
+		m.arena_boss.hp = 0.1
+		m.arena_boss.take_hit(Vector2.RIGHT, 1.0)
+	if _snatch > 0 and frame == _snatch + 200:
+		if m.ko_kind != "":
+			print("cold open: knockout cutscene up")
+		m.toast_t = 0.0
+		get_viewport().get_texture().get_image().save_png("/tmp/qa/cold_5.png")
+		print("cold open: after Mike = ", m.dialog, " money ", m.money)
 		get_tree().quit()
 	if frame == 600:
 		print("cold open: no snatch in 16 s")
