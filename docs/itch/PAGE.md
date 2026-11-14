@@ -5,7 +5,7 @@ Rex Tankton. Never put the family names (the real restaurant, coworkers, exes) o
 are in both editions; get each real person's OK in writing before ads go out (docs/legal/RISK_AUDIT.md).
 Phone paste version (plain text, no tables): `docs/itch/PAGE_paste.txt`.
 Not entering the itch "2026 Jam" (it bans AI art). Images: `cover.png`, `logo_banner.png`, `icon_512.png`, `screens/`, `knockout.gif`, `boss_intro.gif`.
-Upload order (first image shows biggest): `knockout.gif`, `boss_intro.gif`, `screens/07_gala_landlord_ex.png`, `04_kitchen_sandwich_station.png`, `05_fridge_calendar.png`, `06_dialogue_madison.png`, `08_street_night.png`, then `01`, `09`, `02`, `03`. Screens are 1920x1080 engine renders, clean language, gore off; 01, 08 and 09 re-rendered Nov 14 with HD Duff.
+Upload order (first image shows biggest): `knockout.gif`, `boss_intro.gif`, `screens/07_gala_landlord_ex.png`, `04_kitchen_sandwich_station.png`, `05_fridge_calendar.png`, `06_dialogue_madison.png`, `08_street_night.png`, then `01`, `09`, `02`, `03`. Screens are 1920x1080 engine renders, clean language, gore off; 01, 08 and 09 re-rendered Nov 14 with HD Duff; both GIFs re-cut the same day. 02 still shows the old Duff: drop it or put it last.
 
 ## Short description (itch "tagline")
 > Thirty days. One rent check. Eighteen people who need a spatula to the face.
