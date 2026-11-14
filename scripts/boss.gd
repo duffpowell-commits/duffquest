@@ -168,6 +168,7 @@ const STORY_HP_MULT: = 1.2
 const STORY_KINDS: = ["ghoster", "gymbro", "djvape", "crypto", "willnot"]
 
 func _ready() -> void:
+	material = Art.rim_material()   # room-coloured rim light (hd_presentation.gd drives it)
 	add_to_group("hostile")
 	add_to_group("enemy")
 	add_to_group("boss")

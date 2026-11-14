@@ -103,7 +103,13 @@ func _draw_game() -> void:
 	txt(Vector2(6, 151), "Weapons: keys 1-7.  Armor: Z X C V B N.  Shades: S.", 6, Color(1, 1, 1, 0.45))
 
 	draw_set_transform(Vector2(300, 150), 0.0, Vector2(1, 1))
-	Art.frame(self, "duff_apron_red", Vector2.ZERO, 0, 0)
+	# Preview the equipped armour as worn on the line (the apron is work clothes).
+	var arm: = "apron"
+	if m != null and m.get("player") != null:
+		arm = str(m.player.armor_id)
+	if not ["apron", "clogs", "sleeves", "coat", "dad"].has(arm):
+		arm = "apron"
+	Art.frame(self, "duff_%s_red" % arm, Vector2.ZERO, 0, 0)
 	if m != null and bool(m.shades):
-		Art.frame(self, "duff_shades", Vector2.ZERO, 0, 0)
+		Art.frame(self, "duff_shades" if arm == "apron" else "duff_shades_" + arm, Vector2.ZERO, 0, 0)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
