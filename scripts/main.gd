@@ -714,7 +714,7 @@ func cold_open() -> void:
 	e.pname = PIRATE_NAMES[0]
 	e.set_meta("cold_open", true)
 	toast_t = 0.0   # the morning's "*bzzt* texts" toast can wait; the phone badge still shows it
-	_say(["7 AM, day one. {partner}'s package is on the porch. A guy in a hoodie and sunglasses is jogging straight at it. Not today. %s to bonk him." % ("Tap A" if Cast.touch else "Space")])
+	_say(["7 AM, day one. {partner}'s package is on the porch. A guy in a hoodie and sunglasses is jogging straight at it. Not today. %s" % ("Tap A to bonk him." if Cast.touch else "WASD or arrows to walk, Space to bonk him.")])
 
 ## The rules, after the cold open's pirate is down (won) or gone with the package.
 func cold_open_rules(won: bool) -> Array:
