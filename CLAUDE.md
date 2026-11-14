@@ -132,7 +132,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   Rim light: `shaders/sprite_rim.gdshader` via `Art.rim_material()` on player + bosses, per room in
   `hd_presentation._update_rim()`. `Art.shadow()` adds a contact core under every character.
 
-- **Cast 2x overhaul (Nov 14, in progress):** every `ch_*` sheet moves to 2x like Duff (512x512, cell 128,
+- **Cast 2x overhaul (Nov 14, DONE: every used `ch_*` sheet is 2x; last was `ch_duff_suit`, PR #92; `ch_grillboy` is unused and stays 1x. Final review stills: `docs/renders/screens_final_2x.png` + `ui_audit_final_2x.png`):** every `ch_*` sheet moves to 2x like Duff (512x512, cell 128,
   origin [64,120], s 4 in manifest.json AND art_manifest.gd). Batches of four, before/after via
   `res://tools/cast_shot.tscn -- OLD_DIR id[:Label] ...` (old PNGs from git in OLD_DIR) -> `/tmp/qa/cast.png`. Batch 1
   (home crew): `ch_madison` done (8% slimmer per Duff; AI ghost/beard frames replaced by mirrors); dress, Mazikeen
