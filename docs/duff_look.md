@@ -52,6 +52,10 @@ Duff has full tattoo sleeves on BOTH arms:
 - Back of the RIGHT hand: several lines of bold gothic blackletter script running from the knuckles down onto the wrist
   (draw it as illegible blackletter; never invent readable words).
 - LEFT side of the neck: a realistic fox head with pale blue crystal shards and a pale blue rose.
+  **Canonical design (Nov 15): `docs/ref/duff/duff_fox_neck_tattoo.png`**, cut from Duff's own photo (alpha = the
+  tattoo outline). It runs from under the left ear down to the collarbone: blue geometric shards fan out behind the
+  head toward the jaw, a pale blue rose sits on the forehead like a third eye, the snout points down with long
+  whiskers. Duff: "the fox faces front". Use this file, not the fox art, for any neck close-up.
 - Under the shirt (only if shirtless, which the game never is): skull with a pink bow (right chest), small script (left chest),
   belly script "Despite these scars I will recover".
 
