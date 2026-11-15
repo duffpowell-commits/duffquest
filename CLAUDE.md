@@ -145,6 +145,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   issues @mentioning Duff) start when `.github/play_alerts.json` says `"armed": true`, set it the day DuffQuest debuts.
   itch's API gives views/downloads/purchases, not browser plays. CrazyGames/GameDistribution have no stats API.
 
+- **Menu backdrop + dialogue (Nov 15):** the purple sunburst behind cards/settings/credits/phone is gone: `main.open_overlay` lays a blurred, darkened snapshot of the last world frame (`_veil_snapshot`, CPU blur, world still stops drawing) under any overlay and sets `veiled` on it; minigames with painted art cover it; no snapshot (shifts, cold boot) = old burst. Dialogue box: speaker name tab (`hud.speaker()` splits "Name: line"; Duff's lines get his name), gold keyline, bobbing next arrow.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).

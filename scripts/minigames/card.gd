@@ -40,9 +40,9 @@ func _wrap_h(s: String, w: float) -> float:
 	return font.get_multiline_string_size(Cast.T(s), HORIZONTAL_ALIGNMENT_LEFT, w, 8).y
 
 func _draw_game() -> void:
-	if backdrop == "":
+	if backdrop == "" and not veiled:
 		UiStyle.burst(self, Rect2(0, 0, W, H), Color("#3a2a52"), Vector2(W * 0.5, H * 0.62), 28, t * 0.05)
-	if backdrop == "":   # vignette: the burst fades to dark at the edges so the card has a centre
+	if backdrop == "" and not veiled:   # vignette: the burst fades to dark at the edges so the card has a centre
 		for i in 6:
 			var g: = float(i) * 6.0
 			draw_rect(Rect2(g, g, W - g * 2.0, H - g * 2.0), Color(UiStyle.INK, 0.07), false, 6.0)
