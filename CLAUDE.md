@@ -92,7 +92,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (public: Mazikeen; write `{coworker}`, never her name, in new lines). The kitchen's nickname is `{fork_nick}` (family Fork, public Spatula; test_daily fails on a bare "Fork" in any string). New real brand or
   real person? Put the family name in cast.json, the public one in cast_public.json, add a test_daily leak word.
   Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
-  The `_pub` set: Fork + Walgrumps signs, the alley dumpster (`arena_alley`), every Willnot image. test_daily fails if a
+  The `_pub` set: Fork + Walgrumps signs, the alley dumpster (`arena_alley`), the pharmacy shelves (`bg_pharmacy`: no real
+  cold-medicine brands), the tower sign (`sf_plaza`: GLASSHAUS TOWER), every Willnot image. Re-audit Nov 15 in RISK_AUDIT.md;
+  the credits name no AI tools (Duff's call) but itch's AI-generation disclosure stays on. test_daily fails if a
   `_pub` file is a byte copy of its original (redraw the original -> re-run the script).
   Render either edition: `arena_shot.tscn -- <id> --family`.
 

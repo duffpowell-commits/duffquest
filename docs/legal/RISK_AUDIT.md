@@ -98,3 +98,33 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
 - Item 4 if any boss is a real ex.
 - Before charging money: name/likeness releases for the real family and friends, and whether to sell through an LLC
   so a claim can't reach personal savings.
+
+## Re-audit (Nov 15, 2026)
+
+Fresh pass over the public build: every string (cast_public.json, scripts, data), every painted backdrop and
+storefront, and the credits. Not legal advice either.
+
+**Fixed this pass (PUBLIC; the family edition keeps the originals):**
+- **Pharmacy shelves (`bg_pharmacy`).** The painted boxes read DayQuil, NyQuil, Mucinex, Theraflu and Vicks VapoRub,
+  real trademarks on real-looking packaging. The public art now says DayQuail, NyteQuail, Snotinex, Sniffaflu and
+  VAPOR (`tools/make_public_art.py pharmacy_bg`). The interior WALGRUMPS sign was still Walgreens red; it's teal now,
+  matching the storefront (closes the item 6 note).
+- **Tower storefront (`sf_plaza`).** Strings were renamed in PR 51 but the painted sign still said NAKATOMEH PLAZA (a
+  riff on Die Hard's Nakatomi Plaza). Public art says GLASSHAUS TOWER.
+- **Credits.** Duff asked for AI tool names out of the in-game credits and `docs/itch/PAGE.md`. Done. The new lines
+  don't claim hand-drawn art. **The itch.io "AI generation" disclosure must stay on and accurate**: itch requires it
+  for AI-assisted art, and Steam and Google Play ask the same question. Credits are a style choice; the store
+  disclosure is not.
+
+**New, not fixed (low):**
+- Hy-Whee storefront: red sign with a heart, close to Hy-Vee's red look. The name riff is fine parody; recolour the
+  sign (like Walgrumps) if ads ever show it.
+- Kwik-N-Go: red/yellow stripes, invented name. Kwik shelf goods (chip bags, stacked cans, jerky) carry invented or no
+  names. OK.
+
+**Checked, OK:** passing text mentions of Ensure, Venmo, Uber, TikTok, Tesla, iPhone, Costco, Facebook, Crocs, Android
+and Hazbin/Helluva are nominative (naming a real thing in a sentence), no logos. Family-only names (Twisted Fork,
+Wordle, Gucchi, Nakatomeh, Bruce Willnot, Brittany) appear only in family data; test_daily's leak words pass.
+
+**Still open from before:** written OKs from the real people (item 5); family art files still ride in the public packs
+(data-miners only); Duff's reference photos in the public repo (`docs/ref/duff`); whether Fork management knows (ASK).

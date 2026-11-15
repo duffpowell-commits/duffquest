@@ -232,6 +232,65 @@ def alley_dumpster():
     return Image.fromarray(np.clip(np.nan_to_num(f), 0, 255).astype(np.uint8))
 
 
+# --- Pharmacy interior: no real cold-medicine brands, sign off Walgreens red -----------------------------
+def _label(im, box, text, size, fg, bg=None, stroke_fill=None):
+    """Cover a painted brand word with its box's own colour (sampled just outside the word), then letter a
+    parody name in the same spot. box = (x0, y0, x1, y1) of the word in source pixels."""
+    x0, y0, x1, y1 = box
+    px = im.load()
+    if bg is None:
+        ring = [px[x, y0 - 2] for x in range(x0, x1)] + [px[x, y1 + 1] for x in range(x0, x1)]
+        ring = sorted(c[:3] for c in ring)
+        bg = ring[len(ring) // 2]
+    patch = Image.new("RGBA", (x1 - x0 + 4, y1 - y0 + 4), (0, 0, 0, 0))
+    ImageDraw.Draw(patch).rounded_rectangle([(0, 0), (patch.width - 1, patch.height - 1)], radius=3, fill=bg + (255,))
+    patch = patch.filter(ImageFilter.GaussianBlur(0.8))
+    im.alpha_composite(patch, (x0 - 2, y0 - 2))
+    d = ImageDraw.Draw(im)
+    f = font(size)
+    while d.textlength(text, font=f) > (x1 - x0) and size > 8:
+        size -= 1
+        f = font(size)
+    text_c(d, (x0 + x1) / 2, y0 + (y1 - y0 - size * 0.72) / 2, text, f, fg,
+        stroke=1 if stroke_fill else 0, stroke_fill=stroke_fill)
+
+
+def pharmacy_bg():
+    im = Image.open(os.path.join(ART, "bg_pharmacy.png")).convert("RGBA")
+    _label(im, (8, 214, 84, 246), "DayQuail", 26, (250, 244, 232), bg=(222, 104, 20))
+    _label(im, (104, 226, 172, 254), "NyteQuail", 24, (250, 244, 232))
+    _label(im, (9, 339, 81, 364), "Snotinex", 24, (34, 74, 150), bg=(236, 234, 226))
+    _label(im, (107, 341, 178, 364), "Sniffaflu", 24, (240, 196, 60))
+    for box in ((31, 482, 64, 500), (127, 467, 160, 486)):
+        _label(im, box, "VAPOR", 13, (250, 250, 250))
+    # Sign: red letters and border -> teal, like the public storefront.
+    px = im.load()
+    for y in range(8, 158):
+        for x in range(444, 1096):
+            r, g, b, a = px[x, y]
+            h, l, s = colorsys.rgb_to_hls(r / 255, g / 255, b / 255)
+            if s > 0.3 and (h < 0.05 or h > 0.93):
+                nr, ng, nb = colorsys.hls_to_rgb(0.49, l * 0.85, min(1.0, s * 0.75))
+                px[x, y] = (int(nr * 255), int(ng * 255), int(nb * 255), a)
+    return im.convert("RGB")
+
+
+# --- Willnot's tower: "Nakatomeh Plaza" (Die Hard's building) -> "Glasshaus Tower", like the public strings ---
+def plaza_sign():
+    im = Image.open(os.path.join(ART, "sf_plaza.png")).convert("RGBA")
+    d = ImageDraw.Draw(im)
+    d.rectangle([(75, 289), (132, 297)], fill=(62, 34, 26, 255))
+    S = 6   # letter it big, then shrink, so the tiny sign stays crisp
+    t = Image.new("RGBA", (58 * S, 9 * S), (0, 0, 0, 0))
+    td = ImageDraw.Draw(t)
+    f = font(8 * S)
+    while td.textlength("GLASSHAUS TOWER", font=f) > 55 * S:
+        f = font(f.size - 1)
+    text_c(td, 29 * S, int(1.2 * S), "GLASSHAUS TOWER", f, (214, 176, 70, 255))
+    im.alpha_composite(t.resize((58, 9), Image.LANCZOS), (75, 289))
+    return im
+
+
 def pub_path(rel):
     base, ext = os.path.splitext(rel)
     return os.path.join(ART, base + "_pub" + ext)
@@ -252,6 +311,8 @@ def main():
     save("sf_fork.png", fork_sign())
     save("sf_walgrumps.png", walgrumps_sign())
     save("arena_alley.png", alley_dumpster())
+    save("bg_pharmacy.png", pharmacy_bg())
+    save("sf_plaza.png", plaza_sign())
     for rel, im in willnot_set().items():
         save(rel, im)
 
