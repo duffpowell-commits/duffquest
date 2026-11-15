@@ -260,8 +260,11 @@ func _draw() -> void:
 		draw_rect(Rect2(0, 0, W, 13), Color(UiStyle.PANEL, 0.95))
 		draw_rect(Rect2(0, 12, W, 1.5), UiStyle.INK)
 		var tw: = UiStyle.display.get_string_size(Cast.T(title), HORIZONTAL_ALIGNMENT_LEFT, -1, 9).x
-		draw_rect(Rect2(2, 1, minf(tw + 10, W - 50), 11), UiStyle.GOLD)
-		draw_rect(Rect2(2, 1, minf(tw + 10, W - 50), 11), UiStyle.INK, false, 1.0)
+		var tab: = Rect2(2, 1, minf(tw + 10, W - 50), 11)
+		UiStyle.box(self, Rect2(tab.position + Vector2(1, 1), tab.size).grow(0.5), Color(UiStyle.INK, 0.7), 3.0)
+		UiStyle.box(self, tab.grow(0.5), UiStyle.INK, 3.0)
+		UiStyle.box(self, tab.grow(-0.5), UiStyle.GOLD, 2.5)
+		UiStyle.box(self, Rect2(tab.position + Vector2(1, 0.5), Vector2(tab.size.x - 2, 4)), UiStyle.GOLD.lightened(0.25), 2.0)
 		draw_string(UiStyle.display, Vector2(7, 10), Cast.T(title), HORIZONTAL_ALIGNMENT_LEFT, W - 60, 9, UiStyle.INK)
 		if time_limit > 0.0:
 			var left: = maxf(0.0, time_limit - t)

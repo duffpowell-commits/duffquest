@@ -28,7 +28,7 @@ func _setup() -> void:
 	add_button("back", Rect2(110, 163, 100, 15), "Back", KEY_ESCAPE, Color("#a43a2c"))
 	if _guard():
 		add_button("gfx", Rect2(214, 163, 98, 15), _gfx_label(), KEY_V, Color("#3a5a8a"))
-	add_button("credits", Rect2(214, 22, 98, 13), "Credits & legal", KEY_L, Color("#5a5a5a"))
+	add_button("credits", Rect2(214, 22, 98, 13), "Credits & legal", KEY_L, Color("#8a5a2a"))
 	if dev:
 		add_button("dev_quests", Rect2(8, 163, 98, 15), "Dev: quests", KEY_Q, Color("#8a6a1a"))
 
@@ -57,6 +57,16 @@ func music_vol() -> float:
 
 func sfx_vol() -> float:
 	return float(audio.sfx_vol) if audio else 0.0
+
+## Toggles share one look: teal when on, slate when off, so the column reads as a set.
+func _tint_toggles() -> void:
+	for id in ["mute", "clean", "gore", "shake", "gfx"]:
+		var b: = get_button(id)
+		if b.is_empty():
+			continue
+		var l: = str(b["label"])
+		var on: = (": ON" in l) or l.ends_with("Full")
+		b["col"] = UiStyle.TEAL.darkened(0.2) if on else Color("#4f3d66")
 
 func _on_button(id: String) -> void:
 	if id == "dev_quests" or id == "credits":
@@ -129,6 +139,7 @@ func _pointer_up(_p: Vector2) -> void:
 	dragging = ""
 
 func _draw_game() -> void:
+	_tint_toggles()
 	draw_rect(Rect2(8, 20, 304, 142), Color(0, 0, 0, 0.35))
 	Art.image(self, "ic_heart", Vector2(14, 44))
 	txt(Vector2(26, 52), "Music", 8)
