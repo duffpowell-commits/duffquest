@@ -150,6 +150,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Buttons (Nov 15):** three roles only, applied in `UiStyle.button` via `btn_role()`: `BTN_MAIN` teal (do the thing), `BTN_ALT` plum (options/toggles; any low-saturation colour), `BTN_EXIT` red for labels starting back/close/leave/done/stop/quit/cancel/give up/nope/exit. Callers' own colours collapse into these; cards: first option MAIN, rest ALT.
 
 - **Seams (Nov 15):** symphony bus run draws `bg_symphony_street` (Canva, master Drive `bg_symphony_street_v1.png`) cropped 30 units from the top so its asphalt sits on the run lane (y 84-118); it ships in extra.pck like `bg_holland`. Plasma bag is a drawn pouch (`plasma._draw_bag`); the Akarui belt is steel slats between wood lips. Render: `docs/renders/seams_before_after.png`; ui audit has `akarui_belt`.
+- **Placeholder art + HUD (Nov 15, PR #100):** painted backdrops `bg_blackheads_back` (fox neck redo; `blackheads.ZOOM_SRC` zooms on his shoulders), `bg_backwalk_bed` (Madison walks `BACK_X0..BACK_X1` on his painted back) and `bg_stealth_floor` (`stealth.FLOOR_SPLIT` stretches the mid floor so the painted bed sits under the goal column; code still draws creaky boards, cats, Duff). Masters in Drive "97 Gemini art drops". House name tags clamp under the HUD (`main.LABEL_TOP_MARGIN`), boss plate and touch level panel clear the buttons, size 4-5 UI text up one size.
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
