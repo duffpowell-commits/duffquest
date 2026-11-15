@@ -691,6 +691,20 @@ const ASSETS = {
     "kind": "backdrop",
     "s": 4
   },
+  "bg_backwalk_bed": {
+    "w": 1280,
+    "h": 720,
+    "cell": [
+      1280,
+      720
+    ],
+    "origin": [
+      0,
+      0
+    ],
+    "kind": "backdrop",
+    "s": 4
+  },
   "bg_kitchen": {
     "w": 640,
     "h": 360,
