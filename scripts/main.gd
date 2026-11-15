@@ -246,6 +246,7 @@ var cam: Camera2D
 var juice: Node
 
 const UI_SCALE: = 2.0
+var _veil_tex: Texture2D = null   # last blurred world frame (menu-card backdrop)
 var cats: Array = []
 
 var in_title: = false
@@ -1065,12 +1066,42 @@ func open_overlay(node: Node) -> void:
 	overlay_layer.layer = 10
 	add_child(overlay_layer)
 	overlay_node = node
+	# Live scene behind menu cards, blurred + darkened (replaces the old sunburst; screens with painted art cover it).
+	# One snapshot of the last world frame, blurred on the CPU, so the world can still stop drawing under overlays.
+	var snap: = _veil_snapshot()
+	if snap != null:
+		var veil: = TextureRect.new()
+		veil.texture = snap
+		veil.size = Vector2(320, 180)
+		veil.stretch_mode = TextureRect.STRETCH_SCALE
+		veil.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		veil.modulate = Color(0.5, 0.45, 0.6)
+		veil.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		overlay_layer.add_child(veil)
+		node.set("veiled", true)
 	overlay_layer.add_child(node)
 	player.frozen = true
 	touch.set_process_input(false)
 	touch.visible = false
 	hud.visible = false
 	_sync_world()
+
+## Blurred copy of the world as it was last drawn. While the world is hidden (an overlay was already up,
+## e.g. the title card) the previous snapshot is reused; none yet = null (cards fall back to their sunburst).
+func _veil_snapshot() -> Texture2D:
+	if in_shift:
+		return null
+	if not visible:
+		return _veil_tex
+	var vt: = get_viewport().get_texture()
+	var img: Image = vt.get_image() if vt != null else null
+	if img == null or img.is_empty():
+		return _veil_tex
+	# halve down then double up, bilinear each step: a cheap soft blur (one-step resizes alias into a mosaic)
+	for sz in [Vector2i(320, 180), Vector2i(160, 90), Vector2i(80, 45), Vector2i(40, 23), Vector2i(80, 45), Vector2i(160, 90), Vector2i(320, 180)]:
+		img.resize(sz.x, sz.y, Image.INTERPOLATE_BILINEAR)
+	_veil_tex = ImageTexture.create_from_image(img)
+	return _veil_tex
 
 func close_overlay() -> void:
 	if overlay_layer and is_instance_valid(overlay_layer):
@@ -1158,7 +1189,7 @@ func advance_dialog() -> void:
 		cb.call()
 
 func dialog_len() -> int:
-	return Cast.T(str(dialog[0])).length() if not dialog.is_empty() else 0
+	return str(preload("res://scripts/hud.gd").speaker(Cast.T(str(dialog[0])))[1]).length() if not dialog.is_empty() else 0
 
 func _tick_dialog(delta: float) -> void:
 	if dialog.is_empty():

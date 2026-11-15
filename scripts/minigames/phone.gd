@@ -205,7 +205,9 @@ func _app(b: Dictionary, icon: String, stack: bool) -> void:
 		b["stack"] = stack
 
 func _draw_game() -> void:
-	if screen == "home":   # wallpaper: STYLE_LOCK Duff-frame navy/teal sunburst
+	if screen == "home" and veiled:   # wallpaper: the blurred scene behind (main.open_overlay), cooled to phone blue
+		draw_rect(Rect2(0, 0, W, H), Color("#1E4A66", 0.35))
+	elif screen == "home":   # no scene snapshot yet: the old navy/teal sunburst
 		UiStyle.burst(self, Rect2(0, 0, W, H), Color("#1E4A66"), Vector2(W * 0.5, H * 0.62), 24, t * 0.03)
 	else:
 		draw_rect(Rect2(0, 0, W, H), Color("#1c1712"))

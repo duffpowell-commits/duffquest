@@ -12,6 +12,7 @@ const AudioScript: = preload("res://scripts/audio.gd")
 const KITCHEN: = ["quiz", "prep", "pickles", "fryer", "temp_check", "sandwich", "salad", "garnish", "inspector"]
 
 var backdrop: = ""
+var veiled: = false   # main.open_overlay put the blurred live scene behind us
 var backdrop_dim: = 0.0
 var music: = ""
 var work_duff: = false
@@ -67,6 +68,8 @@ func _find_shift() -> Node:
 
 func _draw_backdrop() -> void:
 	if backdrop == "" or Art.tex("bg_" + backdrop) == null:
+		if veiled:
+			return
 		# No painted set: the boss cards' two-tone sunburst in this screen's own colour (STYLE_LOCK sec. 2),
 		# turning slowly, instead of a flat slab. Lightened a touch so the rays read on dark BGs.
 		UiStyle.burst(self, Rect2(0, 0, W, H), BG.lightened(0.12), Vector2(W * 0.5, H * 0.58), 28, t * 0.04)
