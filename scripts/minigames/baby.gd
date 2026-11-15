@@ -133,9 +133,15 @@ func debug_solve(good: bool) -> void:
 func _draw_game() -> void:
 
 	var shake: = sin(t * 30.0) * minf(meter / 30.0, 3.0)
-	draw_set_transform(Vector2(160 + shake, 72), 0.0, Vector2(3, 3))
-	Art.frame(self, "baby", Vector2.ZERO, 2 if meter > 8.0 else 3, 0)
+	# Octavia's HD face sits in a round night-light plate (the art is a round cut-in, like her dialogue portrait)
+	var bc: = Vector2(160 + shake, 72)
+	draw_circle(bc, 30.0, Color("#f2c66a", 0.18 + 0.1 * sin(t * 2.0)))
+	draw_circle(bc, 27.5, Color("#1c2340"))
+	draw_set_transform(bc + Vector2(0, 0.6), 0.0, Vector2(3.5, 3.5))
+	Art.frame(self, "baby_hd", Vector2.ZERO, 2 if meter > 8.0 else 3, 0)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	draw_arc(bc, 27.5, 0.0, TAU, 48, UiStyle.INK, 2.0)
+	draw_arc(bc, 26.0, 0.0, TAU, 48, Color("#f2c66a", 0.8), 1.0)
 	txt(Vector2(6, 24), "Crying", 8)
 	bar(Rect2(50, 18, 140, 7), meter / 100.0, Color("#e06a4a"))
 	txt(Vector2(200, 24), "Formula: %d  Diapers: %d" % [formula - used_formula, diapers - used_diapers], 7, Color(1, 1, 1, 0.7))
