@@ -16,9 +16,12 @@ or cross-promo in game code or data, listing copy uses public names only, contro
    crops of the 2x sheets, `tools/make_avatars.py`. The bank icon is unchanged.
 3. **Marketing assets predate the 2x cast and the Nov 15 UI**: `docs/portals/preview/*.mp4`, `docs/itch/screens/*`,
    `knockout.gif`, `boss_intro.gif` (Nov 13: old 1x sprites, old dialogue box with no name tab). These are what
-   CrazyGames players see first. Re-shoot with `tools/promo_shot.tscn` on the current build.
+   CrazyGames players see first. FIXED: re-shot on the current build (both preview videos open on the porch title
+   card, both GIFs, screens 01-04 and 06-09; 05 fridge calendar has no sprites and stays). Render
+   `docs/renders/listing_reshoot_before_after.png`.
 4. **Covers put the fox tattoo in the middle of the throat** (`docs/portals/covers/*`, `docs/itch/cover.png`). The
-   real one sits on the LEFT side of the neck (`docs/ref/duff/duff_fox_neck_tattoo.png`). Needs a Canva redo.
+   real one sits on the LEFT side of the neck (`docs/ref/duff/duff_fox_neck_tattoo.png`). FIXED without Canva: all four covers are now the porch title art
+   (`bg_title`) + the logo, the same card that opens the preview videos.
 5. **Blackhead Patrol old flat back**: FIXED, PR #101 merged.
 6. **Kitchen minigame centrepieces are chunky old pixel art next to painted backdrops**: prep (tomato + board),
    garnish (Black Forest slab), temp check (patty). Canva repaint, one batch.
