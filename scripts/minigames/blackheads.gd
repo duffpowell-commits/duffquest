@@ -50,8 +50,8 @@ func _on_button(id: String) -> void:
 		finish(score())
 
 ## Painted back (bg_blackheads_back: Duff from behind in the bedroom, both sleeves, fox on his neck), zoomed
-## 1.4x on his shoulders (neck and fox still in frame); the bare back between the sleeves spans x 104-224, y 60-124.
-const ZOOM_SRC: = Rect2(46, 30, 228.6, 128.6)
+## 1.78x on his shoulders (neck and fox still in frame); the bare back between the sleeves spans x 100-240, y 60-130.
+const ZOOM_SRC: = Rect2(70, 40, 180, 101.25)
 
 func _draw_backdrop() -> void:
 	var tex: = Art.tex("bg_blackheads_back")
