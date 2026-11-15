@@ -2606,7 +2606,7 @@ func _draw_inside() -> void:
 	_draw_mat_and_mirror()
 
 	var bs: = 0 if phase() == "Night" else (3 if happiness >= 70.0 else 1)
-	Art.frame(self, "baby", CRIB_R.get_center(), bs, 0)
+	Art.frame(self, "baby_hd", CRIB_R.get_center(), bs, 0)
 
 	if cats_fed_day == day_count:
 		draw_rect(Rect2(BOWLS_R.position + Vector2(1, 2), Vector2(4, 2)), Color("#8a5a2a"))
