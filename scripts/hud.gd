@@ -394,7 +394,7 @@ func _draw_strip(f: Font) -> void:
 		var a: = 0.65 + 0.35 * sin(_pulse * 6.0)
 		UiStyle.panel(self, cr, Color("#b8321e"), a, PX)
 		var due: = ("ERRAND " + Errands.due_text(m.errand)) if u == "errand" else ("RENT %dd" % m.days_until_rent())
-		_t(f, cr.position + Vector2(0, 6.8), due, 5, Color(1, 1, 1, a), cr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
+		_t(f, cr.position + Vector2(0, 6.8), due, 6, Color(1, 1, 1, a), cr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 
 func w_col() -> Color:
 	return Color("#e06a4a") if urgent() == "rent" else PAPER

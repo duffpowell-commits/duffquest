@@ -3986,7 +3986,7 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 	ci.draw_rect(pr, Color("#a43a2c"), false, 1.0 / 1.5)
 	ci.draw_line(pr.position + Vector2(5, 0), pr.position + Vector2(9, -3), Color("#8c8478"), 1.0 / 1.5)
 	ci.draw_line(pr.position + Vector2(25, 0), pr.position + Vector2(21, -3), Color("#8c8478"), 1.0 / 1.5)
-	ci.draw_string(f, Vector2(pr.position.x, pr.position.y + 6.3), "CLOSED", HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, 5, Color("#f0ead8"))
+	ci.draw_string(f, Vector2(pr.position.x, pr.position.y + 6.3), "CLOSED", HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, 6, Color("#f0ead8"))
 
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
