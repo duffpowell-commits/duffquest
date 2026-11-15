@@ -145,6 +145,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   issues @mentioning Duff) start when `.github/play_alerts.json` says `"armed": true`, set it the day DuffQuest debuts.
   itch's API gives views/downloads/purchases, not browser plays. CrazyGames/GameDistribution have no stats API.
 
+- **Menu backdrop + dialogue (Nov 15):** the purple sunburst behind cards/settings/credits/phone is gone: `main.open_overlay` lays a blurred, darkened snapshot of the last world frame (`_veil_snapshot`, CPU blur, world still stops drawing) under any overlay and sets `veiled` on it; minigames with painted art cover it; no snapshot (shifts, cold boot) = old burst. Dialogue box: speaker name tab (`hud.speaker()` splits "Name: line"; Duff's lines get his name), gold keyline, bobbing next arrow.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
@@ -184,7 +186,7 @@ History of everything built: `TRACKER.md` (newest first).
   context). The sandbox itself can't fetch Canva export URLs; Zapier can. Export links expire in hours: re-export.
 - Backdrops + loading screens: `tools/backdrop_import/import_backdrops.py <dir>` (1280x720, manifest "s": 4, then set
   `compress/mode=1` in the .import and reimport). Check: `res://tools/backdrop_shot.tscn` + `tools/backdrop_sheet.py`.
-- Arenas: `tools/arena_import/import_arenas.py`; title: `tools/title_compose.py`. Big HD art ships lossy (`.import` mode 1).
+- Arenas: `tools/arena_import/import_arenas.py`. Title (Nov 15): `bg_title` is Duff on the porch (Canva restyle of Duff's own concept, ref `docs/art_direction/refs/title_porch_duff_ref.png`, master Drive `bg_title_porch_v1.png`); the title card flanks its buttons left/right so he stays in view (`card.gd`, backdrop "title"). `tools/title_compose.py` is the old kitchen title, retired. Big HD art ships lossy (`.import` mode 1).
 
 ## House rules
 - GitHub main only. Never force push. `git fetch` before starting and before pushing. One session per repo at a time.
