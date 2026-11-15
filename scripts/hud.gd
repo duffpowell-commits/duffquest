@@ -28,7 +28,7 @@ static func layout() -> Dictionary:
 		"strip": Rect2(2, 2, 186, 13), "phone": Rect2(190, 1, 10, 16), "chip": Rect2(203, 4, 38, 9),
 		"drawer": Rect2(2, 17, 186, 60), "peek": Rect2(2, 17, 186, 12), "buffs": Rect2(2, 17, 60, 10),
 		"toast": Rect2(10, 50, 300, 36), "hint": Rect2(0, 108, 320, 12), "dialog": Rect2(64, 108, 192, 66),
-		"dialog_portrait": Rect2(64, 108, 192, 66), "boss": Rect2(66, 154, 188, 22), "timer": Rect2(234, 2, 84, 12),
+		"dialog_portrait": Rect2(64, 108, 192, 66), "boss": Rect2(62, 156, 166, 20), "timer": Rect2(234, 2, 84, 12),
 		"saved": Rect2(286, 168, 32, 10),
 	}
 
