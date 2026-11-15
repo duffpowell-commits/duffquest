@@ -3,13 +3,10 @@
 ## Start here (state at handoff)
 - **PR #101** (branch `claude/project-thread-osd9kf`, draft): Blackhead Patrol painted back with Duff's REAL fox neck
   tattoo (from his photo): pale blue rose third eye, blue geometric shards, left side of the neck below the ear, nape
-  bare. Tests pass, CI green. **Waiting on Duff:** (1) which way the fox faces, (2) his "merge".
-  - Facing: Duff said "the fox faces front" and asked for a flip twice. The PR has version A (same orientation as his
-    photo, snout down toward the viewer's left = his throat side). Version B is the mirror. Comparison:
-    project files `renders/fox_facing_A_vs_B.png`; a decision card is out in his thread. If he picks B:
+  bare. Tests pass, CI green. **Waiting on Duff's "merge".**
+  - Facing: Duff picked **B** (Nov 15): the fox faces front, the MIRROR of his photo's crop. Rebuild with
     `python3 tools/fox_tattoo_graft.py <base> /tmp/out/bg_blackheads_back.png --mirror` (base = project files
-    `renders/bg_blackheads_back_no_tattoo.png`), then `tools/backdrop_import/import_backdrops.py /tmp/out bg_blackheads_back`,
-    touch + `--import`, ui_audit `blackheads`, tests, push to the same branch.
+    `renders/bg_blackheads_back_no_tattoo.png`), then `tools/backdrop_import/import_backdrops.py /tmp/out bg_blackheads_back`.
   - Canonical tattoo design: `docs/ref/duff/duff_fox_neck_tattoo.png` (also project files
     `renders/duff_fox_neck_tattoo_MASTER.png`). Duff's photo itself stays OUT of the repo.
 - **Next, queued by Duff:** after #101 merges, a **consistency audit before publishing to CrazyGames**: hunt leftover
