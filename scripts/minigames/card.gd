@@ -35,8 +35,15 @@ func _wrap_h(s: String, w: float) -> float:
 func _draw_game() -> void:
 	if backdrop == "":
 		UiStyle.burst(self, Rect2(0, 0, W, H), Color("#3a2a52"), Vector2(W * 0.5, H * 0.62), 28, t * 0.05)
+	if backdrop == "":   # vignette: the burst fades to dark at the edges so the card has a centre
+		for i in 6:
+			var g: = float(i) * 6.0
+			draw_rect(Rect2(g, g, W - g * 2.0, H - g * 2.0), Color(UiStyle.INK, 0.07), false, 6.0)
 	draw_rect(Rect2(0, 0, W, 17), UiStyle.PINK.darkened(0.15))
+	draw_rect(Rect2(0, 0, W, 6), UiStyle.PINK.darkened(0.02))
+	draw_rect(Rect2(0, 13, W, 2.5), UiStyle.PINK.darkened(0.32))
 	draw_rect(Rect2(0, 15.5, W, 1.5), UiStyle.INK)
+	draw_rect(Rect2(0, 17, W, 1.5), Color(UiStyle.INK, 0.4))
 	UiStyle.label(self, Vector2(0, 13), Cast.T(heading), 12, UiStyle.CREAM, W, HORIZONTAL_ALIGNMENT_CENTER, 4)
 	var x2: = 168.0 if not lines2.is_empty() else 0.0
 	var w1: = (x2 - 12.0) if x2 > 0.0 else (W - 12.0 - (60.0 if big != "" else 0.0))

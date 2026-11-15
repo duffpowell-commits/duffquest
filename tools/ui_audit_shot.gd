@@ -55,6 +55,11 @@ func _ready() -> void:
 		["ending", sub.call(m_script("EndingScript"))],
 	]
 
+	# optional filter: `-- baby stealth` renders only those shots (a step whose name starts with a kept one stays too)
+	var only: = Array(OS.get_cmdline_user_args())
+	if not only.is_empty():
+		steps = steps.filter(func(st): return only.any(func(o): return str(st[0]).begins_with(o)))
+
 func m_script(k: String) -> Script:
 	return load("res://scripts/main.gd").get_script_constant_map()[k]
 

@@ -28,13 +28,46 @@ static func install() -> void:
 func _enter_tree() -> void:
 	install()
 
-## Comic panel: hard ink drop shadow, flat fill, faint cream inner line, thick ink border.
-## `w` = border width in the caller's units.
+## Rounded box in the caller's units: StyleBoxFlat, cached per colour/radius (menus redraw every frame).
+static var _boxes: = {}
+static func box(ci: CanvasItem, r: Rect2, fill: Color, rad: float) -> void:
+	if r.size.x <= 0.0 or r.size.y <= 0.0:
+		return
+	var ri: = clampi(roundi(rad), 0, int(minf(r.size.x, r.size.y) * 0.5))
+	var k: = "%s|%d" % [fill.to_html(true), ri]
+	var sb: StyleBoxFlat = _boxes.get(k)
+	if sb == null:
+		sb = StyleBoxFlat.new()
+		sb.bg_color = fill
+		sb.set_corner_radius_all(ri)
+		sb.anti_aliasing = true
+		sb.anti_aliasing_size = 0.5
+		_boxes[k] = sb
+	ci.draw_style_box(sb, r)
+
+## Corner radius for a box of height `h`, in the caller's units (w = line width unit).
+static func _rad(h: float, w: float) -> float:
+	return minf(3.0 * w * 1.5, h * 0.3)
+
+## Comic panel: rounded, hard ink drop shadow, flat fill with a lighter top band, gold hairline
+## inside, thick ink border. `w` = border width in the caller's units.
 static func panel(ci: CanvasItem, r: Rect2, fill: Color = PANEL, alpha: float = 0.94, w: float = 1.0) -> void:
-	ci.draw_rect(Rect2(r.position + Vector2(w * 1.6, w * 1.6), r.size), Color(INK, 0.6 * alpha))
-	ci.draw_rect(r, Color(fill, alpha * fill.a))
-	ci.draw_rect(r.grow(-w * 1.6), Color(CREAM, 0.16 * alpha), false, w * 0.5)
-	ci.draw_rect(r, Color(INK, alpha), false, w * 1.4)
+	var rad: = _rad(r.size.y, w) + w * 0.6
+	var bw: = w * 1.4
+	box(ci, Rect2(r.position + Vector2(w * 1.6, w * 1.6), r.size).grow(bw * 0.5), Color(INK, 0.6 * alpha), rad + bw * 0.5)
+	box(ci, r.grow(bw * 0.5), Color(INK, alpha), rad + bw * 0.5)
+	var inner: = r.grow(-bw * 0.5)
+	box(ci, inner, Color(fill, alpha * fill.a), rad - bw * 0.5)
+	box(ci, Rect2(inner.position, Vector2(inner.size.x, minf(inner.size.y * 0.5, 9.0 * w * 1.5))),
+		Color(fill.lightened(0.07), alpha * fill.a * 0.6), rad - bw * 0.5)
+	# gold hairline: four thin rounded strips just inside the border
+	var g: = inner.grow(-w * 1.4)
+	var gc: = Color(GOLD, 0.32 * alpha)
+	var t: = maxf(w * 0.5, 0.35)
+	ci.draw_rect(Rect2(g.position.x + rad * 0.6, g.position.y, g.size.x - rad * 1.2, t), gc)
+	ci.draw_rect(Rect2(g.position.x + rad * 0.6, g.end.y - t, g.size.x - rad * 1.2, t), gc)
+	ci.draw_rect(Rect2(g.position.x, g.position.y + rad * 0.6, t, g.size.y - rad * 1.2), gc)
+	ci.draw_rect(Rect2(g.end.x - t, g.position.y + rad * 0.6, t, g.size.y - rad * 1.2), gc)
 
 ## Side-quest marker over an NPC: "!" (gold, has a quest for you) or "?" (teal, your quest wants you here).
 ## Ink-bordered badge with a hard shadow and a little tail, in world pixels. `p` = the tail's tip.
@@ -78,26 +111,35 @@ static func tag(ci: CanvasItem, pos: Vector2, text: String, size: int, col: Colo
 	ci.draw_string(f, Vector2(x, pos.y), text, HORIZONTAL_ALIGNMENT_LEFT, -1, size, col)
 	return r
 
-## Chunky button: saturated fill, light top band, thick ink border, hard shadow that the button
-## sinks into when pressed.
+## Chunky button: rounded, saturated fill, glossy top band, a darker lip along the bottom (it's a
+## key cap), thick ink border, hard shadow that the button sinks into when pressed.
 static func button(ci: CanvasItem, r: Rect2, text: String, col: Color, enabled: bool = true, pressed: bool = false,
 		w: float = 1.0, size: int = 8) -> void:
 	var c: = col
 	if c.s < 0.25:
 		c = TEAL.darkened(0.15)          # the old grey default button colour -> the cards' teal
 	if not enabled:
-		c = c.darkened(0.55)
+		c = c.darkened(0.55).lerp(Color(0.3, 0.28, 0.33), 0.4)
 	var sink: = w * 1.6 if pressed else 0.0
 	var rr: = Rect2(r.position + Vector2(sink, sink), r.size)
+	var rad: = _rad(r.size.y, w)
+	var bw: = w * 1.4
 	if not pressed:
-		ci.draw_rect(Rect2(r.position + Vector2(w * 1.6, w * 1.6), r.size), Color(INK, 0.85))
-	ci.draw_rect(rr, c)
-	ci.draw_rect(Rect2(rr.position, Vector2(rr.size.x, rr.size.y * 0.38)), c.lightened(0.14))
-	ci.draw_rect(rr, INK, false, w * 1.4)
-	var fit: = fit_text(text, rr.size.x - BUTTON_PAD, rr.size.y - 1.0, size)
+		box(ci, Rect2(r.position + Vector2(w * 1.6, w * 1.6), r.size).grow(bw * 0.5), Color(INK, 0.85), rad + bw * 0.5)
+	box(ci, rr.grow(bw * 0.5), INK, rad + bw * 0.5)
+	var lip: = minf(rr.size.y * 0.16, 3.0 * w * 1.5) * (0.4 if pressed else 1.0)
+	var inner: = rr.grow(-bw * 0.5)
+	box(ci, inner, c.darkened(0.3), rad - bw * 0.5)
+	box(ci, Rect2(inner.position, Vector2(inner.size.x, inner.size.y - lip)), c, rad - bw * 0.5)
+	if enabled:   # gloss: a lighter band on the top half, and a thin shine line under the border
+		box(ci, Rect2(inner.position + Vector2(w, w * 0.6), Vector2(inner.size.x - 2.0 * w, (inner.size.y - lip) * 0.42)),
+			Color(c.lightened(0.22), 0.75), maxf(rad - bw, 0.0))
+		ci.draw_rect(Rect2(inner.position.x + rad, inner.position.y + w * 0.7, inner.size.x - rad * 2.0, maxf(w * 0.55, 0.35)),
+			Color(1, 1, 1, 0.35))
+	var fit: = fit_text(text, rr.size.x - BUTTON_PAD, rr.size.y - 1.0 - lip, size)
 	var lines: PackedStringArray = fit[0]
 	var sz: int = fit[1]
-	var y0: = rr.position.y + rr.size.y * 0.5 + sz * 0.36 - (lines.size() - 1) * sz * 0.55
+	var y0: = rr.position.y + (rr.size.y - lip) * 0.5 + sz * 0.36 - (lines.size() - 1) * sz * 0.55
 	for i in lines.size():
 		label(ci, Vector2(rr.position.x, y0 + i * sz * LINE_H), lines[i], sz, CREAM if enabled else Color(CREAM, 0.45),
 			rr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
@@ -187,11 +229,14 @@ static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, b
 		fill = fill.darkened(0.45)
 	var sink: = w * 1.6 if pressed else 0.0
 	var rr: = Rect2(r.position + Vector2(sink, sink), r.size)
+	var rad: = _rad(r.size.y, w)
+	var lw: = w * 1.4
 	if not pressed:
-		ci.draw_rect(Rect2(r.position + Vector2(w * 2.0, w * 2.0), r.size), Color(INK, 0.85))
-	ci.draw_rect(rr, fill)
+		box(ci, Rect2(r.position + Vector2(w * 2.0, w * 2.0), r.size).grow(lw * 0.5), Color(INK, 0.85), rad + lw * 0.5)
+	box(ci, rr.grow(lw * 0.5), INK, rad + lw * 0.5)
+	box(ci, rr.grow(-lw * 0.5), fill.darkened(0.1), rad - lw * 0.5)
 	# one hard cel band along the bottom, like the props
-	ci.draw_rect(Rect2(rr.position.x, rr.end.y - rr.size.y * 0.22, rr.size.x, rr.size.y * 0.22), fill.darkened(0.1))
+	box(ci, Rect2(rr.position, Vector2(rr.size.x, rr.size.y * 0.78)).grow(-lw * 0.5), fill, rad - lw * 0.5)
 	if neutral:   # faint ruled lines: it's an index card
 		var y: = rr.position.y + 9.0 * w
 		while y < rr.end.y - 4.0 * w:
@@ -213,7 +258,6 @@ static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, b
 		ci.draw_rect(badge_r, INK, false, w * 1.1)
 		label(ci, Vector2(badge_r.position.x, badge_r.end.y - bw * 0.24), badge, int(bw * (0.8 if badge.length() < 2 else 0.58)), CREAM, bw,
 			HORIZONTAL_ALIGNMENT_CENTER, 2)
-	ci.draw_rect(rr, INK, false, w * 1.4)
 	var tx: = badge_r.end.x + 3 * w
 	var tw: = rr.end.x - tx - 3 * w
 	if icon != null and (tw < 17.0 or stack):   # narrow (or app-style) picture tile: icon on top, name underneath
@@ -221,14 +265,13 @@ static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, b
 		var iw2: = minf(ih2 * icon.get_width() / float(icon.get_height()), rr.size.x - 6.0)
 		ih2 = iw2 * icon.get_height() / float(icon.get_width())
 		# repaint the card body over the side-placed icon, then the stacked layout
-		ci.draw_rect(Rect2(rr.position + Vector2(1, 1), rr.size - Vector2(2, 2)), fill)
+		box(ci, rr.grow(-lw * 0.5), fill, rad - lw * 0.5)
 		ci.draw_texture_rect(icon, Rect2(rr.position.x + (rr.size.x - iw2) * 0.5, rr.position.y + 1.0, iw2, ih2), false,
 			Color.WHITE if enabled else Color(0.55, 0.55, 0.55))
 		var small: = fit_text(text, rr.size.x - 4.0, 7.0, 6)
 		var ln: PackedStringArray = small[0]
 		ci.draw_string(display, Vector2(rr.position.x + 2, rr.end.y - 2.0), ln[0] if ln.size() > 0 else text,
 			HORIZONTAL_ALIGNMENT_CENTER, rr.size.x - 4.0, int(small[1]), ink_text)
-		ci.draw_rect(rr, INK, false, w * 1.4)
 		return
 	var fit: = fit_text(text, tw, rr.size.y - 2.0, size)
 	var lines: PackedStringArray = fit[0]

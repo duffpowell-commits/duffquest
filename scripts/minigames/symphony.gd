@@ -420,11 +420,43 @@ func _draw_mirror() -> void:
 		draw_rect(Rect2(176, 96, 4, 20), Color(1, 1, 1, 0.35))
 
 	draw_set_transform(Vector2(200, 146), 0.0, Vector2(2, 2))
-	Art.frame(self, "duff_dress", Vector2.ZERO, dress_cell().x, dress_cell().y)
+	_draw_dressed_duff()
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
-func dress_cell() -> Vector2i:
-	return Vector2i(int(dress["top"]) * 2 + (0 if int(dress["extra"]) == 0 else 1), int(dress["shoes"]))
+const DRESS_SHEETS: = ["ch_duff_suit", "duff_coat_red", "duff_home"]   # suit jacket / chef coat / band tee
+
+## Duff in the mirror: the 2x outfit sheet for the top, then the shoes and extra painted on in his sheet's
+## local space (origin = feet, 1 unit = 4 cell px). Feet sit at about x -1.75 / +2.75, y -1.2.
+func _draw_dressed_duff() -> void:
+	Art.frame(self, DRESS_SHEETS[int(dress["top"])], Vector2.ZERO, 0, 0)
+	var shoes: = int(dress["shoes"])
+	for fx in [-1.75, 2.75]:
+		var r: = Rect2(fx - 2.3, -2.6, 4.6, 2.6)
+		match shoes:
+			0:   # dress shoes: black, a shine on the toe
+				if int(dress["top"]) != 0:
+					draw_rect(r, Color("#15131a"))
+					draw_rect(Rect2(r.position + Vector2(0.8, 0.4), Vector2(1.2, 0.5)), Color(1, 1, 1, 0.45))
+			1:   # work clogs: chunky black clog with a pale sole
+				draw_rect(r.grow_individual(0.3, 0.4, 0.3, 0.0), Color("#1d1d22"))
+				draw_rect(Rect2(r.position.x - 0.3, r.end.y - 0.7, r.size.x + 0.6, 0.7), Color("#d8d2c4"))
+			2:   # crocs, sport mode: lime with holes, heel strap flipped forward
+				draw_rect(r.grow_individual(0.2, 0.3, 0.2, 0.0), Color("#8fd13a"))
+				for k in 3:
+					draw_rect(Rect2(r.position.x + 0.7 + k * 1.3, r.position.y + 0.5, 0.5, 0.5), Color("#4f7d1c"))
+				draw_line(Vector2(r.position.x, r.position.y + 0.3), Vector2(r.end.x, r.position.y + 0.3), Color("#4f7d1c"), 0.4)
+	match int(dress["extra"]):
+		0:   # a tie (the suit already has its bow tie)
+			if int(dress["top"]) != 0:
+				draw_colored_polygon(PackedVector2Array([Vector2(-0.8, -12.4), Vector2(0.8, -12.4), Vector2(1.1, -7.0), Vector2(0, -5.8), Vector2(-1.1, -7.0)]), Color("#b0262c"))
+				draw_rect(Rect2(-0.9, -12.9, 1.8, 1.1), Color("#7a161b"))
+		1:   # cologne: a few sparkles
+			for k in 4:
+				var a: = t * 2.0 + k * TAU / 4.0
+				var c: = Vector2(cos(a) * 9.0, -14.0 + sin(a * 1.3) * 6.0)
+				var al: = 0.5 + 0.5 * sin(t * 6.0 + k)
+				draw_line(c + Vector2(-1, 0), c + Vector2(1, 0), Color(1, 1, 0.8, al), 0.5)
+				draw_line(c + Vector2(0, -1), c + Vector2(0, 1), Color(1, 1, 0.8, al), 0.5)
 
 func _draw_busrun() -> void:
 	draw_rect(Rect2(0, 84, W, 34), Color("#3a3a40"))
