@@ -8,32 +8,21 @@ Duff asked for a design review on Nov 15. Ranked fixes:
 2. Dialogue box: DONE, PR #96 merged (speaker tab, gold keyline, bobbing arrow).
 3. Button colours: DONE, PR #97 merged (teal main, plum alt, red exit via `UiStyle.btn_role`).
 4. Pasted seams: DONE, PR #98 merged (symphony street backdrop, plasma pouch, steel sushi belt).
-5. Placeholder art: IN PROGRESS, see below.
-6. HUD clutter and clipped tags: not started.
-7. Tiny text: not started.
-8. Arena HP plate fighting the touch buttons: not started.
+5. Placeholder art: DONE on PR #100 (draft until Duff says "merge"). Blackhead back is painted (fox neck redo
+   at Duff's ask, master `bg_blackheads_back_v2.png`), Back Walk uses `bg_backwalk_bed`, Stealth uses
+   `bg_stealth_floor` (crib left, bed right; `stealth._draw_backdrop` stretches the plain middle floor so the bed sits
+   under the goal column, `FLOOR_SPLIT`).
+6. HUD clutter and clipped tags: DONE on PR #100 (house names clamp below the HUD strip, `main.LABEL_TOP_MARGIN`).
+7. Tiny text: DONE on PR #100 (functional size 4-5 text up one size).
+8. Arena HP plate vs touch buttons: DONE on PR #100 (boss plate `Rect2(62,156,166,20)`, touch level panel above the buttons).
 
-Review sheet: `docs/renders/ui_audit_review_nov15.png`. Before/after renders for each fix sit in `docs/renders/`.
-
-## #5 placeholder art: where it stands
-- Branch `claude/project-thread-sm8r6f`, draft PR #99 (CI green).
-- Done: **Blackhead Patrol** draws the painted back `bg_blackheads_back` (Duff from behind, both sleeves, neck tattoo;
-  Canva master in Drive as `bg_blackheads_back_v1.png`). `blackheads.gd` overrides `_draw_backdrop` and zooms 1.4x on
-  his shoulders (`ZOOM_SRC`); blackheads spawn on the bare back (x 112-216, y 64-116). Check: `ui_audit_shot.tscn -- blackheads`.
-  Caveat to show Duff: the AI's neck tattoo reads more like a generic piece than a clear fox.
-- Left: **Back Walk** (`backwalk.gd`): the bed and Duff are flat rects. Plan: Canva side view of Duff face-down on the
-  bed (head on the pillow at the right, flat back), refs = HD portrait (Canva media `MAHbALqqdnU`) + bedroom style
-  (`MAHbADb1kl4`), LANDSCAPE_16_9. The first try hit Canva's cooldown at ~16:28 UTC. Import it as `bg_backwalk_bed`
-  the same way as `bg_blackheads_back`, drop the drawn bed and body in `_draw_game`, and line Madison's walk
-  (`mx`, y 82) up with his back.
-- Left: **Stealth** (`stealth.gd`): the floor reads like a board-game grid, the bed is a flat box, and the crib tile is odd.
-  The idea is a painted top-down nursery-to-bedroom floor, with the code still drawing the creaky boards and the cats.
-- Then run the tests, build a before/after sheet, mark #99 ready, and wait for Duff's "merge".
+Review sheet: `docs/renders/ui_audit_review_nov15.png`. Before/after renders for each fix sit in `docs/renders/`
+(`blackheads_fox_redo.png`, `backwalk_bed_after.png`, `stealth_floor_before_after.png`, `house_tags_after.png`,
+`arena_hp_plate_after.png`, `tiny_text_after.png`).
 
 ## Open items (not #5)
 - Props repaint: drone, nft, package, van, honeybun, freya_peek, phone icon.
-- Back Walk Duff, which is covered above.
-- Walgrumps background and Blackheads pitches: these need Duff's yes. Blackheads now has art on #99, so show him the render.
+- Walgrumps background and Blackheads pitches: these need Duff's yes. Blackheads art is done (Duff liked it).
 - The hair-copper question: still open with Duff. Confirm the wording with him before you act on it.
 
 ## Gotchas

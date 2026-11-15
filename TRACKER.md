@@ -5,6 +5,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-15** **Design review #5-8 (PR #100).** Painted Blackhead back (clear fox on the neck), Back Walk bed and the stealth floor replace drawn placeholders; house name tags stay under the HUD; arena HP plate and level panel clear the touch buttons; tiny UI text up a size. Renders in `docs/renders/` (`stealth_floor_before_after.png`, `blackheads_fox_redo.png`, `backwalk_bed_after.png`, `house_tags_after.png`, `arena_hp_plate_after.png`, `tiny_text_after.png`).
 - **2026-11-15** **Legal re-audit + brand scrub.** Public pharmacy shelves lose DayQuil/NyQuil/Mucinex/Theraflu/Vicks (now DayQuail, NyteQuail, Snotinex, Sniffaflu, VAPOR) and the red Walgrumps sign; the tower storefront says GLASSHAUS TOWER. AI tool names out of the credits (itch disclosure stays). Render `docs/renders/legal_public_pharmacy_tower.png`; findings in `docs/legal/RISK_AUDIT.md` (Re-audit Nov 15).
 - **2026-11-14** **Cast 2x overhaul complete.** Every character sheet in use is redrawn at 2x (Canva, batches 1-21, PRs #58-#92); Duff's gala suit was last. Review stills of every screen and menu: `docs/renders/screens_final_2x.png` (overworld, kitchen, arenas, quests) and `docs/renders/ui_audit_final_2x.png` (every menu + minigame).
 - **2026-11-14** **Play stats + play alerts.** `.github/workflows/play_stats.yml` reads itch view/download/purchase
