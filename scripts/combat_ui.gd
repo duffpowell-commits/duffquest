@@ -133,11 +133,11 @@ func _draw_panel(f: Font) -> void:
 	draw_rect(Rect2(r.position + Vector2(PX * 2, PX * 2), r.size), Color(0, 0, 0, 0.2))
 	draw_rect(r, Color(PANEL.r, PANEL.g, PANEL.b, 0.82))
 	var sp: Dictionary = c.current()
-	draw_string(f, r.position + Vector2(2, 5.5), "Lv %d" % c.level, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#9fe0ff"))
+	draw_string(f, r.position + Vector2(2, 5.5), "Lv %d" % c.level, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#9fe0ff"))
 	var sname: String = sp.get("short", "") if not sp.is_empty() else ""
 	var cost: = int(c.cost_of(sp)) if not sp.is_empty() else 0
 	var ready: bool = not sp.is_empty() and c.heat >= c.cost_of(sp)
-	draw_string(f, r.position + Vector2(18, 5.5), ("%s %d" % [sname, cost]) if sname != "" else "", HORIZONTAL_ALIGNMENT_LEFT, 38, 5,
+	draw_string(f, r.position + Vector2(18, 5.5), ("%s %d" % [sname, cost]) if sname != "" else "", HORIZONTAL_ALIGNMENT_LEFT, 38, 6,
 		Color("#f0ead8") if ready else Color(1, 1, 1, 0.45))
 	var hb: = Rect2(r.position + Vector2(2, 7), Vector2(r.size.x - 4, 2.5))
 	draw_rect(hb, Color(0, 0, 0, 0.65))
@@ -155,7 +155,7 @@ func _draw_panel(f: Font) -> void:
 	draw_rect(xb, Color(0, 0, 0, 0.6))
 	draw_rect(Rect2(xb.position, Vector2(xb.size.x * clampf(float(c.xp) / c.xp_to_next(), 0.0, 1.0), xb.size.y)), Color("#6ac8ff"))
 	if c.points > 0:
-		draw_string(f, r.position + Vector2(56, 5.5), "+%d pts" % c.points, HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#a0ff90"))
+		draw_string(f, r.position + Vector2(56, 5.5), "+%d pts" % c.points, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color("#a0ff90"))
 	if c.demon_t > 0.0:
 		_center(f, Vector2(r.position.x, r.position.y - 2), r.size.x, "DEMON TIME", 6, Color("#ff7ab0"))
 	elif c.crash_t > 0.0:
