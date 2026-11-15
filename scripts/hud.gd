@@ -154,12 +154,23 @@ func dialog_rect() -> Rect2:
 	var line: String = Cast.T(str(m.dialog[0]))
 	var who: = Art.portrait_for(line, Cast.T("{hero}"), Cast.T("{partner}"), Cast.T("{baby}"))
 	var tw: = r.size.x - (DLG_PORT + 16.0 if who != "" else 14.0)
-	var rows: = mini(wrap_words(f, line, tw, 7).count("\n") + 1, 6)
+	var rows: = mini(wrap_words(f, speaker(line)[1], tw, 7).count("\n") + 1, 6)
 	var h: = 13.0 + float(rows - 1) * f.get_height(7) + 12.0
 	if who != "":
 		h = maxf(h, DLG_PORT + 15.0)
 	h = minf(h, r.size.y)
 	return Rect2(r.position.x, r.end.y - h, r.size.x, h)
+
+## "Madison: You said..." -> ["Madison", "You said..."]. Short speaker prefixes only (no sentence before the colon).
+static func speaker(line: String) -> Array:
+	var i: = line.find(": ")
+	if i <= 0 or i > 22:
+		return ["", line]
+	var who: = line.substr(0, i)
+	for c in [".", "!", "?", "(", "\"", ","]:
+		if who.contains(c):
+			return ["", line]
+	return [who, line.substr(i + 2)]
 
 func typed(f: Font, line: String, width: float, size: int) -> String:
 	var n: = int(m.dlg_chars)
@@ -225,7 +236,21 @@ func _draw() -> void:
 		var who: = Art.portrait_for(line, Cast.T("{hero}"), Cast.T("{partner}"), Cast.T("{baby}"))
 		var duff: = who != ""
 		var r: = dialog_rect()
+		var sp: = speaker(line)
+		var body: String = sp[1]
+		if sp[0] == "" and who == "duff":   # his own lines and narration: tag them as him
+			sp[0] = Cast.T("{hero}")
 		_panel(r, 0.95)
+		draw_rect(r.grow(-2.5), Color(UiStyle.GOLD, 0.35), false, PX)   # inner gold keyline
+		if sp[0] != "":   # name tab on the top edge, like the cards' headers
+			var nx: = r.position.x + (DLG_PORT + 9.0 if duff else 5.0)
+			var nw: = f.get_string_size(sp[0], HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x + 10.0
+			var tab: = Rect2(nx, r.position.y - 7.0, nw, 11.0)
+			draw_rect(Rect2(tab.position + Vector2(PX, PX), tab.size), Color(INK, 0.6))
+			draw_rect(tab, UiStyle.PINK.darkened(0.12))
+			draw_rect(Rect2(tab.position, Vector2(tab.size.x, 3.0)), UiStyle.PINK.lightened(0.08))
+			draw_rect(tab, INK, false, PX * 1.2)
+			_t(f, tab.position + Vector2(5, 8.5), sp[0], 7, UiStyle.CREAM)
 		if duff:
 
 			var pr: = Rect2(r.position + Vector2(6, 9), Vector2(DLG_PORT, DLG_PORT))
@@ -241,11 +266,13 @@ func _draw() -> void:
 				Art.family_portrait(self, who, Vector2.ZERO, mood, bool(m.shades))
 				draw_set_transform(Vector2.ZERO)
 			draw_rect(pr, UiStyle.INK, false, PX * 1.4)
-			_mt(f, r.position + Vector2(DLG_PORT + 11.0, 13), typed(f, line, r.size.x - DLG_PORT - 16.0, 7), r.size.x - DLG_PORT - 16.0, 7, 6, w)
+			_mt(f, r.position + Vector2(DLG_PORT + 11.0, 14), typed(f, body, r.size.x - DLG_PORT - 16.0, 7), r.size.x - DLG_PORT - 16.0, 7, 6, w)
 		else:
-			_mt(f, r.position + Vector2(7, 13), typed(f, line, r.size.x - 14, 7), r.size.x - 14, 7, 6, w)
-		if int(m.dlg_chars) >= line.length():
-			UiStyle.label(self, r.position + Vector2(r.size.x - 30, r.size.y - 3), "E / A >", 6, Color(UiStyle.GOLD, 0.9), -1.0, HORIZONTAL_ALIGNMENT_LEFT, 2)
+			_mt(f, r.position + Vector2(7, 14), typed(f, body, r.size.x - 14, 7), r.size.x - 14, 7, 6, w)
+		if int(m.dlg_chars) >= body.length():   # bobbing "more" arrow
+			var ac: = r.end + Vector2(-8.0, -5.0 + sin(float(m.t) * 6.0) * 1.2)
+			draw_colored_polygon(PackedVector2Array([ac + Vector2(-3.5, -2.5), ac + Vector2(3.5, -2.5), ac + Vector2(0, 2)]), INK)
+			draw_colored_polygon(PackedVector2Array([ac + Vector2(-2.5, -2), ac + Vector2(2.5, -2), ac + Vector2(0, 1.2)]), UiStyle.GOLD)
 		var shown: = preload("res://scripts/look_at_this.gd").screen(line)
 		if shown != "":
 			_draw_her_screen(Rect2(r.end.x - 34, r.position.y - 50, 28, 48), shown)
