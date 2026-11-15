@@ -98,9 +98,9 @@ func _center(f: Font, pos: Vector2, width: float, s: String, size: int, col: Col
 
 ## Level / special / heat: a slim bar above the attack buttons, only while fighting (or while
 ## something about it is worth seeing: heat refilling, points to spend, demon time).
-const PANEL_R: = Rect2(240, 92, 78, 12)          # touch: above the attack buttons
+const PANEL_R: = Rect2(238, 86, 78, 12)          # touch: above the attack buttons, clear of G (top y 101) and D (y 105)
 const PANEL_R_KEYS: = Rect2(238, 163, 78, 12)    # keyboard/mouse: no buttons there, so tuck it into the bottom-right corner
-const PANEL_R_KEYS_BOSS: = Rect2(238, 139, 78, 12)  # boss fights: the boss bar (hud layout "boss", y 154-176) owns that corner
+const PANEL_R_KEYS_BOSS: = Rect2(238, 139, 78, 12)  # boss fights: the boss bar (hud layout "boss", y 156-176) owns that corner
 
 func panel_rect() -> Rect2:
 	var tc = m.get("touch")
