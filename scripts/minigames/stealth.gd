@@ -207,7 +207,7 @@ func _draw_game() -> void:
 	for k in range(1, 5):
 		draw_line(Vector2(cr.position.x + k * cr.size.x / 5.0, cr.position.y + 2), Vector2(cr.position.x + k * cr.size.x / 5.0, cr.end.y - 2),
 			Color("#9a88c0"), 1.0)
-	Art.frame(self, "baby", cr.get_center(), 0, 0)
+	Art.frame(self, "baby_hd", cr.get_center(), 0, 0)
 	# bed (goal): headboard against the wall, navy blanket, cream pillow
 	var g: = _tile_rect(goal)
 	var bed: = Rect2(g.position.x - 2, g.position.y - 10, W - g.position.x - 2, g.size.y + 20)

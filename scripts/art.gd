@@ -330,8 +330,17 @@ static func family_portrait(ci: CanvasItem, who: String, pos: Vector2, mood: int
 		_: duff_portrait(ci, pos, mood, shades)
 
 static func duff_portrait(ci: CanvasItem, pos: Vector2, mood: int, shades: bool = false, modulate: Color = Color.WHITE) -> void :
-
-	frame(ci, "portrait_duff", pos, clampi(mood, 0, 2), 1 if shades else 0, modulate)
+	# HD face (the dialogue portrait) in the old 48 px box; old moods 0 neutral / 1 tired / 2 happy -> HD 1 / 1 / 0
+	var p: = "res://assets/art/portraits_hd/duff.png"
+	var hd: Texture2D = load(pub(p)) if ResourceLoader.exists(p) else null
+	if hd == null:
+		frame(ci, "portrait_duff", pos, clampi(mood, 0, 2), 1 if shades else 0, modulate)
+		return
+	var cell: = float(hd.get_height())
+	var dst: = Rect2(pos, Vector2(48, 48))
+	ci.draw_texture_rect_region(hd, dst, Rect2((0 if mood == 2 else 1) * cell, 0, cell, cell), modulate)
+	if shades:
+		ci.draw_rect(Rect2(dst.position.x + 14.4, dst.position.y + 17.3, 22.0, 3.6), Color(0.05, 0.05, 0.08, 0.95 * modulate.a))
 
 static func person(ci: CanvasItem, name: String, pos: Vector2, dir: Vector2 = Vector2.DOWN, t: float = 0.0, moving: bool = false, attack: bool = false, modulate: Color = Color.WHITE, with_shadow: bool = true) -> void :
 	if with_shadow and modulate.a > 0.2:
