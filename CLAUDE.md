@@ -147,6 +147,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 - **Menu backdrop + dialogue (Nov 15):** the purple sunburst behind cards/settings/credits/phone is gone: `main.open_overlay` lays a blurred, darkened snapshot of the last world frame (`_veil_snapshot`, CPU blur, world still stops drawing) under any overlay and sets `veiled` on it; minigames with painted art cover it; no snapshot (shifts, cold boot) = old burst. Dialogue box: speaker name tab (`hud.speaker()` splits "Name: line"; Duff's lines get his name), gold keyline, bobbing next arrow.
 
+- **Buttons (Nov 15):** three roles only, applied in `UiStyle.button` via `btn_role()`: `BTN_MAIN` teal (do the thing), `BTN_ALT` plum (options/toggles; any low-saturation colour), `BTN_EXIT` red for labels starting back/close/leave/done/stop/quit/cancel/give up/nope/exit. Callers' own colours collapse into these; cards: first option MAIN, rest ALT.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
