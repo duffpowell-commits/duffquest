@@ -29,7 +29,7 @@ func _setup() -> void:
 		var c: = i % cols
 		var y: = 176.0 - (rows - r) * 24.0
 		var x: = (6.0 + c * (W - 12.0 - bw + 4.0)) if flank else (6.0 + c * bw)
-		add_button(o[0], Rect2(x, y, bw - 4, 21), o[1], o[2], Color("#c8452f") if i == 0 else Color("#57504e"))
+		add_button(o[0], Rect2(x, y, bw - 4, 21), o[1], o[2], UiStyle.BTN_MAIN if i == 0 else UiStyle.BTN_ALT)
 
 func _on_button(id: String) -> void:
 	done = true
