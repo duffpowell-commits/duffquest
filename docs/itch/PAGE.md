@@ -80,10 +80,10 @@ Cartoon violence and cartoon blood (spit, flying teeth, x-ray hits in comic pane
 
 One line cook. One phone. No computer.
 
-- **Code:** written with Claude (Anthropic), in Godot 4.5.
-- **Art:** AI-generated with Grok, Gemini, ChatGPT and Canva AI from Duff's own photos and references, then fixed and finished in code. Logo built in code from the game's fonts.
+- **Code:** built in Godot 4.5.
+- **Art:** from Duff's own photos and references, finished in code. Logo built in code from the game's fonts.
 - **Music:** by Duff. The date-night theme is Brahms' Lullaby (public domain). **Sound effects:** synthesized by code.
-- **Writing:** Duff's real life and jokes, drafted and edited with AI help.
+- **Writing:** Duff's real life and jokes.
 - **Fonts:** Baloo 2, Nunito, Caveat, Patrick Hand (SIL Open Font License).
 
 ## Privacy
