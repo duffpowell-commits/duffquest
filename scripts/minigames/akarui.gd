@@ -189,20 +189,32 @@ func summary() -> String:
 func _draw_game() -> void:
 	txt(Vector2(0, 22), "{date_spot_sushi} . sushi . poke . boba", 7, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
 
-	draw_rect(Rect2(0, BELT_Y - 10, W, 20), Color("#5a5a60"))
+	# sushi belt: a lacquered wood counter lip, a steel track and moving slats, so it sits in the room
+	draw_rect(Rect2(0, BELT_Y + 9, W, 6), Color(0, 0, 0, 0.35))                   # shadow onto the counter
+	draw_rect(Rect2(0, BELT_Y - 12, W, 3), Color("#5a2e1c"))                       # back lip (wood)
+	draw_rect(Rect2(0, BELT_Y - 12, W, 1), Color("#8a4a2c"))
+	draw_rect(Rect2(0, BELT_Y - 9, W, 18), Color("#2c2a30"))                       # track bed
+	draw_rect(Rect2(0, BELT_Y - 8, W, 16), Color("#4a4d55"))                       # brushed steel slats
+	draw_rect(Rect2(0, BELT_Y - 8, W, 2), Color("#7a7f88"))                        # lamp glint on the far edge
+	draw_rect(Rect2(0, BELT_Y + 5, W, 3), Color("#383a41"))
 	for i in 17:
 		var x: = fposmod(i * 20.0 + belt_t * BELT_V, W + 20.0) - 10.0
-		draw_line(Vector2(x, BELT_Y - 10), Vector2(x, BELT_Y + 10), Color(0, 0, 0, 0.25))
+		draw_line(Vector2(x, BELT_Y - 8), Vector2(x, BELT_Y + 8), Color("#24252b"), 1.0)   # slat seam
+		draw_line(Vector2(x + 1, BELT_Y - 6), Vector2(x + 1, BELT_Y + 7), Color(1, 1, 1, 0.08), 1.0)
+	draw_rect(Rect2(0, BELT_Y + 9, W, 4), Color("#6a361f"))                        # front lip (wood)
+	draw_rect(Rect2(0, BELT_Y + 9, W, 1), Color("#9a5a34"))
+	draw_rect(Rect2(0, BELT_Y + 13, W, 1), UiStyle.INK)
 	for p in plates:
 		var k: String = p[0]
 		var x: float = p[1]
-		draw_circle(Vector2(x, BELT_Y), 8.0, Color("#fbf6ec"))
-		draw_circle(Vector2(x, BELT_Y), 5.0, Color(str(Dates.PLATES[k][2])))
+		draw_circle(Vector2(x + 1.0, BELT_Y + 1.5), 8.5, Color(0, 0, 0, 0.3))
+		prop_circle(Vector2(x, BELT_Y), 8.0, Color("#fbf6ec"))
+		prop_circle(Vector2(x, BELT_Y), 5.0, Color(str(Dates.PLATES[k][2])))
 	if state == "conveyor":
 		draw_rect(Rect2(ZONE.x, BELT_Y - 14, ZONE.y - ZONE.x, 28), Color("#e6a640"), false, 1.0)
 		draw_line(Vector2(158, BELT_Y - 30), Vector2(150, BELT_Y - 6), Color("#c29a6a"), 2.0)
 		draw_line(Vector2(164, BELT_Y - 30), Vector2(160, BELT_Y - 6), Color("#c29a6a"), 2.0)
-		txt(Vector2(6, 120), "%.0fs  favorites %d  other %d" % [maxf(0.0, BELT_T - belt_t), good, wrong], 7, Color("#f2c66a"))
+		tag(Vector2(6, 114), "%.0fs  favorites %d  other %d" % [maxf(0.0, BELT_T - belt_t), good, wrong], 7, Color("#f2c66a"))
 
 	if state == "order":
 		var tea: = str(Dates.SLOT_OPTS["tea"][int(picks["tea"])])
