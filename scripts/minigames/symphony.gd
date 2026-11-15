@@ -459,8 +459,16 @@ func _draw_dressed_duff() -> void:
 				draw_line(c + Vector2(0, -1), c + Vector2(0, 1), Color(1, 1, 0.8, al), 0.5)
 
 func _draw_busrun() -> void:
-	draw_rect(Rect2(0, 84, W, 34), Color("#3a3a40"))
-	draw_rect(Rect2(0, 116, W, 6), Color("#bdb5a6"))
+	# Painted street outside the hall (bg_symphony_street, 2560x1440 master at 8 px per unit): crop the top
+	# 240 px so its asphalt lands on the run lane (y 84-118), then carry the gutter down to the bottom.
+	var st: = Art.tex("bg_symphony_street")
+	if st != null:
+		var k: = st.get_height() / 180.0
+		draw_texture_rect_region(st, Rect2(0, 0, W, 150), Rect2(0, 30.0 * k, st.get_width(), 150.0 * k))
+		draw_rect(Rect2(0, 150, W, H - 150), Color("#17141a"))
+	else:
+		draw_rect(Rect2(0, 84, W, 34), Color("#3a3a40"))
+		draw_rect(Rect2(0, 116, W, 6), Color("#bdb5a6"))
 	var bx: = 200.0 + run_t * 6.0
 	var bus: = Art.tex("kf_bus")
 	if bus != null:   # the #18 pulling away, painted (kf_bus); its back bumper is at bx
