@@ -8,15 +8,14 @@ var popped: = 0
 var say: = ""
 
 func _setup() -> void:
-	backdrop = "bedroom"
-	backdrop_dim = 0.45
+	backdrop = "blackheads_back"
 	title = "BLACKHEAD PATROL  (tap them all)"
 	time_limit = 12.0
 	space_is_pen = true
 	var rng: = RandomNumberGenerator.new()
 	rng.seed = int(ctx.get("seed", 7))
 	for i in COUNT:
-		heads.append([Vector2(rng.randf_range(90, 230), rng.randf_range(34, 112)), false, 0.0])
+		heads.append([Vector2(rng.randf_range(112, 216), rng.randf_range(64, 116)), false, 0.0])
 	add_button("quit", Rect2(262, 154, 54, 22), "Done", KEY_ESCAPE, Color("#a43a2c"))
 	say = "{partner} snaps on imaginary gloves. \"Turn around. Into the light.\""
 
@@ -50,45 +49,19 @@ func _on_button(id: String) -> void:
 	if id == "quit":
 		finish(score())
 
-const SKIN: = Color("#e9b994")
-const SLEEVE_INK: = [Color("#2a7f86"), Color("#c0443c"), Color("#1e1a24")]
+## Painted back (bg_blackheads_back: Duff from behind in the bedroom, both sleeves, fox on his neck), zoomed
+## 1.78x on his shoulders (neck and fox still in frame); the bare back between the sleeves spans x 100-240, y 60-130.
+const ZOOM_SRC: = Rect2(70, 40, 180, 101.25)
 
-## One tattooed arm hanging at Duff's side: skin prop + sleeve swirls (both sleeves, always: duff_look.md).
-func _arm(x: float, flip: float) -> void:
-	var r: = Rect2(x, 46, 18, 76)
-	prop(r, SKIN, 0.2)
-	for k in 5:
-		var c: = Vector2(r.position.x + 9 + flip * (k % 2) * 3, 54 + k * 14)
-		draw_arc(c, 5.0, 0.2 * k, 0.2 * k + PI * 1.3, 10, SLEEVE_INK[k % 3], 1.6)
-		draw_circle(c + Vector2(-flip * 3, 4), 1.4, SLEEVE_INK[(k + 1) % 3])
-	draw_rect(r, UiStyle.PROP_INK, false, 1.3)
+func _draw_backdrop() -> void:
+	var tex: = Art.tex("bg_blackheads_back")
+	if tex == null:
+		super._draw_backdrop()
+		return
+	var k: = tex.get_width() / W
+	draw_texture_rect_region(tex, Rect2(0, 0, W, H), Rect2(ZOOM_SRC.position * k, ZOOM_SRC.size * k))
 
 func _draw_game() -> void:
-	_arm(50, 1.0)
-	_arm(252, -1.0)
-	# Duff's back: neck, shoulder slope, one cel band down the lower back, ink outline
-	var back: = PackedVector2Array([Vector2(148, 14), Vector2(172, 14), Vector2(178, 28), Vector2(236, 34),
-		Vector2(252, 46), Vector2(246, 122), Vector2(74, 122), Vector2(68, 46), Vector2(84, 34), Vector2(142, 28)])
-	var shadow: = PackedVector2Array()
-	for v in back:
-		shadow.append(v + Vector2(1.5, 1.5))
-	draw_colored_polygon(shadow, Color(UiStyle.PROP_INK, 0.55))
-	draw_colored_polygon(back, SKIN)
-	draw_colored_polygon(PackedVector2Array([Vector2(72, 100), Vector2(248, 100), Vector2(246, 122), Vector2(74, 122)]),
-		SKIN.darkened(0.18))
-	draw_arc(Vector2(118, 60), 20.0, -PI * 0.3, PI * 0.3, 10, SKIN.darkened(0.25), 1.2)      # shoulder blades: ) (
-	draw_arc(Vector2(202, 60), 20.0, PI * 0.7, PI * 1.3, 10, SKIN.darkened(0.25), 1.2)
-	draw_line(Vector2(160, 32), Vector2(160, 118), SKIN.darkened(0.2), 1.4)                  # spine
-	var outline: = back.duplicate()
-	outline.append(back[0])
-	draw_polyline(outline, UiStyle.PROP_INK, 1.4)
-	# the fox on his neck, peeking over the collar line
-	var f: = Vector2(160, 22)
-	draw_colored_polygon(PackedVector2Array([f + Vector2(-6, -3), f + Vector2(-3, -8), f + Vector2(0, -4),
-		f + Vector2(3, -8), f + Vector2(6, -3), f + Vector2(0, 4)]), Color("#e07a2a"))
-	draw_colored_polygon(PackedVector2Array([f + Vector2(-3, 0), f + Vector2(3, 0), f + Vector2(0, 4)]), UiStyle.CREAM)
-	draw_polyline(PackedVector2Array([f + Vector2(-6, -3), f + Vector2(-3, -8), f + Vector2(0, -4), f + Vector2(3, -8),
-		f + Vector2(6, -3), f + Vector2(0, 4), f + Vector2(-6, -3)]), UiStyle.PROP_INK, 1.0)
 	for h in heads:
 		var p: Vector2 = h[0]
 		if not h[1]:
