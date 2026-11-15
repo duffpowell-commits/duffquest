@@ -14,6 +14,22 @@ const PANEL: = Color("#2a1e36")
 const GOLD: = Color("#f2b63c")
 const PINK: = Color("#ff6f91")
 const TEAL: = Color("#2fb3a8")
+## Button palette (Nov 15, Duff: "two colours"): one main, one secondary, red only for leaving.
+const BTN_MAIN: = Color("#27998f")      # do the thing
+const BTN_ALT: = Color("#5b4a72")       # everything else (options, toggles, steps)
+const BTN_EXIT: = Color("#b8432f")      # back / close / leave / done / stop
+const BTN_EXIT_WORDS: = ["back", "close", "leave", "done", "stop", "quit", "cancel", "give up", "nope", "exit"]
+
+## Collapse a caller's colour into the three roles. Low-saturation (the old grey default) = ALT,
+## a leaving label = EXIT, any other colour = MAIN.
+static func btn_role(col: Color, text: String) -> Color:
+	var t: = text.strip_edges().to_lower()
+	for w in BTN_EXIT_WORDS:
+		if t == w or t.begins_with(w + " ") or t.begins_with(w + "!") or t.begins_with(w + ":") or t.begins_with(w + "("):
+			return BTN_EXIT
+	if col.is_equal_approx(BTN_ALT) or col.s < 0.25:
+		return BTN_ALT
+	return BTN_MAIN
 
 static var display: Font
 static var body: Font
@@ -115,9 +131,7 @@ static func tag(ci: CanvasItem, pos: Vector2, text: String, size: int, col: Colo
 ## key cap), thick ink border, hard shadow that the button sinks into when pressed.
 static func button(ci: CanvasItem, r: Rect2, text: String, col: Color, enabled: bool = true, pressed: bool = false,
 		w: float = 1.0, size: int = 8) -> void:
-	var c: = col
-	if c.s < 0.25:
-		c = TEAL.darkened(0.15)          # the old grey default button colour -> the cards' teal
+	var c: = btn_role(col, text)
 	if not enabled:
 		c = c.darkened(0.55).lerp(Color(0.3, 0.28, 0.33), 0.4)
 	var sink: = w * 1.6 if pressed else 0.0
