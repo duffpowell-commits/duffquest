@@ -540,7 +540,7 @@ func _draw_sprite() -> void:
 		"fences":
 			if state == "tele":
 				draw_rect(Rect2(6, -3, 8, 6), Color("#f4f0e4"))           # rent notice
-				draw_string(f, Vector2(6, 2), "DUE", HORIZONTAL_ALIGNMENT_LEFT, -1, 4, Color("#d02020"))
+				draw_string(f, Vector2(6, 2), "DUE", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color("#d02020"))
 		"ghoster":
 			draw_string(f, Vector2(-9, -14), "Seen", HORIZONTAL_ALIGNMENT_LEFT, -1, 5, Color(0.3, 0.5, 1.0, mod.a))
 		"gymbro":

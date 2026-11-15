@@ -683,7 +683,7 @@ func _station(r: Rect2, art: String, label: String, col: Color, ink: Color, lit:
 	pic(art, Vector2(r.get_center().x, r.end.y - 14.0), 24.0, Color.WHITE if lit else Color(0.55, 0.55, 0.55))
 	var plate: = Rect2(r.position.x + 2.0, r.end.y - 6.0, r.size.x - 4.0, 7.0)
 	draw_rect(plate, Color(0.08, 0.07, 0.1, 0.85))
-	txt(plate.position + Vector2(0, 6), label, 5, Color("#f2c66a") if lit else Color(1, 1, 1, 0.5), HORIZONTAL_ALIGNMENT_CENTER, plate.size.x)
+	txt(plate.position + Vector2(0, 6), label, 6, Color("#f2c66a") if lit else Color(1, 1, 1, 0.5), HORIZONTAL_ALIGNMENT_CENTER, plate.size.x)
 
 const PEOPLE_SCALE: = 0.75   # overworld sprites (32 tall) at 24 units: big enough to read on a phone, under one lane + shelf
 

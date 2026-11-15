@@ -13,8 +13,7 @@ var judged: Array = []
 var say: = ""
 
 func _setup() -> void:
-	backdrop = "bedroom"
-	backdrop_dim = 0.3
+	backdrop = "backwalk_bed"   # painted: Duff face-down on the bed, side view, head on the pillow at the right
 	music = "home"
 	title = "BACK WALK  (press on the beat)"
 	time_limit = 0.0
@@ -63,31 +62,17 @@ func _on_button(id: String) -> void:
 	else:
 		say = "I go too early. Now she's balancing on one foot."
 
-const SKIN: = Color("#e9b994")
+## On bg_backwalk_bed his bare back runs from the belt (x ~188) to the shoulders (x ~238), top at y ~97.
+const BACK_X0: = 188.0
+const BACK_X1: = 238.0
+const BACK_Y: = 97.0
 
 func _draw_game() -> void:
-	# the bed, side view: frame, mattress, blanket bunched at the foot, pillow at the head
-	prop(Rect2(26, 112, 268, 12), Color("#4a2e22"), 0.3)
-	prop(Rect2(30, 100, 260, 14), Color("#e8e2f2"), 0.25)
-	prop(Rect2(32, 92, 30, 12), Color("#34407a"), 0.3)
-	prop(Rect2(240, 88, 34, 13), UiStyle.CREAM, 0.25)
-	# Duff face-down: jeans, bare back, tattooed arm along his side, head on the pillow
-	prop(Rect2(62, 86, 70, 15), Color("#3a5a8a"), 0.3)
-	prop(Rect2(130, 80, 96, 21), SKIN, 0.3)
-	var arm: = Rect2(144, 92, 66, 7)
-	draw_rect(arm, SKIN.darkened(0.1))
-	for k in 6:
-		draw_arc(Vector2(arm.position.x + 6 + k * 10, arm.position.y + 2.5), 2.5, k * 0.6, k * 0.6 + PI * 1.4, 8,
-			[Color("#2a7f86"), Color("#c0443c"), UiStyle.PROP_INK][k % 3], 1.2)
-	draw_rect(arm, UiStyle.PROP_INK, false, 0.8)
-	prop_circle(Vector2(236, 86), 10.0, SKIN)
-	draw_colored_polygon(PackedVector2Array([Vector2(227, 82), Vector2(236, 75), Vector2(246, 82), Vector2(244, 87),
-		Vector2(229, 87)]), Color("#4a2e1e"))
 	# Madison walking his spine (real sprite, 2x), bobbing on the beat
 	var prog: = clampf((t - LEAD_IN) / (BEAT * STEPS), 0.0, 1.0)
-	var mx: = 140.0 + prog * 76.0
+	var mx: = BACK_X0 + prog * (BACK_X1 - BACK_X0)
 	var bob: = absf(sin(t * PI / BEAT)) * 3.0
-	draw_set_transform(Vector2(mx, 82 - bob), 0.0, Vector2(2, 2))
+	draw_set_transform(Vector2(mx, BACK_Y - bob), 0.0, Vector2(2, 2))
 	Art.person(self, "ch_madison", Vector2.ZERO, Vector2.RIGHT, t, true, false, Color.WHITE, false)
 	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	# beat ring closing in over her head
