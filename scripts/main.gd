@@ -3986,7 +3986,7 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 	ci.draw_rect(pr, Color("#a43a2c"), false, 1.0 / 1.5)
 	ci.draw_line(pr.position + Vector2(5, 0), pr.position + Vector2(9, -3), Color("#8c8478"), 1.0 / 1.5)
 	ci.draw_line(pr.position + Vector2(25, 0), pr.position + Vector2(21, -3), Color("#8c8478"), 1.0 / 1.5)
-	ci.draw_string(f, Vector2(pr.position.x, pr.position.y + 6.3), "CLOSED", HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, 5, Color("#f0ead8"))
+	ci.draw_string(f, Vector2(pr.position.x, pr.position.y + 6.3), "CLOSED", HORIZONTAL_ALIGNMENT_CENTER, pr.size.x, 6, Color("#f0ead8"))
 
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
@@ -4294,13 +4294,22 @@ func draw_quest_markers(ci: CanvasItem) -> void:
 			ci.draw_line(p - Vector2(0, s), p + Vector2(0, s), c, 1.0)
 			ci.draw_rect(Rect2(p - Vector2(0.5, 0.5), Vector2(1, 1)), Color(1, 1, 1, a))
 
+## World units from the top of the screen to just under the HUD strip (17 HUD units) for floating house names.
+const LABEL_TOP_MARGIN: = 22.0
+
 func draw_world_labels(ci: CanvasItem) -> void:
 	var f: = ThemeDB.fallback_font
+	var ct: = ci.get_canvas_transform()
+	var top: = -ct.origin.y / maxf(ct.get_scale().y, 0.001) + LABEL_TOP_MARGIN   # first world row below the HUD strip
 	for b in buildings:
 		var r: Rect2 = b.get("vis", b["r"])
 		# storefronts carry their own sign; only the unsigned houses still get a floating name
 		if b.get("art", "") in ["", "sf_home", "sf_neighbor"]:
-			_label(ci, f, Vector2(r.position.x, r.position.y - 3), Cast.T(b["n"]), r.size.x, 8 if not (b.has("story") or b.has("errand") or b.has("small")) else 6, Color.WHITE)
+			# keep the name below the HUD instead of half off the top edge, while the house itself is on screen
+			var ly: = r.position.y - 3
+			if r.end.y > top + 12.0:
+				ly = maxf(ly, top)
+			_label(ci, f, Vector2(r.position.x, ly), Cast.T(b["n"]), r.size.x, 8 if not (b.has("story") or b.has("errand") or b.has("small")) else 6, Color.WHITE)
 		r = Rect2(r.position - Vector2(0, 22), r.size)
 		if b.has("errand"):
 			_draw_errand_sign(ci, b, r, f)

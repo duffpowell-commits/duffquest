@@ -259,7 +259,7 @@ func _draw_track() -> void:
 		draw_circle(Vector2(x, TRACK_Y), rad, c)
 		draw_arc(Vector2(x, TRACK_Y), rad, 0.0, TAU, 16, Color(0, 0, 0, 0.6), 1.0)
 		if n["big"]:
-			txt(Vector2(x - 9, TRACK_Y + 2.5), REACT_LABEL[n["react"]], 5, Color(0.1, 0.08, 0.1))
+			txt(Vector2(x - 9, TRACK_Y + 2.5), REACT_LABEL[n["react"]], 6, Color(0.1, 0.08, 0.1))
 	if judge_t > 0.0:
 		txt(Vector2(HIT_X + 14, TRACK_Y - 11), judge, 7, Color(judge_col, minf(1.0, judge_t * 3.0)))
 	if streak >= 3:

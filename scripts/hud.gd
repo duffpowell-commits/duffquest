@@ -28,7 +28,7 @@ static func layout() -> Dictionary:
 		"strip": Rect2(2, 2, 186, 13), "phone": Rect2(190, 1, 10, 16), "chip": Rect2(203, 4, 38, 9),
 		"drawer": Rect2(2, 17, 186, 60), "peek": Rect2(2, 17, 186, 12), "buffs": Rect2(2, 17, 60, 10),
 		"toast": Rect2(10, 50, 300, 36), "hint": Rect2(0, 108, 320, 12), "dialog": Rect2(64, 108, 192, 66),
-		"dialog_portrait": Rect2(64, 108, 192, 66), "boss": Rect2(66, 154, 188, 22), "timer": Rect2(234, 2, 84, 12),
+		"dialog_portrait": Rect2(64, 108, 192, 66), "boss": Rect2(62, 156, 166, 20), "timer": Rect2(234, 2, 84, 12),
 		"saved": Rect2(286, 168, 32, 10),
 	}
 
@@ -394,7 +394,7 @@ func _draw_strip(f: Font) -> void:
 		var a: = 0.65 + 0.35 * sin(_pulse * 6.0)
 		UiStyle.panel(self, cr, Color("#b8321e"), a, PX)
 		var due: = ("ERRAND " + Errands.due_text(m.errand)) if u == "errand" else ("RENT %dd" % m.days_until_rent())
-		_t(f, cr.position + Vector2(0, 6.8), due, 5, Color(1, 1, 1, a), cr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
+		_t(f, cr.position + Vector2(0, 6.8), due, 6, Color(1, 1, 1, a), cr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 
 func w_col() -> Color:
 	return Color("#e06a4a") if urgent() == "rent" else PAPER

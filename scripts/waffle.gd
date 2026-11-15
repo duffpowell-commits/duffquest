@@ -238,7 +238,7 @@ func _draw() -> void:
 			draw_rect(plate, Color(0, 0, 0, 0.6))
 			if cooking:
 				draw_rect(Rect2(plate.position + Vector2(1, 8), Vector2(36 * p, 2)), Color("#f0c040"))
-				draw_string(f, plate.position + Vector2(0, 7), str(tk["code"]), HORIZONTAL_ALIGNMENT_CENTER, 38, 5, Color("#f0ead8"))
+				draw_string(f, plate.position + Vector2(0, 7), str(tk["code"]), HORIZONTAL_ALIGNMENT_CENTER, 38, 6, Color("#f0ead8"))
 				for k in 3:
 					var sx: = gp.x - 8 + k * 8
 					var sy: = gp.y - 2 - fmod(t * 10.0 + k * 3, 6.0)
@@ -247,10 +247,10 @@ func _draw() -> void:
 				var hot: = p > 0.6
 				draw_rect(Rect2(plate.position + Vector2(1, 8), Vector2(36 * (1.0 - p), 2)), Color("#ff5040") if hot else Color("#60e060"))
 				if int(t * 6.0) % 2 == 0 or not hot:
-					draw_string(f, plate.position + Vector2(0, 7), "PLATE IT!" if not hot else "BURNING!", HORIZONTAL_ALIGNMENT_CENTER, 38, 5, Color("#60ff60") if not hot else Color("#ff6040"))
+					draw_string(f, plate.position + Vector2(0, 7), "PLATE IT!" if not hot else "BURNING!", HORIZONTAL_ALIGNMENT_CENTER, 38, 6, Color("#60ff60") if not hot else Color("#ff6040"))
 		else:
 			draw_rect(plate, Color(0, 0, 0, 0.35))
-			draw_string(f, plate.position + Vector2(0, 7), "GRILL %d" % (g + 1), HORIZONTAL_ALIGNMENT_CENTER, 38, 5, Color(1, 1, 1, 0.55))
+			draw_string(f, plate.position + Vector2(0, 7), "GRILL %d" % (g + 1), HORIZONTAL_ALIGNMENT_CENTER, 38, 6, Color(1, 1, 1, 0.55))
 		if smoke[g] > 0.0:
 			for k in 4:
 				draw_circle(gp + Vector2(-6 + k * 4, -2 - (2.0 - smoke[g]) * 10.0 - k * 2), 4.0, Color(0.3, 0.3, 0.3, 0.5 * smoke[g] / 2.0))
@@ -270,7 +270,7 @@ func _draw() -> void:
 		draw_rect(Rect2(r.position + Vector2(2, 8.5), Vector2(34.0 * clampf(float(tk["left"]) / PATIENCE, 0.0, 1.0), 2)), Color("#d04040") if urgent else Color("#40a040"))
 		x += 40.0
 	var tally: = "Served %d  Walked %d" % [delivered, walked]
-	draw_string(f, o + Vector2(250, ry + 8), tally, HORIZONTAL_ALIGNMENT_RIGHT, 60, 5, Color("#2a1a2e"))
+	draw_string(f, o + Vector2(250, ry + 8), tally, HORIZONTAL_ALIGNMENT_RIGHT, 60, 6, Color("#2a1a2e"))
 	if call_t > 0.0 and call_line != "":
 		var sw: = minf(220.0, f.get_string_size(call_line, HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x)
 		var bp: = o + Vector2(160 - sw / 2.0 - 3.0, ry + 16)
