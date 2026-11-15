@@ -532,6 +532,20 @@
       "kind": "backdrop",
       "s": 2
     },
+    "bg_stealth_floor": {
+      "w": 640,
+      "h": 360,
+      "cell": [
+        640,
+        360
+      ],
+      "origin": [
+        0,
+        0
+      ],
+      "kind": "backdrop",
+      "s": 2
+    },
     "bg_kitchen": {
       "w": 640,
       "h": 360,
