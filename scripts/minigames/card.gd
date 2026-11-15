@@ -15,14 +15,21 @@ func _setup() -> void:
 	space_is_pen = false
 	var n: = opts.size()
 	var cols: = n if n <= 3 else 2
+	if backdrop == "title" and n > 1:
+		cols = 2
 	var rows: = int(ceil(float(n) / cols))
 	var bw: = 308.0 / cols
+	# Title: two button columns flank the porch steps, so Duff (centre of bg_title) stays in view.
+	var flank: = backdrop == "title" and cols == 2
+	if flank:
+		bw = 128.0
 	for i in n:
 		var o: Array = opts[i]
 		var r: = i / cols
 		var c: = i % cols
 		var y: = 176.0 - (rows - r) * 24.0
-		add_button(o[0], Rect2(6 + c * bw, y, bw - 4, 21), o[1], o[2], Color("#c8452f") if i == 0 else Color("#57504e"))
+		var x: = (6.0 + c * (W - 12.0 - bw + 4.0)) if flank else (6.0 + c * bw)
+		add_button(o[0], Rect2(x, y, bw - 4, 21), o[1], o[2], Color("#c8452f") if i == 0 else Color("#57504e"))
 
 func _on_button(id: String) -> void:
 	done = true
