@@ -37,6 +37,7 @@ func _ready() -> void:
 		["symphony_concert", func(): m.overlay_node.go("concert"); m.overlay_node.mt = 3.0],
 		["symphony_snacks", func(): m.overlay_node.go("intermission")],
 		["akarui", func(): _clean(); m.debug_station("akarui")],
+		["akarui_belt", func(): m.overlay_node.go("conveyor"); m.overlay_node.plates = [["tuna", 60.0], ["salmon", 150.0], ["tuna", 250.0]]],
 		["show_tell", sub.call(m_script("ShowTellScript"))],
 		["baby", sub.call(m_script("BabyScript"))],
 		["stealth", func(): _clean(); m.debug_station("stealth")],

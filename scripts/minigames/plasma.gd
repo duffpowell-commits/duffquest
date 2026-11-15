@@ -67,9 +67,7 @@ func _draw_game() -> void:
 	prop_circle(Vector2(46, 66), 6.0 * (0.7 + 0.3 * (1.0 - squish)), Color("#e6a640"))
 	tag(Vector2(28, 82), "stress ball", 6)
 
-	prop(Rect2(220, 30, 34, 60), Color("#ffffff"))
-	draw_rect(Rect2(220, 30 + 60 * (1.0 - bag), 34, 60 * bag), Color("#f0c050"))
-	draw_rect(Rect2(220, 30, 34, 60), Color("#8a8a9a"), false, 1.0)
+	_draw_bag(Rect2(220, 30, 34, 60))
 	tag(Vector2(220, 26), "YOUR BAG", 6)
 	tag(Vector2(212, 100), "Bag %d%%" % int(bag * 100.0), 7)
 
@@ -80,3 +78,37 @@ func _draw_game() -> void:
 	draw_rect(Rect2(60 + 150 * clampf(flow / 1.2, 0.0, 1.0) - 1, 107, 3, 14), Color("#c03030"))
 	draw_rect(Rect2(6, 124, 308, 26), Color(0.1, 0.08, 0.15, 0.92))
 	mtxt(Vector2(10, 134), say, 300, 7, Color.WHITE, 2)
+
+
+# Collection bag: a frosted plastic pouch with a hanger tab and a tube; the
+# straw-coloured plasma rises inside it with a glossy meniscus.
+func _draw_bag(r: Rect2) -> void:
+	var ink: = Color("#2a2030")
+	# hanger tab + tube out the bottom
+	prop(Rect2(r.position.x + r.size.x * 0.5 - 5, r.position.y - 5, 10, 6), Color("#cfd6dc"))
+	draw_line(r.position + Vector2(r.size.x * 0.5, r.size.y), r.position + Vector2(r.size.x * 0.5 - 14, r.size.y + 10), ink, 3.0)
+	draw_line(r.position + Vector2(r.size.x * 0.5, r.size.y), r.position + Vector2(r.size.x * 0.5 - 14, r.size.y + 10), Color("#e0b850"), 1.5)
+	# pouch body: frosted, slightly blue-grey, not paper white
+	var body: = StyleBoxFlat.new()
+	body.bg_color = Color("#b8c6d0", 0.55)
+	body.set_corner_radius_all(6)
+	body.border_color = ink
+	body.set_border_width_all(1)
+	draw_style_box(body, r)
+	# plasma fill
+	var h: = (r.size.y - 4) * clampf(bag, 0.0, 1.0)
+	if h > 0.5:
+		var fill: = StyleBoxFlat.new()
+		fill.bg_color = Color("#f0c050")
+		fill.set_corner_radius_all(4)
+		fill.corner_radius_top_left = 2 if h > 6 else 4
+		fill.corner_radius_top_right = fill.corner_radius_top_left
+		var fr: = Rect2(r.position.x + 2, r.position.y + r.size.y - 2 - h, r.size.x - 4, h)
+		draw_style_box(fill, fr)
+		draw_rect(Rect2(fr.position.x + 1, fr.position.y, fr.size.x - 2, 1), Color("#fff0b0"))
+	# seal line, graduation ticks, plastic shine
+	draw_line(r.position + Vector2(3, 5), r.position + Vector2(r.size.x - 3, 5), Color(ink, 0.5), 1.0)
+	for i in range(1, 4):
+		var y: = r.position.y + r.size.y * i / 4.0
+		draw_line(Vector2(r.end.x - 7, y), Vector2(r.end.x - 3, y), Color(ink, 0.55), 1.0)
+	draw_line(r.position + Vector2(5, 9), r.position + Vector2(5, r.size.y - 9), Color(1, 1, 1, 0.5), 2.0)

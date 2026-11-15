@@ -149,6 +149,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 - **Buttons (Nov 15):** three roles only, applied in `UiStyle.button` via `btn_role()`: `BTN_MAIN` teal (do the thing), `BTN_ALT` plum (options/toggles; any low-saturation colour), `BTN_EXIT` red for labels starting back/close/leave/done/stop/quit/cancel/give up/nope/exit. Callers' own colours collapse into these; cards: first option MAIN, rest ALT.
 
+- **Seams (Nov 15):** symphony bus run draws `bg_symphony_street` (Canva, master Drive `bg_symphony_street_v1.png`) cropped 30 units from the top so its asphalt sits on the run lane (y 84-118); it ships in extra.pck like `bg_holland`. Plasma bag is a drawn pouch (`plasma._draw_bag`); the Akarui belt is steel slats between wood lips. Render: `docs/renders/seams_before_after.png`; ui audit has `akarui_belt`.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
