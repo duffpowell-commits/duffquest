@@ -8,8 +8,9 @@ Duff asked for a design review on Nov 15. Ranked fixes:
 2. Dialogue box: DONE, PR #96 merged (speaker tab, gold keyline, bobbing arrow).
 3. Button colours: DONE, PR #97 merged (teal main, plum alt, red exit via `UiStyle.btn_role`).
 4. Pasted seams: DONE, PR #98 merged (symphony street backdrop, plasma pouch, steel sushi belt).
-5. Placeholder art: DONE on PR #100 (draft until Duff says "merge"). Blackhead back is painted (fox neck redo
-   at Duff's ask, master `bg_blackheads_back_v2.png`), Back Walk uses `bg_backwalk_bed`, Stealth uses
+5. Placeholder art: Back Walk + Stealth merged (PR #100). Blackhead back NOT shipped: Duff says the fox sits on the
+   nape, it belongs on the LEFT side of his neck (viewer's left from behind). Art `bg_blackheads_back` is imported but
+   `blackheads.gd` still draws the old back; fix in a follow-up PR. Back Walk uses `bg_backwalk_bed`, Stealth uses
    `bg_stealth_floor` (crib left, bed right; `stealth._draw_backdrop` stretches the plain middle floor so the bed sits
    under the goal column, `FLOOR_SPLIT`).
 6. HUD clutter and clipped tags: DONE on PR #100 (house names clamp below the HUD strip, `main.LABEL_TOP_MARGIN`).
