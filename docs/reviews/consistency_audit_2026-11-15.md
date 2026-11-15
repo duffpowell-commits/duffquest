@@ -19,7 +19,7 @@ or cross-promo in game code or data, listing copy uses public names only, contro
    CrazyGames players see first. Re-shoot with `tools/promo_shot.tscn` on the current build.
 4. **Covers put the fox tattoo in the middle of the throat** (`docs/portals/covers/*`, `docs/itch/cover.png`). The
    real one sits on the LEFT side of the neck (`docs/ref/duff/duff_fox_neck_tattoo.png`). Needs a Canva redo.
-5. **Blackhead Patrol still draws the old flat back**: fixed on PR #101 (waiting on Duff's merge).
+5. **Blackhead Patrol old flat back**: FIXED, PR #101 merged.
 6. **Kitchen minigame centrepieces are chunky old pixel art next to painted backdrops**: prep (tomato + board),
    garnish (Black Forest slab), temp check (patty). Canva repaint, one batch.
 7. **Open prop list from the sprite pass**: delivery van (`truck_h`), drone, nft, package, honeybun, freya_peek.
