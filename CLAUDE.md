@@ -160,6 +160,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   main save as it opens, so Quit to title = retry too. New game erases them. No snapshot = old soft landing.
   Render: `arena_shot -- evicted|gameover`. No Madison lines on either screen.
 
+- **3D view (Nov 16, branch `claude/project-thread-fhx6e4`, draft PR #109, NOT merged):** steps 2-6 of
+  `spike3d/PLAN_3D.md` done (town, fights, rooms, native res, Lite via perf_guard). Render with `arena_shot -- <id> --3d
+  [--lite]`. Step 7 (3D as default) waits on Duff's go and a real-phone test.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
