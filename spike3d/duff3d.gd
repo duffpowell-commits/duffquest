@@ -32,7 +32,7 @@ func _ready() -> void:
 	sprite.pixel_size = U / 4.0
 	sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
-	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	sprite.shaded = true
 	sprite.double_sided = true
 	sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
