@@ -31,9 +31,9 @@ def roads(img: Image.Image):
     return (xs.min() + xs.max()) / 2.0, (ys.min() + ys.max()) / 2.0, xs.max() - xs.min(), ys.max() - ys.min()
 
 
-def main() -> None:
+def fit(pnt: Image.Image, report: bool = False) -> Image.Image:
+    """Scale + place the painting so its roads sit on the layout's roads (UP x the layout, unsharpened)."""
     lay = Image.open(LAYOUT)
-    pnt = Image.open(SRC).convert("RGB")
     lx, ly, lw, lh = (v * UP for v in roads(lay))
     W, H = lay.width * UP, lay.height * UP
     px, py, pw, ph = roads(pnt)
@@ -48,12 +48,19 @@ def main() -> None:
     big = pnt.resize((round(pnt.width * s), round(pnt.height * s)), Image.LANCZOS)
     out = Image.new("RGB", (W, H))
     out.paste(big, (round(ox), round(oy)))
+    if report:
+        print(f"scale {s:.3f} offset ({ox:.0f},{oy:.0f}); roads painted {pw * s:.0f}/{ph * s:.0f} px vs layout {lw}/{lh}; "
+              f"centre error {abs(px * s + ox - lx):.1f},{abs(py * s + oy - ly):.1f} px")
+    return out
+
+
+def main() -> None:
+    out = fit(Image.open(SRC).convert("RGB"), True)
     # The LANCZOS shrink leaves the painting soft next to the 1:1 pixel sprites (HD-2D audit, Nov 12):
     # a 1-px unsharp pass restores crisp slab edges, cracks and lane paint without inventing new colours.
     out = out.filter(ImageFilter.UnsharpMask(radius=1.2, percent=140, threshold=2))
     out.save(OUT)
-    print(f"scale {s:.3f} offset ({ox:.0f},{oy:.0f}); roads painted {pw * s:.0f}/{ph * s:.0f} px vs layout {lw}/{lh}; "
-          f"centre error {abs(px * s + ox - lx):.1f},{abs(py * s + oy - ly):.1f} px -> {OUT.name}")
+    print("->", OUT.name)
 
 
 if __name__ == "__main__":
