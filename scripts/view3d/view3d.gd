@@ -39,6 +39,8 @@ var labels_root: Node3D
 const HD: = {"duff_home": {"path": "res://assets/art3d/duff_home_hd3d.png", "cell": [512, 512], "origin": [256, 480], "s": 16.0}}
 const NO_3D: = ["map_objects"]               # full-map overlays drawn by main (the old bus-stop sign layer)
 var _hd_tex: = {}
+var static_art: = {}                         # art names _build_town already stands up (main's own draws of them are skipped)
+var cam_base: = Vector3.ZERO                 # follow-camera position before the shake offset
 var _ground_tex: Texture2D
 
 static func to3(p: Vector2, h: float = 0.0) -> Vector3:
@@ -91,6 +93,7 @@ func _process(_d: float) -> void:
 	_sync_actors()
 	_sync_labels()
 	_sync_cam()
+	_sync_overlay()
 
 func _set_live(on: bool) -> void:
 	live = on
@@ -101,10 +104,14 @@ func _set_live(on: bool) -> void:
 		Art.rec.clear()
 	if vp2d != null:
 		vp2d.transparent_bg = on
+	var c2: Camera2D = main.get("cam")
+	if c2 != null:
+		c2.enabled = not on   # View3D drives the world canvas transform while live (_sync_overlay)
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if on else SubViewport.UPDATE_DISABLED
 	if on:
 		_redraw_world(main)   # everything draws once more so the capture sees it
-		cam.position = _cam_target() + CAM_OFF
+		cam_base = _cam_target() + CAM_OFF
+		cam.position = cam_base
 		cam.look_at(_cam_target())
 
 ## Last 3D frame (main.gd blurs it behind menu cards).
@@ -226,13 +233,13 @@ func _sync_actors() -> void:
 		if ci == null or not is_instance_valid(ci):
 			Art.rec.erase(id)
 			continue
-		if ci == main or ci.get("it") != null or not ci.is_visible_in_tree() or not main.is_ancestor_of(ci):
+		if ci.get("it") != null or not ci.is_visible_in_tree() or (ci != main and not main.is_ancestor_of(ci)):
 			continue
 		var g: = ci.get_global_transform()
 		var k: = 0
 		for d in Art.rec[id]:
 			var name: String = d[0]
-			if name in NO_3D:
+			if name in NO_3D or (ci == main and static_art.has(name)):
 				continue
 			var full: Transform2D = g * (d[5] as Transform2D)
 			var sc: = full.get_scale()
@@ -300,6 +307,7 @@ func _build_town() -> void:
 		s.position = to3(Vector2(left_x, bottom_y))
 		world.add_child(s)
 		buildings.append([b, s])
+		static_art[n] = true
 		# a dark block behind the facade: it only throws a shadow (the sun sees a building, not a playing card)
 		var mass: = MeshInstance3D.new()
 		var bm: = BoxMesh.new()
@@ -319,6 +327,7 @@ func _build_town() -> void:
 		var a: = str(it["a"])
 		if a == "" or Art.tex(a) == null:
 			continue
+		static_art[a] = true
 		var tx2: = Art.tex(a)
 		var inf2: = Art.info(a)
 		var k2: = Art.density(inf2) / float(it["s"])
@@ -441,5 +450,29 @@ func _cam_target() -> Vector3:
 
 func _sync_cam() -> void:
 	var want: = _cam_target() + CAM_OFF
-	cam.position = cam.position.lerp(want, clampf(get_process_delta_time() * 6.0, 0.0, 1.0))
-	cam.look_at(cam.position - CAM_OFF)
+	cam_base = cam_base.lerp(want, clampf(get_process_delta_time() * 6.0, 0.0, 1.0))
+	cam.position = cam_base
+	cam.look_at(cam_base - CAM_OFF)
+	# juice.gd's screen shake + zoom punch move the (disabled) Camera2D; the 3D camera takes them over
+	var c2: Camera2D = main.get("cam")
+	var off: = c2.offset if c2 != null else Vector2.ZERO
+	cam.position += cam.basis.x * off.x * U - cam.basis.y * off.y * U
+	var punch: = c2.zoom.x / 2.0 if c2 != null and c2.zoom.x > 0.0 else 1.0
+	cam.fov = CAM_FOV / clampf(punch, 0.9, 1.2)
+
+## What the 2D world still draws under the 3D view (sparks, slashes, damage numbers, HP bars, telegraphs,
+## speech bubbles) is laid over the 3D frame: the world canvas gets the affine map that best matches the
+## camera near its target. x follows the ground; y splits the difference between ground depth and standing
+## height, because most of what's left floats at body height (exact at the target, drifts toward the edges).
+func _sync_overlay() -> void:
+	if vp2d == null:
+		return
+	var t3: = cam_base - CAM_OFF
+	var c: = Vector2(t3.x, t3.z) / U
+	var r: = Vector2(vp2d.size) / Vector2(vp.size)
+	var s0: = cam.unproject_position(to3(c)) * r
+	var sx: = (cam.unproject_position(to3(c + Vector2(32, 0))) * r - s0) / 32.0
+	var sg: = (cam.unproject_position(to3(c + Vector2(0, 32))) * r - s0) / 32.0
+	var sv: = (s0 - cam.unproject_position(to3(c, 32.0 * U)) * r) / 32.0
+	var sy: = (sg + sv) * 0.5
+	vp2d.canvas_transform = Transform2D(sx, sy, s0 - sx * c.x - sy * c.y)

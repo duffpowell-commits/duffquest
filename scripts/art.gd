@@ -86,9 +86,11 @@ static func xf(ci: CanvasItem, pos: Vector2, rot: float = 0.0, scale: Vector2 = 
 	_xf = Transform2D(rot, scale, 0.0, pos)
 	_xf_ci = ci.get_instance_id()
 
-static func _record(ci: CanvasItem, name: String, pos: Vector2, col: int, row: int, modulate: Color, is_frame: bool) -> void:
+## True when the draw was taken by the 3D view (the caller then skips its 2D draw: under the 3D view the 2D
+## world only shows what can't be a card, like sparks, numbers, bars and speech bubbles).
+static func _record(ci: CanvasItem, name: String, pos: Vector2, col: int, row: int, modulate: Color, is_frame: bool) -> bool:
 	if ci.get_canvas_layer_node() != null:
-		return   # menus, minigames, HUD: not part of the world
+		return false   # menus, minigames, HUD: not part of the world
 	var id: = ci.get_instance_id()
 	if not rec.has(id):
 		rec[id] = []
@@ -98,10 +100,11 @@ static func _record(ci: CanvasItem, name: String, pos: Vector2, col: int, row: i
 				(rec[id] as Array).clear())
 	var t: = _xf if _xf_ci == id else Transform2D.IDENTITY
 	(rec[id] as Array).append([name, pos, col, row, modulate, t, is_frame])
+	return true
 
 static func frame(ci: CanvasItem, name: String, pos: Vector2, col: int = 0, row: int = 0, modulate: Color = Color.WHITE) -> void :
-	if rec_on:
-		_record(ci, name, pos, col, row, modulate, true)
+	if rec_on and _record(ci, name, pos, col, row, modulate, true):
+		return
 
 	var tx: = tex(name)
 	if tx == null:
@@ -116,8 +119,8 @@ static func frame(ci: CanvasItem, name: String, pos: Vector2, col: int = 0, row:
 	ci.draw_texture_rect_region(tx, Rect2((pos * k).round() / k - Vector2(float(org[0]), float(org[1])) / k, Vector2(cw, chh) / k), src, modulate)
 
 static func image(ci: CanvasItem, name: String, pos: Vector2, modulate: Color = Color.WHITE, scale: float = 1.0) -> void :
-	if rec_on:
-		_record(ci, name, pos, -1, int(scale * 1000.0), modulate, false)
+	if rec_on and _record(ci, name, pos, -1, int(scale * 1000.0), modulate, false):
+		return
 
 	var tx: = tex(name)
 	if tx == null:
@@ -160,6 +163,8 @@ static func set_rim(col: Color, dir: Vector2, strength: float) -> void:
 	mat.set_shader_parameter("strength", strength)
 
 static func shadow(ci: CanvasItem, foot: Vector2, w: float = 7.0, h: float = 2.4, a: float = 0.32) -> void:
+	if rec_on and ci.get_canvas_layer_node() == null:
+		return   # the 3D view casts real shadows
 	if _soft_shadow == null:
 		var image := Image.create_empty(64,24,false,Image.FORMAT_RGBA8)
 		for y in 24:
