@@ -489,17 +489,9 @@ func _build_town() -> void:
 		s.pixel_size = U / k
 		s.position = to3(Vector2(left_x, bottom_y))
 		town.add_child(s)
-		buildings.append([b, s])
 		static_art[n] = true
-		# a dark block behind the facade: it only throws a shadow (the sun sees a building, not a playing card)
-		var mass: = MeshInstance3D.new()
-		var bm: = BoxMesh.new()
-		var h: = float(tx.get_height()) / k * U * 0.6
-		bm.size = Vector3(r.size.x * U * 0.96, h, r.size.y * U * 0.6)
-		mass.mesh = bm
-		mass.position = Vector3((r.position.x + r.size.x * 0.5) * U, h * 0.5, (bottom_y - r.size.y * 0.35) * U)
-		mass.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
-		town.add_child(mass)
+		var box: = _box(b, tx, k, left_x, bottom_y)
+		buildings.append([b, s, box, 1.0])   # [building, facade card, box info (or {}), current see-through alpha]
 		# warm pool at the door from dusk (hd_presentation.gd does the same in 2D)
 		if n != "sf_home":
 			_lamp(Vector2(r.get_center().x, r.end.y + 6), 2.2, Color("#ffc27a"), 1.0, 6.0)
@@ -531,6 +523,143 @@ func _build_town() -> void:
 				c.set_meta("sway", randf() * TAU)
 				c.add_to_group("view3d_sway")
 		town.add_child(c)
+
+## The painted facade is a card; behind it a solid box gives the building real depth: a roof you see past the
+## facade's top, side walls in perspective, a real shadow. Its top sits at the first row of the art that runs
+## (almost) the full width (the eave, under any sign or chimney), its colours come from the art itself
+## (roof = the rows just under that line, walls = the facade's outer columns), its depth from the lot.
+func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float) -> Dictionary:
+	var img: = tx.get_image()
+	if img == null:
+		return {}
+	if img.is_compressed():
+		img.decompress()
+	var w: = img.get_width()
+	var h: = img.get_height()
+	var top: = -1
+	var x0: = 0
+	var x1: = w - 1
+	for want in [0.85, 0.6]:
+		for y in range(h):
+			var n: = 0
+			var lo: = w
+			var hi: = -1
+			for x in range(0, w, 4):
+				if img.get_pixel(x, y).a > 0.5:
+					n += 1
+					lo = mini(lo, x)
+					hi = maxi(hi, x)
+			if float(n) / (w / 4.0) > want:
+				top = y
+				x0 = lo
+				x1 = hi
+				break
+		if top >= 0:
+			break
+	if top < 0:
+		return {}
+	var wall: = _avg(img, Rect2i(x0, (top + h) / 2, mini(6, x1 - x0), (h - top) / 3)).lerp(_avg(img, Rect2i(maxi(x0, x1 - 6), (top + h) / 2, mini(6, x1 - x0), (h - top) / 3)), 0.5)
+	var r: Rect2 = b["r"]
+	var bw: = float(x1 - x0) / k * U
+	var bh: = float(h - top) / k * U
+	var bd: = minf(r.size.y * 0.35, 22.0) * U   # shallow: a deep box shows a roof the size of a parking lot
+	var z_front: = bottom_y * U - 0.02                     # just behind the card
+	var cx: = (left_x + (float(x0 + x1) * 0.5) / k) * U
+	var root: = Node3D.new()
+	root.position = Vector3(cx, 0, z_front - bd * 0.5)
+	town.add_child(root)
+	var walls: = MeshInstance3D.new()
+	var wm: = BoxMesh.new()
+	wm.size = Vector3(bw, bh, bd)
+	walls.mesh = wm
+	walls.position.y = bh * 0.5
+	var wmat: = _flat(wall.darkened(0.15))
+	walls.material_override = wmat
+	root.add_child(walls)
+	# the roof is the art's own painted roof strip (the rows under the eave line), tiled back over the box's depth
+	# a patch of plain roof: the least busy window just under the eave line (skips the shop sign, the fascia,
+	# vents and chimneys), tiled across the whole roof
+	var rh: = clampi(int(4.0 * k), 4, maxi(4, (h - top) / 4))
+	var ww: = mini(int(12.0 * k), x1 - x0)
+	var best: = Vector2i(x0, top + 1)
+	var best_v: = INF
+	for wy in range(top + 1, mini(top + 1 + rh, h - rh), 2):
+		for wx in range(x0, x1 - ww + 1, maxi(2, ww / 4)):
+			var v: = _busy(img, Rect2i(wx, wy, ww, rh))
+			if v < best_v:
+				best_v = v
+				best = Vector2i(wx, wy)
+	var strip: = img.get_region(Rect2i(best, Vector2i(ww, rh)))
+	strip.generate_mipmaps()
+	var cap: = MeshInstance3D.new()
+	var pm: = PlaneMesh.new()
+	pm.size = Vector2(bw + 0.04, bd + 0.02)
+	cap.mesh = pm
+	cap.position.y = bh + 0.005
+	var rmat: = _flat(Color.WHITE)
+	rmat.albedo_texture = ImageTexture.create_from_image(strip)
+	rmat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	rmat.texture_repeat = true
+	rmat.uv1_scale = Vector3(maxf(1.0, round(bw / (float(ww) / k * U))), maxf(1.0, round(bd / (float(strip.get_height()) / k * U))), 1.0)
+	cap.material_override = rmat
+	cap.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(cap)
+	# 2D area where Duff is hidden behind this building: across its width, from the facade back past the box
+	# by as far as its top hides the ground from the ~38 degree camera (+ Duff's own height)
+	var hide_back: = bd / U + (bh / U) * CAM_OFF.z / CAM_OFF.y + 4.0
+	return {"mats": [wmat, rmat], "x0": left_x + float(x0) / k, "x1": left_x + float(x1) / k, "y0": bottom_y - hide_back, "y1": bottom_y - 2.0}
+
+## Duff behind a building: fade its facade and box see-through (like any 3D game), back to solid when he leaves.
+func _fade_buildings(delta: float) -> void:
+	var p: Node2D = main.player
+	if p == null:
+		return
+	var f: = p.position + FEET
+	for e in buildings:
+		var box: Dictionary = e[2]
+		if box.is_empty():
+			continue
+		var behind: = f.x > float(box["x0"]) - 4.0 and f.x < float(box["x1"]) + 4.0 and f.y > float(box["y0"]) and f.y < float(box["y1"])
+		var a: = move_toward(float(e[3]), 0.45 if behind else 1.0, delta * 4.0)
+		if is_equal_approx(a, float(e[3])):
+			continue
+		e[3] = a
+		var s: Sprite3D = e[1]
+		s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD if a >= 0.999 else SpriteBase3D.ALPHA_CUT_DISABLED
+		s.modulate.a = a
+		for m in box["mats"]:
+			(m as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_DISABLED if a >= 0.999 else BaseMaterial3D.TRANSPARENCY_ALPHA
+			(m as StandardMaterial3D).albedo_color.a = a
+
+## How busy a patch is (colour variance plus see-through pixels): signs and vents score high, plain roof low.
+func _busy(img: Image, r: Rect2i) -> float:
+	var m: = _avg(img, r)
+	var v: = 0.0
+	var n: = 0
+	for y in range(r.position.y, r.end.y, 3):
+		for x in range(r.position.x, r.end.x, 3):
+			var p: = img.get_pixel(x, y)
+			v += 1.0 if p.a < 0.5 else (p.r - m.r) ** 2 + (p.g - m.g) ** 2 + (p.b - m.b) ** 2
+			n += 1
+	return v / maxf(1.0, n)
+
+func _avg(img: Image, r: Rect2i) -> Color:
+	var c: = Color(0, 0, 0, 0)
+	var n: = 0
+	r = r.intersection(Rect2i(0, 0, img.get_width(), img.get_height()))
+	for y in range(r.position.y, r.end.y, 3):
+		for x in range(r.position.x, r.end.x, 3):
+			var p: = img.get_pixel(x, y)
+			if p.a > 0.5:
+				c += p
+				n += 1
+	return Color(c.r / n, c.g / n, c.b / n) if n > 0 else Color("#5a4a44")
+
+func _flat(c: Color) -> StandardMaterial3D:
+	var m: = StandardMaterial3D.new()
+	m.albedo_color = c
+	m.roughness = 0.95
+	return m
 
 func _lamp(p: Vector2, h: float, c: Color, e: float, rng: float) -> void:
 	var l: = OmniLight3D.new()
@@ -597,7 +726,10 @@ func _sync_town() -> void:
 	for s in get_tree().get_nodes_in_group("view3d_sway"):
 		s.rotation_degrees.z = sin(t * 1.3 + float(s.get_meta("sway"))) * 0.9
 	for e in buildings:
-		(e[1] as Sprite3D).modulate = Color(0.72, 0.72, 0.78) if main.building_shut(e[0]) else Color.WHITE
+		var tint: = Color(0.72, 0.72, 0.78) if main.building_shut(e[0]) else Color.WHITE
+		tint.a = float(e[3])
+		(e[1] as Sprite3D).modulate = tint
+	_fade_buildings(get_process_delta_time())
 	var dark: = HdPresentation.darkness(float(main.clock))
 	var on: = clampf((dark - 0.15) / 0.5, 0.0, 1.0)
 	for l in lamps:
