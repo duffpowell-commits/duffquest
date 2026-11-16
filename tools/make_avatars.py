@@ -2,7 +2,10 @@
 
 python3 tools/make_avatars.py [OUT_DIR]   (default assets/art)
 Takes the front idle frame (row 0, col 0, 128 px cells), finds the top of the head, crops a square around the head
-and shoulders, scales to 48x48 on a dark round-cornered tile like the old avatars."""
+and shoulders, scales to 96x96 (s 4: 24 world units) on a dark round-cornered tile like the old avatars,
+and sets the av_* entries in assets/art/manifest.json + scripts/art_manifest.gd to 96 px, s 4."""
+import json
+import re
 import sys
 from PIL import Image, ImageDraw
 
@@ -22,14 +25,29 @@ def avatar(sheet: str) -> Image.Image:
     cx = (min(xs) + max(xs)) // 2
     x0 = max(0, cx - SIDE // 2)
     y0 = max(0, top - 3)
-    head = cell.crop((x0, y0, x0 + SIDE, y0 + SIDE)).resize((44, 44), Image.LANCZOS)
-    tile = Image.new("RGBA", (48, 48), (0, 0, 0, 0))
-    ImageDraw.Draw(tile).rounded_rectangle((0, 0, 47, 47), 7, fill=(43, 34, 24, 255))
-    mask = Image.new("L", (48, 48), 0)
-    ImageDraw.Draw(mask).rounded_rectangle((0, 0, 47, 47), 7, fill=255)
-    tile.alpha_composite(head, (2, 4))
+    head = cell.crop((x0, y0, x0 + SIDE, y0 + SIDE)).resize((88, 88), Image.LANCZOS)
+    tile = Image.new("RGBA", (96, 96), (0, 0, 0, 0))
+    ImageDraw.Draw(tile).rounded_rectangle((0, 0, 95, 95), 14, fill=(43, 34, 24, 255))
+    mask = Image.new("L", (96, 96), 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, 95, 95), 14, fill=255)
+    tile.alpha_composite(head, (4, 8))
     tile.putalpha(mask)
     return tile
+
+
+def register(keys: list) -> None:
+    ent = {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4}
+    mj = json.load(open("assets/art/manifest.json"))
+    t = mj["assets"] if "assets" in mj else mj
+    for k in keys:
+        t[k] = dict(ent)
+    open("assets/art/manifest.json", "w").write(json.dumps(mj, indent=2) + "\n")
+    gd = open("scripts/art_manifest.gd").read()
+    for k in keys:
+        gd = re.sub(r'\n  "%s": \{.*?\n  \},' % re.escape(k), "", gd, flags=re.S)
+        gd = re.sub(r'\n  "%s": \{[^\n]*\},' % re.escape(k), "", gd)
+    add = "".join('\n  "%s": %s,' % (k, json.dumps(ent)) for k in sorted(keys))
+    open("scripts/art_manifest.gd", "w").write(gd.replace("const ASSETS = {", "const ASSETS = {" + add, 1))
 
 
 if __name__ == "__main__":
@@ -37,3 +55,6 @@ if __name__ == "__main__":
     for av, sheet in SRC.items():
         avatar(sheet).save("%s/%s.png" % (out, av))
         print(av, "<-", sheet)
+    if out == "assets/art":
+        register(list(SRC))
+
