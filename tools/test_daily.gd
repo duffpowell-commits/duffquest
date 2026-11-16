@@ -582,6 +582,7 @@ func _edition_checks() -> void:
 	check("public edition: no real brand / real-ex names in cast (%s)" % ", ".join(leaked), leaked.is_empty())
 	check("public edition: the house sandwich is renamed with the restaurant", C.T("{HOUSE_SANDWICH}") == "SPATULA CLASSIC")
 	check("public edition: {FORK} and {wordle} renamed, Brittany kept (her OK, Nov 16)", C.T("{FORK} / {wordle} / {coworker}") == "THE BUSTED SPATULA / Word Brawl / Brittany")
+	check("public edition: {COWORKER}'S BETS reads BRITTANY'S BETS, no Mazikeen left", C.T("{COWORKER}'S BETS") == "BRITTANY'S BETS" and not "Maz" in shown)
 	check("public edition: the Fork nickname and club sandwich follow the rename", C.T("{fork_nick} / {club_sandwich}") == "Spatula / Club Spatula")
 	var bare: = _bare_fork_lines()
 	check("public edition: no bare 'Fork' left in player-facing strings (%s)" % ", ".join(bare), bare.is_empty())
