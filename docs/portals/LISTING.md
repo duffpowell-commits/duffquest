@@ -1,6 +1,6 @@
 # Duff Quest: CrazyGames listing (paste-ready, Nov 13 2026)
 
-Public edition wording only (the CrazyGames zip is the public build): The Busted Spatula, Mazikeen, Rex Tankton.
+Public edition wording only (the CrazyGames zip is the public build): The Busted Spatula, Rex Tankton (Brittany keeps her real name since Nov 16, with her OK).
 Never use the family names here (the real restaurant, real coworkers, real exes). PEGI 12 tone: the portal build
 starts with clean language on and cartoon gore off, so don't sell blood or swearing.
 
