@@ -2,6 +2,13 @@ extends RefCounted
 
 # ORIGINAL Style A HD art; generated metadata. Logical coordinates unchanged.
 const ASSETS = {
+  "av_chef": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
+  "av_duff": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
+  "av_gala": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
+  "av_jen": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
+  "av_madison": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
+  "av_pharmacist": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
+  "av_sitter": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
   "kp_bun": {"w": 196, "h": 186, "cell": [196, 186], "origin": [98, 93], "kind": "prop", "s": 4},
   "kp_fried_chicken": {"w": 163, "h": 126, "cell": [163, 126], "origin": [81, 63], "kind": "prop", "s": 4},
   "kp_fries": {"w": 145, "h": 102, "cell": [145, 102], "origin": [72, 51], "kind": "prop", "s": 4},
@@ -440,104 +447,6 @@ const ASSETS = {
     "s": 4
   },
   "av_bank": {
-    "w": 48,
-    "h": 48,
-    "cell": [
-      48,
-      48
-    ],
-    "origin": [
-      0,
-      0
-    ],
-    "kind": "icon",
-    "s": 2
-  },
-  "av_chef": {
-    "w": 48,
-    "h": 48,
-    "cell": [
-      48,
-      48
-    ],
-    "origin": [
-      0,
-      0
-    ],
-    "kind": "icon",
-    "s": 2
-  },
-  "av_duff": {
-    "w": 48,
-    "h": 48,
-    "cell": [
-      48,
-      48
-    ],
-    "origin": [
-      0,
-      0
-    ],
-    "kind": "icon",
-    "s": 2
-  },
-  "av_gala": {
-    "w": 48,
-    "h": 48,
-    "cell": [
-      48,
-      48
-    ],
-    "origin": [
-      0,
-      0
-    ],
-    "kind": "icon",
-    "s": 2
-  },
-  "av_jen": {
-    "w": 48,
-    "h": 48,
-    "cell": [
-      48,
-      48
-    ],
-    "origin": [
-      0,
-      0
-    ],
-    "kind": "icon",
-    "s": 2
-  },
-  "av_madison": {
-    "w": 48,
-    "h": 48,
-    "cell": [
-      48,
-      48
-    ],
-    "origin": [
-      0,
-      0
-    ],
-    "kind": "icon",
-    "s": 2
-  },
-  "av_pharmacist": {
-    "w": 48,
-    "h": 48,
-    "cell": [
-      48,
-      48
-    ],
-    "origin": [
-      0,
-      0
-    ],
-    "kind": "icon",
-    "s": 2
-  },
-  "av_sitter": {
     "w": 48,
     "h": 48,
     "cell": [

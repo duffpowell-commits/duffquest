@@ -7,7 +7,7 @@ but not the exact proportions, so: find both roads' centre lines in the painting
 blue >= green, red < 135), pick ONE uniform scale that still covers the whole map, and line the road centres up.
 Roads land within a few px of the gameplay roads (driver lanes, sidewalks) without stretching the art.
 A final 1-px unsharp pass keeps the shrunk painting as crisp as the 1:1 sprites standing on it.
-scripts/ground.gd uses ground_painted.png when it exists (same size + origin as the tile build).
+scripts/ground.gd uses ground_painted.png when it exists (UP x the tile build, same origin).
 """
 import sys
 from pathlib import Path
@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "grok_art/2026-11-11-street/ground_v1.png"
 LAYOUT = ROOT / "grok_art/2026-11-11-street/ground_layout.png"
 OUT = ROOT / "assets/art/ground_painted.png"
+UP = 2   # output = 2x the tile layout (4 px per world unit; scripts/ground.gd reads the density from the size)
 
 
 def roads(img: Image.Image):
@@ -33,8 +34,8 @@ def roads(img: Image.Image):
 def main() -> None:
     lay = Image.open(LAYOUT)
     pnt = Image.open(SRC).convert("RGB")
-    W, H = lay.size
-    lx, ly, lw, lh = roads(lay)
+    lx, ly, lw, lh = (v * UP for v in roads(lay))
+    W, H = lay.width * UP, lay.height * UP
     px, py, pw, ph = roads(pnt)
     s = max(W / pnt.width, H / pnt.height)
     # road width wants (lw/pw, lh/ph); never go below full coverage
