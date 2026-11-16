@@ -244,3 +244,10 @@ func _layer_sprite(id: String, by: float, h: float) -> bool:
 	var mod: = Color("#b08868") if id == "grilled" else Color.WHITE
 	draw_texture_rect_region(tx, Rect2(200 - w / 2, by - dh + h * 0.5, w, dh), src, mod)
 	return true
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_ticket", "v": "read", "s": "Read the ticket: the sandwich, plus NO / ADD / SUB changes."},
+		{"i": "kf_bun_b", "v": "tap", "s": "Tap ingredients bottom bun to top bun, in ticket order."},
+		{"i": "", "v": "tap", "s": "Oops? UNDO. Looks right? SEND."}]

@@ -38,10 +38,92 @@ var flash_t: = 0.0
 var flash_col: = Color.WHITE
 var font: Font
 
+## --- First-time coach (how-to card, easy first go, replay with "?") ---------------------------------
+## A game opts in by returning steps from howto(): [{"i": prop art or "", "v": "tap"|"drag"|"hold"|"beat"|"mash"|"read", "s": text}].
+## The first time each game (or prep phase, see coach_key) is played, its card opens and the clock waits.
+## `pace` slows the game's clock: 0.7 on the first go, 0.85 on the second, full speed after (PACE_RAMP).
+## Off in headless runs (tests, soak) unless a test turns it on.
+const COACH_PATH: = "user://coach.json"
+const PACE_RAMP: = [0.7, 0.85]
+const HELP_C: = Vector2(267, 6.5)
+static var coach_on: bool = DisplayServer.get_name() != "headless"
+static var _plays: = {}
+static var _plays_loaded: = false
+var coach_open: = false
+var coach_t: = 0.0
+var coach_pace: = true   # false: card only, the game keeps real time (walk-around scenes)
+var pace: = 1.0
+var _coach_steps: Array = []
+var _coach_key: = ""
+var _coach_counted: Array = []
+
 func _ready() -> void:
 	font = ThemeDB.fallback_font
 	_setup()
 	_auto_backdrop()
+	coach_start()
+
+func howto() -> Array: return []
+
+func coach_key() -> String:
+	return (get_script() as Script).resource_path.get_file().get_basename()
+
+static func coach_plays(key: String) -> int:
+	if not _plays_loaded:
+		_plays_loaded = true
+		if FileAccess.file_exists(COACH_PATH):
+			var d = JSON.parse_string(FileAccess.get_file_as_string(COACH_PATH))
+			if typeof(d) == TYPE_DICTIONARY:
+				_plays = d
+	return int(_plays.get(key, 0))
+
+static func _coach_save() -> void:
+	var f: = FileAccess.open(COACH_PATH, FileAccess.WRITE)
+	if f:
+		f.store_string(JSON.stringify(_plays))
+
+## Call when a new game (or prep phase) starts. Opens the card on a first go, sets the pace.
+func coach_start() -> void:
+	var key: = coach_key()
+	if key == _coach_key:
+		return
+	_coach_key = key
+	_coach_steps = howto()
+	pace = 1.0
+	coach_open = false
+	if _coach_steps.is_empty() or not coach_on:
+		return
+	var n: = coach_plays(key)
+	if coach_pace and n < PACE_RAMP.size():
+		pace = float(PACE_RAMP[n])
+	if n == 0:
+		coach_show()
+
+func coach_show() -> void:
+	if _coach_steps.is_empty():
+		return
+	coach_open = true
+	coach_t = 0.0
+	pen_down = false
+	key_pen = false
+
+func coach_close() -> void:
+	coach_open = false
+	AudioScript.sfx("select")
+
+## Count one finished go of the current game/phase (once per key per run).
+func coach_done() -> void:
+	if _coach_steps.is_empty() or not coach_on or _coach_key in _coach_counted:
+		return
+	_coach_counted.append(_coach_key)
+	_plays[_coach_key] = coach_plays(_coach_key) + 1
+	_coach_save()
+
+func _help_hit(p: Vector2) -> bool:
+	return not _coach_steps.is_empty() and coach_on and p.distance_to(_help_c()) <= 9.0
+
+func _help_c() -> Vector2:
+	return HELP_C if show_header else Vector2(W - 9, 8)
 
 func _auto_backdrop() -> void:
 
@@ -118,6 +200,7 @@ func finish(score: float, note: String = "") -> void:
 	if done:
 		return
 	done = true
+	coach_done()
 	if note != "":
 		notes.append(note)
 	if not has_signal("chosen") and time_limit >= 0.0:
@@ -165,6 +248,11 @@ func press(id: String) -> void:
 func _process(delta: float) -> void:
 	if done:
 		return
+	if coach_open:
+		coach_t += delta
+		queue_redraw()
+		return
+	delta *= pace
 	t += delta
 	flash_t = maxf(0.0, flash_t - delta)
 	var kv: = Vector2.ZERO
@@ -181,6 +269,26 @@ func _process(delta: float) -> void:
 
 func _input(e: InputEvent) -> void:
 	if done:
+		return
+	if coach_open:
+		var go: = false
+		if e is InputEventScreenTouch and (e as InputEventScreenTouch).pressed:
+			go = true
+		elif e is InputEventKey and (e as InputEventKey).pressed and not (e as InputEventKey).echo:
+			go = (e as InputEventKey).physical_keycode in [KEY_SPACE, KEY_ENTER, KEY_KP_ENTER, KEY_ESCAPE, KEY_H, KEY_F1]
+		if go and coach_t > 0.35:   # the tap that opened the game doesn't also close its card
+			coach_close()
+		if e is InputEventScreenTouch or e is InputEventScreenDrag or e is InputEventKey:
+			get_viewport().set_input_as_handled()
+		return
+	if e is InputEventScreenTouch and (e as InputEventScreenTouch).pressed and _help_hit(ui_point((e as InputEventScreenTouch).position)):
+		coach_show()
+		get_viewport().set_input_as_handled()
+		return
+	if e is InputEventKey and (e as InputEventKey).pressed and not (e as InputEventKey).echo \
+			and (e as InputEventKey).physical_keycode == KEY_F1 and not _coach_steps.is_empty() and coach_on:
+		coach_show()
+		get_viewport().set_input_as_handled()
 		return
 	if e is InputEventScreenTouch:
 		var st: = e as InputEventScreenTouch
@@ -263,12 +371,12 @@ func _draw() -> void:
 		draw_rect(Rect2(0, 0, W, 13), Color(UiStyle.PANEL, 0.95))
 		draw_rect(Rect2(0, 12, W, 1.5), UiStyle.INK)
 		var tw: = UiStyle.display.get_string_size(Cast.T(title), HORIZONTAL_ALIGNMENT_LEFT, -1, 9).x
-		var tab: = Rect2(2, 1, minf(tw + 10, W - 50), 11)
+		var tab: = Rect2(2, 1, minf(tw + 10, W - (68.0 if _coach_steps.size() > 0 and coach_on else 50.0)), 11)
 		UiStyle.box(self, Rect2(tab.position + Vector2(1, 1), tab.size).grow(0.5), Color(UiStyle.INK, 0.7), 3.0)
 		UiStyle.box(self, tab.grow(0.5), UiStyle.INK, 3.0)
 		UiStyle.box(self, tab.grow(-0.5), UiStyle.GOLD, 2.5)
 		UiStyle.box(self, Rect2(tab.position + Vector2(1, 0.5), Vector2(tab.size.x - 2, 4)), UiStyle.GOLD.lightened(0.25), 2.0)
-		draw_string(UiStyle.display, Vector2(7, 10), Cast.T(title), HORIZONTAL_ALIGNMENT_LEFT, W - 60, 9, UiStyle.INK)
+		draw_string(UiStyle.display, Vector2(7, 10), Cast.T(title), HORIZONTAL_ALIGNMENT_LEFT, tab.size.x - 8, 9, UiStyle.INK)
 		if time_limit > 0.0:
 			var left: = maxf(0.0, time_limit - t)
 			UiStyle.label(self, Vector2(278, 10), "%4.1fs" % left, 9, UiStyle.PINK if left < 5.0 else UiStyle.CREAM, -1.0, HORIZONTAL_ALIGNMENT_LEFT, 3)
@@ -276,7 +384,77 @@ func _draw() -> void:
 		draw_arc(cursor, 4, 0, TAU, 12, Color(1, 1, 1, 0.8), 1.0)
 		draw_line(cursor - Vector2(6, 0), cursor + Vector2(6, 0), Color(1, 1, 1, 0.5))
 		draw_line(cursor - Vector2(0, 6), cursor + Vector2(0, 6), Color(1, 1, 1, 0.5))
-	if flash_t > 0.0:
+	if flash_t > 0.0 and not coach_open:
 		var fr: = Rect2(20, 66, 280, 22)
 		UiStyle.panel(self, fr, UiStyle.PANEL, 0.96, 1.0 / 1.5)
 		mtxt(fr.position + Vector2(4, 9), flash_msg, fr.size.x - 8, 8, flash_col, 2)
+	if not _coach_steps.is_empty() and coach_on:
+		var hc: = _help_c()
+		draw_circle(hc + Vector2(0.8, 0.8), 6.0, Color(UiStyle.INK, 0.6))
+		draw_circle(hc, 6.0, UiStyle.TEAL)
+		draw_arc(hc, 6.0, 0, TAU, 24, UiStyle.INK, 1.0)
+		UiStyle.label(self, hc + Vector2(-6, 3.5), "?", 9, UiStyle.CREAM, 12, HORIZONTAL_ALIGNMENT_CENTER, 2)
+		if pace < 1.0 and not coach_open:
+			tag(Vector2(0, 22), "EASY FIRST GO  (slowed down)" if pace <= PACE_RAMP[0] else "WARM-UP  (a bit slower)", 6, UiStyle.GOLD, HORIZONTAL_ALIGNMENT_RIGHT, W - 4)
+	if coach_open:
+		_draw_coach()
+
+## The how-to card: dims the game, three picture steps, each with a little animated hint of the move.
+func _draw_coach() -> void:
+	draw_rect(Rect2(0, 0, W, H), Color(0.04, 0.02, 0.07, 0.72))
+	var n: = _coach_steps.size()
+	var row_h: = 30.0
+	var r: = Rect2(18, 18, W - 36, 44 + n * row_h + 34)
+	r.position.y = (H - r.size.y) * 0.5
+	UiStyle.panel(self, r, UiStyle.PANEL, 0.98, 1.0)
+	UiStyle.label(self, r.position + Vector2(0, 12), "HOW TO PLAY", 7, UiStyle.GOLD, r.size.x, HORIZONTAL_ALIGNMENT_CENTER, 2)
+	UiStyle.label(self, r.position + Vector2(0, 26), Cast.T(title), 10, UiStyle.CREAM, r.size.x, HORIZONTAL_ALIGNMENT_CENTER, 3)
+	for i in n:
+		var st: Dictionary = _coach_steps[i]
+		var y: = r.position.y + 36 + i * row_h
+		var row: = Rect2(r.position.x + 8, y, r.size.x - 16, row_h - 3)
+		UiStyle.box(self, row, Color(UiStyle.INK, 0.55), 4.0)
+		var badge: = row.position + Vector2(9, row.size.y * 0.5)
+		draw_circle(badge, 6.0, UiStyle.GOLD)
+		draw_string(UiStyle.display, badge + Vector2(-6, 3.5), str(i + 1), HORIZONTAL_ALIGNMENT_CENTER, 12, 9, UiStyle.INK)
+		var ic: = row.position + Vector2(36, row.size.y * 0.5)
+		var art: = str(st.get("i", ""))
+		if art != "" and pic(art, ic, row.size.y - 4):
+			_coach_verb(str(st.get("v", "")), ic + Vector2(10, 6))
+		else:
+			_coach_verb(str(st.get("v", "")), ic)
+		var lines: = UiStyle.wrap_words(Cast.T(str(st.get("s", ""))), row.size.x - 66, 8)
+		var ty: = row.position.y + row.size.y * 0.5 - (lines.size() - 1) * 4.5 + 3
+		for ln in lines.size():
+			draw_string(font, Vector2(row.position.x + 56, ty + ln * 9), lines[ln], HORIZONTAL_ALIGNMENT_LEFT, -1, 8, UiStyle.CREAM)
+	var fy: = r.end.y - 28
+	var pulse: = 0.5 + 0.5 * sin(coach_t * 5.0)
+	var go: = Rect2(r.get_center().x - 60, fy, 120, 16)
+	UiStyle.button(self, go, "GOT IT, LET'S GO", UiStyle.BTN_MAIN.lightened(0.12 * pulse), true, false, 1.0, 8)
+	var foot: = "First go runs slow. Tap ? to see this again." if pace < 1.0 else "Tap ? to see this again."
+	draw_string(font, Vector2(r.position.x, r.end.y - 4), foot, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 6, Color(UiStyle.CREAM, 0.6))
+
+## A tiny looping hint of the gesture: tap = ripple, drag = sliding dot, hold = filling ring, beat = pulse on a 0.5 s beat, mash = fast ripples.
+func _coach_verb(v: String, c: Vector2) -> void:
+	var w: = Color(1, 1, 1, 0.95)
+	match v:
+		"tap", "mash":
+			var per: = 0.9 if v == "tap" else 0.25
+			var k: = fmod(coach_t, per) / per
+			draw_arc(c, 2.0 + k * 7.0, 0, TAU, 16, Color(1, 1, 1, 1.0 - k), 1.0)
+			draw_circle(c, 2.6, w)
+		"drag":
+			var k: = fmod(coach_t, 1.4) / 1.4
+			var a: = c + Vector2(-9, 0)
+			var p: = a + Vector2(18 * k, 0)
+			draw_line(a, p, Color(1, 1, 1, 0.5), 2.0)
+			draw_circle(p, 2.6, w)
+		"hold":
+			var k: = fmod(coach_t, 1.6) / 1.2
+			draw_circle(c, 2.6, w)
+			draw_arc(c, 6.0, -PI * 0.5, -PI * 0.5 + TAU * minf(k, 1.0), 20, UiStyle.GOLD, 1.5)
+		"beat":
+			var k: = fmod(coach_t, 0.5) / 0.5
+			draw_circle(c, 2.0 + (1.0 - k) * 3.5, Color(UiStyle.GOLD, 0.4 + 0.6 * (1.0 - k)))
+		"read":
+			draw_circle(c, 2.6, Color(UiStyle.TEAL, 0.9))

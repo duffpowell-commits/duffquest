@@ -160,6 +160,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   main save as it opens, so Quit to title = retry too. New game erases them. No snapshot = old soft landing.
   Render: `arena_shot -- evicted|gameover`. No Madison lines on either screen.
 
+- **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
+  action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
+  test_daily checks it). Multi-phase games override `coach_key()` and call `coach_start()` / `coach_done()` per phase
+  (see prep.gd). `coach_pace = false` in `_setup` = card only. Renders: `ui_audit_shot.tscn -- coach`.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).

@@ -16,6 +16,7 @@ var last_move: = -10.0
 var cat_t: = 0.0
 
 func _setup() -> void:
+	coach_pace = false
 	title = "BABY'S FINALLY ASLEEP"
 	music = "home"
 	backdrop = "stealth_floor"   # painted top-down: crib on the left, bed on the right (stretched to clear the grid in _draw_backdrop)
@@ -214,3 +215,10 @@ func _draw_game() -> void:
 	UiStyle.label(self, Vector2(30, 24), "Noise", 8, UiStyle.CREAM, -1.0, HORIZONTAL_ALIGNMENT_LEFT, 2)
 	bar(Rect2(62, 18, 120, 7), noise / 100.0, Color("#e06a4a"))
 	txt(Vector2(30, 172), "Tap a lit tile or use arrows. Warped boards creak. Avoid the cats.", 7, Color(1, 1, 1, 0.75))
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "", "v": "tap", "s": "Tap a lit tile next to you to step (or arrows). Reach the bed."},
+		{"i": "", "v": "read", "s": "Warped boards creak. Cats scream. Step around both."},
+		{"i": "", "v": "beat", "s": "Tiptoe: one step at a time. Rushing makes noise."}]

@@ -71,3 +71,10 @@ func _draw_game() -> void:
 	txt(Vector2(36, 82), "Observation %d/%d" % [mini(idx + 1, picks.size()), picks.size()], 7, Color(UiStyle.INK, 0.6))
 	if idx < picks.size():
 		mtxt(Vector2(36, 96), OBS[picks[idx]][0], 248, 9, UiStyle.INK, 3)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_note", "v": "read", "s": "The inspector reads one thing out at a time."},
+		{"i": "", "v": "tap", "s": "Safe and by the book? COMPLIANT. Gross or unsafe? VIOLATION."},
+		{"i": "", "v": "read", "s": "Four calls. The clock's ticking, so trust your gut."}]
