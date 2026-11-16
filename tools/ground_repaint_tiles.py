@@ -7,7 +7,7 @@ One Canva generation tops out near 2k px, and the 4 px/unit ground is 2688x1536,
 1536x864 (16:9) with 384/192 px overlaps. Each tile is repainted in Canva (reference = the tile, "same layout"), saved
 as DIR/tile_<r><c>.png at any size, and merged: every repaint is scaled to its tile, nudged onto the source tile by
 the best whole-pixel shift of its edges (+-24 px), checked (mean edge error must stay low, or the tile is rejected and
-the source tile is kept) and feather-blended across the overlaps.
+the source tile is kept) and colour-matched to the source below BLUR px and feather-blended across the overlaps.
 """
 import sys
 from pathlib import Path
@@ -25,6 +25,7 @@ X0 = [0, W - TW]
 Y0 = [0, H - TH]
 TILES = ROOT / "grok_art" / "2026-11-16-ground"
 SHIFT = 24
+BLUR = 10   # px: detail finer than this comes from the repaint, coarser from the source painting
 
 
 def base(src: Path) -> Image.Image:
@@ -89,7 +90,10 @@ def merge(d: Path) -> None:
                     shifted = Image.new("RGB", (TW, TH))
                     shifted.paste(src)
                     shifted.paste(new, (-dx, -dy))
-                    tile = shifted
+                    # keep the repaint's fine detail, take colour + shading from the source (no seams between tiles)
+                    lo_s = np.asarray(src.filter(ImageFilter.GaussianBlur(BLUR))).astype(float)
+                    lo_n = np.asarray(shifted.filter(ImageFilter.GaussianBlur(BLUR))).astype(float)
+                    tile = Image.fromarray((np.asarray(shifted).astype(float) - lo_n + lo_s).clip(0, 255).astype(np.uint8))
             else:
                 print(f"tile {r}{c}: missing, keeping the source")
             wy = ramp(TH, ovy, r == 1, r == 0)
