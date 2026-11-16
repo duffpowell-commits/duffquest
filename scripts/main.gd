@@ -1128,7 +1128,7 @@ func _veil_snapshot() -> Texture2D:
 	if img == null or img.is_empty():
 		return _veil_tex
 	# halve down then double up, bilinear each step: a cheap soft blur (one-step resizes alias into a mosaic)
-	for sz in [Vector2i(320, 180), Vector2i(160, 90), Vector2i(80, 45), Vector2i(40, 23), Vector2i(80, 45), Vector2i(160, 90), Vector2i(320, 180)]:
+	for sz in [Vector2i(640, 360), Vector2i(320, 180), Vector2i(160, 90), Vector2i(80, 45), Vector2i(40, 23), Vector2i(80, 45), Vector2i(160, 90), Vector2i(320, 180)]:
 		img.resize(sz.x, sz.y, Image.INTERPOLATE_BILINEAR)
 	_veil_tex = ImageTexture.create_from_image(img)
 	return _veil_tex

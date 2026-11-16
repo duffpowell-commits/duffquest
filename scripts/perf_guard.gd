@@ -31,10 +31,17 @@ func _ready() -> void:
 	if c.load(CFG) == OK:
 		auto = bool(c.get_value("gfx", "auto", true))
 		low = bool(c.get_value("gfx", "low", false))
+		res = int(c.get_value("gfx", "res", 2))
 	if _web and str(JavaScriptBridge.eval("window.location.hash")).contains("lite"):
 		low = true
 		auto = false
 	call_deferred("_apply")
+
+## World render scale (game.gd): 2 = 1280x720, 1 = the old 640x360. Only the auto guard lowers it.
+var res: = 2
+
+func _game() -> Node:
+	return get_parent()
 
 func _hd() -> Node:
 	return main.get_node_or_null("HD2DPresentation") if main else null
@@ -43,11 +50,15 @@ func _apply() -> void:
 	var hd: = _hd()
 	if hd and hd.has_method("set_low"):
 		hd.set_low(low)
+	var g: = _game()
+	if g and g.has_method("set_res_scale"):
+		g.set_res_scale(res if low else 2)
 
 func _save() -> void:
 	var c: = ConfigFile.new()
 	c.set_value("gfx", "auto", auto)
 	c.set_value("gfx", "low", low)
+	c.set_value("gfx", "res", res)
 	c.save(CFG)
 
 ## Settings toggle / tools: pick lite (true) or full (false) by hand; turns the auto switch off.
@@ -64,7 +75,7 @@ func _process(d: float) -> void:
 		if _pub <= 0.0:
 			_pub = 0.5
 			_publish()
-	if not _can_auto or not auto or low or main == null:
+	if not _can_auto or not auto or main == null or (low and _game().res_scale <= 1):
 		return
 	# Only judge real play: menus, loading screens and cutscenes hitch on texture loads.
 	var b: bool = main.busy()
@@ -85,10 +96,15 @@ func _process(d: float) -> void:
 		_acc = 0.0
 		_frames = 0
 		if _bad >= BAD_WINDOWS:
-			low = true
+			_bad = 0
+			if not low:
+				low = true
+				print("perf_guard: avg %.0f fps, lite graphics on" % fps)
+			else:   # still slow with lite on: last resort, render the world at 640x360 again
+				res = 1
+				print("perf_guard: avg %.0f fps, world back to 640x360" % fps)
 			_apply()
 			_save()
-			print("perf_guard: avg %.0f fps, lite graphics on" % fps)
 
 func state() -> String:
 	if main == null:
