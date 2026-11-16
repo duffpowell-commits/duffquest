@@ -153,6 +153,13 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Placeholder art + HUD (Nov 15, PR #100):** painted backdrops `bg_backwalk_bed` (Madison walks `BACK_X0..BACK_X1` on his painted back) and `bg_stealth_floor` (`stealth.FLOOR_SPLIT` stretches the mid floor so the painted bed sits under the goal column; code still draws creaky boards, cats, Duff). Masters in Drive "97 Gemini art drops". House name tags clamp under the HUD (`main.LABEL_TOP_MARGIN`), boss plate and touch level panel clear the buttons, size 4-5 UI text up one size. Blackhead Patrol draws `bg_blackheads_back` zoomed (`blackheads.ZOOM_SRC`); the neck tattoo on the LEFT side below the ear matches Duff's real one (realistic fox, pale blue rose third eye, blue geometric shards behind; lifted from his photo Nov 15, Duff picked the MIRROR of the photo crop: 'the fox faces front'; rebuild with `--mirror`). Nape bare; v2 had a cartoon fox on the nape and Duff rejected it; the tattoo design master is `docs/ref/duff/duff_fox_neck_tattoo.png` (canonical, see duff_look.md); re-graft with `python3 tools/fox_tattoo_graft.py BASE OUT --mirror` on the bare-neck base in project files `renders/bg_blackheads_back_no_tattoo.png`.
 - **Consistency audit (Nov 15):** ranked leftovers in `docs/reviews/consistency_audit_2026-11-15.md` (marketing re-shoot, cover fox placement, kitchen centrepieces, props, sunburst fallback). Boot splash `splash.png` + app icon `icon.png` (project.godot). Phone avatars: `python3 tools/make_avatars.py` after any `ch_*` re-import. Listing assets re-shot Nov 15 (previews, GIFs, screens, covers = porch title art + logo); re-shoot again after any big art or UI change.
 
+- **Fail states (Nov 16):** `scripts/minigames/fail_screen.gd` (extends card.gd). Eviction = `EVICT_STRIKES` (3) short
+  Mondays in a row (`rent_strikes`; a strike = couldn't cover the week's base, back rent alone carries over) -> roll back
+  to last Monday. Story/gala KO -> game over, roll back to this morning. `save_game()` keeps two snapshots next to the
+  save (`snap_path("morning"|"week")`, first save of each day / each Monday); `fail_screen()` writes the rollback over the
+  main save as it opens, so Quit to title = retry too. New game erases them. No snapshot = old soft landing.
+  Render: `arena_shot -- evicted|gameover`. No Madison lines on either screen.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
