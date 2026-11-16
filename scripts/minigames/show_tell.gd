@@ -280,3 +280,10 @@ func _draw_dialog() -> void:
 		var shown: = int(clampf(phase / 2.6, 0.0, 1.0) * full.length())
 		line = full.substr(0, shown)
 	mtxt(r.position + Vector2(5, 9), line, r.size.x - 10, 7, Color.WHITE, 2)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "", "v": "read", "s": "Bubbles slide left toward the line. Each says HAHA, AWW or WHOA."},
+		{"i": "", "v": "tap", "s": "Tap the matching button as a bubble hits the line."},
+		{"i": "", "v": "beat", "s": "Big bubbles are worth triple. Right vibe, right time."}]

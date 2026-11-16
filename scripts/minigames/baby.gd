@@ -149,3 +149,10 @@ func _draw_game() -> void:
 	if need() == "fussy":
 		var pulse: = 1.0 - fmod(t, BEAT) / BEAT
 		draw_circle(Vector2(260, 70), 6 + pulse * 8, Color(1, 0.8, 0.2, 0.3 + pulse * 0.5))
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_shop_formula", "v": "read", "s": "Read why she's crying: hungry, diaper, or just fussy."},
+		{"i": "kf_shop_diapers", "v": "tap", "s": "Hungry = FEED. Stinky = CHANGE. Guessing wrong makes it worse."},
+		{"i": "", "v": "beat", "s": "Fed and dry but still mad? ROCK HER on the beat till she's out."}]

@@ -202,3 +202,10 @@ func _draw_game() -> void:
 		var ty: float = 24 + 120 * (1.0 - (tt - 32.0) / 200.0)
 		draw_rect(Rect2(286, ty - 1, 18, 2), Color("#c0d890"))
 		tag(Vector2(236, ty - 4), "safe %d°F" % tt, 6, Color("#c0d890"))
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_raw_chicken", "v": "tap", "s": "Tap the THICKEST middle of the meat to probe it."},
+		{"i": "", "v": "hold", "s": "Watch the temp climb. The SAFE mark is the number you need."},
+		{"i": "kf_grilled", "v": "tap", "s": "PULL IT just past safe. Early = raw, way late = shoe leather."}]

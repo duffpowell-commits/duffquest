@@ -235,3 +235,10 @@ func _draw_game() -> void:
 		r = Rect2(6, 74, 308, 34)
 	draw_rect(r, Color(0.1, 0.08, 0.15, 0.95))
 	mtxt(r.position + Vector2(4, 9), say, r.size.x - 8, 7, Color.WHITE, 5 if state in ["listen", "bill"] else 3)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_note", "v": "read", "s": "Listen to her order. Then pick her picks from the menu."},
+		{"i": "", "v": "tap", "s": "Plates roll by on the belt. GRAB her favorites at the chopsticks."},
+		{"i": "", "v": "read", "s": "Then the bill. Choose how to pay."}]

@@ -174,3 +174,10 @@ func _draw_game() -> void:
 			prop_circle(Vector2(200, 72) + Vector2.from_angle(a) * (6.0 + i * 2.5), 7, Color(ING[built[i]][1]))
 	if gloves:
 		txt(Vector2(150, 24), "Gloves: fresh", 8, Color("#c0d890"))
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_ticket", "v": "read", "s": "Read the ticket. ALLERGY means some stuff stays out."},
+		{"i": "kf_spray", "v": "tap", "s": "Allergy ticket? Tap GLOVES+SANITIZE before anything else."},
+		{"i": "kf_greens", "v": "tap", "s": "Tap every ingredient it needs, nothing extra. Then SERVE."}]

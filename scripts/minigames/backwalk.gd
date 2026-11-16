@@ -94,3 +94,9 @@ func _draw_game() -> void:
 		prop_circle(Vector2(18 + k * 12, 22), 4.0, c)
 	UiStyle.panel(self, Rect2(6, 126, 308, 24), UiStyle.PANEL, 0.94, 1.0 / 1.5)
 	mtxt(Vector2(10, 135), say, 300, 7, Color.WHITE, 2)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "", "v": "beat", "s": "Footsteps march down his back to a steady beat."},
+		{"i": "", "v": "tap", "s": "Tap STEP right as each footprint lands. Early or late = ouch."}]
