@@ -81,6 +81,7 @@ var karen_say_t: = 0.0
 const KAREN_BARKS: = ["MANAGER!", "Do you WORK here?", "This aisle is MINE.", "Excuse ME."]
 
 func _setup() -> void:
+	coach_pace = false
 	backdrop = "grocery"
 	title = "{GROCERY}"
 	time_limit = 0.0
@@ -807,3 +808,10 @@ func _draw_receipt() -> void:
 	txt(Vector2(96, y + 4), "TOTAL", 7, Color.BLACK)
 	txt(Vector2(192, y + 4), "$%d" % total, 7, Color.BLACK)
 	mtxt(Vector2(96, y + 16), say, 128, 6, Color(0.2, 0.2, 0.2), 6)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "", "v": "drag", "s": "Hold where you want to walk (or arrows). Bobbing arrows = your list."},
+		{"i": "", "v": "tap", "s": "Walk up to an item to grab it. Coupon kiosk: tap the ones on your list."},
+		{"i": "", "v": "beat", "s": "Self-checkout: hit SCAN when the marker's in the green."}]

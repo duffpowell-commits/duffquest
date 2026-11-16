@@ -5355,7 +5355,7 @@ func ride_bus(to: String) -> Array:
 	return out
 
 func bounty_menu() -> void:
-	var lines: Array = ["THE 86 LIST. Chef's handwriting: 'If you see these people, you have my blessing.'"]
+	var lines: Array = ["Chef's handwriting: 'If you see these people, you have my blessing.'"]
 	if int(bounties["day"]) == day_count:
 		lines.append("(I already ran a bounty today. Chef says one alley fight a day. HR is watching. HR is Chef.)")
 	var opts: Array = []
@@ -5368,7 +5368,7 @@ func bounty_menu() -> void:
 		var why: = Bounties.locked_reason(e, combat.level, bounties["beaten"])
 		var tag: = ("86'd - rematch $%d" % Bounties.payout(e, false)["cash"]) if beaten else ("$%d" % int(e["cash"]))
 		if why != "":
-			tag = "LOCKED: " + why
+			tag = "LOCKED: " + why.replace("Seniority ", "")   # short: three buttons share a row
 		lines.append("%s - %s" % [nm, str(e["crime"])])
 		opts.append([id, "%s (%s)" % [nm, tag], keys[i]])
 		i += 1

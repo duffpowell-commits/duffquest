@@ -186,3 +186,10 @@ func _draw_game() -> void:
 	txt(Vector2(212, 78), "Sweet spot", 8, Color(1, 1, 1, 0.6))
 	txt(Vector2(212, 88), "350-375°F", 8, Color(1, 1, 1, 0.6))
 	mtxt(Vector2(212, 104), "Cold baskets drop the oil. Too hot = smoke + splatter.", 104, 8, Color(1, 1, 1, 0.5), 3)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_basket_fries", "v": "tap", "s": "Tap a basket to DROP it in the oil."},
+		{"i": "kf_fried", "v": "hold", "s": "Watch its bar. Tap again to PULL it right when it's golden."},
+		{"i": "kf_fryer", "v": "tap", "s": "Keep the oil 350-375°F with HEAT - / HEAT +. Dropping cold baskets cools it."}]

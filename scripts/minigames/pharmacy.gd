@@ -64,6 +64,7 @@ var asked: = 0
 var bought: Array = []
 
 func _setup() -> void:
+	coach_pace = false
 	backdrop = "pharmacy"
 	title = "{PHARMACY}"
 	time_limit = 0.0
@@ -387,3 +388,10 @@ func _person(p: Vector2, shirt: Color, _skin: Color, coat: bool) -> void:
 
 	var nm: = "ch_pharmacist" if coat else ("duff_apron_red" if shirt == Color("#fbf6ec") else str(LINE_FOLKS[absi(int(p.y)) % LINE_FOLKS.size()]))
 	Art.person(self, nm, p + Vector2(0, 8), Vector2.DOWN if coat else Vector2.UP, t, false)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "", "v": "read", "s": "Wait in line. Someone cuts? Hit AHEM fast."},
+		{"i": "", "v": "tap", "s": "At the counter, say the right name. On hold? Pick whatever gets a human."},
+		{"i": "", "v": "read", "s": "Pick up, pay, done. Leave works any time."}]
