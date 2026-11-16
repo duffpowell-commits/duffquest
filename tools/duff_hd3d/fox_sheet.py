@@ -1,5 +1,5 @@
 """Neck fox for the hd3d Duff sheet: repaint the AI's neck blob as skin, then multiply Duff's real fox on.
-# Run from the repo root: python3 spike3d/tools/fox_sheet.py <sheet without fox> spike3d/art/duff_home_hd3d.png
+# Run from the repo root: python3 tools/duff_hd3d/fox_sheet.py <sheet without fox> assets/art3d/duff_home_hd3d.png
 # (Canva master: Drive ch_duff_home_hd3d_v1.png.png, imported with import_big_sheet.py --cell 512).
 Front + right-facing frames get the fox; left-facing frames (his bare right side) get skin only."""
 from PIL import Image, ImageDraw, ImageOps, ImageFilter

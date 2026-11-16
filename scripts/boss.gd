@@ -510,17 +510,17 @@ func take_hit(dir: Vector2, dmg: float, special: String = "") -> float:
 
 func _draw() -> void:
 	var f: = ThemeDB.fallback_font
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.45, 1.45))
+	Art.xf(self, Vector2.ZERO, 0.0, Vector2(1.45, 1.45))
 	if hidden_t > 0.0:
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		Art.xf(self, Vector2.ZERO, 0.0, Vector2.ONE)
 		_draw_hidden(f)
 		return
 	_draw_sprite()
 	if hidden_t > 0.0:
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		Art.xf(self, Vector2.ZERO, 0.0, Vector2.ONE)
 		_draw_hidden(f)
 		return
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	Art.xf(self, Vector2.ZERO, 0.0, Vector2.ONE)
 	if state == "tele" and int(t * 12.0) % 2 == 0:
 		draw_string(f, Vector2(-2, -22), "!", HORIZONTAL_ALIGNMENT_LEFT, -1, 10, Color("#ff4040"))
 	# speech bubble: drawn by main's Barks node (scripts/barks.gd)
@@ -542,9 +542,9 @@ func _draw_sprite() -> void:
 	var moving: = velocity.length() > 5.0 or dash_t > 0.0
 	var atk: = state == "tele" or flex_t > 0.0
 	if kind == "grease":  # oil slick under him, drawn before the sprite
-		draw_set_transform(Vector2(0, 11 * 1.45), 0.0, Vector2(1.45, 0.5))
+		Art.xf(self, Vector2(0, 11 * 1.45), 0.0, Vector2(1.45, 0.5))
 		draw_circle(Vector2.ZERO, 11.0 + sin(t * 2.0), Color(0.36, 0.24, 0.04, 0.6))
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.45, 1.45))
+		Art.xf(self, Vector2.ZERO, 0.0, Vector2(1.45, 1.45))
 	var tint = BOSSES[kind].get("tint", Color.WHITE)
 	if flash <= 0.0:
 		mod = Color(mod.r * tint.r, mod.g * tint.g, mod.b * tint.b, mod.a)
