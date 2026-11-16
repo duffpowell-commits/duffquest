@@ -82,7 +82,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Labels (Nov 13):** any text over painted art goes through `UiStyle.tag()` (minigames: `tag()`), never bare dark
   `txt()`. Audit + open list in `TRACKER.md` (PRs #48, #49).
 - **Combat (Nov 13):** Searing Spatter cut; S + swap hide until the first special (Pinwheel Lv 2). Duff said combat
-  was easy: `main.DMG_TAKEN` 1.25, story exes +20% HP (`boss.STORY_HP_MULT`, Willnot timer 250 s), night spawn cap +3.
+  was easy: `main.DMG_TAKEN` 1.25, story exes tuned in `boss.STORY_TUNE` (Nov 15 pass 2: early four 54/99/120/144 HP, x1.25 dmg, faster attacks, lead aim; Willnot 240 HP, timer 250 s), night spawn cap +3.
 
 - **Legal (Nov 13):** ranked risks in `docs/legal/RISK_AUDIT.md` (not legal advice). In-game Settings > Credits &
   legal carries the parody notice + Godot/OFL licenses; keep it, `docs/itch/PAGE.md` Legal and the end credits in
