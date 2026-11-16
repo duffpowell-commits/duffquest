@@ -28,11 +28,19 @@ static func clear_cache() -> void:
 static func texture() -> Texture2D:
 	if _tex == null:
 		_tex = _build()
+		_base = _tex.get_size()
 		if ResourceLoader.exists(PAINTED):
 			var p: = load(PAINTED) as Texture2D
-			if p != null and p.get_size() == _tex.get_size():
+			if p != null and (p.get_size() == _base or p.get_size() == _base * 2.0):
 				_tex = p
 	return _tex
+
+## Where the ground texture sits in world units. The tile build is 2 px per unit; the painted street may be
+## twice that (Nov 16: 2x super-res so it matches the 4 px/unit sprites at native resolution), same footprint.
+static var _base: = Vector2.ZERO
+static func world_rect() -> Rect2:
+	texture()
+	return Rect2(_origin / 2.0, _base / 2.0)
 
 static func _build() -> Texture2D:
 	var index: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(INDEX))

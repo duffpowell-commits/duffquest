@@ -2649,7 +2649,7 @@ func _draw_outside() -> void:
 	# bus-stop sign (trees/props replaced by street dressing, tools/import_dressing.py)
 	var gt: = Ground.texture()
 	if not view3d_on:   # the 3D view lays the same texture on its ground plane
-		draw_texture_rect(gt, Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0), false)
+		draw_texture_rect(gt, Ground.world_rect(), false)
 	Art.image(self, "map_objects", Vector2.ZERO)
 	# storefronts (Grok, Nov 8): one sprite per footprint, drawn at the rect; shut places get dimmed
 	# street dressing (Grok, Nov 8) is y-sorted WITH the actors by scripts/dressing_front.gd (Nov 9);

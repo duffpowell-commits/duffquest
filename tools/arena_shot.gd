@@ -239,6 +239,7 @@ func _process(_d: float) -> void:
 		get_viewport().get_texture().get_image().save_png("/tmp/qa/arena_%s.png" % id)  # fryer/sandwich: the station
 		if m.view3d != null and m.view3d_on:   # --3d: the 3D layer alone, for checking what's 2D and what's 3D
 			m.view3d.snapshot().save_png("/tmp/qa/arena_%s_3donly.png" % id)
+			m.view3d.vp.get_texture().get_image().save_png("/tmp/qa/arena_%s_3dfull.png" % id)
 		get_tree().quit()
 
 ## id "cold": the new game's cold open (run with --fixed-fps 30). Saves cold_0 (phone: first control card),
