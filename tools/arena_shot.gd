@@ -130,6 +130,8 @@ func _process(_d: float) -> void:
 		var g: Node = _find_game(m)
 		if g and id == "sandwich":
 			g.built = g.ORDER.duplicate()
+			g.steal_armed = false     # keep the ticket on the rail for the shot
+			g.stolen = false
 		elif g:
 			g.toggle(0)
 			g.baskets[0]["prog"] = 0.8
