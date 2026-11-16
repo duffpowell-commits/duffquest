@@ -2589,1573 +2589,1573 @@
       ],
       "s": 2
     },
-    "kp_fry_basket": {
-      "w": 84,
-      "h": 86,
-      "cell": [
-        84,
-        86
-      ],
-      "origin": [
-        42,
-        43
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_fries": {
-      "w": 72,
-      "h": 51,
-      "cell": [
-        72,
-        51
-      ],
-      "origin": [
-        36,
-        25
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_fried_chicken": {
-      "w": 81,
-      "h": 63,
-      "cell": [
-        81,
-        63
-      ],
-      "origin": [
-        40,
-        31
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_bun": {
-      "w": 98,
-      "h": 93,
-      "cell": [
-        98,
-        93
-      ],
-      "origin": [
-        49,
-        46
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_lettuce": {
-      "w": 105,
-      "h": 81,
-      "cell": [
-        105,
-        81
-      ],
-      "origin": [
-        52,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_tomato": {
-      "w": 92,
-      "h": 75,
-      "cell": [
-        92,
-        75
-      ],
-      "origin": [
-        46,
-        37
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_pickle_jar": {
-      "w": 30,
-      "h": 50,
-      "cell": [
-        30,
-        50
-      ],
-      "origin": [
-        15,
-        25
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_mash": {
-      "w": 42,
-      "h": 36,
-      "cell": [
-        42,
-        36
-      ],
-      "origin": [
-        21,
-        18
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_thermometer": {
-      "w": 28,
-      "h": 43,
-      "cell": [
-        28,
-        43
-      ],
-      "origin": [
-        14,
-        21
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_ticket": {
-      "w": 38,
-      "h": 26,
-      "cell": [
-        38,
-        26
-      ],
-      "origin": [
-        19,
-        13
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_heat_lamp": {
-      "w": 42,
-      "h": 50,
-      "cell": [
-        42,
-        50
-      ],
-      "origin": [
-        21,
-        25
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_ketchup": {
-      "w": 19,
-      "h": 50,
-      "cell": [
-        19,
-        50
-      ],
-      "origin": [
-        9,
-        25
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_spatula": {
-      "w": 46,
-      "h": 44,
-      "cell": [
-        46,
-        44
-      ],
-      "origin": [
-        23,
-        22
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_skillet": {
-      "w": 54,
-      "h": 38,
-      "cell": [
-        54,
-        38
-      ],
-      "origin": [
-        27,
-        19
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_plate": {
-      "w": 53,
-      "h": 34,
-      "cell": [
-        53,
-        34
-      ],
-      "origin": [
-        26,
-        17
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kp_salt": {
-      "w": 25,
-      "h": 46,
-      "cell": [
-        25,
-        46
-      ],
-      "origin": [
-        12,
-        23
-      ],
-      "kind": "prop",
-      "s": 2
-    },
     "kf_bun_b": {
-      "w": 80,
-      "h": 53,
+      "w": 160,
+      "h": 106,
       "cell": [
+        160,
+        106
+      ],
+      "origin": [
         80,
         53
       ],
-      "origin": [
-        40,
-        26
-      ],
       "kind": "prop",
-      "s": 2
+      "s": 4
     },
     "kf_bun_t": {
-      "w": 80,
-      "h": 60,
+      "w": 160,
+      "h": 120,
       "cell": [
+        160,
+        120
+      ],
+      "origin": [
         80,
         60
       ],
-      "origin": [
-        40,
-        30
-      ],
       "kind": "prop",
-      "s": 2
+      "s": 4
     },
     "kf_mayo": {
-      "w": 80,
-      "h": 63,
+      "w": 160,
+      "h": 125,
       "cell": [
-        80,
-        63
+        160,
+        125
       ],
       "origin": [
-        40,
-        31
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_fried": {
-      "w": 80,
-      "h": 54,
-      "cell": [
-        80,
-        54
-      ],
-      "origin": [
-        40,
-        27
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_grilled": {
-      "w": 80,
-      "h": 56,
-      "cell": [
-        80,
-        56
-      ],
-      "origin": [
-        40,
-        28
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_hot": {
-      "w": 80,
-      "h": 56,
-      "cell": [
-        80,
-        56
-      ],
-      "origin": [
-        40,
-        28
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_cheese": {
-      "w": 80,
-      "h": 49,
-      "cell": [
-        80,
-        49
-      ],
-      "origin": [
-        40,
-        24
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_bacon": {
-      "w": 80,
-      "h": 66,
-      "cell": [
-        80,
-        66
-      ],
-      "origin": [
-        40,
-        33
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_lettuce": {
-      "w": 80,
-      "h": 69,
-      "cell": [
-        80,
-        69
-      ],
-      "origin": [
-        40,
-        34
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_tomato": {
-      "w": 80,
-      "h": 56,
-      "cell": [
-        80,
-        56
-      ],
-      "origin": [
-        40,
-        28
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_pickles": {
-      "w": 80,
-      "h": 63,
-      "cell": [
-        80,
-        63
-      ],
-      "origin": [
-        40,
-        31
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_greens": {
-      "w": 80,
-      "h": 66,
-      "cell": [
-        80,
-        66
-      ],
-      "origin": [
-        40,
-        33
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_egg": {
-      "w": 80,
-      "h": 57,
-      "cell": [
-        80,
-        57
-      ],
-      "origin": [
-        40,
-        28
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_blue": {
-      "w": 80,
-      "h": 60,
-      "cell": [
-        80,
-        60
-      ],
-      "origin": [
-        40,
-        30
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_feta": {
-      "w": 80,
-      "h": 64,
-      "cell": [
-        80,
-        64
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_pecans": {
-      "w": 80,
-      "h": 54,
-      "cell": [
-        80,
-        54
-      ],
-      "origin": [
-        40,
-        27
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_apple": {
-      "w": 80,
-      "h": 67,
-      "cell": [
-        80,
-        67
-      ],
-      "origin": [
-        40,
-        33
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_onion": {
-      "w": 80,
-      "h": 57,
-      "cell": [
-        80,
-        57
-      ],
-      "origin": [
-        40,
-        28
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_ranch": {
-      "w": 80,
-      "h": 73,
-      "cell": [
-        80,
-        73
-      ],
-      "origin": [
-        40,
-        36
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_vin": {
-      "w": 55,
-      "h": 80,
-      "cell": [
-        55,
-        80
-      ],
-      "origin": [
-        27,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_bowl": {
-      "w": 80,
-      "h": 53,
-      "cell": [
-        80,
-        53
-      ],
-      "origin": [
-        40,
-        26
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_basket_fries": {
-      "w": 80,
-      "h": 78,
-      "cell": [
-        80,
-        78
-      ],
-      "origin": [
-        40,
-        39
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_basket_wings": {
-      "w": 80,
-      "h": 78,
-      "cell": [
-        80,
-        78
-      ],
-      "origin": [
-        40,
-        39
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_wings": {
-      "w": 80,
-      "h": 68,
-      "cell": [
-        80,
-        68
-      ],
-      "origin": [
-        40,
-        34
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_pickle_raw": {
-      "w": 80,
-      "h": 64,
-      "cell": [
-        80,
-        64
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_flour": {
-      "w": 80,
-      "h": 64,
-      "cell": [
-        80,
-        64
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_egg_wash": {
-      "w": 80,
-      "h": 64,
-      "cell": [
-        80,
-        64
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_breadcrumbs": {
-      "w": 80,
-      "h": 64,
-      "cell": [
-        80,
-        64
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_fried_pickles": {
-      "w": 80,
-      "h": 63,
-      "cell": [
-        80,
-        63
-      ],
-      "origin": [
-        40,
-        31
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_board": {
-      "w": 80,
-      "h": 60,
-      "cell": [
-        80,
-        60
-      ],
-      "origin": [
-        40,
-        30
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_knife": {
-      "w": 80,
-      "h": 57,
-      "cell": [
-        80,
-        57
-      ],
-      "origin": [
-        40,
-        28
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_tomato_whole": {
-      "w": 80,
-      "h": 80,
-      "cell": [
-        80,
-        80
-      ],
-      "origin": [
-        40,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_torte": {
-      "w": 67,
-      "h": 80,
-      "cell": [
-        67,
-        80
-      ],
-      "origin": [
-        33,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_whipped": {
-      "w": 80,
-      "h": 79,
-      "cell": [
-        80,
-        79
-      ],
-      "origin": [
-        40,
-        39
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_cherry": {
-      "w": 53,
-      "h": 80,
-      "cell": [
-        53,
-        80
-      ],
-      "origin": [
-        26,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_choc_bottle": {
-      "w": 35,
-      "h": 80,
-      "cell": [
-        35,
-        80
-      ],
-      "origin": [
-        17,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_plate": {
-      "w": 80,
-      "h": 48,
-      "cell": [
-        80,
-        48
-      ],
-      "origin": [
-        40,
-        24
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_mint": {
-      "w": 80,
-      "h": 75,
-      "cell": [
-        80,
-        75
-      ],
-      "origin": [
-        40,
-        37
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_hotel_pan": {
-      "w": 80,
-      "h": 68,
-      "cell": [
-        80,
-        68
-      ],
-      "origin": [
-        40,
-        34
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_spray": {
-      "w": 33,
-      "h": 80,
-      "cell": [
-        33,
-        80
-      ],
-      "origin": [
-        16,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_rag": {
-      "w": 80,
-      "h": 65,
-      "cell": [
-        80,
-        65
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_label": {
-      "w": 80,
-      "h": 61,
-      "cell": [
-        80,
-        61
-      ],
-      "origin": [
-        40,
-        30
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_diced": {
-      "w": 80,
-      "h": 58,
-      "cell": [
-        80,
-        58
-      ],
-      "origin": [
-        40,
-        29
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_fryer": {
-      "w": 71,
-      "h": 80,
-      "cell": [
-        71,
-        80
-      ],
-      "origin": [
-        35,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_basket": {
-      "w": 80,
-      "h": 68,
-      "cell": [
-        80,
-        68
-      ],
-      "origin": [
-        40,
-        34
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_ticket": {
-      "w": 66,
-      "h": 80,
-      "cell": [
-        66,
-        80
-      ],
-      "origin": [
-        33,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_produce_box": {
-      "w": 80,
-      "h": 68,
-      "cell": [
-        80,
-        68
-      ],
-      "origin": [
-        40,
-        34
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_spatula": {
-      "w": 76,
-      "h": 80,
-      "cell": [
-        76,
-        80
-      ],
-      "origin": [
-        38,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_skillet": {
-      "w": 80,
-      "h": 75,
-      "cell": [
-        80,
-        75
-      ],
-      "origin": [
-        40,
-        37
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_knife": {
-      "w": 79,
-      "h": 80,
-      "cell": [
-        79,
-        80
-      ],
-      "origin": [
-        39,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_tenderizer": {
-      "w": 75,
-      "h": 80,
-      "cell": [
-        75,
-        80
-      ],
-      "origin": [
-        37,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_flail": {
-      "w": 75,
-      "h": 80,
-      "cell": [
-        75,
-        80
-      ],
-      "origin": [
-        37,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_cleaver": {
-      "w": 72,
-      "h": 80,
-      "cell": [
-        72,
-        80
-      ],
-      "origin": [
-        36,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_apron": {
-      "w": 71,
-      "h": 80,
-      "cell": [
-        71,
-        80
-      ],
-      "origin": [
-        35,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_clogs": {
-      "w": 80,
-      "h": 58,
-      "cell": [
-        80,
-        58
-      ],
-      "origin": [
-        40,
-        29
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_sleeves": {
-      "w": 80,
-      "h": 77,
-      "cell": [
-        80,
-        77
-      ],
-      "origin": [
-        40,
-        38
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_coat": {
-      "w": 80,
-      "h": 78,
-      "cell": [
-        80,
-        78
-      ],
-      "origin": [
-        40,
-        39
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_dad": {
-      "w": 71,
-      "h": 80,
-      "cell": [
-        71,
-        80
-      ],
-      "origin": [
-        35,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_shades": {
-      "w": 80,
-      "h": 48,
-      "cell": [
-        80,
-        48
-      ],
-      "origin": [
-        40,
-        24
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_door": {
-      "w": 44,
-      "h": 80,
-      "cell": [
-        44,
-        80
-      ],
-      "origin": [
-        22,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_hand_dry": {
-      "w": 72,
-      "h": 80,
-      "cell": [
-        72,
-        80
-      ],
-      "origin": [
-        36,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_hand_wet": {
-      "w": 69,
-      "h": 80,
-      "cell": [
-        69,
-        80
-      ],
-      "origin": [
-        34,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_gear_locked": {
-      "w": 79,
-      "h": 80,
-      "cell": [
-        79,
-        80
-      ],
-      "origin": [
-        39,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_honey": {
-      "w": 80,
-      "h": 64,
-      "cell": [
-        80,
-        64
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_formula": {
-      "w": 61,
-      "h": 80,
-      "cell": [
-        61,
-        80
-      ],
-      "origin": [
-        30,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_diapers": {
-      "w": 73,
-      "h": 80,
-      "cell": [
-        73,
-        80
-      ],
-      "origin": [
-        36,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_cherries": {
-      "w": 80,
-      "h": 79,
-      "cell": [
-        80,
-        79
-      ],
-      "origin": [
-        40,
-        39
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_chocolate": {
-      "w": 76,
-      "h": 80,
-      "cell": [
-        76,
-        80
-      ],
-      "origin": [
-        38,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_cream": {
-      "w": 54,
-      "h": 80,
-      "cell": [
-        54,
-        80
-      ],
-      "origin": [
-        27,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_flour": {
-      "w": 61,
-      "h": 80,
-      "cell": [
-        61,
-        80
-      ],
-      "origin": [
-        30,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_eggs": {
-      "w": 80,
-      "h": 76,
-      "cell": [
-        80,
-        76
-      ],
-      "origin": [
-        40,
-        38
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_treats": {
-      "w": 66,
-      "h": 80,
-      "cell": [
-        66,
-        80
-      ],
-      "origin": [
-        33,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_shop_ensure": {
-      "w": 37,
-      "h": 80,
-      "cell": [
-        37,
-        80
-      ],
-      "origin": [
-        18,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_raw_chicken": {
-      "w": 80,
-      "h": 65,
-      "cell": [
-        80,
-        65
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_raw_turkey": {
-      "w": 80,
-      "h": 64,
-      "cell": [
-        80,
-        64
-      ],
-      "origin": [
-        40,
-        32
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_raw_beef": {
-      "w": 80,
-      "h": 66,
-      "cell": [
-        80,
-        66
-      ],
-      "origin": [
-        40,
-        33
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_raw_pork": {
-      "w": 80,
-      "h": 78,
-      "cell": [
-        80,
-        78
-      ],
-      "origin": [
-        40,
-        39
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_raw_ribeye": {
-      "w": 80,
-      "h": 70,
-      "cell": [
-        80,
-        70
-      ],
-      "origin": [
-        40,
-        35
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_raw_salmon": {
-      "w": 80,
-      "h": 62,
-      "cell": [
         80,
         62
       ],
-      "origin": [
-        40,
-        31
-      ],
       "kind": "prop",
-      "s": 2
+      "s": 4
     },
-    "kf_app_messages": {
-      "w": 78,
-      "h": 80,
+    "kf_fried": {
+      "w": 160,
+      "h": 108,
       "cell": [
-        78,
-        80
+        160,
+        108
       ],
       "origin": [
-        39,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_app_stonks": {
-      "w": 79,
-      "h": 80,
-      "cell": [
-        79,
-        80
-      ],
-      "origin": [
-        39,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_app_fund": {
-      "w": 79,
-      "h": 80,
-      "cell": [
-        79,
-        80
-      ],
-      "origin": [
-        39,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_app_gear": {
-      "w": 79,
-      "h": 80,
-      "cell": [
-        79,
-        80
-      ],
-      "origin": [
-        39,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_app_settings": {
-      "w": 78,
-      "h": 80,
-      "cell": [
-        78,
-        80
-      ],
-      "origin": [
-        39,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_app_notes": {
-      "w": 64,
-      "h": 80,
-      "cell": [
-        64,
-        80
-      ],
-      "origin": [
-        32,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_letter_tile": {
-      "w": 80,
-      "h": 79,
-      "cell": [
         80,
-        79
-      ],
-      "origin": [
-        40,
-        39
+        54
       ],
       "kind": "prop",
-      "s": 2
+      "s": 4
     },
-    "kf_kiosk_self": {
-      "w": 62,
-      "h": 80,
+    "kf_grilled": {
+      "w": 160,
+      "h": 111,
       "cell": [
-        62,
-        80
+        160,
+        111
       ],
       "origin": [
-        31,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_kiosk_coupon": {
-      "w": 52,
-      "h": 80,
-      "cell": [
-        52,
-        80
-      ],
-      "origin": [
-        26,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_mirror": {
-      "w": 53,
-      "h": 80,
-      "cell": [
-        53,
-        80
-      ],
-      "origin": [
-        26,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_bus": {
-      "w": 80,
-      "h": 55,
-      "cell": [
         80,
         55
       ],
-      "origin": [
-        40,
-        27
-      ],
       "kind": "prop",
-      "s": 2
+      "s": 4
     },
-    "kf_wine": {
-      "w": 42,
-      "h": 80,
+    "kf_hot": {
+      "w": 160,
+      "h": 112,
       "cell": [
-        42,
-        80
+        160,
+        112
       ],
       "origin": [
-        21,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_pretzels": {
-      "w": 72,
-      "h": 80,
-      "cell": [
-        72,
-        80
-      ],
-      "origin": [
-        36,
-        40
-      ],
-      "kind": "prop",
-      "s": 2
-    },
-    "kf_pillow": {
-      "w": 80,
-      "h": 67,
-      "cell": [
         80,
-        67
-      ],
-      "origin": [
-        40,
-        33
+        56
       ],
       "kind": "prop",
-      "s": 2
+      "s": 4
     },
-    "kf_quilt": {
-      "w": 80,
-      "h": 62,
+    "kf_cheese": {
+      "w": 160,
+      "h": 99,
       "cell": [
+        160,
+        99
+      ],
+      "origin": [
+        80,
+        49
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_bacon": {
+      "w": 160,
+      "h": 131,
+      "cell": [
+        160,
+        131
+      ],
+      "origin": [
+        80,
+        65
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_lettuce": {
+      "w": 160,
+      "h": 139,
+      "cell": [
+        160,
+        139
+      ],
+      "origin": [
+        80,
+        69
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_tomato": {
+      "w": 160,
+      "h": 112,
+      "cell": [
+        160,
+        112
+      ],
+      "origin": [
+        80,
+        56
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_pickles": {
+      "w": 160,
+      "h": 125,
+      "cell": [
+        160,
+        125
+      ],
+      "origin": [
         80,
         62
       ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_greens": {
+      "w": 160,
+      "h": 132,
+      "cell": [
+        160,
+        132
+      ],
       "origin": [
-        40,
-        31
+        80,
+        66
       ],
       "kind": "prop",
-      "s": 2
+      "s": 4
+    },
+    "kf_egg": {
+      "w": 160,
+      "h": 115,
+      "cell": [
+        160,
+        115
+      ],
+      "origin": [
+        80,
+        57
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_blue": {
+      "w": 160,
+      "h": 119,
+      "cell": [
+        160,
+        119
+      ],
+      "origin": [
+        80,
+        59
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_feta": {
+      "w": 160,
+      "h": 128,
+      "cell": [
+        160,
+        128
+      ],
+      "origin": [
+        80,
+        64
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_pecans": {
+      "w": 160,
+      "h": 108,
+      "cell": [
+        160,
+        108
+      ],
+      "origin": [
+        80,
+        54
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_apple": {
+      "w": 160,
+      "h": 133,
+      "cell": [
+        160,
+        133
+      ],
+      "origin": [
+        80,
+        66
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_onion": {
+      "w": 160,
+      "h": 114,
+      "cell": [
+        160,
+        114
+      ],
+      "origin": [
+        80,
+        57
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_ranch": {
+      "w": 160,
+      "h": 146,
+      "cell": [
+        160,
+        146
+      ],
+      "origin": [
+        80,
+        73
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_vin": {
+      "w": 111,
+      "h": 160,
+      "cell": [
+        111,
+        160
+      ],
+      "origin": [
+        55,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_bowl": {
+      "w": 160,
+      "h": 106,
+      "cell": [
+        160,
+        106
+      ],
+      "origin": [
+        80,
+        53
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_basket_fries": {
+      "w": 160,
+      "h": 156,
+      "cell": [
+        160,
+        156
+      ],
+      "origin": [
+        80,
+        78
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_basket_wings": {
+      "w": 160,
+      "h": 155,
+      "cell": [
+        160,
+        155
+      ],
+      "origin": [
+        80,
+        77
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_wings": {
+      "w": 160,
+      "h": 135,
+      "cell": [
+        160,
+        135
+      ],
+      "origin": [
+        80,
+        67
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_pickle_raw": {
+      "w": 160,
+      "h": 128,
+      "cell": [
+        160,
+        128
+      ],
+      "origin": [
+        80,
+        64
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_flour": {
+      "w": 160,
+      "h": 128,
+      "cell": [
+        160,
+        128
+      ],
+      "origin": [
+        80,
+        64
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_egg_wash": {
+      "w": 160,
+      "h": 127,
+      "cell": [
+        160,
+        127
+      ],
+      "origin": [
+        80,
+        63
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_breadcrumbs": {
+      "w": 160,
+      "h": 127,
+      "cell": [
+        160,
+        127
+      ],
+      "origin": [
+        80,
+        63
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_fried_pickles": {
+      "w": 160,
+      "h": 126,
+      "cell": [
+        160,
+        126
+      ],
+      "origin": [
+        80,
+        63
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_board": {
+      "w": 160,
+      "h": 120,
+      "cell": [
+        160,
+        120
+      ],
+      "origin": [
+        80,
+        60
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_knife": {
+      "w": 160,
+      "h": 114,
+      "cell": [
+        160,
+        114
+      ],
+      "origin": [
+        80,
+        57
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_tomato_whole": {
+      "w": 159,
+      "h": 160,
+      "cell": [
+        159,
+        160
+      ],
+      "origin": [
+        79,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_torte": {
+      "w": 133,
+      "h": 160,
+      "cell": [
+        133,
+        160
+      ],
+      "origin": [
+        66,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_whipped": {
+      "w": 160,
+      "h": 157,
+      "cell": [
+        160,
+        157
+      ],
+      "origin": [
+        80,
+        78
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_cherry": {
+      "w": 106,
+      "h": 160,
+      "cell": [
+        106,
+        160
+      ],
+      "origin": [
+        53,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_choc_bottle": {
+      "w": 70,
+      "h": 160,
+      "cell": [
+        70,
+        160
+      ],
+      "origin": [
+        35,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_plate": {
+      "w": 160,
+      "h": 95,
+      "cell": [
+        160,
+        95
+      ],
+      "origin": [
+        80,
+        47
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_mint": {
+      "w": 160,
+      "h": 149,
+      "cell": [
+        160,
+        149
+      ],
+      "origin": [
+        80,
+        74
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_hotel_pan": {
+      "w": 160,
+      "h": 136,
+      "cell": [
+        160,
+        136
+      ],
+      "origin": [
+        80,
+        68
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_spray": {
+      "w": 66,
+      "h": 160,
+      "cell": [
+        66,
+        160
+      ],
+      "origin": [
+        33,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_rag": {
+      "w": 160,
+      "h": 130,
+      "cell": [
+        160,
+        130
+      ],
+      "origin": [
+        80,
+        65
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_label": {
+      "w": 160,
+      "h": 122,
+      "cell": [
+        160,
+        122
+      ],
+      "origin": [
+        80,
+        61
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_diced": {
+      "w": 160,
+      "h": 117,
+      "cell": [
+        160,
+        117
+      ],
+      "origin": [
+        80,
+        58
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_fryer": {
+      "w": 143,
+      "h": 160,
+      "cell": [
+        143,
+        160
+      ],
+      "origin": [
+        71,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_basket": {
+      "w": 160,
+      "h": 136,
+      "cell": [
+        160,
+        136
+      ],
+      "origin": [
+        80,
+        68
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_ticket": {
+      "w": 132,
+      "h": 160,
+      "cell": [
+        132,
+        160
+      ],
+      "origin": [
+        66,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_produce_box": {
+      "w": 160,
+      "h": 135,
+      "cell": [
+        160,
+        135
+      ],
+      "origin": [
+        80,
+        67
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_spatula": {
+      "w": 152,
+      "h": 160,
+      "cell": [
+        152,
+        160
+      ],
+      "origin": [
+        76,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_skillet": {
+      "w": 160,
+      "h": 150,
+      "cell": [
+        160,
+        150
+      ],
+      "origin": [
+        80,
+        75
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_knife": {
+      "w": 157,
+      "h": 160,
+      "cell": [
+        157,
+        160
+      ],
+      "origin": [
+        78,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_tenderizer": {
+      "w": 150,
+      "h": 160,
+      "cell": [
+        150,
+        160
+      ],
+      "origin": [
+        75,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_flail": {
+      "w": 150,
+      "h": 160,
+      "cell": [
+        150,
+        160
+      ],
+      "origin": [
+        75,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_cleaver": {
+      "w": 144,
+      "h": 160,
+      "cell": [
+        144,
+        160
+      ],
+      "origin": [
+        72,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_apron": {
+      "w": 142,
+      "h": 160,
+      "cell": [
+        142,
+        160
+      ],
+      "origin": [
+        71,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_clogs": {
+      "w": 160,
+      "h": 116,
+      "cell": [
+        160,
+        116
+      ],
+      "origin": [
+        80,
+        58
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_sleeves": {
+      "w": 160,
+      "h": 155,
+      "cell": [
+        160,
+        155
+      ],
+      "origin": [
+        80,
+        77
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_coat": {
+      "w": 160,
+      "h": 156,
+      "cell": [
+        160,
+        156
+      ],
+      "origin": [
+        80,
+        78
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_dad": {
+      "w": 143,
+      "h": 160,
+      "cell": [
+        143,
+        160
+      ],
+      "origin": [
+        71,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_shades": {
+      "w": 160,
+      "h": 95,
+      "cell": [
+        160,
+        95
+      ],
+      "origin": [
+        80,
+        47
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_door": {
+      "w": 87,
+      "h": 160,
+      "cell": [
+        87,
+        160
+      ],
+      "origin": [
+        43,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_hand_dry": {
+      "w": 143,
+      "h": 160,
+      "cell": [
+        143,
+        160
+      ],
+      "origin": [
+        71,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_hand_wet": {
+      "w": 138,
+      "h": 160,
+      "cell": [
+        138,
+        160
+      ],
+      "origin": [
+        69,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_gear_locked": {
+      "w": 158,
+      "h": 160,
+      "cell": [
+        158,
+        160
+      ],
+      "origin": [
+        79,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_honey": {
+      "w": 160,
+      "h": 128,
+      "cell": [
+        160,
+        128
+      ],
+      "origin": [
+        80,
+        64
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_formula": {
+      "w": 121,
+      "h": 160,
+      "cell": [
+        121,
+        160
+      ],
+      "origin": [
+        60,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_diapers": {
+      "w": 146,
+      "h": 160,
+      "cell": [
+        146,
+        160
+      ],
+      "origin": [
+        73,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_cherries": {
+      "w": 160,
+      "h": 158,
+      "cell": [
+        160,
+        158
+      ],
+      "origin": [
+        80,
+        79
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_chocolate": {
+      "w": 153,
+      "h": 160,
+      "cell": [
+        153,
+        160
+      ],
+      "origin": [
+        76,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_cream": {
+      "w": 108,
+      "h": 160,
+      "cell": [
+        108,
+        160
+      ],
+      "origin": [
+        54,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_flour": {
+      "w": 121,
+      "h": 160,
+      "cell": [
+        121,
+        160
+      ],
+      "origin": [
+        60,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_eggs": {
+      "w": 160,
+      "h": 152,
+      "cell": [
+        160,
+        152
+      ],
+      "origin": [
+        80,
+        76
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_treats": {
+      "w": 132,
+      "h": 160,
+      "cell": [
+        132,
+        160
+      ],
+      "origin": [
+        66,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_shop_ensure": {
+      "w": 74,
+      "h": 160,
+      "cell": [
+        74,
+        160
+      ],
+      "origin": [
+        37,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_raw_chicken": {
+      "w": 160,
+      "h": 130,
+      "cell": [
+        160,
+        130
+      ],
+      "origin": [
+        80,
+        65
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_raw_turkey": {
+      "w": 160,
+      "h": 129,
+      "cell": [
+        160,
+        129
+      ],
+      "origin": [
+        80,
+        64
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_raw_beef": {
+      "w": 160,
+      "h": 133,
+      "cell": [
+        160,
+        133
+      ],
+      "origin": [
+        80,
+        66
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_raw_pork": {
+      "w": 160,
+      "h": 157,
+      "cell": [
+        160,
+        157
+      ],
+      "origin": [
+        80,
+        78
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_raw_ribeye": {
+      "w": 160,
+      "h": 140,
+      "cell": [
+        160,
+        140
+      ],
+      "origin": [
+        80,
+        70
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_raw_salmon": {
+      "w": 160,
+      "h": 124,
+      "cell": [
+        160,
+        124
+      ],
+      "origin": [
+        80,
+        62
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_app_messages": {
+      "w": 156,
+      "h": 160,
+      "cell": [
+        156,
+        160
+      ],
+      "origin": [
+        78,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_app_stonks": {
+      "w": 157,
+      "h": 160,
+      "cell": [
+        157,
+        160
+      ],
+      "origin": [
+        78,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_app_fund": {
+      "w": 157,
+      "h": 160,
+      "cell": [
+        157,
+        160
+      ],
+      "origin": [
+        78,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_app_gear": {
+      "w": 157,
+      "h": 160,
+      "cell": [
+        157,
+        160
+      ],
+      "origin": [
+        78,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_app_settings": {
+      "w": 156,
+      "h": 160,
+      "cell": [
+        156,
+        160
+      ],
+      "origin": [
+        78,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_app_notes": {
+      "w": 129,
+      "h": 160,
+      "cell": [
+        129,
+        160
+      ],
+      "origin": [
+        64,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_letter_tile": {
+      "w": 160,
+      "h": 158,
+      "cell": [
+        160,
+        158
+      ],
+      "origin": [
+        80,
+        79
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_kiosk_self": {
+      "w": 123,
+      "h": 160,
+      "cell": [
+        123,
+        160
+      ],
+      "origin": [
+        61,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_kiosk_coupon": {
+      "w": 103,
+      "h": 160,
+      "cell": [
+        103,
+        160
+      ],
+      "origin": [
+        51,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_mirror": {
+      "w": 107,
+      "h": 160,
+      "cell": [
+        107,
+        160
+      ],
+      "origin": [
+        53,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_bus": {
+      "w": 160,
+      "h": 110,
+      "cell": [
+        160,
+        110
+      ],
+      "origin": [
+        80,
+        55
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_wine": {
+      "w": 84,
+      "h": 160,
+      "cell": [
+        84,
+        160
+      ],
+      "origin": [
+        42,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_pretzels": {
+      "w": 144,
+      "h": 160,
+      "cell": [
+        144,
+        160
+      ],
+      "origin": [
+        72,
+        80
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_pillow": {
+      "w": 160,
+      "h": 134,
+      "cell": [
+        160,
+        134
+      ],
+      "origin": [
+        80,
+        67
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kf_quilt": {
+      "w": 160,
+      "h": 124,
+      "cell": [
+        160,
+        124
+      ],
+      "origin": [
+        80,
+        62
+      ],
+      "kind": "prop",
+      "s": 4
     },
     "kf_note": {
-      "w": 59,
-      "h": 80,
+      "w": 118,
+      "h": 160,
       "cell": [
+        118,
+        160
+      ],
+      "origin": [
         59,
         80
       ],
-      "origin": [
-        29,
-        40
-      ],
       "kind": "prop",
-      "s": 2
+      "s": 4
     },
     "kf_cake": {
-      "w": 300,
-      "h": 168,
+      "w": 600,
+      "h": 335,
       "cell": [
-        300,
-        168
+        600,
+        335
       ],
       "origin": [
-        150,
-        84
+        300,
+        167
       ],
       "kind": "prop",
-      "s": 2
+      "s": 4
+    },
+    "kp_fry_basket": {
+      "w": 168,
+      "h": 172,
+      "cell": [
+        168,
+        172
+      ],
+      "origin": [
+        84,
+        86
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_fries": {
+      "w": 145,
+      "h": 102,
+      "cell": [
+        145,
+        102
+      ],
+      "origin": [
+        72,
+        51
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_fried_chicken": {
+      "w": 163,
+      "h": 126,
+      "cell": [
+        163,
+        126
+      ],
+      "origin": [
+        81,
+        63
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_bun": {
+      "w": 196,
+      "h": 186,
+      "cell": [
+        196,
+        186
+      ],
+      "origin": [
+        98,
+        93
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_lettuce": {
+      "w": 210,
+      "h": 163,
+      "cell": [
+        210,
+        163
+      ],
+      "origin": [
+        105,
+        81
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_tomato": {
+      "w": 185,
+      "h": 150,
+      "cell": [
+        185,
+        150
+      ],
+      "origin": [
+        92,
+        75
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_pickle_jar": {
+      "w": 59,
+      "h": 100,
+      "cell": [
+        59,
+        100
+      ],
+      "origin": [
+        29,
+        50
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_mash": {
+      "w": 84,
+      "h": 73,
+      "cell": [
+        84,
+        73
+      ],
+      "origin": [
+        42,
+        36
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_thermometer": {
+      "w": 56,
+      "h": 86,
+      "cell": [
+        56,
+        86
+      ],
+      "origin": [
+        28,
+        43
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_ticket": {
+      "w": 76,
+      "h": 53,
+      "cell": [
+        76,
+        53
+      ],
+      "origin": [
+        38,
+        26
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_heat_lamp": {
+      "w": 85,
+      "h": 99,
+      "cell": [
+        85,
+        99
+      ],
+      "origin": [
+        42,
+        49
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_ketchup": {
+      "w": 38,
+      "h": 100,
+      "cell": [
+        38,
+        100
+      ],
+      "origin": [
+        19,
+        50
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_spatula": {
+      "w": 93,
+      "h": 88,
+      "cell": [
+        93,
+        88
+      ],
+      "origin": [
+        46,
+        44
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_skillet": {
+      "w": 108,
+      "h": 76,
+      "cell": [
+        108,
+        76
+      ],
+      "origin": [
+        54,
+        38
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_plate": {
+      "w": 106,
+      "h": 69,
+      "cell": [
+        106,
+        69
+      ],
+      "origin": [
+        53,
+        34
+      ],
+      "kind": "prop",
+      "s": 4
+    },
+    "kp_salt": {
+      "w": 50,
+      "h": 92,
+      "cell": [
+        50,
+        92
+      ],
+      "origin": [
+        25,
+        46
+      ],
+      "kind": "prop",
+      "s": 4
     }
   }
 }
