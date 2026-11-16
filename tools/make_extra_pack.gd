@@ -22,7 +22,11 @@ const WORLD: = ["assets/art/ch_*", "assets/art/sf_*", "assets/art/sd_*", "assets
 ## tapping New Game and the first punch. Duff's finisher stills (duff_*.jpg) wait for world.pck.
 const STREET: = ["assets/art/sf_*", "assets/art/sd_*", "assets/art/ground_painted*", "assets/art/home_*", "assets/art/duff_*.png",
 	"assets/art/ch_pirate*", "assets/art/ch_scammer*", "assets/art/ch_hustler*", "assets/art/ch_karen*", "assets/art/ch_madison.png",
-	"assets/art/portraits_hd/duff.png"]   # the cold open's one line is Duff's: no empty portrait frame
+	"assets/art/portraits_hd/duff.png",   # the cold open's one line is Duff's: no empty portrait frame
+	# {coworker}'s first bet follows the porch fight in minute two: the alley, Marketplace Mike, her portrait and the
+	# boss music ride in street.pck so that fight never waits on world.pck's loading card (~0.7 MB).
+	"assets/art/arena_alley*", "assets/art/ch_mike*", "assets/art/ch_brittany*", "assets/art/portraits_hd/brittany*",
+	"assets/audio/mus_boss*"]
 
 func _init() -> void:
 	var out: = "build/web/extra.pck"
