@@ -25,7 +25,7 @@ One playable slice: the real town map in 3D, HD-2D style (Octopath / Sea of Star
 - Renderer: Compatibility (WebGL2), the one the web build has to use, so what you see is what a
   phone browser would get.
 
-Run it: `godot --path spike3d -- dusk|night|day` (add `demo` for the scripted walk, `shots` to save
+Run it: `godot --path spike3d -- dusk|night|day` (add `demo` for the scripted walk, `pose` for Duff close-ups, `shots` to save
 stills to `/tmp/qa3d/`, `stats` for draw calls). On the Godot Android editor: open `spike3d/` as its
 own project.
 

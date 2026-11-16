@@ -292,7 +292,7 @@ func _build_ambient() -> void:
 	qm.material = lm
 	leaves.mesh = qm
 	add_child(leaves)
-	if mode != "day":
+	if mode != "day" and not "pose" in OS.get_cmdline_user_args():
 		var ff: = CPUParticles3D.new()
 		ff.amount = 50
 		ff.lifetime = 5.0
@@ -408,6 +408,9 @@ func _process(delta: float) -> void:
 	var t: = Time.get_ticks_msec() / 1000.0
 	for s in get_tree().get_nodes_in_group("sway"):
 		s.rotation_degrees.z = sin(t * 1.3 + float(s.get_meta("sway"))) * 0.9
+	if "pose" in OS.get_cmdline_user_args() and frame >= 20:
+		_pose_shots()
+		return
 	var want: = _cam_target() + CAM_OFF
 	cam.position = cam.position.lerp(want, clampf(delta * 5.0, 0.0, 1.0))
 	cam.look_at(cam.position - CAM_OFF)
@@ -416,6 +419,8 @@ func _process(delta: float) -> void:
 		cam.position += (shake_dir * 0.6 + Vector3(randf_range(-1, 1), randf_range(-1, 1), 0) * 0.4) * shake * 0.35
 	if demo:
 		_demo_inputs()
+	elif "pose" in OS.get_cmdline_user_args():
+		_pose_shots()
 
 ## Scripted take: walk off the porch, down the walk, bonk the raccoons, stroll the street.
 func _demo_inputs() -> void:
@@ -430,6 +435,23 @@ func _demo_inputs() -> void:
 		print("STATS draw_calls=", Performance.get_monitor(Performance.RENDER_TOTAL_DRAW_CALLS_IN_FRAME), " objects=", Performance.get_monitor(Performance.RENDER_TOTAL_OBJECTS_IN_FRAME), " prims=", Performance.get_monitor(Performance.RENDER_TOTAL_PRIMITIVES_IN_FRAME), " vram_MB=", Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0)
 	if f > 310:
 		get_tree().quit()
+
+## Close-ups of Duff on his porch path: the four facings, the bonk, then a low hero angle.
+const POSES: = [[0, "front"], [8, "right"], [12, "left"], [4, "back"], [3, "bonk"], [1, "walk"]]
+
+func _pose_shots() -> void:
+	var i: = (frame - 20) / 8
+	if frame < 20 or i >= POSES.size() + 1:
+		if frame > 20 + 8 * (POSES.size() + 1):
+			get_tree().quit()
+		return
+	var hero: = i == POSES.size()
+	player.posed = 0 if hero else int(POSES[i][0])
+	var look: = player.position + Vector3(0, 1.0, 0)
+	cam.position = look + (Vector3(-2.2, 0.5, 4.2) if hero else Vector3(0, 1.8, 5.6))
+	cam.look_at(look)
+	if (frame - 20) % 8 == 7:
+		get_viewport().get_texture().get_image().save_png("/tmp/qa3d/pose_%s_%s.png" % [mode, "hero" if hero else POSES[i][1]])
 
 func _press(a: String, on: bool) -> void:
 	if on:
