@@ -698,6 +698,13 @@ func _world_gate(cb: Callable) -> bool:
 	_after_world(cb, 1, func () -> void: pass)
 	return true
 
+## Same as _world_gate for things that only need street.pck (the first bet).
+func _street_gate(cb: Callable) -> bool:
+	if ExtraPack.street_ready:
+		return false
+	_after_world(cb, 0, func () -> void: pass)
+	return true
+
 func new_game(write_save: bool = true) -> void:
 	from_dict({})
 	wordle_seed = randi()
@@ -759,7 +766,9 @@ func first_bet_pitch(ko_line: String) -> void:
 			_say(["{coworker}: Coward. I'm out front of the {fork_nick} every day with a new one. Bring your own money."] + cold_open_rules(porch_pkg)))
 
 func start_first_bet() -> void:
-	if busy() or _world_gate(start_first_bet):
+	# Its art and music are in street.pck (tools/make_extra_pack.gd STREET), which New Game already waited on, so
+	# the bet starts while world.pck keeps streaming behind it instead of parking on the loading card.
+	if busy() or _street_gate(start_first_bet):
 		return
 	show_loading()
 	clear_enemies()
@@ -1093,6 +1102,8 @@ func _veil_snapshot() -> Texture2D:
 		return null
 	if not visible:
 		return _veil_tex
+	if DisplayServer.get_name() == "headless":
+		return null   # the dummy renderer has no viewport texture: get_image() logs an engine error (soak/test runs)
 	var vt: = get_viewport().get_texture()
 	var img: Image = vt.get_image() if vt != null else null
 	if img == null or img.is_empty():
