@@ -530,31 +530,69 @@ func _sync_town() -> void:
 # --- floating markers -----------------------------------------------------------------------------------------
 
 ## Quest '!'/'?' (same rules as main.draw_quest_markers), story '!' over open fights, house names.
+## A 2D point on a building's facade -> the same spot on its standing card (and a hair in front of it).
+func _facade(b: Dictionary, p: Vector2) -> Vector3:
+	for e in buildings:
+		if e[0] == b:
+			var s: Sprite3D = e[1]
+			var by: = s.position.z / U
+			return Vector3(p.x * U, (by - p.y) * U, s.position.z + 0.05)
+	return _float(p)
+
+## A 2D marker floats above a point on the ground plane; stand it up at the matching height.
+func _float(p: Vector2) -> Vector3:
+	return to3(Vector2(p.x, p.y + 26.0), 2.6)
+
+## Everything main's flat WorldLabels layer draws, stood up in 3D (that layer is hidden while the view is live:
+## its affine overlay only matches the camera near the target, so signs slid off their shops toward the edges).
 func _sync_labels() -> void:
-	var want: Array = []   # [world point, text, colour, size]
+	var want: Array = []   # [3D point, text, colour, size]
 	var t: = float(main.t)
-	if main.dialog.is_empty() and room().size == Vector2.ZERO:
+	var loc: = str(main.location)
+	if main.dialog.is_empty() and loc in ["outside", "home"]:
 		var spots: Dictionary = main.quest_spots()
 		for npc in spots:
-			if str(spots[npc][0]) != "outside":
+			if str(spots[npc][0]) != loc:
 				continue
 			var mk: String = main.SideQuests.marker_for(main.side_quests, str(npc), main.show_hidden_quests, main.day_count)
 			if mk != "":
-				want.append([spots[npc][1] + Vector2(0, sin(t * 3.2) * 1.5), mk, Color("#ffd640") if mk == "!" else Color("#7fd0ff"), 64])
-	for b in main.buildings:
-		var r: Rect2 = b.get("vis", b["r"])
-		if b.get("art", "") in ["sf_home", "sf_neighbor"]:
-			want.append([Vector2(r.get_center().x, r.position.y - 8), main.Cast.T(b["n"]), Color.WHITE, 28])
-		if b.has("story") and not main.story_beaten(str(b["story"])) and main.story_available(str(b["story"])):
-			want.append([Vector2(r.get_center().x, r.position.y - 28 + sin(t * 5.0) * 2.0), "!", Color("#e6a640"), 64])
+				want.append([_float(spots[npc][1] + Vector2(0, sin(t * 3.2) * 1.5)), mk, Color("#ffd640") if mk == "!" else Color("#7fd0ff"), 64])
+	if loc == "outside":
+		# Lost & Found: each unfound thing glints now and then (no '?' while hunting)
+		if main.SideQuests.is_active(main.side_quests, "alley") and main.SideQuests.stage(main.side_quests, "alley") == 1:
+			var i: = 0
+			for k in main.LOST_SPOTS:
+				i += 1
+				if main.SideQuests.has_clue(main.side_quests, "alley", k):
+					continue
+				var a: = clampf(sin(t * 2.4 + i * 2.1) * 1.6 - 0.6, 0.0, 1.0)
+				if a > 0.0:
+					want.append([to3(main.LOST_SPOTS[k], 0.6), "+", Color(1.0, 0.95, 0.6, a), int(16 + a * 16)])
+		for b in main.buildings:
+			var r: Rect2 = b.get("vis", b["r"])
+			if b.get("art", "") in ["sf_home", "sf_neighbor"]:
+				want.append([_float(Vector2(r.get_center().x, r.position.y - 8)), main.Cast.T(b["n"]), Color.WHITE, 36])
+			var r2: = Rect2(r.position - Vector2(0, 22), r.size)
+			match main.building_sign(b):
+				"closed":
+					if main.closed_near(r2):
+						want.append([_facade(b, Vector2(r.get_center().x, r.end.y - 14)), "CLOSED", Color("#f0ead8"), 22, Color("#a43a2c")])   # on the door, not floating over the roof
+				"errand":
+					want.append([_facade(b, Vector2(r.get_center().x, r.position.y - 24 + sin(t * 5.0) * 2.0)), "!", Color("#8cc4e8"), 64])
+				"cleared":
+					want.append([_facade(b, Vector2(r.get_center().x, r.end.y - 20)), "CLEARED", Color("#c0d890"), 30])
+			if b.has("story") and not main.story_beaten(str(b["story"])) and main.story_available(str(b["story"])):
+				want.append([_facade(b, Vector2(r.get_center().x, r.position.y - 28 + sin(t * 5.0) * 2.0)), "!", Color("#e6a640"), 64])
+		var fork: Dictionary = main.buildings[3]
+		var fr: Rect2 = fork.get("vis", fork["r"])
+		want.append([_facade(fork, Vector2(fr.get_center().x, fr.position.y + 1)), "NOW HIRING (you)", main.UiStyle.CREAM, 30])
 	while marks.size() < want.size():
 		var l: = Label3D.new()
 		l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 		l.no_depth_test = true
 		l.fixed_size = false
-		l.pixel_size = 0.004
-		l.outline_size = 10
-		l.outline_modulate = Color("#1a1024")
+		l.pixel_size = 0.02   # font_size 64 = 12.8 world units, the 2D marker's size
+		l.outline_size = 6
 		l.render_priority = 10
 		l.outline_render_priority = 9
 		labels_root.add_child(l)
@@ -568,9 +606,9 @@ func _sync_labels() -> void:
 		l.text = str(w[1])
 		l.modulate = w[2]
 		l.font_size = int(w[3])
-		# a 2D marker floats above a point on the ground plane; stand it up at the matching height
-		var p: Vector2 = w[0]
-		l.position = to3(Vector2(p.x, p.y + 26.0), 2.6)
+		l.outline_modulate = w[4] if w.size() > 4 else Color("#1a1024")
+		l.outline_modulate.a = (w[2] as Color).a
+		l.position = w[0]
 
 ## Rooms get a fixed key light from the front-left (a ceiling lamp / the arena floods), soft ambient,
 ## no fog. Night tint and the like still come from main's own overlay draws.

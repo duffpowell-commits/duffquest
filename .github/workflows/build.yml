@@ -59,18 +59,19 @@ jobs:
           mkdir -p ~/.local/share/godot/export_templates
           unzip -q tpl.tpz -d /tmp/tpl
           mv /tmp/tpl/templates ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-      - name: Use the trimmed 2D web template when it exists (web_template.yml)
+      - name: Use the trimmed 3D web template (web_template_3d.yml; 3D view is the default since Nov 16)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # branches test the preview build first (web_template.yml publishes there off main)
-          tags=web-template-2d; [ "$GITHUB_REF" = refs/heads/main ] || tags="web-template-2d-preview web-template-2d"
+          # main: web-template-3d, then the preview build until web_template_3d.yml has run on main;
+          # branches: the preview first. The 2D-only template (web-template-2d) is the last fallback.
+          tags="web-template-3d web-template-3d-preview web-template-2d"
+          [ "$GITHUB_REF" = refs/heads/main ] || tags="web-template-3d-preview web-template-3d web-template-2d"
           for t in $tags; do gh release download $t -p web_nothreads_release.zip -D /tmp/wt 2>/dev/null && echo "template: $t" && break; done
           if [ -f /tmp/wt/web_nothreads_release.zip ]; then
             cp /tmp/wt/web_nothreads_release.zip ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}/web_nothreads_release.zip
-            echo "using the trimmed 2D web template"
           else
-            echo "no web-template-2d release yet: stock web template"
+            echo "no trimmed web template release: stock web template"
           fi
       - name: Android SDK paths + debug keystore
         run: |
