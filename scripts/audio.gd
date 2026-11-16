@@ -137,6 +137,9 @@ func load_settings() -> void:
 	gore = bool(d.get("gore", not portal))
 	JuiceScript.shake_on = bool(d.get("screen_shake", true))
 	view3d = bool(d.get("view3d", false))
+	# web test link: "#3d" in the URL turns the 3D view on (the phone test before 3D is the default)
+	if OS.has_feature("web") and str(JavaScriptBridge.eval("window.location.hash", true)).contains("3d"):
+		view3d = true
 	apply()
 
 func play_sfx(name: String, pitch: float = 1.0) -> void:
