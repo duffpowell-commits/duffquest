@@ -297,7 +297,7 @@ stay raw.
 | camper | The Four-Hour Camper | 86 List, Lv 6 | flex, curl | no |
 | bdaydad | Birthday Party Dad | 86 List, Lv 8 | hire, coins, charge; kid minions | no |
 | dasher | The Dine-and-Dasher | 86 List, Lv 10, after all the others | charge, vanish, rug | no |
-- Story exes get `boss.STORY_HP_MULT` 1.2 on top of the table HP (Nov 13).
+- Story exes are tuned per kind in `boss.STORY_TUNE` (HP mult, damage mult, attack cooldown, lead aim; Nov 15). Early four: 54/99/120/144 HP, x1.25 damage, attacks every 1.7-1.8 s, aim ahead of a moving Duff. Willnot: x1.2 HP (240), unchanged otherwise.
 - The story is `main.STORY`, in order. Madison announces each boss (`story_announce`) when the day and Happiness
   conditions are met. Fight via the building door (`story_doors`) → `start_story_fight` (arena `arena_<id>`, energy
   refilled). The reward is cash + scrap + a gear piece + an achievement + 15 Happiness. Losing → `story_lose`.
