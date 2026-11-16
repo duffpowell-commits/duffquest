@@ -15,6 +15,8 @@ func check(name: String, ok: bool) -> void:
 
 func _init() -> void:
 	# web: walls come from baked rects (world.pck carries the art); they must match the textures
+	check("3D Duff sheet: plain black sleeves, no print (rebuild only with tools/duff_hd3d/build_duff_hd.sh)",
+		_sleeve_print_px("res://assets/art3d/duff_home_hd3d.png") < 1000)
 	check("data/art_rects.json matches sf_/sd_ art (re-run tools/bake_art_rects.gd)",
 		FileAccess.get_file_as_string("res://data/art_rects.json") == JSON.stringify(preload("res://tools/bake_art_rects.gd").measure(), "\t", true) + "\n")
 	_edition_checks()
@@ -90,6 +92,33 @@ func _init() -> void:
 
 ## Nov 14 portal review: a second fight inside five minutes. Cold-open pirate down -> {coworker}'s first bet
 ## (Marketplace Mike, alley) -> payout -> rules. Pitched once; a loss costs nothing.
+## Duff (Nov 16, permanent): his T-shirt sleeves are plain black and cover the top of his tattoos. Counts warm,
+## mid-bright pixels inside the sleeve ellipses of the reference frames (tools/duff_hd3d/sleeves.py, same maths
+## without its template shift). Printed AI sleeves score ~5700; the fixed sheet ~240.
+const SLEEVES_3D: = {0: [[185, 256, 18, 20], [326, 254, 18, 20]], 4: [[188, 260, 18, 20], [326, 262, 18, 20]],
+	3: [[124, 264, 18, 20], [264, 244, 18, 20]], 7: [[124, 264, 18, 20], [268, 258, 18, 20]],
+	8: [[210, 292, 26, 22]], 12: [[286, 298, 26, 22]], 11: [[134, 296, 22, 20]], 15: [[272, 296, 22, 20]]}
+func _sleeve_print_px(path: String) -> int:
+	var tx: = load(path) as Texture2D
+	if tx == null:
+		return 999999
+	var im: = tx.get_image()
+	if im.is_compressed():
+		im.decompress()
+	var n: = 0
+	for fr in SLEEVES_3D:
+		var o: = Vector2i((fr % 4) * 512, (fr / 4) * 512)
+		for e in SLEEVES_3D[fr]:
+			for y in range(e[1] - e[3], e[1] + e[3] + 1):
+				for x in range(e[0] - e[2], e[0] + e[2] + 1):
+					if pow(float(x - e[0]) / e[2], 2) + pow(float(y - e[1]) / e[3], 2) > 1.0:
+						continue
+					var c: = im.get_pixel(o.x + x, o.y + y)
+					var l: = c.r * 0.3 + c.g * 0.5 + c.b * 0.2
+					if c.a > 0.0 and l > 60.0 / 255.0 and l < 190.0 / 255.0 and c.r - c.b > 8.0 / 255.0:
+						n += 1
+	return n
+
 func _first_bet_checks(main: Node) -> void:
 	var B: = preload("res://scripts/boss.gd")
 	check("first bet: Mike is a boss", B.BOSSES.has("mike"))

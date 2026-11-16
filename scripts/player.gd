@@ -155,7 +155,7 @@ func shades_sheet() -> String:
 
 func _draw() -> void:
 	if stage_scale != 1.0:   # scale around the feet (y = 11) so he doesn't sink into the floor
-		draw_set_transform(Vector2(0, 11.0 * (1.0 - stage_scale)), 0.0, Vector2(stage_scale, stage_scale))
+		Art.xf(self, Vector2(0, 11.0 * (1.0 - stage_scale)), 0.0, Vector2(stage_scale, stage_scale))
 	var flash: = hurt_t > 0.0 and int(hurt_t * 20.0) % 2 == 0
 	var mod: = Color(1, 0.55, 0.55, 0.75) if flash else Color.WHITE
 	if roll_t > 0.0:

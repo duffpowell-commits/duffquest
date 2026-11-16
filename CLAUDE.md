@@ -59,9 +59,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `tools/make_extra_pack.gd -- OUT world|late`; `scripts/extra_pack.gd` mounts them. Continue/New Game wait on a
   "Loading Omaha..." card until world.pck lands (~23 s cold, cached after). Anything new under `assets/` that the
   title doesn't need: add its glob to the Web preset `exclude_filter` and to `WORLD` in make_extra_pack.gd.
-  The engine is a trimmed 2D-only Godot 4.5 web template (`tools/web_template/custom.py`, built by
-  `.github/workflows/web_template.yml` into release `web-template-2d`; branches use `web-template-2d-preview`).
-  No 3D nodes, no `Image.create` (use `create_empty`), WorldEnvironment via ClassDB only. Changed the profile? Run
+  The engine was a trimmed 2D-only Godot 4.5 web template (`tools/web_template/custom.py`, release `web-template-2d`);
+  since the 3D view went default it is the trimmed 3D one (`tools/web_template_3d/custom.py`, `web_template_3d.yml`,
+  release `web-template-3d`, branches `-preview`; 3D physics off). Outside `scripts/view3d/` keep to 2D nodes, no
+  `Image.create` (use `create_empty`), WorldEnvironment via ClassDB only. Changed the profile? Run
   that workflow and play-test the build. Storefront/prop sizes are baked in `data/art_rects.json`
   (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
   Branch builds publish to the `web-preview` release (sessions can't download Actions artifacts).
@@ -160,6 +161,15 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   save (`snap_path("morning"|"week")`, first save of each day / each Monday); `fail_screen()` writes the rollback over the
   main save as it opens, so Quit to title = retry too. New game erases them. No snapshot = old soft landing.
   Render: `arena_shot -- evicted|gameover`. No Madison lines on either screen.
+
+- **3D view (Nov 16, branch `claude/project-thread-fhx6e4`, draft PR #109, NOT merged):** steps 2-6 of
+  `spike3d/PLAN_3D.md` done (town, fights, rooms, native res, Lite via perf_guard). Render with `arena_shot -- <id> --3d
+  [--lite]`. Duff phone-tested it Nov 16 ("looks great, controls feel better") and said go: step 7 is on the branch.
+  3D is the default (`audio.view3d` true; settings saved before carry `view3d_v` < 2 and flip to 3D once; Settings > 3D
+  view still turns it off; web `#3d` / `#2d` in the URL force it). Web exports use the 3D engine (`web-template-3d`, falls
+  back to `-preview`). Building signs (CLOSED, CLEARED, errand/story `!`, NOW HIRING, quest markers, house names,
+  Lost & Found glints) are Label3Ds pinned to their facade (`view3d._sync_labels`); main's flat WorldLabels layer hides
+  in 3D because the overlay map only lines up near the camera target. Phone-test link: memory `duffquest-3d-phone-test`.
 
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
