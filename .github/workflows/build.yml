@@ -190,6 +190,27 @@ jobs:
           gh release view web-preview >/dev/null 2>&1 || gh release create web-preview --prerelease --title "Branch web preview" --notes "Not for players."
           gh release upload web-preview build/duffquest-web-preview.zip --clobber
           gh release edit web-preview --notes "Not for players. ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}"
+      - name: 3D phone-test build (branches with the 3D view)
+        # Same game exported on the 3D web engine (release web-template-3d-preview), each file a separate asset of
+        # release web3d-preview so a static host can pull them by URL (a phone test link; 3D stays a setting, the
+        # URL hash #3d turns it on). Never runs on main.
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main' && hashFiles('scripts/view3d/view3d.gd') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          T=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          cp $T/web_nothreads_release.zip /tmp/web2d_tpl.zip
+          gh release download web-template-3d-preview -p web_nothreads_release.zip -D /tmp/wt3 --clobber
+          cp /tmp/wt3/web_nothreads_release.zip $T/web_nothreads_release.zip
+          mkdir -p build/web3d
+          godot --headless --path . --export-release "Web" build/web3d/index.html
+          cp /tmp/web2d_tpl.zip $T/web_nothreads_release.zip
+          cp build/web/street.pck build/web/world.pck build/web/extra.pck build/web3d/
+          gzip -9 -n build/web3d/index.wasm
+          ls -la build/web3d
+          gh release view web3d-preview >/dev/null 2>&1 || gh release create web3d-preview --prerelease --title "3D phone-test build" --notes "Not for players."
+          gh release upload web3d-preview build/web3d/* --clobber
+          gh release edit web3d-preview --notes "Not for players. ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}"
       - name: Upload web build to itch.io (main only)
         # Finds the itch project by title ("duff"), so no URL has to live in this file.
         # The project must exist on itch first (kind HTML). Needs repo secret BUTLER_API_KEY.
