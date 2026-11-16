@@ -360,7 +360,14 @@ func _handle_ui(n: Node) -> void:
 			return
 		var pick: = _pick(n, ids)
 		want = ""
+		var fail_kind: = str(n.get("kind")) if n.get("kind") != null else ""
+		if fail_kind != "" and "retry" in ids:   # fail_screen: always retry (quitting to the title ends the soak)
+			pick = "retry"
+			cover("fail:" + fail_kind)
 		n.press(pick)
+		if fail_kind == "evicted":   # rolled back to last Monday; a lazy bot would just get evicted again forever
+			assist("evicted: +$%d to break the loop" % (int(m.rent_due()) + 50))
+			m.money += int(m.rent_due()) + 50
 		return
 	if n != mg:
 		mg = n
