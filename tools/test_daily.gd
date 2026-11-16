@@ -435,7 +435,12 @@ func _fail_state_checks(main: Node) -> void:
 	main.save_game()
 	check("morning snapshot = the day's first save", int(SaveGame.read(main.snap_path("morning")).get("money", -1)) == 777)
 	check("week snapshot written on Monday", int(SaveGame.read(main.snap_path("week")).get("day_count", -1)) == 21)
-	# game over: story KO opens the fail screen; retry restores the morning
+	# game over: the day's first story KO is the free get-up, the second opens the fail screen
+	main.getup_day = -1
+	main.story_lose("test KO")
+	main.dialog.clear()
+	check("first KO of the day = free get-up (no fail screen)", main.overlay_node == null and main.getup_day == main.day_count)
+	main.money = 5
 	main.story_lose("test KO")
 	check("story KO opens the game over screen", main.overlay_node is FailScreen and str(main.overlay_node.kind) == "gameover")
 	check("game over rolls the main save back to the morning", int(SaveGame.read(main.save_path).get("money", -1)) == 777)
@@ -456,6 +461,7 @@ func _fail_state_checks(main: Node) -> void:
 	check("eviction retry = last Monday", main.day_count == 21 and main.money == 777 and main.overlay_node == null)
 	main.erase_snapshots()
 	check("no snapshot: story KO keeps the old soft landing", (func () -> bool:
+		main.getup_day = main.day_count
 		main.story_lose("test KO")
 		main.dialog.clear()
 		return main.overlay_node == null).call())

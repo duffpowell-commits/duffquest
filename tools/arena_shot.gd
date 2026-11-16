@@ -151,6 +151,7 @@ func _process(_d: float) -> void:
 	if frame == 236 and id == "gameover":
 		m.player.position = m.ARENA_ORIGIN + Vector2(200, 140)
 	if frame == 250 and id == "gameover":
+		m.getup_day = m.day_count   # today's free get-up already spent
 		m.story_lose("I get knocked out. Me and the sidewalk get acquainted.")
 	if frame == 236 and id == "chad":
 		m.quest_talk("neighbor")

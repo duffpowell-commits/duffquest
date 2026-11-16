@@ -276,6 +276,7 @@ var shifts_worked: = 0
 var rent_debt: = 0
 var weeks_paid: = 0
 var late_notices: = 0
+var getup_day: = -1           # day_count the free daily get-up was spent (story/gala KO): the next KO that day = game over
 var rent_strikes: = 0          # Mondays in a row I couldn't cover the week (resets on any covered Monday)
 var _pending_fail: Array = []  # [kind, lines] shown once the wake's loading screen is gone
 var _snap_days: = {}          # snapshot tag -> day_count of that snapshot on disk (lazy)
@@ -828,7 +829,7 @@ func to_dict() -> Dictionary:
 		"day_i": day_i, "day_count": day_count, "clock": clock, "money": money, "energy": energy, "happiness": happiness,
 		"quest": quest, "quest_kind": quest_kind, "last_quest_kind": last_quest_kind, "inventory": inventory.duplicate(),
 		"leftovers": leftovers.duplicate(), "achievements": achievements.duplicate(), "fryer_smell": fryer_smell,
-		"shifts_worked": shifts_worked, "station_best": station_best.duplicate(), "daily": daily.duplicate(true), "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices, "rent_strikes": rent_strikes,
+		"shifts_worked": shifts_worked, "station_best": station_best.duplicate(), "daily": daily.duplicate(true), "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices, "rent_strikes": rent_strikes, "getup_day": getup_day,
 		"cats_fed_day": cats_fed_day, "couch_day": couch_day, "crib_day": crib_day, "freya_trust": freya_trust,
 		"freya_treat_day": freya_treat_day, "inspector_follow": inspector_follow, "inspector_t": inspector_t,
 		"gear": gear.duplicate(true), "shades": shades, "wordle": wordle.duplicate(true), "wordle_seed": wordle_seed, "kills": kills.duplicate(),
@@ -886,6 +887,7 @@ func from_dict(d: Dictionary) -> void:
 	weeks_paid = int(d.get("weeks_paid", 0))
 	late_notices = int(d.get("late_notices", 0))
 	rent_strikes = int(d.get("rent_strikes", 0))
+	getup_day = int(d.get("getup_day", -1))
 	cats_fed_day = int(d.get("cats_fed_day", -1))
 	couch_day = int(d.get("couch_day", -1))
 	crib_day = int(d.get("crib_day", -1))
@@ -1106,7 +1108,7 @@ func open_overlay(node: Node) -> void:
 ## Blurred copy of the world as it was last drawn. While the world is hidden (an overlay was already up,
 ## e.g. the title card) the previous snapshot is reused; none yet = null (cards fall back to their sunburst).
 func _veil_snapshot() -> Texture2D:
-	if in_shift:
+	if in_shift or DisplayServer.get_name() == "headless":   # headless (tests, soak): no frame to grab
 		return null
 	if not visible:
 		return _veil_tex
@@ -3442,9 +3444,10 @@ func gala_lose() -> void:
 	gala_boss = null
 	_leave_gala()
 	energy = 40.0
-	if fail_screen("gameover", ["Security walks me out. They even take the shrimp back. Turns out the shrimp was a loan."]):
+	var free: = _free_getup()
+	if not free and fail_screen("gameover", ["Security walks me out. They even take the shrimp back. Turns out the shrimp was a loan."]):
 		return
-	_say(["Security walks me out. They even take the shrimp back. Turns out the shrimp was a loan.", "Invitation's still good. Gear up and go again."])
+	_say(["Security walks me out. They even take the shrimp back. Turns out the shrimp was a loan.", "Invitation's still good. Gear up and go again."] + ([GETUP_LINE] if free else []))
 	save_game()
 
 func _leave_gala() -> void:
@@ -3624,9 +3627,10 @@ func story_lose(msg: String) -> void:
 	_leave_arena()
 	energy = 40.0
 	happiness = maxf(0.0, happiness - 5.0)
-	if fail_screen("gameover", [msg]):
+	var free: = _free_getup()
+	if not free and fail_screen("gameover", [msg]):
 		return
-	_say([msg, "-5 Happiness. The door's still open whenever you're ready."])
+	_say([msg, "-5 Happiness. The door's still open whenever you're ready."] + ([GETUP_LINE] if free else []))
 	save_game()
 
 ## ---- Fail states (Nov 16) ----------------------------------------------------------------------------
@@ -3655,6 +3659,15 @@ func _snapshot_if_new(d: Dictionary) -> void:
 		if _snap_day(tag) != day_count:
 			SaveGame.write(d.duplicate(true), snap_path(tag))
 			_snap_days[tag] = day_count
+
+## One free get-up a day (Duff, Nov 16): the first story/gala KO of a day is the old soft landing; the second
+## is KNOCKED OUT. True = the get-up was spent just now.
+const GETUP_LINE: = "That was today's free get-up. Get knocked out again today and it's game over."
+func _free_getup() -> bool:
+	if getup_day == day_count:
+		return false
+	getup_day = day_count
+	return true
 
 func _evicted() -> void:
 	clear_enemies()

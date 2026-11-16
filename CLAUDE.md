@@ -155,7 +155,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 - **Fail states (Nov 16):** `scripts/minigames/fail_screen.gd` (extends card.gd). Eviction = `EVICT_STRIKES` (3) short
   Mondays in a row (`rent_strikes`; a strike = couldn't cover the week's base, back rent alone carries over) -> roll back
-  to last Monday. Story/gala KO -> game over, roll back to this morning. `save_game()` keeps two snapshots next to the
+  to last Monday. Story/gala KO -> game over, roll back to this morning, but the first such KO each day is a free get-up (`getup_day`, Duff Nov 16). `save_game()` keeps two snapshots next to the
   save (`snap_path("morning"|"week")`, first save of each day / each Monday); `fail_screen()` writes the rollback over the
   main save as it opens, so Quit to title = retry too. New game erases them. No snapshot = old soft landing.
   Render: `arena_shot -- evicted|gameover`. No Madison lines on either screen.
