@@ -42,6 +42,8 @@ func _process(_d: float) -> void:
 		m = game.get_child(0).get_child(0).get_child(0)
 		if "--3d" in OS.get_cmdline_user_args() and m.AudioScript.inst != null:   # 3D town view (scripts/view3d/)
 			m.AudioScript.inst.set_view3d(true)
+		if "--2d" in OS.get_cmdline_user_args() and m.AudioScript.inst != null:   # the flat view (Settings > 3D view off)
+			m.AudioScript.inst.set_view3d(false)
 		if "--lite" in OS.get_cmdline_user_args():   # lite graphics (perf_guard), e.g. to compare 3D full vs lite
 			game.get_node("PerfGuard").force_low(true)
 		m.close_overlay()

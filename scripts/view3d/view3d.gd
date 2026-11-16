@@ -52,6 +52,7 @@ var _hd_tex: = {}
 var static_art: = {}                         # art names _build_town already stands up (main's own draws of them are skipped)
 var cam_base: = Vector3.ZERO                 # follow-camera position before the shake offset
 var _ground_tex: Texture2D
+var under_mat: StandardMaterial3D           # the plain lawn past the map edge (tinted to the map's own border)
 ## The 3D frame renders at the screen's real pixel size (the 2D game is 640x360 scaled up), times this.
 ## 1.0 = native; Auto Lite drops it (step 6). Env DQ_3D_LOWRES=1 forces the old 640x360 render (renders/compare).
 var res_scale: = 1.0
@@ -93,6 +94,8 @@ func _ready() -> void:
 	_build_ground()
 	_build_sun()
 	_build_town()
+	if main != null:
+		_build_signs()
 	labels_root = Node3D.new()
 	world.add_child(labels_root)
 	_build_room_parts()
@@ -161,8 +164,8 @@ func _process(_d: float) -> void:
 	_sync_sky()
 	_sync_town()
 	_sync_actors()
-	_sync_labels()
 	_sync_cam()
+	_sync_labels()   # after the camera: house names clamp under the HUD in screen space
 	_sync_overlay()
 
 func _set_live(on: bool) -> void:
@@ -178,8 +181,9 @@ func _set_live(on: bool) -> void:
 	if c2 != null:
 		c2.enabled = not on   # View3D drives the world canvas transform while live (_sync_overlay)
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if on else SubViewport.UPDATE_DISABLED
+	_redraw_world(main)   # everything draws once more: on = the capture sees it; off = static props that never
+	# redraw (dressing_front items) paint for real again instead of keeping their recorded-only (empty) frame
 	if on:
-		_redraw_world(main)   # everything draws once more so the capture sees it
 		cam_base = _cam_target() + _cam_off()
 		cam.position = cam_base
 		cam.look_at(_cam_target())
@@ -293,7 +297,6 @@ func _build_ground() -> void:
 	mat.roughness = 1.0
 	ground.material_override = mat
 	town.add_child(ground)
-	_refresh_ground()
 	# beyond the map: a dark lawn so the camera never sees void
 	var under: = MeshInstance3D.new()
 	var pm: = PlaneMesh.new()
@@ -303,8 +306,10 @@ func _build_ground() -> void:
 	um.albedo_color = Color("#3d5a2a")
 	um.roughness = 1.0
 	under.material_override = um
+	under_mat = um
 	under.position = to3(Vector2(320, 180), -0.02)
 	town.add_child(under)
+	_refresh_ground()
 
 ## Same texture and placement as main.gd _draw_outside: Rect2(origin / 2, size / 2) in world units.
 ## Re-checked every frame because on the web the painted street arrives later with a pack (Ground.clear_cache()).
@@ -319,6 +324,27 @@ func _refresh_ground() -> void:
 	ground.mesh = pm
 	(ground.material_override as StandardMaterial3D).albedo_texture = gt
 	ground.position = to3(r.get_center())
+	# past the map the camera sees the plain plane under it (top corners, mostly); give it the average colour of
+	# the painting's outer rows so the edge reads as more street, not a mint-green band
+	var img: = gt.get_image()
+	if img != null and under_mat != null:
+		if img.is_compressed():
+			img.decompress()
+		var sum: = Color(0, 0, 0, 0)
+		var n: = 0
+		var w: = img.get_width()
+		var h: = img.get_height()
+		for x in range(0, w, 8):
+			for y in [2, h - 3]:
+				sum += img.get_pixel(x, y)
+				n += 1
+		for y in range(0, h, 8):
+			for x in [2, w - 3]:
+				sum += img.get_pixel(x, y)
+				n += 1
+		if n > 0:
+			var c: = sum / float(n)
+			under_mat.albedo_color = Color(c.r, c.g, c.b).darkened(0.08)
 
 func _build_sun() -> void:
 	sun = DirectionalLight3D.new()
@@ -515,7 +541,57 @@ func _lamp(p: Vector2, h: float, c: Color, e: float, rng: float) -> void:
 	town.add_child(l)
 	lamps.append([l, e])
 
+## Hand-drawn street signs (the Waffle Haus pole, the 86 List board): main draws them with plain draw calls, so
+## the capture never sees them and the flat overlay slid them off their spots. Each gets its own little 2D
+## viewport (main's draw function at SIGN_K x) shown on a standing card.
+const SIGN_K: = 4.0
+const HUD_FRAC: = 0.12   # the HUD strip covers the top ~12% of the screen (house names slide below it)
+var signs: Array = []   # [SignCanvas, SubViewport]
+
+class SignCanvas extends Node2D:
+	var fn: Callable
+	var o: = Vector2.ZERO
+	func _draw() -> void:
+		fn.call(self, o, SIGN_K)
+
+## r = the drawing's 2D world rect; the card's bottom-left goes at `at` (a ground point or a facade point).
+func _sign(fn: Callable, r: Rect2, at: Vector3) -> void:
+	var sv: = SubViewport.new()
+	sv.size = Vector2i((r.size * SIGN_K).ceil())
+	sv.transparent_bg = true
+	sv.disable_3d = true
+	sv.render_target_update_mode = SubViewport.UPDATE_DISABLED
+	world.add_child(sv)   # not under this container: a SubViewportContainer shows every SubViewport child on screen
+	var c: = SignCanvas.new()
+	c.fn = fn
+	c.o = -r.position
+	sv.add_child(c)
+	var s: = _card()
+	s.texture = sv.get_texture()
+	s.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISABLED
+	s.pixel_size = U / SIGN_K
+	s.position = at
+	town.add_child(s)
+	signs.append([c, sv])
+
+func _build_signs() -> void:
+	var sp: Vector2 = main.WAFFLE_SIGN_PT
+	_sign(Callable(main, "draw_waffle_sign"), Rect2(sp + Vector2(-17, -37), Vector2(34, 38)), to3(sp + Vector2(-17, 1)))
+	var bp: Vector2 = main.BOARD_PT + Vector2(-10, -20)
+	var br: = Rect2(bp + Vector2(-6, -7), Vector2(34, 21))
+	var at: = _facade(main.buildings[3], Vector2(br.position.x, br.end.y))
+	at.y = maxf(at.y, 0.02)   # its bottom sits a hair under the facade's base line in 2D
+	_sign(Callable(main, "draw_86_board"), br, at)
+
+func _sync_signs() -> void:
+	for e in signs:
+		(e[0] as SignCanvas).queue_redraw()
+		(e[1] as SubViewport).render_target_update_mode = SubViewport.UPDATE_ONCE
+
 func _sync_town() -> void:
+	if town.visible:
+		_sync_signs()
 	var t: = Time.get_ticks_msec() / 1000.0
 	for s in get_tree().get_nodes_in_group("view3d_sway"):
 		s.rotation_degrees.z = sin(t * 1.3 + float(s.get_meta("sway"))) * 0.9
@@ -571,7 +647,7 @@ func _sync_labels() -> void:
 		for b in main.buildings:
 			var r: Rect2 = b.get("vis", b["r"])
 			if b.get("art", "") in ["sf_home", "sf_neighbor"]:
-				want.append([_float(Vector2(r.get_center().x, r.position.y - 8)), main.Cast.T(b["n"]), Color.WHITE, 36])
+				want.append([_float(Vector2(r.get_center().x, r.position.y - 8)), main.Cast.T(b["n"]), Color.WHITE, 36, Color("#1a1024"), "house"])
 			var r2: = Rect2(r.position - Vector2(0, 22), r.size)
 			match main.building_sign(b):
 				"closed":
@@ -583,9 +659,12 @@ func _sync_labels() -> void:
 					want.append([_facade(b, Vector2(r.get_center().x, r.end.y - 20)), "CLEARED", Color("#c0d890"), 30])
 			if b.has("story") and not main.story_beaten(str(b["story"])) and main.story_available(str(b["story"])):
 				want.append([_facade(b, Vector2(r.get_center().x, r.position.y - 28 + sin(t * 5.0) * 2.0)), "!", Color("#e6a640"), 64])
+		# {coworker}'s "$" (a bet on offer today) over her head, like draw_brittany's 2D one
+		if int(main.bet["day"]) != int(main.day_count) and main.phase() != "Night":
+			want.append([to3(main.BRITT_POS + Vector2(0, 6), 3.1 + sin(t * 3.0) * 0.15), "$", Color("#60e060"), 40])
 		var fork: Dictionary = main.buildings[3]
 		var fr: Rect2 = fork.get("vis", fork["r"])
-		want.append([_facade(fork, Vector2(fr.get_center().x, fr.position.y + 1)), "NOW HIRING (you)", main.UiStyle.CREAM, 30])
+		want.append([_facade(fork, Vector2(fr.get_center().x, fr.position.y + 1)), "NOW HIRING (you)", main.UiStyle.CREAM, 30, Color("#1a1024"), "sign"])
 	while marks.size() < want.size():
 		var l: = Label3D.new()
 		l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -609,6 +688,25 @@ func _sync_labels() -> void:
 		l.outline_modulate = w[4] if w.size() > 4 else Color("#1a1024")
 		l.outline_modulate.a = (w[2] as Color).a
 		l.position = w[0]
+		if w.size() > 5 and w[5] == "house":
+			_below_hud(l)
+		elif w.size() > 5 and w[5] == "sign" and not cam.is_position_behind(l.position):
+			# a roof sign on a shop that sits low in the frame is close to the camera: oversized, under the touch pad
+			l.visible = cam.unproject_position(l.position).y < float(vp.size.y) * 0.75   # near the bottom it is also close and huge
+
+## House names float over the roof; when the house sits at the top of the frame that's under the HUD strip.
+## Slide the name down (never below the ground) until it clears the strip, like main.draw_world_labels in 2D.
+func _below_hud(l: Label3D) -> void:
+	if cam.is_position_behind(l.position):
+		return
+	var top: = float(vp.size.y) * HUD_FRAC
+	var sy: = cam.unproject_position(l.position).y
+	if sy >= top:
+		return
+	var per_m: = cam.unproject_position(l.position + Vector3.DOWN).y - sy   # screen px per metre straight down
+	if per_m <= 0.01:
+		return
+	l.position.y = maxf(0.3, l.position.y - (top - sy) / per_m)
 
 ## Rooms get a fixed key light from the front-left (a ceiling lamp / the arena floods), soft ambient,
 ## no fog. Night tint and the like still come from main's own overlay draws.
@@ -665,7 +763,10 @@ func _cam_target() -> Vector3:
 	var c: = p.position if p != null else Vector2(320, 180)
 	# keep the frame inside the map the way the 2D camera's limits do (a little looser: the view is tilted)
 	c.x = clampf(c.x, 110.0, 530.0)
-	c.y = clampf(c.y, 95.0, 330.0)
+	# y: the frame's bottom edge sees the ground ~67 units past the target and the row just under the HUD strip
+	# ~126 units before it (CAM_OFF pitch + CAM_FOV); the painted ground spans y -16..368 (Ground.world_rect), so
+	# 112..300 keeps the plain lawn past the map out of the bottom strip and out from under the HUD
+	c.y = clampf(c.y, 112.0, 300.0)
 	return to3(c, 0.8)
 
 func _sync_cam() -> void:
