@@ -33,6 +33,16 @@ var buildings: Array = []                   # [building dict, card]
 var lamps: Array = []                       # [OmniLight3D, base energy]
 var marks: Array = []                       # Label3D pool: quest/story markers + house names
 var labels_root: Node3D
+var town: Node3D                            # the outdoor map (ground, storefronts, props, lamps); hidden in rooms
+## Rooms (home, gala, arenas): main draws one painted floor image per room; it lies flat and the rest stands.
+## Where each painted room's back wall meets its floor (fraction of the image height). The band above stands
+## up as a wall card, the rest lies flat as the floor.
+const WALL: = {"arena_alley": 0.29, "arena_crypto": 0.33, "arena_djvape": 0.31, "arena_ghoster": 0.31,
+	"arena_gymbro": 0.35, "arena_waffle": 0.52, "arena_willnot": 0.37, "gala": 0.26, "home_interior": 0.19}
+var floor_card: Sprite3D
+var wall_card: Sprite3D
+var room_dark: Node3D                        # dark box around a room so the camera never sees void
+var caption: Label3D
 
 ## The 3D view gets Duff's HD sheet (2048, same 4x4 layout and world size as the 2x one). Built only by
 ## tools/duff_hd3d/build_duff_hd.sh: plain black sleeves (test_daily checks), his fox on the LEFT of his neck.
@@ -42,14 +52,16 @@ var _hd_tex: = {}
 var static_art: = {}                         # art names _build_town already stands up (main's own draws of them are skipped)
 var cam_base: = Vector3.ZERO                 # follow-camera position before the shake offset
 var _ground_tex: Texture2D
+## The 3D frame renders at the screen's real pixel size (the 2D game is 640x360 scaled up), times this.
+## 1.0 = native; Auto Lite drops it (step 6). Env DQ_3D_LOWRES=1 forces the old 640x360 render (renders/compare).
+var res_scale: = 1.0
 
 static func to3(p: Vector2, h: float = 0.0) -> Vector3:
 	return Vector3(p.x * U, h, p.y * U)
 
 func _ready() -> void:
 	name = "View3D"
-	stretch = true
-	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	stretch = false   # sized by hand in _fit(): native pixels, not the 640x360 logical size
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
 	vp = SubViewport.new()
@@ -59,12 +71,15 @@ func _ready() -> void:
 	add_child(vp)
 	world = Node3D.new()
 	vp.add_child(world)
+	town = Node3D.new()
+	world.add_child(town)
 	_build_env()
 	_build_ground()
 	_build_sun()
 	_build_town()
 	labels_root = Node3D.new()
 	world.add_child(labels_root)
+	_build_room_parts()
 	cam = Camera3D.new()
 	cam.fov = CAM_FOV
 	world.add_child(cam)
@@ -74,9 +89,42 @@ func _ready() -> void:
 ## The 3D view is live outdoors when the setting is on. Opaque full-screen menus pause it (like the 2D world).
 func wanted() -> bool:
 	var a: Node = AudioScript.inst
-	return main != null and a != null and bool(a.get("view3d")) and str(main.location) == "outside"
+	if main == null or a == null or not bool(a.get("view3d")):
+		return false
+	if str(main.location) == "arena" and str(main.arena_id) == "waffle":
+		return false   # the Waffle Haus shift is a station game drawn for the flat view (grill hot spots)
+	return str(main.location) in ["outside", "home", "arena", "gala"]
+
+## The room the player is in (zero rect outdoors).
+func room() -> Rect2:
+	match str(main.location):
+		"home":
+			return Rect2(main.INT_ORIGIN, main.INT_SIZE)
+		"arena":
+			return Rect2(main.ARENA_ORIGIN, main.ARENA_SIZE)
+		"gala":
+			return Rect2(main.GALA_ORIGIN, main.GALA_SIZE)
+	return Rect2()
+
+## main's painted room floors, laid flat instead of stood up.
+func is_floor(name: String) -> bool:
+	return name in ["home_interior", "gala"] or name.begins_with("arena_")
+
+## Render the 3D view at native resolution: the SubViewport gets the real pixel size and this container is
+## scaled back down to the 640x360 logical screen.
+func _fit() -> void:
+	var win: = Vector2(DisplayServer.window_get_size())
+	var k: = maxf(1.0, minf(win.x / 640.0, win.y / 360.0)) * res_scale
+	if OS.get_environment("DQ_3D_LOWRES") == "1":
+		k = 1.0
+	var want: = Vector2i(roundi(640.0 * k), roundi(360.0 * k))
+	if vp.size != want:
+		vp.size = want
+		size = Vector2(want)
+		scale = Vector2.ONE * (640.0 / float(want.x))
 
 func _process(_d: float) -> void:
+	_fit()
 	var on: = wanted()
 	if on != live:
 		_set_live(on)
@@ -88,6 +136,12 @@ func _process(_d: float) -> void:
 		vp.render_target_update_mode = mode
 	if covered:
 		return
+	var in_room: = room().size != Vector2.ZERO
+	town.visible = not in_room
+	room_dark.visible = in_room
+	if not in_room:
+		floor_card.visible = false
+		wall_card.visible = false
 	_sync_sky()
 	_sync_town()
 	_sync_actors()
@@ -110,14 +164,90 @@ func _set_live(on: bool) -> void:
 	vp.render_target_update_mode = SubViewport.UPDATE_ALWAYS if on else SubViewport.UPDATE_DISABLED
 	if on:
 		_redraw_world(main)   # everything draws once more so the capture sees it
-		cam_base = _cam_target() + CAM_OFF
+		cam_base = _cam_target() + _cam_off()
 		cam.position = cam_base
 		cam.look_at(_cam_target())
+
+func _build_room_parts() -> void:
+	floor_card = _card()
+	floor_card.rotation_degrees.x = -90.0
+	floor_card.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	floor_card.region_enabled = true
+	floor_card.double_sided = false
+	world.add_child(floor_card)
+	wall_card = _card()
+	wall_card.region_enabled = true
+	wall_card.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	world.add_child(wall_card)
+	room_dark = Node3D.new()
+	world.add_child(room_dark)
+	var m: = StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.albedo_color = Color("#120e16")
+	m.cull_mode = BaseMaterial3D.CULL_DISABLED
+	for i in 2:   # under the floor, and a backdrop behind the wall
+		var q: = MeshInstance3D.new()
+		var pm: = PlaneMesh.new()
+		pm.size = Vector2(300, 300)
+		q.mesh = pm
+		q.material_override = m
+		q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		if i == 1:
+			q.rotation_degrees.x = 90.0
+		q.set_meta("i", i)
+		room_dark.add_child(q)
+	caption = Label3D.new()
+	caption.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	caption.outline_size = 8
+	caption.font_size = 40
+	caption.pixel_size = 0.012
+	caption.modulate = Color.WHITE
+	caption.outline_modulate = Color(0, 0, 0, 0.85)
+	world.add_child(caption)
+
+## A room's painted floor image: the back band stands up as the wall, the rest lies on the ground.
+func _place_room(name: String, tx: Texture2D, inf: Dictionary, pos: Vector2, isc: float, dens: float) -> void:
+	var org: Array = inf.get("origin", [0, 0])
+	var w: = float(tx.get_width())
+	var h: = float(tx.get_height())
+	var band: = roundf(h * float(WALL.get(name, 0.0)))
+	var px: = U / dens * isc
+	var top_left: = pos - Vector2(float(org[0]), float(org[1])) * isc / dens
+	var base: = top_left + Vector2(0, band * isc / dens)   # where the wall meets the floor
+	floor_card.texture = tx
+	floor_card.pixel_size = px
+	floor_card.region_rect = Rect2(0, band, w, h - band)
+	floor_card.offset = Vector2(0, -(h - band))
+	floor_card.position = to3(base, 0.0)
+	floor_card.visible = true
+	wall_card.visible = band > 0.0
+	if band > 0.0:
+		wall_card.texture = tx
+		wall_card.pixel_size = px
+		wall_card.region_rect = Rect2(0, 0, w, band)
+		wall_card.offset = Vector2.ZERO
+		wall_card.position = to3(base, 0.0)
+	for q in room_dark.get_children():
+		if int(q.get_meta("i")) == 0:
+			q.position = to3(base, -0.02)
+		else:
+			q.position = to3(base, 0.0) + Vector3(0, 0, -0.05)
+	caption.visible = not main.arena_caption_3d.is_empty()
+	if caption.visible:
+		caption.text = str(main.arena_caption_3d[0])
+		caption.modulate = main.arena_caption_3d[1]
+		var top: = band * isc / dens * U
+		caption.position = to3(base + Vector2(w * isc / dens * 0.5, 0), top * 0.86) + Vector3(0, 0, 0.06)
 
 ## Last 3D frame (main.gd blurs it behind menu cards).
 func snapshot() -> Image:
 	var t: = vp.get_texture()
-	return t.get_image() if t != null else null
+	if t == null:
+		return null
+	var img: = t.get_image()
+	if img != null and img.get_width() != 640:
+		img.resize(640, 360, Image.INTERPOLATE_BILINEAR)   # main.gd's veil blur expects the logical size
+	return img
 
 # --- building blocks ---------------------------------------------------------------------------------------
 
@@ -146,7 +276,7 @@ func _build_ground() -> void:
 	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	mat.roughness = 1.0
 	ground.material_override = mat
-	world.add_child(ground)
+	town.add_child(ground)
 	_refresh_ground()
 	# beyond the map: a dark lawn so the camera never sees void
 	var under: = MeshInstance3D.new()
@@ -158,7 +288,7 @@ func _build_ground() -> void:
 	um.roughness = 1.0
 	under.material_override = um
 	under.position = to3(Vector2(320, 180), -0.02)
-	world.add_child(under)
+	town.add_child(under)
 
 ## Same texture and placement as main.gd _draw_outside: Rect2(origin / 2, size / 2) in world units.
 ## Re-checked every frame because on the web the painted street arrives later with a pack (Ground.clear_cache()).
@@ -256,8 +386,14 @@ func _sync_actors() -> void:
 				world.add_child(c)
 				pool.append(c)
 			var s: Sprite3D = pool[used]
-			used += 1
+			used += 1  # (room floors never get here)
 			s.visible = true
+			var flat: = ci == main and is_floor(name)
+			if flat:
+				_place_room(name, tx, inf, d[1], float(d[3]) / 1000.0, dens)
+				continue
+			s.rotation_degrees.x = -90.0 if flat else 0.0
+			s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if flat else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 			s.texture = tx
 			s.flip_h = sc.x < 0.0
 			var mod: Color = d[4]
@@ -278,8 +414,12 @@ func _sync_actors() -> void:
 				s.region_enabled = false
 				s.offset = Vector2(-float(org2[0]), 0.0)
 				s.pixel_size = U / dens * isc * absf(sc.y)
-				var bottom: = pos + Vector2(0, (float(tx.get_height()) - float(org2[1])) * isc / dens)
-				s.position = to3(full * bottom) + toward * k
+				if flat:   # top-left corner on the floor, image runs south
+					s.offset = Vector2(-float(org2[0]), -float(tx.get_height()) + float(org2[1]))
+					s.position = to3(full * pos, 0.0)
+				else:
+					var bottom: = pos + Vector2(0, (float(tx.get_height()) - float(org2[1])) * isc / dens)
+					s.position = to3(full * bottom) + toward * k
 			if s.flip_h:
 				s.offset.x = -float(s.region_rect.size.x if s.region_enabled else tx.get_width()) - s.offset.x
 			k += 1
@@ -305,7 +445,7 @@ func _build_town() -> void:
 		s.texture = tx
 		s.pixel_size = U / k
 		s.position = to3(Vector2(left_x, bottom_y))
-		world.add_child(s)
+		town.add_child(s)
 		buildings.append([b, s])
 		static_art[n] = true
 		# a dark block behind the facade: it only throws a shadow (the sun sees a building, not a playing card)
@@ -316,7 +456,7 @@ func _build_town() -> void:
 		mass.mesh = bm
 		mass.position = Vector3((r.position.x + r.size.x * 0.5) * U, h * 0.5, (bottom_y - r.size.y * 0.35) * U)
 		mass.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_SHADOWS_ONLY
-		world.add_child(mass)
+		town.add_child(mass)
 		# warm pool at the door from dusk (hd_presentation.gd does the same in 2D)
 		if n != "sf_home":
 			_lamp(Vector2(r.get_center().x, r.end.y + 6), 2.2, Color("#ffc27a"), 1.0, 6.0)
@@ -347,7 +487,7 @@ func _build_town() -> void:
 			if it.get("tree", false):
 				c.set_meta("sway", randf() * TAU)
 				c.add_to_group("view3d_sway")
-		world.add_child(c)
+		town.add_child(c)
 
 func _lamp(p: Vector2, h: float, c: Color, e: float, rng: float) -> void:
 	var l: = OmniLight3D.new()
@@ -356,7 +496,7 @@ func _lamp(p: Vector2, h: float, c: Color, e: float, rng: float) -> void:
 	l.omni_attenuation = 1.6
 	l.position = to3(p, h)
 	l.light_energy = 0.0
-	world.add_child(l)
+	town.add_child(l)
 	lamps.append([l, e])
 
 func _sync_town() -> void:
@@ -377,7 +517,7 @@ func _sync_town() -> void:
 func _sync_labels() -> void:
 	var want: Array = []   # [world point, text, colour, size]
 	var t: = float(main.t)
-	if main.dialog.is_empty():
+	if main.dialog.is_empty() and room().size == Vector2.ZERO:
 		var spots: Dictionary = main.quest_spots()
 		for npc in spots:
 			if str(spots[npc][0]) != "outside":
@@ -416,9 +556,26 @@ func _sync_labels() -> void:
 		var p: Vector2 = w[0]
 		l.position = to3(Vector2(p.x, p.y + 26.0), 2.6)
 
+## Rooms get a fixed key light from the front-left (a ceiling lamp / the arena floods), soft ambient,
+## no fog. Night tint and the like still come from main's own overlay draws.
+func _room_light() -> void:
+	sun.rotation_degrees = Vector3(-58.0, 28.0, 0.0)
+	sun.light_color = Color(1.0, 0.95, 0.86)
+	sun.light_energy = 0.7
+	sun.shadow_enabled = true
+	env.ambient_light_color = Color("#d8d0e8")
+	env.ambient_light_energy = 0.55
+	env.glow_intensity = 0.35
+	env.adjustment_contrast = 1.1
+	env.background_color = Color("#141018")
+	env.fog_enabled = false
+
 ## Sun, ambient and sky follow the same clock keys as the 2D grade (hd_presentation.gd SKY).
 func _sync_sky() -> void:
 	_refresh_ground()
+	if room().size != Vector2.ZERO:
+		_room_light()
+		return
 	var minute: = float(main.clock)
 	var sky: = HdPresentation.sky_at(minute)
 	var dark: = HdPresentation.darkness(minute)
@@ -438,9 +595,18 @@ func _sync_sky() -> void:
 	env.adjustment_contrast = lerpf(1.14, 1.06, warm)
 	env.background_color = Color("#9cc8e8").lerp(sky, 0.5).darkened(dark * 0.6)
 	env.fog_light_color = Color("#c8dcef").lerp(sky, 0.6).darkened(dark * 0.5)
+	env.fog_enabled = true
 	env.fog_density = lerpf(0.0012, 0.004, maxf(warm, dark))
 
+func _cam_off() -> Vector3:
+	return CAM_OFF
+
 func _cam_target() -> Vector3:
+	var rr: = room()
+	if rr.size != Vector2.ZERO:
+		# follow Duff across, hold the depth so the front edge sits at the bottom of the screen
+		var px: float = main.player.position.x if main.player != null else rr.get_center().x
+		return to3(Vector2(clampf(px, rr.position.x + 128.0, rr.end.x - 128.0), rr.end.y - 70.0), 0.8)
 	var p: Node2D = main.player
 	var c: = p.position if p != null else Vector2(320, 180)
 	# keep the frame inside the map the way the 2D camera's limits do (a little looser: the view is tilted)
@@ -449,10 +615,12 @@ func _cam_target() -> Vector3:
 	return to3(c, 0.8)
 
 func _sync_cam() -> void:
-	var want: = _cam_target() + CAM_OFF
-	cam_base = cam_base.lerp(want, clampf(get_process_delta_time() * 6.0, 0.0, 1.0))
+	var want: = _cam_target() + _cam_off()
+	# snap on a room change (doors cut in 2D too), glide while walking the town
+	var jump: = cam_base.distance_to(want) > 30.0
+	cam_base = want if jump else cam_base.lerp(want, clampf(get_process_delta_time() * 6.0, 0.0, 1.0))
 	cam.position = cam_base
-	cam.look_at(cam_base - CAM_OFF)
+	cam.look_at(cam_base - _cam_off())
 	# juice.gd's screen shake + zoom punch move the (disabled) Camera2D; the 3D camera takes them over
 	var c2: Camera2D = main.get("cam")
 	var off: = c2.offset if c2 != null else Vector2.ZERO
@@ -467,9 +635,9 @@ func _sync_cam() -> void:
 func _sync_overlay() -> void:
 	if vp2d == null:
 		return
-	var t3: = cam_base - CAM_OFF
+	var t3: = cam_base - _cam_off()
 	var c: = Vector2(t3.x, t3.z) / U
-	var r: = Vector2(vp2d.size) / Vector2(vp.size)
+	var r: = Vector2(640, 360) / Vector2(vp.size)   # canvas units (vp2d's size_2d_override)
 	var s0: = cam.unproject_position(to3(c)) * r
 	var sx: = (cam.unproject_position(to3(c + Vector2(32, 0))) * r - s0) / 32.0
 	var sg: = (cam.unproject_position(to3(c + Vector2(0, 32))) * r - s0) / 32.0

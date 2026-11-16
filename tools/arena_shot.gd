@@ -123,7 +123,7 @@ func _process(_d: float) -> void:
 			m._say(["Dolores (31 years in): \"Three grills, hon. Fire 'em, plate 'em, don't let 'em burn. And don't let the drunks hug you. They mean it.\""])
 		elif id == "waffle":  # Waffle Haus shift (Dolores behind the counter)
 			m.start_waffle()
-		elif id in ["fryer", "sandwich", "home"]:
+		elif id in ["fryer", "sandwich", "home", "prep"]:
 			m.debug_station(id)
 		elif id == "hint":  # home, Duff next to Madison so the "E / A: Talk to" prompt shows
 			m.debug_station("home")
@@ -135,7 +135,7 @@ func _process(_d: float) -> void:
 			m.start_bounty(id.substr(7))
 		else:
 			m.start_story_fight(id)
-	if frame == 215 and id in ["fryer", "sandwich", "waffle"]:
+	if frame == 215 and id in ["fryer", "sandwich", "waffle", "prep"]:
 		_key(KEY_SPACE)  # past the NEXT STATION card
 	if frame == 260 and id in ["fryer", "sandwich"]:
 		var g: Node = _find_game(m)
@@ -221,7 +221,7 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["street", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look"):
+	if frame == 230 and not id in ["street", "prep", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
@@ -237,6 +237,8 @@ func _process(_d: float) -> void:
 		return
 	if frame == 280:
 		get_viewport().get_texture().get_image().save_png("/tmp/qa/arena_%s.png" % id)  # fryer/sandwich: the station
+		if m.view3d != null and m.view3d_on:   # --3d: the 3D layer alone, for checking what's 2D and what's 3D
+			m.view3d.snapshot().save_png("/tmp/qa/arena_%s_3donly.png" % id)
 		get_tree().quit()
 
 ## id "cold": the new game's cold open (run with --fixed-fps 30). Saves cold_0 (phone: first control card),

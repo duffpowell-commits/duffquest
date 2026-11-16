@@ -2608,6 +2608,7 @@ func debug_station(k: String) -> void:
 ## on phones. _process() redraws on a location change even while busy (perf, Nov 9).
 func _draw() -> void:
 	_drawn_loc = location
+	arena_caption_3d = []
 	match location:
 		"home":
 			_draw_inside()
@@ -2624,6 +2625,7 @@ func _draw() -> void:
 ## hides the same way it does under an opaque menu, and the HUD/dialogue CanvasLayers draw over the 3D frame.
 var view3d: Node = null
 var view3d_on: = false
+var arena_caption_3d: Array = []   # [text, colour] of the room's joke caption while the 3D view is live
 
 func world_covered() -> bool:
 	return overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
@@ -3852,10 +3854,14 @@ func _draw_arena() -> void:
 			var pp: = o + Vector2(rng.randf_range(10, 310), rng.randf_range(30, 170))
 			draw_circle(pp, rng.randf_range(10, 26), Color(1, rng.randf_range(0.3, 0.8), 0.1, 0.75))
 		draw_rect(Rect2(o, ARENA_SIZE), Color(1, 0.9, 0.6, 0.25 + 0.25 * sin(t * 30.0)))
-	draw_rect(Rect2(o, ARENA_SIZE), Color("#888888"), false, 2.0)
+	if not view3d_on:   # the 3D room has real edges
+		draw_rect(Rect2(o, ARENA_SIZE), Color("#888888"), false, 2.0)
 
 ## One-line joke caption on a dark strip across the back wall, just under the HUD bar (never on the floor).
 func _arena_caption(f: Font, o: Vector2, line: String, c: Color) -> void:
+	if view3d_on:   # View3D hangs it on the standing back wall instead
+		arena_caption_3d = [Cast.T(line), c]
+		return
 	draw_rect(Rect2(o + Vector2(0, 18), Vector2(ARENA_SIZE.x, 9)), Color(0, 0, 0, 0.55))
 	draw_string(f, o + Vector2(0, 25), Cast.T(line), HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 6, c)
 
