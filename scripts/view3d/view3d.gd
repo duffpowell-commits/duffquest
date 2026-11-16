@@ -297,7 +297,7 @@ func _refresh_ground() -> void:
 	if gt == null or gt == _ground_tex:
 		return
 	_ground_tex = gt
-	var r: = Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0)
+	var r: = Ground.world_rect()
 	var pm: = PlaneMesh.new()
 	pm.size = r.size * U
 	ground.mesh = pm

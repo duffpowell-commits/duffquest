@@ -7,7 +7,8 @@ but not the exact proportions, so: find both roads' centre lines in the painting
 blue >= green, red < 135), pick ONE uniform scale that still covers the whole map, and line the road centres up.
 Roads land within a few px of the gameplay roads (driver lanes, sidewalks) without stretching the art.
 A final 1-px unsharp pass keeps the shrunk painting as crisp as the 1:1 sprites standing on it.
-scripts/ground.gd uses ground_painted.png when it exists (same size + origin as the tile build).
+scripts/ground.gd uses ground_painted.png when it exists (same origin as the tile build, 1x or 2x its size).
+The shipped ground is 2x: run tools/superres_x2.py on this script's output.
 """
 import sys
 from pathlib import Path
