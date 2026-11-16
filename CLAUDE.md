@@ -170,6 +170,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   back to `-preview`). Building signs (CLOSED, CLEARED, errand/story `!`, NOW HIRING, quest markers, house names,
   Lost & Found glints) are Label3Ds pinned to their facade (`view3d._sync_labels`); main's flat WorldLabels layer hides
   in 3D because the overlay map only lines up near the camera target. Phone-test link: memory `duffquest-3d-phone-test`.
+  Plain draw_rect/draw_string art in the town (signs, boards) drifts in 3D the same way: give it a
+  `draw_x(ci, o, k)` function and stand it up with `view3d._sign()` (own 4x viewport on a card), or use a Label3D.
+  Bus stop signs are dressing items. Renders: `arena_shot -- at:X,Y[,MIN] --3d` / `--2d`.
 
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;

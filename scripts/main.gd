@@ -2670,7 +2670,9 @@ func _draw_outside() -> void:
 		Art.image(self, str(b.get("art", "")), r.position, Color(0.72, 0.72, 0.78) if building_shut(b) else Color.WHITE)
 
 	_draw_porch_and_cans()
-	_draw_waffle_sign_and_board(f)
+	if not view3d_on:   # 3D stands both up as cards (view3d._sign)
+		draw_waffle_sign(self)
+		draw_86_board(self)
 	if ensure_respawn <= 0.0:
 		Art.image(self, "ensure", ENSURE_POS + Vector2(0, 4))
 
@@ -2691,7 +2693,7 @@ func draw_inspector_at(ci: CanvasItem, ofs: Vector2) -> void:
 
 func draw_brittany(ci: CanvasItem, ofs: Vector2) -> void:
 	Art.person(ci, "ch_brittany", BRITT_POS + Vector2(0, 6) + ofs, player.position - BRITT_POS, t, false, int(t * 0.7) % 4 == 0)
-	if int(bet["day"]) != day_count:
+	if int(bet["day"]) != day_count and not view3d_on:   # 3D: a Label3D over her head (view3d._sync_labels)
 		ci.draw_string(ThemeDB.fallback_font, BRITT_POS + ofs + Vector2(-3, -24 + sin(t * 3.0) * 1.5), "$", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#60e060"))
 
 func _draw_inside() -> void:
@@ -5617,30 +5619,36 @@ func end_waffle(r: Dictionary) -> void:
 	night_report.append("I roll home at 6:20 AM smelling like hash browns. {partner} did the 3 AM bottle alone. Note on the fridge: \"Proud of you. Shower. -{partner}\" -6 Happiness")
 	_wake(55)
 
-func _draw_waffle_sign_and_board(f: Font) -> void:
-
+## The Waffle Haus pole sign and the 86 List board. ci gets (world + o) * k: 2D passes (self, ZERO, 1); the 3D
+## view (view3d._sign) draws each into its own small viewport at 4x and stands it up as a card, so they stay put.
+func draw_waffle_sign(ci: CanvasItem, o: Vector2 = Vector2.ZERO, k: float = 1.0) -> void:
+	var f: = ThemeDB.fallback_font
+	var R: = func(r: Rect2) -> Rect2: return Rect2((r.position + o) * k, r.size * k)
 	var sp: = WAFFLE_SIGN_PT
-	draw_rect(Rect2(sp + Vector2(-1, -20), Vector2(2, 20)), Color("#5a5a66"))
+	ci.draw_rect(R.call(Rect2(sp + Vector2(-1, -20), Vector2(2, 20))), Color("#5a5a66"))
 	var lit: = phase() == "Night" or phase() == "Evening"
 	var box: = Rect2(sp + Vector2(-13, -33), Vector2(26, 13))
-	draw_rect(box.grow(1), Color("#2a1a2e"))
-	draw_rect(box, Color("#f8d232") if lit or int(t) % 2 == 0 else Color("#e0b828"))
-	draw_string(f, box.position + Vector2(0, 6), "WAFFLE", HORIZONTAL_ALIGNMENT_CENTER, 26, 5, Color("#1a1418"))
-	draw_string(f, box.position + Vector2(0, 12), "HAUS", HORIZONTAL_ALIGNMENT_CENTER, 26, 5, Color("#1a1418"))
+	ci.draw_rect(R.call(box.grow(1)), Color("#2a1a2e"))
+	ci.draw_rect(R.call(box), Color("#f8d232") if lit or int(t) % 2 == 0 else Color("#e0b828"))
+	ci.draw_string(f, (box.position + Vector2(0, 6) + o) * k, "WAFFLE", HORIZONTAL_ALIGNMENT_CENTER, 26 * k, int(5 * k), Color("#1a1418"))
+	ci.draw_string(f, (box.position + Vector2(0, 12) + o) * k, "HAUS", HORIZONTAL_ALIGNMENT_CENTER, 26 * k, int(5 * k), Color("#1a1418"))
 	if lit:
-		draw_rect(box.grow(3), Color(1, 0.85, 0.2, 0.12 + 0.05 * sin(t * 3.0)))
-	draw_string(f, sp + Vector2(-14, -17), "-> I-80", HORIZONTAL_ALIGNMENT_CENTER, 28, 4, Color("#f0ead8"))
+		ci.draw_rect(R.call(box.grow(3)), Color(1, 0.85, 0.2, 0.12 + 0.05 * sin(t * 3.0)))
+	ci.draw_string(f, (sp + Vector2(-14, -17) + o) * k, "-> I-80", HORIZONTAL_ALIGNMENT_CENTER, 28 * k, int(4 * k), Color("#f0ead8"))
 
+func draw_86_board(ci: CanvasItem, o: Vector2 = Vector2.ZERO, k: float = 1.0) -> void:
+	var f: = ThemeDB.fallback_font
+	var R: = func(r: Rect2) -> Rect2: return Rect2((r.position + o) * k, r.size * k)
 	var bp: = BOARD_PT + Vector2(-10, -20)
-	draw_rect(Rect2(bp - Vector2(1, 1), Vector2(22, 14)), Color("#2a1a2e"))
-	draw_rect(Rect2(bp, Vector2(20, 12)), Color("#b8864a"))
+	ci.draw_rect(R.call(Rect2(bp - Vector2(1, 1), Vector2(22, 14))), Color("#2a1a2e"))
+	ci.draw_rect(R.call(Rect2(bp, Vector2(20, 12))), Color("#b8864a"))
 	for i in Bounties.LIST.size():
 		var pp: = bp + Vector2(1.5 + (i % 3) * 6.2, 1.2 + (i / 3) * 5.4)
-		draw_rect(Rect2(pp, Vector2(5, 4.4)), Color("#f4f0e8"))
+		ci.draw_rect(R.call(Rect2(pp, Vector2(5, 4.4))), Color("#f4f0e8"))
 		if (bounties["beaten"] as Array).has(str(Bounties.LIST[i]["id"])):
-			draw_line(pp, pp + Vector2(5, 4.4), Color("#d02020"), 1.0)
-			draw_line(pp + Vector2(5, 0), pp + Vector2(0, 4.4), Color("#d02020"), 1.0)
-	draw_string(f, bp + Vector2(-4, -1), "86 LIST", HORIZONTAL_ALIGNMENT_CENTER, 28, 4, Color("#ffd23f"))
+			ci.draw_line((pp + o) * k, (pp + Vector2(5, 4.4) + o) * k, Color("#d02020"), k)
+			ci.draw_line((pp + Vector2(5, 0) + o) * k, (pp + Vector2(0, 4.4) + o) * k, Color("#d02020"), k)
+	ci.draw_string(f, (bp + Vector2(-4, -1) + o) * k, "86 LIST", HORIZONTAL_ALIGNMENT_CENTER, 28 * k, int(4 * k), Color("#ffd23f"))
 
 	# Brittany: drawn by a y-sorted proxy (dressing_front.gd -> draw_brittany)
 
