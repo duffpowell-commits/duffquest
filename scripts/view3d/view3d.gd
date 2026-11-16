@@ -223,6 +223,7 @@ func _build_room_parts() -> void:
 	caption.pixel_size = 0.012
 	caption.modulate = Color.WHITE
 	caption.outline_modulate = Color(0, 0, 0, 0.85)
+	caption.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	world.add_child(caption)
 
 ## A room's painted floor image: the back band stands up as the wall, the rest lies on the ground.
@@ -674,6 +675,7 @@ func _sync_labels() -> void:
 		l.outline_size = 6
 		l.render_priority = 10
 		l.outline_render_priority = 9
+		l.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF   # text is a screen marker; edge-on to a low sun it threw a stray line
 		labels_root.add_child(l)
 		marks.append(l)
 	for i in marks.size():
@@ -693,6 +695,10 @@ func _sync_labels() -> void:
 		elif w.size() > 5 and w[5] == "sign" and not cam.is_position_behind(l.position):
 			# a roof sign on a shop that sits low in the frame is close to the camera: oversized, under the touch pad
 			l.visible = cam.unproject_position(l.position).y < float(vp.size.y) * 0.75   # near the bottom it is also close and huge
+			# closer than the camera target, perspective blows it up past the shop's width: shrink it back to its size at the target
+			var near: = cam.global_position.distance_to(l.position) / CAM_OFF.length()
+			if near < 1.0:
+				l.font_size = maxi(8, int(float(w[3]) * near))
 
 ## House names float over the roof; when the house sits at the top of the frame that's under the HUD strip.
 ## Slide the name down (never below the ground) until it clears the strip, like main.draw_world_labels in 2D.
