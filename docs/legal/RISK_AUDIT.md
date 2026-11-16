@@ -20,8 +20,9 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
    Saying a real person committed a crime against a real business is the classic defamation fact pattern, even as a
    joke, and the restaurant (or her real manager) didn't consent. PROPOSE: rename the restaurant (new name + new
    sign art) and either make the thief a made-up coworker or get Brittany's written OK. **LAWYER** if both stay real.
-   PUBLIC: restaurant renamed; Brittany is "Mazikeen" (`{coworker}` token, her own chosen persona) everywhere in the
-   public build. Sprite and portrait still look like her, so keep her written OK on file.
+   PUBLIC: restaurant renamed. Brittany was "Mazikeen" in the public build until Nov 16, when she told Duff in writing
+   (Snapchat) "I like it being my name" and called "Brittanys Bets" catchy; her real name is back in both editions
+   (`{coworker}` token). Keep that screenshot on file as her written OK.
 2. **The Twisted Fork in general.** Real business name and a look-alike green sign, shown with a health
    inspector, ranch theft, a villain buying it, "Nobody tips the fry cook". Even if Duff works there, the owner can
    object to its name in a game sold or advertised to the public, and an employer can discipline staff for it.
