@@ -1119,6 +1119,13 @@ func open_overlay(node: Node) -> void:
 func _veil_snapshot() -> Texture2D:
 	if in_shift or DisplayServer.get_name() == "headless":   # headless (tests, soak): no frame to grab
 		return null
+	if view3d_on and view3d != null:   # the 3D frame is the world (its viewport keeps its last frame when paused)
+		var img3: Image = view3d.snapshot()
+		if img3 != null and not img3.is_empty():
+			for sz in [Vector2i(320, 180), Vector2i(160, 90), Vector2i(80, 45), Vector2i(40, 23), Vector2i(80, 45), Vector2i(160, 90), Vector2i(320, 180)]:
+				img3.resize(sz.x, sz.y, Image.INTERPOLATE_BILINEAR)
+			_veil_tex = ImageTexture.create_from_image(img3)
+		return _veil_tex
 	if not visible:
 		return _veil_tex
 	if DisplayServer.get_name() == "headless":
@@ -2613,8 +2620,16 @@ func _draw() -> void:
 
 ## An opaque full-screen menu/minigame (every minigame.gd overlay paints its whole 320x180 first)
 ## hides the world: stop drawing it and its screen shader until the overlay closes. Looks identical.
+## 3D town view (scripts/view3d/view3d.gd, made by game.gd only on engines with 3D): while it's live the 2D world
+## hides the same way it does under an opaque menu, and the HUD/dialogue CanvasLayers draw over the 3D frame.
+var view3d: Node = null
+var view3d_on: = false
+
+func world_covered() -> bool:
+	return overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
+
 func _update_world_cover() -> void:
-	var cover: = overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
+	var cover: = world_covered() or view3d_on
 	if visible == cover:
 		visible = not cover
 		var hd: = get_node_or_null("HD2DPresentation")

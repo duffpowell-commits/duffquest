@@ -17,6 +17,7 @@ var music_vol: = 0.7
 var sfx_vol: = 0.8
 var muted: = false
 var gore: = true                             # "Cartoon gore" in the KO cutscenes (knockout.gd reads this)
+var view3d: = false                          # 3D town view (scripts/view3d/, game.gd); only on engines with 3D
 var current: = ""
 var played: Array = []
 var music_player: AudioStreamPlayer
@@ -95,7 +96,7 @@ func set_muted(on: bool) -> void:
 
 func to_dict() -> Dictionary:
 	return {"music": music_vol, "sfx": sfx_vol, "mute": muted, "clean": bool(CastScript.clean), "gore": gore,
-		"screen_shake": bool(JuiceScript.shake_on) }
+		"screen_shake": bool(JuiceScript.shake_on), "view3d": view3d }
 
 func set_screen_shake(on: bool) -> void:
 	JuiceScript.shake_on = on
@@ -103,6 +104,10 @@ func set_screen_shake(on: bool) -> void:
 
 func set_clean(on: bool) -> void:
 	CastScript.clean = on
+	save_settings()
+
+func set_view3d(on: bool) -> void:
+	view3d = on
 	save_settings()
 
 func set_gore(on: bool) -> void:
@@ -131,6 +136,7 @@ func load_settings() -> void:
 	CastScript.clean = bool(d.get("clean", portal))
 	gore = bool(d.get("gore", not portal))
 	JuiceScript.shake_on = bool(d.get("screen_shake", true))
+	view3d = bool(d.get("view3d", false))
 	apply()
 
 func play_sfx(name: String, pitch: float = 1.0) -> void:
