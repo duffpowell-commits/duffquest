@@ -239,7 +239,7 @@ func _layer_sprite(id: String, by: float, h: float) -> bool:
 	var tx: Texture2D = Art.tex(LAYER_ART[id][0])
 	var a: Array = LAYER_ART[id]
 	var src: = Rect2(0, tx.get_height() * float(a[1]), tx.get_width(), tx.get_height() * (float(a[2]) - float(a[1])))
-	var w: = src.size.x / 2.0
+	var w: = src.size.x / Art.density(Art.info(LAYER_ART[id][0]))
 	var dh: = maxf(h * 2.2, 7.0)
 	var mod: = Color("#b08868") if id == "grilled" else Color.WHITE
 	draw_texture_rect_region(tx, Rect2(200 - w / 2, by - dh + h * 0.5, w, dh), src, mod)

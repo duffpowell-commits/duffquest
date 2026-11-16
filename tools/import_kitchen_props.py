@@ -4,8 +4,8 @@
 
 Sources: grok_art/2026-11-10-kitchen-props/<sheet>.png = a Canva scratch-page export (1920x1080) with the square
 generated sheet placed at left 420, 1080x1080: 4x4 items on flat magenta. Each cell is keyed (magenta + pink spill),
-trimmed, scaled so its longest side is MAX_PX (2 px per world unit -> ~40 world units) and saved as
-assets/art/kf_<name>.png. Registers kf_* in assets/art/manifest.json + scripts/art_manifest.gd (kind "prop", s 2).
+trimmed, scaled so its longest side is MAX_PX (4 px per world unit -> ~40 world units) and saved as
+assets/art/kf_<name>.png. Registers kf_* in assets/art/manifest.json + scripts/art_manifest.gd (kind "prop", s 4).
 """
 import json
 import re
@@ -17,7 +17,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "grok_art" / "2026-11-10-kitchen-props"
 OUT = ROOT / "assets" / "art"
-MAX_PX = 80
+MAX_PX = 160   # 4 px per world unit (s 4) -> ~40 world units
 SQ = (420, 0, 1080)
 MESH = {"basket", "basket_fries", "basket_wings"}   # x, y, size of the square sheet on the export page
 SHEETS = {
@@ -43,7 +43,7 @@ SHEETS = {
 
 
 # one big prop filling the whole export page: name, longest side in px
-SINGLE = {"k4_cake.png": ("cake", 300)}
+SINGLE = {"k4_cake.png": ("cake", 600)}
 
 
 def cut(sheet: Path, names: list, grid: int = 4, max_px: int = MAX_PX) -> dict:
@@ -89,7 +89,7 @@ def cut(sheet: Path, names: list, grid: int = 4, max_px: int = MAX_PX) -> dict:
         small[..., 3] = np.where(small[..., 3] >= 128, 255, 0)
         key = "kf_" + name
         Image.fromarray(small, "RGBA").save(OUT / f"{key}.png")
-        table[key] = {"w": w, "h": h, "cell": [w, h], "origin": [w // 2, h // 2], "kind": "prop", "s": 2}
+        table[key] = {"w": w, "h": h, "cell": [w, h], "origin": [w // 2, h // 2], "kind": "prop", "s": 4}
     return table
 
 
