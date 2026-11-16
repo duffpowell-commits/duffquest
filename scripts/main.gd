@@ -766,7 +766,7 @@ func first_bet_pitch(ko_line: String) -> void:
 	lines.append("{coworker} from the {fork_nick} is across the street with her phone up. Of course she filmed that.")
 	lines.append("{coworker}: That guy sells to Marketplace Mike. Mike's out back of the {fork_nick} right now, loading a van full of everybody's porches.")
 	lines.append("{coworker}: Bet you can't drop him. I'll front the stake. You win, I pay you $%d. You lose, I post it." % FIRST_BET_PAY)
-	_menu("{COWORKER}'S BET", lines, [["go", "Take the bet", KEY_1], ["no", "Not today", KEY_2]], func (ch: String) -> void:
+	_menu("{COWORKER}'S BETS", lines, [["go", "Take the bet", KEY_1], ["no", "Not today", KEY_2]], func (ch: String) -> void:
 		if ch == "go":
 			start_first_bet()
 		else:
@@ -3818,7 +3818,7 @@ func _draw_arena() -> void:
 				_draw_bet_hud(f, o)
 			elif arena_mode == "firstbet":
 				draw_rect(Rect2(o + Vector2(40, 62), Vector2(240, 10)), Color(0, 0, 0, 0.6))
-				draw_string(f, o + Vector2(40, 70), Cast.T("{COWORKER}'S BET: DROP MIKE, WIN $%d" % FIRST_BET_PAY), HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
+				draw_string(f, o + Vector2(40, 70), Cast.T("{COWORKER}'S BETS: DROP MIKE, WIN $%d" % FIRST_BET_PAY), HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
 				_draw_britt_rec(f, o)
 			else:
 				_arena_caption(f, o, "BEHIND {FORK}  -  86 LIST ENFORCEMENT ZONE", Color("#ffd23f"))
@@ -5634,7 +5634,7 @@ func bet_menu() -> void:
 	if opts.is_empty():
 		lines.append("{coworker}: You have $%d. I'm not betting against your lunch money. That's too sad, even for me." % money)
 	opts.append(["no", "Nah", KEY_ESCAPE])
-	_menu("{COWORKER}'S BET", lines, opts, func (ch: String) -> void:
+	_menu("{COWORKER}'S BETS", lines, opts, func (ch: String) -> void:
 		if ch in ["10", "25"]:
 			start_bet(bet_today(), int(ch)))
 
@@ -5719,7 +5719,7 @@ func _draw_bet_hud(f: Font, o: Vector2) -> void:
 	if bet_kind == "":
 		return
 	var b: Dictionary = BETS[bet_kind]
-	var txt: = "{COWORKER}'S BET: %s   %d / %d" % [str(b["name"]).to_upper(), _bet_progress(), int(b["goal"])]
+	var txt: = "{COWORKER}'S BETS: %s   %d / %d" % [str(b["name"]).to_upper(), _bet_progress(), int(b["goal"])]
 	if float(b["time"]) > 0.0:
 		txt += "   %ds" % int(ceil(maxf(0.0, float(b["time"]) - bet_t)))
 	if bet_kind == "nohit":
