@@ -327,17 +327,26 @@ func _build_tiltshift() -> void:
 	sh.code = """
 shader_type canvas_item;
 uniform sampler2D screen_tex : hint_screen_texture, filter_linear_mipmap;
+uniform float sharpen = 0.6;
+uniform float blur = 1.0;
 void fragment() {
 	vec2 uv = SCREEN_UV;
-	float band = smoothstep(0.30, 0.0, uv.y) + smoothstep(0.72, 1.0, uv.y);
+	float band = (smoothstep(0.30, 0.0, uv.y) + smoothstep(0.72, 1.0, uv.y)) * blur;
 	float lod = band * 2.6;
 	vec3 c = textureLod(screen_tex, uv, lod).rgb;
+	// sharpen the in-focus band (unsharp mask): crisper sprite edges without touching the art
+	vec2 px = 1.0 / vec2(textureSize(screen_tex, 0));
+	vec3 nb = textureLod(screen_tex, uv + vec2(px.x, 0.0), 0.0).rgb + textureLod(screen_tex, uv - vec2(px.x, 0.0), 0.0).rgb
+		+ textureLod(screen_tex, uv + vec2(0.0, px.y), 0.0).rgb + textureLod(screen_tex, uv - vec2(0.0, px.y), 0.0).rgb;
+	c = mix(c, clamp(c + (c - nb * 0.25) * sharpen, 0.0, 1.0), 1.0 - clamp(band * 3.0, 0.0, 1.0));
 	float vig = smoothstep(1.15, 0.35, length((uv - 0.5) * vec2(1.4, 1.0)));
 	COLOR = vec4(c * mix(0.78, 1.0, vig), 1.0);
 }
 """
 	var mat: = ShaderMaterial.new()
 	mat.shader = sh
+	if "pose" in OS.get_cmdline_user_args():
+		mat.set_shader_parameter("blur", 0.35)
 	rect.material = mat
 	cl.add_child(rect)
 	add_child(cl)
