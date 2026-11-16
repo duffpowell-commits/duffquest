@@ -29,7 +29,21 @@ func _process(delta: float) -> void:
 		vel = Vector2.from_angle(randf() * TAU) * randf_range(0.0, 45.0) if randf() < 0.75 else Vector2.ZERO
 	position += vel * delta
 	position = position.clamp(room.position, room.end)
+	_depth_sort()
 	queue_redraw()
+
+## Cats are added after Duff, so they'd always draw over him (a cat on his head). Keep the one whose feet
+## are further up the screen earlier in the draw order: cat feet = y + 5, Duff's = y + 11.
+func _depth_sort() -> void:
+	if target == null or target.get_parent() != get_parent():
+		return
+	var behind: = position.y + 5.0 < target.position.y + 11.0
+	var me: = get_index()
+	var him: = target.get_index()
+	if behind and me > him:
+		get_parent().move_child(self, him)
+	elif not behind and me < him:
+		get_parent().move_child(self, him)
 
 const Art: = preload("res://scripts/art.gd")
 const SHEETS: = {"{cat1}": "cat_alastor", "{cat2}": "cat_lucifer", "{cat3}": "cat_freya" }
