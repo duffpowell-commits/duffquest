@@ -13,6 +13,7 @@ var facing: = Vector3(0, 0, 1)
 var row: = 0                # 0 front, 1 back, 2 right, 3 left (sheet rows)
 var walk_t: = 0.0
 var swing_t: = 0.0
+var posed: = -1           # pose shots: force a sheet frame
 
 func _ready() -> void:
 	var cs: = CollisionShape3D.new()
@@ -81,4 +82,4 @@ func _physics_process(delta: float) -> void:
 	else:
 		walk_t = 0.0
 	var col: = 3 if swing_t > 0.0 else (0 if walk_t == 0.0 else 1 + int(walk_t) % 2)
-	sprite.frame = row * 4 + col
+	sprite.frame = posed if posed >= 0 else row * 4 + col
