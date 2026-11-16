@@ -35,7 +35,10 @@ Total: about 12-15 sessions.
 - No 3D node may be created on the 2D web engine. Until step 1 ships, every 3D script stays under
   `spike3d/` or behind the ClassDB check.
 - Public build: "Spatula", never a bare "Fork". Madison scenes: Duff approves every line, as today.
-- Duff's look: both sleeves, fox tattoo on the LEFT side of the neck, facing front.
+- Duff's look: both tattoo sleeves, fox tattoo on the LEFT side of the neck, facing front. His T-shirt sleeves
+  are plain black and cover the top of his tattoos (Duff, Nov 16: permanent). The HD sheet is rebuilt only with
+  `spike3d/tools/build_duff_hd.sh`, which paints both fixes in and fails if sleeve print is left. When the
+  sheet moves into the main game (step 3), test_daily gets the same sleeve check.
 - Tests (`test_daily`, soak) run before every push. The 3D view must not change any sim result.
 
 ## Risks
