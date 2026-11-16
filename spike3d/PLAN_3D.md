@@ -110,3 +110,10 @@ of the neck, facing front. Public build: "Spatula", never a bare "Fork". Madison
 `Accept: application/octet-stream` (`gh release download` is blocked). Boot test needs `pip install playwright` and
 Chrome at `/usr/bin/google-chrome`. To boot-test the 3D engine, swap
 `~/.local/share/godot/export_templates/4.5.stable/web_nothreads_release.zip` and put the 2D one back afterwards.
+
+## HANDOFF 2 (Nov 16, 12:00Z) - steps 2-6 done
+Branch `claude/project-thread-fhx6e4`, draft PR #109 (supersedes #106). Nothing merged. Steps 2-5: town, combat FX
+overlay, rooms, native-res render. Step 6: `View3D.set_low()` driven by `perf_guard.gd` (Lite = 1.5x render, no
+MSAA, shadows or glow; full caps at 3x). Ground: the branch has an AI 2x upscale; the Canva repaint lands on main from
+the HD thread, take main's `ground_painted.png` + `ground.gd` when merging main in. Open before step 7: a real-phone
+test (iPhone Safari + cheap Android) of the 3D view, and Duff's go for 3D as the default.
