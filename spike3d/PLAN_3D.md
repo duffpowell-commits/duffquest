@@ -20,7 +20,7 @@ Duff's call (Nov 16): "We are gonna make it 3D." This is the plan for doing that
 | # | Step | What ships | Sessions |
 |---|------|-----------|----------|
 | 0 | HD Duff sheet | Hi-detail Canva sheet of Duff so close-ups hold up (art job, started Nov 16) | 1 |
-| 1 | 3D web engine | `tools/web_template/custom.py` with 3D on, new release `web-template-3d`; boot test vs the 2D engine; the live build keeps the 2D engine until step 7 | 1-2 |
+| 1 | 3D web engine | `tools/web_template/custom.py` with 3D on, new release `web-template-3d`; boot test vs the 2D engine; the live build keeps the 2D engine until step 7. **Done Nov 16: +0.8 MB, +0.7 s** | 1-2 |
 | 2 | View scaffold | `scripts/view3d/` in the main project, loaded only when the engine has 3D (`ClassDB.class_exists("Node3D")`), so the 2D web build never parses it; Settings toggle; `arena_shot -- at:X,Y,MIN --3d` renders | 1 |
 | 3 | Town in 3D | Spike town moved in: ground, storefronts, props, fences, lamps, time-of-day from `hd_presentation.gd` SKY keys; Duff, NPCs, enemies and quest markers mirrored from the 2D nodes | 2 |
 | 4 | Combat feel | Slashes, hit sparks, boss telegraphs and the camera in 3D; touch buttons unchanged | 2 |
@@ -29,6 +29,27 @@ Duff's call (Nov 16): "We are gonna make it 3D." This is the plan for doing that
 | 7 | Default on | Both editions rendered and play-tested, then 3D becomes the default (2D stays as an option) | 1-2 |
 
 Total: about 12-15 sessions.
+
+## Step 1 result (Nov 16)
+
+Engine built from `tools/web_template_3d/custom.py` (release `web-template-3d-preview`). Same game, same packs,
+throttled 4G, headless Chrome (`tools/web_boot_test.py`):
+
+| | 2D engine (live) | 3D engine | Change |
+|---|---|---|---|
+| Template zip | 7.3 MB | 8.1 MB | +0.8 MB |
+| wasm on the wire (gz) | 7.2 MB | 8.0 MB | +0.8 MB |
+| Title screen | 9.9 s | 10.6 s | +0.7 s |
+| New Game playable | 17.9 s | 18.4 s | +0.5 s |
+| Console errors | none | none | |
+
+The full 2D game runs unchanged on the 3D engine. `spike3d/webcheck/` (ground, shadowed sun, glow + fog, the HD
+Duff card) renders in WebGL 2 on it: `docs/renders/spike3d_web_engine_check.png`.
+
+3D physics stays OFF in the profile. The spike's `town3d.gd` and `duff3d.gd` use CharacterBody3D / StaticBody3D
+and do NOT parse on this engine. That is fine: the plan is 2D sim, 3D view, so the view never needs 3D physics.
+Step 2 ports the view as plain Node3D/Sprite3D/MeshInstance3D driven by 2D positions; walls and movement stay in
+the 2D world. Turn physics 3D on only if a later step proves it needs it (and re-measure).
 
 ## Rules that carry over
 
