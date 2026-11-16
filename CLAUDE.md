@@ -82,14 +82,14 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Labels (Nov 13):** any text over painted art goes through `UiStyle.tag()` (minigames: `tag()`), never bare dark
   `txt()`. Audit + open list in `TRACKER.md` (PRs #48, #49).
 - **Combat (Nov 13):** Searing Spatter cut; S + swap hide until the first special (Pinwheel Lv 2). Duff said combat
-  was easy: `main.DMG_TAKEN` 1.25, story exes +20% HP (`boss.STORY_HP_MULT`, Willnot timer 250 s), night spawn cap +3.
+  was easy: `main.DMG_TAKEN` 1.25, story exes tuned in `boss.STORY_TUNE` (Nov 15 pass 2: early four 54/99/120/144 HP, x1.25 dmg, faster attacks, lead aim; Willnot 240 HP, timer 250 s), night spawn cap +3.
 
 - **Legal (Nov 13):** ranked risks in `docs/legal/RISK_AUDIT.md` (not legal advice). In-game Settings > Credits &
   legal carries the parody notice + Godot/OFL licenses; keep it, `docs/itch/PAGE.md` Legal and the end credits in
   sync. Privacy policy: `docs/legal/PRIVACY.md`.
 - **Editions (Nov 13):** public = default export (itch, Pages root, `duffquest-public.apk`): `data/cast_public.json`
   overrides cast.json and `Art.pub()` loads `<name>_pub.<ext>` art. Family = feature tag `family` (Pages
-  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (public: Mazikeen; write `{coworker}`, never her name, in new lines). The kitchen's nickname is `{fork_nick}` (family Fork, public Spatula; test_daily fails on a bare "Fork" in any string). New real brand or
+  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (both editions since Nov 16: she OKed her real name and asked for redder hair; still write `{coworker}`, not her name, in new lines). The kitchen's nickname is `{fork_nick}` (family Fork, public Spatula; test_daily fails on a bare "Fork" in any string). New real brand or
   real person? Put the family name in cast.json, the public one in cast_public.json, add a test_daily leak word.
   Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
   The `_pub` set: Fork + Walgrumps signs, the alley dumpster (`arena_alley`), the pharmacy shelves (`bg_pharmacy`: no real
@@ -137,7 +137,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Cast 2x overhaul (Nov 14, DONE: every used `ch_*` sheet is 2x; last was `ch_duff_suit`, PR #92; `ch_grillboy` is unused and stays 1x. Final review stills: `docs/renders/screens_final_2x.png` + `ui_audit_final_2x.png`):** every `ch_*` sheet moves to 2x like Duff (512x512, cell 128,
   origin [64,120], s 4 in manifest.json AND art_manifest.gd). Batches of four, before/after via
   `res://tools/cast_shot.tscn -- OLD_DIR id[:Label] ...` (old PNGs from git in OLD_DIR) -> `/tmp/qa/cast.png`. Batch 1
-  (home crew): `ch_madison` done (8% slimmer per Duff; AI ghost/beard frames replaced by mirrors); dress, Mazikeen
+  (home crew): `ch_madison` done (8% slimmer per Duff; AI ghost/beard frames replaced by mirrors); dress, Brittany
   (`ch_brittany`), Lance (`ch_fences`) done too (PRs #62, #66, #67 merged). Batch 1 complete. Batch 2 (story exes: Ghoster, Gym Bro, DJ Vape, Crypto) done on branch `claude/project-thread-i5tf4g`, draft PR for Duff's yes (render `docs/renders/cast_batch2_exes_before_after.png`). DJ Vape + Crypto came from Grok (Duff ran it; prompt + refs in project files `renders/grok/`). Sheet row 3 faces RIGHT, row 4 LEFT: check against cast_shot, AI sheets often come swapped. Canva allows about one generation per 40 min. Import with `--tol 90` (reds survive the key) and `--fit-action` (keeps attack swings inside the cell). Action-frame FX trails (purple) get purged and small islands dropped after import. Batch 3 (Willnot, Grease, Husk, Baron, Marketplace Mike as his own `ch_mike`, no tint) done on branch `claude/project-thread-sm8r6f`, draft PR for Duff's yes (render `docs/renders/cast_batch3_bosses_before_after.png`). Canva takes TWO characters per shot (LANDSCAPE_2_1, 8x4 sheet, split into two 2048 halves before import). Batch 4 (porch pirates 0-3) done, render `docs/renders/cast_batch4_pirates_before_after.png`. Order after: Fork customers, then street, Fork customers, errand NPCs. Duff approves Marketplace Mike (first-bet boss) borrows `ch_hustler` tinted today; Duff wants him in the 2x pass as his own `ch_mike` with `"sprite": "mike"` in boss.gd and no tint.
   every batch before merge.
 
@@ -151,7 +151,14 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 - **Seams (Nov 15):** symphony bus run draws `bg_symphony_street` (Canva, master Drive `bg_symphony_street_v1.png`) cropped 30 units from the top so its asphalt sits on the run lane (y 84-118); it ships in extra.pck like `bg_holland`. Plasma bag is a drawn pouch (`plasma._draw_bag`); the Akarui belt is steel slats between wood lips. Render: `docs/renders/seams_before_after.png`; ui audit has `akarui_belt`.
 - **Placeholder art + HUD (Nov 15, PR #100):** painted backdrops `bg_backwalk_bed` (Madison walks `BACK_X0..BACK_X1` on his painted back) and `bg_stealth_floor` (`stealth.FLOOR_SPLIT` stretches the mid floor so the painted bed sits under the goal column; code still draws creaky boards, cats, Duff). Masters in Drive "97 Gemini art drops". House name tags clamp under the HUD (`main.LABEL_TOP_MARGIN`), boss plate and touch level panel clear the buttons, size 4-5 UI text up one size. Blackhead Patrol draws `bg_blackheads_back` zoomed (`blackheads.ZOOM_SRC`); the neck tattoo on the LEFT side below the ear matches Duff's real one (realistic fox, pale blue rose third eye, blue geometric shards behind; lifted from his photo Nov 15, Duff picked the MIRROR of the photo crop: 'the fox faces front'; rebuild with `--mirror`). Nape bare; v2 had a cartoon fox on the nape and Duff rejected it; the tattoo design master is `docs/ref/duff/duff_fox_neck_tattoo.png` (canonical, see duff_look.md); re-graft with `python3 tools/fox_tattoo_graft.py BASE OUT --mirror` on the bare-neck base in project files `renders/bg_blackheads_back_no_tattoo.png`.
-- **Consistency audit (Nov 15):** ranked leftovers in `docs/reviews/consistency_audit_2026-11-15.md` (marketing re-shoot, cover fox placement, kitchen centrepieces, props, sunburst fallback). Boot splash `splash.png` + app icon `icon.png` (project.godot). Phone avatars: `python3 tools/make_avatars.py` after any `ch_*` re-import.
+- **Consistency audit (Nov 15):** ranked leftovers in `docs/reviews/consistency_audit_2026-11-15.md` (marketing re-shoot, cover fox placement, kitchen centrepieces, props, sunburst fallback). Boot splash `splash.png` + app icon `icon.png` (project.godot). Phone avatars: `python3 tools/make_avatars.py` after any `ch_*` re-import. Listing assets re-shot Nov 15 (previews, GIFs, screens, covers = porch title art + logo); re-shoot again after any big art or UI change.
+
+- **Fail states (Nov 16):** `scripts/minigames/fail_screen.gd` (extends card.gd). Eviction = `EVICT_STRIKES` (3) short
+  Mondays in a row (`rent_strikes`; a strike = couldn't cover the week's base, back rent alone carries over) -> roll back
+  to last Monday. Story/gala KO -> game over, roll back to this morning, but the first such KO each day is a free get-up (`getup_day`, Duff Nov 16). `save_game()` keeps two snapshots next to the
+  save (`snap_path("morning"|"week")`, first save of each day / each Monday); `fail_screen()` writes the rollback over the
+  main save as it opens, so Quit to title = retry too. New game erases them. No snapshot = old soft landing.
+  Render: `arena_shot -- evicted|gameover`. No Madison lines on either screen.
 
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.

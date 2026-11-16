@@ -3,6 +3,7 @@ extends SceneTree
 ##   godot --headless --path . --script tools/test_daily.gd
 ## Prints PASS/FAIL per check and exits 1 on any failure.
 
+const FailScreen: = preload("res://scripts/minigames/fail_screen.gd")
 const Shift: = preload("res://scripts/shift.gd")
 const SaveGame: = preload("res://scripts/save_game.gd")
 var fails: = 0
@@ -65,6 +66,7 @@ func _init() -> void:
 	_extra_checks(main)
 	_money_path_checks(main)
 	_review_fix_checks(main)
+	_fail_state_checks(main)
 	_ko_sfx_checks()
 	_ko_gore_checks()
 	_button_fit_checks()
@@ -399,6 +401,71 @@ func _gala_gate_checks(main: Node) -> void:
 	check("gala: save on day 20 stays locked", not main.gala_unlocked)
 	SaveGame.erase(main.save_path)
 
+## Nov 16 fail states: rent strikes -> eviction (roll back to last Monday), story KO -> game over (this morning).
+func _fail_state_checks(main: Node) -> void:
+	main.no_loading = true
+	main.close_overlay()
+	main.dialog.clear()
+	main.erase_snapshots()
+	check("old saves load with zero rent strikes", (func () -> bool:
+		var d: Dictionary = main.to_dict()
+		d.erase("rent_strikes")
+		main.from_dict(d)
+		return main.rent_strikes == 0).call())
+	main.weeks_paid = 3
+	main.day_count = 20
+	main.rent_debt = 0
+	main.rent_strikes = 0
+	main.money = 0
+	main.pay_rent()
+	check("short Monday = strike one", main.rent_strikes == 1)
+	main.money = main.weekly_base()
+	main.pay_rent()
+	check("covering the week (not the back rent) clears strikes", main.rent_strikes == 0 and main.rent_debt > 0)
+	main.money = 100000
+	main.rent_strikes = 2
+	main.pay_rent()
+	check("paying in full clears strikes + debt", main.rent_strikes == 0 and main.rent_debt == 0)
+	# snapshots: first save of a day = morning, first save of a Monday = week
+	main.day_i = 7
+	main.day_count = 21
+	main.money = 777
+	main.save_game()
+	main.money = 5
+	main.save_game()
+	check("morning snapshot = the day's first save", int(SaveGame.read(main.snap_path("morning")).get("money", -1)) == 777)
+	check("week snapshot written on Monday", int(SaveGame.read(main.snap_path("week")).get("day_count", -1)) == 21)
+	# game over: the day's first story KO is the free get-up, the second opens the fail screen
+	main.getup_day = -1
+	main.story_lose("test KO")
+	main.dialog.clear()
+	check("first KO of the day = free get-up (no fail screen)", main.overlay_node == null and main.getup_day == main.day_count)
+	main.money = 5
+	main.story_lose("test KO")
+	check("story KO opens the game over screen", main.overlay_node is FailScreen and str(main.overlay_node.kind) == "gameover")
+	check("game over rolls the main save back to the morning", int(SaveGame.read(main.save_path).get("money", -1)) == 777)
+	main.overlay_node.press("retry")
+	main.dialog.clear()
+	check("retry from this morning restores the morning", main.money == 777 and main.overlay_node == null)
+	# eviction: third short Monday a week later
+	main.day_i = 13
+	main.day_count = 27
+	main.money = 0
+	main.rent_strikes = 2
+	main.rent_debt = 0
+	main._wake(0)
+	main.dialog.clear()
+	check("third short Monday evicts", main.overlay_node is FailScreen and str(main.overlay_node.kind) == "evicted")
+	main.overlay_node.press("retry")
+	main.dialog.clear()
+	check("eviction retry = last Monday", main.day_count == 21 and main.money == 777 and main.overlay_node == null)
+	main.erase_snapshots()
+	check("no snapshot: story KO keeps the old soft landing", (func () -> bool:
+		main.getup_day = main.day_count
+		main.story_lose("test KO")
+		main.dialog.clear()
+		return main.overlay_node == null).call())
+
 ## Nov 10 review fixes: gentler first week, gala after the ending, phone wording.
 func _review_fix_checks(main: Node) -> void:
 	main.no_loading = true
@@ -479,12 +546,12 @@ func _edition_checks() -> void:
 	C.set_family(false)
 	var shown: = " ".join(PackedStringArray(C.names().values().map(func(v): return str(v))))
 	var leaked: = []
-	for w in ["Twisted", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh", "Brittany"]:
+	for w in ["Twisted", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh"]:
 		if w in shown:
 			leaked.append(w)
 	check("public edition: no real brand / real-ex names in cast (%s)" % ", ".join(leaked), leaked.is_empty())
 	check("public edition: the house sandwich is renamed with the restaurant", C.T("{HOUSE_SANDWICH}") == "SPATULA CLASSIC")
-	check("public edition: {FORK} and {wordle} tokens renamed", C.T("{FORK} / {wordle} / {coworker}") == "THE BUSTED SPATULA / Word Brawl / Mazikeen")
+	check("public edition: {FORK} and {wordle} renamed, Brittany kept (her OK, Nov 16)", C.T("{FORK} / {wordle} / {coworker}") == "THE BUSTED SPATULA / Word Brawl / Brittany")
 	check("public edition: the Fork nickname and club sandwich follow the rename", C.T("{fork_nick} / {club_sandwich}") == "Spatula / Club Spatula")
 	var bare: = _bare_fork_lines()
 	check("public edition: no bare 'Fork' left in player-facing strings (%s)" % ", ".join(bare), bare.is_empty())
