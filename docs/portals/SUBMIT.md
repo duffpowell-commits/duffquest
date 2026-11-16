@@ -22,7 +22,7 @@ Checked 2026-11-13 against https://docs.crazygames.com/requirements/intro/ and t
 | English, readable at 907x510 and 800x450 | Pass: the frame now fills any window where integer scaling would waste >10% (was a 640x360 box in black at 907x510). Render `docs/renders/portal_iframe_fit_before_after.jpg` |
 | Mouse + keyboard + touch | Pass: on the web the touch pad shows up front only when the browser says iOS/Android, otherwise on the first real finger touch. Mouse clicks (emulated touches) no longer pop it up on desktop |
 | Covers: 1920x1080, 800x1200, 800x800, title only, no borders/logos | Done: `docs/portals/covers/` (`tools/make_portal_covers.py`; Duff portrait upscaled ~2x, fine at card size) |
-| Preview video: 15-20 s, landscape 1080p + portrait 2:3, no sound | Done: `docs/portals/preview/` (16:9 1920x1080 18.3 s, 2:3 1080x1620 15.2 s, silent, open on the cover; real footage, gore off, from `tools/promo_shot.tscn`) |
+| Preview video: 15-20 s, landscape 1080p + portrait 2:3, no sound | Done: `docs/portals/preview/` (16:9 1920x1080 16.5 s, 2:3 1080x1620 16.5 s, silent, open on the porch title card; text panels hold ~2-3 s after typing so they read; re-shot Nov 15 on the 2x cast + new dialogue box, gore off, from `tools/promo_shot.tscn`) |
 | Mobile homepage (<= 20 MB initial) | Not eligible without the SDK. With SDK + gameplayStart after world.pck it is ~20 MB |
 
 Full Launch (ads, revenue share) comes after Basic Launch metrics, and needs the CrazyGames SDK (gameplay start/stop,
