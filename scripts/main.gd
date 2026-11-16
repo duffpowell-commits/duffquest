@@ -2629,16 +2629,13 @@ func world_covered() -> bool:
 	return overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
 
 func _update_world_cover() -> void:
-	# Menus with painted art hide the world outright (stops its drawing too).
-	# The 3D view only fades it to alpha 0: the renderer skips it, but every
-	# _draw still runs so View3D can capture the actors' sprite calls.
+	# Menus with painted art hide the world outright (stops its drawing too). Under the 3D view the world
+	# keeps drawing: sprites go to View3D as cards (Art capture), the ground is skipped, and what's left
+	# (sparks, numbers, bars, bubbles) lands on top of the 3D frame through View3D's canvas transform.
 	var cover: = world_covered()
 	var shown: = not cover and not view3d_on
 	if visible == cover:
 		visible = not cover
-	var a: = 0.0 if view3d_on else 1.0
-	if modulate.a != a:
-		modulate.a = a
 	var hd: = get_node_or_null("HD2DPresentation")
 	if hd and hd.world_shown != shown:
 		hd.set_world_shown(shown)
@@ -2649,7 +2646,8 @@ func _draw_outside() -> void:
 	# ground is built from Grok's tiles (data/town_ground.txt); map_objects now only holds the old
 	# bus-stop sign (trees/props replaced by street dressing, tools/import_dressing.py)
 	var gt: = Ground.texture()
-	draw_texture_rect(gt, Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0), false)
+	if not view3d_on:   # the 3D view lays the same texture on its ground plane
+		draw_texture_rect(gt, Rect2(Ground.origin() / 2.0, gt.get_size() / 2.0), false)
 	Art.image(self, "map_objects", Vector2.ZERO)
 	# storefronts (Grok, Nov 8): one sprite per footprint, drawn at the rect; shut places get dimmed
 	# street dressing (Grok, Nov 8) is y-sorted WITH the actors by scripts/dressing_front.gd (Nov 9);
