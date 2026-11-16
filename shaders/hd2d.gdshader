@@ -5,7 +5,7 @@ uniform float bloom_strength = 0.09;
 uniform float focus_strength = 0.06;
 void fragment() {
  vec2 uv = SCREEN_UV;
- vec2 p = SCREEN_PIXEL_SIZE * 2.0;
+ vec2 p = vec2(2.0 / 640.0, 2.0 / 360.0);   // two base pixels at any render scale (game.gd res_scale)
  vec3 sharp = texture(screen_texture, uv).rgb;
  vec3 soft = (texture(screen_texture,uv+vec2(p.x,0.0)).rgb + texture(screen_texture,uv-vec2(p.x,0.0)).rgb + texture(screen_texture,uv+vec2(0.0,p.y)).rgb + texture(screen_texture,uv-vec2(0.0,p.y)).rgb) * 0.25;
  // Almost imperceptible far-edge focus falloff; actors and the central view stay crisp.
