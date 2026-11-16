@@ -29,6 +29,8 @@ func _setup() -> void:
 	if _guard():
 		add_button("gfx", Rect2(214, 163, 98, 15), _gfx_label(), KEY_V, Color("#3a5a8a"))
 	add_button("credits", Rect2(214, 22, 98, 13), "Credits & legal", KEY_L, Color("#8a5a2a"))
+	if ClassDB.class_exists("Node3D"):    # the slim 2D web engine has no 3D: no toggle there
+		add_button("view3d", Rect2(110, 22, 100, 13), _view3d_label(), KEY_B, Color("#3a6a5a"))
 	if dev:
 		add_button("dev_quests", Rect2(8, 163, 98, 15), "Dev: quests", KEY_Q, Color("#8a6a1a"))
 
@@ -39,6 +41,9 @@ func _guard() -> Node:
 func _gfx_label() -> String:
 	var g: = _guard()
 	return "Graphics: Lite" if g and g.low else "Graphics: Full"
+
+func _view3d_label() -> String:
+	return "3D view: ON (B)" if audio and audio.view3d else "3D view: OFF (B)"
 
 func _mute_label() -> String:
 	return "Sound: MUTED (tap to unmute)" if audio and audio.muted else "Sound: ON (tap to mute)"
@@ -60,7 +65,7 @@ func sfx_vol() -> float:
 
 ## Toggles share one look: teal when on, slate when off, so the column reads as a set.
 func _tint_toggles() -> void:
-	for id in ["mute", "clean", "gore", "shake", "gfx"]:
+	for id in ["mute", "clean", "gore", "shake", "gfx", "view3d"]:
 		var b: = get_button(id)
 		if b.is_empty():
 			continue
@@ -104,6 +109,11 @@ func _on_button(id: String) -> void:
 			audio.set_screen_shake(not JuiceScript.shake_on)
 			get_button("shake")["label"] = _shake_label()
 			AudioScript.sfx("select")
+		"view3d":
+			audio.set_view3d(not audio.view3d)
+			get_button("view3d")["label"] = _view3d_label()
+			AudioScript.sfx("select")
+			flash("3D town ON. Same town, more depth." if audio.view3d else "3D town OFF. Back to the flat map.", Color.WHITE, 1.0)
 		"gfx":
 			var g: = _guard()
 			if g:

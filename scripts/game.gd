@@ -21,6 +21,15 @@ func _ready() -> void:
 	Art.hd_enabled = true
 	var main: = (load("res://main.tscn") as PackedScene).instantiate()
 	vp.add_child(main)
+	# 3D town view (Settings > 3D view), under the 2D viewport. Engines without 3D (the slim web build) skip it,
+	# and load() (not preload) keeps them from ever parsing the script.
+	var v3: Node = null
+	if ClassDB.class_exists("Node3D"):
+		v3 = load("res://scripts/view3d/view3d.gd").new()
+		v3.set("main", main)
+		v3.set("vp2d", vp)
+		v3.z_index = -1      # drawn under the 2D viewport; stays child 1 so tools that walk child(0) still find main
+		add_child(v3)
 	var layer: = CanvasLayer.new()
 	layer.layer = 100
 	add_child(layer)
@@ -39,6 +48,8 @@ func _ready() -> void:
 		n.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		layer.add_child(n)
 		gate.covers.append(n)
+	if v3 != null:
+		gate.vp3d = v3.get("vp")
 	add_child(gate)
 	var extra: = preload("res://scripts/extra_pack.gd").new()   # web: streams the deferred art in the background
 	extra.name = "ExtraPack"
@@ -54,6 +65,7 @@ func _ready() -> void:
 ## Runs after every other node's _process (priority), so it sees this frame's overlay state.
 class WorldGate extends Node:
 	var vp: SubViewport
+	var vp3d: SubViewport          # View3D's viewport (null on 2D-only engines); paused under the same overlays
 	var covers: Array = []
 	func _process(_d: float) -> void:
 		var hide: = false
@@ -64,3 +76,5 @@ class WorldGate extends Node:
 		var mode: = SubViewport.UPDATE_DISABLED if hide else SubViewport.UPDATE_ALWAYS
 		if vp.render_target_update_mode != mode:
 			vp.render_target_update_mode = mode
+		if hide and vp3d != null and vp3d.render_target_update_mode != mode:
+			vp3d.render_target_update_mode = mode   # View3D turns it back on next frame when the cover lifts

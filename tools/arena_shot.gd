@@ -38,6 +38,8 @@ func _process(_d: float) -> void:
 		_key(KEY_1 if frame == 40 else KEY_ENTER)
 	if frame == 200:
 		m = game.get_child(0).get_child(0).get_child(0)
+		if "--3d" in OS.get_cmdline_user_args() and m.AudioScript.inst != null:   # 3D town view (scripts/view3d/)
+			m.AudioScript.inst.set_view3d(true)
 		m.close_overlay()
 		m.dialog.clear()
 		m.no_loading = true
