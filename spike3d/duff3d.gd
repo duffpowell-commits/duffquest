@@ -1,5 +1,6 @@
 extends CharacterBody3D
-## Duff in the 3D spike: the shipping 2x sheet (duff_home, 4x4 cells of 128 px) on a camera-facing card.
+## Duff in the 3D spike: a camera-facing card. Default is the hi-detail sheet made for 3D close-ups
+## (duff_home_hd3d, 4x4 cells of 512 px, origin [256, 480]); pass `old` to use the shipping 2x sheet.
 ## Same actions as the 2D game: move_* to walk (8-way), attack (Space/J) to bonk.
 
 signal bonked(at: Vector3, dir: Vector3)
@@ -24,15 +25,18 @@ func _ready() -> void:
 	cs.position.y = 0.6
 	add_child(cs)
 	sprite = Sprite3D.new()
-	sprite.texture = load("res://art/duff_home.png")
+	var hd: = not "old" in OS.get_cmdline_user_args()
+	sprite.texture = load("res://art/duff_home_hd3d.png" if hd else "res://art/duff_home.png")
 	sprite.hframes = 4
 	sprite.vframes = 4
 	sprite.centered = false
-	sprite.offset = Vector2(-64, -8)            # sheet origin [64, 120]: feet on the node
-	sprite.pixel_size = U / 4.0
+	# feet on the node: origin [256, 480] of a 512 cell (hd) or [64, 120] of a 128 cell (2x)
+	sprite.offset = Vector2(-256, -32) if hd else Vector2(-64, -8)
+	sprite.pixel_size = U / 16.0 if hd else U / 4.0
 	sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
 	sprite.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
-	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	# hd art is painted at 4x screen size: mipmapped linear keeps it smooth, the 2x pixel sheet stays nearest
+	sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC if hd else BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	sprite.shaded = true
 	sprite.double_sided = true
 	sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
