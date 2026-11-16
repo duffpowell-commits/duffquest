@@ -60,6 +60,7 @@ func _ready() -> void:
 		["coach_fryer", func(): _clean(); _coach(true); m.debug_station("fryer"); _g().coach_show(); _g().coach_t = 0.4],
 		["coach_garnish", func(): _clean(); _coach(true); m.debug_station("garnish"); _g().coach_show(); _g().coach_t = 0.4],
 		["coach_baby", func(): _clean(); _coach(true); m._run_game(m_script("BabyScript").new(), func(_a, _b, _c): pass); _g().coach_show(); _g().coach_t = 0.4],
+		["coach_noise", func(): _clean(); _coach(true); m._run_game(m_script("NoiseScript").new(), func(_a, _b, _c): pass); _g().coach_show(); _g().coach_t = 0.4],
 		["coach_easy_fryer", func(): _clean(); _coach(true); m.debug_station("fryer"); _g().coach_open = false; _g().pace = 0.7],
 	]
 
