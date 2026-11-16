@@ -3,6 +3,7 @@
 Page: https://dufftkyosht.itch.io/duff-quest. Paste-ready. Real names are approved for public (Nov 9); get each real person's OK in writing before ads go out (docs/legal/RISK_AUDIT.md).
 Not entering the itch "2026 Jam" (it bans AI art). Images: `cover.png`, `logo_banner.png`, `icon_512.png`, `screens/`, `knockout.gif`, `boss_intro.gif`.
 Upload order (first image shows biggest): `knockout.gif`, `boss_intro.gif`, `screens/07_gala_landlord_ex.png`, `04_kitchen_sandwich_station.png`, `05_fridge_calendar.png`, `06_dialogue_madison.png`, `08_street_night.png`, then `01`, `09`, `02`, `03`. Screens are 1920x1080 engine renders (Nov 13), clean language, gore off.
+New Nov 16 (append after `03`): `10_cold_open_porch_pirate.png`, `11_first_bet_card.png`, `12_first_bet_fight.png`, `14_side_gig_choice.png`, `15_evicted.png`, `13_side_quest_notes.png`. Same settings (public edition, clean language, gore off, `arena_shot` ids `cold` / `gig` / `evicted` / `notes` at `--resolution 1920x1080`). New page copy + launch posts: Claude Doc "Duff Quest: itch page and launch posts" (Nov 16).
 
 ## Short description (itch "tagline")
 > Thirty days. One rent check. Seventeen people who need a spatula to the face.
