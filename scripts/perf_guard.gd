@@ -43,6 +43,9 @@ func _apply() -> void:
 	var hd: = _hd()
 	if hd and hd.has_method("set_low"):
 		hd.set_low(low)
+	var v3: Node = main.get("view3d") if main else null
+	if v3 != null and v3.has_method("set_low"):
+		v3.set_low(low)
 
 func _save() -> void:
 	var c: = ConfigFile.new()

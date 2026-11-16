@@ -55,6 +55,22 @@ var _ground_tex: Texture2D
 ## The 3D frame renders at the screen's real pixel size (the 2D game is 640x360 scaled up), times this.
 ## 1.0 = native; Auto Lite drops it (step 6). Env DQ_3D_LOWRES=1 forces the old 640x360 render (renders/compare).
 var res_scale: = 1.0
+## Lite graphics (perf_guard.gd, same switch as the 2D lite): render at 1.5x the logical size instead of native,
+## no MSAA, no sun shadows, no glow. Full graphics still caps the render at 3x (1920x1080): a phone's extra pixels
+## past that cost fill rate for detail the 4 px/unit art doesn't have.
+var low: = false
+const MAX_K: = 3.0
+const LOW_K: = 1.5
+
+func set_low(on: bool) -> void:
+	low = on
+	vp.msaa_3d = Viewport.MSAA_DISABLED if low else Viewport.MSAA_2X
+	env.glow_enabled = not low
+	if low:
+		sun.shadow_enabled = false
+	elif live:
+		_sync_sky()
+	_fit()
 
 static func to3(p: Vector2, h: float = 0.0) -> Vector3:
 	return Vector3(p.x * U, h, p.y * U)
@@ -114,7 +130,7 @@ func is_floor(name: String) -> bool:
 ## scaled back down to the 640x360 logical screen.
 func _fit() -> void:
 	var win: = Vector2(DisplayServer.window_get_size())
-	var k: = maxf(1.0, minf(win.x / 640.0, win.y / 360.0)) * res_scale
+	var k: = minf(maxf(1.0, minf(win.x / 640.0, win.y / 360.0)), LOW_K if low else MAX_K) * res_scale
 	if OS.get_environment("DQ_3D_LOWRES") == "1":
 		k = 1.0
 	var want: = Vector2i(roundi(640.0 * k), roundi(360.0 * k))
@@ -562,7 +578,7 @@ func _room_light() -> void:
 	sun.rotation_degrees = Vector3(-58.0, 28.0, 0.0)
 	sun.light_color = Color(1.0, 0.95, 0.86)
 	sun.light_energy = 0.7
-	sun.shadow_enabled = true
+	sun.shadow_enabled = not low
 	env.ambient_light_color = Color("#d8d0e8")
 	env.ambient_light_energy = 0.55
 	env.glow_intensity = 0.35
@@ -588,7 +604,7 @@ func _sync_sky() -> void:
 	# warm = golden hour / dusk (the 2D grade loses green + blue), dark = night
 	var warm: = clampf((1.0 - sky.b) * 2.5, 0.0, 1.0) * (1.0 - dark)
 	sun.light_energy = lerpf(0.82, 0.28, dark) + 0.25 * warm
-	sun.shadow_enabled = dark < 0.6      # moonlight shadows read as stray dark polygons on the lawns
+	sun.shadow_enabled = dark < 0.6 and not low     # moonlight shadows read as stray dark polygons on the lawns
 	env.ambient_light_color = sky.lerp(Color("#8a86b8"), 0.4)
 	env.ambient_light_energy = lerpf(0.3, 0.6, maxf(warm, dark * 0.6))
 	env.glow_intensity = lerpf(0.3, 0.9, maxf(warm, dark))

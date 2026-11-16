@@ -7,6 +7,7 @@ var _street: Array = []
 var game: Node
 var m: Node
 var frame: = 0
+var _bench_t: = 0
 var id: = "gymbro"
 
 func _ready() -> void:
@@ -41,6 +42,8 @@ func _process(_d: float) -> void:
 		m = game.get_child(0).get_child(0).get_child(0)
 		if "--3d" in OS.get_cmdline_user_args() and m.AudioScript.inst != null:   # 3D town view (scripts/view3d/)
 			m.AudioScript.inst.set_view3d(true)
+		if "--lite" in OS.get_cmdline_user_args():   # lite graphics (perf_guard), e.g. to compare 3D full vs lite
+			game.get_node("PerfGuard").force_low(true)
 		m.close_overlay()
 		m.dialog.clear()
 		m.no_loading = true
@@ -235,6 +238,10 @@ func _process(_d: float) -> void:
 			get_viewport().get_texture().get_image().save_png("/tmp/qa/arena_%s.png" % id.replace(":", "_"))
 			get_tree().quit()
 		return
+	if frame == 230:
+		_bench_t = Time.get_ticks_usec()
+	if frame == 270 and _bench_t > 0:   # 40 frames of the live scene: render cost per frame (--fixed-fps 0 for real time)
+		print("BENCH ms/frame %.1f" % ((Time.get_ticks_usec() - _bench_t) / 40000.0))
 	if frame == 280:
 		get_viewport().get_texture().get_image().save_png("/tmp/qa/arena_%s.png" % id)  # fryer/sandwich: the station
 		if m.view3d != null and m.view3d_on:   # --3d: the 3D layer alone, for checking what's 2D and what's 3D
