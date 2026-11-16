@@ -406,11 +406,21 @@ func drawer_lines() -> Array:
 	var dr: int = m.days_until_rent()
 	out.append([rent_text(), Color("#e06a4a") if m.money < m.rent_due() and dr <= 2 else PAPER, 1])
 	if m.fund_value() >= 1.0:   # only once there's money in it (IGN review: dead "$0 / 100k" line)
-		out.append([fund_text(), Color("#c8b0e8"), 1])
+		out.append([fund_text(), Color("#c8b0e8"), 1, "fund"])
+	if m.pass_active():
+		var left: int = int(m.bus_pass_until) - int(m.day_count) + 1
+		out.append(["Bus pass: %d day%s left" % [left, "" if left == 1 else "s"], Color("#8cc4e8"), 1, "bus"])
 	out.append([Cast.T("{partner}: ") + Cast.T(m.mood_label()), Color("#e88aa8"), 1, "mood"])
 	var bag: = bag_text()
 	out.append(["Bag: " + (bag if bag != "" else "empty"), PAPER if bag != "" else Color(1, 1, 1, 0.5), 2])
 	return out
+
+## Drawer rows tagged "fund" / "bus" get a little icon in front (piggy bank, bus) from the Nov 16 icon sheet.
+const ROW_ICON_W: = 9.0
+const ROW_ICONS: = {"fund": "ic_piggy", "bus": "ic_bus"}
+
+func _row_icon(r: Array) -> String:
+	return str(ROW_ICONS.get(r[3], "")) if r.size() > 3 else ""
 
 func _draw_drawer(f: Font) -> float:
 	var dr: Rect2 = layout()["drawer"]
@@ -419,7 +429,8 @@ func _draw_drawer(f: Font) -> float:
 	var h: = 4.0
 	var heights: Array = []
 	for r in rows:
-		var n: = clampi(int(ceil(f.get_string_size(str(r[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x / (tw - 2.0))), 1, int(r[2]))
+		var rw: = tw - (ROW_ICON_W if _row_icon(r) != "" else 0.0)
+		var n: = clampi(int(ceil(f.get_string_size(str(r[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x / (rw - 2.0))), 1, int(r[2]))
 		heights.append(n)
 		h += n * 8.0 + 1.0
 	var box: = Rect2(dr.position, Vector2(dr.size.x, h + 2.0))
@@ -427,7 +438,12 @@ func _draw_drawer(f: Font) -> float:
 	var y: = box.position.y + 3.0
 	for i in rows.size():
 		var r: Array = rows[i]
-		_mt(f, Vector2(box.position.x + 4, y + 6), str(r[0]), tw, 6, int(heights[i]), r[1])
+		var ic: = _row_icon(r)
+		var ix: = 0.0
+		if ic != "":
+			Art.image(self, ic, Vector2(box.position.x + 3, y - 0.5), Color.WHITE, 0.75)
+			ix = ROW_ICON_W
+		_mt(f, Vector2(box.position.x + 4 + ix, y + 6), str(r[0]), tw - ix, 6, int(heights[i]), r[1])
 		y += int(heights[i]) * 8.0 + 1.0
 		if r.size() > 3 and r[3] == "mood":
 			_draw_face(Vector2(box.position.x + 10 + f.get_string_size(str(r[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x, y - 5), m.mood_face())
