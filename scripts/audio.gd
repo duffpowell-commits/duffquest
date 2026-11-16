@@ -17,7 +17,7 @@ var music_vol: = 0.7
 var sfx_vol: = 0.8
 var muted: = false
 var gore: = true                             # "Cartoon gore" in the KO cutscenes (knockout.gd reads this)
-var view3d: = false                          # 3D town view (scripts/view3d/, game.gd); only on engines with 3D
+var view3d: = true                           # 3D town view (scripts/view3d/, game.gd); only on engines with 3D. Default since Nov 16
 var current: = ""
 var played: Array = []
 var music_player: AudioStreamPlayer
@@ -96,7 +96,7 @@ func set_muted(on: bool) -> void:
 
 func to_dict() -> Dictionary:
 	return {"music": music_vol, "sfx": sfx_vol, "mute": muted, "clean": bool(CastScript.clean), "gore": gore,
-		"screen_shake": bool(JuiceScript.shake_on), "view3d": view3d }
+		"screen_shake": bool(JuiceScript.shake_on), "view3d": view3d, "view3d_v": 2 }
 
 func set_screen_shake(on: bool) -> void:
 	JuiceScript.shake_on = on
@@ -136,10 +136,16 @@ func load_settings() -> void:
 	CastScript.clean = bool(d.get("clean", portal))
 	gore = bool(d.get("gore", not portal))
 	JuiceScript.shake_on = bool(d.get("screen_shake", true))
-	view3d = bool(d.get("view3d", false))
-	# web test link: "#3d" in the URL turns the 3D view on (the phone test before 3D is the default)
-	if OS.has_feature("web") and str(JavaScriptBridge.eval("window.location.hash", true)).contains("3d"):
-		view3d = true
+	# 3D became the default Nov 16 (view3d_v 2): settings saved before that carry the old "off" default, so they
+	# start in 3D once; after that the player's own Settings choice sticks
+	view3d = bool(d.get("view3d", true)) if int(d.get("view3d_v", 1)) >= 2 else true
+	# web links: "#3d" / "#2d" in the URL force the view (phone tests, side-by-side checks)
+	if OS.has_feature("web"):
+		var h: = str(JavaScriptBridge.eval("window.location.hash", true))
+		if h.contains("3d"):
+			view3d = true
+		elif h.contains("2d"):
+			view3d = false
 	apply()
 
 func play_sfx(name: String, pitch: float = 1.0) -> void:

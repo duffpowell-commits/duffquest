@@ -4128,7 +4128,8 @@ class WorldLabels extends Node2D:
 
 	var m: Node
 	func _process(_d: float) -> void:
-		visible = m.location == "outside" or m.location == "home"
+		# under the 3D view these go up as Label3Ds instead (view3d._sync_labels): the flat overlay drifts off its building
+		visible = (m.location == "outside" or m.location == "home") and not m.view3d_on
 		queue_redraw()
 	func _draw() -> void:
 		if m.location == "outside":
@@ -4138,9 +4139,29 @@ class WorldLabels extends Node2D:
 func _label(ci: CanvasItem, f: Font, pos: Vector2, s: String, w: float, size: int, col: Color) -> void:
 	UiStyle.tag(ci, pos, s, size, col, w, HORIZONTAL_ALIGNMENT_CENTER, 1.0 / 1.5, f)
 
+## Only the shop you're walking up to says CLOSED; a whole street of them was noise. `r` = vis rect raised 22.
+func closed_near(r: Rect2) -> bool:
+	return player != null and player.position.distance_to(Vector2(r.get_center().x, r.end.y + 22.0)) <= CLOSED_NEAR
+
+## What a building's sign shows: "closed" (shut errand or locked story), "errand" (the active errand's "!"),
+## "cleared", or "". Shared by the flat labels and the 3D view.
+func building_sign(b: Dictionary) -> String:
+	if b.has("errand"):
+		var kind: String = b["errand"]
+		if not Errands.is_open(kind, clock):
+			return "closed"
+		if errand["kind"] == kind and errand["status"] == "active":
+			return "errand"
+	if b.has("story"):
+		var sid: String = b["story"]
+		if story_beaten(sid):
+			return "cleared"
+		if not story_available(sid):
+			return "closed"
+	return ""
+
 func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
-	# only the shop you're walking up to says CLOSED; a whole street of them was noise
-	if player == null or player.position.distance_to(Vector2(r.get_center().x, r.end.y + 22.0)) > CLOSED_NEAR:
+	if not closed_near(r):
 		return
 
 	var pr: = Rect2(r.get_center().x - 15.0, r.position.y + 12.0, 30.0, 8.0)
