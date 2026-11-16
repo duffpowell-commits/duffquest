@@ -59,18 +59,19 @@ jobs:
           mkdir -p ~/.local/share/godot/export_templates
           unzip -q tpl.tpz -d /tmp/tpl
           mv /tmp/tpl/templates ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
-      - name: Use the trimmed 2D web template when it exists (web_template.yml)
+      - name: Use the trimmed 3D web template (web_template_3d.yml; 3D view is the default since Nov 16)
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # branches test the preview build first (web_template.yml publishes there off main)
-          tags=web-template-2d; [ "$GITHUB_REF" = refs/heads/main ] || tags="web-template-2d-preview web-template-2d"
+          # main: web-template-3d, then the preview build until web_template_3d.yml has run on main;
+          # branches: the preview first. The 2D-only template (web-template-2d) is the last fallback.
+          tags="web-template-3d web-template-3d-preview web-template-2d"
+          [ "$GITHUB_REF" = refs/heads/main ] || tags="web-template-3d-preview web-template-3d web-template-2d"
           for t in $tags; do gh release download $t -p web_nothreads_release.zip -D /tmp/wt 2>/dev/null && echo "template: $t" && break; done
           if [ -f /tmp/wt/web_nothreads_release.zip ]; then
             cp /tmp/wt/web_nothreads_release.zip ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}/web_nothreads_release.zip
-            echo "using the trimmed 2D web template"
           else
-            echo "no web-template-2d release yet: stock web template"
+            echo "no trimmed web template release: stock web template"
           fi
       - name: Android SDK paths + debug keystore
         run: |
@@ -190,6 +191,27 @@ jobs:
           gh release view web-preview >/dev/null 2>&1 || gh release create web-preview --prerelease --title "Branch web preview" --notes "Not for players."
           gh release upload web-preview build/duffquest-web-preview.zip --clobber
           gh release edit web-preview --notes "Not for players. ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}"
+      - name: 3D phone-test build (branches with the 3D view)
+        # Same game exported on the 3D web engine (release web-template-3d-preview), each file a separate asset of
+        # release web3d-preview so a static host can pull them by URL (a phone test link; 3D stays a setting, the
+        # URL hash #3d turns it on). Never runs on main.
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main' && hashFiles('scripts/view3d/view3d.gd') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          T=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          cp $T/web_nothreads_release.zip /tmp/web2d_tpl.zip
+          gh release download web-template-3d-preview -p web_nothreads_release.zip -D /tmp/wt3 --clobber
+          cp /tmp/wt3/web_nothreads_release.zip $T/web_nothreads_release.zip
+          mkdir -p build/web3d
+          godot --headless --path . --export-release "Web" build/web3d/index.html
+          cp /tmp/web2d_tpl.zip $T/web_nothreads_release.zip
+          cp build/web/street.pck build/web/world.pck build/web/extra.pck build/web3d/
+          gzip -9 -n build/web3d/index.wasm
+          ls -la build/web3d
+          gh release view web3d-preview >/dev/null 2>&1 || gh release create web3d-preview --prerelease --title "3D phone-test build" --notes "Not for players."
+          gh release upload web3d-preview build/web3d/* --clobber
+          gh release edit web3d-preview --notes "Not for players. ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}"
       - name: Upload web build to itch.io (main only)
         # Finds the itch project by title ("duff"), so no URL has to live in this file.
         # The project must exist on itch first (kind HTML). Needs repo secret BUTLER_API_KEY.

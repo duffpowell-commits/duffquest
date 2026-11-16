@@ -3,9 +3,11 @@ extends Node
 ##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "look"/"look_text" (her phone over the dialogue), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "porch"/"chad" (porch mystery: '?' on the neighbor door / the suspect fleeing), "grease86" (Grease Trap '?' on the 86 List at night; the fight itself is "bounty:grease"), "gig" (Brittany's Side Gig choice card), "lost" (Lost & Found hunt: glints at the storm drain), "at:X,Y[,MIN]" (outdoors at a world point, optional clock minute), or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
+var _street: Array = []
 var game: Node
 var m: Node
 var frame: = 0
+var _bench_t: = 0
 var id: = "gymbro"
 
 func _ready() -> void:
@@ -38,6 +40,10 @@ func _process(_d: float) -> void:
 		_key(KEY_1 if frame == 40 else KEY_ENTER)
 	if frame == 200:
 		m = game.get_child(0).get_child(0).get_child(0)
+		if "--3d" in OS.get_cmdline_user_args() and m.AudioScript.inst != null:   # 3D town view (scripts/view3d/)
+			m.AudioScript.inst.set_view3d(true)
+		if "--lite" in OS.get_cmdline_user_args():   # lite graphics (perf_guard), e.g. to compare 3D full vs lite
+			game.get_node("PerfGuard").force_low(true)
 		m.close_overlay()
 		m.dialog.clear()
 		m.no_loading = true
@@ -114,11 +120,13 @@ func _process(_d: float) -> void:
 				m.player.position = m.madison_spot() + Vector2(22, 4)
 			else:
 				m.player.position = m.CRIB_PT + Vector2(10, 14)
+		elif id == "street":
+			pass   # set up below at frame 200
 		elif id == "dolores":
 			m._say(["Dolores (31 years in): \"Three grills, hon. Fire 'em, plate 'em, don't let 'em burn. And don't let the drunks hug you. They mean it.\""])
 		elif id == "waffle":  # Waffle Haus shift (Dolores behind the counter)
 			m.start_waffle()
-		elif id in ["fryer", "sandwich", "home"]:
+		elif id in ["fryer", "sandwich", "home", "prep"]:
 			m.debug_station(id)
 		elif id == "hint":  # home, Duff next to Madison so the "E / A: Talk to" prompt shows
 			m.debug_station("home")
@@ -130,7 +138,7 @@ func _process(_d: float) -> void:
 			m.start_bounty(id.substr(7))
 		else:
 			m.start_story_fight(id)
-	if frame == 215 and id in ["fryer", "sandwich", "waffle"]:
+	if frame == 215 and id in ["fryer", "sandwich", "waffle", "prep"]:
 		_key(KEY_SPACE)  # past the NEXT STATION card
 	if frame == 260 and id in ["fryer", "sandwich"]:
 		var g: Node = _find_game(m)
@@ -143,6 +151,20 @@ func _process(_d: float) -> void:
 			g.baskets[0]["prog"] = 0.8
 			g.baskets[1]["prog"] = 1.5
 
+	if id == "street":  # night street fight: two thugs on Duff, a swing and a crit landing as the shot is taken
+		if frame == 200:
+			if m.location != "outside":
+				m.leave_home()
+			m.dialog.clear()
+			m.clock = 1260.0
+			m.player.position = Vector2(300, 215)
+			m.player.facing = Vector2.RIGHT
+			_street = [m.spawn_enemy("karen", Vector2(322, 214)), m.spawn_enemy("hustler", Vector2(276, 226))]
+		if frame in [262, 270, 278] and _street.size() > 0 and is_instance_valid(_street[0]):
+			m.player.swing()
+			m.combat.hit(_street[0], Vector2.RIGHT, 0.6 if frame == 278 else 0.3, "crit" if frame == 278 else "")
+		if frame >= 240:
+			m.dialog.clear()
 	if frame >= 200 and id.begins_with("at:") and id.count(",") == 2:  # at:X,Y,MIN = also set the clock
 		m.clock = float(id.split(",")[2])
 		m.dialog.clear()
@@ -202,7 +224,7 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look"):
+	if frame == 230 and not id in ["street", "prep", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
@@ -216,8 +238,15 @@ func _process(_d: float) -> void:
 			get_viewport().get_texture().get_image().save_png("/tmp/qa/arena_%s.png" % id.replace(":", "_"))
 			get_tree().quit()
 		return
+	if frame == 230:
+		_bench_t = Time.get_ticks_usec()
+	if frame == 270 and _bench_t > 0:   # 40 frames of the live scene: render cost per frame (--fixed-fps 0 for real time)
+		print("BENCH ms/frame %.1f" % ((Time.get_ticks_usec() - _bench_t) / 40000.0))
 	if frame == 280:
 		get_viewport().get_texture().get_image().save_png("/tmp/qa/arena_%s.png" % id)  # fryer/sandwich: the station
+		if m.view3d != null and m.view3d_on:   # --3d: the 3D layer alone, for checking what's 2D and what's 3D
+			m.view3d.snapshot().save_png("/tmp/qa/arena_%s_3donly.png" % id)
+			m.view3d.vp.get_texture().get_image().save_png("/tmp/qa/arena_%s_3dfull.png" % id)
 		get_tree().quit()
 
 ## id "cold": the new game's cold open (run with --fixed-fps 30). Saves cold_0 (phone: first control card),

@@ -1119,6 +1119,13 @@ func open_overlay(node: Node) -> void:
 func _veil_snapshot() -> Texture2D:
 	if in_shift or DisplayServer.get_name() == "headless":   # headless (tests, soak): no frame to grab
 		return null
+	if view3d_on and view3d != null:   # the 3D frame is the world (its viewport keeps its last frame when paused)
+		var img3: Image = view3d.snapshot()
+		if img3 != null and not img3.is_empty():
+			for sz in [Vector2i(320, 180), Vector2i(160, 90), Vector2i(80, 45), Vector2i(40, 23), Vector2i(80, 45), Vector2i(160, 90), Vector2i(320, 180)]:
+				img3.resize(sz.x, sz.y, Image.INTERPOLATE_BILINEAR)
+			_veil_tex = ImageTexture.create_from_image(img3)
+		return _veil_tex
 	if not visible:
 		return _veil_tex
 	if DisplayServer.get_name() == "headless":
@@ -2601,6 +2608,7 @@ func debug_station(k: String) -> void:
 ## on phones. _process() redraws on a location change even while busy (perf, Nov 9).
 func _draw() -> void:
 	_drawn_loc = location
+	arena_caption_3d = []
 	match location:
 		"home":
 			_draw_inside()
@@ -2613,13 +2621,26 @@ func _draw() -> void:
 
 ## An opaque full-screen menu/minigame (every minigame.gd overlay paints its whole 320x180 first)
 ## hides the world: stop drawing it and its screen shader until the overlay closes. Looks identical.
+## 3D town view (scripts/view3d/view3d.gd, made by game.gd only on engines with 3D): while it's live the 2D world
+## hides the same way it does under an opaque menu, and the HUD/dialogue CanvasLayers draw over the 3D frame.
+var view3d: Node = null
+var view3d_on: = false
+var arena_caption_3d: Array = []   # [text, colour] of the room's joke caption while the 3D view is live
+
+func world_covered() -> bool:
+	return overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
+
 func _update_world_cover() -> void:
-	var cover: = overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
+	# Menus with painted art hide the world outright (stops its drawing too). Under the 3D view the world
+	# keeps drawing: sprites go to View3D as cards (Art capture), the ground is skipped, and what's left
+	# (sparks, numbers, bars, bubbles) lands on top of the 3D frame through View3D's canvas transform.
+	var cover: = world_covered()
+	var shown: = not cover and not view3d_on
 	if visible == cover:
 		visible = not cover
-		var hd: = get_node_or_null("HD2DPresentation")
-		if hd:
-			hd.set_world_shown(not cover)
+	var hd: = get_node_or_null("HD2DPresentation")
+	if hd and hd.world_shown != shown:
+		hd.set_world_shown(shown)
 
 func _draw_outside() -> void:
 	var f: = ThemeDB.fallback_font
@@ -2627,7 +2648,8 @@ func _draw_outside() -> void:
 	# ground is built from Grok's tiles (data/town_ground.txt); map_objects now only holds the old
 	# bus-stop sign (trees/props replaced by street dressing, tools/import_dressing.py)
 	var gt: = Ground.texture()
-	draw_texture_rect(gt, Ground.world_rect(), false)
+	if not view3d_on:   # the 3D view lays the same texture on its ground plane
+		draw_texture_rect(gt, Ground.world_rect(), false)
 	Art.image(self, "map_objects", Vector2.ZERO)
 	# storefronts (Grok, Nov 8): one sprite per footprint, drawn at the rect; shut places get dimmed
 	# street dressing (Grok, Nov 8) is y-sorted WITH the actors by scripts/dressing_front.gd (Nov 9);
@@ -2645,8 +2667,7 @@ func _draw_outside() -> void:
 			Dressing.draw_item(self, b)
 			continue
 		var r: Rect2 = b["r"]
-		var shut: bool = (b.has("story") and not story_beaten(str(b["story"])) and not story_available(str(b["story"]))) or (b.has("errand") and not Errands.is_open(str(b["errand"]), clock))
-		Art.image(self, str(b.get("art", "")), r.position, Color(0.72, 0.72, 0.78) if shut else Color.WHITE)
+		Art.image(self, str(b.get("art", "")), r.position, Color(0.72, 0.72, 0.78) if building_shut(b) else Color.WHITE)
 
 	_draw_porch_and_cans()
 	_draw_waffle_sign_and_board(f)
@@ -2655,6 +2676,10 @@ func _draw_outside() -> void:
 
 	# dusk/night darkening now lives in hd_presentation.gd (clock-driven grade + door lights)
 	# the inspector and Brittany are drawn outdoors by y-sorted proxies (dressing_front.gd)
+
+## A story spot not open yet, or an errand shop outside its hours (drawn dimmed, 2D and 3D).
+func building_shut(b: Dictionary) -> bool:
+	return (b.has("story") and not story_beaten(str(b["story"])) and not story_available(str(b["story"]))) or (b.has("errand") and not Errands.is_open(str(b["errand"]), clock))
 
 func _draw_inspector() -> void:
 	draw_inspector_at(self, Vector2.ZERO)
@@ -3829,10 +3854,14 @@ func _draw_arena() -> void:
 			var pp: = o + Vector2(rng.randf_range(10, 310), rng.randf_range(30, 170))
 			draw_circle(pp, rng.randf_range(10, 26), Color(1, rng.randf_range(0.3, 0.8), 0.1, 0.75))
 		draw_rect(Rect2(o, ARENA_SIZE), Color(1, 0.9, 0.6, 0.25 + 0.25 * sin(t * 30.0)))
-	draw_rect(Rect2(o, ARENA_SIZE), Color("#888888"), false, 2.0)
+	if not view3d_on:   # the 3D room has real edges
+		draw_rect(Rect2(o, ARENA_SIZE), Color("#888888"), false, 2.0)
 
 ## One-line joke caption on a dark strip across the back wall, just under the HUD bar (never on the floor).
 func _arena_caption(f: Font, o: Vector2, line: String, c: Color) -> void:
+	if view3d_on:   # View3D hangs it on the standing back wall instead
+		arena_caption_3d = [Cast.T(line), c]
+		return
 	draw_rect(Rect2(o + Vector2(0, 18), Vector2(ARENA_SIZE.x, 9)), Color(0, 0, 0, 0.55))
 	draw_string(f, o + Vector2(0, 25), Cast.T(line), HORIZONTAL_ALIGNMENT_CENTER, ARENA_SIZE.x, 6, c)
 
@@ -4099,7 +4128,8 @@ class WorldLabels extends Node2D:
 
 	var m: Node
 	func _process(_d: float) -> void:
-		visible = m.location == "outside" or m.location == "home"
+		# under the 3D view these go up as Label3Ds instead (view3d._sync_labels): the flat overlay drifts off its building
+		visible = (m.location == "outside" or m.location == "home") and not m.view3d_on
 		queue_redraw()
 	func _draw() -> void:
 		if m.location == "outside":
@@ -4109,9 +4139,29 @@ class WorldLabels extends Node2D:
 func _label(ci: CanvasItem, f: Font, pos: Vector2, s: String, w: float, size: int, col: Color) -> void:
 	UiStyle.tag(ci, pos, s, size, col, w, HORIZONTAL_ALIGNMENT_CENTER, 1.0 / 1.5, f)
 
+## Only the shop you're walking up to says CLOSED; a whole street of them was noise. `r` = vis rect raised 22.
+func closed_near(r: Rect2) -> bool:
+	return player != null and player.position.distance_to(Vector2(r.get_center().x, r.end.y + 22.0)) <= CLOSED_NEAR
+
+## What a building's sign shows: "closed" (shut errand or locked story), "errand" (the active errand's "!"),
+## "cleared", or "". Shared by the flat labels and the 3D view.
+func building_sign(b: Dictionary) -> String:
+	if b.has("errand"):
+		var kind: String = b["errand"]
+		if not Errands.is_open(kind, clock):
+			return "closed"
+		if errand["kind"] == kind and errand["status"] == "active":
+			return "errand"
+	if b.has("story"):
+		var sid: String = b["story"]
+		if story_beaten(sid):
+			return "cleared"
+		if not story_available(sid):
+			return "closed"
+	return ""
+
 func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
-	# only the shop you're walking up to says CLOSED; a whole street of them was noise
-	if player == null or player.position.distance_to(Vector2(r.get_center().x, r.end.y + 22.0)) > CLOSED_NEAR:
+	if not closed_near(r):
 		return
 
 	var pr: = Rect2(r.get_center().x - 15.0, r.position.y + 12.0, 30.0, 8.0)
