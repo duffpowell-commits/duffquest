@@ -12,6 +12,7 @@ var chop_q: = 0.0
 var last_chop: = -10.0
 
 var pans: Array = []
+const PAN_ART: = {"Tomatoes": "kf_tomato", "Lettuce": "kf_lettuce", "Pickles": "kf_pickles", "Onions": "kf_onion", "Chx salad": "kf_grilled"}
 
 var shelf: Array = []
 var tossed: Array = []
@@ -26,6 +27,30 @@ var warned: = false
 func _setup() -> void:
 	_enter_phase()
 
+## Each prep phase is its own little game, so each gets its own how-to card and easy first go.
+func coach_key() -> String:
+	return "prep_" + phase()
+
+func howto() -> Array:
+	match phase():
+		"chop": return [
+			{"i": "kf_tomato_whole", "v": "beat", "s": "Watch the yellow dot pulse. It's the beat."},
+			{"i": "kf_knife", "v": "tap", "s": "Tap CHOP right as it pops. 12 chops."},
+			{"i": "", "v": "mash", "s": "Don't machine-gun it. Rushing the knife = cut finger."}]
+		"stock": return [
+			{"i": "kf_hotel_pan", "v": "read", "s": "Each pan shows its food and a temp. Look at both."},
+			{"i": "kf_lettuce", "v": "tap", "s": "Almost empty? Tap the pan till it says REFILL."},
+			{"i": "", "v": "tap", "s": "Says HOT (over 41°F)? Tap till TOSS. The rest stay OK. Then DONE."}]
+		"fifo": return [
+			{"i": "", "v": "read", "s": "Read each milk's use-by date. Today's date is up top."},
+			{"i": "", "v": "tap", "s": "Past today? Tap it, then TOSS SELECTED."},
+			{"i": "", "v": "tap", "s": "Tap two cartons to swap them. Oldest date on the LEFT. Then DONE."}]
+		"wipe": return [
+			{"i": "kf_rag", "v": "drag", "s": "Pick SOAPY WATER. Drag over every dirty square."},
+			{"i": "kf_spray", "v": "drag", "s": "Now SANITIZER. Drag over them all again till they shine."},
+			{"i": "", "v": "read", "s": "Sanitizer on a dirty spot does nothing. Wash first, always."}]
+	return []
+
 func phase() -> String:
 	return PHASES[mini(pi, PHASES.size() - 1)]
 
@@ -33,6 +58,7 @@ func _enter_phase() -> void:
 	buttons.clear()
 	t = 0.0
 	time_limit = PHASE_TIME[phase()]
+	coach_start()
 	space_is_pen = true
 	match phase():
 		"chop":
@@ -66,6 +92,7 @@ func end_phase() -> void:
 		"fifo": s = _fifo_score()
 		"wipe": s = _wipe_score()
 	phase_scores.append(clampf(s, 0, 1))
+	coach_done()
 	pi += 1
 	if pi >= PHASES.size():
 		var tot: = 0.0
@@ -296,24 +323,32 @@ func _draw_game() -> void:
 				for i in chops:
 					prop(Rect2(120 + i * 6, 76, 4, 28), Color("#e04a3a"))
 			txt(Vector2(40, 140), "%d / 12 chops" % chops, 8)
-			txt(Vector2(0, 28), "Steady beats only. Rushing = cuts.", 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
+			tag(Vector2(0, 28), "Steady beats only. Rushing = cuts.", 8, Color("#d8f0a8"), HORIZONTAL_ALIGNMENT_CENTER, W)
 		"stock":
-			txt(Vector2(0, 28), "Tap a pan to set: OK / REFILL (low) / TOSS (over 41°F)", 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
+			tag(Vector2(0, 28), "Tap a pan: OK / REFILL (low) / TOSS (over 41°F)", 8, Color("#d8f0a8"), HORIZONTAL_ALIGNMENT_CENTER, W)
 			for i in pans.size():
 				var p: Dictionary = pans[i]
 				var r: = Rect2(6 + i * 62, 40, 58, 66)
 				var lv: float = p["level"]
-				if pic("kf_hotel_pan", r.get_center() + Vector2(0, 8), 50.0):
-					# steel shows through where the pan is empty: cover the lettuce from the top down
-					draw_rect(Rect2(r.position.x + 9, r.position.y + 21, 40, 16 * (1.0 - lv)), Color("#b8bec8"))
+				var hot: = int(p["temp"]) > 41
+				var pc: = r.get_center() + Vector2(0, 10)
+				if pic("kf_hotel_pan", pc, 46.0):
+					# empty steel pan, then this pan's own food piled in: a low pan shows mostly steel
+					var food: String = PAN_ART.get(p["n"], "")
+					if food != "":
+						pic(food, pc + Vector2(0, -6.0 - 4.0 * lv), 6.0 + 18.0 * lv)
 				else:
 					prop(r, Color("#9aa0aa"))
 					draw_rect(Rect2(r.position.x + 4, r.end.y - 4 - 40 * lv, 50, 40 * lv), Color("#6aa04a"))
-				txt(Vector2(r.position.x, r.position.y + 10), p["n"], 8, Color.BLACK, HORIZONTAL_ALIGNMENT_CENTER, 58)
-				var hot: = int(p["temp"]) > 41
-				txt(Vector2(r.position.x, r.position.y + 20), "%d°F" % p["temp"], 8, Color("#7a2a22") if hot else Color("#103a10"), HORIZONTAL_ALIGNMENT_CENTER, 58)
+				# fill gauge under the pan, with the "refill" line at 40%
+				var g: = Rect2(r.position.x + 10, r.end.y + 1, r.size.x - 20, 4)
+				draw_rect(g.grow(1.0), UiStyle.INK)
+				draw_rect(Rect2(g.position, Vector2(g.size.x * lv, g.size.y)), Color("#e6a640") if lv < 0.4 else Color("#7ac05a"))
+				draw_line(Vector2(g.position.x + g.size.x * 0.4, g.position.y - 1), Vector2(g.position.x + g.size.x * 0.4, g.end.y + 1), UiStyle.CREAM, 1.0)
+				tag(Vector2(r.position.x, r.position.y + 7), p["n"], 7, UiStyle.CREAM, HORIZONTAL_ALIGNMENT_CENTER, 58)
+				tag(Vector2(r.position.x, r.position.y + 19), "%d°F%s" % [p["temp"], "  HOT" if hot else ""], 9, Color("#ff7a6a") if hot else Color("#9fe0a0"), HORIZONTAL_ALIGNMENT_CENTER, 58)
 		"fifo":
-			txt(Vector2(0, 28), "Today is %s. Oldest in FRONT (left). Toss anything expired." % today_s, 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
+			tag(Vector2(0, 28), "Today is %s. Oldest in FRONT (left). Toss anything expired." % today_s, 8, Color("#d8f0a8"), HORIZONTAL_ALIGNMENT_CENTER, W)
 			txt(Vector2(10, 52), "FRONT", 8, Color(1, 1, 1, 0.6))
 			txt(Vector2(260, 52), "BACK", 8, Color(1, 1, 1, 0.6))
 			draw_rect(Rect2(6, 112, 308, 4), Color("#888888"))
@@ -331,7 +366,7 @@ func _draw_game() -> void:
 			txt(Vector2(0, 132), "Tap two cartons to swap. Keys: arrows + Space, X toss.", 8, Color(1, 1, 1, 0.5), HORIZONTAL_ALIGNMENT_CENTER, W)
 		"wipe":
 			show_cursor = true
-			txt(Vector2(0, 28), "Tool: %s. Drag to wipe (or arrows + hold Space)." % ("SOAPY WATER" if tool == "soap" else "SANITIZER"), 8, Color("#c0d890"), HORIZONTAL_ALIGNMENT_CENTER, W)
+			tag(Vector2(0, 28), "Tool: %s. Drag to wipe (or arrows + hold Space)." % ("SOAPY WATER" if tool == "soap" else "SANITIZER"), 8, Color("#d8f0a8"), HORIZONTAL_ALIGNMENT_CENTER, W)
 			for i in cells.size():
 				var c: Color = [Color("#7a6a4a"), Color("#b8c0c8"), Color("#e8f4f0")][cells[i]]
 				prop(_cell_rect(i), c)

@@ -18,6 +18,7 @@ func _init() -> void:
 	check("data/art_rects.json matches sf_/sd_ art (re-run tools/bake_art_rects.gd)",
 		FileAccess.get_file_as_string("res://data/art_rects.json") == JSON.stringify(preload("res://tools/bake_art_rects.gd").measure(), "\t", true) + "\n")
 	_edition_checks()
+	_coach_checks()
 	# full shift: quiz first, same 8 stations, order changes across shifts
 	var orders: = {}
 	for i in 30:
@@ -1334,3 +1335,51 @@ func _look_checks(main: Node) -> void:
 	main.day_count = dc0
 	if loc0 != main.location and loc0 != "home" and main.location == "home":
 		main.leave_home()
+
+## Mini-game how-to cards: every coached game has 1-3 short steps with real art, and the first go runs slow.
+func _coach_checks() -> void:
+	var MG = load("res://scripts/minigames/minigame.gd")
+	var Art = load("res://scripts/art.gd")
+	var coached: = 0
+	for f in DirAccess.get_files_at("res://scripts/minigames"):
+		if not f.ends_with(".gd"):
+			continue
+		var sc: GDScript = load("res://scripts/minigames/" + f)
+		if f == "minigame.gd" or not sc.source_code.contains("func howto()"):
+			continue
+		var g = sc.new()
+		var keys: Array = [""]
+		if f == "prep.gd":
+			keys = [0, 1, 2, 3]
+		for k in keys:
+			if f == "prep.gd":
+				g.pi = k
+			var steps: Array = g.howto()
+			coached += 1
+			check("%s%s how-to has 1-3 steps" % [f, "" if str(k) == "" else ":%s" % k], steps.size() >= 1 and steps.size() <= 3)
+			for st in steps:
+				var art: = str(st.get("i", ""))
+				check("%s how-to art %s exists" % [f, art], art == "" or Art.tex(art) != null)
+				check("%s how-to step is short (<= 80 chars)" % f, str(st.get("s", "")).length() <= 80)
+		g.free()
+	check("at least 20 coached mini-games/phases (got %d)" % coached, coached >= 20)
+	# pace ramp: first go 0.7, second 0.85, then full speed
+	MG.coach_on = true
+	MG._plays = {"fryer": 0}
+	MG._plays_loaded = true
+	var fr = load("res://scripts/minigames/fryer.gd").new()
+	fr.coach_start()
+	check("first fryer go opens the how-to and runs at 0.7", fr.coach_open and is_equal_approx(fr.pace, 0.7))
+	fr.free()
+	MG._plays = {"fryer": 1}
+	fr = load("res://scripts/minigames/fryer.gd").new()
+	fr.coach_start()
+	check("second fryer go: no card, 0.85 pace", not fr.coach_open and is_equal_approx(fr.pace, 0.85))
+	fr.free()
+	MG._plays = {"fryer": 5}
+	fr = load("res://scripts/minigames/fryer.gd").new()
+	fr.coach_start()
+	check("practiced fryer: full speed", is_equal_approx(fr.pace, 1.0))
+	fr.free()
+	MG.coach_on = false
+	MG._plays = {}

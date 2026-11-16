@@ -29,6 +29,7 @@ var solved_in: = 0
 var shake_t: = 0.0
 
 func _setup() -> void:
+	coach_pace = false
 	title = "{SISTER}'S {WORDLE} - %s" % ("PRACTICE" if practice else "DAILY")
 	time_limit = 0.0
 	space_is_pen = false
@@ -198,3 +199,10 @@ func _draw_game() -> void:
 	txt(Vector2(100, 62), ("Practice round: small rewards, no streak." if practice else "Daily. Streak: %d. 1-2 guesses = new gear." % streak), 7, Color("#f2c66a"))
 	txt(Vector2(100, 74), "Guess %d of 6" % mini(guesses.size() + 1, 6), 7, Color(1, 1, 1, 0.7))
 	txt(Vector2(100, 86), "Type, tap, or click. Enter = guess.", 6, Color(1, 1, 1, 0.5))
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_letter_tile", "v": "tap", "s": "Type a 5-letter word, then Enter."},
+		{"i": "", "v": "read", "s": "Green = right letter, right spot. Yellow = right letter, wrong spot."},
+		{"i": "", "v": "read", "s": "Grey = not in the word. Six tries."}]
