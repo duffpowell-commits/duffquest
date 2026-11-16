@@ -33,6 +33,8 @@ func _ready() -> void:
 		["drawer", func():
 			m.clear_enemies(); m.dialog.clear(); m.toast_t = 0.0
 			m.combat.heat = m.combat.heat_max()
+			m.money = 400; m.fund_deposit(250)                       # college fund row (piggy icon)
+			m.bus_pass_until = m.day_count + 11                      # bus pass row (bus icon)
 			if m.hud.has_method("toggle_drawer"):
 				m.hud.drawer_open = true],
 		["peek", func():
