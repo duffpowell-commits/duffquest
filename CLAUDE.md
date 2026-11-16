@@ -162,9 +162,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   main save as it opens, so Quit to title = retry too. New game erases them. No snapshot = old soft landing.
   Render: `arena_shot -- evicted|gameover`. No Madison lines on either screen.
 
-- **3D view (Nov 16, branch `claude/project-thread-fhx6e4`, draft PR #109, NOT merged):** steps 2-6 of
+- **3D view (Nov 16, PR #109 MERGED, 3D is the default):** steps 2-6 of
   `spike3d/PLAN_3D.md` done (town, fights, rooms, native res, Lite via perf_guard). Render with `arena_shot -- <id> --3d
-  [--lite]`. Duff phone-tested it Nov 16 ("looks great, controls feel better") and said go: step 7 is on the branch.
+  [--lite]`. Duff phone-tested it Nov 16 ("looks great, controls feel better") and said go: step 7 shipped (devlog `docs/itch/devlog_2026-11-16_3d.md`).
   3D is the default (`audio.view3d` true; settings saved before carry `view3d_v` < 2 and flip to 3D once; Settings > 3D
   view still turns it off; web `#3d` / `#2d` in the URL force it). Web exports use the 3D engine (`web-template-3d`, falls
   back to `-preview`). Building signs (CLOSED, CLEARED, errand/story `!`, NOW HIRING, quest markers, house names,
