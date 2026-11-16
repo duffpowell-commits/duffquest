@@ -157,3 +157,10 @@ func _draw_game() -> void:
 				prop_circle(Vector2(50 + k * 50, 87), 9, fc)
 		bar(Rect2(18, 108, 206, 5), fry_p / 1.4, fc)
 		draw_rect(Rect2(18 + 206 * 0.8 / 1.4, 106, 206 * 0.25 / 1.4, 9), Color(1, 1, 1, 0.25))
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_flour", "v": "tap", "s": "Bread each pickle in order: Flour, Egg wash, Breading."},
+		{"i": "kf_egg_wash", "v": "tap", "s": "Dry hand for flour + crumbs, wet hand for egg. Tap SWITCH HAND."},
+		{"i": "kf_basket", "v": "hold", "s": "Into basket x3. Then PULL BASKET when the bar is in the light band."}]

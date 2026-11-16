@@ -115,3 +115,9 @@ func _draw_top() -> void:
 	draw_arc(c, 11.0, PI, TAU, 18, Color("#d9567a"), 3.0)
 	prop(Rect2(c.x - 15, c.y - 3, 7, 11), Color("#3a3240"), 0.3)
 	prop(Rect2(c.x + 8, c.y - 3, 7, 11), Color("#3a3240"), 0.3)
+
+func howto() -> Array:
+	return [
+		{"i": "", "v": "beat", "s": "The store keeps getting louder. Watch the NOISE meter."},
+		{"i": "", "v": "tap", "s": "Dig in her bag and tap her HEADPHONES before it fills."},
+		{"i": "kf_shop_diapers", "v": "tap", "s": "Wrong grabs add noise. The diapers will not help. Probably."}]

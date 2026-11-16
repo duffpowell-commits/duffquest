@@ -112,3 +112,10 @@ func _draw_bag(r: Rect2) -> void:
 		var y: = r.position.y + r.size.y * i / 4.0
 		draw_line(Vector2(r.end.x - 7, y), Vector2(r.end.x - 3, y), Color(ink, 0.55), 1.0)
 	draw_line(r.position + Vector2(5, 9), r.position + Vector2(5, r.size.y - 9), Color(1, 1, 1, 0.5), 2.0)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "", "v": "beat", "s": "Tap SQUEEZE to push the red flow line up. It sinks on its own."},
+		{"i": "", "v": "read", "s": "Keep the red line inside the green band. That fills the bag."},
+		{"i": "", "v": "mash", "s": "Steady taps. Mashing overshoots the band."}]

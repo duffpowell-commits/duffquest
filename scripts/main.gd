@@ -1135,7 +1135,7 @@ func _veil_snapshot() -> Texture2D:
 	if img == null or img.is_empty():
 		return _veil_tex
 	# halve down then double up, bilinear each step: a cheap soft blur (one-step resizes alias into a mosaic)
-	for sz in [Vector2i(320, 180), Vector2i(160, 90), Vector2i(80, 45), Vector2i(40, 23), Vector2i(80, 45), Vector2i(160, 90), Vector2i(320, 180)]:
+	for sz in [Vector2i(640, 360), Vector2i(320, 180), Vector2i(160, 90), Vector2i(80, 45), Vector2i(40, 23), Vector2i(80, 45), Vector2i(160, 90), Vector2i(320, 180)]:
 		img.resize(sz.x, sz.y, Image.INTERPOLATE_BILINEAR)
 	_veil_tex = ImageTexture.create_from_image(img)
 	return _veil_tex
@@ -5384,7 +5384,7 @@ func ride_bus(to: String) -> Array:
 	return out
 
 func bounty_menu() -> void:
-	var lines: Array = ["THE 86 LIST. Chef's handwriting: 'If you see these people, you have my blessing.'"]
+	var lines: Array = ["Chef's handwriting: 'If you see these people, you have my blessing.'"]
 	if int(bounties["day"]) == day_count:
 		lines.append("(I already ran a bounty today. Chef says one alley fight a day. HR is watching. HR is Chef.)")
 	var opts: Array = []
@@ -5397,7 +5397,7 @@ func bounty_menu() -> void:
 		var why: = Bounties.locked_reason(e, combat.level, bounties["beaten"])
 		var tag: = ("86'd - rematch $%d" % Bounties.payout(e, false)["cash"]) if beaten else ("$%d" % int(e["cash"]))
 		if why != "":
-			tag = "LOCKED: " + why
+			tag = "LOCKED: " + why.replace("Seniority ", "")   # short: three buttons share a row
 		lines.append("%s - %s" % [nm, str(e["crime"])])
 		opts.append([id, "%s (%s)" % [nm, tag], keys[i]])
 		i += 1

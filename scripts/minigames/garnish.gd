@@ -179,3 +179,10 @@ func _draw_game() -> void:
 		if not pic("kf_cherry", c + Vector2(0, -9), 13.0):
 			prop_circle(c + Vector2(0, -5), 3.5, Color("#c0102a"))
 			draw_line(c + Vector2(0, -8), c + Vector2(3, -13), Color("#3a6a1a"), 1.0)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_choc_bottle", "v": "drag", "s": "Drag along the zigzag dots to drizzle chocolate."},
+		{"i": "kf_whipped", "v": "tap", "s": "Tap the 3 dots to pipe whipped cream."},
+		{"i": "kf_cherry", "v": "tap", "s": "Tap each cream swirl to drop a cherry. NEXT STEP moves on."}]

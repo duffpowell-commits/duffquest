@@ -164,6 +164,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `spike3d/PLAN_3D.md` done (town, fights, rooms, native res, Lite via perf_guard). Render with `arena_shot -- <id> --3d
   [--lite]`. Step 7 (3D as default) waits on Duff's go and a real-phone test.
 
+- **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
+  action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
+  test_daily checks it). Multi-phase games override `coach_key()` and call `coach_start()` / `coach_done()` per phase
+  (see prep.gd). `coach_pace = false` in `_setup` = card only. Renders: `ui_audit_shot.tscn -- coach`.
+
 ## Next (in order)
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).

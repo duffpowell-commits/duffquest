@@ -71,3 +71,8 @@ func _draw_game() -> void:
 	mtxt(Vector2(78, 36), PITCH[pitch_i], 224, 9, Color("#2b2218"), 3)
 	bar(Rect2(40, 84, 240, 10), float(presses) / NEED, Color("#c0d890"))
 	txt(Vector2(40, 104), "Escape: %d / %d" % [presses, NEED], 8, Color.WHITE)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "kf_door", "v": "mash", "s": "Mash NOPE as fast as you can before he gets you."}]

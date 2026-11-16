@@ -78,3 +78,9 @@ func _draw_game() -> void:
 	UiStyle.label(self, Vector2(6, 24), "Popped: %d/%d" % [popped, COUNT], 8, UiStyle.GOLD, -1.0, HORIZONTAL_ALIGNMENT_LEFT, 2)
 	UiStyle.panel(self, Rect2(6, 124, 250, 26), UiStyle.PANEL, 0.94, 1.0 / 1.5)
 	mtxt(Vector2(10, 134), say, 244, 7, Color.WHITE, 2)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "", "v": "tap", "s": "Tap every dark dot on his back to pop it."},
+		{"i": "", "v": "read", "s": "Freckles aren't blackheads. Leave them alone."}]

@@ -54,6 +54,14 @@ func _ready() -> void:
 		["temp_check", func(): _clean(); m.debug_station("temp")],
 		["inspector", func(): _clean(); m.debug_station("inspector")],
 		["ending", sub.call(m_script("EndingScript"))],
+		["prep_stock", func(): _clean(); m.debug_station("prep"); var g = _g(); g.pi = 1; g._enter_phase(); g.coach_open = false; g.pans[0]["temp"] = 47; g.pans[1]["level"] = 0.15],
+		["bounty86", func(): _clean(); m.combat.level = 1; m.bounty_menu()],
+		["coach_prep_stock", func(): _clean(); _coach(true); m.debug_station("prep"); var g = _g(); g.pi = 1; g._enter_phase(); g.coach_show(); g.coach_t = 0.4],
+		["coach_fryer", func(): _clean(); _coach(true); m.debug_station("fryer"); _g().coach_show(); _g().coach_t = 0.4],
+		["coach_garnish", func(): _clean(); _coach(true); m.debug_station("garnish"); _g().coach_show(); _g().coach_t = 0.4],
+		["coach_baby", func(): _clean(); _coach(true); m._run_game(m_script("BabyScript").new(), func(_a, _b, _c): pass); _g().coach_show(); _g().coach_t = 0.4],
+		["coach_noise", func(): _clean(); _coach(true); m._run_game(m_script("NoiseScript").new(), func(_a, _b, _c): pass); _g().coach_show(); _g().coach_t = 0.4],
+		["coach_easy_fryer", func(): _clean(); _coach(true); m.debug_station("fryer"); _g().coach_open = false; _g().pace = 0.7],
 	]
 
 	# optional filter: `-- baby stealth` renders only those shots (a step whose name starts with a kept one stays too)
@@ -64,7 +72,18 @@ func _ready() -> void:
 func m_script(k: String) -> Script:
 	return load("res://scripts/main.gd").get_script_constant_map()[k]
 
+## The running minigame: inside a shift it's the shift's current station.
+func _g() -> Node:
+	return m.shift.current if m.in_shift and m.shift.current != null else m.overlay_node
+
+## The first-time coach (how-to cards, slow first go) stays out of the regular audit shots.
+func _coach(on: bool) -> void:
+	var ms = load("res://scripts/minigames/minigame.gd")
+	if ms.source_code.contains("static var coach_on"):
+		ms.coach_on = on
+
 func _clean() -> void:
+	_coach(false)
 	if m.in_shift:
 		m.end_shift({"left": true})
 	m.no_loading = true

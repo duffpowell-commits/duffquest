@@ -513,3 +513,10 @@ func _draw_staff() -> void:
 		if not pic("kf_note", Vector2(x + 2.0, y - 4.0), 15.0, c):
 			draw_circle(Vector2(x, y), 3.0, c)
 			draw_line(Vector2(x + 3, y), Vector2(x + 3, y - 10), c, 1.0)
+
+## First-time how-to card (minigame.gd coach).
+func howto() -> Array:
+	return [
+		{"i": "", "v": "read", "s": "Dress up, then get downtown. Missing the bus? Mash RUN."},
+		{"i": "", "v": "beat", "s": "During the music, tap NOD as each note crosses the line."},
+		{"i": "", "v": "read", "s": "Only Clap at the very end. Clapping between parts = row F guy."}]
