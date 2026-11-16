@@ -4,7 +4,7 @@
 
 Source: grok_art/2026-11-08-gemini-test/g6_try1.jpg (1024x1024 JPEG, 4x4 cells of 256 on magenta, thin grid lines).
 Each cell is inset past the grid line, keyed (JPEG magenta, sampled from the corners), trimmed, scaled by SCALE
-with hard alpha, and saved as assets/art/kp_<name>.png (origin = centre, 2 px per world unit).
+with hard alpha, and saved as assets/art/kp_<name>.png (origin = centre, DENSITY px per world unit).
 Registers kp_* in assets/art/manifest.json + scripts/art_manifest.gd. Used by sandwich.gd and fryer.gd.
 """
 import json
@@ -21,6 +21,7 @@ SCALE = 0.25
 # bigger sprites for the minigame stars (native size, no runtime scaling)
 SCALE_OF = {"fry_basket": 0.42, "fries": 0.36, "fried_chicken": 0.45, "bun": 0.6, "lettuce": 0.55, "tomato": 0.6}
 INSET = 10
+DENSITY = 4   # px per world unit (manifest "s"); SCALE/SCALE_OF were tuned at 2
 NAMES = ["fry_basket", "fries", "fried_chicken", "bun",
          "lettuce", "tomato", "pickle_jar", "mash",
          "thermometer", "ticket", "heat_lamp", "ketchup",
@@ -50,13 +51,13 @@ def main():
         rgba = np.dstack([rgb.clip(0, 255).astype(np.uint8), alpha])
         ys, xs = np.where(alpha > 0)
         rgba = rgba[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
-        sc = SCALE_OF.get(name, SCALE)
+        sc = SCALE_OF.get(name, SCALE) * DENSITY / 2
         w, h = max(1, round(rgba.shape[1] * sc)), max(1, round(rgba.shape[0] * sc))
         small = np.asarray(Image.fromarray(rgba, "RGBA").resize((w, h), Image.LANCZOS)).copy()
         small[..., 3] = np.where(small[..., 3] >= 140, 255, 0)
         key = "kp_" + name
         Image.fromarray(small, "RGBA").save(OUT / f"{key}.png")
-        table[key] = {"w": w, "h": h, "cell": [w, h], "origin": [w // 2, h // 2], "kind": "prop", "s": 2}
+        table[key] = {"w": w, "h": h, "cell": [w, h], "origin": [w // 2, h // 2], "kind": "prop", "s": DENSITY}
     mj_path = OUT / "manifest.json"
     mj = json.loads(mj_path.read_text())
     t = mj["assets"] if "assets" in mj else mj

@@ -1,18 +1,36 @@
 extends Node
-## Root of the game. The pixel game (main.tscn) renders at 640×360 inside a SubViewport and is
-## scaled up with nearest filtering, so it looks exactly as before. On top, at the screen's real
+## Root of the game. The game (main.tscn) lives in 640×360 coordinates inside a SubViewport that renders
+## res_scale times bigger (1280×720), then is shown at the window's size. On top, at the screen's real
 ## resolution, sit things that must stay sharp: the HD cartoon dialogue portraits.
 const Art: = preload("res://scripts/art.gd")
+## The world keeps its 640x360 coordinate system, but renders RES_SCALE times bigger so the
+## HD art (4 texture px per world unit; the camera zooms 2x) is not crushed. Audit: docs/reviews/hd_audit_2026-11-16.md
+const BASE: = Vector2i(640, 360)
+var res_scale: = 2
+var _vp: SubViewport
+var _box: SubViewportContainer
+
+## 1 = the old 640x360 render (phones that can't keep up), 2 = 1280x720 (every s:4 sprite pixel shows).
+func set_res_scale(n: int) -> void:
+	res_scale = clampi(n, 1, 2)
+	if _vp == null:
+		return
+	_vp.size = BASE * res_scale
+	_box.size = Vector2(BASE * res_scale)
+	_box.scale = Vector2.ONE / float(res_scale)
 
 func _ready() -> void:
 	var box: = SubViewportContainer.new()
-	box.stretch = true
+	box.stretch = false
 	box.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	box.mouse_filter = Control.MOUSE_FILTER_PASS
 	add_child(box)
 	var vp: = SubViewport.new()
-	vp.size = Vector2i(640, 360)
+	_vp = vp
+	_box = box
+	vp.size_2d_override = BASE
+	vp.size_2d_override_stretch = true
+	set_res_scale(res_scale)
 	vp.canvas_item_default_texture_filter = Viewport.DEFAULT_CANVAS_ITEM_TEXTURE_FILTER_NEAREST
 	vp.snap_2d_transforms_to_pixel = true
 	vp.snap_2d_vertices_to_pixel = true

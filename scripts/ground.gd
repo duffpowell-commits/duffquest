@@ -11,13 +11,23 @@ const LETTERS: = {"g": "grass", "s": "sidewalk", "a": "asphalt", "d": "dirt", "b
 
 static var _tex: Texture2D = null
 static var _origin: = Vector2.ZERO
+static var _density: = 2.0
 static var warnings: PackedStringArray = []
 
 ## Origin of the built texture in art pixels (2 px per world unit, like map_outside).
 static func origin() -> Vector2:
 	return _origin
 
-## Painted street (tools/import_street.py, Nov 11): same size + origin as the tile build. The tiles still get
+## Texture pixels per world unit: 2 for the tile build, 4 for the 2x painting (HD pass, Nov 16).
+static func density() -> float:
+	return _density
+
+## Where the ground texture sits in world units.
+static func world_rect() -> Rect2:
+	var t: = texture()
+	return Rect2(_origin / 2.0, Vector2(t.get_size()) / _density)
+
+## Painted street (tools/import_street.py, Nov 11): the tile build's size (or exactly 2x it) + origin. The tiles still get
 ## built once so the origin/layout parse stays the single source of truth, then the painting replaces them.
 const PAINTED: = "res://assets/art/ground_painted.png"
 
@@ -28,19 +38,15 @@ static func clear_cache() -> void:
 static func texture() -> Texture2D:
 	if _tex == null:
 		_tex = _build()
-		_base = _tex.get_size()
+		_density = 2.0
 		if ResourceLoader.exists(PAINTED):
 			var p: = load(PAINTED) as Texture2D
-			if p != null and (p.get_size() == _base or p.get_size() == _base * 2.0):
+			if p != null and p.get_size() == _tex.get_size():
 				_tex = p
+			elif p != null and p.get_size() == _tex.get_size() * 2:
+				_tex = p
+				_density = 4.0
 	return _tex
-
-## Where the ground texture sits in world units. The tile build is 2 px per unit; the painted street may be
-## twice that (Nov 16: 2x super-res so it matches the 4 px/unit sprites at native resolution), same footprint.
-static var _base: = Vector2.ZERO
-static func world_rect() -> Rect2:
-	texture()
-	return Rect2(_origin / 2.0, _base / 2.0)
 
 static func _build() -> Texture2D:
 	var index: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(INDEX))

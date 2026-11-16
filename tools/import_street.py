@@ -7,8 +7,7 @@ but not the exact proportions, so: find both roads' centre lines in the painting
 blue >= green, red < 135), pick ONE uniform scale that still covers the whole map, and line the road centres up.
 Roads land within a few px of the gameplay roads (driver lanes, sidewalks) without stretching the art.
 A final 1-px unsharp pass keeps the shrunk painting as crisp as the 1:1 sprites standing on it.
-scripts/ground.gd uses ground_painted.png when it exists (same origin as the tile build, 1x or 2x its size).
-The shipped ground is 2x: run tools/superres_x2.py on this script's output.
+scripts/ground.gd uses ground_painted.png when it exists (UP x the tile build, same origin).
 """
 import sys
 from pathlib import Path
@@ -20,6 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "grok_art/2026-11-11-street/ground_v1.png"
 LAYOUT = ROOT / "grok_art/2026-11-11-street/ground_layout.png"
 OUT = ROOT / "assets/art/ground_painted.png"
+UP = 2   # output = 2x the tile layout (4 px per world unit; scripts/ground.gd reads the density from the size)
 
 
 def roads(img: Image.Image):
@@ -31,11 +31,11 @@ def roads(img: Image.Image):
     return (xs.min() + xs.max()) / 2.0, (ys.min() + ys.max()) / 2.0, xs.max() - xs.min(), ys.max() - ys.min()
 
 
-def main() -> None:
+def fit(pnt: Image.Image, report: bool = False) -> Image.Image:
+    """Scale + place the painting so its roads sit on the layout's roads (UP x the layout, unsharpened)."""
     lay = Image.open(LAYOUT)
-    pnt = Image.open(SRC).convert("RGB")
-    W, H = lay.size
-    lx, ly, lw, lh = roads(lay)
+    lx, ly, lw, lh = (v * UP for v in roads(lay))
+    W, H = lay.width * UP, lay.height * UP
     px, py, pw, ph = roads(pnt)
     s = max(W / pnt.width, H / pnt.height)
     # road width wants (lw/pw, lh/ph); never go below full coverage
@@ -48,12 +48,19 @@ def main() -> None:
     big = pnt.resize((round(pnt.width * s), round(pnt.height * s)), Image.LANCZOS)
     out = Image.new("RGB", (W, H))
     out.paste(big, (round(ox), round(oy)))
+    if report:
+        print(f"scale {s:.3f} offset ({ox:.0f},{oy:.0f}); roads painted {pw * s:.0f}/{ph * s:.0f} px vs layout {lw}/{lh}; "
+              f"centre error {abs(px * s + ox - lx):.1f},{abs(py * s + oy - ly):.1f} px")
+    return out
+
+
+def main() -> None:
+    out = fit(Image.open(SRC).convert("RGB"), True)
     # The LANCZOS shrink leaves the painting soft next to the 1:1 pixel sprites (HD-2D audit, Nov 12):
     # a 1-px unsharp pass restores crisp slab edges, cracks and lane paint without inventing new colours.
     out = out.filter(ImageFilter.UnsharpMask(radius=1.2, percent=140, threshold=2))
     out.save(OUT)
-    print(f"scale {s:.3f} offset ({ox:.0f},{oy:.0f}); roads painted {pw * s:.0f}/{ph * s:.0f} px vs layout {lw}/{lh}; "
-          f"centre error {abs(px * s + ox - lx):.1f},{abs(py * s + oy - ly):.1f} px -> {OUT.name}")
+    print("->", OUT.name)
 
 
 if __name__ == "__main__":
