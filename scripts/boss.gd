@@ -171,16 +171,29 @@ var flex_t: = 0.0
 var dash_t: = 0.0
 var dash_v: = Vector2.ZERO
 
-## Difficulty pass Nov 13 (Duff: "combat is pretty easy"): the five story exes get +20% HP.
-const STORY_HP_MULT: = 1.2
+## Difficulty pass Nov 13 (Duff: "combat is pretty easy"): the five story exes got +20% HP.
+## Pass 2, Nov 15 (Duff: "increase the difficulty of the fights"): the four early exes went from pushovers
+## (38/72/90/108 HP vs Willnot's 240, a 2.2x wall) to real fights that ramp into him (54/99/120/144, 1.7x).
+## Per kind: hp = HP multiplier, dmg = multiplier on every hit they land, cd = seconds between attacks (enraged
+## 0.7 less), lead = how far ahead (s) they aim at a moving Duff. Willnot keeps his Nov 13 numbers.
+const STORY_TUNE: = {
+	"ghoster": {"hp": 1.7, "dmg": 1.25, "cd": 1.7, "lead": 0.35},
+	"gymbro": {"hp": 1.65, "dmg": 1.25, "cd": 1.8, "lead": 0.4},
+	"djvape": {"hp": 1.6, "dmg": 1.25, "cd": 1.8, "lead": 0.45},
+	"crypto": {"hp": 1.6, "dmg": 1.25, "cd": 1.8, "lead": 0.45},
+	"willnot": {"hp": 1.2, "dmg": 1.0, "cd": 2.2, "lead": 0.0},
+}
 const STORY_KINDS: = ["ghoster", "gymbro", "djvape", "crypto", "willnot"]
+
+func _tune(key: String, fallback: float) -> float:
+	return float(STORY_TUNE.get(kind, {}).get(key, fallback))
 
 func _ready() -> void:
 	material = Art.rim_material()   # room-coloured rim light (hd_presentation.gd drives it)
 	add_to_group("hostile")
 	add_to_group("enemy")
 	add_to_group("boss")
-	max_hp = float(BOSSES[kind]["hp"]) * (STORY_HP_MULT if kind in STORY_KINDS else 1.0)
+	max_hp = float(BOSSES[kind]["hp"]) * _tune("hp", 1.0)
 	hp = max_hp
 	collision_layer = 4
 	collision_mask = 1
@@ -228,7 +241,7 @@ func _physics_process(delta: float) -> void:
 			dash_t -= delta
 			velocity = dash_v
 			move_and_slide()
-			if dist < 15.0 and contact_cd <= 0.0 and m.hurt_player(12.0, global_position, 260.0, "charge"):
+			if dist < 15.0 and contact_cd <= 0.0 and m.hurt_player(12.0 * _tune("dmg", 1.0), global_position, 260.0, "charge"):
 				contact_cd = 1.0
 			queue_redraw()
 			return
@@ -267,12 +280,12 @@ func _physics_process(delta: float) -> void:
 				if st <= 0.0:
 					_attack(to)
 					state = "roam"
-					act_cd = (2.2 if not enraged else 1.5) + randf() * 0.6
+					act_cd = _tune("cd", 2.2) - (0.7 if enraged else 0.0) + randf() * 0.6
 	velocity = v + knock
 	knock = knock.move_toward(Vector2.ZERO, 500.0 * delta)
 	move_and_slide()
 	if dist < 14.0 and contact_cd <= 0.0 and not calm:
-		if m.hurt_player(8.0, global_position, 200.0, "boss"):
+		if m.hurt_player(8.0 * _tune("dmg", 1.0), global_position, 200.0, "boss"):
 			contact_cd = 1.0
 	queue_redraw()
 
@@ -294,7 +307,7 @@ func _proj(k: String, pos: Vector2, vel: Vector2, dmg: float) -> Node2D:
 	k = str(_opt("swap", k, k))
 	pr.kind = k
 	pr.vel = vel
-	pr.dmg = dmg
+	pr.dmg = dmg * _tune("dmg", 1.0)
 	pr.thrower = self
 	pr.position = pos
 	get_parent().add_child(pr)
@@ -315,6 +328,10 @@ func _attack(to: Vector2) -> void:
 	if ATTACK_SFX.has(cur):
 		AudioScript.sfx(str(ATTACK_SFX[cur]))
 	var aim: = to.normalized()
+	var lead: = _tune("lead", 0.0)
+	if lead > 0.0:   # aim where a moving Duff will be, not where he was: running in a straight line stops working
+		p += m.player.velocity * minf(to.length() / 90.0, lead)
+		aim = (p - global_position).normalized()
 	match cur:
 		"posting":
 			var n: = 7 if enraged else 5
