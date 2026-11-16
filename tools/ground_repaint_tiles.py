@@ -61,20 +61,38 @@ def split(src: Path) -> None:
     print("tiles ->", TILES)
 
 
-def ramp(n: int, ov: int, lo: bool, hi: bool) -> np.ndarray:
-    w = np.ones(n)
-    if lo:
-        w[:ov] = np.linspace(0, 1, ov)
-    if hi:
-        w[-ov:] = np.linspace(1, 0, ov)
-    return w
+FEATHER = 24  # px of cross-fade either side of a seam
+
+
+def seam_cut(a: np.ndarray, b: np.ndarray, axis: int) -> np.ndarray:
+    """Weight for b (0..1) across an overlap of two aligned images, cutting along the
+    lowest-difference path (a min-cost seam) so roads and lane lines never ghost."""
+    diff = np.abs(a - b).mean(axis=2)
+    if axis == 0:  # seam runs top to bottom, left image a, right image b
+        diff = diff
+    else:  # seam runs left to right, top image a, bottom image b
+        diff = diff.T
+    n, m = diff.shape
+    cost = diff.copy()
+    for i in range(1, n):
+        prev = cost[i - 1]
+        left = np.r_[np.inf, prev[:-1]]
+        right = np.r_[prev[1:], np.inf]
+        cost[i] += np.minimum(np.minimum(left, prev), right)
+    path = np.zeros(n, int)
+    path[-1] = int(np.argmin(cost[-1]))
+    for i in range(n - 2, -1, -1):
+        j = path[i + 1]
+        lo, hi = max(j - 1, 0), min(j + 2, m)
+        path[i] = lo + int(np.argmin(cost[i, lo:hi]))
+    cols = np.arange(m)[None, :]
+    w = np.clip((cols - path[:, None] + FEATHER) / (2 * FEATHER), 0, 1)
+    return w if axis == 0 else w.T
 
 
 def merge(d: Path) -> None:
     full = base(ROOT / "grok_art/2026-11-11-street/ground_v1.png")
-    acc = np.zeros((H, W, 3))
-    wsum = np.zeros((H, W, 1))
-    ovx, ovy = 2 * TW - W, 2 * TH - H
+    tiles = {}
     for r, y in enumerate(Y0):
         for c, x in enumerate(X0):
             src = full.crop((x, y, x + TW, y + TH))
@@ -96,14 +114,28 @@ def merge(d: Path) -> None:
                     tile = Image.fromarray((np.asarray(shifted).astype(float) - lo_n + lo_s).clip(0, 255).astype(np.uint8))
             else:
                 print(f"tile {r}{c}: missing, keeping the source")
-            wy = ramp(TH, ovy, r == 1, r == 0)
-            wx = ramp(TW, ovx, c == 1, c == 0)
-            w = (wy[:, None] * wx[None, :])[..., None]
-            acc[y:y + TH, x:x + TW] += np.asarray(tile).astype(float) * w
-            wsum[y:y + TH, x:x + TW] += w
-    out = Image.fromarray((acc / np.maximum(wsum, 1e-6)).clip(0, 255).astype(np.uint8))
-    out = out.filter(ImageFilter.UnsharpMask(radius=1.0, percent=80, threshold=2))
-    out.save(import_street.OUT)
+            tiles[r, c] = np.asarray(tile).astype(float)
+    # join each row's left + right tile along a min-cost vertical seam, then the two rows along a horizontal one
+    ox, oy = X0[1], Y0[1]
+    rows = []
+    for r in range(2):
+        strip = np.zeros((TH, W, 3))
+        a, b = tiles[r, 0], tiles[r, 1]
+        strip[:, :ox] = a[:, :ox]
+        strip[:, TW:] = b[:, TW - ox:]
+        oa, ob = a[:, ox:], b[:, :TW - ox]
+        w = seam_cut(oa, ob, 0)[..., None]
+        strip[:, ox:TW] = oa * (1 - w) + ob * w
+        rows.append(strip)
+    out = np.zeros((H, W, 3))
+    out[:oy] = rows[0][:oy]
+    out[TH:] = rows[1][TH - oy:]
+    oa, ob = rows[0][oy:], rows[1][:TH - oy]
+    w = seam_cut(oa, ob, 1)[..., None]
+    out[oy:TH] = oa * (1 - w) + ob * w
+    img = Image.fromarray(out.clip(0, 255).astype(np.uint8))
+    img = img.filter(ImageFilter.UnsharpMask(radius=1.0, percent=80, threshold=2))
+    img.save(import_street.OUT)
     print("->", import_street.OUT)
 
 
