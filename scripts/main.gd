@@ -15,6 +15,7 @@ const CatScript: = preload("res://scripts/cat.gd")
 const SaveGame: = preload("res://scripts/save_game.gd")
 const Cast: = preload("res://scripts/cast.gd")
 const Card: = preload("res://scripts/minigames/card.gd")
+const FailScreen: = preload("res://scripts/minigames/fail_screen.gd")
 const ExtraPack: = preload("res://scripts/extra_pack.gd")
 const ShopScript: = preload("res://scripts/minigames/shop.gd")
 const BabyScript: = preload("res://scripts/minigames/baby.gd")
@@ -76,6 +77,7 @@ const KNOCK_LINES: = ["{cat1} knocks a mug off the counter. Looks me dead in the
 const RENT: = 110
 const BILLS: = 40
 const LATE_FEE: = 15
+const EVICT_STRIKES: = 3   # Mondays in a row short of the week's base -> evicted (fail_screen, retry the week)
 const AUTOSAVE_EVERY: = 180.0
 const MIN_PER_SEC: = 2.0
 ## Balance (Duff, Nov 10: "soften them"). Was a flat 0.2/s (~6 per game hour) with no floor, so one errand
@@ -274,6 +276,9 @@ var shifts_worked: = 0
 var rent_debt: = 0
 var weeks_paid: = 0
 var late_notices: = 0
+var rent_strikes: = 0          # Mondays in a row I couldn't cover the week (resets on any covered Monday)
+var _pending_fail: Array = []  # [kind, lines] shown once the wake's loading screen is gone
+var _snap_days: = {}          # snapshot tag -> day_count of that snapshot on disk (lazy)
 var cats_fed_day: = -1
 var couch_day: = -1
 var crib_day: = -1
@@ -699,6 +704,7 @@ func _world_gate(cb: Callable) -> bool:
 	return true
 
 func new_game(write_save: bool = true) -> void:
+	erase_snapshots()
 	from_dict({})
 	wordle_seed = randi()
 	market = Market.new_state(randi())
@@ -822,7 +828,7 @@ func to_dict() -> Dictionary:
 		"day_i": day_i, "day_count": day_count, "clock": clock, "money": money, "energy": energy, "happiness": happiness,
 		"quest": quest, "quest_kind": quest_kind, "last_quest_kind": last_quest_kind, "inventory": inventory.duplicate(),
 		"leftovers": leftovers.duplicate(), "achievements": achievements.duplicate(), "fryer_smell": fryer_smell,
-		"shifts_worked": shifts_worked, "station_best": station_best.duplicate(), "daily": daily.duplicate(true), "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices,
+		"shifts_worked": shifts_worked, "station_best": station_best.duplicate(), "daily": daily.duplicate(true), "rent_debt": rent_debt, "weeks_paid": weeks_paid, "late_notices": late_notices, "rent_strikes": rent_strikes,
 		"cats_fed_day": cats_fed_day, "couch_day": couch_day, "crib_day": crib_day, "freya_trust": freya_trust,
 		"freya_treat_day": freya_treat_day, "inspector_follow": inspector_follow, "inspector_t": inspector_t,
 		"gear": gear.duplicate(true), "shades": shades, "wordle": wordle.duplicate(true), "wordle_seed": wordle_seed, "kills": kills.duplicate(),
@@ -879,6 +885,7 @@ func from_dict(d: Dictionary) -> void:
 	rent_debt = int(d.get("rent_debt", 0))
 	weeks_paid = int(d.get("weeks_paid", 0))
 	late_notices = int(d.get("late_notices", 0))
+	rent_strikes = int(d.get("rent_strikes", 0))
 	cats_fed_day = int(d.get("cats_fed_day", -1))
 	couch_day = int(d.get("couch_day", -1))
 	crib_day = int(d.get("crib_day", -1))
@@ -983,7 +990,10 @@ func from_dict(d: Dictionary) -> void:
 	_sync_world()
 
 func save_game(manual: bool = false) -> bool:
-	var ok: = SaveGame.write(to_dict(), save_path)
+	var d: = to_dict()
+	var ok: = SaveGame.write(d, save_path)
+	if ok:
+		_snapshot_if_new(d)
 	save_flash_t = 1.5
 	autosave_t = AUTOSAVE_EVERY
 	if manual:
@@ -1035,6 +1045,13 @@ func show_loading() -> void:
 
 func loading_done() -> void:
 	loading_on = false
+	if not _pending_fail.is_empty():
+		var pf: Array = _pending_fail
+		_pending_fail = []
+		calendar_pending = false
+		fail_screen(str(pf[0]), pf[1])
+		_sync_world()
+		return
 	if calendar_pending:
 		calendar_pending = false
 		show_calendar()
@@ -1679,6 +1696,9 @@ func _wake(energy_penalty: int) -> void:
 	if day_i % 7 == 0:
 		lines.append_array(market_week())
 		lines.append_array(pay_rent())
+		if rent_strikes >= EVICT_STRIKES:
+			_evicted()
+			return
 	jen_text_daily()
 	var missed: = errand_new_day()
 	if not missed.is_empty():
@@ -1780,6 +1800,7 @@ func pay_rent() -> Array:
 	if money >= due:
 		money -= due
 		rent_debt = 0
+		rent_strikes = 0
 		weeks_paid += 1
 		if prorated:
 			return ["Monday. Rent is due. Rent is always due.",
@@ -1790,10 +1811,16 @@ func pay_rent() -> Array:
 	money -= partial
 	rent_debt = due - partial + LATE_FEE
 	late_notices += 1
+	# a strike = couldn't even cover this week (back rent alone carries over, no strike)
+	rent_strikes = rent_strikes + 1 if partial < base else 0
 	happiness = maxf(0.0, happiness - 20.0)
 	set_upset("rent")
-	return [LATE_NOTICES[(late_notices - 1) % LATE_NOTICES.size()],
+	var out: = [LATE_NOTICES[(late_notices - 1) % LATE_NOTICES.size()],
 		"Can't cover $%d (%s). I pay what I've got ($%d). Late fee $%d, because being broke is expensive. Owe $%d next Monday. {partner}'s stressed. -20 Happiness" % [due, parts, partial, LATE_FEE, rent_debt]]
+	if rent_strikes > 0 and rent_strikes < EVICT_STRIKES:
+		out.append(["Strike one with the landlord. Three short Mondays in a row and we're out on the curb.",
+			"Strike TWO. One more short Monday and the landlord changes the locks. Cover at least $%d next Monday." % weekly_base()][mini(rent_strikes, 2) - 1])
+	return out
 
 func rent_due() -> int:
 	return (int(ceil(weekly_base() / 2.0)) if first_week_prorate() else weekly_base()) + rent_debt
@@ -3415,6 +3442,8 @@ func gala_lose() -> void:
 	gala_boss = null
 	_leave_gala()
 	energy = 40.0
+	if fail_screen("gameover", ["Security walks me out. They even take the shrimp back. Turns out the shrimp was a loan."]):
+		return
 	_say(["Security walks me out. They even take the shrimp back. Turns out the shrimp was a loan.", "Invitation's still good. Gear up and go again."])
 	save_game()
 
@@ -3595,8 +3624,89 @@ func story_lose(msg: String) -> void:
 	_leave_arena()
 	energy = 40.0
 	happiness = maxf(0.0, happiness - 5.0)
+	if fail_screen("gameover", [msg]):
+		return
 	_say([msg, "-5 Happiness. The door's still open whenever you're ready."])
 	save_game()
+
+## ---- Fail states (Nov 16) ----------------------------------------------------------------------------
+## Soft fails, never a wiped save. Two rolling snapshots next to the save: "morning" = the first save of each
+## day (the wake), "week" = the first save of each Monday. Game over (story fight / gala KO) rolls back to this
+## morning; eviction (EVICT_STRIKES short Mondays in a row) rolls back to last Monday, a week to make rent.
+## The rollback is written over the main save as the screen opens, so quitting to the title = the retry too.
+func snap_path(tag: String) -> String:
+	return save_path.get_basename() + "_" + tag + ".json"
+
+func erase_snapshots() -> void:
+	for tag in ["morning", "week"]:
+		SaveGame.erase(snap_path(tag))
+	_snap_days = {}
+
+func _snap_day(tag: String) -> int:
+	if not _snap_days.has(tag):
+		_snap_days[tag] = int(SaveGame.read(snap_path(tag)).get("day_count", -1))
+	return int(_snap_days[tag])
+
+func _snapshot_if_new(d: Dictionary) -> void:
+	var tags: Array = ["morning"]
+	if day_i % 7 == 0:
+		tags.append("week")
+	for tag in tags:
+		if _snap_day(tag) != day_count:
+			SaveGame.write(d.duplicate(true), snap_path(tag))
+			_snap_days[tag] = day_count
+
+func _evicted() -> void:
+	clear_enemies()
+	var lines: = ["Third short Monday in a row. The landlord doesn't knock. He tapes. Our stuff's on the curb by noon.",
+		"Retry rolls back to last Monday: one week to cover at least $%d." % weekly_base()]
+	calendar_pending = false
+	if loading_on:
+		_pending_fail = ["evicted", lines]
+	else:
+		fail_screen("evicted", lines)
+
+## Opens the eviction / game over screen. False = no snapshot to roll back to (old save, nothing saved yet
+## today): the caller keeps its old soft-landing flow.
+func fail_screen(kind: String, lines: Array) -> bool:
+	var tag: = "week" if kind == "evicted" else "morning"
+	var snap: = SaveGame.read(snap_path(tag))
+	var grace: = false
+	if snap.is_empty() and kind == "evicted":   # save from before snapshots existed: this morning + a fresh start
+		snap = SaveGame.read(snap_path("morning"))
+		grace = true
+	if snap.is_empty():
+		if kind == "evicted":   # nothing at all to roll back to: the landlord blinks
+			rent_strikes = 0
+			_say(lines.slice(0, 1) + ["...then he sees {baby} and gives us one more week. Strikes wiped. Don't make him regret it."])
+			save_game()
+		return false
+	if grace:
+		snap["rent_strikes"] = 0
+	SaveGame.write(snap.duplicate(true), save_path)
+	var c: = FailScreen.new()
+	c.kind = kind
+	c.heading = ""
+	var tail: String = "Retry rolls back to this morning, Day %d. Everything since didn't happen." % int(snap.get("day_count", day_count)) if kind == "gameover" else ""
+	c.lines = (lines + ([tail] if tail != "" else [])).map(func (l): return Cast.N(str(l)))
+	c.opts = [["retry", "Retry this week" if kind == "evicted" else "Retry from this morning", KEY_1], ["title", "Quit to title", KEY_2]]
+	c.chosen.connect(func (id: String) -> void:
+		close_overlay()
+		if id == "title":
+			show_title()
+		else:
+			_retry_from(snap, kind))
+	open_overlay(c)
+	return true
+
+func _retry_from(snap: Dictionary, kind: String) -> void:
+	clear_enemies()
+	from_dict(snap.duplicate(true))
+	save_game()
+	if kind == "evicted":
+		_say(["Monday again. Same landlord, same boat. One week to cover $%d, or we're back on the curb." % rent_due(), next_fact()])
+	else:
+		_say(["Day %d, %s, %s. Again. Same coffee, better plan." % [day_count, DAY_NAMES[day_i % 7], clock_text()], next_fact()])
 
 func _leave_arena() -> void:
 	arena_mode = ""

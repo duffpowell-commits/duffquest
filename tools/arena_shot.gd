@@ -65,6 +65,12 @@ func _process(_d: float) -> void:
 			m.clock = 600.0
 			m.dev_warp_quest("gig", 2)
 			m.dialog.clear()
+		elif id == "evicted":  # fail state: three short Mondays (rolls back to last Monday)
+			m.debug_station("home")
+			m.dialog.clear()
+		elif id == "gameover":  # fail state: KO'd in a story fight (rolls back to this morning)
+			m.start_story_fight(str(m.STORY[0]["id"]))
+			m.dialog.clear()
 		elif id == "grease86":  # Grease Trap stage 2: '?' over the 86 List
 			m.dev_warp_quest("grease", 2)
 			m.dialog.clear()
@@ -140,6 +146,12 @@ func _process(_d: float) -> void:
 	if frame >= 200 and id.begins_with("at:") and id.count(",") == 2:  # at:X,Y,MIN = also set the clock
 		m.clock = float(id.split(",")[2])
 		m.dialog.clear()
+	if frame == 236 and id == "evicted":
+		m._evicted()
+	if frame == 236 and id == "gameover":
+		m.player.position = m.ARENA_ORIGIN + Vector2(200, 140)
+	if frame == 250 and id == "gameover":
+		m.story_lose("I get knocked out. Me and the sidewalk get acquainted.")
 	if frame == 236 and id == "chad":
 		m.quest_talk("neighbor")
 	if frame >= 236 and id == "grease86":
@@ -189,7 +201,7 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look"):
+	if frame == 230 and not id in ["fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
