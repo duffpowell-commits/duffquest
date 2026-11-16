@@ -2629,12 +2629,19 @@ func world_covered() -> bool:
 	return overlay_node != null and is_instance_valid(overlay_node) and overlay_node.has_method("_draw_backdrop")
 
 func _update_world_cover() -> void:
-	var cover: = world_covered() or view3d_on
+	# Menus with painted art hide the world outright (stops its drawing too).
+	# The 3D view only fades it to alpha 0: the renderer skips it, but every
+	# _draw still runs so View3D can capture the actors' sprite calls.
+	var cover: = world_covered()
+	var shown: = not cover and not view3d_on
 	if visible == cover:
 		visible = not cover
-		var hd: = get_node_or_null("HD2DPresentation")
-		if hd:
-			hd.set_world_shown(not cover)
+	var a: = 0.0 if view3d_on else 1.0
+	if modulate.a != a:
+		modulate.a = a
+	var hd: = get_node_or_null("HD2DPresentation")
+	if hd and hd.world_shown != shown:
+		hd.set_world_shown(shown)
 
 func _draw_outside() -> void:
 	var f: = ThemeDB.fallback_font
@@ -2660,8 +2667,7 @@ func _draw_outside() -> void:
 			Dressing.draw_item(self, b)
 			continue
 		var r: Rect2 = b["r"]
-		var shut: bool = (b.has("story") and not story_beaten(str(b["story"])) and not story_available(str(b["story"]))) or (b.has("errand") and not Errands.is_open(str(b["errand"]), clock))
-		Art.image(self, str(b.get("art", "")), r.position, Color(0.72, 0.72, 0.78) if shut else Color.WHITE)
+		Art.image(self, str(b.get("art", "")), r.position, Color(0.72, 0.72, 0.78) if building_shut(b) else Color.WHITE)
 
 	_draw_porch_and_cans()
 	_draw_waffle_sign_and_board(f)
@@ -2670,6 +2676,10 @@ func _draw_outside() -> void:
 
 	# dusk/night darkening now lives in hd_presentation.gd (clock-driven grade + door lights)
 	# the inspector and Brittany are drawn outdoors by y-sorted proxies (dressing_front.gd)
+
+## A story spot not open yet, or an errand shop outside its hours (drawn dimmed, 2D and 3D).
+func building_shut(b: Dictionary) -> bool:
+	return (b.has("story") and not story_beaten(str(b["story"])) and not story_available(str(b["story"]))) or (b.has("errand") and not Errands.is_open(str(b["errand"]), clock))
 
 func _draw_inspector() -> void:
 	draw_inspector_at(self, Vector2.ZERO)

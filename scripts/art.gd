@@ -70,7 +70,38 @@ static func row_for(v: Vector2) -> int:
 static func walk_col(t: float, moving: bool, fps: float = 8.0) -> int:
 	return int(WALK[int(t * fps) % 4]) if moving else 0
 
+## --- 3D view capture (scripts/view3d/view3d.gd) -----------------------------------------------------------
+## While the 3D town view is live, every sheet frame / image an actor draws in the world is also written down
+## here: {canvas item id: [[name, local pos, col, row, modulate, draw xf, is_frame], ...]}. A canvas item's list
+## is cleared when it redraws (its `draw` signal fires just before _draw), so it always holds the last frame
+## that item actually drew. Off by default: zero cost for the 2D game.
+static var rec_on: = false
+static var rec: = {}
+static var _xf: = Transform2D.IDENTITY
+static var _xf_ci: = 0
+
+## draw_set_transform that the 3D capture can see (bosses, Pete, fight-floor scaling).
+static func xf(ci: CanvasItem, pos: Vector2, rot: float = 0.0, scale: Vector2 = Vector2.ONE) -> void:
+	ci.draw_set_transform(pos, rot, scale)
+	_xf = Transform2D(rot, scale, 0.0, pos)
+	_xf_ci = ci.get_instance_id()
+
+static func _record(ci: CanvasItem, name: String, pos: Vector2, col: int, row: int, modulate: Color, is_frame: bool) -> void:
+	if ci.get_canvas_layer_node() != null:
+		return   # menus, minigames, HUD: not part of the world
+	var id: = ci.get_instance_id()
+	if not rec.has(id):
+		rec[id] = []
+		ci.draw.connect(func() -> void:
+			_xf_ci = 0
+			if rec.has(id):
+				(rec[id] as Array).clear())
+	var t: = _xf if _xf_ci == id else Transform2D.IDENTITY
+	(rec[id] as Array).append([name, pos, col, row, modulate, t, is_frame])
+
 static func frame(ci: CanvasItem, name: String, pos: Vector2, col: int = 0, row: int = 0, modulate: Color = Color.WHITE) -> void :
+	if rec_on:
+		_record(ci, name, pos, col, row, modulate, true)
 
 	var tx: = tex(name)
 	if tx == null:
@@ -85,6 +116,8 @@ static func frame(ci: CanvasItem, name: String, pos: Vector2, col: int = 0, row:
 	ci.draw_texture_rect_region(tx, Rect2((pos * k).round() / k - Vector2(float(org[0]), float(org[1])) / k, Vector2(cw, chh) / k), src, modulate)
 
 static func image(ci: CanvasItem, name: String, pos: Vector2, modulate: Color = Color.WHITE, scale: float = 1.0) -> void :
+	if rec_on:
+		_record(ci, name, pos, -1, int(scale * 1000.0), modulate, false)
 
 	var tx: = tex(name)
 	if tx == null:

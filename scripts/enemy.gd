@@ -530,12 +530,12 @@ func _draw_driver() -> void:
 			draw_string(f, Vector2(-12, p.y - global_position.y - 10), "HONK!", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color("#ff4040"))
 
 	if axis == "h":
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2(dir, 1))
+		Art.xf(self, Vector2.ZERO, 0.0, Vector2(dir, 1))
 		Art.image(self, "truck_h", Vector2.ZERO)
 	else:
-		draw_set_transform(Vector2.ZERO, 0.0, Vector2(1, dir))
+		Art.xf(self, Vector2.ZERO, 0.0, Vector2(1, dir))
 		Art.image(self, "truck_v", Vector2.ZERO)
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	Art.xf(self, Vector2.ZERO, 0.0, Vector2.ONE)
 
 const Art: = preload("res://scripts/art.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
@@ -560,14 +560,14 @@ func _look() -> Vector2:
 func _draw_person() -> void:
 	if m != null and m.has_method("on_fight_floor") and m.on_fight_floor():   # match Duff + bosses on painted fight floors
 		var k: float = m.STAGE_SCALE * 0.9
-		draw_set_transform(Vector2(0, 11.0 * (1.0 - k)), 0.0, Vector2(k, k))
+		Art.xf(self, Vector2(0, 11.0 * (1.0 - k)), 0.0, Vector2(k, k))
 	Art.person(self, sprite_name(), Vector2(0, 11), _look(), t, velocity.length() > 4.0, telegraphing(), _mod())
 	if kind == "pirate" and loot != "":
 		Art.image(self, "package", Vector2(9, 6))
 
 func _draw_pete() -> void:
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2(1.3, 1.3))
+	Art.xf(self, Vector2.ZERO, 0.0, Vector2(1.3, 1.3))
 	Art.person(self, "ch_pete", Vector2(0, 8.5), _look(), t, velocity.length() > 4.0, state == "charge" or telegraphing(), _mod())
-	draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	Art.xf(self, Vector2.ZERO, 0.0, Vector2.ONE)
 	if state == "charge":
 		draw_line(-charge_dir * 6.0, -charge_dir * 16.0, Color(1, 1, 1, 0.6), 2.0)
