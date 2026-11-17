@@ -501,10 +501,11 @@ func _build_town() -> void:
 		s.position = to3(Vector2(left_x, bottom_y))
 		town.add_child(s)
 		static_art[n] = true
-		if models_on() and MODELS.has(n):   # mock-up: this building is real geometry, the card stays empty
+		if models_on() and n.begins_with("sf_"):   # #models: this building is real geometry, the card stays empty
 			s.texture = null
-			buildings.append([b, s, _model(n, tx, k, left_x, bottom_y), 1.0])
-			_lamp(Vector2(r.get_center().x, r.end.y + 6), 2.2, Color("#ffc27a"), 1.0, 6.0)
+			buildings.append([b, s, _model(b, n, tx, k, left_x, bottom_y), 1.0])
+			if n != "sf_home":
+				_lamp(Vector2(r.get_center().x, r.end.y + 6), 2.2, Color("#ffc27a"), 1.0, 6.0)
 			continue
 		# pitched-roof houses: the painted roof above the eave folds back like a real roof instead of standing up
 		var fold: = int(round(float(FOLD[n][0]) * tx.get_height())) if FOLD.has(n) else -1
@@ -875,16 +876,19 @@ func _hip(root: Node3D, k: float, x0: int, x1: int, rx0: int, rx1: int, rise_len
 	root.add_child(mi)
 	return m
 
-# --- modeled buildings (mock-up, Nov 17) ---------------------------------------------------------------------
+# --- modeled buildings (#models, Nov 17) ----------------------------------------------------------------------
 ## Real geometry instead of a painted card: walls with depth, a hip or parapet roof, trim, rooftop kit. Only the
-## front wall wears the painted art (cut from the facade below its eave); roof, sides and trim are built.
+## front wall wears the painted art (the facade below its eave or parapet); whatever the art paints above the
+## roofline (signs, a dish, a spire) stands on the coping as its own cut-out, minus the painted roof behind it.
 ## Off unless the URL has "#models" (web) or DQ_3D_MODELS=1 (renders), so the painted look stays the default.
-## All in art pixels of the facade: "wall" = the front wall's rows [y0, y1) and columns [x0, x1).
+## Every storefront is modeled as a flat-roof shop measured from its own art; this table only overrides.
+## Pixel values are in the facade art's own pixels.
 const MODELS: = {
-	"sf_neighbor": {"wall": [130, 240, 14, 306], "depth": 44.0, "roof": "hip", "pitch": 30.0, "ov": 3.0,
-		"shingle": [100, 74, 48, 26], "trim": Color("#e4d9c8"), "corners": true},
-	"sf_club": {"wall": [84, 208, 2, 318], "sign": [40, 100, 100, 220], "depth": 34.0, "roof": "flat", "ov": 0.0, "parapet": Color("#5b3494"),
-		"deck": Color("#2e2440"), "neon": Color("#18e4fc"), "trim": Color("#3a2a5c"), "ac": true}}
+	"sf_home": {"roof": "hip", "eave": 0.506, "pitch": 30.0, "ov": 3.0, "trim": Color("#efe3cc"), "corners": true,
+		"chimney": [359, 379]},
+	"sf_neighbor": {"roof": "hip", "eave": 0.54, "pitch": 30.0, "ov": 3.0, "trim": Color("#e4d9c8"), "corners": true},
+	"sf_club": {"neon": Color("#18e4fc")},
+	"sf_plaza": {"depth": "square", "ac": false}}
 static var _models_flag: = -1
 
 static func models_on() -> bool:
@@ -899,7 +903,23 @@ func _skin(img: Image, r: Rect2i) -> ImageTexture:
 	part.generate_mipmaps()
 	return ImageTexture.create_from_image(part)
 
-func _lit(c: Color, glow: float = 0.3) -> StandardMaterial3D:
+## Lit like the painted cards: no specular sheen. Front walls get no glow (the cards have none, so a glowing wall
+## stood out pink at night); sides and roofs a little, so walls turned from a low sun don't go black.
+const MODEL_ALBEDO: = 0.62
+const MODEL_GLOW: = 0.08
+
+func _model_mat(tex: Texture2D, tint: = Color.WHITE, glow: = MODEL_GLOW) -> StandardMaterial3D:
+	var m: = _flat(Color(tint.r * MODEL_ALBEDO, tint.g * MODEL_ALBEDO, tint.b * MODEL_ALBEDO))
+	m.metallic_specular = 0.0
+	m.albedo_texture = tex
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	if glow > 0.0:
+		m.emission_enabled = true
+		m.emission = Color(glow, glow, glow)
+		m.emission_texture = tex
+	return m
+
+func _lit(c: Color, glow: float = 0.15) -> StandardMaterial3D:
 	var m: = _flat(c * MODEL_ALBEDO / 0.8)
 	m.metallic_specular = 0.0
 	m.emission_enabled = true
@@ -917,57 +937,77 @@ func _part(root: Node3D, size: Vector3, at: Vector3, m: Material, shadow: = true
 	root.add_child(mi)
 	return mi
 
-## Lit like the painted cards: no specular sheen, a touch of the art's own colour as emission so dusk walls
-## facing away from the sun don't go black.
-const MODEL_ALBEDO: = 0.62
-const MODEL_GLOW: = 0.12
-
-func _model_mat(tex: Texture2D, tint: = Color.WHITE) -> StandardMaterial3D:
-	var m: = _flat(Color(tint.r * MODEL_ALBEDO, tint.g * MODEL_ALBEDO, tint.b * MODEL_ALBEDO))
-	m.metallic_specular = 0.0
-	m.albedo_texture = tex
-	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	m.emission_enabled = true
-	m.emission = Color(MODEL_GLOW, MODEL_GLOW, MODEL_GLOW)
-	m.emission_texture = tex
+## A standing cut-out quad on the model (front wall, roofline sign). Alpha-scissored; the fade restores the cut.
+func _cutout(root: Node3D, tex: Texture2D, size: Vector2, at: Vector3, glow: float) -> StandardMaterial3D:
+	var q: = MeshInstance3D.new()
+	var qm: = QuadMesh.new()
+	qm.size = size
+	q.mesh = qm
+	q.position = at
+	var m: = _model_mat(tex, Color.WHITE, glow)
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+	m.alpha_scissor_threshold = 0.5
+	m.set_meta("cut", true)   # _fade_buildings puts the scissor back when it turns solid again
+	q.material_override = m
+	q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(q)
 	return m
 
-func _model(n: String, tx: Texture2D, k: float, left_x: float, bottom_y: float) -> Dictionary:
-	var spec: Dictionary = MODELS[n]
+## Opaque span of one art row (step 2): [x0, x1, count].
+func _row_span(img: Image, y: int) -> Array:
+	var lo: = img.get_width()
+	var hi: = -1
+	var n: = 0
+	for x in range(0, img.get_width(), 2):
+		if img.get_pixel(x, y).a > 0.5:
+			n += 1
+			lo = mini(lo, x)
+			hi = maxi(hi, x)
+	return [lo, hi, n]
+
+func _model(b: Dictionary, n: String, tx: Texture2D, k: float, left_x: float, bottom_y: float) -> Dictionary:
+	var spec: Dictionary = MODELS.get(n, {})
 	var img: = tx.get_image()
 	if img.is_compressed():
 		img.decompress()
-	var wr: Array = spec["wall"]
-	var wpx: = Rect2i(int(wr[2]), int(wr[0]), int(wr[3]) - int(wr[2]), int(wr[1]) - int(wr[0]))
+	var w: = img.get_width()
+	var h: = img.get_height()
+	var hip: = str(spec.get("roof", "flat")) == "hip"
+	# measure the art: the roof band's top (first ~full-width row) and the parapet / eave (where it reaches full width)
+	var spans: = []
+	var mx: = 0
+	for y in range(h):
+		var sp: = _row_span(img, y)
+		spans.append(sp)
+		mx = maxi(mx, int(sp[2]))
+	var top: = 0
+	while top < h - 1 and int(spans[top][2]) < mx * 0.85:
+		top += 1
+	var par: = top
+	while par < h - 1 and int(spans[par][2]) < mx * 0.985:
+		par += 1
+	if hip:
+		par = int(round(float(spec["eave"]) * h))
+	var sp0: Array = spans[mini(h - 1, par + 2)]
+	var wpx: = Rect2i(int(sp0[0]), par, int(sp0[1]) - int(sp0[0]) + 2, h - par)
 	var W: = float(wpx.size.x) / k * U
 	var H: = float(wpx.size.y) / k * U
-	var D: = float(spec["depth"]) * U
-	var cx: = (left_x + (float(wpx.position.x) + float(wpx.size.x) * 0.5) / k) * U
-	var zf: = bottom_y * U
+	var r: Rect2 = b["r"]
+	var D: = W if str(spec.get("depth", "")) == "square" else clampf(r.size.y * 0.55, 18.0, 36.0) * U
+	if spec.get("depth", null) is float:
+		D = float(spec["depth"]) * U
+	var cxp: = float(wpx.position.x) + float(wpx.size.x) * 0.5
 	var root: = Node3D.new()
-	root.position = Vector3(cx, 0, zf - D * 0.5)
+	root.position = Vector3((left_x + cxp / k) * U, 0, bottom_y * U - D * 0.5)
 	town.add_child(root)
 	var mats: Array = []
-	# front wall: the painted facade below the eave, alpha-cut so steps and planters keep their outline
-	var front: = MeshInstance3D.new()
-	var qm: = QuadMesh.new()
-	qm.size = Vector2(W, H)
-	front.mesh = qm
-	front.position = Vector3(0, H * 0.5, D * 0.5 + 0.004)
-	var ftex: = _skin(img, wpx)
-	var fm: = _model_mat(ftex)
-	fm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
-	fm.alpha_scissor_threshold = 0.5
-	fm.set_meta("cut", true)   # _fade_buildings puts the scissor back when it turns solid again
-	front.material_override = fm
-	front.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	root.add_child(front)
-	mats.append(fm)
+	# front wall: the painted facade under the roofline
+	mats.append(_cutout(root, _skin(img, wpx), Vector2(W, H), Vector3(0, H * 0.5, D * 0.5 + 0.004), 0.0))
 	# body: sides and back in the wall's own skin (the plainest strip of the facade), a shade darker
 	var sw: = int(8.0 * k)
 	var pick: = wpx.position.x
 	var pv: = INF
-	for sx in range(wpx.position.x, wpx.end.x - sw, maxi(2, sw / 2)):
+	for sx in range(wpx.position.x, maxi(wpx.position.x + 1, wpx.end.x - sw), maxi(2, sw / 2)):
 		var v: = _busy(img, Rect2i(sx, wpx.position.y + 4, sw, wpx.size.y / 2))
 		if v < pv:
 			pv = v
@@ -978,20 +1018,30 @@ func _model(n: String, tx: Texture2D, k: float, left_x: float, bottom_y: float) 
 	bm.uv1_scale = Vector3(1.0 / (float(sw) / k * U), 1.0 / (H * 0.5), 1.0 / (float(sw) / k * U))
 	_part(root, Vector3(W, H, D), Vector3(0, H * 0.5, 0), bm)
 	mats.append(bm)
-	var trim: Color = spec["trim"]
-	var tm: = _lit(trim)
-	mats.append(tm)
-	if spec.get("corners", false):   # corner boards stand proud of the siding
-		for sx in [-1, 1]:
-			for sz in [-1, 1]:
-				_part(root, Vector3(0.14, H, 0.14), Vector3(sx * (W * 0.5 - 0.02), H * 0.5, sz * (D * 0.5 - 0.02)), tm)
-	if str(spec["roof"]) == "hip":
+	var roof_top: = H
+	if hip:
+		var trim: Color = spec["trim"]
+		var tm: = _lit(trim)
+		mats.append(tm)
+		if spec.get("corners", false):   # corner boards stand proud of the siding
+			for sx in [-1, 1]:
+				for sz in [-1, 1]:
+					_part(root, Vector3(0.14, H, 0.14), Vector3(sx * (W * 0.5 - 0.02), H * 0.5, sz * (D * 0.5 - 0.02)), tm)
 		var ov: = float(spec["ov"]) * U
-		# fascia band round the eave, then the hip roof over it
 		var fh: = 0.16
-		_part(root, Vector3(W + ov * 2.0, fh, D + ov * 2.0), Vector3(0, H + fh * 0.5, 0), tm)
-		var shp: Array = spec["shingle"]
-		var stx: = _skin(img, Rect2i(int(shp[0]), int(shp[1]), int(shp[2]), int(shp[3])))
+		_part(root, Vector3(W + ov * 2.0, fh, D + ov * 2.0), Vector3(0, H + fh * 0.5, 0), tm)   # fascia
+		# shingles: the plainest patch of the painted roof
+		var shw: = int(12.0 * k)
+		var shh: = int(6.0 * k)
+		var best: = Vector2i(wpx.position.x, maxi(0, par - shh - 4))
+		var bv: = INF
+		for sy in range(maxi(top, par - (par - top) / 2), maxi(top + 1, par - shh - 4), 4):
+			for sx in range(wpx.position.x + shw, wpx.end.x - shw * 2, shw / 2):
+				var v2: = _busy(img, Rect2i(sx, sy, shw, shh))
+				if v2 < bv:
+					bv = v2
+					best = Vector2i(sx, sy)
+		var stx: = _skin(img, Rect2i(best, Vector2i(shw, shh)))
 		var rw: = W * 0.5 + ov
 		var rd: = D * 0.5 + ov
 		var rise: = rd * tan(deg_to_rad(float(spec["pitch"])))
@@ -1011,79 +1061,84 @@ func _model(n: String, tx: Texture2D, k: float, left_x: float, bottom_y: float) 
 		st.generate_normals()
 		var roof: = MeshInstance3D.new()
 		roof.mesh = st.commit()
-		var rm: = _model_mat(stx, Color(0.85, 0.85, 0.9))
+		var rm: = _model_mat(stx, Color(0.72, 0.72, 0.76))   # the paint has its own light baked in: keep it dim
 		rm.uv1_triplanar = true
-		rm.uv1_scale = Vector3(1.0 / (float(shp[2]) / k * U), 1.0 / (float(shp[3]) / k * U), 1.0 / (float(shp[3]) / k * U))
+		rm.uv1_scale = Vector3(1.0 / (float(shw) / k * U), 1.0 / (float(shh) / k * U), 1.0 / (float(shh) / k * U))
 		rm.cull_mode = BaseMaterial3D.CULL_DISABLED
 		roof.material_override = rm
 		root.add_child(roof)
 		mats.append(rm)
-		# ridge and hip caps: a darker line along each edge reads as shingle caps
-		var cap: = _lit(Color(0.0, 0.0, 0.0).lerp(rm.albedo_color, 0.0).lerp(Color("#2a3448"), 1.0), 0.2)
+		var cap: = _lit(_avg(img, Rect2i(best, Vector2i(shw, shh))).darkened(0.35))
 		mats.append(cap)
-		_part(root, Vector3(rl * 2.0 + 0.1, 0.08, 0.12), Vector3(0, y0 + rise + 0.02, 0), cap, false)
+		_part(root, Vector3(rl * 2.0 + 0.1, 0.08, 0.12), Vector3(0, y0 + rise + 0.02, 0), cap, false)   # ridge cap
+		if spec.has("chimney"):
+			var ch: Array = spec["chimney"]
+			var cw: = float(int(ch[1]) - int(ch[0])) / k * U
+			var cmat: = _lit(_avg(img, Rect2i(int(ch[0]), 0, int(ch[1]) - int(ch[0]), 14)))
+			mats.append(cmat)
+			var chx: = (float(int(ch[0]) + int(ch[1])) * 0.5 - cxp) / k * U
+			_part(root, Vector3(cw, rise + 0.7, cw), Vector3(chx, y0 + (rise + 0.7) * 0.5, -rd * 0.3), cmat)
+		roof_top = y0 + rise
 	else:
-		# flat roof: a dark deck inside a parapet, a coping line, rooftop kit
+		# flat roof: a deck inside a parapet; coping in the paint's own trim colour, deck in its roof colour
+		var deck_c: = _avg(img, Rect2i(wpx.position.x + 4, top, mini(40, wpx.size.x / 6), maxi(2, par - top)))
+		var trim_c: = _avg(img, Rect2i(wpx.position.x, maxi(0, par - 1), wpx.size.x, 3))
 		var ph: = 0.22
 		var pt: = 0.12
-		var pm: = _lit(spec["parapet"], 0.35)
+		var pm: = _lit(trim_c)
 		mats.append(pm)
 		_part(root, Vector3(W + 0.06, ph, pt), Vector3(0, H + ph * 0.5, D * 0.5 - pt * 0.5 + 0.02), pm)
 		_part(root, Vector3(W + 0.06, ph, pt), Vector3(0, H + ph * 0.5, -D * 0.5 + pt * 0.5), pm)
 		for sx in [-1, 1]:
 			_part(root, Vector3(pt, ph, D), Vector3(sx * (W * 0.5 - pt * 0.5 + 0.03), H + ph * 0.5, 0), pm)
-		var dm: = _lit(spec["deck"], 0.2)
+		var dm: = _lit(deck_c.darkened(0.15), 0.1)
 		mats.append(dm)
 		_part(root, Vector3(W - pt, 0.02, D - pt * 2.0), Vector3(0, H + 0.01, 0), dm, false)
 		var neon: Color = spec.get("neon", Color.TRANSPARENT)
-		if neon.a > 0.0:   # a lit tube along the front coping, the club's own cyan
+		if neon.a > 0.0:   # a lit tube along the front coping
 			var nm: = _flat(neon)
 			nm.emission_enabled = true
 			nm.emission = neon
 			nm.emission_energy_multiplier = 1.6
 			mats.append(nm)
 			_part(root, Vector3(W + 0.08, 0.035, 0.035), Vector3(0, H + ph + 0.02, D * 0.5 - 0.02), nm, false)
-		if spec.get("ac", false):
-			var am: = _lit(Color("#8f9aa8"), 0.3)
+		if spec.get("ac", true):   # rooftop kit, placed from the name so every shop's roof differs
+			var rng: = RandomNumberGenerator.new()
+			rng.seed = hash(n)
+			var am: = _lit(Color("#8f9aa8"))
+			var vm: = _lit(Color("#4a4658"))
 			mats.append(am)
-			_part(root, Vector3(0.9, 0.5, 0.7), Vector3(-W * 0.28, H + 0.27, -D * 0.1), am)
-			_part(root, Vector3(0.5, 0.35, 0.5), Vector3(W * 0.3, H + 0.2, -D * 0.25), am)
-			var vm: = _lit(Color("#4a4658"), 0.25)
 			mats.append(vm)
-			_part(root, Vector3(0.18, 0.45, 0.18), Vector3(W * 0.12, H + 0.24, D * 0.15), vm)
-	if spec.has("sign"):   # a sign that rises over the roofline stands on the parapet as its own cut-out
-		var sg: Array = spec["sign"]
-		var spx: = Rect2i(int(sg[2]), int(sg[0]), int(sg[3]) - int(sg[2]), int(wr[0]) - int(sg[0]))
-		var sq: = MeshInstance3D.new()
-		var sqm: = QuadMesh.new()
-		sqm.size = Vector2(float(spx.size.x) / k * U, float(spx.size.y) / k * U)
-		sq.mesh = sqm
-		var sx0: = (float(spx.position.x) + float(spx.size.x) * 0.5 - (float(wpx.position.x) + float(wpx.size.x) * 0.5)) / k * U
-		sq.position = Vector3(sx0, H + 0.22 + sqm.size.y * 0.5, D * 0.5 + 0.03)   # stands on the parapet coping
-		# only the lit sign itself, not the painted roof behind it: keep bright pixels plus a 2 px outline
-		var part: = img.get_region(spx)
-		var keep: = Image.create_empty(part.get_width(), part.get_height(), false, Image.FORMAT_RGBA8)
-		keep.fill(Color(0, 0, 0, 0))
-		for y in range(part.get_height()):
-			for x in range(part.get_width()):
-				var c: = part.get_pixel(x, y)
-				if c.a > 0.5 and maxf(c.r, maxf(c.g, c.b)) > 0.7:
-					for dy in range(-2, 3):
-						for dx in range(-2, 3):
-							var px: = x + dx
-							var py: = y + dy
-							if px >= 0 and py >= 0 and px < part.get_width() and py < part.get_height() and part.get_pixel(px, py).a > 0.5:
-								keep.set_pixel(px, py, part.get_pixel(px, py))
-		keep.generate_mipmaps()
-		var stx2: = ImageTexture.create_from_image(keep)
-		var sgm: = _model_mat(stx2)
-		sgm.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
-		sgm.alpha_scissor_threshold = 0.5
-		sgm.set_meta("cut", true)
-		sgm.emission = Color(0.35, 0.35, 0.35)   # it's neon
-		sq.material_override = sgm
-		root.add_child(sq)
-		mats.append(sgm)
+			for i in range(1 + int(W > 6.0)):
+				var s3: = Vector3(rng.randf_range(0.6, 1.0), rng.randf_range(0.35, 0.5), rng.randf_range(0.5, 0.8))
+				_part(root, s3, Vector3(rng.randf_range(-0.35, 0.35) * W, H + s3.y * 0.5, rng.randf_range(-0.3, 0.1) * D), am)
+			_part(root, Vector3(0.18, 0.45, 0.18), Vector3(rng.randf_range(-0.4, 0.4) * W, H + 0.24, rng.randf_range(-0.3, 0.2) * D), vm)
+		roof_top = H + ph
+		# whatever stands over the roofline in the paint (sign, dish, spire), minus the painted roof behind it
+		if par > 4:
+			var crown: = Image.create_empty(wpx.size.x, par, false, Image.FORMAT_RGBA8)
+			crown.fill(Color(0, 0, 0, 0))
+			var kept: = 0
+			var mw: = maxi(2, wpx.size.x / 8)
+			for y in range(par):
+				var band: = Color(0, 0, 0, 0)
+				var in_band: = y >= top
+				if in_band:
+					band = _avg(img, Rect2i(wpx.position.x + 2, y, mw, 1)).lerp(_avg(img, Rect2i(wpx.end.x - mw - 2, y, mw, 1)), 0.5)
+				for x in range(wpx.size.x):
+					var c: = img.get_pixel(wpx.position.x + x, y)
+					if c.a < 0.5:
+						continue
+					if in_band and absf(c.r - band.r) + absf(c.g - band.g) + absf(c.b - band.b) < 0.28:
+						continue
+					crown.set_pixel(x, y, c)
+					kept += 1
+			if kept > wpx.size.x * par / 60:
+				crown.generate_mipmaps()
+				var ctx: = ImageTexture.create_from_image(crown)
+				var csz: = Vector2(W, float(par) / k * U)
+				mats.append(_cutout(root, ctx, csz, Vector3(0, H + csz.y * 0.5, D * 0.5 + 0.03), 0.25 if neon.a > 0.0 else 0.0))
+				roof_top = maxf(roof_top, H + csz.y)
 	# contact shadow
 	var soft: Array = []
 	var ao: = MeshInstance3D.new()
@@ -1102,10 +1157,21 @@ func _model(n: String, tx: Texture2D, k: float, left_x: float, bottom_y: float) 
 	ao.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	root.add_child(ao)
 	soft.append(aom)
-	var top_h: = H + 0.6
-	var hide_back: = D / U + (top_h / U) * CAM_OFF.z / CAM_OFF.y + 4.0
+	for m in mats:
+		(m as Object).set_meta("base", (m as StandardMaterial3D).albedo_color)
+	var hide_back: = D / U + (roof_top / U) * CAM_OFF.z / CAM_OFF.y + 4.0
 	return {"mats": mats, "soft": soft, "root": root, "x0": left_x + float(wpx.position.x) / k, "x1": left_x + float(wpx.end.x) / k,
 		"y0": bottom_y - hide_back, "y1": bottom_y - 2.0}
+
+## Closed shops go grey in the painted view (the card's modulate); a modeled shop greys its own materials.
+func _tint_model(box: Dictionary, tint: Color) -> void:
+	if box.get("tint", Color.WHITE) == tint:
+		return
+	box["tint"] = tint
+	for m in box["mats"]:
+		var base: Color = (m as Object).get_meta("base", Color.WHITE)
+		var a: = (m as StandardMaterial3D).albedo_color.a
+		(m as StandardMaterial3D).albedo_color = Color(base.r * tint.r, base.g * tint.g, base.b * tint.b, a)
 
 func _shown(b: Dictionary) -> bool:
 	for e in buildings:
@@ -1211,6 +1277,8 @@ func _sync_town() -> void:
 		var tint: = Color(0.72, 0.72, 0.78) if main.building_shut(e[0]) else Color.WHITE
 		tint.a = float(e[3])
 		(e[1] as Sprite3D).modulate = tint
+		if (e[2] as Dictionary).has("root"):
+			_tint_model(e[2], Color(tint.r, tint.g, tint.b))
 		var rc: Sprite3D = (e[2] as Dictionary).get("roof_card")
 		if rc != null:
 			var dim: = float((e[2] as Dictionary).get("roof_dim", 1.0))
