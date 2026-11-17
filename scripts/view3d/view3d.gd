@@ -495,12 +495,35 @@ func _build_town() -> void:
 		var bottom_y: = r.position.y - float(org[1]) / k + float(tx.get_height()) / k
 		var left_x: = r.position.x - float(org[0]) / k
 		var s: = _card()
+		s.alpha_cut = FACADE_CUT
 		s.texture = tx
 		s.pixel_size = U / k
 		s.position = to3(Vector2(left_x, bottom_y))
 		town.add_child(s)
 		static_art[n] = true
-		var box: = _box(b, tx, k, left_x, bottom_y)
+		# pitched-roof houses: the painted roof above the eave folds back like a real roof instead of standing up
+		var fold: = int(round(float(FOLD[n][0]) * tx.get_height())) if FOLD.has(n) else -1
+		var tilt: = float(FOLD[n][1]) if FOLD.has(n) else 0.0
+		var roof_card: Sprite3D = null
+		if fold > 0:
+			var h0: = tx.get_height()
+			s.region_enabled = true
+			s.region_rect = Rect2(0, fold, tx.get_width(), h0 - fold)
+			roof_card = _card()
+			roof_card.alpha_cut = FACADE_CUT
+			roof_card.texture = tx
+			roof_card.pixel_size = U / k
+			roof_card.region_enabled = true
+			roof_card.region_rect = Rect2(0, 0, tx.get_width(), fold)
+			roof_card.position = s.position + Vector3(0, float(h0 - fold) / k * U, 0.004)
+			roof_card.rotation_degrees.x = -tilt
+			town.add_child(roof_card)
+		var box: = _box(b, tx, k, left_x, bottom_y, fold, tilt)
+		if roof_card != null and not box.is_empty():
+			box["roof_card"] = roof_card
+			# a roof that lies back faces the sun square: the painted light would wash out, so it's dimmed to match
+			# the brightness the upright card had
+			box["roof_dim"] = 0.74 if tilt > 60.0 else 0.9
 		buildings.append([b, s, box, 1.0])   # [building, facade card, box info (or {}), current see-through alpha]
 		# warm pool at the door from dusk (hd_presentation.gd does the same in 2D)
 		if n != "sf_home":
@@ -538,7 +561,17 @@ func _build_town() -> void:
 ## facade's top, side walls in perspective, a real shadow. Its top sits at the first row of the art that runs
 ## (almost) the full width (the eave, under any sign or chimney), its colours come from the art itself
 ## (roof = the rows just under that line, walls = the facade's outer columns), its depth from the lot.
-func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float) -> Dictionary:
+## Buildings whose painted roof folds back at the eave: [fraction of the art's height where the fascia / parapet
+## front ends, degrees back from upright]. Pitched roofs lean 52 (faces the ~38 degree camera almost square, like
+## the 2D paint); flat roofs (painted as a narrowing band) lie almost flat. Shops with a sign standing above the
+## roof (the {fork_nick}, Hy-Whee, the mining rig's dish) keep the upright false front.
+## Facade outlines: the opaque prepass keeps the art's soft alpha edge instead of scissoring it (a hard,
+## shimmering scissor line round every roof was half of the "cut out of a cereal box" look).
+const FACADE_CUT: = SpriteBase3D.ALPHA_CUT_OPAQUE_PREPASS
+const FOLD: = {"sf_home": [0.506, 52.0], "sf_neighbor": [0.54, 52.0], "sf_club": [0.404, 80.0],
+	"sf_hoa": [0.486, 80.0], "sf_plazmart": [0.45, 80.0], "sf_walgrumps": [0.46, 80.0]}
+
+func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float, fold: int = -1, tilt: float = 0.0) -> Dictionary:
 	var img: = tx.get_image()
 	if img == null:
 		return {}
@@ -566,6 +599,17 @@ func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float
 				break
 		if top >= 0:
 			break
+	if fold > 0:   # the box stops at the eave; the roof is the folded card plus a hip behind it
+		top = fold
+		var lo2: = w
+		var hi2: = -1
+		for x in range(w):
+			if img.get_pixel(x, mini(h - 1, fold + 2)).a > 0.5:
+				lo2 = mini(lo2, x)
+				hi2 = maxi(hi2, x)
+		if hi2 > lo2:
+			x0 = lo2
+			x1 = hi2
 	if top < 0:
 		return {}
 	var wall: = _avg(img, Rect2i(x0, (top + h) / 2, mini(6, x1 - x0), (h - top) / 3)).lerp(_avg(img, Rect2i(maxi(x0, x1 - 6), (top + h) / 2, mini(6, x1 - x0), (h - top) / 3)), 0.5)
@@ -573,6 +617,26 @@ func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float
 	var bw: = float(x1 - x0) / k * U
 	var bh: = float(h - top) / k * U
 	var bd: = minf(r.size.y * 0.35, 22.0) * U   # shallow: a deep box shows a roof the size of a parking lot
+	# folded roof: where its ridge lands (the first row at least ~half the eave's width; above it only peaks,
+	# dormers and chimneys), and a box deep enough for a matching back slope
+	var ridge_row: = -1
+	var rx0: = x0
+	var rx1: = x1
+	if fold > 0:
+		for y in range(fold):
+			var lo3: = w
+			var hi3: = -1
+			for x in range(0, w, 2):
+				if img.get_pixel(x, y).a > 0.5:
+					lo3 = mini(lo3, x)
+					hi3 = maxi(hi3, x)
+			if hi3 - lo3 >= (x1 - x0) * 0.45:
+				ridge_row = y
+				rx0 = lo3
+				rx1 = hi3
+				break
+		if ridge_row >= 0:
+			bd = maxf(bd, float(fold - ridge_row) / k * U * sin(deg_to_rad(tilt)) * 1.8)
 	var z_front: = bottom_y * U - 0.02                     # just behind the card
 	var cx: = (left_x + (float(x0 + x1) * 0.5) / k) * U
 	var root: = Node3D.new()
@@ -591,6 +655,45 @@ func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float
 	wmat.emission = wc * 0.45
 	walls.material_override = wmat
 	root.add_child(walls)
+	var mats: Array = [wmat]
+	var soft: Array = []
+	# the side walls wear the facade's own skin: the plainest full-height strip near each edge (siding, brick),
+	# tiled back over the depth, a shade darker than the front. A flat-colour slab is what read as cardboard.
+	var sw: = mini(int(8.0 * k), maxi(4, (x1 - x0) / 6))
+	for side in [-1, 1]:
+		var lo: = x0 if side < 0 else maxi(x0, x1 - int(36.0 * k))
+		var hi: = mini(x1 - sw, x0 + int(36.0 * k)) if side < 0 else x1 - sw
+		var pick: = lo
+		var pick_v: = INF
+		for sx in range(lo, maxi(lo, hi) + 1, maxi(1, sw / 3)):
+			# plainest strip, but the nearer the edge the better: the side wall should continue the corner it turns
+			var v: = _busy(img, Rect2i(sx, top + 1, sw, h - top - 1)) * (1.0 + float(absi(sx - (x0 if side < 0 else x1 - sw))) / float(sw * 2))
+			if v < pick_v:
+				pick_v = v
+				pick = sx
+		if pick_v > 0.5:   # nothing solid near that edge (a porch, an awning): keep the plain wall there
+			continue
+		var skin: = img.get_region(Rect2i(pick, top + 1, sw, h - top - 1))
+		skin.generate_mipmaps()
+		var q: = MeshInstance3D.new()
+		var qm: = QuadMesh.new()
+		qm.size = Vector2(bd, bh)
+		q.mesh = qm
+		q.position = Vector3(side * (bw * 0.5 + 0.003), bh * 0.5, 0)
+		q.rotation_degrees.y = 90.0 * side
+		var tx2: = ImageTexture.create_from_image(skin)
+		var sm: = _flat(Color(0.7, 0.68, 0.74))
+		sm.albedo_texture = tx2
+		sm.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		sm.texture_repeat = true
+		sm.uv1_scale = Vector3(maxf(1.0, round(bd / (float(sw) / k * U))), 1.0, 1.0)
+		sm.emission_enabled = true
+		sm.emission = Color(0.24, 0.23, 0.26)
+		sm.emission_texture = tx2
+		q.material_override = sm
+		q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF   # the box already casts it
+		root.add_child(q)
+		mats.append(sm)
 	# the roof is the art's own painted roof strip (the rows under the eave line), tiled back over the box's depth
 	# a patch of plain roof: the least busy window just under the eave line (skips the shop sign, the fascia,
 	# vents and chimneys), tiled across the whole roof
@@ -604,25 +707,74 @@ func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float
 			if v < best_v:
 				best_v = v
 				best = Vector2i(wx, wy)
+	if fold > 0:   # the roof skin comes from the painted roof itself, between the ridge and the fascia
+		var sy: = fold - rh - maxi(2, mini(int(14.0 * k), (fold - maxi(0, ridge_row)) / 3))
+		sy = clampi(sy, maxi(0, ridge_row), maxi(0, fold - rh))
+		best = Vector2i(x0 + (x1 - x0) / 2 - ww / 2, sy)
+		var bv: = INF
+		for wx in range(x0, x1 - ww + 1, maxi(2, ww / 4)):
+			var v2: = _busy(img, Rect2i(wx, sy, ww, rh))
+			if v2 < bv:
+				bv = v2
+				best = Vector2i(wx, sy)
 	var strip: = img.get_region(Rect2i(best, Vector2i(ww, rh)))
+	var roof_c: = _avg(strip, Rect2i(0, 0, strip.get_width(), strip.get_height()))
 	strip.generate_mipmaps()
-	var cap: = MeshInstance3D.new()
-	var pm: = PlaneMesh.new()
-	pm.size = Vector2(bw + 0.04, bd + 0.02)
-	cap.mesh = pm
-	cap.position.y = bh + 0.005
-	var rmat: = _flat(Color.WHITE)
-	rmat.albedo_texture = ImageTexture.create_from_image(strip)
-	rmat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-	rmat.texture_repeat = true
-	rmat.uv1_scale = Vector3(maxf(1.0, round(bw / (float(ww) / k * U))), maxf(1.0, round(bd / (float(strip.get_height()) / k * U))), 1.0)
-	cap.material_override = rmat
-	cap.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	root.add_child(cap)
+	if fold > 0:
+		if ridge_row >= 0:
+			mats.append(_hip(root, k, x0, x1, rx0, rx1, float(fold - ridge_row) / k * U, tilt, bw, bh, bd, strip, 0.74 if tilt > 60.0 else 0.9))
+	else:
+		# eave: a thick lip under the roof that overhangs the side and back walls and throws a shadow line down them
+		# (no front overhang: it would cover the painted fascia)
+		var ov: = 1.6 * U
+		var th: = 1.4 * U
+		var eave: = MeshInstance3D.new()
+		var em: = BoxMesh.new()
+		em.size = Vector3(bw + ov * 2.0, th, bd + ov)
+		eave.mesh = em
+		eave.position = Vector3(0, bh + th * 0.5, -ov * 0.5)
+		var emat: = _flat(roof_c.darkened(0.45))
+		emat.emission_enabled = true
+		emat.emission = roof_c.darkened(0.45) * 0.3
+		eave.material_override = emat
+		root.add_child(eave)
+		mats.append(emat)
+		var cap: = MeshInstance3D.new()
+		var pm: = PlaneMesh.new()
+		pm.size = Vector2(bw + ov * 2.0 - 0.02, bd + ov - 0.01)
+		cap.mesh = pm
+		cap.position = Vector3(0, bh + th + 0.004, -ov * 0.5)
+		var rmat: = _flat(Color.WHITE)
+		rmat.albedo_texture = ImageTexture.create_from_image(strip)
+		rmat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		rmat.texture_repeat = true
+		rmat.uv1_scale = Vector3(maxf(1.0, round(bw / (float(ww) / k * U))), maxf(1.0, round(bd / (float(strip.get_height()) / k * U))), 1.0)
+		cap.material_override = rmat
+		cap.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		root.add_child(cap)
+		mats.append(rmat)
+	# contact shadow: soft dark ground around the footprint, so the building sits IN the street instead of on it
+	var ao: = MeshInstance3D.new()
+	var am: = PlaneMesh.new()
+	var m_side: = 5.0 * U
+	var m_front: = 3.0 * U
+	am.size = Vector2(bw + m_side * 2.0, bd + m_side + m_front)
+	ao.mesh = am
+	ao.position = Vector3(0, 0.012, (m_front - m_side) * 0.5)
+	var amat: = StandardMaterial3D.new()
+	amat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	amat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	amat.albedo_color = Color(0.05, 0.04, 0.08, 1.0)
+	amat.albedo_texture = _ao_tex(am.size, bw, bd, m_side, m_front)
+	amat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	ao.material_override = amat
+	ao.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	root.add_child(ao)
+	soft.append(amat)
 	# 2D area where Duff is hidden behind this building: across its width, from the facade back past the box
 	# by as far as its top hides the ground from the ~38 degree camera (+ Duff's own height)
 	var hide_back: = bd / U + (bh / U) * CAM_OFF.z / CAM_OFF.y + 4.0
-	return {"mats": [wmat, rmat], "x0": left_x + float(x0) / k, "x1": left_x + float(x1) / k, "y0": bottom_y - hide_back, "y1": bottom_y - 2.0}
+	return {"mats": mats, "soft": soft, "x0": left_x + float(x0) / k, "x1": left_x + float(x1) / k, "y0": bottom_y - hide_back, "y1": bottom_y - 2.0}
 
 ## Duff behind a building: fade its facade and box see-through (like any 3D game), back to solid when he leaves.
 func _fade_buildings(delta: float) -> void:
@@ -640,12 +792,82 @@ func _fade_buildings(delta: float) -> void:
 			continue
 		e[3] = a
 		var s: Sprite3D = e[1]
-		s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD if a >= 0.999 else SpriteBase3D.ALPHA_CUT_DISABLED
+		s.alpha_cut = FACADE_CUT if a >= 0.999 else SpriteBase3D.ALPHA_CUT_DISABLED
 		s.modulate.a = a
 		s.visible = a > 0.01
+		var rc: Sprite3D = box.get("roof_card")
+		if rc != null:
+			rc.alpha_cut = s.alpha_cut
+			rc.modulate.a = a
+			rc.visible = s.visible
 		for m in box["mats"]:
 			(m as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_DISABLED if a >= 0.999 else BaseMaterial3D.TRANSPARENCY_ALPHA
 			(m as StandardMaterial3D).albedo_color.a = a
+		for m in box.get("soft", []):
+			(m as StandardMaterial3D).albedo_color.a = a
+
+## Alpha mask for a building's contact shadow: full under the walls, falling off smoothly past them
+## (m_side px... in metres: margins on the sides/back, m_front in front of the facade). ~6 px per metre.
+func _ao_tex(size: Vector2, bw: float, bd: float, m_side: float, m_front: float) -> ImageTexture:
+	var ppm: = 6.0
+	var iw: = maxi(8, int(size.x * ppm))
+	var ih: = maxi(8, int(size.y * ppm))
+	var img: = Image.create_empty(iw, ih, false, Image.FORMAT_RGBA8)
+	for y in range(ih):
+		var mz: = (float(y) + 0.5) / ppm   # metres from the back edge
+		var dz: = maxf(m_side - mz, mz - (m_side + bd))
+		var mz_m: = m_side if mz < m_side + bd * 0.5 else m_front
+		for x in range(iw):
+			var mx: = (float(x) + 0.5) / ppm
+			var dx: = maxf(m_side - mx, mx - (m_side + bw))
+			var t: = clampf(maxf(dx / m_side, dz / mz_m), 0.0, 1.0)
+			var a: = (1.0 - t) * (1.0 - t) * 0.5
+			img.set_pixel(x, y, Color(1, 1, 1, a))
+	img.generate_mipmaps()
+	return ImageTexture.create_from_image(img)
+
+## The rest of a folded roof: the back slope and the two hip ends, from the eave of the box up to the ridge the
+## folded card reaches. Skinned with a patch of the painted roof (world-space triplanar, so no stretched seams).
+func _hip(root: Node3D, k: float, x0: int, x1: int, rx0: int, rx1: int, rise_len: float, tilt: float, bw: float, bh: float, bd: float, strip: Image, dim: float) -> StandardMaterial3D:
+	var t: = deg_to_rad(tilt)
+	var zf: = bd * 0.5            # the box root sits at its middle; front face at +bd/2
+	var zb: = -bd * 0.5
+	var ry: = bh + rise_len * cos(t)
+	var rz: = zf - rise_len * sin(t)
+	var cx: = float(x0 + x1) * 0.5
+	var ex0: = -bw * 0.5
+	var ex1: = bw * 0.5
+	var rl: = (float(rx0) - cx) / k * U
+	var rr: = (float(rx1) - cx) / k * U
+	var st: = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	var quads: = [
+		[Vector3(ex1, bh, zb), Vector3(ex0, bh, zb), Vector3(rl, ry, rz), Vector3(rr, ry, rz)],   # back slope
+	]
+	for q in quads:
+		for i in [0, 1, 2, 0, 2, 3]:
+			st.add_vertex(q[i])
+	for tri in [[Vector3(ex0, bh, zb), Vector3(ex0, bh, zf), Vector3(rl, ry, rz)], [Vector3(ex1, bh, zf), Vector3(ex1, bh, zb), Vector3(rr, ry, rz)]]:
+		for v in tri:
+			st.add_vertex(v)
+	st.generate_normals()
+	var mi: = MeshInstance3D.new()
+	mi.mesh = st.commit()
+	var m: = _flat(Color(0.72, 0.7, 0.76) * dim)
+	var tex: = ImageTexture.create_from_image(strip)
+	m.albedo_texture = tex
+	m.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	m.texture_repeat = true
+	m.uv1_triplanar = true
+	m.uv1_world_triplanar = false
+	m.uv1_scale = Vector3(1.0 / (float(strip.get_width()) / k * U), 1.0 / (float(strip.get_height()) / k * U), 1.0 / (float(strip.get_width()) / k * U))
+	m.cull_mode = BaseMaterial3D.CULL_DISABLED
+	m.emission_enabled = true
+	m.emission = Color(0.18, 0.18, 0.2)
+	m.emission_texture = tex
+	mi.material_override = m
+	root.add_child(mi)
+	return m
 
 func _shown(b: Dictionary) -> bool:
 	for e in buildings:
@@ -751,6 +973,10 @@ func _sync_town() -> void:
 		var tint: = Color(0.72, 0.72, 0.78) if main.building_shut(e[0]) else Color.WHITE
 		tint.a = float(e[3])
 		(e[1] as Sprite3D).modulate = tint
+		var rc: Sprite3D = (e[2] as Dictionary).get("roof_card")
+		if rc != null:
+			var dim: = float((e[2] as Dictionary).get("roof_dim", 1.0))
+			rc.modulate = Color(tint.r * dim, tint.g * dim, tint.b * dim, tint.a)
 	_fade_buildings(get_process_delta_time())
 	var dark: = HdPresentation.darkness(float(main.clock))
 	var on: = clampf((dark - 0.15) / 0.5, 0.0, 1.0)
