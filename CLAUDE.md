@@ -19,7 +19,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   from the icon: no Safari bars. Native iOS builds are out (no Mac, no Apple developer account).
   Godot's service worker is cache-first, so CI injects `tools/web_shell/pwa_autoupdate.html` into the Pages
   `index.html`: at boot a waiting new build takes over and reloads once (Nov 16: Brittany saw a stale "Mazikeen").
-- **IGN review v3: 7.9/10** (`docs/reviews/ign_review_2026-11-11_v3.md`). Duff + Brittany played it Nov 11: "it's
+- **IGN review v4: 8.4/10** (`docs/reviews/ign_review_2026-11-17_v4.md`; v3 was 7.9). Duff + Brittany played it Nov 11: "it's
   come a long way."
 - **Last session's handoff (read it): `docs/handoffs/2026-11-11_painted_minigames_ign_v3.md`.** It covers what
   shipped, the step-by-step prop-art pipeline, the ranked next list and the gotchas.
