@@ -174,7 +174,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   in 3D because the overlay map only lines up near the camera target. Phone-test link: memory `duffquest-3d-phone-test`.
   Plain draw_rect/draw_string art in the town (signs, boards) drifts in 3D the same way: give it a
   `draw_x(ci, o, k)` function and stand it up with `view3d._sign()` (own 4x viewport on a card), or use a Label3D.
-  Bus stop signs are dressing items. Renders: `arena_shot -- at:X,Y[,MIN] --3d` / `--2d`.
+  Bus stop signs are dressing items. Duff's 3D sheet is the HD `assets/art3d/duff_home_hd3d.png` (2x sheet if it
+  isn't in the build); his shades over it are `duff_shades_home_hd3d.png` from
+  `tools/duff_hd3d/shades_hd.py` (eye centres measured per frame: re-measure if the HD sheet is rebuilt). Render: `--shades`. Renders: `arena_shot -- at:X,Y[,MIN] --3d` / `--2d`.
   Low-end phones (Nov 17): `perf_guard.gd` steps 3D down in order: Lite, then 640x360, then the flat 2D view with a
   toast (Settings > 3D view switches back). Profile with `tools/perf_run.tscn -- view=3d|2d [low]`. Store screens in
   `docs/itch/screens/` are 3D shots since Nov 17 (`docs/renders/store_screens_3d_before_after.jpg`).
