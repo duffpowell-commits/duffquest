@@ -1,6 +1,6 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
-##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "look"/"look_text" (her phone over the dialogue), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "porch"/"chad" (porch mystery: '?' on the neighbor door / the suspect fleeing), "grease86" (Grease Trap '?' on the 86 List at night; the fight itself is "bounty:grease"), "gig" (Brittany's Side Gig choice card), "lost" (Lost & Found hunt: glints at the storm drain), "at:X,Y[,MIN]" (outdoors at a world point, optional clock minute), or "fryer"/"sandwich" = the kitchen station with food in it)
+##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "gala_say:<boss>" ({partner}'s setup line as the ex walks in), "ask" ({partner} asks for diapers), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "look"/"look_text" (her phone over the dialogue), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "porch"/"chad" (porch mystery: '?' on the neighbor door / the suspect fleeing), "grease86" (Grease Trap '?' on the 86 List at night; the fight itself is "bounty:grease"), "gig" (Brittany's Side Gig choice card), "lost" (Lost & Found hunt: glints at the storm drain), "at:X,Y[,MIN]" (outdoors at a world point, optional clock minute), or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var _street: Array = []
@@ -135,6 +135,10 @@ func _process(_d: float) -> void:
 			m.debug_station(id)
 		elif id == "hint":  # home, Duff next to Madison so the "E / A: Talk to" prompt shows
 			m.debug_station("home")
+		elif id == "ask":  # store shot: home, {partner} asks for an errand (diapers) over the dialogue box
+			m.debug_station("home")
+		elif id.begins_with("gala_say:"):  # store shot: a gala ex walks in, {partner}'s setup line over the floor
+			m.debug_station("boss_" + id.substr(9))
 		elif id.begins_with("gala:"):  # a gala ex fight on the painted gala floor, e.g. gala:husk
 			m.debug_station("boss_" + id.substr(5))
 		elif id.begins_with("move:"):  # move:<bounty>:<attack>:<frames> = fire that attack, shoot <frames> later
@@ -196,6 +200,8 @@ func _process(_d: float) -> void:
 	if frame == 250 and id == "type":
 		m._say(["Brittany: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case."])
 	if frame == 230 and id == "notes":
+		m.dialog.clear()   # a quest line queued since frame 200 would block the phone
+		m.close_overlay()
 		m.open_phone("notes")
 	if frame == 232 and id == "loud":
 		m.too_loud_story()
@@ -223,13 +229,23 @@ func _process(_d: float) -> void:
 	if frame == 250 and id == "zebra_talk":
 		for i in 3:
 			m.advance_dialog()
+	if frame == 236 and id == "ask":
+		m.dialog.clear()
+		m.player.position = m.MADISON_POS + Vector2(16, 4)
+		m._say([m.start_quest("diapers")[0]])
+	if frame == 236 and id.begins_with("gala_say:"):
+		m.dialog.clear()
+		m.player.position = m.GALA_SPAWN + Vector2(40, -10)
+		m._say([str(m.BossScript.BOSSES[id.substr(9)].get("setup", ""))])
+	if frame >= 237 and (id == "ask" or id.begins_with("gala_say:")):
+		m.dlg_chars = 100000.0
 	if frame == 236 and id == "morning_bring":
 		m.morning_talk()
 	if frame == 230 and id in ["home", "waffle", "hint"]:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["street", "prep", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look"):
+	if frame == 230 and not id in ["street", "prep", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look") and id != "ask" and not id.begins_with("gala_say:"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
