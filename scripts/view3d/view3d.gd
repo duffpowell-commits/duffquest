@@ -52,6 +52,7 @@ const HD: = {"duff_home": {"path": "res://assets/art3d/duff_home_hd3d.png", "cel
 const HD_OVER: = {"duff_shades_home": "duff_home"}   # overlay -> the sheet it was fitted to
 const NO_3D: = ["map_objects"]               # full-map overlays drawn by main (the old bus-stop sign layer)
 var _hd_tex: = {}
+var true3d: Node3D                           # #true3d test slice: real models for Duff + porch pirates (true3d.gd)
 var britt_head: = Vector3.INF                # top of {coworker}'s card this frame (her "$" sits on it)
 var static_art: = {}                         # art names _build_town already stands up (main's own draws of them are skipped)
 var cam_base: = Vector3.ZERO                 # follow-camera position before the shake offset
@@ -167,7 +168,7 @@ func _process(_d: float) -> void:
 		wall_card.visible = false
 	_sync_sky()
 	_sync_town()
-	_sync_actors()
+	_sync_actors(_d)
 	_sync_cam()
 	_sync_labels()   # after the camera: house names clamp under the HUD in screen space
 	_sync_overlay()
@@ -402,8 +403,13 @@ func _hd(name: String) -> Texture2D:
 
 ## One card per captured draw. Sheet frames stand on their origin (the feet); plain images stand on their
 ## bottom edge (a carried package, a drone, the delivery truck), facing the camera like the 2D art did.
-func _sync_actors() -> void:
+func _sync_actors(dt: float = 0.016) -> void:
 	var used: = 0
+	if true3d == null and AudioScript.inst != null and bool(AudioScript.inst.get("true3d")):
+		true3d = load("res://scripts/view3d/true3d.gd").new()
+		world.add_child(true3d)
+	if true3d != null:
+		true3d.begin_frame()
 	var toward: = CAM_OFF.normalized() * 0.012
 	britt_head = Vector3.INF
 	for id in Art.rec.keys():
@@ -425,6 +431,8 @@ func _sync_actors() -> void:
 			var hd: = HD.has(name) and _hd(name) != null and (not HD_OVER.has(name) or hd_drawn.has(HD_OVER[name]))
 			if hd:
 				hd_drawn[name] = true
+			if true3d != null and d[6] and true3d.claim(id, d, to3(full * (d[1] as Vector2)), sc.x < 0.0, dt, full.get_rotation()):
+				continue   # drawn as a real model (#true3d test slice)
 			var tx: Texture2D = _hd(name) if hd else Art.tex(name)
 			if tx == null:
 				continue
@@ -478,6 +486,8 @@ func _sync_actors() -> void:
 			k += 1
 	for i in range(used, pool.size()):
 		(pool[i] as Sprite3D).visible = false
+	if true3d != null:
+		true3d.end_frame()
 
 # --- the static town ------------------------------------------------------------------------------------------
 

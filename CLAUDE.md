@@ -181,6 +181,17 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   toast (Settings > 3D view switches back). Profile with `tools/perf_run.tscn -- view=3d|2d [low]`. Store screens in
   `docs/itch/screens/` are 3D shots since Nov 17 (`docs/renders/store_screens_3d_before_after.jpg`).
 
+- **True 3D slice (Nov 17, test only, OFF for players):** web link `#true3d` (or env `DQ_TRUE3D=1` for renders) swaps
+  Duff from a painted card to a real 3D model in the 3D view (porch pirate entries exist but have no model yet:
+  their 1x art gave Hunyuan a slab/box, so they stay cards) (`scripts/view3d/true3d.gd`; view3d
+  hands each captured sheet frame to `true3d.claim()` first). Nothing else changes; never saved, not in Settings.
+  Models: `assets/model3d/<key>.res` (skinned ArrayMesh, 7 bones in its "bones" metadata) + `<key>_atlas.png`
+  (front/back/left/right tiles of the sheet's idle frames, projected on). Excluded from every export preset except
+  the web's late `extra.pck` (cards until it lands). Animation is code: walk swing from ground speed, idle breathing,
+  facing from movement, sheet column 3 = attack swing (Duff gets a 3D skillet), roll = tumble, KO tilt follows the 2D
+  rotation. His shades overlay is dropped (not on the model yet). Rebuild a model (CPU, ~7 min shape): see
+  `tools/true3d/README.md`. Turnaround render: `tools/true3d/model_shot.gd -- <key>`.
+
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
   test_daily checks it). Multi-phase games override `coach_key()` and call `coach_start()` / `coach_done()` per phase
