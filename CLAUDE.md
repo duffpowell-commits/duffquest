@@ -202,6 +202,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 - **Living town + motion (Nov 17):** `scripts/town_life.gd` (child of main, y-sorted entity nodes, own RNG, nothing
   collides): vans, walkers, pigeons, roof steam, screen-space weather. New ambient thing? Add an `Ent` kind and draw it
   with `Art.*` so 3D mirrors it. Tilt-shift: `shaders/tilt_shift.gdshader` on View3D (`tilt_mat`, null in Lite).
+  Vans (`truck_h`/`truck_v`) are top-down art: in 3D they lie flat as a roof on a box (`view3d.VANS`, `_van_box`); other top-down art needs the same.
   Squash: `juice.squash(node, big)`. Swing smear / roll dust: `combat_fx.swing()` / `dust()`. Wipe: `hud.wipe_t`.
 
 - **Kitchen tickets (Nov 17):** spec lines are picture tiles (`minigame.ticket_spec()`), the fryer is a colour gauge (`fryer._draw_gauge`). Don't add small explanatory text to play screens; put it on the how-to card.
