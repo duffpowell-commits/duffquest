@@ -4,6 +4,11 @@ One page: what's built, what's next, what could be better. Updated at every mile
 (the handoff) and `QUEUE.md` (the work queue). Newest first.
 
 ## Built
+- **2026-11-16** **Home-screen app picks up new builds.** Brittany still saw "Mazikeen's bet" after PR #108: the source and every
+  shipped build (dev release web + CrazyGames zip) were already clean, but the GitHub Pages copy is a PWA whose Godot
+  service worker serves the cached `index.pck` until every window of the app closes. CI now injects
+  `tools/web_shell/pwa_autoupdate.html` so a launch swaps in the new build (one reload on the title). test_daily guards
+  BRITTANY'S BETS in the public edition.
 - **2026-11-16** **3D buildings get depth (cardboard boxes).** Duff picked boxes over flat cutouts. Each storefront/house keeps its painted facade card, with a solid box behind it (`view3d._box`): its top at the art's eave line, its depth min(lot x 0.35, 22 units), walls tinted from the facade's outer columns, and the roof tiled from the least busy patch of the art's own painted roof (skips signs and vents). It replaces the old shadow-only block, so shadows match. When Duff walks behind a building, its facade and box fade to 45% (`_fade_buildings`). 2D untouched. Render `docs/renders/view3d_buildings_boxes.png` (before left, after right; Duff behind the Spatula top right).
 - **2026-11-16** **3D polish 2: NOW HIRING and label shadows.** NOW HIRING (you) shrinks back to its normal size when the Spatula sits closer to the camera than Duff (it filled a third of the screen and ran off the edge). 3D labels no longer cast shadows: at dusk the low sun turned the NOW HIRING label into a stray dark line on the sidewalk. Render `docs/renders/view3d_polish2_hiring_before_after.png`.
 - **2026-11-16** **HUD drawer icons.** The piggy bank (`ic_piggy`) now sits on the "Octavia's college fund" line and the bus icon (`ic_bus`) on a new "Bus pass: N days left" line, shown while a pass is active (`hud.gd` `ROW_ICONS`). Both sprites existed but were drawn nowhere. Render `docs/renders/hud_drawer_icons.png`.

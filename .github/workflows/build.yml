@@ -126,6 +126,9 @@ jobs:
             title="Duff Quest"; [ "$d" = build/pages/family ] && title="Duff Quest Family"
             sed -i "s#<head>#<head><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\"><meta name=\"apple-mobile-web-app-title\" content=\"$title\">#" $d/index.html
             sed -i 's#<meta name="viewport" content="#<meta name="viewport" content="viewport-fit=cover, #' $d/index.html
+            # New builds reach home-screen players on their next launch (see the snippet for why)
+            python3 -c "import sys; p=sys.argv[1]; s=open(p).read(); open(p,'w').write(s.replace('</head>', open('tools/web_shell/pwa_autoupdate.html').read() + '</head>', 1))" $d/index.html
+            grep -q "postMessage('update')" $d/index.html
           done
           test -s build/pages/family/index.pck
           touch build/pages/.nojekyll
