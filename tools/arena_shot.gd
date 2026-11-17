@@ -46,6 +46,9 @@ func _process(_d: float) -> void:
 			m.AudioScript.inst.set_view3d(false)
 		if "--lite" in OS.get_cmdline_user_args():   # lite graphics (perf_guard), e.g. to compare 3D full vs lite
 			game.get_node("PerfGuard").force_low(true)
+		if "--shades" in OS.get_cmdline_user_args():   # Duff in his round shades (gear screen toggle)
+			m.shades = true
+			m.player.shades = true
 		m.close_overlay()
 		m.dialog.clear()
 		m.no_loading = true
