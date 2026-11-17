@@ -260,6 +260,8 @@ func hit(e: Node, dir: Vector2, dmg: float, special: String = "", gain_heat: flo
 		# heavy = finisher (finisher heat), crit, or a big number; "flip" is the spatula's every-swing special
 		var heavy: = special == "crit" or dmg >= 10.0 or gain_heat >= HEAT_PER_FINISHER
 		m.juice.impact(pos, dir, heavy, dead, e.is_in_group("boss"))
+		if e is Node2D:
+			m.juice.squash(e, heavy or dead)
 	if dealt > 0.0:
 		if m.get("arena_mode") == "bet":
 			m.bet_hits += 1
