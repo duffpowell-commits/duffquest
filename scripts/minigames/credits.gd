@@ -26,6 +26,7 @@ static func notice() -> Array:
 	]
 
 func _setup() -> void:
+	pill_buttons = true   # Nov 17: phone-style buttons, same as the menu sheets
 	title = "CREDITS & LEGAL"
 	time_limit = 0.0
 	space_is_pen = false

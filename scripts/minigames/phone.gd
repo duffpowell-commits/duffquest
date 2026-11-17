@@ -17,6 +17,7 @@ var action: = ""
 var tip_i: = 0
 
 func _setup() -> void:
+	pill_buttons = true   # Nov 17: phone-style buttons, same as the menu sheets
 	time_limit = 0.0
 	show_header = false
 	space_is_pen = false
