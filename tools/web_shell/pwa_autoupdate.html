@@ -1,0 +1,27 @@
+<script>
+// Home-screen copy only (GitHub Pages PWA). Godot's service worker is cache-first and only swaps in a new
+// build once every window of the app is closed, which an installed home-screen app almost never does, so
+// players kept running old builds for days. At boot: ask for the newest worker; if one is waiting (or
+// finishes installing in the first 30 s, i.e. still on the title), tell it to take over, which reloads once.
+// A worker that finishes later stays waiting and is picked up at the next launch.
+(function () {
+  if (!('serviceWorker' in navigator)) return;
+  var t0 = Date.now(), done = false;
+  function take(w) {
+    if (done || !w || !navigator.serviceWorker.controller || Date.now() - t0 > 30000) return;
+    done = true;
+    w.postMessage('update');
+  }
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.getRegistration().then(function (reg) {
+      if (!reg) return;
+      if (reg.waiting) take(reg.waiting);
+      reg.addEventListener('updatefound', function () {
+        var w = reg.installing;
+        if (w) w.addEventListener('statechange', function () { if (w.state === 'installed') take(w); });
+      });
+      reg.update().catch(function () {});
+    });
+  });
+})();
+</script>
