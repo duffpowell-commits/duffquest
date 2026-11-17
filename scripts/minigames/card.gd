@@ -31,8 +31,25 @@ func _setup() -> void:
 		var y: = 176.0 - (rows - r) * 24.0
 		var x: = (6.0 + c * (W - 12.0 - bw + 4.0)) if flank else (6.0 + c * bw)
 		add_button(o[0], Rect2(x, y, bw - 4, 21), o[1], o[2], UiStyle.BTN_MAIN if i == 0 else UiStyle.BTN_ALT)
+	if _sliding():
+		position.y = SLIDE_PX
+
+## Nov 17: sheets slide up into place (0.22 s ease-out); taps during the slide are ignored so a double tap from
+## the previous screen can't pick an option. Not on the title or fail screens, and never headless (tests).
+const SLIDE_T: = 0.22
+const SLIDE_PX: = 70.0
+
+func _sliding() -> bool:
+	return backdrop != "title" and get_script() == preload("res://scripts/minigames/card.gd") \
+		and DisplayServer.get_name() != "headless" and t < SLIDE_T
+
+func _tick(_d: float) -> void:
+	var k: = clampf(t / SLIDE_T, 0.0, 1.0)
+	position.y = SLIDE_PX * pow(1.0 - k, 3.0) if _sliding() else 0.0
 
 func _on_button(id: String) -> void:
+	if _sliding():
+		return
 	done = true
 	chosen.emit(id)
 

@@ -341,6 +341,7 @@ var fund_happy_today: = 0.0
 
 var inspector_quip_t: = 0.0
 var inspector_pos: = Vector2.ZERO
+var town_life: Node2D   # scripts/town_life.gd
 var barks: Node   # speech bubbles for enemies/bosses/raccoons (scripts/barks.gd)
 var dialog: Array[String] = []
 var ko_kind: = ""                           # boss knockout cutscene playing (knockout.gd, HD layer)
@@ -483,6 +484,10 @@ func _ready() -> void:
 		cats.append(c)
 
 	_spawn_raccoons()
+	town_life = preload("res://scripts/town_life.gd").new()   # cars, walkers, pigeons, steam, weather (cosmetic)
+	town_life.name = "TownLife"
+	town_life.m = self
+	add_child(town_life)
 
 	audio = AudioScript.new()
 	audio.name = "Audio"
@@ -1280,6 +1285,8 @@ func player_atk() -> float:
 	return atk
 
 func _on_player_attack(pos: Vector2, dir: Vector2) -> void:
+	if combat.fx != null:
+		combat.fx.swing(player, dir, player.is_finisher())
 	var sp: = Gear.w_special(gear)
 	var step: int = player.combo_step
 	var fin: bool = player.is_finisher()

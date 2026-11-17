@@ -41,6 +41,14 @@ var peek_t: = 0.0
 const PEEK_TIME: = 3.5
 var _seen: = {}                  # last values the peek compares against ("" = not primed yet)
 var _pulse: = 0.0
+## Nov 17 motion: the cash pill counts toward the real balance (green flash up, red down); a circle wipe opens on
+## every room change (home, the Fork, arenas...), since a hard cut between painted rooms felt cheap.
+var shown_money: = -1.0
+var money_flash: = 0.0
+var money_up: = true
+var _loc: = ""
+var wipe_t: = 9.0
+const WIPE_T: = 0.42
 
 func toggle_drawer() -> void:
 	drawer_open = not drawer_open
@@ -108,6 +116,20 @@ func _watch() -> void:
 func _process(d: float) -> void:
 	_pulse += d
 	peek_t = maxf(0.0, peek_t - d)
+	wipe_t += d
+	if m != null:
+		var mon: = float(m.money)
+		if shown_money < 0.0 or m.in_title:
+			shown_money = mon
+		elif absf(mon - shown_money) > 0.01:
+			money_up = mon > shown_money
+			money_flash = 0.5
+			shown_money = move_toward(shown_money, mon, maxf(absf(mon - shown_money) * 7.0, 25.0) * d)
+		money_flash = maxf(0.0, money_flash - d)
+		var loc: = str(m.location)
+		if _loc != "" and loc != _loc and DisplayServer.get_name() != "headless":
+			wipe_t = 0.0
+		_loc = loc
 	if m != null:
 		_watch()
 	queue_redraw()
@@ -283,6 +305,17 @@ func _draw() -> void:
 		var shown: = preload("res://scripts/look_at_this.gd").screen(line)
 		if shown != "":
 			_draw_her_screen(Rect2(r.end.x - 34, r.position.y - 50, 28, 48), shown)
+	_draw_wipe()
+
+func _draw_wipe() -> void:
+	if wipe_t >= WIPE_T:
+		return
+	var k: = clampf(wipe_t / WIPE_T, 0.0, 1.0)
+	var e: = 1.0 - pow(1.0 - k, 3.0)
+	var c: = Vector2(160, 92)
+	var big: = 200.0
+	var r: = e * big
+	draw_arc(c, (r + big) * 0.5 + 2.0, 0.0, TAU, 72, Color("#0b0910"), big - r + 4.0)
 
 ## "Look At This": the phone she's holding up at me, over the dialogue box (a reel, or a text thread).
 func _draw_her_screen(pr: Rect2, kind: String) -> void:
@@ -462,10 +495,12 @@ func _draw_strip(f: Font) -> void:
 	var dy: = -1.5 if drawer_open else 1.5
 	draw_colored_polygon(PackedVector2Array([c + Vector2(-2.2, -dy), c + Vector2(2.2, -dy), c + Vector2(0, dy)]), Color(1, 1, 1, 0.8))
 	x -= 6.0
-	var cash: = "$%d" % m.money
+	var cash: = "$%d" % roundi(shown_money if shown_money >= 0.0 else float(m.money))
 	var cw: = _tw(f, cash, 7) + 7.0
 	var cr: = Rect2(x - cw, p.y + 2.2, cw, 8.6)
 	var cc: = Color("#d8432f") if urgent() == "rent" else CASH
+	if money_flash > 0.0:   # brighter green while it climbs, red while it drops
+		cc = cc.lerp(Color("#7dffb0") if money_up else Color("#ff5a4a"), money_flash * 1.6)
 	UiStyle.box(self, cr, cc.darkened(0.3), 4.3)
 	UiStyle.box(self, cr.grow(-0.5), cc, 3.8)
 	UiStyle.box(self, Rect2(cr.position + Vector2(0.5, 0.5), Vector2(cr.size.x - 1, 3.4)), Color(1, 1, 1, 0.16), 3.0)

@@ -2,6 +2,8 @@ extends RefCounted
 
 # ORIGINAL Style A HD art; generated metadata. Logical coordinates unchanged.
 const ASSETS = {
+  "amb_pigeon": {"w": 128, "h": 24, "cell": [32, 24], "origin": [16, 22], "kind": "prop", "s": 4},
+  "amb_puff": {"w": 48, "h": 40, "cell": [48, 40], "origin": [24, 40], "kind": "prop", "s": 4},
   "av_chef": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
   "av_duff": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},
   "av_gala": {"w": 96, "h": 96, "cell": [96, 96], "origin": [0, 0], "kind": "icon", "s": 4},

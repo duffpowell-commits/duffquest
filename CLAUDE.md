@@ -192,14 +192,19 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   Loading screens double as wallpapers (`scripts/wallpaper.gd`): phone home = one per day, menus with no world
   frame = a blurred one. Draw them via ImageTexture (sandbox GL renders the lossy CompressedTexture white).
 
+- **Living town + motion (Nov 17):** `scripts/town_life.gd` (child of main, y-sorted entity nodes, own RNG, nothing
+  collides): vans, walkers, pigeons, roof steam, screen-space weather. New ambient thing? Add an `Ent` kind and draw it
+  with `Art.*` so 3D mirrors it. Tilt-shift: `shaders/tilt_shift.gdshader` on View3D (`tilt_mat`, null in Lite).
+  Squash: `juice.squash(node, big)`. Swing smear / roll dust: `combat_fx.swing()` / `dust()`. Wipe: `hud.wipe_t`.
+
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
   test_daily checks it). Multi-phase games override `coach_key()` and call `coach_start()` / `coach_done()` per phase
   (see prep.gd). `coach_pace = false` in `_setup` = card only. Renders: `ui_audit_shot.tscn -- coach`.
 
 ## Next (in order)
-0. **Four visual upgrades Duff picked Nov 17** (living town, UI motion, diorama 3D, fight impact): plan in
-   `docs/handoffs/2026-11-17_phone_ui_and_visual_plan.md`.
+0. **Visual plan built Nov 17** (living town, UI motion, diorama 3D, fight impact; TRACKER entry): needs Duff's
+   phone test, mainly the tilt-shift cost on his Android (perf_guard Lite turns it off). Then re-shoot store screens.
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
 3. **Grease boss art:** done Nov 12 (own sprite `ch_grease`, alley arena already its own). Left: nothing unless Duff asks.
