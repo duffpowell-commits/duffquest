@@ -409,31 +409,37 @@ func _app_tile(p: Vector2, s: float, col: Color, glyph: String, a: float = 1.0) 
 
 ## Signal bars: 4 bars, each 25% of {partner}'s mood, the last one fills from the bottom.
 func _signal(p: Vector2, frac: float) -> void:
+	signal_bars(self, p, frac)
+
+static func signal_bars(ci: CanvasItem, p: Vector2, frac: float) -> void:
 	var f: = clampf(frac, 0.0, 1.0) * 4.0
 	var low: = frac < 0.25
 	var on: = Color("#ff4d6d") if low else Color("#ff8fb1")
 	for i in 4:
 		var h: = 3.0 + i * 1.6
 		var r: = Rect2(p.x + i * 2.6, p.y + 8.0 - h, 1.9, h)
-		draw_rect(r, Color(1, 1, 1, 0.2))
+		ci.draw_rect(r, Color(1, 1, 1, 0.2))
 		var fill: = clampf(f - i, 0.0, 1.0)
 		if fill > 0.0:
-			draw_rect(Rect2(r.position.x, r.end.y - h * fill, r.size.x, h * fill), on)
+			ci.draw_rect(Rect2(r.position.x, r.end.y - h * fill, r.size.x, h * fill), on)
 
 ## Battery: outline, nub, fill by Energy (green / amber / red), a bolt when it's charged past 80.
 func _battery(p: Vector2, frac: float) -> void:
+	battery(self, p, frac)
+
+static func battery(ci: CanvasItem, p: Vector2, frac: float) -> void:
 	var fr: = clampf(frac, 0.0, 1.0)
 	var body: = Rect2(p, Vector2(13, 6.5))
-	UiStyle.box(self, body.grow(0.6), Color(1, 1, 1, 0.75), 1.8)
-	UiStyle.box(self, body, Color(BEZEL, 0.95), 1.4)
-	draw_rect(Rect2(body.end.x + 0.7, p.y + 2.0, 1.1, 2.5), Color(1, 1, 1, 0.75))
+	UiStyle.box(ci, body.grow(0.6), Color(1, 1, 1, 0.75), 1.8)
+	UiStyle.box(ci, body, Color(BEZEL, 0.95), 1.4)
+	ci.draw_rect(Rect2(body.end.x + 0.7, p.y + 2.0, 1.1, 2.5), Color(1, 1, 1, 0.75))
 	var col: = Color("#46d36b") if fr > 0.5 else (Color("#f2c14e") if fr > 0.2 else NOTIF_RED)
 	var inner: = body.grow(-0.9)
 	if fr > 0.0:
-		UiStyle.box(self, Rect2(inner.position, Vector2(maxf(inner.size.x * fr, 1.2), inner.size.y)), col, 0.9)
+		UiStyle.box(ci, Rect2(inner.position, Vector2(maxf(inner.size.x * fr, 1.2), inner.size.y)), col, 0.9)
 	if fr > 0.8:
 		var c: = body.get_center()
-		draw_colored_polygon(PackedVector2Array([c + Vector2(0.6, -2.6), c + Vector2(-1.6, 0.4), c + Vector2(-0.1, 0.4),
+		ci.draw_colored_polygon(PackedVector2Array([c + Vector2(0.6, -2.6), c + Vector2(-1.6, 0.4), c + Vector2(-0.1, 0.4),
 			c + Vector2(-0.6, 2.6), c + Vector2(1.6, -0.4), c + Vector2(0.1, -0.4)]), Color(BEZEL, 0.85))
 
 func _tw(f: Font, s: String, size: int) -> float:

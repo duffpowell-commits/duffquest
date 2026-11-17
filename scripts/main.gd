@@ -1118,8 +1118,10 @@ func open_overlay(node: Node) -> void:
 ## Blurred copy of the world as it was last drawn. While the world is hidden (an overlay was already up,
 ## e.g. the title card) the previous snapshot is reused; none yet = null (cards fall back to their sunburst).
 func _veil_snapshot() -> Texture2D:
-	if in_shift or DisplayServer.get_name() == "headless":   # headless (tests, soak): no frame to grab
+	if DisplayServer.get_name() == "headless":   # headless (tests, soak): no frame to grab
 		return null
+	if in_shift or (_veil_tex == null and not visible):   # no world frame: a blurred loading-screen wallpaper
+		return preload("res://scripts/wallpaper.gd").blurred_next()
 	if view3d_on and view3d != null:   # the 3D frame is the world (its viewport keeps its last frame when paused)
 		var img3: Image = view3d.snapshot()
 		if img3 != null and not img3.is_empty():
