@@ -198,6 +198,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   (see prep.gd). `coach_pace = false` in `_setup` = card only. Renders: `ui_audit_shot.tscn -- coach`.
 
 ## Next (in order)
+0. **Four visual upgrades Duff picked Nov 17** (living town, UI motion, diorama 3D, fight impact): plan in
+   `docs/handoffs/2026-11-17_phone_ui_and_visual_plan.md`.
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
 3. **Grease boss art:** done Nov 12 (own sprite `ch_grease`, alley arena already its own). Left: nothing unless Duff asks.
