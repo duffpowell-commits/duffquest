@@ -22,6 +22,7 @@ func _ready() -> void:
 		["title", func(): _clean(); m.show_title()],
 		["menu_card", func(): _clean(); m.in_title = false; m._menu("BEDTIME", ["Show & Tell with {partner}, the 3 AM shift, then the creak-free crawl to bed.", "Skip it and I wing the whole night on autopilot."], [["play", "Play tonight", KEY_1], ["skip", "Skip: autopilot", KEY_2]], func(_c): pass)],
 		["dialogue", func(): _clean(); m._say(["{partner}: You said you'd be home by six. It is nine. The baby has learned three new words and two of them are about you."])],
+		["menu_wallpaper", func(): _clean(); m.in_title = false; m.visible = false; m._veil_tex = null; m._menu("SHIFT'S OVER", ["No scene to blur behind this card (shift menus, cold boot): a blurred loading-screen wallpaper."], [["ok", "Clock out", KEY_1]], func(_c): pass); m.visible = true],
 		["phone", func(): _clean(); m.open_phone()],
 		["settings", func(): _clean(); m.open_settings()],
 		["credits", sub.call(m_script("CreditsScript"))],

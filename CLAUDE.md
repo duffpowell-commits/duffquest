@@ -185,6 +185,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   battery = Energy, cash pill, chevron), the drawer as a notification shade (`ROW_APPS` tile per `drawer_lines` tag),
   peeks/toasts as banners. New drawer row? Give it a tag + a `ROW_APPS` entry. Rects in `layout()` unchanged.
   Render: `res://tools/hud_shot.tscn -- DIR` (town/fight/drawer/peek/rent_due).
+  Loading screens double as wallpapers (`scripts/wallpaper.gd`): phone home = one per day, menus with no world
+  frame = a blurred one. Draw them via ImageTexture (sandbox GL renders the lossy CompressedTexture white).
 
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
