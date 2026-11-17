@@ -73,7 +73,7 @@ func _input(e: InputEvent) -> void:
 			elif not dialog_open() and tp.distance_to(BTN_B) < BTN_R + 5.0:
 				b_pressed.emit()
 				get_viewport().set_input_as_handled()
-			elif not dialog_open() and tp.distance_to(BTN_G) < BTN_G_R + 4.0:
+			elif not dialog_open() and not _fighting() and tp.distance_to(BTN_G) < BTN_G_R + 4.0:
 				g_pressed.emit()
 				get_viewport().set_input_as_handled()
 			elif tp.distance_to(BTN_P) < BTN_P_R:
@@ -166,7 +166,9 @@ func _draw() -> void:
 		draw_circle(joy_center + joy_knob, 8, Color(0.94, 0.89, 0.77, 0.42))
 		_btn(BTN_B, BTN_R, Color("#a43a2c"), "B", f)
 		_hint(BTN_B + Vector2(0, -13), "roll")
-		_btn(BTN_G, BTN_G_R, Color("#d8982e"), "G", f)
+		if not _fighting():   # Nov 17 review: five buttons in a fight; gear is a between-fights thing
+			_btn(BTN_G, BTN_G_R, Color("#d8982e"), "G", f)
+			_hint(BTN_G + Vector2(0, -13), "gear")
 		var c = m.combat if m != null and m.get("combat") != null else null
 		if c != null:
 			var sp: Dictionary = c.current()
@@ -188,6 +190,11 @@ func _hint(at: Vector2, s: String) -> void:
 	var f: = ThemeDB.fallback_font
 	draw_string_outline(f, at - Vector2(20, 0), s, HORIZONTAL_ALIGNMENT_CENTER, 40, 6, 2, Color(0, 0, 0, 0.7))
 	draw_string(f, at - Vector2(20, 0), s, HORIZONTAL_ALIGNMENT_CENTER, 40, 6, Color(1, 1, 1, 0.92))
+
+func _fighting() -> bool:
+	var c = m.get("combat") if m != null else null
+	var ui = c.ui if c != null else null
+	return ui != null and is_instance_valid(ui) and (ui.fight_t > 0.0 or ui.in_fight())
 
 func _special_shown() -> bool:
 	return m != null and m.get("combat") != null and not m.combat.current().is_empty()
