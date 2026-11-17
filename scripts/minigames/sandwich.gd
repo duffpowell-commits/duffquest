@@ -204,12 +204,12 @@ func _draw_game() -> void:
 		if eighty_six_note != "":
 			mtxt(Vector2(8, y), eighty_six_note, 112, 8, Color("#a8406a"), 2)
 			y += 18.0
-		txt(Vector2(8, y + 2), "Spec (btm to top):", 6, Color("#6a625a"))
-		y += 10.0
-		var spec: = ""
+		var icons: = []   # spec as picture tiles, bottom bun first (was 6 pt text)
+		var cols: = []
 		for id in base:
-			spec += String(ING[id][0]) + ", "
-		mtxt(Vector2(8, y), spec.trim_suffix(", "), 112, 6, Color("#6a625a"), 4)
+			icons.append("kf_" + id if Art.tex("kf_" + id) != null else "")
+			cols.append(Color(ING[id][1]))
+		ticket_spec(y + 2.0, 100.0, icons, cols, base.find(eighty_six) if eighty_six != "" else -1)
 
 	if not pic("kf_plate", Vector2(200, 110), 30.0):
 		prop(Rect2(150, 108, 100, 4), Color("#cccccc"))
