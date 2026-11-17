@@ -185,6 +185,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   battery = Energy, cash pill, chevron), the drawer as a notification shade (`ROW_APPS` tile per `drawer_lines` tag),
   peeks/toasts as banners. New drawer row? Give it a tag + a `ROW_APPS` entry. Rects in `layout()` unchanged.
   Render: `res://tools/hud_shot.tscn -- DIR` (town/fight/drawer/peek/rent_due).
+  UI language (Nov 17): menus are glass sheets (`card.gd`), buttons there are pills (`minigame.pill_buttons`,
+  `UiStyle.pill_button`), panels use `UiStyle.glass`. Settings = phone Settings app, Gear = icon grid; rows/tiles are
+  buttons with `"hide": true` (drawn by the screen, still tappable + key-bound). Minigame play screens keep the chunky
+  key-cap buttons on purpose (big thumb targets on the line).
   Loading screens double as wallpapers (`scripts/wallpaper.gd`): phone home = one per day, menus with no world
   frame = a blurred one. Draw them via ImageTexture (sandbox GL renders the lossy CompressedTexture white).
 

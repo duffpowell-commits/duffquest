@@ -37,6 +37,7 @@ var flash_msg: = ""
 var flash_t: = 0.0
 var flash_col: = Color.WHITE
 var font: Font
+var pill_buttons: = false   # phone-style pill buttons (menu sheets, phone apps) instead of chunky key caps
 
 ## --- First-time coach (how-to card, easy first go, replay with "?") ---------------------------------
 ## A game opts in by returning steps from howto(): [{"i": prop art or "", "v": "tap"|"drag"|"hold"|"beat"|"mash"|"read", "s": text}].
@@ -358,12 +359,17 @@ func _draw() -> void:
 	_draw_game()
 	for b in buttons:
 		var r: Rect2 = b["rect"]
+		if b.get("hide", false):   # drawn by the screen itself (settings switches), still tappable / key-bound
+			continue
 		if b.has("badge") or b.has("icon"):   # answer card (quiz, inspector) or picture tile (Fork ingredients)
 			var ic: Texture2D = Art.tex(str(b["icon"])) if b.has("icon") else null
 			UiStyle.card_button(self, r, Cast.T(str(b["label"])), str(b.get("badge", "")), b.get("badge_col", UiStyle.TEAL),
 				b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8, ic, bool(b.get("stack", false)))
 			continue
-		UiStyle.button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
+		if pill_buttons:
+			UiStyle.pill_button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
+		else:
+			UiStyle.button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
 		if int(b["key"]) != 0 and not Cast.touch:   # key chips are keyboard-only; phones never see "Space"/"Escape"
 			txt(r.position + Vector2(2, 7), OS.get_keycode_string(int(b["key"])), 6, Color(1, 1, 1, 0.45))
 	_draw_top()

@@ -12,6 +12,7 @@ var opts: Array = []
 func _setup() -> void:
 	time_limit = 0.0
 	show_header = false
+	pill_buttons = true
 	space_is_pen = false
 	var n: = opts.size()
 	var cols: = n if n <= 3 else (3 if n >= 7 else 2)   # 7+ choices in 3 columns, so the text above keeps room
@@ -59,7 +60,7 @@ func _text_room() -> float:
 	var top: = H
 	for b in buttons:
 		top = minf(top, (b["rect"] as Rect2).position.y)
-	return top - 3.0 - 19.0
+	return top - 5.0 - 19.0 - 2.0   # sheet: title 19, gap above the buttons 5
 
 ## Body size that fits above the buttons: 8, else 7, else 6 (the 86 list's last line used to slide under them).
 func _body_size(w1: float) -> int:
@@ -72,50 +73,72 @@ func _body_size(w1: float) -> int:
 			return sz
 	return 6
 
+## Nov 17: cards are phone sheets (match the phone HUD). A dark glass sheet rises from the bottom just as tall as
+## its text + buttons, with a grabber, a bold title and a hairline; the scene stays visible above it. The title
+## screen keeps Duff on the porch clear: its title + line sit on a small glass plate up top instead.
 func _draw_game() -> void:
 	if backdrop == "" and not veiled:
 		UiStyle.burst(self, Rect2(0, 0, W, H), Color("#3a2a52"), Vector2(W * 0.5, H * 0.62), 28, t * 0.05)
-	if backdrop == "" and not veiled:   # vignette: the burst fades to dark at the edges so the card has a centre
-		for i in 6:
-			var g: = float(i) * 6.0
-			draw_rect(Rect2(g, g, W - g * 2.0, H - g * 2.0), Color(UiStyle.INK, 0.07), false, 6.0)
-	draw_rect(Rect2(0, 0, W, 17), UiStyle.PINK.darkened(0.15))
-	draw_rect(Rect2(0, 0, W, 6), UiStyle.PINK.darkened(0.02))
-	draw_rect(Rect2(0, 13, W, 2.5), UiStyle.PINK.darkened(0.32))
-	draw_rect(Rect2(0, 15.5, W, 1.5), UiStyle.INK)
-	draw_rect(Rect2(0, 17, W, 1.5), Color(UiStyle.INK, 0.4))
-	UiStyle.label(self, Vector2(0, 13), Cast.T(heading), 12, UiStyle.CREAM, W, HORIZONTAL_ALIGNMENT_CENTER, 4)
 	var x2: = 168.0 if not lines2.is_empty() else 0.0
-	var w1: = (x2 - 12.0) if x2 > 0.0 else (W - 12.0 - (60.0 if big != "" else 0.0))
+	var w1: = (x2 - 18.0) if x2 > 0.0 else (W - 20.0 - (60.0 if big != "" else 0.0))
 	var fs: = _body_size(w1)
-	var y: = 20.0 + fs
-	# panel behind the text: always (backdrop art or the burst)
 	var hh: = 0.0
 	for l in lines:
 		var ls: = str(l)
 		hh += fs * 1.3 if "\t" in ls else _wrap_h(ls, w1, fs)
 	hh = maxf(hh, 10.0 * lines2.size())
-	if hh > 0.0:
-		UiStyle.panel(self, Rect2(2, 19, W - 4, hh + 4), UiStyle.PANEL, 0.9, 1.0 / 1.5)
+	if big != "" and lines2.is_empty():
+		hh = maxf(hh, 50.0)
+	var btop: = H
+	for b in buttons:
+		btop = minf(btop, (b["rect"] as Rect2).position.y)
+	if backdrop == "title":
+		_draw_title_plate(fs, hh)
+		return
+	var top: = maxf(2.0, btop - 5.0 - hh - (19.0 if hh > 0.0 else 15.0))
+	var sheet: = Rect2(3, top, W - 6, H - top + 10.0)
+	if top > 40.0:   # a soft dark fade above the sheet so it reads as lifted off the scene
+		for i in 6:
+			draw_rect(Rect2(0, top - 12.0 + i * 2.0, W, 2.0), Color(0, 0, 0, 0.04 * (i + 1)))
+	UiStyle.glass(self, sheet, 8.0, 0.94, 1.0 / 1.5)
+	draw_rect(Rect2(W * 0.5 - 10.0, top + 2.5, 20.0, 1.4), Color(1, 1, 1, 0.3))   # grabber
+	draw_string(UiStyle.display, Vector2(11, top + 14.5), Cast.T(heading), HORIZONTAL_ALIGNMENT_LEFT, W - 22.0, 11, UiStyle.CREAM)
+	draw_rect(Rect2(10, top + 17.5, W - 20.0, 0.6), Color(1, 1, 1, 0.12))
+	var y: = top + 19.0 + fs
 	for l in lines:
 		var s: = str(l)
 		if "\t" in s:
 			var parts: = s.split("\t")
-			txt(Vector2(6, y), parts[0], fs, Color.WHITE)
-			txt(Vector2(118, y), parts[1], fs, grade_col(parts[1].substr(0, 1)))
+			txt(Vector2(11, y), parts[0], fs, Color.WHITE)
+			txt(Vector2(123, y), parts[1], fs, grade_col(parts[1].substr(0, 1)))
 			y += fs * 1.3
 			continue
 		for ln in _wrap(s, w1, fs):
-			draw_string(font, Vector2(6, y), ln, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color.WHITE)
+			draw_string(font, Vector2(11, y), ln, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(1, 1, 1, 0.92))
 			y += fs * 1.3
-	y = 28.0
+	y = top + 27.0
 	for l in lines2:
 		txt(Vector2(x2, y), str(l), 8, Color("#e6e6f0"))
 		y += 10.0
 	if big != "" and not lines2.is_empty():
-		UiStyle.label(self, Vector2(W - 30, 14), big, 15, big_col, 30, HORIZONTAL_ALIGNMENT_CENTER, 4)
+		UiStyle.label(self, Vector2(W - 34, top + 15), big, 15, big_col, 30, HORIZONTAL_ALIGNMENT_CENTER, 4)
 	elif big != "":
-		UiStyle.label(self, Vector2(W - 64, 66), big, 44, big_col, 60, HORIZONTAL_ALIGNMENT_CENTER, 8)
+		UiStyle.label(self, Vector2(W - 68, top + 19.0 + hh * 0.5 + 14.0), big, 44, big_col, 60, HORIZONTAL_ALIGNMENT_CENTER, 8)
+
+## Title screen: logo-style title and the tagline on a glass plate at the top; the porch stays in view.
+func _draw_title_plate(fs: int, _hh: float) -> void:
+	var w1: = W - 40.0
+	var rows: = 0
+	for l in lines:
+		rows += _wrap(str(l), w1, fs).size()
+	var plate: = Rect2(14, 4, W - 28, 21.0 + rows * fs * 1.3)
+	UiStyle.glass(self, plate, 7.0, 0.82, 1.0 / 1.5)
+	UiStyle.label(self, Vector2(0, 18), Cast.T(heading), 14, UiStyle.GOLD, W, HORIZONTAL_ALIGNMENT_CENTER, 4)
+	var y: = 22.0 + fs
+	for l in lines:
+		for ln in _wrap(str(l), w1, fs):
+			draw_string(font, Vector2(20, y), ln, HORIZONTAL_ALIGNMENT_CENTER, w1, fs, Color(1, 1, 1, 0.92))
+			y += fs * 1.3
 
 func grade_col(g: String) -> Color:
 	return {"S": Color("#e6a640"), "A": Color("#c0d890"), "B": Color("#8ad0ff"), "C": Color("#e6a640"), "F": Color("#e06a4a") }.get(g, Color.WHITE)

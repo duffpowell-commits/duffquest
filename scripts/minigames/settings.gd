@@ -2,8 +2,17 @@ extends "res://scripts/minigames/minigame.gd"
 
 const JuiceScript: = preload("res://scripts/juice.gd")
 
-const MUSIC_BAR: = Rect2(176, 44, 108, 10)
-const SFX_BAR: = Rect2(176, 74, 108, 10)
+## Nov 17: Settings is the Duffphone's Settings app: a glass title bar, grouped cards of rows, iOS switches and
+## sliders. Every row is one (hidden) button the size of the row, so a tap anywhere on it toggles; keys still work.
+const LEFT: = 6.0
+const RIGHT: = 164.0
+const COL_W: = 150.0
+const ROW_H: = 17.0
+const TOP: = 33.0
+const MUSIC_BAR: = Rect2(LEFT + 10, TOP + 15, 104, 3)
+const SFX_BAR: = Rect2(LEFT + 10, TOP + 37, 104, 3)
+const OFF: = Rect2(-40, -40, 1, 1)   # key-only buttons (volume - / +)
+const TOGGLES: = ["clean", "gore", "shake", "view3d", "gfx"]
 const STEP: = 0.1
 
 var audio: Node = null
@@ -15,24 +24,33 @@ func _setup() -> void:
 	title = "SETTINGS"
 	time_limit = 0.0
 	space_is_pen = false
+	show_header = false
+	pill_buttons = true
 	if audio == null:
 		audio = AudioScript.inst
-	add_button("music_down", Rect2(148, 39, 24, 20), "-", KEY_1)
-	add_button("music_up", Rect2(288, 39, 24, 20), "+", KEY_2)
-	add_button("sfx_down", Rect2(148, 69, 24, 20), "-", KEY_3)
-	add_button("sfx_up", Rect2(288, 69, 24, 20), "+", KEY_4)
-	add_button("mute", Rect2(148, 90, 164, 16), _mute_label(), KEY_M, Color("#6a4a96"))
-	add_button("clean", Rect2(148, 108, 164, 16), _clean_label(), KEY_C, Color("#3a6a5a"))
-	add_button("gore", Rect2(148, 126, 164, 16), _gore_label(), KEY_G, Color("#8a2a34"))
-	add_button("shake", Rect2(148, 144, 164, 16), _shake_label(), KEY_K, Color("#4a5a8a"))
-	add_button("back", Rect2(110, 163, 100, 15), "Back", KEY_ESCAPE, Color("#a43a2c"))
-	if _guard():
-		add_button("gfx", Rect2(214, 163, 98, 15), _gfx_label(), KEY_V, Color("#3a5a8a"))
-	add_button("credits", Rect2(214, 22, 98, 13), "Credits & legal", KEY_L, Color("#8a5a2a"))
-	if ClassDB.class_exists("Node3D"):    # the slim 2D web engine has no 3D: no toggle there
-		add_button("view3d", Rect2(110, 22, 100, 13), _view3d_label(), KEY_B, Color("#3a6a5a"))
+	add_button("music_down", OFF, "-", KEY_1)
+	add_button("music_up", OFF, "+", KEY_2)
+	add_button("sfx_down", OFF, "-", KEY_3)
+	add_button("sfx_up", OFF, "+", KEY_4)
+	_row("mute", Rect2(LEFT, TOP + 44, COL_W, ROW_H), _mute_label(), KEY_M)
+	var y: = TOP
+	for id in TOGGLES:
+		if id == "gfx" and not _guard():
+			continue
+		if id == "view3d" and not ClassDB.class_exists("Node3D"):   # the slim 2D web engine has no 3D
+			continue
+		var lbl: String = {"clean": _clean_label(), "gore": _gore_label(), "shake": _shake_label(),
+			"view3d": _view3d_label(), "gfx": _gfx_label()}[id]
+		var key: int = {"clean": KEY_C, "gore": KEY_G, "shake": KEY_K, "view3d": KEY_B, "gfx": KEY_V}[id]
+		_row(id, Rect2(RIGHT, y, COL_W, ROW_H), lbl, key)
+		y += ROW_H
+	_row("credits", Rect2(LEFT, TOP + 79, COL_W, ROW_H), "Credits & legal", KEY_L)
 	if dev:
-		add_button("dev_quests", Rect2(8, 163, 98, 15), "Dev: quests", KEY_Q, Color("#8a6a1a"))
+		_row("dev_quests", Rect2(LEFT, TOP + 79 + ROW_H, COL_W, ROW_H), "Dev: quests", KEY_Q)
+	add_button("back", Rect2(4, 3, 46, 13), "Back", KEY_ESCAPE, Color("#a43a2c"))
+
+func _row(id: String, r: Rect2, label: String, key: int) -> void:
+	add_button(id, r, label, key)["hide"] = true
 
 ## perf_guard.gd (game.gd's child): Lite graphics = no HD-2D screen shader / window lights, for slow phones.
 func _guard() -> Node:
@@ -132,10 +150,10 @@ func _set_from(bar: Rect2, p: Vector2, which: String) -> void:
 func _pointer_down(p: Vector2) -> void:
 	if audio == null:
 		return
-	if MUSIC_BAR.grow(4).has_point(p):
+	if MUSIC_BAR.grow(6).has_point(p):
 		dragging = "music"
 		_set_from(MUSIC_BAR, p, "music")
-	elif SFX_BAR.grow(4).has_point(p):
+	elif SFX_BAR.grow(6).has_point(p):
 		dragging = "sfx"
 		_set_from(SFX_BAR, p, "sfx")
 
@@ -148,19 +166,66 @@ func _pointer_up(_p: Vector2) -> void:
 		AudioScript.sfx("select")
 	dragging = ""
 
+func _on(id: String) -> bool:
+	match id:
+		"mute": return audio != null and audio.muted
+		"clean": return Cast.clean
+		"gore": return audio == null or audio.gore
+		"shake": return JuiceScript.shake_on
+		"view3d": return audio != null and audio.view3d
+		"gfx": return _guard() != null and _guard().low
+	return false
+
+const ROW_TEXT: = {"mute": "Mute all", "clean": "Clean language", "gore": "Cartoon gore (KOs)", "shake": "Screen shake",
+	"view3d": "3D view", "gfx": "Lite graphics", "credits": "Credits & legal", "dev_quests": "Dev: quests"}
+
+func _card(r: Rect2, head: String) -> void:
+	draw_string(UiStyle.display, r.position + Vector2(4, -3), head, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color(1, 1, 1, 0.5))
+	UiStyle.box(self, r, Color(UiStyle.GLASS.lightened(0.06), 0.93), 5.0)
+
+func _switch(c: Vector2, on: bool) -> void:   # iOS-style: pill track, white knob
+	var tr: = Rect2(c - Vector2(9, 5), Vector2(18, 10))
+	UiStyle.box(self, tr, Color("#34c759") if on else Color(1, 1, 1, 0.2), 5.0)
+	var k: = Vector2(tr.end.x - 5.0 if on else tr.position.x + 5.0, c.y)
+	draw_circle(k + Vector2(0, 0.6), 4.2, Color(0, 0, 0, 0.25))
+	draw_circle(k, 4.0, Color.WHITE)
+
+func _slider(bar_r: Rect2, v: float, col: Color, label: String) -> void:
+	txt(bar_r.position + Vector2(0, -5), label, 7, Color.WHITE)
+	txt(Vector2(bar_r.end.x + 6, bar_r.position.y + 3), "%d%%" % roundi(v * 100.0), 7, Color(1, 1, 1, 0.6))
+	UiStyle.box(self, bar_r.grow(0.3), Color(1, 1, 1, 0.18), 1.8)
+	UiStyle.box(self, Rect2(bar_r.position, Vector2(maxf(bar_r.size.x * v, 3.0), bar_r.size.y)).grow(0.3), col, 1.8)
+	var k: = Vector2(bar_r.position.x + bar_r.size.x * v, bar_r.get_center().y)
+	draw_circle(k + Vector2(0, 0.7), 5.0, Color(0, 0, 0, 0.3))
+	draw_circle(k, 4.6, Color.WHITE)
+
 func _draw_game() -> void:
-	_tint_toggles()
-	draw_rect(Rect2(8, 20, 304, 142), Color(0, 0, 0, 0.35))
-	Art.image(self, "ic_heart", Vector2(14, 44))
-	txt(Vector2(26, 52), "Music", 8)
-	bar(MUSIC_BAR, music_vol(), Color("#ff6aa8"))
-	txt(Vector2(108, 52), "%d%%" % roundi(music_vol() * 100.0), 8, Color("#f2c66a"))
-	Art.image(self, "ic_bolt", Vector2(14, 74))
-	txt(Vector2(26, 82), "Sound FX", 8)
-	bar(SFX_BAR, sfx_vol(), Color("#f2c66a"))
-	txt(Vector2(108, 82), "%d%%" % roundi(sfx_vol() * 100.0), 8, Color("#f2c66a"))
-	txt(Vector2(26, 101), "Mute all", 8)
-	txt(Vector2(26, 119), "Clean language", 8)
-	txt(Vector2(26, 137), "Cartoon gore (KOs)", 8)
-	txt(Vector2(26, 155), "Screen shake", 8)
-	txt(Vector2(14, 32), "Saved automatically.", 6, Color(1, 1, 1, 0.55))
+	draw_rect(Rect2(0, 0, W, H), Color(0.03, 0.02, 0.06, 0.55))
+	UiStyle.box(self, Rect2(0, 0, W, 19), Color(UiStyle.GLASS, 0.96), 0.0)
+	draw_rect(Rect2(0, 19, W, 0.6), Color(1, 1, 1, 0.12))
+	draw_string(UiStyle.display, Vector2(0, 13.5), "Settings", HORIZONTAL_ALIGNMENT_CENTER, W, 10, Color.WHITE)
+	# left: sound card (two sliders + mute), more card; right: game card (switch rows)
+	_card(Rect2(LEFT, TOP - 4, COL_W, 48 + ROW_H + 4), "SOUND")
+	_slider(MUSIC_BAR, music_vol(), Color("#ff6aa8"), "Music")
+	_slider(SFX_BAR, sfx_vol(), Color("#f2c66a"), "Sound FX")
+	var more: = 1 + (1 if dev else 0)
+	_card(Rect2(LEFT, TOP + 77, COL_W, ROW_H * more + 4), "MORE")
+	var toggles: = buttons.filter(func(b): return TOGGLES.has(str(b["id"])))
+	if not toggles.is_empty():
+		_card(Rect2(RIGHT, TOP - 4, COL_W, ROW_H * toggles.size() + 4), "GAME")
+	for b in buttons:
+		var id: = str(b["id"])
+		if not b.get("hide", false) or not ROW_TEXT.has(id):
+			continue
+		var r: Rect2 = b["rect"]
+		var cy: = r.position.y + r.size.y * 0.5
+		if bool(b.get("down", false)):
+			UiStyle.box(self, Rect2(r.position.x + 1, cy - 8, r.size.x - 2, 16), Color(1, 1, 1, 0.08), 4.0)
+		txt(Vector2(r.position.x + 10, cy + 2.5), str(ROW_TEXT[id]), 7, Color.WHITE)
+		if id in ["credits", "dev_quests"]:
+			draw_string(UiStyle.display, Vector2(r.end.x - 12, cy + 3), ">", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(1, 1, 1, 0.45))
+		else:
+			_switch(Vector2(r.end.x - 16, cy), _on(id))
+		if b != buttons.back() and id != "credits" and r.position.x == RIGHT and r.end.y < TOP + ROW_H * toggles.size():
+			draw_rect(Rect2(r.position.x + 10, r.end.y - 0.3, r.size.x - 14, 0.5), Color(1, 1, 1, 0.08))
+	txt(Vector2(LEFT + 4, H - 6), "Saved automatically.", 6, Color(1, 1, 1, 0.45))
