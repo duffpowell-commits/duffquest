@@ -73,6 +73,8 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | #131 | Glass menu sheets, Settings app, Gear grid, hustler + quiz polish | merged |
 | #132 | Handoff/plan doc + IGN review v4 (8.4/10) | merged |
 | #133 | Visual plan (living town, UI motion, tilt-shift, fight impact) | merged (CI green), merge sha `cd637d8` |
+| #135 | Lossy sprite sheets (Continue downloads 8 MB, was 17.6) | merged |
+| #136 | Store screens re-shot on the Duffphone UI + kitchen screens talk less (fryer gauge, ticket icon specs) | merged, sha `f67819a` |
 - Branch: `ccr-1297da7c-69sgo3`.
 - IGN review v4: 8.4/10 (v3 7.9, v2 7.1, v1 6.4). File `docs/reviews/ign_review_2026-11-17_v4.md`.
 - World geometry: road centre y 175, x 316; lanes y 167 (dir -1) / 184 (dir +1), x 308 (+1) / 324 (-1); sidewalks y 141 / 211, x 283. Ground world rect P(-5,-16) S(672,384).
@@ -91,17 +93,19 @@ You are continuing work from a previous chat. That chat is gone; this file is th
 | Item | Status | Version / location | Notes |
 |---|---|---|---|
 | Phone HUD, wallpapers, menus/Settings/Gear | final, live | main (#129–#131) | not yet phone-tested by Duff |
-| Visual plan | final, live | main (#133) | squash + swing arc not caught on a render yet; not phone-tested |
+| Visual plan | final, live | main (#133) | swing smear caught on a render (`docs/renders/swing_smear_2d_3d.jpg`); not phone-tested |
+| Kitchen less text | final, live | main (#136) | fryer colour gauge, sandwich/salad spec tiles; not phone-tested |
 | Handoff/plan doc | final | `docs/handoffs/2026-11-17_phone_ui_and_visual_plan.md` | |
 | Renders | final | `docs/renders/hud_phone_before_after.png`, `wallpapers_phone_menu.png`, `ui_phone_sheets_before_after.png`, `visual_plan_town_motion_3d.png` | |
-| Store screenshots | stale | `docs/itch/screens/` | re-shoot after UI changes |
+| Store screenshots | current (Nov 17 late) | `docs/itch/screens/` | re-shoot ids in CLAUDE.md |
 
 ## 11. Next steps
 1. **Next action:** ask Duff for his phone-test notes on today's build (UI, tilt-shift smoothness on Android, walker density) and fix what he reports.
 2. Duff phone-tests the new UI, tilt-shift blur (Android perf) and walker density.
 3. Duff pastes the itch page from `docs/itch/PAGE.md`; arm play alerts on debut.
-4. Re-shoot store screenshots in `docs/itch/screens/` with the new UI.
-5. Optional: Canva painted porch backdrop for the door-to-door hustler; fewer text labels in kitchen minigames.
+4. Done Nov 17 late: store screens re-shot, kitchen text cut (#136). Consistency audit items 6/8/9 closed.
+5. Optional: Canva painted porch backdrop for the door-to-door hustler (offered, not requested).
+6. After Duff's notes: balance re-check with two outside players (IGN v4 weakness #3).
 
 ## 12. Open questions ⚠️
 - Does the tilt-shift run smoothly on Duff's Android? (keep / tone down / Lite only)
