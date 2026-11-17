@@ -24,12 +24,14 @@ or cross-promo in game code or data, listing copy uses public names only, contro
    (`bg_title`) + the logo, the same card that opens the preview videos.
 5. **Blackhead Patrol old flat back**: FIXED, PR #101 merged.
 6. **Kitchen minigame centrepieces are chunky old pixel art next to painted backdrops**: prep (tomato + board),
-   garnish (Black Forest slab), temp check (patty). Canva repaint, one batch.
+   garnish (Black Forest slab), temp check (patty). Canva repaint, one batch. CLOSED Nov 17: re-checked on renders; the
+   Nov 16 HD re-cut (`kf_cake`, `kf_raw_*` at 4 px/unit, house cel style) already matches the other kf props.
 7. **Open prop list from the sprite pass**: delivery van (`truck_h`), drone, nft, package, honeybun, freya_peek.
 8. **Old sunburst still shows** behind cards when no world snapshot exists (shift menus, cold boot). Swap the fallback
-   for a plain dark veil.
+   for a plain dark veil. FIXED Nov 17: a blurred loading-screen wallpaper replaces it (`main._veil_snapshot`).
 9. Dead art still shipped in the packs (unused): fence corners/gates `sd_*_corner|gate`, `sd_political_sun_sign`,
-   `bench`, `bus_sign`, `trash_can`, `duff_dress`, `ch_grillboy`. Harmless, a few hundred KB.
+   `bench`, `bus_sign`, `trash_can`, `duff_dress`, `ch_grillboy`. Harmless, a few hundred KB. Checked Nov 17: the
+   fence corners/gates + sun sign are ~16 KB imported (lossy); `bus_sign` is in use again. Left as is.
 
 ## Not leftovers (checked, fine)
 Buttons, dialogue tab, veil, HUD tags, tiny text, seams, Back Walk, Stealth floor, symphony, Akarui, Hy-Whee floor,
