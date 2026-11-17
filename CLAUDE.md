@@ -181,6 +181,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   toast (Settings > 3D view switches back). Profile with `tools/perf_run.tscn -- view=3d|2d [low]`. Store screens in
   `docs/itch/screens/` are 3D shots since Nov 17 (`docs/renders/store_screens_3d_before_after.jpg`).
 
+- **HUD = Duff's phone (Nov 17):** `hud.gd` draws the strip as his status bar (clock, heart + signal bars = {partner},
+  battery = Energy, cash pill, chevron), the drawer as a notification shade (`ROW_APPS` tile per `drawer_lines` tag),
+  peeks/toasts as banners. New drawer row? Give it a tag + a `ROW_APPS` entry. Rects in `layout()` unchanged.
+  Render: `res://tools/hud_shot.tscn -- DIR` (town/fight/drawer/peek/rent_due).
+
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
   test_daily checks it). Multi-phase games override `coach_key()` and call `coach_start()` / `coach_done()` per phase
