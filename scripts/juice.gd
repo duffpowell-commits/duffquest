@@ -50,6 +50,25 @@ func hurt() -> void:
 		return
 	hitstop(float(HURT[0]))
 	shake(float(HURT[1]))
+	if m != null and m.get("player") != null:
+		squash(m.player, false)
+
+## Nov 17 fight impact: the body that took the hit squashes wide-and-short, then springs back past round (0.18 s,
+## scaled from its feet). It plays through the hit-stop at the slowed clock, so the squash holds on the freeze frame.
+## The 3D view only reads the height change (cards keep their width), which still reads as a flinch.
+func squash(n: Node2D, big: bool) -> void:
+	if n == null or not is_instance_valid(n) or not enabled:
+		return
+	var now: = Time.get_ticks_msec()
+	var base: Vector2 = n.scale   # mid-squash: keep the real base (arenas scale actors, so never cache it for good)
+	if now < int(n.get_meta("squash_until", 0)):
+		base = n.get_meta("squash_base", n.scale)
+	n.set_meta("squash_base", base)
+	n.set_meta("squash_until", now + 450)
+	var k: = 1.35 if big else 1.0
+	n.scale = base * Vector2(1.0 + 0.16 * k, 1.0 - 0.16 * k)
+	var tw: = n.create_tween()
+	tw.tween_property(n, "scale", base, 0.18).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 func hitstop(sec: float) -> void:
 	if not enabled or sec <= 0.0:
