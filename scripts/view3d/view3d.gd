@@ -30,6 +30,12 @@ var env: Environment
 var ground: MeshInstance3D
 var live: = false
 var pool: Array = []                        # Sprite3D cards for captured actor draws, reused every frame
+var van_boxes: Array = []                   # MeshInstance3D bodies under the vans' roof cards, reused every frame
+## Top-down vehicle art (town vans, the HONK delivery truck): in 3D the art is the van's ROOF, laid flat VAN_H units
+## up on a tinted box, like the buildings' cardboard boxes. Stood up as a card it read as a van tipped on its side
+## (Duff's phone test, Nov 17).
+const VANS: = ["truck_h", "truck_v"]
+const VAN_H: = 7.0
 var buildings: Array = []                   # [building dict, card]
 var lamps: Array = []                       # [OmniLight3D, base energy]
 var marks: Array = []                       # Label3D pool: quest/story markers + house names
@@ -412,6 +418,7 @@ func _hd(name: String) -> Texture2D:
 ## bottom edge (a carried package, a drone, the delivery truck), facing the camera like the 2D art did.
 func _sync_actors() -> void:
 	var used: = 0
+	var vans_used: = 0
 	var toward: = CAM_OFF.normalized() * 0.012
 	britt_head = Vector3.INF
 	for id in Art.rec.keys():
@@ -455,6 +462,7 @@ func _sync_actors() -> void:
 			s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if flat else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 			s.texture = tx
 			s.flip_h = sc.x < 0.0
+			s.flip_v = false
 			var mod: Color = d[4]
 			s.modulate = mod
 			s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD if mod.a > 0.95 else SpriteBase3D.ALPHA_CUT_DISABLED
@@ -475,6 +483,19 @@ func _sync_actors() -> void:
 				s.region_enabled = false
 				s.offset = Vector2(-float(org2[0]), 0.0)
 				s.pixel_size = U / dens * isc * absf(sc.y)
+				if name in VANS:   # roof card on a box, centred on the art's origin (its middle)
+					var uw: = tx.get_width() * isc / dens
+					var uh: = tx.get_height() * isc / dens
+					var at: Vector2 = full * pos
+					s.rotation_degrees.x = -90.0
+					s.flip_v = sc.y < 0.0
+					s.offset = Vector2(-tx.get_width(), -tx.get_height()) * 0.5
+					s.position = to3(at, VAN_H * U + 0.002)
+					s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+					_van_box(vans_used, at, Vector2(uw, uh), mod)
+					vans_used += 1
+					k += 1
+					continue
 				if flat:   # top-left corner on the floor, image runs south
 					s.offset = Vector2(-float(org2[0]), -float(tx.get_height()) + float(org2[1]))
 					s.position = to3(full * pos, 0.0)
@@ -489,6 +510,34 @@ func _sync_actors() -> void:
 			k += 1
 	for i in range(used, pool.size()):
 		(pool[i] as Sprite3D).visible = false
+	for i in range(vans_used, van_boxes.size()):
+		(van_boxes[i] as MeshInstance3D).visible = false
+
+## The body under a van's roof card: a box a little inside the roof's footprint, tinted like the van, dark at the
+## wheels (a darker bottom slab).
+func _van_box(i: int, at: Vector2, size_u: Vector2, tint: Color) -> void:
+	if i >= van_boxes.size():
+		var mi: = MeshInstance3D.new()
+		var bm: = BoxMesh.new()
+		mi.mesh = bm
+		mi.material_override = _flat(Color.WHITE)
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		var wheels: = MeshInstance3D.new()
+		wheels.name = "Wheels"
+		wheels.mesh = BoxMesh.new()
+		wheels.material_override = _flat(Color(0.08, 0.08, 0.1))
+		mi.add_child(wheels)
+		world.add_child(mi)
+		van_boxes.append(mi)
+	var b: MeshInstance3D = van_boxes[i]
+	b.visible = true
+	var body: = Vector3(size_u.x * 0.86, VAN_H - 1.5, size_u.y * 0.78) * U   # tucked under the roof's rounded corners
+	(b.mesh as BoxMesh).size = body
+	b.position = to3(at, 1.5 * U + body.y * 0.5)
+	(b.material_override as StandardMaterial3D).albedo_color = Color(0.55, 0.57, 0.56) * Color(tint.r, tint.g, tint.b)   # sides in shade
+	var w: = b.get_node("Wheels") as MeshInstance3D
+	(w.mesh as BoxMesh).size = Vector3(body.x * 0.86, 1.6 * U, body.z * 0.96)
+	w.position = Vector3(0, -body.y * 0.5 - 0.7 * U, 0)
 
 # --- the static town ------------------------------------------------------------------------------------------
 
