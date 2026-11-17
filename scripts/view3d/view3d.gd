@@ -13,6 +13,7 @@ const Art: = preload("res://scripts/art.gd")
 const Ground: = preload("res://scripts/ground.gd")
 const HdPresentation: = preload("res://scripts/hd_presentation.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
+const TownLife: = preload("res://scripts/town_life.gd")
 
 const U: = 0.1                              # metres per 2D world unit
 const CAM_OFF: = Vector3(0, 12.5, 16.0)     # fixed-yaw follow camera, pitched ~38 degrees like the 2D 3/4 view
@@ -67,8 +68,12 @@ var low: = false
 const MAX_K: = 3.0
 const LOW_K: = 1.5
 
+## Tilt-shift diorama blur (shaders/tilt_shift.gdshader) on this container: only the 3D frame, off in Lite.
+var tilt_mat: ShaderMaterial
+
 func set_low(on: bool) -> void:
 	low = on
+	material = null if low else tilt_mat
 	vp.msaa_3d = Viewport.MSAA_DISABLED if low else Viewport.MSAA_2X
 	env.glow_enabled = not low
 	if low:
@@ -83,6 +88,9 @@ static func to3(p: Vector2, h: float = 0.0) -> Vector3:
 func _ready() -> void:
 	name = "View3D"
 	stretch = false   # sized by hand in _fit(): native pixels, not the 640x360 logical size
+	tilt_mat = ShaderMaterial.new()
+	tilt_mat.shader = preload("res://shaders/tilt_shift.gdshader")
+	material = tilt_mat
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
 	vp = SubViewport.new()
@@ -473,6 +481,9 @@ func _sync_actors() -> void:
 				else:
 					var bottom: = pos + Vector2(0, (float(tx.get_height()) - float(org2[1])) * isc / dens)
 					s.position = to3(full * bottom) + toward * k
+					if name == "amb_puff":   # roof steam: stand on the facade front, lifted by its 2D height above it
+						var gp: Vector2 = full * bottom
+						s.position = to3(Vector2(gp.x, TownLife.PUFF_BASE_Y + 1.0)) + Vector3(0, (TownLife.PUFF_BASE_Y - gp.y) * U, 0)
 			if s.flip_h:
 				s.offset.x = -float(s.region_rect.size.x if s.region_enabled else tx.get_width()) - s.offset.x
 			k += 1

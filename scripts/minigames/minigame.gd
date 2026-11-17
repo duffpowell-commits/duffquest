@@ -37,6 +37,7 @@ var flash_msg: = ""
 var flash_t: = 0.0
 var flash_col: = Color.WHITE
 var font: Font
+const SQUISH_T: = 0.14
 var pill_buttons: = false   # phone-style pill buttons (menu sheets, phone apps) instead of chunky key caps
 
 ## --- First-time coach (how-to card, easy first go, replay with "?") ---------------------------------
@@ -297,6 +298,7 @@ func _input(e: InputEvent) -> void:
 		if st.pressed:
 			for b in buttons:
 				if b["enabled"] and (b["rect"] as Rect2).has_point(sp):
+					b["press_ms"] = Time.get_ticks_msec()
 					_on_button(b["id"])
 					get_viewport().set_input_as_handled()
 					return
@@ -318,6 +320,7 @@ func _input(e: InputEvent) -> void:
 		if k.pressed:
 			for b in buttons:
 				if b["enabled"] and int(b["key"]) != 0 and int(b["key"]) == int(k.physical_keycode):
+					b["press_ms"] = Time.get_ticks_msec()
 					_on_button(b["id"])
 					get_viewport().set_input_as_handled()
 					return
@@ -357,8 +360,17 @@ func _draw() -> void:
 	if done:
 		return
 	_draw_game()
+	var now_ms: = Time.get_ticks_msec()
 	for b in buttons:
 		var r: Rect2 = b["rect"]
+		var since: = float(now_ms - int(b.get("press_ms", -100000))) / 1000.0
+		if since < SQUISH_T:   # Nov 17: a pressed button squishes in and springs back
+			r = r.grow(-sin(since / SQUISH_T * PI) * minf(r.size.y * 0.12, 2.0))
+			b["down"] = since < SQUISH_T * 0.5
+		elif b.get("down", false) and b.has("press_ms"):
+			b["down"] = false
+		if since < SQUISH_T + 0.05:
+			queue_redraw()
 		if b.get("hide", false):   # drawn by the screen itself (settings switches), still tappable / key-bound
 			continue
 		if b.has("badge") or b.has("icon"):   # answer card (quiz, inspector) or picture tile (Fork ingredients)
