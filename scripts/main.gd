@@ -722,7 +722,8 @@ func new_game(write_save: bool = true) -> void:
 	cold_open()
 	if write_save:
 		save_game()
-	maybe_touch_tutorial()
+	# Nov 17 review: the three control cards stacked on the cold open's line and its fight on frame one. The line
+	# itself says how to walk and bonk; the cards stay under the title's How to play.
 
 ## Nov 13: a new game opens on a fight, not a rules dump. A porch pirate jogs at {partner}'s package; one line
 ## says so, then the player has control. The rules come after he's down (or gone). On the web this plays on
@@ -737,17 +738,18 @@ func cold_open() -> void:
 	e.pname = PIRATE_NAMES[0]
 	e.set_meta("cold_open", true)
 	toast_t = 0.0   # the morning's "*bzzt* texts" toast can wait; the phone badge still shows it
-	_say(["7 AM, day one. {partner}'s package is on the porch. A guy in a hoodie and sunglasses is jogging straight at it. Not today. %s" % ("Tap A to bonk him." if Cast.touch else "WASD or arrows to walk, Space to bonk him.")])
+	_say(["A porch pirate is going for {partner}'s package. %s" % ("Drag left to walk, tap A to bonk." if Cast.touch else "WASD or arrows to walk, Space to bonk.")])
 
 ## The rules, after the cold open's pirate is down (won) or gone with the package.
 func cold_open_rules(won: bool) -> Array:
 	story["cold_open"] = false
 	var lines: Array = []
+	# Nov 17 review: one short line per beat (was a four-line rules dump)
 	if not won and not porch_pkg:
-		lines.append("He's gone. With the package. Great start. {partner} is going to hear about this.")
-	lines.append("So here's the deal. Keep {partner} happy. Pay the rent. Guard the porch. Three rules. I'm already 0 for 1.")
-	lines.append("{partner}'s inside on the couch, top-left house, and she's got that look." + (" Bring her that package." if won or porch_pkg else " She wants something. Probably a honey bun."))
-	lines.append("Every Monday, rent, bills and the family basics: $%d. This first Monday it's prorated to $%d. {fork} (bottom-right) needs a cook, even this weekend. They always need a cook." % [weekly_base(), int(ceil(weekly_base() / 2.0))])
+		lines.append("He's gone. With the package. Great start.")
+	lines.append("Three rules: keep {partner} happy, pay the rent, guard the porch.")
+	lines.append("{partner}'s on the couch, top-left house." + (" Bring her that package." if won or porch_pkg else " Bring her something."))
+	lines.append("Rent's due Monday: $%d. {fork} (bottom-right) needs a cook." % int(ceil(weekly_base() / 2.0)))
 	return lines
 
 ## Nov 14 (portal review: "a second, bigger fight inside the first five minutes"): right after the cold open's
@@ -761,16 +763,15 @@ func first_bet_pitch(ko_line: String) -> void:
 		return
 	story["first_bet"] = true
 	var lines: Array = []
+	# Nov 17 review: the pitch was a six-line wall; now the KO line and the bet in one line
 	if ko_line != "":
 		lines.append(ko_line)
-	lines.append("{coworker} from the {fork_nick} is across the street with her phone up. Of course she filmed that.")
-	lines.append("{coworker}: That guy sells to Marketplace Mike. Mike's out back of the {fork_nick} right now, loading a van full of everybody's porches.")
-	lines.append("{coworker}: Bet you can't drop him. I'll front the stake. You win, I pay you $%d. You lose, I post it." % FIRST_BET_PAY)
+	lines.append("{coworker} filmed that. \"Bet you can't drop Marketplace Mike, out back. Win, I pay $%d. Lose, I post it.\"" % FIRST_BET_PAY)
 	_menu("{COWORKER}'S BETS", lines, [["go", "Take the bet", KEY_1], ["no", "Not today", KEY_2]], func (ch: String) -> void:
 		if ch == "go":
 			start_first_bet()
 		else:
-			_say(["{coworker}: Coward. I'm out front of the {fork_nick} every day with a new one. Bring your own money."] + cold_open_rules(porch_pkg)))
+			_say(["{coworker}: Coward. New bet every day, out front of the {fork_nick}."] + cold_open_rules(porch_pkg)))
 
 func start_first_bet() -> void:
 	# Its art and music are in street.pck (tools/make_extra_pack.gd STREET), which New Game already waited on, so
@@ -813,8 +814,8 @@ func first_bet_won(b: Node) -> void:
 	porch_pkg = true   # Mike's van had it
 	_first_bet_out()
 	var lines: Array = [str(BossScript.BOSSES["mike"]["defeat"]),
-		"{coworker} pays up: $%d. \"I fronted the stake, so I'm out sixty AND I have to edit this. Worth it.\"" % FIRST_BET_PAY,
-		"She runs a bet like this every day, out front of the {fork_nick}. Next time it's my money on the line. Record vs {coworker}: %d-%d." % [int(bet["won"]), int(bet["lost"])]]
+		"{coworker} pays up: $%d. \"Worth it for the footage.\"" % FIRST_BET_PAY,
+		"She runs a bet every day out front of the {fork_nick}. Record: %d-%d." % [int(bet["won"]), int(bet["lost"])]]
 	_say(lines + cold_open_rules(true))
 	save_game()
 
@@ -822,8 +823,8 @@ func first_bet_lost() -> void:
 	bet["lost"] = int(bet["lost"]) + 1
 	_first_bet_out()
 	energy = 40.0
-	_say(["I wake up next to the dumpster. Mike's van is gone. {coworker} is already adding music.",
-		"{coworker}: First one's on me. She runs a bet every day out front of the {fork_nick}. Next time it's my money. Record vs {coworker}: %d-%d." % [int(bet["won"]), int(bet["lost"])]]
+	_say(["I wake up next to the dumpster. {coworker} is already adding music.",
+		"{coworker}: First one's on me. New bet every day, out front of the {fork_nick}. Record: %d-%d." % [int(bet["won"]), int(bet["lost"])]]
 		+ cold_open_rules(porch_pkg))
 	save_game()
 
@@ -3222,7 +3223,8 @@ func jen_text_daily() -> bool:
 	text("sister", "sister", JEN_DAILY[day_count % JEN_DAILY.size()])
 	if int(wordle.get("streak", 0)) > 1:
 		text("sister", "sister", "Streak's at %d. Don't choke." % int(wordle["streak"]))
-	unread["sister"] = true
+	# Nov 17 review: her daily nudge lit the badge every single day, so it never meant anything. The buzz and
+	# the toast carry it; the badge is for texts that matter.
 	ping_t = 2.0
 	_toast("*bzzt* {sister} texts me: today's {wordle} is up. (P = phone)")
 	return true
