@@ -175,6 +175,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   Plain draw_rect/draw_string art in the town (signs, boards) drifts in 3D the same way: give it a
   `draw_x(ci, o, k)` function and stand it up with `view3d._sign()` (own 4x viewport on a card), or use a Label3D.
   Bus stop signs are dressing items. Renders: `arena_shot -- at:X,Y[,MIN] --3d` / `--2d`.
+  Low-end phones (Nov 17): `perf_guard.gd` steps 3D down in order: Lite, then 640x360, then the flat 2D view with a
+  toast (Settings > 3D view switches back). Profile with `tools/perf_run.tscn -- view=3d|2d [low]`. Store screens in
+  `docs/itch/screens/` are 3D shots since Nov 17 (`docs/renders/store_screens_3d_before_after.jpg`).
 
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
@@ -191,6 +194,11 @@ History of everything built: `TRACKER.md` (newest first).
 
 ## Commands (cloud sandbox)
 - Godot: 4.5-stable Linux zip from GitHub releases → `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`
+- **Stale imports (Nov 17):** `--import` trusts the local filesystem cache, and a changed `.import` param (quality,
+  mode) never re-triggers an import whose source md5 still matches. Sandbox renders then show old art (a porch pirate
+  as four tiny 1x guys in 3D). Fix: `rm .godot/editor/filesystem_cache10`, delete `.godot/imported/<file>-*` for any
+  file whose params you changed, `--import`, and commit the new `.godot/imported` files (CI ships the committed ones
+  when md5s match).
 - **Tests (before every push):** `XDG_DATA_HOME=/tmp/xdg_x godot --headless --path . --script tools/test_daily.gd`
   must print `ALL PASS (0 failed)` with no `SCRIPT ERROR`; then `git checkout -- .godot/exported`.
 - Soak (30 days, every system through real code, ~10+ min):

@@ -17,7 +17,7 @@ dest_files=["res://.godot/imported/husk_c.jpg-e531af02fdb0915d62059e2b91010bd6.c
 
 compress/mode=1
 compress/high_quality=false
-compress/lossy_quality=0.8
+compress/lossy_quality=0.62
 compress/uastc_level=0
 compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
