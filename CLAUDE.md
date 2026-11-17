@@ -68,6 +68,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   that workflow and play-test the build. Storefront/prop sizes are baked in `data/art_rects.json`
   (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
   Branch builds publish to the `web-preview` release (sessions can't download Actions artifacts).
+  **Lossy sprites (Nov 17):** every `ch_*`, `duff_*`, `kf_*`, `sf_*`, `sd_*` sheet imports lossy 0.8 (`compress/mode=1`):
+  street.pck 4.8 -> 2.0 MB, world.pck 12.8 -> 6.0 MB, so Continue downloads 8 MB instead of 17.6. No visible change
+  (`docs/renders/lossy_sprites_before_after.png`). A NEW sheet imports lossless by default: set mode 1 / 0.8 in its .import.
 
 - **Cold open (Nov 13):** new game = porch-pirate fight first, rules after (`main.gd cold_open()`, flag
   `story.cold_open`). Web packs are now street -> world -> extra: `street.pck` (STREET globs in

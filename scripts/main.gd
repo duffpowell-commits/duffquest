@@ -695,8 +695,11 @@ func _after_world(cb: Callable, need: int = 1, back: Callable = show_title) -> v
 			cb.call()
 			return
 		var pr: float = ExtraPack.progress
+		# Continue waits on two packs back to back: name the step so the % restarting doesn't read as going backwards
+		var step: = "Unpacking the street" if ExtraPack.fetching == 0 else "Unpacking the neighbors"
+		step += (" (1/2): " if ExtraPack.fetching == 0 else " (2/2): ") if need == 1 else ": "
 		c.lines = [ExtraPack.retrying if ExtraPack.retrying != "" else
-			"Unpacking the neighbors. " + ("%d%%" % int(pr * 100.0) if pr >= 0.0 else "%.1f MB" % ExtraPack.got_mb)]
+			step + ("%d%%" % int(pr * 100.0) if pr >= 0.0 else "%.1f MB" % ExtraPack.got_mb)]
 		c.queue_redraw()
 		get_tree().create_timer(0.25).timeout.connect(tk.bind(tk))
 	get_tree().create_timer(0.25).timeout.connect(tick.bind(tick))
