@@ -16,6 +16,7 @@ var m: Node
 var scenes: Array = SCENES.duplicate()
 var off: Array = []
 var low: = false
+var view: = ""   # view=2d|3d forces Settings > 3D view for the run
 var si: = -1
 var f: = 0
 var samples: Array = []
@@ -47,6 +48,8 @@ func _ready() -> void:
 			off = Array(a.substr(4).split(","))
 		elif a == "low":
 			low = true
+		elif a.begins_with("view="):
+			view = a.substr(5)
 	game = load("res://game.tscn").instantiate()
 	add_child(game)
 
@@ -77,6 +80,8 @@ func _apply_off() -> void:
 		m.combat.fx.visible = false
 	if "overlay" in off:
 		_find(game, "res://scripts/hd_portrait_overlay.gd").visible = false
+	if view != "" and m.AudioScript.inst != null:
+		m.AudioScript.inst.set_view3d(view == "3d")
 	var pg: = _find(game, "res://scripts/perf_guard.gd")
 	if pg and low:
 		pg.force_low(true)

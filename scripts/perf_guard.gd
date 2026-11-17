@@ -78,7 +78,7 @@ func _process(d: float) -> void:
 		if _pub <= 0.0:
 			_pub = 0.5
 			_publish()
-	if not _can_auto or not auto or main == null or (low and _game().res_scale <= 1):
+	if not _can_auto or not auto or main == null or (low and _game().res_scale <= 1 and not _in_3d()):
 		return
 	# Only judge real play: menus, loading screens and cutscenes hitch on texture loads.
 	var b: bool = main.busy()
@@ -103,11 +103,18 @@ func _process(d: float) -> void:
 			if not low:
 				low = true
 				print("perf_guard: avg %.0f fps, lite graphics on" % fps)
-			else:   # still slow with lite on: last resort, render the world at 640x360 again
+			elif _game().res_scale > 1:   # still slow with lite on: render the world at 640x360 again
 				res = 1
 				print("perf_guard: avg %.0f fps, world back to 640x360" % fps)
+			elif _in_3d():   # Nov 17: last resort on a weak phone, the flat 2D view (Settings > 3D view brings it back)
+				main.AudioScript.inst.set_view3d(false)
+				main._toast("This phone's sweating. Switched to the flat view (Settings > 3D view to switch back).")
+				print("perf_guard: avg %.0f fps, 3D view off" % fps)
 			_apply()
 			_save()
+
+func _in_3d() -> bool:
+	return main != null and bool(main.get("view3d_on")) and main.AudioScript.inst != null and bool(main.AudioScript.inst.view3d)
 
 func state() -> String:
 	if main == null:
