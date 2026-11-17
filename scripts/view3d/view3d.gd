@@ -588,11 +588,11 @@ func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float
 	# the roof is the art's own painted roof strip (the rows under the eave line), tiled back over the box's depth
 	# a patch of plain roof: the least busy window just under the eave line (skips the shop sign, the fascia,
 	# vents and chimneys), tiled across the whole roof
-	var rh: = clampi(int(4.0 * k), 4, maxi(4, (h - top) / 4))
+	var rh: = clampi(int(2.0 * k), 4, maxi(4, (h - top) / 4))   # thin: some roofs are a strip of a few px over the sign band
 	var ww: = mini(int(12.0 * k), x1 - x0)
 	var best: = Vector2i(x0, top + 1)
 	var best_v: = INF
-	for wy in range(top + 1, mini(top + 1 + rh, h - rh), 2):
+	for wy in range(maxi(0, top - rh), mini(top + 1 + rh, h - rh), 2):   # from above the eave line: a thin roof strip sits over it
 		for wx in range(x0, x1 - ww + 1, maxi(2, ww / 4)):
 			var v: = _busy(img, Rect2i(wx, wy, ww, rh))
 			if v < best_v:

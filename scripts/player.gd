@@ -143,7 +143,10 @@ func sheet_name() -> String:
 	# casual tee. Same body, hitbox and frames; only the sheet changes.
 	if armor_id == "apron" or not ARMORS.has(armor_id) or (at_home and armor_id != "dad"):
 		return "duff_home_black" if shoes == "black" else "duff_home"
-	return "duff_%s_%s" % [armor_id if ARMORS.has(armor_id) else "apron", shoes if shoes == "black" else "red"]
+	var n: = "duff_%s_%s" % [armor_id if ARMORS.has(armor_id) else "apron", shoes if shoes == "black" else "red"]
+	if Art.tex(n) == null:   # web: the outfits ride in world.pck, which can still be streaming on day one
+		return "duff_home_black" if shoes == "black" else "duff_home"
+	return n
 
 ## Each 2x outfit has its own shades overlay, fitted to that sheet's faces.
 func shades_sheet() -> String:

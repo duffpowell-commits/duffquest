@@ -20,7 +20,8 @@ const WORLD: = ["assets/art/ch_*", "assets/art/sf_*", "assets/art/sd_*", "assets
 ## Subset of WORLD the cold open needs (main.gd cold_open): the street outside home, Duff's walk/roll layers,
 ## the street's day-1/2 walkers and porch pirates, the home interior and Duff's dialogue portrait. Keep it small: it's the wait between
 ## tapping New Game and the first punch. Duff's finisher stills (duff_*.jpg) wait for world.pck.
-const STREET: = ["assets/art/sf_*", "assets/art/sd_*", "assets/art/ground_painted*", "assets/art/home_*", "assets/art/duff_*.png",
+const STREET: = ["assets/art/sf_*", "assets/art/sd_*", "assets/art/ground_painted*", "assets/art/home_*", "assets/art/duff_home*.png",
+	"assets/art/duff_roll_*.png", "assets/art/duff_shades.png", "assets/art/duff_shades_home.png",   # other outfits wait for world.pck
 	"assets/art/ch_pirate*", "assets/art/ch_scammer*", "assets/art/ch_hustler*", "assets/art/ch_karen*", "assets/art/ch_madison.png",
 	"assets/art/portraits_hd/duff.png",   # the cold open's one line is Duff's: no empty portrait frame
 	# {coworker}'s first bet follows the porch fight in minute two: the alley, Marketplace Mike, her portrait and the
