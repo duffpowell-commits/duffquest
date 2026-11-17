@@ -4,8 +4,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 (the handoff) and `QUEUE.md` (the work queue). Newest first.
 
 ## Built
-- Nov 17 polish pass 3 + review fixes: Brittany's $ plumb over her head (3D billboard vs perspective), buildings in front of Duff hide outright with their signs, box walls never black, cold open is one line (no control cards on frame one; cards stay in How to play), first bet pitch is one card line, rules four short beats, G (gear) hidden in fights and labelled, level/heat panel hidden until the first special, toasts moved to the top, Jen's daily text no longer lights the phone badge. Render: docs/renders/polish3_review_fixes.png.
-
+- **2026-11-17** **Polish pass 3 + review fixes.** Brittany's $ plumb over her head (3D billboard vs perspective), buildings in front of Duff hide outright with their signs, box walls never black, cold open is one line (no control cards on frame one; cards stay in How to play), first bet pitch is one card line, rules four short beats, G (gear) hidden in fights and labelled, level/heat panel hidden until the first special, toasts moved to the top, Jen's daily text no longer lights the phone badge. Render: docs/renders/polish3_review_fixes.png.
 - **2026-11-16** **Home-screen app picks up new builds.** Brittany still saw "Mazikeen's bet" after PR #108: the source and every
   shipped build (dev release web + CrazyGames zip) were already clean, but the GitHub Pages copy is a PWA whose Godot
   service worker serves the cached `index.pck` until every window of the app closes. CI now injects
