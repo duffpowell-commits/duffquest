@@ -121,6 +121,9 @@ func in_fight() -> bool:
 	return false
 
 func panel_shown() -> bool:
+	# Nov 17 review: before the first special (Lv 2) the bar was an unlabelled "Lv 1" strip that read as enemy HP
+	if c.current().is_empty() and c.points <= 0 and not c.demon_ready() and c.demon_t <= 0.0:
+		return false
 	return fight_t > 0.0 or c.demon_t > 0.0 or c.crash_t > 0.0 or c.demon_ready() or c.points > 0 or c.heat < c.heat_max() - 0.5
 
 func _draw_panel(f: Font) -> void:

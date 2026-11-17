@@ -49,6 +49,7 @@ var caption: Label3D
 const HD: = {"duff_home": {"path": "res://assets/art3d/duff_home_hd3d.png", "cell": [512, 512], "origin": [256, 480], "s": 16.0}}
 const NO_3D: = ["map_objects"]               # full-map overlays drawn by main (the old bus-stop sign layer)
 var _hd_tex: = {}
+var britt_head: = Vector3.INF                # top of {coworker}'s card this frame (her "$" sits on it)
 var static_art: = {}                         # art names _build_town already stands up (main's own draws of them are skipped)
 var cam_base: = Vector3.ZERO                 # follow-camera position before the shake offset
 var _ground_tex: Texture2D
@@ -401,6 +402,7 @@ func _hd(name: String) -> Texture2D:
 func _sync_actors() -> void:
 	var used: = 0
 	var toward: = CAM_OFF.normalized() * 0.012
+	britt_head = Vector3.INF
 	for id in Art.rec.keys():
 		var ci: = instance_from_id(id) as CanvasItem
 		if ci == null or not is_instance_valid(ci):
@@ -451,6 +453,8 @@ func _sync_actors() -> void:
 				s.offset = Vector2(-float(org[0]), -(float(cell[1]) - float(org[1])))
 				s.pixel_size = U / dens * absf(sc.y)
 				s.position = to3(full * pos) + toward * k
+				if name == "ch_brittany":
+					britt_head = s.position + Vector3(0, float(org[1] - 12) * s.pixel_size, 0)
 			else:      # plain image, scale packed into the row slot
 				var isc: = float(d[3]) / 1000.0
 				var org2: Array = inf.get("origin", [0, 0])
@@ -573,7 +577,12 @@ func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float
 	wm.size = Vector3(bw, bh, bd)
 	walls.mesh = wm
 	walls.position.y = bh * 0.5
-	var wmat: = _flat(wall.darkened(0.15))
+	var wc: = wall.darkened(0.15)
+	if wc.get_luminance() < 0.22:   # sampled off a dark edge: a black slab reads as a hole in the street
+		wc = wc.lerp(Color(0.55, 0.5, 0.46), 0.5)
+	var wmat: = _flat(wc)
+	wmat.emission_enabled = true   # side walls face away from a low sun at dusk; keep them lit like the painted card
+	wmat.emission = wc * 0.45
 	walls.material_override = wmat
 	root.add_child(walls)
 	# the roof is the art's own painted roof strip (the rows under the eave line), tiled back over the box's depth
@@ -620,16 +629,23 @@ func _fade_buildings(delta: float) -> void:
 		if box.is_empty():
 			continue
 		var behind: = f.x > float(box["x0"]) - 4.0 and f.x < float(box["x1"]) + 4.0 and f.y > float(box["y0"]) and f.y < float(box["y1"])
-		var a: = move_toward(float(e[3]), 0.45 if behind else 1.0, delta * 4.0)
+		var a: = move_toward(float(e[3]), 0.0 if behind else 1.0, delta * 6.0)   # hidden outright: a ghost over Duff read as a bug
 		if is_equal_approx(a, float(e[3])):
 			continue
 		e[3] = a
 		var s: Sprite3D = e[1]
 		s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD if a >= 0.999 else SpriteBase3D.ALPHA_CUT_DISABLED
 		s.modulate.a = a
+		s.visible = a > 0.01
 		for m in box["mats"]:
 			(m as StandardMaterial3D).transparency = BaseMaterial3D.TRANSPARENCY_DISABLED if a >= 0.999 else BaseMaterial3D.TRANSPARENCY_ALPHA
 			(m as StandardMaterial3D).albedo_color.a = a
+
+func _shown(b: Dictionary) -> bool:
+	for e in buildings:
+		if e[0] == b:
+			return float(e[3]) > 0.5
+	return true
 
 ## How busy a patch is (colour variance plus see-through pixels): signs and vents score high, plain roof low.
 func _busy(img: Image, r: Rect2i) -> float:
@@ -778,6 +794,8 @@ func _sync_labels() -> void:
 				if a > 0.0:
 					want.append([to3(main.LOST_SPOTS[k], 0.6), "+", Color(1.0, 0.95, 0.6, a), int(16 + a * 16)])
 		for b in main.buildings:
+			if not _shown(b):
+				continue
 			var r: Rect2 = b.get("vis", b["r"])
 			if b.get("art", "") in ["sf_home", "sf_neighbor"]:
 				want.append([_float(Vector2(r.get_center().x, r.position.y - 8)), main.Cast.T(b["n"]), Color.WHITE, 36, Color("#1a1024"), "house"])
@@ -794,10 +812,12 @@ func _sync_labels() -> void:
 				want.append([_facade(b, Vector2(r.get_center().x, r.position.y - 28 + sin(t * 5.0) * 2.0)), "!", Color("#e6a640"), 64])
 		# {coworker}'s "$" (a bet on offer today) over her head, like draw_brittany's 2D one
 		if int(main.bet["day"]) != int(main.day_count) and main.phase() != "Night":
-			want.append([to3(main.BRITT_POS + Vector2(0, 6), 3.1 + sin(t * 3.0) * 0.15), "$", Color("#60e060"), 40])
+			var head: = britt_head if britt_head != Vector3.INF else to3(main.BRITT_POS + Vector2(0, 6), 3.0)
+			want.append([head + Vector3(0, 0.15 + sin(t * 3.0) * 0.1, 0), "$", Color("#60e060"), 40, Color("#1a1024"), "over"])
 		var fork: Dictionary = main.buildings[3]
 		var fr: Rect2 = fork.get("vis", fork["r"])
-		want.append([_facade(fork, Vector2(fr.get_center().x, fr.position.y + 1)), "NOW HIRING (you)", main.UiStyle.CREAM, 30, Color("#1a1024"), "sign"])
+		if _shown(fork):   # its building hid to show Duff behind it: the roof sign goes with it
+			want.append([_facade(fork, Vector2(fr.get_center().x, fr.position.y + 1)), "NOW HIRING (you)", main.UiStyle.CREAM, 30, Color("#1a1024"), "sign"])
 	while marks.size() < want.size():
 		var l: = Label3D.new()
 		l.billboard = BaseMaterial3D.BILLBOARD_ENABLED
@@ -822,6 +842,8 @@ func _sync_labels() -> void:
 		l.outline_modulate = w[4] if w.size() > 4 else Color("#1a1024")
 		l.outline_modulate.a = (w[2] as Color).a
 		l.position = w[0]
+		if w.size() > 5 and w[5] == "over" and not cam.is_position_behind(l.position):
+			_plumb(l)
 		if w.size() > 5 and w[5] == "house":
 			_below_hud(l)
 		elif w.size() > 5 and w[5] == "sign" and not cam.is_position_behind(l.position):
@@ -831,6 +853,16 @@ func _sync_labels() -> void:
 			var near: = cam.global_position.distance_to(l.position) / CAM_OFF.length()
 			if near < 1.0:
 				l.font_size = maxi(8, int(float(w[3]) * near))
+
+## A marker over someone's head: the label is a billboard, the person a card that perspective leans, so a point
+## straight above the feet lands off to the side of the head. Slide it sideways until it is plumb over the feet.
+func _plumb(l: Label3D) -> void:
+	var feet: = Vector3(l.position.x, 0.0, l.position.z)
+	var want_x: = cam.unproject_position(feet).x
+	var at: = cam.unproject_position(l.position)
+	var per_m: = cam.unproject_position(l.position + Vector3.RIGHT).x - at.x
+	if absf(per_m) > 0.01:
+		l.position.x += (want_x - at.x) / per_m
 
 ## House names float over the roof; when the house sits at the top of the frame that's under the HUD strip.
 ## Slide the name down (never below the ground) until it clears the strip, like main.draw_world_labels in 2D.
