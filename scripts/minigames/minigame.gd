@@ -350,6 +350,34 @@ func tag(p: Vector2, s: String, size: int = 7, col: Color = UiStyle.CREAM, align
 func mtxt(p: Vector2, s: String, width: float, size: int = 8, col: Color = Color.WHITE, max_lines: int = -1) -> void:
 	draw_multiline_string(font, p, Cast.T(s), HORIZONTAL_ALIGNMENT_LEFT, width, size, max_lines, col)
 
+## A ticket's spec as picture tiles instead of tiny text (IGN v4 #5): icons left to right in build order, a small
+## arrow under them, the 86'd item slashed in red. icons[i] = art name or "" (then a colour dot from cols[i]).
+func spec_icons(p: Vector2, icons: Array, cols: Array, crossed: int = -1, sz: float = 13.0, per_row: int = 8) -> float:
+	for i in icons.size():
+		var c: = p + Vector2((i % per_row) * (sz + 1.0) + sz * 0.5, floorf(i / float(per_row)) * (sz + 3.0) + sz * 0.5)
+		draw_circle(c, sz * 0.5, Color(0, 0, 0, 0.08))
+		var fade: = Color(1, 1, 1, 0.5) if i == crossed else Color.WHITE
+		if str(icons[i]) == "" or not pic(str(icons[i]), c, sz, fade):
+			prop_circle(c, sz * 0.38, cols[i] * fade)
+		if i == crossed:   # 86'd: faded, with a red slash on a dark keyline so it shows on red food too
+			draw_line(c + Vector2(-sz, -sz) * 0.45, c + Vector2(sz, sz) * 0.45, Color("#2b2218"), 3.5)
+			draw_line(c + Vector2(-sz, -sz) * 0.45, c + Vector2(sz, sz) * 0.45, Color("#e0402a"), 2.0)
+	var rows: = int(ceil(icons.size() / float(per_row)))
+	var ay: = p.y + rows * (sz + 3.0)
+	var aw: = minf(icons.size(), per_row) * (sz + 1.0) - 1.0
+	draw_line(Vector2(p.x + 2, ay), Vector2(p.x + aw - 4, ay), Color("#6a625a"), 1.0)
+	draw_colored_polygon(PackedVector2Array([Vector2(p.x + aw - 4, ay - 2.5), Vector2(p.x + aw, ay), Vector2(p.x + aw - 4, ay + 2.5)]), Color("#6a625a"))
+	return ay + 4.0
+
+## spec_icons at the bottom of a ticket whose text ends at text_y: big tiles in two rows when they fit, else one row.
+func ticket_spec(text_y: float, bottom: float, icons: Array, cols: Array, crossed: int) -> void:
+	var big: = icons.size() > 6
+	var need: = (2.0 if big else 1.0) * 20.0 + 4.0
+	if bottom - text_y >= need:
+		spec_icons(Vector2(8, bottom - need), icons, cols, crossed, 17.0, 6)
+	else:
+		spec_icons(Vector2(8, maxf(text_y, bottom - 20.0)), icons, cols, crossed, 13.0, 8)
+
 func bar(r: Rect2, frac: float, col: Color) -> void:
 	draw_rect(r, Color(0, 0, 0, 0.6))
 	draw_rect(Rect2(r.position, Vector2(r.size.x * clampf(frac, 0, 1), r.size.y)), col)

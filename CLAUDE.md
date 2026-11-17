@@ -182,7 +182,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `tools/duff_hd3d/shades_hd.py` (eye centres measured per frame: re-measure if the HD sheet is rebuilt). Render: `--shades`. Renders: `arena_shot -- at:X,Y[,MIN] --3d` / `--2d`.
   Low-end phones (Nov 17): `perf_guard.gd` steps 3D down in order: Lite, then 640x360, then the flat 2D view with a
   toast (Settings > 3D view switches back). Profile with `tools/perf_run.tscn -- view=3d|2d [low]`. Store screens in
-  `docs/itch/screens/` are 3D shots since Nov 17 (`docs/renders/store_screens_3d_before_after.jpg`).
+  `docs/itch/screens/` are 3D shots on the Duffphone UI (re-shot Nov 17 late, `docs/renders/store_screens_phone_ui_before_after.jpg`).
+  Re-shoot: `XDG_DATA_HOME=<fresh dir with settings.json {"clean":true,"gore":false}> xvfb-run -a godot --path . --rendering-driver opengl3
+  --resolution 1920x1080 --fixed-fps 30 res://tools/arena_shot.tscn -- <id>`, one fresh XDG dir per run (a leftover save makes `cold`
+  stop at "Start over?"). Ids: 01 `at:540,150,720 --3d`, 06 `ask --3d`, 07 `gala_say:fences --3d`, 08 `at:300,215,1260 --3d`,
+  10/11/12 `cold` (cold_1/3/4), 13 `notes`, 14 `gig`, 15 `evicted`.
 
 - **HUD = Duff's phone (Nov 17):** `hud.gd` draws the strip as his status bar (clock, heart + signal bars = {partner},
   battery = Energy, cash pill, chevron), the drawer as a notification shade (`ROW_APPS` tile per `drawer_lines` tag),
@@ -200,6 +204,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   with `Art.*` so 3D mirrors it. Tilt-shift: `shaders/tilt_shift.gdshader` on View3D (`tilt_mat`, null in Lite).
   Squash: `juice.squash(node, big)`. Swing smear / roll dust: `combat_fx.swing()` / `dust()`. Wipe: `hud.wipe_t`.
 
+- **Kitchen tickets (Nov 17):** spec lines are picture tiles (`minigame.ticket_spec()`), the fryer is a colour gauge (`fryer._draw_gauge`). Don't add small explanatory text to play screens; put it on the how-to card.
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
   test_daily checks it). Multi-phase games override `coach_key()` and call `coach_start()` / `coach_done()` per phase
@@ -207,7 +212,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 ## Next (in order)
 0. **Visual plan built Nov 17** (living town, UI motion, diorama 3D, fight impact; TRACKER entry): needs Duff's
-   phone test, mainly the tilt-shift cost on his Android (perf_guard Lite turns it off). Then re-shoot store screens.
+   phone test, mainly the tilt-shift cost on his Android (perf_guard Lite turns it off). Store screens re-shot Nov 17 late.
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
 3. **Grease boss art:** done Nov 12 (own sprite `ch_grease`, alley arena already its own). Left: nothing unless Duff asks.
