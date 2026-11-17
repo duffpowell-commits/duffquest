@@ -182,14 +182,32 @@ func _draw_game() -> void:
 
 	txt(Vector2(212, 30), "OIL", 8, Color(1, 1, 1, 0.7))
 	txt(Vector2(212, 48), "%d°F" % int(oil), 16, Color("#c0d890") if oil >= 335.0 and oil <= 385.0 else Color("#e06a4a"))
-	txt(Vector2(212, 62), "Set: %d°F" % int(setpoint), 8, Color.WHITE)
-	txt(Vector2(212, 78), "Sweet spot", 8, Color(1, 1, 1, 0.6))
-	txt(Vector2(212, 88), "350-375°F", 8, Color(1, 1, 1, 0.6))
-	mtxt(Vector2(212, 104), "Cold baskets drop the oil. Too hot = smoke + splatter.", 104, 8, Color(1, 1, 1, 0.5), 3)
+	_draw_gauge(Rect2(212, 60, 100, 12))
+
+## IGN v4 #5 (phones mid-rush): the oil reads as a colour gauge, not text. Blue = too cold, green = the 350-375°F
+## sweet spot, red = smoking. White pointer = the oil now, gold notch = where HEAT -/+ has it set.
+const GAUGE_LO: = 300.0
+const GAUGE_HI: = 420.0
+func _gauge_x(r: Rect2, f: float) -> float:
+	return r.position.x + r.size.x * clampf((f - GAUGE_LO) / (GAUGE_HI - GAUGE_LO), 0.0, 1.0)
+
+func _draw_gauge(r: Rect2) -> void:
+	draw_rect(r.grow(1.0), Color(0, 0, 0, 0.7))
+	var zones: = [[GAUGE_LO, 335.0, Color("#3a7ad0")], [335.0, 350.0, Color("#6aa0c0")], [350.0, 375.0, Color("#5ac04a")],
+		[375.0, 385.0, Color("#d0a030")], [385.0, GAUGE_HI, Color("#d0402a")]]
+	for z in zones:
+		var x0: = _gauge_x(r, z[0])
+		draw_rect(Rect2(x0, r.position.y, _gauge_x(r, z[1]) - x0, r.size.y), z[2])
+	var sx: = _gauge_x(r, setpoint)   # setpoint: gold notch above the bar
+	draw_colored_polygon(PackedVector2Array([Vector2(sx - 3, r.position.y - 5), Vector2(sx + 3, r.position.y - 5), Vector2(sx, r.position.y - 1)]), Color("#f2c230"))
+	var ox: = _gauge_x(r, oil)        # the oil now: white pointer under the bar, a line through it
+	draw_line(Vector2(ox, r.position.y - 1), Vector2(ox, r.end.y + 1), Color.WHITE, 2.0)
+	draw_colored_polygon(PackedVector2Array([Vector2(ox - 4, r.end.y + 6), Vector2(ox + 4, r.end.y + 6), Vector2(ox, r.end.y + 1)]), Color.WHITE)
+	draw_rect(r, Color(1, 1, 1, 0.5), false, 1.0)
 
 ## First-time how-to card (minigame.gd coach).
 func howto() -> Array:
 	return [
 		{"i": "kf_basket_fries", "v": "tap", "s": "Tap a basket to DROP it in the oil."},
 		{"i": "kf_fried", "v": "hold", "s": "Watch its bar. Tap again to PULL it right when it's golden."},
-		{"i": "kf_fryer", "v": "tap", "s": "Keep the oil 350-375°F with HEAT - / HEAT +. Dropping cold baskets cools it."}]
+		{"i": "kf_fryer", "v": "tap", "s": "Keep the pointer in the GREEN (350-375°F) with HEAT -/+. Cold baskets cool it."}]
