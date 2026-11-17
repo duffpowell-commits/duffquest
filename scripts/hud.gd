@@ -36,6 +36,7 @@ static func layout() -> Dictionary:
 var drawer_open: = false
 var peek_text: = ""
 var peek_col: = Color.WHITE
+var peek_kind: = ""              # which app the banner comes from (drawer_lines tag)
 var peek_t: = 0.0
 const PEEK_TIME: = 3.5
 var _seen: = {}                  # last values the peek compares against ("" = not primed yet)
@@ -45,7 +46,8 @@ func toggle_drawer() -> void:
 	drawer_open = not drawer_open
 	peek_t = 0.0
 
-func _peek(s: String, col: Color) -> void:
+func _peek(s: String, col: Color, kind: String = "") -> void:
+	peek_kind = kind
 	peek_text = s
 	peek_col = col
 	peek_t = PEEK_TIME
@@ -80,7 +82,9 @@ func _watch() -> void:
 		return
 	var msg: = ""
 	var col: = GOLD
+	var kind: = "quest"
 	if now["urgent"] != _seen["urgent"] and urgent() != "":
+		kind = "quest" if urgent() == "errand" else "rent"
 		msg = (Cast.T(m.quest_text()) if urgent() == "errand" else rent_text() + "  -  short $%d" % (int(m.rent_due()) - int(m.money)))
 		col = Color("#ff8a6a")
 	elif now["quest"] != _seen["quest"]:
@@ -88,15 +92,18 @@ func _watch() -> void:
 	elif now["bag"] != _seen["bag"] and str(now["bag"]) != "":
 		msg = "Bag: " + str(now["bag"])
 		col = PAPER
+		kind = "bag"
 	elif now["rent"] != _seen["rent"]:
 		msg = rent_text()
 		col = PAPER
+		kind = "rent"
 	elif now["fund"] != _seen["fund"] and int(now["fund"]) > 0:
 		msg = fund_text()
 		col = Color("#c8b0e8")
+		kind = "fund"
 	_seen = now
 	if msg != "" and not drawer_open:
-		_peek(msg, col)
+		_peek(msg, col, kind)
 
 func _process(d: float) -> void:
 	_pulse += d
@@ -211,15 +218,15 @@ func _draw() -> void:
 		var sr: Rect2 = L["saved"]
 		_t(f, sr.position + Vector2(0, 8), "saved", 6, Color(1, 1, 1, 0.6))
 
-	if m.toast_t > 0.0:
+	if m.toast_t > 0.0:   # a notification banner on his lock screen
 		var tr: Rect2 = L["toast"]
-		var tw: = tr.size.x - 8.0
+		var tw: = tr.size.x - 18.0
 		var toast: String = Cast.T(m.toast)
 		var n: = clampi(int(ceil(f.get_string_size(toast, HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x / (tw - 4.0))), 1, 3)
-		var r2: = Rect2(tr.position, Vector2(tr.size.x, 6 + n * 9))
-		_panel(r2, 0.92)
-		draw_rect(Rect2(r2.position + Vector2(PX, PX), Vector2(r2.size.x - 2 * PX, PX)), Color("#e88aa8"))
-		_mt(f, r2.position + Vector2(4, 9), toast, tw, 7, n, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER)
+		var r2: = Rect2(tr.position, Vector2(tr.size.x, 7 + n * 9))
+		_glass(r2, 4.0, 0.94)
+		_app_tile(Vector2(r2.position.x + 3.5, r2.position.y + (r2.size.y - 9.0) * 0.5), 9.0, Color("#e88aa8"), "!")
+		_mt(f, r2.position + Vector2(15, 10), toast, tw, 7, n, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER)
 
 	if m.hint != "" and m.dialog.is_empty():
 		# Dark pill behind the prompt so it reads on any floor (the teal rug ate the old pale-green text).
@@ -345,12 +352,11 @@ func status_icons() -> Array:
 		out.append(["DRN", Color("#7fd0ff"), 1.0])
 	return out
 
-func _draw_face(p: Vector2, face: String) -> void:
-
+func _draw_face(p: Vector2, face: String, k: float = 1.0) -> void:
 	if Art.tex("face_" + face) != null:
-		Art.image(self, "face_" + face, p)
+		Art.image(self, "face_" + face, p, Color.WHITE, k)
 	else:
-		Art.image(self, "face_meh", p)
+		Art.image(self, "face_meh", p, Color.WHITE, k)
 
 func _draw_boss(f: Font) -> void:
 	var b = m.current_boss()
@@ -371,30 +377,106 @@ func _draw_boss(f: Font) -> void:
 		_panel(tm, 0.8)
 		_t(f, tm.position + Vector2(0, 9), "TOWER: %d:%02d" % [int(tl) / 60, int(tl) % 60], 8, Color("#e06a4a") if tl < 30.0 else GOLD, tm.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 
-## The one always-on panel: [heart bar] [bolt bar] [$] [day time] [v]. Tap/Tab opens the drawer.
+## Duff's phone theme (Nov 17, Duff's pick): the HUD is his lock screen. The strip is the status bar:
+## [time  day] .... [heart + signal bars = {partner}] [battery = Energy] [cash pill] [v]. Tap/Tab opens the
+## drawer (the notification shade). Same rects as before, so touch hit areas don't move.
+const GLASS: = Color("#17141f")
+const BEZEL: = Color("#07060a")
+const DIM: = Color("#b9b2c8")
+const CASH: = Color("#1fae5b")
+const NOTIF_RED: = Color("#ff3b30")
+
+## Phone glass: soft drop shadow, black bezel, dark glass, a faint sheen on the top half.
+func _glass(r: Rect2, rad: float, a: float = 0.9) -> void:
+	UiStyle.box(self, Rect2(r.position + Vector2(0.9, 1.1), r.size).grow(0.6), Color(0, 0, 0, 0.35 * a), rad + 0.6)
+	UiStyle.box(self, r.grow(0.7), Color(BEZEL, a), rad + 0.7)
+	UiStyle.box(self, r, Color(GLASS, a), rad)
+	UiStyle.box(self, Rect2(r.position, Vector2(r.size.x, r.size.y * 0.45)).grow(-0.4), Color(1, 1, 1, 0.055 * a), maxf(rad - 0.4, 0.0))
+
+## Rounded app icon: colour tile + an ic_* sprite or a one-letter glyph.
+func _app_tile(p: Vector2, s: float, col: Color, glyph: String, a: float = 1.0) -> void:
+	var r: = Rect2(p, Vector2(s, s))
+	UiStyle.box(self, r, Color(col.darkened(0.25), a), s * 0.28)
+	UiStyle.box(self, r.grow(-0.5), Color(col, a), s * 0.25)
+	UiStyle.box(self, Rect2(r.position + Vector2(0.5, 0.5), Vector2(s - 1.0, s * 0.42)), Color(1, 1, 1, 0.18 * a), s * 0.25)
+	if glyph.begins_with("ic_") or glyph.begins_with("face_"):
+		if Art.tex(glyph) != null:
+			var k: = (s - 1.6) / 9.25   # ic_* art is 37 px at s:4
+			Art.image(self, glyph, p + Vector2(0.8, 0.8), Color(1, 1, 1, a), k)
+	elif glyph != "":
+		var f: = ThemeDB.fallback_font
+		draw_string(f, p + Vector2(0, s * 0.5 + 2.4), glyph, HORIZONTAL_ALIGNMENT_CENTER, s, 7, Color(1, 1, 1, a))
+
+## Signal bars: 4 bars, each 25% of {partner}'s mood, the last one fills from the bottom.
+func _signal(p: Vector2, frac: float) -> void:
+	var f: = clampf(frac, 0.0, 1.0) * 4.0
+	var low: = frac < 0.25
+	var on: = Color("#ff4d6d") if low else Color("#ff8fb1")
+	for i in 4:
+		var h: = 3.0 + i * 1.6
+		var r: = Rect2(p.x + i * 2.6, p.y + 8.0 - h, 1.9, h)
+		draw_rect(r, Color(1, 1, 1, 0.2))
+		var fill: = clampf(f - i, 0.0, 1.0)
+		if fill > 0.0:
+			draw_rect(Rect2(r.position.x, r.end.y - h * fill, r.size.x, h * fill), on)
+
+## Battery: outline, nub, fill by Energy (green / amber / red), a bolt when it's charged past 80.
+func _battery(p: Vector2, frac: float) -> void:
+	var fr: = clampf(frac, 0.0, 1.0)
+	var body: = Rect2(p, Vector2(13, 6.5))
+	UiStyle.box(self, body.grow(0.6), Color(1, 1, 1, 0.75), 1.8)
+	UiStyle.box(self, body, Color(BEZEL, 0.95), 1.4)
+	draw_rect(Rect2(body.end.x + 0.7, p.y + 2.0, 1.1, 2.5), Color(1, 1, 1, 0.75))
+	var col: = Color("#46d36b") if fr > 0.5 else (Color("#f2c14e") if fr > 0.2 else NOTIF_RED)
+	var inner: = body.grow(-0.9)
+	if fr > 0.0:
+		UiStyle.box(self, Rect2(inner.position, Vector2(maxf(inner.size.x * fr, 1.2), inner.size.y)), col, 0.9)
+	if fr > 0.8:
+		var c: = body.get_center()
+		draw_colored_polygon(PackedVector2Array([c + Vector2(0.6, -2.6), c + Vector2(-1.6, 0.4), c + Vector2(-0.1, 0.4),
+			c + Vector2(-0.6, 2.6), c + Vector2(1.6, -0.4), c + Vector2(0.1, -0.4)]), Color(BEZEL, 0.85))
+
+func _tw(f: Font, s: String, size: int) -> float:
+	return f.get_string_size(s, HORIZONTAL_ALIGNMENT_LEFT, -1, size).x
+
 func _draw_strip(f: Font) -> void:
 	var st: Rect2 = layout()["strip"]
-	_panel(st)
+	_glass(st, st.size.y * 0.5, 0.9)
 	var p: = st.position
-	Art.image(self, "ic_heart", p + Vector2(2, 2.5), Color.WHITE, 0.85)
-	_bar(p + Vector2(11, 4.5), 30, m.happiness / 100.0, Color("#e88aa8"))
-	Art.image(self, "ic_bolt", p + Vector2(44, 2.5), Color.WHITE, 0.85)
-	_bar(p + Vector2(53, 4.5), 30, m.energy / 100.0, Color("#f2c66a"))
-	Art.image(self, "ic_coin", p + Vector2(86, 2.5), Color.WHITE, 0.85)
-	_t(f, p + Vector2(95, 9.5), "$%d" % m.money, 7, w_col(), 34)
+	var y: = p.y + 9.6
+	# left: lock-screen clock, bold (drawn twice), then the day dimmed
+	var tm: String = m.clock_text()
+	_t(f, Vector2(p.x + 7, y), tm, 7, Color.WHITE)
+	draw_string(f, Vector2(p.x + 7.35, y), tm, HORIZONTAL_ALIGNMENT_LEFT, -1, 7, Color.WHITE)
 	var dn: String = m.DAY_NAMES[m.day_i % 7].substr(0, 3)
-	_t(f, p + Vector2(124, 9), "D%d %s %s" % [m.day_count, dn, m.clock_text()], 6, PAPER, 54)
-	# drawer handle: a little chevron, flipped when open
-	var c: = p + Vector2(st.size.x - 5, 6.5)
-	var dy: = -1.6 if drawer_open else 1.6
-	draw_colored_polygon(PackedVector2Array([c + Vector2(-2.4, -dy), c + Vector2(2.4, -dy), c + Vector2(0, dy)]), Color(GOLD, 0.9))
+	_t(f, Vector2(p.x + 10 + _tw(f, tm, 7), y - 0.4), "%s  Day %d" % [dn, m.day_count], 6, DIM)
+	# right, laid out from the drawer chevron inwards
+	var x: = st.end.x - 5.0
+	var c: = Vector2(x, p.y + 6.5)
+	var dy: = -1.5 if drawer_open else 1.5
+	draw_colored_polygon(PackedVector2Array([c + Vector2(-2.2, -dy), c + Vector2(2.2, -dy), c + Vector2(0, dy)]), Color(1, 1, 1, 0.8))
+	x -= 6.0
+	var cash: = "$%d" % m.money
+	var cw: = _tw(f, cash, 7) + 7.0
+	var cr: = Rect2(x - cw, p.y + 2.2, cw, 8.6)
+	var cc: = Color("#d8432f") if urgent() == "rent" else CASH
+	UiStyle.box(self, cr, cc.darkened(0.3), 4.3)
+	UiStyle.box(self, cr.grow(-0.5), cc, 3.8)
+	UiStyle.box(self, Rect2(cr.position + Vector2(0.5, 0.5), Vector2(cr.size.x - 1, 3.4)), Color(1, 1, 1, 0.16), 3.0)
+	_t(f, cr.position + Vector2(0, 7.0), cash, 7, Color.WHITE, cw, HORIZONTAL_ALIGNMENT_CENTER)
+	x = cr.position.x - 19.5
+	_battery(Vector2(x, p.y + 3.2), m.energy / 100.0)
+	x -= 13.5
+	_signal(Vector2(x, p.y + 2.3), m.happiness / 100.0)
+	Art.image(self, "ic_heart", Vector2(x - 8.5, p.y + 2.6), Color.WHITE, 0.7)
 	var u: = urgent()
-	if u != "":
-		var cr: Rect2 = layout()["chip"]
-		var a: = 0.65 + 0.35 * sin(_pulse * 6.0)
-		UiStyle.panel(self, cr, Color("#b8321e"), a, PX)
+	if u != "":   # red notification pill next to the phone
+		var chip: Rect2 = layout()["chip"]
+		var a: = 0.7 + 0.3 * sin(_pulse * 6.0)
+		UiStyle.box(self, chip.grow(0.7), Color(BEZEL, 0.8 * a), chip.size.y * 0.5 + 0.7)
+		UiStyle.box(self, chip, Color(NOTIF_RED, a), chip.size.y * 0.5)
 		var due: = ("ERRAND " + Errands.due_text(m.errand)) if u == "errand" else ("RENT %dd" % m.days_until_rent())
-		_t(f, cr.position + Vector2(0, 6.8), due, 6, Color(1, 1, 1, a), cr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
+		_t(f, chip.position + Vector2(0, 6.8), due, 6, Color(1, 1, 1, a), chip.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 
 func w_col() -> Color:
 	return Color("#e06a4a") if urgent() == "rent" else PAPER
@@ -402,9 +484,9 @@ func w_col() -> Color:
 ## Lines the drawer shows (text, colour, max lines). Also what the smoke/render tools check.
 func drawer_lines() -> Array:
 	var out: Array = []
-	out.append([Cast.T(m.quest_text()), GOLD, 2])
+	out.append([Cast.T(m.quest_text()), GOLD, 2, "quest"])
 	var dr: int = m.days_until_rent()
-	out.append([rent_text(), Color("#e06a4a") if m.money < m.rent_due() and dr <= 2 else PAPER, 1])
+	out.append([rent_text(), Color("#ff8a6a") if m.money < m.rent_due() and dr <= 2 else PAPER, 1, "rent"])
 	if m.fund_value() >= 1.0:   # only once there's money in it (IGN review: dead "$0 / 100k" line)
 		out.append([fund_text(), Color("#c8b0e8"), 1, "fund"])
 	if m.pass_active():
@@ -412,63 +494,75 @@ func drawer_lines() -> Array:
 		out.append(["Bus pass: %d day%s left" % [left, "" if left == 1 else "s"], Color("#8cc4e8"), 1, "bus"])
 	out.append([Cast.T("{partner}: ") + Cast.T(m.mood_label()), Color("#e88aa8"), 1, "mood"])
 	var bag: = bag_text()
-	out.append(["Bag: " + (bag if bag != "" else "empty"), PAPER if bag != "" else Color(1, 1, 1, 0.5), 2])
+	out.append(["Bag: " + (bag if bag != "" else "empty"), PAPER if bag != "" else Color(1, 1, 1, 0.5), 2, "bag"])
 	return out
 
-## Drawer rows tagged "fund" / "bus" get a little icon in front (piggy bank, bus) from the Nov 16 icon sheet.
-const ROW_ICON_W: = 9.0
+## Drawer = the notification shade: each row is a notification card with its app tile.
+## Tags: quest (Notes, gold "!"), rent ($, landlord red), fund (piggy), bus, mood (her face), bag.
+const ROW_ICON_W: = 11.0
 const ROW_ICONS: = {"fund": "ic_piggy", "bus": "ic_bus"}
+const ROW_APPS: = {"quest": ["#e0a02a", "!"], "rent": ["#c8463a", "$"], "fund": ["#9b6fd0", "ic_piggy"],
+	"bus": ["#2f7fd0", "ic_bus"], "mood": ["#e8698e", "mood"], "bag": ["#7a6a58", "B"]}
 
 func _row_icon(r: Array) -> String:
 	return str(ROW_ICONS.get(r[3], "")) if r.size() > 3 else ""
 
+func _row_app(r: Array) -> Array:
+	return ROW_APPS.get(r[3], ["#5b4a72", ""]) if r.size() > 3 else ["#5b4a72", ""]
+
 func _draw_drawer(f: Font) -> float:
 	var dr: Rect2 = layout()["drawer"]
-	var tw: = dr.size.x - 8.0
+	var tw: = dr.size.x - 8.0 - ROW_ICON_W
 	var rows: = drawer_lines()
-	var h: = 4.0
 	var heights: Array = []
+	var h: = 6.0
 	for r in rows:
-		var rw: = tw - (ROW_ICON_W if _row_icon(r) != "" else 0.0)
-		var n: = clampi(int(ceil(f.get_string_size(str(r[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x / (rw - 2.0))), 1, int(r[2]))
+		var n: = clampi(int(ceil(f.get_string_size(str(r[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x / (tw - 2.0))), 1, int(r[2]))
 		heights.append(n)
-		h += n * 8.0 + 1.0
-	var box: = Rect2(dr.position, Vector2(dr.size.x, h + 2.0))
-	_panel(box, 0.9)
-	var y: = box.position.y + 3.0
+		h += n * 8.0 + 1.5
+	var box: = Rect2(dr.position, Vector2(dr.size.x, h + 0.5))
+	_glass(box, 5.0, 0.93)
+	draw_rect(Rect2(box.get_center().x - 8.0, box.end.y - 2.6, 16.0, 1.0), Color(1, 1, 1, 0.35))   # shade grabber
+	var y: = box.position.y + 2.0
 	for i in rows.size():
 		var r: Array = rows[i]
-		var ic: = _row_icon(r)
-		var ix: = 0.0
-		if ic != "":
-			Art.image(self, ic, Vector2(box.position.x + 3, y - 0.5), Color.WHITE, 0.75)
-			ix = ROW_ICON_W
-		_mt(f, Vector2(box.position.x + 4 + ix, y + 6), str(r[0]), tw - ix, 6, int(heights[i]), r[1])
-		y += int(heights[i]) * 8.0 + 1.0
-		if r.size() > 3 and r[3] == "mood":
-			_draw_face(Vector2(box.position.x + 10 + f.get_string_size(str(r[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 6).x, y - 5), m.mood_face())
+		var ch: = int(heights[i]) * 8.0 + 0.5
+		var card: = Rect2(box.position.x + 2.0, y, box.size.x - 4.0, ch)
+		UiStyle.box(self, card, Color(1, 1, 1, 0.07), 2.5)
+		var app: = _row_app(r)
+		var glyph: String = app[1]
+		var ts: = 7.0
+		var tp: = Vector2(card.position.x + 1.5, card.position.y + (minf(ch, 8.5) - ts) * 0.5)
+		if glyph == "mood":
+			_app_tile(tp, ts, Color(str(app[0])), "")
+			_draw_face(tp + Vector2(ts, ts) * 0.5, m.mood_face(), ts * 0.95 / 11.3)   # faces are centred
+		else:
+			_app_tile(tp, ts, Color(str(app[0])), glyph)
+		_mt(f, Vector2(card.position.x + ROW_ICON_W, y + 6.0), str(r[0]), tw, 6, int(heights[i]), r[1])
+		y += ch + 1.0
 	return box.end.y
 
-func _draw_peek(f: Font) -> float:
+func _draw_peek(f: Font) -> float:   # a notification banner sliding down out of the status bar
 	var pr: Rect2 = layout()["peek"]
 	var a: = clampf(peek_t / 0.4, 0.0, 1.0) * clampf((PEEK_TIME - peek_t) / 0.15, 0.0, 1.0)
 	var slide: = (1.0 - clampf((PEEK_TIME - peek_t) / 0.15, 0.0, 1.0)) * -6.0
-	var r: = Rect2(pr.position + Vector2(0, slide), pr.size)
-	UiStyle.panel(self, r, UiStyle.PANEL, 0.9 * a, PX)
-	draw_rect(Rect2(r.position + Vector2(PX, PX), Vector2(2, r.size.y - 2 * PX)), Color(peek_col, a))
-	_t(f, r.position + Vector2(6, 8.3), peek_text, 6, Color(peek_col, a), r.size.x - 9)
+	var r: = Rect2(pr.position + Vector2(0, slide + 0.5), pr.size)
+	_glass(r, 4.0, 0.92 * a)
+	var app: Array = ROW_APPS.get(peek_kind, ["#5b4a72", "!"])
+	_app_tile(Vector2(r.position.x + 2.0, r.position.y + 2.0), 8.0, Color(str(app[0])), str(app[1]) if app[1] != "mood" else "", a)
+	_t(f, r.position + Vector2(13, 8.3), peek_text, 6, Color(peek_col, a), r.size.x - 15)
 	return r.end.y
 
-func _draw_buffs(f: Font, y: float) -> void:
+func _draw_buffs(f: Font, y: float) -> void:   # buffs = little app icons with a progress line
 	var icons: = status_icons()
 	for i in icons.size():
 		var ic: Array = icons[i]
-		var r: = Rect2(2 + i * 10, y, 9, 9)
+		var r: = Rect2(2 + i * 11, y, 9.5, 9.5)
 		var c: Color = ic[1]
-		draw_rect(r, Color(0.07, 0.05, 0.04, 0.7))
+		UiStyle.box(self, r.grow(0.6), Color(BEZEL, 0.8), 3.0)
+		UiStyle.box(self, r, Color(GLASS, 0.9), 2.6)
 		if Art.tex("buff_" + str(ic[0])) != null:
-			Art.image(self, "buff_" + str(ic[0]), r.position, Color.WHITE, 9.0 / 11.0)
+			Art.image(self, "buff_" + str(ic[0]), r.position + Vector2(0.25, 0.25), Color.WHITE, 9.0 / 11.0)
 		else:
-			draw_string(f, r.position + Vector2(0, 6), str(ic[0]), HORIZONTAL_ALIGNMENT_CENTER, 9, 4, c)
-		draw_rect(r, c, false, PX)
-		draw_rect(Rect2(r.position + Vector2(1, 7.6), Vector2(7.0 * float(ic[2]), PX * 2.0)), c)
+			draw_string(f, r.position + Vector2(0, 6.3), str(ic[0]), HORIZONTAL_ALIGNMENT_CENTER, 9.5, 4, c)
+		draw_rect(Rect2(r.position + Vector2(1.2, 8.2), Vector2(7.1 * float(ic[2]), PX * 1.6)), c)
