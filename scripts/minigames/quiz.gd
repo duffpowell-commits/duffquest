@@ -15,6 +15,8 @@ var chosen: = -1
 
 func _setup() -> void:
 	title = "Pre-shift Lineup Quiz"
+	backdrop = "kitchen"      # Nov 17: lineup happens on the line, not on a blank slab
+	backdrop_dim = 0.45
 	time_limit = 0.0
 	space_is_pen = false
 	var ids: = range(Bank.BANK.size())
@@ -109,12 +111,17 @@ func debug_solve(good: bool) -> void:
 		_advance()
 
 func _draw_game() -> void:
-	txt(Vector2(4, 24), "Question %d/%d" % [mini(idx + 1, count), count], 8, Color(1, 1, 1, 0.6))
+	tag(Vector2(8, 24), "Question %d/%d   %d correct" % [mini(idx + 1, count), count, correct], 7, Color(1, 1, 1, 0.9))
 	if phase == "ask":
 		bar(Rect2(200, 18, 114, 5), 1.0 - q_t / Q_TIME, Color("#e6a640"))
 	# the question on the lineup clipboard: cream paper, ink border, gold clip
-	var qr: = Rect2(6, 30, 308, 58)
-	UiStyle.prop(self, qr, UiStyle.CREAM, 1.0 / 1.5, 0.12)
-	prop(Rect2(144, 26, 32, 7), UiStyle.GOLD, 0.0)
+	var qr: = Rect2(10, 32, 300, 56)
+	UiStyle.box(self, Rect2(qr.position + Vector2(-4, -5), qr.size + Vector2(8, 9)).grow(0.8), Color("#2a1a10"), 4.0)
+	UiStyle.box(self, Rect2(qr.position + Vector2(-4, -5), qr.size + Vector2(8, 9)), Color("#9a6a3c"), 3.5)   # hardboard
+	UiStyle.box(self, qr, UiStyle.CREAM, 1.0)                                                                  # paper
+	for i in 3:
+		draw_rect(Rect2(qr.position.x + 6, qr.position.y + 22 + i * 11, qr.size.x - 12, 0.5), Color("#8ab0d0", 0.35))
+	UiStyle.box(self, Rect2(138, 24, 44, 11).grow(0.8), Color("#3a3a44"), 3.0)                               # metal clip
+	UiStyle.box(self, Rect2(138, 24, 44, 11), Color("#b8bcc8"), 3.0)
+	UiStyle.box(self, Rect2(140, 25, 40, 4), Color(1, 1, 1, 0.45), 2.0)
 	mtxt(Vector2(12, 46), str(current()["q"]), 296, 9, UiStyle.INK, 4)
-	txt(Vector2(260, 9), "%d correct" % correct, 8, Color("#c0d890"))
