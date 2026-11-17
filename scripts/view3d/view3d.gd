@@ -46,7 +46,10 @@ var caption: Label3D
 
 ## The 3D view gets Duff's HD sheet (2048, same 4x4 layout and world size as the 2x one). Built only by
 ## tools/duff_hd3d/build_duff_hd.sh: plain black sleeves (test_daily checks), his fox on the LEFT of his neck.
-const HD: = {"duff_home": {"path": "res://assets/art3d/duff_home_hd3d.png", "cell": [512, 512], "origin": [256, 480], "s": 16.0}}
+const HD: = {"duff_home": {"path": "res://assets/art3d/duff_home_hd3d.png", "cell": [512, 512], "origin": [256, 480], "s": 16.0},
+	# his round shades, fitted to the HD faces (tools/duff_hd3d/shades_hd.py); only used over the HD sheet
+	"duff_shades_home": {"path": "res://assets/art3d/duff_shades_home_hd3d.png", "cell": [512, 512], "origin": [256, 480], "s": 16.0}}
+const HD_OVER: = {"duff_shades_home": "duff_home"}   # overlay -> the sheet it was fitted to
 const NO_3D: = ["map_objects"]               # full-map overlays drawn by main (the old bus-stop sign layer)
 var _hd_tex: = {}
 var britt_head: = Vector3.INF                # top of {coworker}'s card this frame (her "$" sits on it)
@@ -412,13 +415,16 @@ func _sync_actors() -> void:
 			continue
 		var g: = ci.get_global_transform()
 		var k: = 0
+		var hd_drawn: = {}   # HD sheets this actor drew this frame (an overlay only goes HD over its HD sheet)
 		for d in Art.rec[id]:
 			var name: String = d[0]
 			if name in NO_3D or (ci == main and static_art.has(name)):
 				continue
 			var full: Transform2D = g * (d[5] as Transform2D)
 			var sc: = full.get_scale()
-			var hd: = HD.has(name) and _hd(name) != null
+			var hd: = HD.has(name) and _hd(name) != null and (not HD_OVER.has(name) or hd_drawn.has(HD_OVER[name]))
+			if hd:
+				hd_drawn[name] = true
 			var tx: Texture2D = _hd(name) if hd else Art.tex(name)
 			if tx == null:
 				continue
