@@ -176,12 +176,15 @@ var dash_v: = Vector2.ZERO
 ## (38/72/90/108 HP vs Willnot's 240, a 2.2x wall) to real fights that ramp into him (54/99/120/144, 1.7x).
 ## Per kind: hp = HP multiplier, dmg = multiplier on every hit they land, cd = seconds between attacks (enraged
 ## 0.7 less), lead = how far ahead (s) they aim at a moving Duff. Willnot keeps his Nov 13 numbers.
+## Pass 3, Nov 17 (Duff: "scale the enemies back again, they are tough"): halfway back between pre-Nov 13 and pass 2.
+## Early four 43/80/98/117 HP (pre-Nov 13 32/60/75/90, pass 2 54/99/120/144), hits x1.1, slower swings, lighter lead.
+## Willnot 220 HP (x1.1; timer 230 s to match).
 const STORY_TUNE: = {
-	"ghoster": {"hp": 1.7, "dmg": 1.25, "cd": 1.7, "lead": 0.35},
-	"gymbro": {"hp": 1.65, "dmg": 1.25, "cd": 1.8, "lead": 0.4},
-	"djvape": {"hp": 1.6, "dmg": 1.25, "cd": 1.8, "lead": 0.45},
-	"crypto": {"hp": 1.6, "dmg": 1.25, "cd": 1.8, "lead": 0.45},
-	"willnot": {"hp": 1.2, "dmg": 1.0, "cd": 2.2, "lead": 0.0},
+	"ghoster": {"hp": 1.35, "dmg": 1.1, "cd": 2.0, "lead": 0.15},
+	"gymbro": {"hp": 1.33, "dmg": 1.1, "cd": 2.0, "lead": 0.2},
+	"djvape": {"hp": 1.3, "dmg": 1.1, "cd": 2.0, "lead": 0.2},
+	"crypto": {"hp": 1.3, "dmg": 1.1, "cd": 2.0, "lead": 0.2},
+	"willnot": {"hp": 1.1, "dmg": 1.0, "cd": 2.2, "lead": 0.0},
 }
 const STORY_KINDS: = ["ghoster", "gymbro", "djvape", "crypto", "willnot"]
 
