@@ -136,6 +136,82 @@ STILLS = {
         "dots": [(32, 656, 1.3), (29, 660, 1.3), (26, 664, 1.3), (50, 661, 1.4), (74, 659, 1.4)],
         "crop": (0, 590, 150, 690),
     },
+    # ---- loading screens (assets/art/loading). Right hands: invented blackletter -> red script.
+    "fryer_nap": {
+        "file": "assets/art/loading/fryer_nap.jpg",
+        "erase": [[(707, 574), (745, 574), (749, 600), (746, 614), (735, 621), (705, 621), (700, 607), (700, 588), (703, 576)]],
+        "below": 140, "pale": True,
+        "script": [(701, 572), (746, 574), (748, 617), (700, 615)],
+        "crop": (670, 540, 790, 690),
+    },
+    "goose_bet": {  # right fist, back arm, hanging fingers-down
+        "file": "assets/art/loading/goose_bet.jpg",
+        "erase": [[(503, 322), (530, 316), (552, 322), (550, 340), (541, 352), (510, 351), (501, 342)]],
+        "below": 140, "pale": True,
+        "script": [(508, 317), (552, 322), (546, 352), (499, 346)],
+        "crop": (470, 290, 590, 390),
+    },
+    "gym_spot": {  # right fist on the rolling pin, fingers UP -> script upside down (wrist edge at the bottom)
+        "file": "assets/art/loading/gym_spot.jpg",
+        "erase": [[(357, 291), (380, 283), (420, 286), (436, 296), (434, 330), (410, 346), (380, 346), (360, 331)]],
+        "below": 140, "pale": True,
+        "script": [(432, 344), (360, 344), (360, 286), (432, 286)],
+        "crop": (340, 250, 460, 380),
+    },
+    "brunch_atlas": {  # raised right fist, back of the hand to us, fingers UP -> script upside down
+        "file": "assets/art/loading/brunch_atlas.jpg",
+        "erase": [[(256, 36), (264, 28), (290, 26), (316, 28), (322, 40), (320, 60), (295, 67), (263, 68), (254, 60)]],
+        "below": 140, "pale": True,
+        "script": [(320, 68), (254, 66), (252, 28), (318, 26)],
+        "crop": (220, 0, 350, 110),
+    },
+    "octavia_fund": {  # right hand on the table, fingers down-right: grey wolf-ish piece + finger dashes -> red script, bare fingers
+        "file": "assets/art/loading/octavia_fund.jpg",
+        "blobs": {"polys": [[(100, 470), (140, 470), (180, 505), (178, 530), (150, 560), (95, 560), (95, 500)]], "below": 110, "max": 22},
+        "erase": [[(62, 482), (100, 472), (112, 474), (126, 480), (122, 492), (110, 500), (100, 525), (85, 545), (64, 530)]],
+        "below": 160, "grey": True, "pale": True,
+        "script": [(60, 508), (91, 477), (116, 502), (85, 533)],
+        "crop": (50, 440, 200, 570),
+    },
+    "one_trip": {  # right hand (blackletter on the back + finger letters) -> red script, bare fingers;
+                   # left hand keeps its eye mandala, "HUNTED" off the fingers -> finger dots
+        "file": "assets/art/loading/one_trip.jpg",
+        "erase": [[(684, 566), (700, 562), (730, 566), (752, 574), (754, 600), (750, 614), (690, 614), (682, 595)],
+                  [(697, 613), (760, 611), (759, 632), (740, 638), (700, 636)],
+                  [(924, 520), (935, 514), (950, 530), (972, 555), (972, 570), (960, 572), (940, 552), (924, 535)]],
+        "below": 140, "pale": True,
+        "script": [(686, 565), (751, 572), (749, 613), (688, 611)],
+        "gaps": [[(715, 620), (715, 630), (716, 639)], [(729, 621), (730, 630), (730, 640)], [(746, 618), (746, 628), (745, 637)],
+                 [(921, 517), (931, 517), (941, 518)], [(929, 543), (939, 537), (949, 531)], [(946, 557), (955, 551), (964, 545)]],
+        "dots": [(940, 511, 1.3), (948, 525, 1.4), (946, 546, 1.2), (952, 543, 1.2), (958, 540, 1.2)],
+        "crop": (660, 550, 800, 690),
+        "crop2": (900, 460, 1040, 600),
+    },
+    "plasma_day": {  # right hand on the armrest, fingers pointing LEFT: blackletter -> red script, finger marks off
+        "file": "assets/art/loading/plasma_day.jpg",
+        "blobs": {"polys": [[(78, 540), (138, 535), (138, 592), (78, 595)]], "below": 150, "max": 16},
+        "erase": [[(98, 549), (120, 543), (160, 542), (194, 548), (201, 562), (200, 582), (145, 584), (140, 567), (120, 561), (98, 559)]],
+        "below": 140, "pale": True,
+        "script": [(198, 541), (198, 584), (122, 581), (122, 543)],
+        "crop": (30, 510, 220, 610),
+    },
+    "raccoon_break": {  # LEFT hand on the fork, fingers pointing left: invented sun+triangle -> canon eye mandala + dots
+        "file": "assets/art/loading/raccoon_break.jpg",
+        "erase": [[(795, 354), (836, 353), (844, 365), (844, 395), (830, 402), (800, 400), (793, 380)]],
+        "below": 140, "pale": True,
+        "mandala": [(845, 352), (845, 406), (791, 406), (791, 352)],
+        "mandala_clip": [(790, 354), (836, 351), (849, 362), (849, 398), (830, 406), (792, 404)],
+        "dots": [(776, 357, 1.3), (774, 370, 1.3), (768, 384, 1.2), (774, 384, 1.2), (780, 384, 1.2)],
+        "crop": (730, 330, 870, 420),
+    },
+    "rent_slot": {  # right hand on the jar, fingers pointing RIGHT: blackletter -> red script
+        "file": "assets/art/loading/rent_slot.jpg",
+        "blobs": {"polys": [[(748, 380), (792, 380), (792, 452), (748, 452)]], "below": 110, "max": 10},
+        "erase": [[(648, 386), (700, 377), (730, 386), (736, 410), (732, 438), (700, 442), (656, 438), (646, 415)]],
+        "below": 140, "pale": True,
+        "script": [(648, 442), (648, 378), (735, 378), (735, 442)],
+        "crop": (630, 360, 790, 470),
+    },
 }
 
 
@@ -218,6 +294,22 @@ def lay_script(img, quad, bold=2):
     return out.clip(0, 255).astype(np.uint8)
 
 
+def lay_mandala(img, quad, clip):
+    """Warp the LEFT-hand eye mandala master (top = wrist) onto quad TL,TR,BR,BL, inked only inside clip."""
+    m = Image.open(os.path.join(REF, "hand_left_eye_mandala.png")).split()[-1]
+    a = np.asarray(m).astype(np.float32) / 255.0
+    n = a.shape[0]
+    M = cv2.getPerspectiveTransform(np.float32([(0, 0), (n, 0), (n, n), (0, n)]), np.float32(quad))
+    h, w = img.shape[:2]
+    al = cv2.warpPerspective(a, M, (w, h), flags=cv2.INTER_AREA)
+    keep = np.zeros((h, w), np.float32)
+    cv2.fillPoly(keep, [np.array(clip, np.int32)], 1.0)
+    keep = cv2.GaussianBlur(keep, (0, 0), 0.8)
+    al = (cv2.GaussianBlur(al, (0, 0), 0.5) * keep * 0.92)[..., None]
+    ink = np.array([30, 24, 28], float)  # BGR blackwork
+    return (img * (1 - al) + ink * al).clip(0, 255).astype(np.uint8)
+
+
 def grab(img, rect):
     """Biggest grabCut foreground blob inside rect (x, y, w, h), holes closed."""
     m = np.zeros(img.shape[:2], np.uint8)
@@ -254,6 +346,29 @@ def lay_fist(img, fist, cut=None):
     cv2.ellipse(m, ((x0 + x1) // 2, (y0 + y1) // 2), ((x1 - x0) // 2, (y1 - y0) // 2), 0, 0, 360, 255, -1)
     m = cv2.GaussianBlur(m, (0, 0), 6).astype(np.float32)[..., None] / 255.0
     return (img * (1 - m) + new * m).clip(0, 255).astype(np.uint8)
+
+
+def blobs(img, cfg):
+    """Erase small dark marks (finger dashes, stray letters) inside the polygons but keep long lines:
+    a dark component that reaches outside the polygon or is longer than "max" px is an outline."""
+    h, w = img.shape[:2]
+    area = np.zeros((h, w), np.uint8)
+    for p in cfg["polys"]:
+        cv2.fillPoly(area, [np.array(p, np.int32)], 1)
+    lum = img.astype(float) @ [0.114, 0.587, 0.299]
+    dark = (lum < cfg.get("below", 100)).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(dark, connectivity=8)
+    kill = np.zeros((h, w), bool)
+    for k in range(1, n):
+        x, y, bw, bh, a = st[k]
+        if max(bw, bh) > cfg.get("max", 14):
+            continue
+        comp = lab[y:y + bh, x:x + bw] == k
+        if (area[y:y + bh, x:x + bw][comp] == 0).any():
+            continue
+        kill[y:y + bh, x:x + bw] |= comp
+    ink = cv2.dilate(kill.astype(np.uint8), np.ones((3, 3), np.uint8), iterations=1)
+    return cv2.inpaint(img, ink * 255, 3, cv2.INPAINT_TELEA)
 
 
 def bare(img, cfg):
@@ -298,8 +413,12 @@ def fix(name):
     before = img.copy()
     if cfg.get("erase"):
         img = erase(img, cfg["erase"], cfg.get("below"), cfg.get("grey", False), cfg.get("pale", False))
+    if cfg.get("blobs"):
+        img = blobs(img, cfg["blobs"])
     if cfg.get("bare"):
         img = bare(img, cfg["bare"])
+    if cfg.get("mandala"):
+        img = lay_mandala(img, cfg["mandala"], cfg["mandala_clip"])
     if (cfg.get("gaps") or cfg.get("spikes") or cfg.get("dots")) and not cfg.get("bare"):
         img = lines(img, cfg)
     if cfg.get("script"):
