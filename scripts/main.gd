@@ -1835,6 +1835,7 @@ func pay_rent() -> Array:
 		rent_debt = 0
 		rent_strikes = 0
 		weeks_paid += 1
+		AudioScript.sting("rent")
 		if prorated:
 			return ["Monday. Rent is due. Rent is always due.",
 				"First week's prorated, since I moved in on a Friday. I pay $%d, half of the usual. $%d left. Next Monday it's the full $%d." % [due, money, weekly_base()]]
@@ -3515,6 +3516,8 @@ func _spawn_boss() -> void:
 	_say(([setup] if setup != "" else []) + [str(BossScript.BOSSES[b.kind]["intro"])])
 
 func boss_defeated(b: Node) -> void:
+	if b != _ko_boss:
+		AudioScript.sting("ko")             # EDM soundtrack: drop hit on the KO (once; the cutscene comes back here)
 	if b != _ko_boss and KnockoutScript.is_live(str(b.kind)):
 		_ko_boss = b                        # knockout cutscene first; knockout_done() comes back here
 		ko_kind = str(b.kind)
@@ -3830,6 +3833,7 @@ func fail_screen(kind: String, lines: Array) -> bool:
 	SaveGame.write(snap.duplicate(true), save_path)
 	var c: = FailScreen.new()
 	c.kind = kind
+	AudioScript.sting("tapestop")
 	c.heading = ""
 	var tail: String = "Retry rolls back to this morning, Day %d. Everything since didn't happen." % int(snap.get("day_count", day_count)) if kind == "gameover" else ""
 	c.lines = (lines + ([tail] if tail != "" else [])).map(func (l): return Cast.N(str(l)))
