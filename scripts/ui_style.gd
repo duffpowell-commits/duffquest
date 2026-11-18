@@ -296,6 +296,15 @@ static func card_button(ci: CanvasItem, r: Rect2, text: String, badge: String, b
 		if iw > ih * 1.15:
 			iw = ih * 1.15
 			ih = iw * icon.get_height() / float(icon.get_width())
+		# Nov 18: narrower tiles (wider gaps between them) shrink the picture a little before the name gets cut.
+		var need: = 0.0
+		for word in text.split(" "):
+			need = maxf(need, _w(word, MIN_SIZE))
+		var room: = rr.size.x - (2 * w + iw + 3 * w) - 3 * w
+		if need > room and not stack and need - room <= iw * 0.28:   # only when that makes the name fit
+			var new_iw: = iw - (need - room)
+			ih *= new_iw / iw
+			iw = new_iw
 		badge_r = Rect2(rr.position + Vector2(2 * w, (rr.size.y - ih) * 0.5), Vector2(iw, ih))
 		ci.draw_texture_rect(icon, badge_r, false, Color.WHITE if enabled else Color(0.55, 0.55, 0.55))
 	else:

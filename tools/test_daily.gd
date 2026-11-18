@@ -948,6 +948,22 @@ func _touch_tut_checks(main: Node) -> void:
 	check("cards: >= 6 units between choices", rb.position.x - ra.end.x >= 6.0 and rc.position.y - ra.end.y >= 6.0)
 	check("cards: a tap just off a choice still picks it", cd._button_at(ra.end + Vector2(2, -4)).get("id", "") == "a")
 	cd.free()
+	# Kitchen ingredient tiles and the Wordle keyboard: >= 4 units between neighbours (Duff asked for these too).
+	for path in ["res://scripts/minigames/sandwich.gd", "res://scripts/minigames/salad.gd", "res://scripts/minigames/wordle.gd"]:
+		var g: Node = (load(path) as GDScript).new()
+		if path.ends_with("wordle.gd"):
+			g.answer = "crane"
+		g._setup()
+		var gap: = INF
+		for i in g.buttons.size():
+			for j in range(i + 1, g.buttons.size()):
+				var a: Rect2 = g.buttons[i]["rect"]
+				var b: Rect2 = g.buttons[j]["rect"]
+				var dx: = maxf(b.position.x - a.end.x, a.position.x - b.end.x)
+				var dy: = maxf(b.position.y - a.end.y, a.position.y - b.end.y)
+				gap = minf(gap, maxf(dx, dy))
+		check("spacing: %s buttons >= 3 units apart (got %.1f)" % [path.get_file(), gap], gap >= 3.0)
+		g.free()
 	Cast.touch = was
 
 

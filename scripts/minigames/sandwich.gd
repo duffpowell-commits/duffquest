@@ -44,18 +44,19 @@ func _setup() -> void:
 		var id: String = ORDER[i]
 		var row: = 0 if i < 6 else 1
 		var col: = i if i < 6 else i - 6
-		var b: = add_button(id, Rect2(4 + col * 52.5, 128 + row * 24, 50, 21), ING[id][0], KEYS[i], Color(ING[id][1]).darkened(0.45))
+		# Nov 18 (Duff: fat fingers): 5 units between tiles (was 2-3).
+		var b: = add_button(id, Rect2(3 + col * 53.0, 129 + row * 26, 48, 21), ING[id][0], KEYS[i], Color(ING[id][1]).darkened(0.45))
 		if Art.tex("kf_" + id) != null:   # picture tile (house-style prop, tools/import_kitchen_props.py)
 			b["icon"] = "kf_" + id
 			b["col"] = Color("#57504e")
-	add_button("undo", Rect2(4 + 5 * 52.5, 152, 50, 21), "UNDO", KEY_BACKSPACE)
-	add_button("send", Rect2(266, 104, 50, 21), "SEND", KEY_ENTER, Color("#4e7a3a"))
+	add_button("undo", Rect2(3 + 5 * 53.0, 155, 48, 21), "UNDO", KEY_BACKSPACE)
+	add_button("send", Rect2(266, 104, 50, 20), "SEND", KEY_ENTER, Color("#4e7a3a"))
 	if eighty_six != "":
-		add_button("comp", Rect2(212, 104, 50, 21), "COMP IT", KEY_C, Color("#a8406a"))
+		add_button("comp", Rect2(210, 104, 50, 20), "COMP IT", KEY_C, Color("#a8406a"))
 		get_button(eighty_six)["enabled"] = false
 		get_button(eighty_six)["label"] = "86'd"
 	if steal_armed:
-		add_button("grab", Rect2(4, 104, 110, 21), "GRAB TICKET BACK", KEY_G, Color("#9c5a2c"))
+		add_button("grab", Rect2(4, 104, 110, 20), "GRAB TICKET BACK", KEY_G, Color("#9c5a2c"))
 		get_button("grab")["enabled"] = false
 
 func _roll_mods() -> void:
