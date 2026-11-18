@@ -42,6 +42,19 @@ static func sfx(name: String, pitch: float = 1.0) -> void:
 	if inst != null and is_instance_valid(inst):
 		inst.play_sfx(name, pitch)
 
+## EDM stings (Nov 18): with the EDM soundtrack on, big moments get a one-shot (sting_<name>.wav: ko, rent,
+## levelup, tapestop); with it off they keep their old sfx (`fallback`, "" = nothing).
+const STINGS: = ["ko", "rent", "levelup", "tapestop"]
+static func sting(name: String, fallback: String = "") -> void:
+	if inst == null or not is_instance_valid(inst):
+		return
+	var n: String = inst.sting_name(name, fallback)
+	if n != "":
+		inst.play_sfx(n)
+
+func sting_name(name: String, fallback: String) -> String:
+	return ("sting_" + name) if edm and STINGS.has(name) else fallback
+
 static func music(name: String) -> void:
 	if inst != null and is_instance_valid(inst):
 		inst.play_music(name)
