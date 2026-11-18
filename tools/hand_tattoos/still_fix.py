@@ -61,7 +61,7 @@ STILLS = {
     },
     "duff_fin3": {
         "file": "assets/art/ko/duff_fin3.jpg",
-        "fist": ("duff_fin3_v4.png", (690, 80, 1330, 660)),
+        "fist": ("duff_fin3_v4.png", (745, 80, 1275, 660), (740, 1280)),  # Duff's photo was a mirrored selfie
         "crop2": (700, 120, 1280, 620),
     },
     "duff_fin2": {
@@ -124,9 +124,12 @@ def lay_script(img, quad, bold=2):
 
 
 def lay_fist(img, fist):
-    src, (x0, y0, x1, y1) = fist
+    src, (x0, y0, x1, y1) = fist[:2]
     h, w = img.shape[:2]
     new = cv2.resize(cv2.imread(os.path.join(REGEN, src), cv2.IMREAD_COLOR), (w, h), interpolation=cv2.INTER_AREA)
+    if len(fist) > 2:  # (fx0, fx1): mirror this column band left-right (selfie refs come out mirrored)
+        fx0, fx1 = fist[2]
+        new[:, fx0:fx1] = new[:, fx0:fx1][:, ::-1].copy()
     m = np.zeros((h, w), np.uint8)
     cv2.ellipse(m, ((x0 + x1) // 2, (y0 + y1) // 2), ((x1 - x0) // 2, (y1 - y0) // 2), 0, 0, 360, 255, -1)
     m = cv2.GaussianBlur(m, (0, 0), 6).astype(np.float32)[..., None] / 255.0
