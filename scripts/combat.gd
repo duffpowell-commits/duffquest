@@ -300,7 +300,7 @@ func _level_up() -> void:
 	points += POINTS_PER_LEVEL
 	heat = heat_max()
 	m.energy = minf(m.energy_cap(), m.energy + 15.0)
-	AudioScript.sfx("achievement")
+	AudioScript.sting("levelup", "achievement")
 	var msg: = "SENIORITY UP! Lv %d. +3 stat points, Heat refilled, +15 Energy." % level
 	for s in SPECIALS:
 		if int(s["lvl"]) == level:
