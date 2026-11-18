@@ -84,6 +84,29 @@ STILLS = {
         "script": [(68, 528), (117, 525), (115, 590), (71, 592)],
         "crop": (30, 480, 170, 620),
     },
+    # Boss KO frames (Duff's half of each KO panel). Only the right hands needed work: made-up
+    # blackletter -> his real script in red. The left fists already show the eye mandala.
+    "baron_b": {
+        "file": "assets/art/ko/baron_b.jpg",
+        "erase": [[(92, 564), (163, 567), (170, 600), (148, 621), (94, 621), (90, 596)]],
+        "below": 135,
+        "script": [(92, 560), (165, 565), (175, 615), (85, 612)],
+        "crop": (20, 500, 260, 680),
+    },
+    "bozos_b": {
+        "file": "assets/art/ko/bozos_b.jpg",
+        "erase": [[(85, 486), (179, 481), (181, 579), (89, 591), (84, 560)]],
+        "below": 140,
+        "script": [(80, 492), (175, 488), (178, 575), (84, 588)],
+        "crop": (20, 440, 240, 640),
+    },
+    "camper_b": {
+        "file": "assets/art/ko/camper_b.jpg",
+        "erase": [[(538, 120), (564, 122), (575, 138), (575, 163), (560, 164), (540, 150)]],
+        "below": 140,
+        "script": [(582, 128), (575, 168), (536, 152), (532, 114)],
+        "crop": (490, 80, 620, 200),
+    },
 }
 
 
@@ -97,13 +120,32 @@ def original(rel):
     return dst
 
 
-def erase(img, polys):
-    """Paint out dark ink inside the polygons (BGR uint8 in, out)."""
+def erase(img, polys, below=None):
+    """Paint out dark ink inside the polygons (BGR uint8 in, out). below=<lum>: the polygon is all
+    skin, so wipe everything darker than that (thick or blurry lettering, grey halos) too."""
     h, w = img.shape[:2]
     area = np.zeros((h, w), np.uint8)
     for p in polys:
         cv2.fillPoly(area, [np.array(p, np.int32)], 255)
     lum = img.astype(float) @ [0.114, 0.587, 0.299]
+    if below:
+        ink = cv2.dilate(((lum < below) & (area > 0)).astype(np.uint8), np.ones((3, 3), np.uint8), iterations=2) & (area > 0)
+        # fill from nearby SKIN only (normalised blur), so the hand outline never smears in
+        b_, g_, r_ = [img[..., i].astype(int) for i in range(3)]
+        hue = (r_ > 120) & (r_ > g_ + 15) & (g_ > b_)
+        skin = ((lum >= below + 15) & hue & ~ink.astype(bool)).astype(np.float32)
+        fill = np.zeros(img.shape, np.float32)
+        got = np.zeros(img.shape[:2] + (1,), np.float32)
+        for sig in (4, 10, 25):  # wide gaps fall back to a wider sample
+            num = cv2.GaussianBlur(img.astype(np.float32) * skin[..., None], (0, 0), sig)
+            den = cv2.GaussianBlur(skin, (0, 0), sig)[..., None]
+            ok = (den > 0.15).astype(np.float32) * (1 - got)
+            fill += ok * num / np.maximum(den, 1e-3)
+            got += ok
+        sk = (skin > 0) & (cv2.dilate(area, np.ones((25, 25), np.uint8)) > 0)
+        fill += (1 - got) * np.median(img[sk], axis=0).astype(np.float32)  # last resort: the hand's own tone
+        a = cv2.GaussianBlur(ink.astype(np.float32), (0, 0), 0.8)[..., None]
+        return (img * (1 - a) + fill * a).clip(0, 255).astype(np.uint8)
     dark = (lum < 115) & (area > 0)
     # big dark blobs are shirt / background poking into the polygon, not ink: keep them
     allDark = (lum < 115).astype(np.uint8)
@@ -206,7 +248,7 @@ def fix(name):
     img = cv2.imread(original(rel), cv2.IMREAD_COLOR)
     before = img.copy()
     if cfg.get("erase"):
-        img = erase(img, cfg["erase"])
+        img = erase(img, cfg["erase"], cfg.get("below"))
     if cfg.get("bare"):
         img = bare(img, cfg["bare"])
     if cfg.get("script"):
