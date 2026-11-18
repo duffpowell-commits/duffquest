@@ -27,3 +27,13 @@ Details pulled from the photos that no art has yet:
 2. Sprites (what players see every second): stamp the real designs onto every hand frame, pixel-exact.
 3. KO stills + loading screens: graft the real designs onto each hand, batch 1 for Duff's look first.
 4. Title/covers/thumbnail, then re-cut trailer + GIFs.
+
+## Status (Nov 18, 23:20 UTC): every item matched
+- Sprites + 3D atlas: PRs #141, #143, #150 (traced script master).
+- KO stills: #142, #144, #150, #154. All 60 audited; only Duff frames (_b, duff_*) needed work.
+- Loading screens: #155 (9 fixed, 5 already fine / no Duff hands).
+- Title, itch cover, portal covers, YouTube thumbnail: #156 (pixel-size hands: red right-hand ink, black left hand with the eye).
+- Trailer (both cuts), portal previews, boss_intro.gif: patched frame by frame with `tools/hand_tattoos/video_patch.py`
+  (ORB homography finds each changed still in every frame and swaps in the fixed one). knockout.gif needed nothing.
+  Old copies: project files `duffquest-youtube/old_pre_hand_fix/`, `duffquest-ads/old_pre_hand_fix/`.
+- Any NEW still/promo: run still_fix.py for the still, then video_patch.py on any cut that uses it.
