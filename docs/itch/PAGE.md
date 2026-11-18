@@ -83,7 +83,7 @@ One line cook. One phone. No computer.
 
 - **Code:** built in Godot 4.5.
 - **Art:** from Duff's own photos and references, finished in code. Logo built in code from the game's fonts.
-- **Music:** by Duff. The date-night theme is Brahms' Lullaby (public domain). **Sound effects:** synthesized by code.
+- **Music:** by Duff. The Club Cloud 9 dubstep (DJ Vape's fight) is synthesized in code, no samples. The date-night theme is Brahms' Lullaby (public domain). **Sound effects:** synthesized by code.
 - **Writing:** Duff's real life and jokes.
 - **Fonts:** Baloo 2, Nunito, Caveat, Patrick Hand (SIL Open Font License).
 
