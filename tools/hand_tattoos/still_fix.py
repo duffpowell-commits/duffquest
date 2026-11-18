@@ -5,13 +5,15 @@
     python3 tools/hand_tattoos/still_fix.py duff_fin1  # one still
 
 The stills already have the right idea (blackout left arm, script right hand) but invented
-lettering, crosses on the right fingers, and no signet ring. Per still, hand-placed by eye:
+lettering, crosses on the right fingers, and solid-black left fists. Per still, hand-placed by eye:
   "erase": polygons whose dark ink on skin is painted out (OpenCV inpaint; outlines stay
            outside the polygons), e.g. the made-up blackletter and the finger crosses.
   "script": quad TL,TR,BR,BL on the back of the RIGHT hand; TL-TR = the wrist edge. The master
            docs/ref/duff/hand_right_script.png ("This Red / Right Hand / Points Me / South") is
            warped onto it, so it reads upright when his arm hangs fingers-down, like the photo.
-  "ring":  [cx, cy, r, angle] silver signet ring band on the LEFT pinky.
+  "fist":  [x0, y0, x1, y1] ellipse taken from the redrawn still (FISTS: Canva redraw with Duff's
+           no-ring photo as reference, same framing) and feathered over the old LEFT fist.
+NO RING on either hand (Duff, Nov 18 2026: "Take the ring off").
 Originals come from git (cached in grok_art/hand_tattoos/_work/originals/), so re-runs never
 double-ink. Before/after crops go to docs/renders/hand_tattoos/stills/.
 """
@@ -30,6 +32,9 @@ REF = os.path.join(ROOT, "docs", "ref", "duff")
 BACKUP = os.path.join(ROOT, "grok_art", "hand_tattoos", "_work", "originals")
 RENDERS = os.path.join(ROOT, "docs", "renders", "hand_tattoos", "stills")
 INK = np.array([30, 20, 22], float)
+# Redrawn stills (Canva, refs = the still + docs/ref/duff/photo_left_hand_back_fingers_2026-11-18.jpg).
+# Masters also in Drive "97 Gemini art drops".
+REGEN = os.path.join(ROOT, "grok_art", "hand_tattoos", "_work", "regen")
 
 STILLS = {
     "duff_fin1": {
@@ -42,13 +47,20 @@ STILLS = {
             [(294, 647), (310, 647), (310, 676), (294, 676)],
         ],
         "script": [(143, 552), (262, 564), (272, 652), (150, 654)],
+        "fist": ("duff_fin1_v1.png", (690, 55, 915, 235)),
         "crop": (100, 500, 360, 720),
+        "crop2": (640, 20, 960, 280),
     },
     "duff_slip": {
         "file": "assets/art/ko/duff_slip.jpg",
         "erase": [[(362, 590), (400, 586), (456, 600), (458, 640), (440, 668), (390, 674), (362, 668), (358, 630)]],
         "script": [(364, 670), (364, 592), (458, 596), (458, 668)],
         "crop": (330, 560, 530, 710),
+    },
+    "duff_fin3": {
+        "file": "assets/art/ko/duff_fin3.jpg",
+        "fist": ("duff_fin3_v2.png", (760, 170, 1240, 575)),
+        "crop2": (700, 120, 1280, 620),
     },
     "duff_fin2": {
         "file": "assets/art/ko/duff_fin2.jpg",
@@ -106,16 +118,14 @@ def lay_script(img, quad, bold=2):
     return out.clip(0, 255).astype(np.uint8)
 
 
-def lay_ring(img, ring):
-    """Silver band across the pinky: from p0 to p1 (finger edge to edge), w = band width."""
-    p0, p1, w = ring
-    ov = img.copy()
-    cv2.line(ov, p0, p1, (60, 58, 56), w + 2, cv2.LINE_AA)       # dark rim
-    cv2.line(ov, p0, p1, (196, 198, 204), w, cv2.LINE_AA)        # silver
-    mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
-    cv2.circle(ov, (int(mx), int(my)), max(2, w // 2 + 1), (24, 22, 22), -1, cv2.LINE_AA)  # signet face
-    cv2.line(ov, (p0[0], p0[1] - w // 3), (p1[0], p1[1] - w // 3), (245, 245, 245), 1, cv2.LINE_AA)
-    return ov
+def lay_fist(img, fist):
+    src, (x0, y0, x1, y1) = fist
+    h, w = img.shape[:2]
+    new = cv2.resize(cv2.imread(os.path.join(REGEN, src), cv2.IMREAD_COLOR), (w, h), interpolation=cv2.INTER_AREA)
+    m = np.zeros((h, w), np.uint8)
+    cv2.ellipse(m, ((x0 + x1) // 2, (y0 + y1) // 2), ((x1 - x0) // 2, (y1 - y0) // 2), 0, 0, 360, 255, -1)
+    m = cv2.GaussianBlur(m, (0, 0), 6).astype(np.float32)[..., None] / 255.0
+    return (img * (1 - m) + new * m).clip(0, 255).astype(np.uint8)
 
 
 def fix(name):
@@ -127,8 +137,8 @@ def fix(name):
         img = erase(img, cfg["erase"])
     if cfg.get("script"):
         img = lay_script(img, cfg["script"])
-    if cfg.get("ring"):
-        img = lay_ring(img, cfg["ring"])
+    if cfg.get("fist"):
+        img = lay_fist(img, cfg["fist"])
     out = os.path.join(ROOT, rel)
     if rel.endswith(".jpg"):
         cv2.imwrite(out, img, [cv2.IMWRITE_JPEG_QUALITY, 92])
