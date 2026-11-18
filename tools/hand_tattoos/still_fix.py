@@ -5,13 +5,15 @@
     python3 tools/hand_tattoos/still_fix.py duff_fin1  # one still
 
 The stills already have the right idea (blackout left arm, script right hand) but invented
-lettering, crosses on the right fingers, and no signet ring. Per still, hand-placed by eye:
+lettering, crosses on the right fingers, and solid-black left fists. Per still, hand-placed by eye:
   "erase": polygons whose dark ink on skin is painted out (OpenCV inpaint; outlines stay
            outside the polygons), e.g. the made-up blackletter and the finger crosses.
   "script": quad TL,TR,BR,BL on the back of the RIGHT hand; TL-TR = the wrist edge. The master
            docs/ref/duff/hand_right_script.png ("This Red / Right Hand / Points Me / South") is
            warped onto it, so it reads upright when his arm hangs fingers-down, like the photo.
-  "ring":  [cx, cy, r, angle] silver signet ring band on the LEFT pinky.
+  "fist":  [x0, y0, x1, y1] ellipse taken from the redrawn still (FISTS: Canva redraw with Duff's
+           no-ring photo as reference, same framing) and feathered over the old LEFT fist.
+NO RING on either hand (Duff, Nov 18 2026: "Take the ring off").
 Originals come from git (cached in grok_art/hand_tattoos/_work/originals/), so re-runs never
 double-ink. Before/after crops go to docs/renders/hand_tattoos/stills/.
 """
@@ -29,7 +31,12 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 REF = os.path.join(ROOT, "docs", "ref", "duff")
 BACKUP = os.path.join(ROOT, "grok_art", "hand_tattoos", "_work", "originals")
 RENDERS = os.path.join(ROOT, "docs", "renders", "hand_tattoos", "stills")
-INK = np.array([30, 20, 22], float)
+# Right-hand script ink is RED (Duff, Nov 18 2026: "blend the right hand tattoo and make the ink red").
+# RGB; multiplied into the skin so the painted shading shows through like real ink.
+RED_INK = np.array([178, 22, 30], float)
+# Redrawn stills (Canva, refs = the still + docs/ref/duff/photo_left_hand_back_fingers_2026-11-18.jpg).
+# Masters also in Drive "97 Gemini art drops".
+REGEN = os.path.join(ROOT, "grok_art", "hand_tattoos", "_work", "regen")
 
 STILLS = {
     "duff_fin1": {
@@ -42,13 +49,21 @@ STILLS = {
             [(294, 647), (310, 647), (310, 676), (294, 676)],
         ],
         "script": [(143, 552), (262, 564), (272, 652), (150, 654)],
+        "fist": ("duff_fin1_v1.png", (690, 55, 915, 235)),
         "crop": (100, 500, 360, 720),
+        "crop2": (640, 20, 960, 280),
     },
     "duff_slip": {
         "file": "assets/art/ko/duff_slip.jpg",
         "erase": [[(362, 590), (400, 586), (456, 600), (458, 640), (440, 668), (390, 674), (362, 668), (358, 630)]],
         "script": [(364, 670), (364, 592), (458, 596), (458, 668)],
         "crop": (330, 560, 530, 710),
+    },
+    "duff_fin3": {
+        "file": "assets/art/ko/duff_fin3.jpg",
+        "fist": ("duff_fin3_v4.png", (755, 95, 1265, 645), (740, 1280), 82),  # Duff's photo was a mirrored selfie
+        "cut": ((775, 135, 470, 445), (740, 160, 510, 420)),  # grabCut rects: new fist, old fist
+        "crop2": (700, 120, 1280, 620),
     },
     "duff_fin2": {
         "file": "assets/art/ko/duff_fin2.jpg",
@@ -101,21 +116,50 @@ def lay_script(img, quad, bold=2):
     b, g, r = [img[..., i].astype(int) for i in range(3)]
     skin = ((r > 120) & (r > g + 10) & (g > b)).astype(np.float32)
     skin = cv2.GaussianBlur(skin, (3, 3), 0)
-    al = (np.clip(al * 1.15, 0, 1) * skin)[..., None]
-    out = img.astype(float) * (1 - al) + INK[::-1] * al
+    al = cv2.GaussianBlur(al, (0, 0), 0.8)  # soft edge: healed ink, not a sticker
+    al = (np.clip(al * 1.1, 0, 0.88) * skin)[..., None]
+    base = img.astype(float)
+    inked = base * (RED_INK[::-1] / 255.0) * 0.9  # multiply: keeps the skin's light and shadow
+    out = base * (1 - al) + inked * al
     return out.clip(0, 255).astype(np.uint8)
 
 
-def lay_ring(img, ring):
-    """Silver band across the pinky: from p0 to p1 (finger edge to edge), w = band width."""
-    p0, p1, w = ring
-    ov = img.copy()
-    cv2.line(ov, p0, p1, (60, 58, 56), w + 2, cv2.LINE_AA)       # dark rim
-    cv2.line(ov, p0, p1, (196, 198, 204), w, cv2.LINE_AA)        # silver
-    mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
-    cv2.circle(ov, (int(mx), int(my)), max(2, w // 2 + 1), (24, 22, 22), -1, cv2.LINE_AA)  # signet face
-    cv2.line(ov, (p0[0], p0[1] - w // 3), (p1[0], p1[1] - w // 3), (245, 245, 245), 1, cv2.LINE_AA)
-    return ov
+def grab(img, rect):
+    """Biggest grabCut foreground blob inside rect (x, y, w, h), holes closed."""
+    m = np.zeros(img.shape[:2], np.uint8)
+    cv2.grabCut(img, m, rect, np.zeros((1, 65)), np.zeros((1, 65)), 6, cv2.GC_INIT_WITH_RECT)
+    fm = ((m == 1) | (m == 3)).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(fm)
+    fm = (lab == 1 + np.argmax(st[1:, 4])).astype(np.uint8)
+    return cv2.morphologyEx(fm, cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8))
+
+
+def cut_fist(img, new, rect_new, rect_old):
+    """Paste only the redrawn fist (grabCut) and paint the old fist's leftovers out with the burst around it."""
+    fm = cv2.morphologyEx(grab(new, rect_new), cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (41, 41)))
+    old = grab(img, rect_old)
+    rest = cv2.dilate(old & (1 - fm), np.ones((7, 7), np.uint8))
+    img = cv2.inpaint(img, rest * 255, 9, cv2.INPAINT_TELEA)
+    a = cv2.GaussianBlur(fm.astype(np.float32), (0, 0), 1.5)[..., None]
+    return (img * (1 - a) + new * a).clip(0, 255).astype(np.uint8)
+
+
+def lay_fist(img, fist, cut=None):
+    src, (x0, y0, x1, y1) = fist[:2]
+    h, w = img.shape[:2]
+    new = cv2.resize(cv2.imread(os.path.join(REGEN, src), cv2.IMREAD_COLOR), (w, h), interpolation=cv2.INTER_AREA)
+    if len(fist) > 2:  # (fx0, fx1): mirror this column band left-right (selfie refs come out mirrored)
+        fx0, fx1 = fist[2]
+        new[:, fx0:fx1] = new[:, fx0:fx1][:, ::-1].copy()
+    if len(fist) > 3:  # rotate the redraw (degrees, CCW) about the ellipse centre to match the old fist's pose
+        R = cv2.getRotationMatrix2D(((fist[2][0] + fist[2][1]) / 2, 370), fist[3], 1.0)
+        new = cv2.warpAffine(new, R, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
+    if cut:
+        return cut_fist(img, new, *cut)
+    m = np.zeros((h, w), np.uint8)
+    cv2.ellipse(m, ((x0 + x1) // 2, (y0 + y1) // 2), ((x1 - x0) // 2, (y1 - y0) // 2), 0, 0, 360, 255, -1)
+    m = cv2.GaussianBlur(m, (0, 0), 6).astype(np.float32)[..., None] / 255.0
+    return (img * (1 - m) + new * m).clip(0, 255).astype(np.uint8)
 
 
 def fix(name):
@@ -127,8 +171,8 @@ def fix(name):
         img = erase(img, cfg["erase"])
     if cfg.get("script"):
         img = lay_script(img, cfg["script"])
-    if cfg.get("ring"):
-        img = lay_ring(img, cfg["ring"])
+    if cfg.get("fist"):
+        img = lay_fist(img, cfg["fist"], cfg.get("cut"))
     out = os.path.join(ROOT, rel)
     if rel.endswith(".jpg"):
         cv2.imwrite(out, img, [cv2.IMWRITE_JPEG_QUALITY, 92])
