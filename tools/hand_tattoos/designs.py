@@ -126,7 +126,10 @@ def to_rgba(alpha):
 def main():
     os.makedirs(OUT, exist_ok=True)
     to_rgba(eye_mandala()).save(os.path.join(OUT, "hand_left_eye_mandala.png"))
-    to_rgba(script()).save(os.path.join(OUT, "hand_right_script.png"))
+    # hand_right_script.png is now TRACED from Duff's close-up photo (Nov 18: Canva stencil of
+    # photo_right_hand_script_closeup_2026-11-18.jpg + the pennant swash under "Points"). Never overwrite it.
+    if not os.path.exists(os.path.join(OUT, "hand_right_script.png")):
+        to_rgba(script()).save(os.path.join(OUT, "hand_right_script.png"))
     print("wrote", OUT)
 
 
