@@ -61,7 +61,7 @@ STILLS = {
     },
     "duff_fin3": {
         "file": "assets/art/ko/duff_fin3.jpg",
-        "fist": ("duff_fin3_v2.png", (760, 170, 1240, 575)),
+        "fist": ("duff_fin3_v3.png", (690, 80, 1330, 660)),
         "crop2": (700, 120, 1280, 620),
     },
     "duff_fin2": {
