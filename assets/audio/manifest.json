@@ -45,7 +45,7 @@
   "edm_home": 25.71,
   "edm_gala": 23.61,
   "edm_willnot": 22.07,
-  "edm_date": 32.0,
+  "edm_date": 34.29,
   "edm_credits": 23.23
  },
  "credits": "Music by Duff (the game's author). The optional EDM soundtrack (Settings) and the Club Cloud 9 dubstep (DJ Vape's fight) are synthesized in code (tools/edm/, tools/synth_dubstep.py). SFX synthesized in code. Date theme: Brahms' Lullaby (1868, public domain). Everything else original."
