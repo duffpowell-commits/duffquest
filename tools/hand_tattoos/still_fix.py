@@ -31,7 +31,9 @@ ROOT = os.path.dirname(os.path.dirname(HERE))
 REF = os.path.join(ROOT, "docs", "ref", "duff")
 BACKUP = os.path.join(ROOT, "grok_art", "hand_tattoos", "_work", "originals")
 RENDERS = os.path.join(ROOT, "docs", "renders", "hand_tattoos", "stills")
-INK = np.array([30, 20, 22], float)
+# Right-hand script ink is RED (Duff, Nov 18 2026: "blend the right hand tattoo and make the ink red").
+# RGB; multiplied into the skin so the painted shading shows through like real ink.
+RED_INK = np.array([178, 22, 30], float)
 # Redrawn stills (Canva, refs = the still + docs/ref/duff/photo_left_hand_back_fingers_2026-11-18.jpg).
 # Masters also in Drive "97 Gemini art drops".
 REGEN = os.path.join(ROOT, "grok_art", "hand_tattoos", "_work", "regen")
@@ -113,8 +115,11 @@ def lay_script(img, quad, bold=2):
     b, g, r = [img[..., i].astype(int) for i in range(3)]
     skin = ((r > 120) & (r > g + 10) & (g > b)).astype(np.float32)
     skin = cv2.GaussianBlur(skin, (3, 3), 0)
-    al = (np.clip(al * 1.15, 0, 1) * skin)[..., None]
-    out = img.astype(float) * (1 - al) + INK[::-1] * al
+    al = cv2.GaussianBlur(al, (0, 0), 0.8)  # soft edge: healed ink, not a sticker
+    al = (np.clip(al * 1.1, 0, 0.88) * skin)[..., None]
+    base = img.astype(float)
+    inked = base * (RED_INK[::-1] / 255.0) * 0.9  # multiply: keeps the skin's light and shadow
+    out = base * (1 - al) + inked * al
     return out.clip(0, 255).astype(np.uint8)
 
 
