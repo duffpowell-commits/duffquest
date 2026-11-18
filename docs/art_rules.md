@@ -14,8 +14,12 @@ Any **HARD** rule failure is an automatic FIX or REDO.
   sleeve must be there.
 - **D3 Other arm.** Grey-wash horns or flames on the upper arm. On the forearm: a dark creature head with
   orange eyes. It is **not a panther**, and it is not a lion or a cat.
-- **D4 Hands.** Back of the blackout-arm hand: an eye inside a ring of triangles. Back of the other hand:
-  bold blackletter script.
+- **D4 Hands (HARD, Nov 18).** LEFT hand (the blackout-arm hand): eye mandala (eye, ring of triangle teeth, spiked
+  sun to the finger bases), finger dots, silver signet ring on the LEFT pinky (infinity over a double cross). RIGHT hand:
+  four lines of brush calligraphy, "This Red / Right Hand / Points Me / South", swirl under "South", fingers bare.
+  Readable letters must spell exactly that. Masters + photos: `docs/duff_look.md` "Hands". Sprites come from
+  `tools/hand_tattoos/stamp.py`, never a hand edit or an AI repaint.
+
 - **D5 Sides stay consistent.** The fox neck tattoo sits on Duff's left side of the neck. Use it to check
   which arm is which.
 - **D6 Face.** He must match `portraits_hd/duff.png` and the photos in `docs/ref/duff/`. Wherever the
