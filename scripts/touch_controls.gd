@@ -92,6 +92,9 @@ func _input(e: InputEvent) -> void:
 			elif not dialog_open() and _demon_shown() and tp.distance_to(BTN_D) < BTN_D_R + 4.0:
 				d_pressed.emit()
 				get_viewport().set_input_as_handled()
+			elif dialog_open() and not _on_hud(tp):   # Nov 18: a tap anywhere moves the line on (not just A)
+				a_pressed.emit()
+				get_viewport().set_input_as_handled()
 			elif tp.x < 160.0 and joy_idx == -1 and not dialog_open():
 				joy_idx = t.index
 				joy_center = tp
