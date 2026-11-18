@@ -50,15 +50,16 @@ func _setup() -> void:
 		var id: String = ORDER[i]
 		var row: = 0 if i < 7 else 1
 		var col: = i if i < 7 else i - 7
-		var b: = add_button(id, Rect2(4 + col * 45, 128 + row * 24, 43, 21), ING[id][0], KEYS[i], Color(ING[id][1]).darkened(0.5))
+		# Nov 18 (Duff: fat fingers): 5 units between tiles (was 2-3).
+		var b: = add_button(id, Rect2(4 + col * 45.5, 129 + row * 26, 40, 21), ING[id][0], KEYS[i], Color(ING[id][1]).darkened(0.5))
 		var art: String = ICON.get(id, "kf_" + id)
 		if Art.tex(art) != null:   # picture tile (house-style prop, tools/import_kitchen_props.py)
 			b["icon"] = art
 			b["col"] = Color("#57504e")
-	add_button("gloves", Rect2(4 + 5 * 45, 152, 88, 21), "GLOVES+SANITIZE", KEY_G, Color("#43668e"))
-	add_button("serve", Rect2(266, 104, 50, 21), "SERVE", KEY_ENTER, Color("#4e7a3a"))
+	add_button("gloves", Rect2(4 + 5 * 45.5, 155, 85.5, 21), "GLOVES+SANITIZE", KEY_G, Color("#43668e"))
+	add_button("serve", Rect2(266, 104, 50, 20), "SERVE", KEY_ENTER, Color("#4e7a3a"))
 	if eighty_six != "":
-		add_button("comp", Rect2(212, 104, 50, 21), "COMP IT", KEY_C, Color("#a8406a"))
+		add_button("comp", Rect2(210, 104, 50, 20), "COMP IT", KEY_C, Color("#a8406a"))
 		get_button(eighty_six)["enabled"] = false
 		get_button(eighty_six)["label"] = "86'd"
 
