@@ -33,6 +33,20 @@ static func tex(name: String) -> Texture2D:
 static func clear_cache() -> void :
 	_tex.clear()
 
+## Nov 18 (Brittany's iPhone 11 froze on a boss intro): the cache kept every backdrop it ever loaded, and big
+## 1280x720 room art piles up past what iPhone Safari lets one page hold. main.gd calls this when the room
+## changes: one-off backdrops (minigame bg_*, fight arenas, the gala floor) reload from the pack when needed.
+const BIG_PREFIXES: = ["bg_", "arena_", "gala"]
+static func drop_big() -> int:
+	var n: = 0
+	for k in _tex.keys():
+		for pre in BIG_PREFIXES:
+			if str(k).begins_with(pre):
+				_tex.erase(k)
+				n += 1
+				break
+	return n
+
 ## Pixel size + opaque rect of every storefront (sf_*) and street prop (sd_*), baked into data/art_rects.json by
 ## tools/bake_art_rects.gd. main.gd builds the walls from these at startup, so on the web the walls are right
 ## before world.pck (which carries the art itself) has arrived. test_daily checks they match the textures.

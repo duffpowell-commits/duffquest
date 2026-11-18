@@ -76,9 +76,28 @@ func _portrait(who: String) -> Texture2D:
 		_tex[who] = load(Art.pub(p)) if ResourceLoader.exists(p) else null
 	return _tex[who]
 
+const KEEP_PORTRAITS: = ["duff", "madison", "brittany", "octavia"]
+var _room: = ""
+
+## Nov 18 (iPhone memory): a boss intro card is 960x540 and each guest portrait strip 1536x512; drop them when
+## they're done instead of keeping every one for the whole session.
+func _trim() -> void:
+	if main == null:
+		return
+	var room: = str(main.location) + ":" + str(main.get("arena_id"))
+	for k in _tex.keys():
+		var key: = str(k)
+		if key.begins_with("intro_") and key != "intro_" + _splash_boss:
+			_tex.erase(k)
+		elif room != _room and not key.begins_with("intro_") and not key in KEEP_PORTRAITS:
+			_tex.erase(k)
+	_room = room
+
 func _draw() -> void:
 	if main == null or main.dialog.is_empty():
 		_splash_boss = ""
+		if not _tex.is_empty():
+			_trim()
 		return
 	var line: String = Cast.T(str(main.dialog[0]))
 	var r: Rect2 = main.hud.dialog_rect()

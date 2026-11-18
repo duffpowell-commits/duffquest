@@ -206,6 +206,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `python3 tools/import_vans.py grok_art/2026-11-17-vans/_work/vans_v1.png`). A mirrored 2D draw shows as get_scale().y < 0, not x.
   Squash: `juice.squash(node, big)`. Swing smear / roll dust: `combat_fx.swing()` / `dust()`. Wipe: `hud.wipe_t`.
 
+- **iPhone hardening (Nov 18):** iPhones start Lite once (`perf_guard` cfg `ios_lite`). Big one-off art is dropped from `Art._tex` on room change (`Art.drop_big`, prefixes `bg_ arena_ gala`); never hold a 1280x720 texture forever in a cache. `main._watchdog` frees a stuck loading screen (10 s) or a dead menu. A tap anywhere advances dialogue. Bug reports: Settings > Send a bug report (`main.bug_report()`); ask testers for one before guessing.
 - **Kitchen tickets (Nov 17):** spec lines are picture tiles (`minigame.ticket_spec()`), the fryer is a colour gauge (`fryer._draw_gauge`). Don't add small explanatory text to play screens; put it on the how-to card.
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
