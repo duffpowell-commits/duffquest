@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Draw Duff's two hand tattoos + his signet ring as clean design masters (alpha = ink).
+"""Draw Duff's two hand tattoos as clean design masters (alpha = ink).
 
     python3 tools/hand_tattoos/designs.py        # writes docs/ref/duff/hand_*.png
 
 Truth (Duff, Nov 18 2026, photos docs/ref/duff/photo_*_hand_*_2026-11-18.jpg):
   LEFT hand  = eye mandala, part of the blackout sleeve: an eye in the centre, a ring of
-               triangle teeth, a spiked sun whose points reach the finger bases. Dots on the
-               fingers (three stacked on the ring finger). Silver signet ring on the LEFT pinky,
-               face = an infinity sign over a double cross.
+               triangle teeth, a spiked sun whose points run onto the backs of the fingers
+               (Duff: "The mandala is on the back of the fingers"). Dot clusters on the fingers
+               (three on the ring finger, a pair on the middle, single dots by pinky and thumb).
+               NO RING (Duff, Nov 18 2026: "Take the ring off").
   RIGHT hand = four lines of brush calligraphy, wrist to knuckles:
                "This Red / Right Hand / Points Me / South", a swirl under "South".
                It reads upright when his arm hangs at his side (fingers down), so line 1 sits
@@ -116,29 +117,6 @@ def script(size=S):
     return im.resize((size, size), Image.LANCZOS)
 
 
-def ring(size=128):
-    """RGBA icon of the signet ring face: silver rim, black face, infinity over a double cross."""
-    k = 4
-    n = size * k
-    im = Image.new("RGBA", (n, n), (0, 0, 0, 0))
-    d = ImageDraw.Draw(im)
-    d.ellipse((0, 0, n - 1, n - 1), fill=(196, 198, 204, 255))
-    m = n * 0.1
-    d.ellipse((m, m, n - m, n - m), fill=(20, 20, 24, 255))
-    s = (205, 208, 214, 255)
-    w = int(n * 0.05)
-    cx = n / 2
-    # infinity
-    r = n * 0.11
-    d.ellipse((cx - 2 * r, n * 0.20, cx, n * 0.20 + 2 * r), outline=s, width=w)
-    d.ellipse((cx, n * 0.20, cx + 2 * r, n * 0.20 + 2 * r), outline=s, width=w)
-    # double cross
-    d.line((cx, n * 0.20 + 2 * r, cx, n * 0.86), fill=s, width=w)
-    d.line((cx - n * 0.16, n * 0.56, cx + n * 0.16, n * 0.56), fill=s, width=w)
-    d.line((cx - n * 0.12, n * 0.70, cx + n * 0.12, n * 0.70), fill=s, width=w)
-    return im.resize((size, size), Image.LANCZOS)
-
-
 def to_rgba(alpha):
     im = Image.new("RGBA", alpha.size, INK[:3] + (0,))
     im.putalpha(alpha)
@@ -149,7 +127,6 @@ def main():
     os.makedirs(OUT, exist_ok=True)
     to_rgba(eye_mandala()).save(os.path.join(OUT, "hand_left_eye_mandala.png"))
     to_rgba(script()).save(os.path.join(OUT, "hand_right_script.png"))
-    ring().save(os.path.join(OUT, "hand_left_pinky_ring.png"))
     print("wrote", OUT)
 
 
