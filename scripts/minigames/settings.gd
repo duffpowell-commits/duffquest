@@ -12,7 +12,7 @@ const TOP: = 33.0
 const MUSIC_BAR: = Rect2(LEFT + 10, TOP + 15, 104, 3)
 const SFX_BAR: = Rect2(LEFT + 10, TOP + 37, 104, 3)
 const OFF: = Rect2(-40, -40, 1, 1)   # key-only buttons (volume - / +)
-const TOGGLES: = ["clean", "gore", "shake", "view3d", "gfx"]
+const TOGGLES: = ["clean", "gore", "shake", "edm", "view3d", "gfx"]
 const STEP: = 0.1
 
 var audio: Node = null
@@ -40,8 +40,8 @@ func _setup() -> void:
 		if id == "view3d" and not ClassDB.class_exists("Node3D"):   # the slim 2D web engine has no 3D
 			continue
 		var lbl: String = {"clean": _clean_label(), "gore": _gore_label(), "shake": _shake_label(),
-			"view3d": _view3d_label(), "gfx": _gfx_label()}[id]
-		var key: int = {"clean": KEY_C, "gore": KEY_G, "shake": KEY_K, "view3d": KEY_B, "gfx": KEY_V}[id]
+			"edm": _edm_label(), "view3d": _view3d_label(), "gfx": _gfx_label()}[id]
+		var key: int = {"clean": KEY_C, "gore": KEY_G, "shake": KEY_K, "edm": KEY_E, "view3d": KEY_B, "gfx": KEY_V}[id]
 		_row(id, Rect2(RIGHT, y, COL_W, ROW_H), lbl, key)
 		y += ROW_H
 	_row("credits", Rect2(LEFT, TOP + 79, COL_W, ROW_H), "Credits & legal", KEY_L)
@@ -73,6 +73,9 @@ func _clean_label() -> String:
 func _gore_label() -> String:
 	return "Cartoon gore: ON (G)" if audio == null or audio.gore else "Cartoon gore: OFF (G)"
 
+func _edm_label() -> String:
+	return "EDM soundtrack: ON (E)" if audio != null and audio.edm else "EDM soundtrack: OFF (E)"
+
 func _shake_label() -> String:
 	return "Screen shake: ON (K)" if JuiceScript.shake_on else "Screen shake: OFF (K)"
 
@@ -84,7 +87,7 @@ func sfx_vol() -> float:
 
 ## Toggles share one look: teal when on, slate when off, so the column reads as a set.
 func _tint_toggles() -> void:
-	for id in ["mute", "clean", "gore", "shake", "gfx", "view3d"]:
+	for id in ["mute", "clean", "gore", "shake", "edm", "gfx", "view3d"]:
 		var b: = get_button(id)
 		if b.is_empty():
 			continue
@@ -128,6 +131,11 @@ func _on_button(id: String) -> void:
 			audio.set_screen_shake(not JuiceScript.shake_on)
 			get_button("shake")["label"] = _shake_label()
 			AudioScript.sfx("select")
+		"edm":
+			audio.set_edm(not audio.edm)
+			get_button("edm")["label"] = _edm_label()
+			AudioScript.sfx("select")
+			flash("EDM soundtrack ON. Drop incoming." if audio.edm else "Original soundtrack. Duff's own tunes.", Color.WHITE, 1.0)
 		"view3d":
 			audio.set_view3d(not audio.view3d)
 			get_button("view3d")["label"] = _view3d_label()
@@ -173,12 +181,13 @@ func _on(id: String) -> bool:
 		"clean": return Cast.clean
 		"gore": return audio == null or audio.gore
 		"shake": return JuiceScript.shake_on
+		"edm": return audio != null and audio.edm
 		"view3d": return audio != null and audio.view3d
 		"gfx": return _guard() != null and _guard().low
 	return false
 
 const ROW_TEXT: = {"mute": "Mute all", "clean": "Clean language", "gore": "Cartoon gore (KOs)", "shake": "Screen shake",
-	"view3d": "3D view", "gfx": "Lite graphics", "credits": "Credits & legal", "report": "Send a bug report", "dev_quests": "Dev: quests"}
+	"edm": "EDM soundtrack", "view3d": "3D view", "gfx": "Lite graphics", "credits": "Credits & legal", "report": "Send a bug report", "dev_quests": "Dev: quests"}
 
 func _card(r: Rect2, head: String) -> void:
 	draw_string(UiStyle.display, r.position + Vector2(4, -3), head, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color(1, 1, 1, 0.5))

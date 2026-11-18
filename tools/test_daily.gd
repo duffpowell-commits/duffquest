@@ -17,6 +17,17 @@ func _init() -> void:
 	# web: walls come from baked rects (world.pck carries the art); they must match the textures
 	check("3D Duff sheet: plain black sleeves, no print (rebuild only with tools/duff_hd3d/build_duff_hd.sh)",
 		_sleeve_print_px("res://assets/art3d/duff_home_hd3d.png") < 1000)
+	# EDM soundtrack (Settings toggle, Nov 18): every place has its EDM file, and the switch picks it up
+	var Au: = load("res://scripts/audio.gd")
+	var au = Au.new()
+	au.edm = true
+	check("EDM: night -> edm_night first, falls back to the neighborhood theme",
+		au._music_candidates("night") == ["edm_night", "night", "edm_neighborhood", "neighborhood"])
+	au.edm = false
+	check("EDM off: original first", au._music_candidates("boss") == ["boss"])
+	for n in ["neighborhood", "night", "kitchen", "boss"]:
+		check("EDM track mus_edm_%s.ogg ships" % n, ResourceLoader.exists("res://assets/audio/mus_edm_%s.ogg" % n))
+	au.free()
 	check("data/art_rects.json matches sf_/sd_ art (re-run tools/bake_art_rects.gd)",
 		FileAccess.get_file_as_string("res://data/art_rects.json") == JSON.stringify(preload("res://tools/bake_art_rects.gd").measure(), "\t", true) + "\n")
 	_edition_checks()

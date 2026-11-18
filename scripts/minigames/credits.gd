@@ -69,7 +69,7 @@ func _build() -> void:
 	_head("HOW IT WAS MADE")
 	_para("Code: built in the Godot Engine 4.5.")
 	_para("Art: from the author's own photos and direction, finished in code.")
-	_para(Cast.T("Music: by {hero}. The Club Cloud 9 dubstep is synthesized in code. The date-night theme is Brahms' Lullaby (1868, public domain)."))
+	_para(Cast.T("Music: by {hero}. The Club Cloud 9 dubstep and the optional EDM soundtrack (Settings) are synthesized in code. The date-night theme is Brahms' Lullaby (1868, public domain)."))
 	_para("Sound effects: synthesized by code for this game.")
 	_para("Writing: the author's life and jokes.")
 	_head("PRIVACY")

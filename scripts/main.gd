@@ -2086,7 +2086,8 @@ func music_track() -> String:
 				return "club"
 			return "kitchen" if arena_mode == "waffle" else "boss"
 		"home": return "home"
-	return "neighborhood"
+	# the EDM set has its own night theme (synthwave); the original soundtrack falls back to the neighborhood one
+	return "night" if (clock >= 1200.0 or clock < 330.0) else "neighborhood"
 
 func open_settings() -> void:
 	var was_title: = in_title
