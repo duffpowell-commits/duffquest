@@ -34,20 +34,21 @@ func _setup() -> void:
 	time_limit = 0.0
 	space_is_pen = false
 	answer = answer.to_upper()
-	var y: = 111.0
+	# Nov 18 (Duff: fat fingers): 4 units between keys (was 1), 4 between rows (was 2).
+	var y: = 107.0
 	for r in ROWS.size():
 		var row: String = ROWS[r]
-		var x: = 5.0 + (r * 15.0 if r < 2 else 0.0)
+		var x: = 7.0 + (r * 15.0 if r < 2 else 0.0)
 		if r == 2:
-			add_button("ENTER", Rect2(5, y, 45, 21), "ENTER", KEY_ENTER, Color("#2e5aa8"))
+			add_button("ENTER", Rect2(5, y, 43, 21), "ENTER", KEY_ENTER, Color("#2e5aa8"))
 			x = 52.0
 		for i in row.length():
 			var ch: = row[i]
-			add_button(ch, Rect2(x + i * 31.0, y, 30, 21), ch, OS.find_keycode_from_string(ch), C_KEY)
+			add_button(ch, Rect2(x + i * 31.0, y, 27, 21), ch, OS.find_keycode_from_string(ch), C_KEY)
 		if r == 2:
-			add_button("DEL", Rect2(270, y, 45, 21), "DEL", KEY_BACKSPACE, Color("#7a4a4a"))
-		y += 23.0
-	add_button("giveup", Rect2(262, 94, 54, 13), "give up", KEY_ESCAPE, Color("#4a3a3a"))
+			add_button("DEL", Rect2(269, y, 46, 21), "DEL", KEY_BACKSPACE, Color("#7a4a4a"))
+		y += 25.0
+	add_button("giveup", Rect2(262, 91, 54, 13), "give up", KEY_ESCAPE, Color("#4a3a3a"))
 
 func type_letter(ch: String) -> void:
 	if ended or cur.length() >= 5:
