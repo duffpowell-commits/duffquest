@@ -101,6 +101,9 @@ jobs:
           test -s build/web/street.pck
           test -s build/web/world.pck
           test -s build/web/extra.pck
+          # md5 of each pack: returning players re-mount their stored copy when it still matches (extra_pack.gd)
+          python3 -c "import hashlib,json; print(json.dumps({n: hashlib.md5(open('build/web/'+n,'rb').read()).hexdigest() for n in ['street.pck','world.pck','extra.pck']}))" > build/web/packs.json
+          cat build/web/packs.json
           # pre-gzipped engine: index.html unzips it in the browser (export_presets.cfg html/head_include)
           gzip -9 -k -n build/web/index.wasm
           ls -la build/web
@@ -120,7 +123,7 @@ jobs:
           godot --headless --path . --export-release "Web" build/pages/family/index.html
           cp /tmp/presets.bak export_presets.cfg
           for d in build/pages build/pages/family; do
-            cp build/web/street.pck build/web/world.pck build/web/extra.pck $d/
+            cp build/web/street.pck build/web/world.pck build/web/extra.pck build/web/packs.json $d/
             gzip -9 -k -n $d/index.wasm
             # iOS reads these from the page, not only the manifest
             title="Duff Quest"; [ "$d" = build/pages/family ] && title="Duff Quest Family"
@@ -209,7 +212,7 @@ jobs:
           mkdir -p build/web3d
           godot --headless --path . --export-release "Web" build/web3d/index.html
           cp /tmp/web2d_tpl.zip $T/web_nothreads_release.zip
-          cp build/web/street.pck build/web/world.pck build/web/extra.pck build/web3d/
+          cp build/web/street.pck build/web/world.pck build/web/extra.pck build/web/packs.json build/web3d/
           gzip -9 -n build/web3d/index.wasm
           ls -la build/web3d
           gh release view web3d-preview >/dev/null 2>&1 || gh release create web3d-preview --prerelease --title "3D phone-test build" --notes "Not for players."

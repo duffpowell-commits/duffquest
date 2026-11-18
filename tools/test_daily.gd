@@ -36,6 +36,19 @@ func _init() -> void:
 		FileAccess.get_file_as_string("res://data/art_rects.json") == JSON.stringify(preload("res://tools/bake_art_rects.gd").measure(), "\t", true) + "\n")
 	_edition_checks()
 	_coach_checks()
+	# web packs: a stored copy is reused only when its md5 matches this build's packs.json (extra_pack.gd)
+	var XP: = load("res://scripts/extra_pack.gd")
+	var tmp: = "user://_pack_cache_test.bin"
+	var tf: = FileAccess.open(tmp, FileAccess.WRITE)
+	tf.store_string("duff")
+	tf.close()
+	var md5: = FileAccess.get_md5(tmp)
+	var want: = {"street.pck": md5.to_upper()}
+	check("pack cache: matching md5 reuses the stored pack", XP.cached_ok(tmp, XP.want_md5(want, "street.pck")))
+	check("pack cache: other md5 downloads again", not XP.cached_ok(tmp, "0123456789abcdef0123456789abcdef"))
+	check("pack cache: no packs.json entry downloads again", not XP.cached_ok(tmp, XP.want_md5(want, "world.pck")))
+	check("pack cache: no stored copy downloads", not XP.cached_ok("user://_no_such_pack.pck", md5))
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(tmp))
 	# full shift: quiz first, same 8 stations, order changes across shifts
 	var orders: = {}
 	for i in 30:
