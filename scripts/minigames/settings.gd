@@ -45,8 +45,9 @@ func _setup() -> void:
 		_row(id, Rect2(RIGHT, y, COL_W, ROW_H), lbl, key)
 		y += ROW_H
 	_row("credits", Rect2(LEFT, TOP + 79, COL_W, ROW_H), "Credits & legal", KEY_L)
+	_row("report", Rect2(LEFT, TOP + 79 + ROW_H, COL_W, ROW_H), "Send a bug report", KEY_R)
 	if dev:
-		_row("dev_quests", Rect2(LEFT, TOP + 79 + ROW_H, COL_W, ROW_H), "Dev: quests", KEY_Q)
+		_row("dev_quests", Rect2(LEFT, TOP + 79 + ROW_H * 2, COL_W, ROW_H), "Dev: quests", KEY_Q)
 	add_button("back", Rect2(4, 3, 46, 13), "Back", KEY_ESCAPE, Color("#a43a2c"))
 
 func _row(id: String, r: Rect2, label: String, key: int) -> void:
@@ -92,7 +93,7 @@ func _tint_toggles() -> void:
 		b["col"] = UiStyle.TEAL.darkened(0.2) if on else Color("#4f3d66")
 
 func _on_button(id: String) -> void:
-	if id == "dev_quests" or id == "credits":
+	if id == "dev_quests" or id == "credits" or id == "report":
 		action = id
 		finish(1.0)
 		return
@@ -177,7 +178,7 @@ func _on(id: String) -> bool:
 	return false
 
 const ROW_TEXT: = {"mute": "Mute all", "clean": "Clean language", "gore": "Cartoon gore (KOs)", "shake": "Screen shake",
-	"view3d": "3D view", "gfx": "Lite graphics", "credits": "Credits & legal", "dev_quests": "Dev: quests"}
+	"view3d": "3D view", "gfx": "Lite graphics", "credits": "Credits & legal", "report": "Send a bug report", "dev_quests": "Dev: quests"}
 
 func _card(r: Rect2, head: String) -> void:
 	draw_string(UiStyle.display, r.position + Vector2(4, -3), head, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color(1, 1, 1, 0.5))
@@ -208,7 +209,7 @@ func _draw_game() -> void:
 	_card(Rect2(LEFT, TOP - 4, COL_W, 48 + ROW_H + 4), "SOUND")
 	_slider(MUSIC_BAR, music_vol(), Color("#ff6aa8"), "Music")
 	_slider(SFX_BAR, sfx_vol(), Color("#f2c66a"), "Sound FX")
-	var more: = 1 + (1 if dev else 0)
+	var more: = 2 + (1 if dev else 0)
 	_card(Rect2(LEFT, TOP + 77, COL_W, ROW_H * more + 4), "MORE")
 	var toggles: = buttons.filter(func(b): return TOGGLES.has(str(b["id"])))
 	if not toggles.is_empty():
@@ -222,10 +223,10 @@ func _draw_game() -> void:
 		if bool(b.get("down", false)):
 			UiStyle.box(self, Rect2(r.position.x + 1, cy - 8, r.size.x - 2, 16), Color(1, 1, 1, 0.08), 4.0)
 		txt(Vector2(r.position.x + 10, cy + 2.5), str(ROW_TEXT[id]), 7, Color.WHITE)
-		if id in ["credits", "dev_quests"]:
+		if id in ["credits", "report", "dev_quests"]:
 			draw_string(UiStyle.display, Vector2(r.end.x - 12, cy + 3), ">", HORIZONTAL_ALIGNMENT_LEFT, -1, 8, Color(1, 1, 1, 0.45))
 		else:
 			_switch(Vector2(r.end.x - 16, cy), _on(id))
-		if b != buttons.back() and id != "credits" and r.position.x == RIGHT and r.end.y < TOP + ROW_H * toggles.size():
+		if b != buttons.back() and id != "credits" and id != "report" and r.position.x == RIGHT and r.end.y < TOP + ROW_H * toggles.size():
 			draw_rect(Rect2(r.position.x + 10, r.end.y - 0.3, r.size.x - 14, 0.5), Color(1, 1, 1, 0.08))
 	txt(Vector2(LEFT + 4, H - 6), "Saved automatically.", 6, Color(1, 1, 1, 0.45))

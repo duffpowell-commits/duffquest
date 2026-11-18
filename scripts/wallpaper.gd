@@ -33,8 +33,14 @@ static func for_day(day: int) -> Texture2D:
 		if img == null:
 			return null
 		img.resize(640, 360, Image.INTERPOLATE_LANCZOS)
+		_trim(_sharp)
 		_sharp[id] = ImageTexture.create_from_image(img)
 	return _sharp[id]
+
+## Keep at most two of each (Nov 18: iPhone memory); older ones rebuild if they come round again.
+static func _trim(cache: Dictionary) -> void:
+	while cache.size() >= 2:
+		cache.erase(cache.keys()[0])
 
 static func _image(id: String) -> Image:
 	var tex: Texture2D = load(DIR % id)
@@ -54,6 +60,7 @@ static func blurred_next() -> Texture2D:
 	var id: String = a[posmod(_turn, a.size())]
 	if _blur.has(id):
 		return _blur[id]
+	_trim(_blur)
 	var img: = _image(id)
 	if img == null:
 		return null
