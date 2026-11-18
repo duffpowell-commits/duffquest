@@ -141,6 +141,17 @@ def riser(n, rng=None, top=7000.0, level=0.45):
     return svf(rng.uniform(-1, 1, n), 300 + top * k ** 2, 2.0, "bp") * k ** 1.6 * level
 
 
+def boom(sec=1.8, f0=120.0, f1=38.0, level=0.9):
+    """The bass drop: an 808-style sub that dives in pitch, with a noisy thump on top."""
+    n = ns(sec)
+    t = tt(n)
+    f = f1 + (f0 - f1) * np.exp(-t * 5)
+    s = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 1.6)
+    s = np.tanh(s * 2.2) * 0.8 + 0.25 * np.sin(4 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 4)
+    hit = svf(np.random.default_rng(9).uniform(-1, 1, n), 900, 0.8) * np.exp(-t * 18) * 0.9
+    return (s + hit) * level
+
+
 # ---------------------------------------------------------------- the loop canvas
 class Track:
     def __init__(self, bpm, bars, beats_per_bar=4):
@@ -150,6 +161,17 @@ class Track:
         self.bars = bars
         self.n = ns(self.bar * bars)
         self.bus = {}
+        self.gaps = []
+
+    def drop(self, bar, gap_beats=0.5, rise_bars=1, rise_level=0.3, boom_level=0.9):
+        """A bass drop at `bar`: everything but the fx bus cuts out for `gap_beats` before it, a riser leads in,
+        and an 808 sub boom lands on the downbeat."""
+        t = bar * self.bar
+        g0 = t - gap_beats * self.beat
+        self.gaps.append((self.at(g0), ns(gap_beats * self.beat)))
+        r = riser(ns(rise_bars * self.bar - gap_beats * self.beat), top=6000, level=rise_level)
+        self.add(r, t - rise_bars * self.bar, "fx")
+        self.add(boom(level=boom_level), t, "fx")
 
     def at(self, sec):
         return ns(sec) % self.n
@@ -182,8 +204,20 @@ class Track:
         out = np.zeros(self.n)
         for name, sig in self.bus.items():
             g = gains.get(name, 1.0)
-            out += sig * g * (duck if (duck is not None and name in ducked) else 1.0)
+            sig = sig * g * (duck if (duck is not None and name in ducked) else 1.0)
+            if name != "fx" and self.gaps:
+                sig = sig * self._gate()
+            out += sig
         return out
+
+    def _gate(self):
+        gate = np.ones(self.n)
+        fade = ns(0.012)
+        for s0, ln in self.gaps:
+            idx = (np.arange(-fade, ln + fade) + s0) % self.n
+            shape = np.concatenate([np.linspace(1, 0, fade), np.zeros(ln), np.linspace(0, 1, fade)])
+            gate[idx] = np.minimum(gate[idx], shape)
+        return gate
 
 
 def master(x, rms=0.17, drive=1.5):
