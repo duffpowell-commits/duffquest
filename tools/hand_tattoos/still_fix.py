@@ -107,6 +107,35 @@ STILLS = {
         "script": [(582, 128), (575, 168), (536, 152), (532, 114)],
         "crop": (490, 80, 620, 200),
     },
+    "willnot_b": {
+        # right fist: made-up grey letters across the fingers; his fingers are bare
+        "file": "assets/art/ko/willnot_b.jpg",
+        "gaps": [[(118, 526), (130, 535), (141, 544)], [(102, 553), (112, 561), (123, 571)], [(88, 581), (98, 588), (108, 596)]],
+        "erase": [[(100, 512), (118, 508), (142, 512), (147, 530), (130, 560), (110, 585), (102, 615), (74, 615), (74, 585), (93, 545)]],
+        "below": 165, "grey": True,
+        "crop": (40, 490, 200, 640),
+    },
+    "willnot_b_pub": {
+        "file": "assets/art/ko/willnot_b_pub.jpg",
+        "gaps": [[(118, 526), (130, 535), (141, 544)], [(102, 553), (112, 561), (123, 571)], [(88, 581), (98, 588), (108, 596)]],
+        "erase": [[(100, 512), (118, 508), (142, 512), (147, 530), (130, 560), (110, 585), (102, 615), (74, 615), (74, 585), (93, 545)]],
+        "below": 165, "grey": True,
+        "crop": (40, 490, 200, 640),
+    },
+    # Crypto Bro KO: Duff's LEFT hand flat on the floor (eye on the back). Invented blackletter on the fingers
+    # and a cross by the thumb -> canon: sun spikes onto the finger bases + finger dots (three on the ring finger).
+    "crypto_b": {
+        "file": "assets/art/ko/crypto_b.jpg",
+        "erase": [[(17, 647), (28, 641), (44, 639), (62, 638), (84, 637), (88, 648), (85, 662), (66, 665), (44, 666), (24, 666), (14, 659)],
+                  [(98, 622), (114, 624), (114, 646), (102, 646)]],
+        "below": 120, "pale": True,
+        "gaps": [[(14, 650), (22, 644), (32, 640)],  # hand edge the wipe took
+                 [(13, 662), (21, 654), (30, 646)], [(34, 669), (43, 657), (50, 646)], [(58, 667), (63, 656), (66, 646)]],
+        "spikes": [[(23, 645), (32, 641), (20, 653)], [(37, 642), (47, 641), (37, 652)],
+                   [(53, 641), (62, 641), (54, 655)], [(69, 640), (79, 641), (75, 654)]],
+        "dots": [(32, 656, 1.3), (29, 660, 1.3), (26, 664, 1.3), (50, 661, 1.4), (74, 659, 1.4)],
+        "crop": (0, 590, 150, 690),
+    },
 }
 
 
@@ -120,7 +149,7 @@ def original(rel):
     return dst
 
 
-def erase(img, polys, below=None):
+def erase(img, polys, below=None, grey=False, pale=False):
     """Paint out dark ink inside the polygons (BGR uint8 in, out). below=<lum>: the polygon is all
     skin, so wipe everything darker than that (thick or blurry lettering, grey halos) too."""
     h, w = img.shape[:2]
@@ -129,10 +158,17 @@ def erase(img, polys, below=None):
         cv2.fillPoly(area, [np.array(p, np.int32)], 255)
     lum = img.astype(float) @ [0.114, 0.587, 0.299]
     if below:
-        ink = cv2.dilate(((lum < below) & (area > 0)).astype(np.uint8), np.ones((3, 3), np.uint8), iterations=2) & (area > 0)
+        dark = lum < below
+        if grey:  # grey-wash lettering only: keep the near-black, saturated-brown outlines
+            sat = img.max(axis=2).astype(int) - img.min(axis=2).astype(int)
+            br = img[..., 0].astype(float) / np.maximum(img[..., 2].astype(float), 1)
+            dark &= (sat < 55) | ((br > 0.34) & (sat < 100))  # outlines are dark brown (b/r ~0.25); grey ink and its edges aren't
+        ink = cv2.dilate((dark & (area > 0)).astype(np.uint8), np.ones((3, 3), np.uint8), iterations=2) & (area > 0)
         # fill from nearby SKIN only (normalised blur), so the hand outline never smears in
         b_, g_, r_ = [img[..., i].astype(int) for i in range(3)]
         hue = (r_ > 120) & (r_ > g_ + 15) & (g_ > b_)
+        if pale:  # yellow backdrop passes the warm-hue test; skin keeps some blue
+            hue &= b_ * 10 > r_ * 4
         skin = ((lum >= below + 15) & hue & ~ink.astype(bool)).astype(np.float32)
         fill = np.zeros(img.shape, np.float32)
         got = np.zeros(img.shape[:2] + (1,), np.float32)
@@ -144,7 +180,10 @@ def erase(img, polys, below=None):
             got += ok
         sk = (skin > 0) & (cv2.dilate(area, np.ones((25, 25), np.uint8)) > 0)
         fill += (1 - got) * np.median(img[sk], axis=0).astype(np.float32)  # last resort: the hand's own tone
-        a = cv2.GaussianBlur(ink.astype(np.float32), (0, 0), 0.8)[..., None]
+        a = cv2.GaussianBlur(ink.astype(np.float32), (0, 0), 1.6 if pale else 0.8)[..., None]
+        if pale:  # big wipes: keep a whisper of the old shading so the patch isn't flat
+            shade = cv2.GaussianBlur(lum.astype(np.float32), (0, 0), 4) / max(float(np.median(lum[sk])), 1)
+            fill *= (np.clip(shade, 0.8, 1.1) ** 0.2)[..., None]
         return (img * (1 - a) + fill * a).clip(0, 255).astype(np.uint8)
     dark = (lum < 115) & (area > 0)
     # big dark blobs are shirt / background poking into the polygon, not ink: keep them
@@ -229,6 +268,12 @@ def bare(img, cfg):
     soft = cv2.bilateralFilter(img, 7, 30, 5)  # the inpaint leaves speckles; smooth skin only in the area
     a = cv2.GaussianBlur(area.astype(np.float32) / 255, (0, 0), 1.0)[..., None]
     img = (img * (1 - a) + soft * a).astype(np.uint8)
+    return lines(img, cfg)
+
+
+def lines(img, cfg):
+    """Redraw finger gaps (dark) and knuckle bumps (half-strength) as soft painted lines."""
+    h, w = img.shape[:2]
     K = 4
     m = Image.new("L", (w * K, h * K), 0)
     d = ImageDraw.Draw(m)
@@ -236,6 +281,10 @@ def bare(img, cfg):
         d.line([(x * K, y * K) for x, y in pts], fill=255, width=int(1.8 * K), joint="curve")
     for cx, cy, r in cfg.get("knuckles", []):
         d.arc([(cx - r) * K, (cy - r * 0.6) * K, (cx + r) * K, (cy + r * 0.6) * K], 200, 340, fill=150, width=int(1.3 * K))
+    for pts in cfg.get("spikes", []):  # mandala sun spikes running onto the finger backs (solid ink)
+        d.polygon([(x * K, y * K) for x, y in pts], fill=235)
+    for cx, cy, r in cfg.get("dots", []):  # finger dots (ring finger = three)
+        d.ellipse([(cx - r) * K, (cy - r) * K, (cx + r) * K, (cy + r) * K], fill=235)
     m = np.asarray(m.resize((w, h), Image.LANCZOS)).astype(np.float32) / 255 * 0.9
     m = cv2.GaussianBlur(m, (0, 0), 0.5)[..., None]
     line = np.array([30, 20, 25], float)  # BGR outline ink
@@ -248,9 +297,11 @@ def fix(name):
     img = cv2.imread(original(rel), cv2.IMREAD_COLOR)
     before = img.copy()
     if cfg.get("erase"):
-        img = erase(img, cfg["erase"], cfg.get("below"))
+        img = erase(img, cfg["erase"], cfg.get("below"), cfg.get("grey", False), cfg.get("pale", False))
     if cfg.get("bare"):
         img = bare(img, cfg["bare"])
+    if (cfg.get("gaps") or cfg.get("spikes") or cfg.get("dots")) and not cfg.get("bare"):
+        img = lines(img, cfg)
     if cfg.get("script"):
         img = lay_script(img, cfg["script"])
     if cfg.get("fist"):
