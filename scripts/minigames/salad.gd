@@ -154,11 +154,13 @@ func _draw_game() -> void:
 	if eighty_six != "":
 		txt(Vector2(8, y), "86 %s: leave off/comp" % String(ING[eighty_six][0]).to_upper(), 8, Color("#a8406a"))
 		y += 9.0
-	var spec: = ""
+	var icons: = []   # spec as picture tiles (was 6 pt text)
+	var cols: = []
 	for id in MENU[item]:
-		spec += String(ING[id][0]) + ", "
-	txt(Vector2(8, y + 4), "Spec:", 6, Color("#6a625a"))
-	mtxt(Vector2(8, y + 12), spec.trim_suffix(", "), 112, 6, Color("#6a625a"), 4)
+		var nm: String = ICON.get(id, "kf_" + id)
+		icons.append(nm if Art.tex(nm) != null else "")
+		cols.append(Color(ING[id][1]))
+	ticket_spec(y + 2.0, 100.0, icons, cols, (MENU[item] as Array).find(eighty_six) if eighty_six != "" else -1)
 
 	if pic("kf_bowl", Vector2(200, 78), 66.0):
 		for i in built.size():   # toppings pile up inside the rim

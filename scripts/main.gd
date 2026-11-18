@@ -341,6 +341,7 @@ var fund_happy_today: = 0.0
 
 var inspector_quip_t: = 0.0
 var inspector_pos: = Vector2.ZERO
+var town_life: Node2D   # scripts/town_life.gd
 var barks: Node   # speech bubbles for enemies/bosses/raccoons (scripts/barks.gd)
 var dialog: Array[String] = []
 var ko_kind: = ""                           # boss knockout cutscene playing (knockout.gd, HD layer)
@@ -483,6 +484,10 @@ func _ready() -> void:
 		cats.append(c)
 
 	_spawn_raccoons()
+	town_life = preload("res://scripts/town_life.gd").new()   # cars, walkers, pigeons, steam, weather (cosmetic)
+	town_life.name = "TownLife"
+	town_life.m = self
+	add_child(town_life)
 
 	audio = AudioScript.new()
 	audio.name = "Audio"
@@ -690,8 +695,11 @@ func _after_world(cb: Callable, need: int = 1, back: Callable = show_title) -> v
 			cb.call()
 			return
 		var pr: float = ExtraPack.progress
+		# Continue waits on two packs back to back: name the step so the % restarting doesn't read as going backwards
+		var step: = "Unpacking the street" if ExtraPack.fetching == 0 else "Unpacking the neighbors"
+		step += (" (1/2): " if ExtraPack.fetching == 0 else " (2/2): ") if need == 1 else ": "
 		c.lines = [ExtraPack.retrying if ExtraPack.retrying != "" else
-			"Unpacking the neighbors. " + ("%d%%" % int(pr * 100.0) if pr >= 0.0 else "%.1f MB" % ExtraPack.got_mb)]
+			step + ("%d%%" % int(pr * 100.0) if pr >= 0.0 else "%.1f MB" % ExtraPack.got_mb)]
 		c.queue_redraw()
 		get_tree().create_timer(0.25).timeout.connect(tk.bind(tk))
 	get_tree().create_timer(0.25).timeout.connect(tick.bind(tick))
@@ -1118,8 +1126,10 @@ func open_overlay(node: Node) -> void:
 ## Blurred copy of the world as it was last drawn. While the world is hidden (an overlay was already up,
 ## e.g. the title card) the previous snapshot is reused; none yet = null (cards fall back to their sunburst).
 func _veil_snapshot() -> Texture2D:
-	if in_shift or DisplayServer.get_name() == "headless":   # headless (tests, soak): no frame to grab
+	if DisplayServer.get_name() == "headless":   # headless (tests, soak): no frame to grab
 		return null
+	if in_shift or (_veil_tex == null and not visible):   # no world frame: a blurred loading-screen wallpaper
+		return preload("res://scripts/wallpaper.gd").blurred_next()
 	if view3d_on and view3d != null:   # the 3D frame is the world (its viewport keeps its last frame when paused)
 		var img3: Image = view3d.snapshot()
 		if img3 != null and not img3.is_empty():
@@ -1278,6 +1288,8 @@ func player_atk() -> float:
 	return atk
 
 func _on_player_attack(pos: Vector2, dir: Vector2) -> void:
+	if combat.fx != null:
+		combat.fx.swing(player, dir, player.is_finisher())
 	var sp: = Gear.w_special(gear)
 	var step: int = player.combo_step
 	var fin: bool = player.is_finisher()
@@ -2082,7 +2094,56 @@ func open_settings() -> void:
 		elif was_title:
 			show_title()
 		elif str(n.get("action")) == "dev_quests":
-			dev_quest_menu())
+			dev_quest_menu()
+		elif str(n.get("action")) == "report":
+			send_bug_report()
+			if was_title:
+				show_title())
+
+## Settings > "Send a bug report" (Nov 18, after Brittany's iPhone freeze we couldn't reproduce): the game's
+## state + the save as text the player can paste into a message. On the web it opens a page-level box with a
+## real Copy button (iPhone Safari only lets a tap on the page itself write the clipboard).
+func bug_report() -> String:
+	var pg: Node = get_tree().root.find_child("PerfGuard", true, false)
+	var lines: Array = ["DuffQuest bug report " + Time.get_datetime_string_from_system(),
+		"engine %s | %s | %s" % [Engine.get_version_info().get("string", ""), OS.get_name(),
+			str(JavaScriptBridge.eval("navigator.userAgent", true)) if OS.has_feature("web") else OS.get_model_name()],
+		"screen %s window %s" % [DisplayServer.screen_get_size(), get_window().size],
+		pg.summary() if pg != null and pg.has_method("summary") else "gfx ?",
+		"mem static %d MB, textures %d MB, video %d MB" % [OS.get_static_memory_usage() / 1048576,
+			int(Performance.get_monitor(Performance.RENDER_TEXTURE_MEM_USED)) / 1048576,
+			int(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED)) / 1048576],
+		"day %d %s loc=%s arena=%s/%s money=$%d happy=%d energy=%d" % [day_count, clock_text(), location, arena_id, arena_mode,
+			int(money), int(happiness), int(energy)],
+		"busy=%s overlay=%s loading=%s calendar=%s ko=%s tut=%s dialog=%d" % [busy(), overlay_node != null, loading_on,
+			calendar_on, ko_kind, tut != null and tut.active(), dialog.size()],
+		"story %s" % JSON.stringify(story),
+		"SAVE " + JSON.stringify(to_dict())]
+	return "\n".join(lines)
+
+func send_bug_report() -> void:
+	var text: = bug_report()
+	if not OS.has_feature("web"):
+		DisplayServer.clipboard_set(text)
+		print(text)
+		_toast("Bug report copied. Paste it in a text to {hero}.")
+		return
+	JavaScriptBridge.eval("""(function(t){
+		var d=document.createElement('div');
+		d.style.cssText='position:fixed;inset:0;z-index:99999;background:rgba(10,8,16,.94);display:flex;flex-direction:column;gap:10px;padding:16px;font:16px sans-serif;color:#fff';
+		d.innerHTML='<b>Bug report</b><div>Tap COPY, then paste it in a text to Duff.</div>';
+		var a=document.createElement('textarea');a.value=t;a.readOnly=true;
+		a.style.cssText='flex:1;font:11px monospace;background:#1c1826;color:#ddd;border:0;border-radius:8px;padding:8px';
+		var row=document.createElement('div');row.style.cssText='display:flex;gap:10px';
+		function btn(l,c,f){var b=document.createElement('button');b.textContent=l;
+			b.style.cssText='flex:1;padding:14px;font:bold 17px sans-serif;border:0;border-radius:24px;color:#fff;background:'+c;b.onclick=f;row.appendChild(b);return b;}
+		var cp=btn('COPY','#1f9e8f',function(){a.select();a.setSelectionRange(0,t.length);
+			var ok=false;try{ok=document.execCommand('copy');}catch(e){}
+			if(navigator.clipboard){navigator.clipboard.writeText(t).then(function(){cp.textContent='COPIED';},function(){if(ok)cp.textContent='COPIED';});}
+			else if(ok){cp.textContent='COPIED';}});
+		btn('CLOSE','#a43a2c',function(){d.remove();});
+		d.appendChild(a);d.appendChild(row);document.body.appendChild(d);
+	})(%s)""" % JSON.stringify(text), true)
 
 ## Settings > "Credits & legal" (credits.gd): Back returns to Settings (and from there to the title, if
 ## that's where Settings was opened).
@@ -2162,6 +2223,28 @@ const STAGE_SCALE: = 1.45
 func on_fight_floor() -> bool:
 	return location == "gala" or (location == "arena" and arena_mode != "waffle")
 
+## Nov 18 (Brittany: "freezes on the DJ Vape intro" on an iPhone 11). Two safety nets:
+## - a loading screen that never reports back (it holds 3.2 s) would leave busy() on and every tap ignored:
+##   after STUCK_LOAD seconds the game lets go by itself; a menu node freed without close_overlay() likewise.
+## - big one-off art (Art.drop_big) is let go whenever the room changes, so a long session doesn't pile up
+##   texture memory past what iPhone Safari allows a page.
+const STUCK_LOAD: = 10.0
+var _load_t: = 0.0
+var _room_key: = ""
+func _watchdog(delta: float) -> void:
+	_load_t = _load_t + delta if loading_on else 0.0
+	if _load_t > STUCK_LOAD:
+		_load_t = 0.0
+		push_warning("watchdog: loading screen never finished, letting go")
+		loading_done()
+	if overlay_node != null and not is_instance_valid(overlay_node):
+		push_warning("watchdog: menu freed without close_overlay")
+		close_overlay()
+	var rk: = location + ":" + arena_id + ":" + str(overlay_node != null)
+	if rk != _room_key:
+		_room_key = rk
+		Art.drop_big()
+
 func _process(delta: float) -> void:
 	t += delta
 	if player != null:
@@ -2176,6 +2259,7 @@ func _process(delta: float) -> void:
 	save_flash_t = maxf(0.0, save_flash_t - delta)
 	_tick_dialog(delta)
 	_update_world_cover()
+	_watchdog(delta)
 	if location != _drawn_loc:
 		queue_redraw()
 	if busy():

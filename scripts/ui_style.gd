@@ -158,6 +158,38 @@ static func button(ci: CanvasItem, r: Rect2, text: String, col: Color, enabled: 
 		label(ci, Vector2(rr.position.x, y0 + i * sz * LINE_H), lines[i], sz, CREAM if enabled else Color(CREAM, 0.45),
 			rr.size.x, HORIZONTAL_ALIGNMENT_CENTER)
 
+## Phone-style pill button (Nov 17, menu sheets + phone apps): fully rounded, flat role colour, soft top
+## sheen, a hairline darker rim, white text. Same roles as button() (btn_role).
+static func pill_button(ci: CanvasItem, r: Rect2, text: String, col: Color, enabled: bool = true, pressed: bool = false,
+		w: float = 1.0, size: int = 8) -> void:
+	var c: = btn_role(col, text)
+	if not enabled:
+		c = c.darkened(0.5).lerp(Color(0.3, 0.28, 0.33), 0.45)
+	var rr: = r.grow(-w * 0.4 if pressed else 0.0)
+	var rad: = minf(rr.size.y * 0.5, 9.0 * w * 1.5)
+	box(ci, Rect2(rr.position + Vector2(0, w * 1.2), rr.size), Color(0, 0, 0, 0.35), rad)
+	box(ci, rr, c.darkened(0.35), rad)
+	box(ci, rr.grow(-w * 0.6), c.darkened(0.08) if pressed else c, maxf(rad - w * 0.6, 0.0))
+	if enabled:
+		box(ci, Rect2(rr.position + Vector2(w * 1.2, w * 0.9), Vector2(rr.size.x - w * 2.4, rr.size.y * 0.42)),
+			Color(1, 1, 1, 0.16), maxf(rad - w * 1.2, 0.0))
+	var fit: = fit_text(text, rr.size.x - BUTTON_PAD, rr.size.y - 1.0, size)
+	var lines: PackedStringArray = fit[0]
+	var sz: int = fit[1]
+	var y0: = rr.position.y + rr.size.y * 0.5 + sz * 0.36 - (lines.size() - 1) * sz * 0.55
+	for i in lines.size():
+		var tc: = Color.WHITE if enabled else Color(1, 1, 1, 0.45)
+		ci.draw_string(display, Vector2(rr.position.x, y0 + i * sz * LINE_H + w * 0.6), lines[i], HORIZONTAL_ALIGNMENT_CENTER, rr.size.x, sz, Color(0, 0, 0, 0.35 * tc.a))
+		ci.draw_string(display, Vector2(rr.position.x, y0 + i * sz * LINE_H), lines[i], HORIZONTAL_ALIGNMENT_CENTER, rr.size.x, sz, tc)
+
+## Phone glass sheet (menu cards, phone apps): soft shadow, black bezel, dark glass, faint top sheen.
+const GLASS: = Color("#17141f")
+static func glass(ci: CanvasItem, r: Rect2, rad: float, a: float = 0.92, w: float = 1.0) -> void:
+	box(ci, Rect2(r.position + Vector2(0, w * 1.5), r.size).grow(w), Color(0, 0, 0, 0.35 * a), rad + w)
+	box(ci, r.grow(w), Color("#07060a", a), rad + w)
+	box(ci, r, Color(GLASS, a), rad)
+	box(ci, Rect2(r.position, Vector2(r.size.x, minf(r.size.y * 0.45, 30.0 * w))).grow(-w * 0.5), Color(1, 1, 1, 0.045 * a), maxf(rad - w * 0.5, 0.0))
+
 const BUTTON_PAD: = 16.0      # both side margins inside a button together (the key hint sits in the left 6)
 const LINE_H: = 1.1           # button line spacing, x font size
 const MIN_SIZE: = 6

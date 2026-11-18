@@ -32,10 +32,20 @@ func _ready() -> void:
 		auto = bool(c.get_value("gfx", "auto", true))
 		low = bool(c.get_value("gfx", "low", false))
 		res = int(c.get_value("gfx", "res", 2))
+	# Nov 18: iPhones start in lite (no MSAA / shadows / glow / tilt-shift buffers). Brittany's iPhone 11 froze on
+	# a boss intro; Safari gives a page far less graphics memory than an Android Chrome tab. Once per device, so
+	# Settings > Lite graphics OFF sticks.
+	if OS.has_feature("web_ios") and not bool(c.get_value("gfx", "ios_lite", false)):
+		low = true
+		_ios_first = true
 	if _web and str(JavaScriptBridge.eval("window.location.hash")).contains("lite"):
 		low = true
 		auto = false
 	call_deferred("_apply")
+	if _ios_first:
+		call_deferred("_save")
+
+var _ios_first: = false
 
 ## World render scale (game.gd): 2 = 1280x720, 1 = the old 640x360. Only the auto guard lowers it.
 var res: = 2
@@ -62,6 +72,7 @@ func _save() -> void:
 	c.set_value("gfx", "auto", auto)
 	c.set_value("gfx", "low", low)
 	c.set_value("gfx", "res", res)
+	c.set_value("gfx", "ios_lite", OS.has_feature("web_ios"))
 	c.save(CFG)
 
 ## Settings toggle / tools: pick lite (true) or full (false) by hand; turns the auto switch off.
@@ -115,6 +126,10 @@ func _process(d: float) -> void:
 
 func _in_3d() -> bool:
 	return main != null and bool(main.get("view3d_on")) and main.AudioScript.inst != null and bool(main.AudioScript.inst.view3d)
+
+## One line for the bug report (Settings > Copy bug report).
+func summary() -> String:
+	return "gfx low=%s res=%d auto=%s 3d=%s fps=%d" % [low, res, auto, _in_3d(), Engine.get_frames_per_second()]
 
 func state() -> String:
 	if main == null:

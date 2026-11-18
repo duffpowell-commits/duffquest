@@ -17,6 +17,7 @@ var action: = ""
 var tip_i: = 0
 
 func _setup() -> void:
+	pill_buttons = true   # Nov 17: phone-style buttons, same as the menu sheets
 	time_limit = 0.0
 	show_header = false
 	space_is_pen = false
@@ -192,11 +193,14 @@ func _spark(r: Rect2, hist: Array, col: Color) -> void:
 	draw_polyline(pts, col, 1.0)
 
 func _status_bar() -> void:
-	draw_rect(Rect2(0, 0, W, 12), Color("#14100c"))
+	draw_rect(Rect2(0, 0, W, 12), Color("#14100c", 0.55 if screen == "home" else 1.0))
 	txt(Vector2(4, 9), "{phone}", 7, Color(1, 1, 1, 0.8))
 	txt(Vector2(0, 9), m.clock_text() if m else "", 7, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
-	draw_rect(Rect2(296, 3, 16, 6), Color(1, 1, 1, 0.7), false, 1.0)
-	draw_rect(Rect2(297, 4, 11, 4), Color("#7aa05a"))
+	if m == null:
+		return
+	const Hud: = preload("res://scripts/hud.gd")   # same signal bars ({partner}) and battery (Energy) as the HUD strip
+	Hud.signal_bars(self, Vector2(282, 1.8), float(m.happiness) / 100.0)
+	Hud.battery(self, Vector2(296, 2.6), float(m.energy) / 100.0)
 
 ## Home-screen app tile: painted icon (kf_app_*, tools/import_kitchen_props.py); plain tile if the art is missing.
 func _app(b: Dictionary, icon: String, stack: bool) -> void:
@@ -205,7 +209,14 @@ func _app(b: Dictionary, icon: String, stack: bool) -> void:
 		b["stack"] = stack
 
 func _draw_game() -> void:
-	if screen == "home" and veiled:   # wallpaper: the blurred scene behind (main.open_overlay), cooled to phone blue
+	var wp: Texture2D = preload("res://scripts/wallpaper.gd").for_day(int(m.day_count)) if m != null and screen == "home" else null
+	if wp != null:   # wallpaper: today's loading-screen painting, a new one each day; dark bands keep text readable
+		draw_texture_rect(wp, Rect2(0, 0, W, H), false)
+		draw_rect(Rect2(0, 0, W, H), Color(0.04, 0.03, 0.08, 0.18))
+		for i in 8:
+			draw_rect(Rect2(0, 12 + i * 3, W, 3), Color(0.04, 0.03, 0.08, 0.5 * (1.0 - i / 8.0)))
+			draw_rect(Rect2(0, H - 64 + i * 8, W, 8), Color(0.04, 0.03, 0.08, 0.12 + 0.09 * i))
+	elif screen == "home" and veiled:   # no art yet: the blurred scene behind (main.open_overlay), cooled to phone blue
 		draw_rect(Rect2(0, 0, W, H), Color("#1E4A66", 0.35))
 	elif screen == "home":   # no scene snapshot yet: the old navy/teal sunburst
 		UiStyle.burst(self, Rect2(0, 0, W, H), Color("#1E4A66"), Vector2(W * 0.5, H * 0.62), 24, t * 0.03)
