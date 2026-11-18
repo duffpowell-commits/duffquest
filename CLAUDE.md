@@ -271,8 +271,8 @@ History of everything built: `TRACKER.md` (newest first).
 - **Duff's hands (Nov 18, HARD, Duff: "so that the mistakes stop happening"):** LEFT = eye mandala (sun spikes run onto the
   finger backs) + finger dots, NO RING (Duff Nov 18: "Take the ring off"); RIGHT = calligraphy "This Red / Right Hand / Points Me / South" in RED ink, blended into the skin (Duff Nov 18: "blend the right hand tattoo and make the ink red"). Copy the masters in
   `docs/ref/duff/hand_*.png` (photos `photo_*_hand_*_2026-11-18.jpg`, sheet `hand_tattoos_canon.png`), never invent. Any new or
-  re-made Duff sprite sheet: `python3 tools/hand_tattoos/stamp.py <sheet>` then `tools/hand_tattoos/atlas.py`. Audit of the
-  stills/promos still to redo: `docs/reviews/hand_tattoo_audit_2026-11-18.md`.
+  re-made Duff sprite sheet: `python3 tools/hand_tattoos/stamp.py <sheet>` then `tools/hand_tattoos/atlas.py`. Stills: `tools/hand_tattoos/still_fix.py`
+  (per-still config); finished videos/GIFs: `tools/hand_tattoos/video_patch.py IN OUT`. All art matched Nov 18: `docs/reviews/hand_tattoo_audit_2026-11-18.md`.
 - **Fully automatic art pipeline (Nov 10), no Duff steps:** Canva `generate-image` -> put each media id full-bleed on
   its own 1920x1080 page of one Canva design (`edit-design` insert_fill, commit) -> `export-design` png -> Zapier
   Google Drive "Upload File" (connection `023ae0fb-19cc-8509-b28e-979de3a98f75`, pass it as connection_id) with the
