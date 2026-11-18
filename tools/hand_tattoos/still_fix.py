@@ -212,6 +212,15 @@ STILLS = {
         "script": [(648, 442), (648, 378), (735, 378), (735, 442)],
         "crop": (630, 360, 790, 470),
     },
+    # ---- title (porch, pixel art; hands ~25 px): left hand gets the eye mandala, right hand the red script texture
+    "bg_title": {
+        "file": "assets/art/bg_title.png",
+        "redden": [(612, 448), (630, 446), (634, 458), (632, 472), (614, 473), (609, 460)],
+        "blackout": [(658, 487), (672, 484), (684, 488), (682, 500), (676, 512), (662, 513), (655, 502)],
+        "eye": (669, 498, 5, 2, 30),
+        "sleeve": [(695, 440), (712, 438), (724, 455), (712, 480), (696, 494), (678, 490), (684, 470)],
+        "crop": (550, 410, 740, 520),
+    },
 }
 
 
@@ -308,6 +317,39 @@ def lay_mandala(img, quad, clip):
     al = (cv2.GaussianBlur(al, (0, 0), 0.5) * keep * 0.92)[..., None]
     ink = np.array([30, 24, 28], float)  # BGR blackwork
     return (img * (1 - al) + ink * al).clip(0, 255).astype(np.uint8)
+
+
+def tiny(img, cfg):
+    """Pixel-art sized hands (~20 px): redden the right hand's ink in place, black out the left hand
+    and open a skin-coloured eye in it (the mandala's eye is all that reads at this size)."""
+    h, w = img.shape[:2]
+    lum = img.astype(float) @ [0.114, 0.587, 0.299]
+    out = img.astype(float)
+    if cfg.get("redden"):
+        area = np.zeros((h, w), np.uint8)
+        cv2.fillPoly(area, [np.array(cfg["redden"], np.int32)], 1)
+        b_, r_ = img[..., 0].astype(int), img[..., 2].astype(int)
+        ink = (area > 0) & (lum < cfg.get("redden_below", 95)) & (lum > 38) & (r_ > b_ + 12)  # tattoo, not the black shirt
+        red = RED_INK[::-1] * np.clip(lum / 80.0, 0.55, 1.15)[..., None]
+        out[ink] = out[ink] * 0.4 + red[ink] * 0.6
+    if cfg.get("blackout"):
+        area = np.zeros((h, w), np.float32)
+        cv2.fillPoly(area, [np.array(cfg["blackout"], np.int32)], 1.0)
+        a = (cv2.GaussianBlur(area, (0, 0), 0.6) * 0.85)[..., None]
+        out = out * (1 - a) + np.array([28, 22, 26], float) * a
+        if cfg.get("sleeve"):  # blackout sleeve: darken, old linework survives as faint negative lines
+            sl = np.zeros((h, w), np.float32)
+            cv2.fillPoly(sl, [np.array(cfg["sleeve"], np.int32)], 1.0)
+            sl = (cv2.GaussianBlur(sl, (0, 0), 0.8) * 0.7)[..., None]
+            out = out * (1 - sl) + np.array([28, 22, 26], float) * sl
+        cx, cy, rx, ry, ang = cfg["eye"]
+        skin = np.array(cfg.get("skin", (120, 160, 220)), float)  # BGR
+        m = np.zeros((h, w), np.uint8)
+        cv2.ellipse(m, (cx, cy), (rx, ry), ang, 0, 360, 1, -1)
+        out[m > 0] = skin
+        cv2.circle(m2 := np.zeros((h, w), np.uint8), (cx, cy), max(1, ry - 1), 1, -1)
+        out[m2 > 0] = np.array([28, 22, 26], float)
+    return out.clip(0, 255).astype(np.uint8)
 
 
 def grab(img, rect):
@@ -417,6 +459,8 @@ def fix(name):
         img = blobs(img, cfg["blobs"])
     if cfg.get("bare"):
         img = bare(img, cfg["bare"])
+    if cfg.get("redden") or cfg.get("blackout"):
+        img = tiny(img, cfg)
     if cfg.get("mandala"):
         img = lay_mandala(img, cfg["mandala"], cfg["mandala_clip"])
     if (cfg.get("gaps") or cfg.get("spikes") or cfg.get("dots")) and not cfg.get("bare"):
