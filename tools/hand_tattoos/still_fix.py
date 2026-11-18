@@ -24,7 +24,7 @@ import sys
 
 import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
@@ -65,11 +65,47 @@ STILLS = {
         "cut": ((775, 135, 470, 445), (740, 160, 510, 420)),  # grabCut rects: new fist, old fist
         "crop2": (700, 120, 1280, 620),
     },
+    "duff_stance": {
+        # Right hand reaches out curled, knuckle side to us: the back of the hand is hidden under the
+        # forearm, so no script fits. The invented blackletter on the fingers goes (fingers are bare),
+        # then the finger gaps and knuckle bumps are redrawn. Left fist already reads as the eye mandala.
+        "file": "assets/art/ko/duff_stance.jpg",
+        "bare": {
+            "poly": [(487, 304), (512, 299), (530, 298), (546, 308), (551, 318), (553, 345), (532, 353), (500, 349), (487, 336)],
+            "gaps": [[(500, 346), (502, 334), (505, 322)], [(520, 353), (521, 341), (524, 327)],
+                     [(539, 352), (540, 341), (543, 329)], [(551, 316), (554, 330), (552, 346)]],
+            "knuckles": [(493, 318, 8), (511, 314, 9), (530, 317, 9), (547, 322, 7)],
+        },
+        "crop": (440, 250, 620, 380),
+    },
     "duff_fin2": {
         "file": "assets/art/ko/duff_fin2.jpg",
         "erase": [[(69, 530), (108, 524), (119, 540), (117, 585), (95, 592), (69, 586)]],
         "script": [(68, 528), (117, 525), (115, 590), (71, 592)],
         "crop": (30, 480, 170, 620),
+    },
+    # Boss KO frames (Duff's half of each KO panel). Only the right hands needed work: made-up
+    # blackletter -> his real script in red. The left fists already show the eye mandala.
+    "baron_b": {
+        "file": "assets/art/ko/baron_b.jpg",
+        "erase": [[(92, 564), (163, 567), (170, 600), (148, 621), (94, 621), (90, 596)]],
+        "below": 135,
+        "script": [(92, 560), (165, 565), (175, 615), (85, 612)],
+        "crop": (20, 500, 260, 680),
+    },
+    "bozos_b": {
+        "file": "assets/art/ko/bozos_b.jpg",
+        "erase": [[(85, 486), (179, 481), (181, 579), (89, 591), (84, 560)]],
+        "below": 140,
+        "script": [(80, 492), (175, 488), (178, 575), (84, 588)],
+        "crop": (20, 440, 240, 640),
+    },
+    "camper_b": {
+        "file": "assets/art/ko/camper_b.jpg",
+        "erase": [[(538, 120), (564, 122), (575, 138), (575, 163), (560, 164), (540, 150)]],
+        "below": 140,
+        "script": [(582, 128), (575, 168), (536, 152), (532, 114)],
+        "crop": (490, 80, 620, 200),
     },
 }
 
@@ -84,13 +120,32 @@ def original(rel):
     return dst
 
 
-def erase(img, polys):
-    """Paint out dark ink inside the polygons (BGR uint8 in, out)."""
+def erase(img, polys, below=None):
+    """Paint out dark ink inside the polygons (BGR uint8 in, out). below=<lum>: the polygon is all
+    skin, so wipe everything darker than that (thick or blurry lettering, grey halos) too."""
     h, w = img.shape[:2]
     area = np.zeros((h, w), np.uint8)
     for p in polys:
         cv2.fillPoly(area, [np.array(p, np.int32)], 255)
     lum = img.astype(float) @ [0.114, 0.587, 0.299]
+    if below:
+        ink = cv2.dilate(((lum < below) & (area > 0)).astype(np.uint8), np.ones((3, 3), np.uint8), iterations=2) & (area > 0)
+        # fill from nearby SKIN only (normalised blur), so the hand outline never smears in
+        b_, g_, r_ = [img[..., i].astype(int) for i in range(3)]
+        hue = (r_ > 120) & (r_ > g_ + 15) & (g_ > b_)
+        skin = ((lum >= below + 15) & hue & ~ink.astype(bool)).astype(np.float32)
+        fill = np.zeros(img.shape, np.float32)
+        got = np.zeros(img.shape[:2] + (1,), np.float32)
+        for sig in (4, 10, 25):  # wide gaps fall back to a wider sample
+            num = cv2.GaussianBlur(img.astype(np.float32) * skin[..., None], (0, 0), sig)
+            den = cv2.GaussianBlur(skin, (0, 0), sig)[..., None]
+            ok = (den > 0.15).astype(np.float32) * (1 - got)
+            fill += ok * num / np.maximum(den, 1e-3)
+            got += ok
+        sk = (skin > 0) & (cv2.dilate(area, np.ones((25, 25), np.uint8)) > 0)
+        fill += (1 - got) * np.median(img[sk], axis=0).astype(np.float32)  # last resort: the hand's own tone
+        a = cv2.GaussianBlur(ink.astype(np.float32), (0, 0), 0.8)[..., None]
+        return (img * (1 - a) + fill * a).clip(0, 255).astype(np.uint8)
     dark = (lum < 115) & (area > 0)
     # big dark blobs are shirt / background poking into the polygon, not ink: keep them
     allDark = (lum < 115).astype(np.uint8)
@@ -162,13 +217,40 @@ def lay_fist(img, fist, cut=None):
     return (img * (1 - m) + new * m).clip(0, 255).astype(np.uint8)
 
 
+def bare(img, cfg):
+    """Wipe every dark mark inside the polygon (fingers drawn with made-up ink), then redraw
+    the finger gaps (dark) and knuckle bumps (half-strength) as soft lines."""
+    h, w = img.shape[:2]
+    area = np.zeros((h, w), np.uint8)
+    cv2.fillPoly(area, [np.array(cfg["poly"], np.int32)], 255)
+    lum = img.astype(float) @ [0.114, 0.587, 0.299]
+    ink = cv2.dilate(((lum < 120) & (area > 0)).astype(np.uint8) * 255, np.ones((3, 3), np.uint8)) & area
+    img = cv2.inpaint(img, ink, 5, cv2.INPAINT_TELEA)
+    soft = cv2.bilateralFilter(img, 7, 30, 5)  # the inpaint leaves speckles; smooth skin only in the area
+    a = cv2.GaussianBlur(area.astype(np.float32) / 255, (0, 0), 1.0)[..., None]
+    img = (img * (1 - a) + soft * a).astype(np.uint8)
+    K = 4
+    m = Image.new("L", (w * K, h * K), 0)
+    d = ImageDraw.Draw(m)
+    for pts in cfg.get("gaps", []):
+        d.line([(x * K, y * K) for x, y in pts], fill=255, width=int(1.8 * K), joint="curve")
+    for cx, cy, r in cfg.get("knuckles", []):
+        d.arc([(cx - r) * K, (cy - r * 0.6) * K, (cx + r) * K, (cy + r * 0.6) * K], 200, 340, fill=150, width=int(1.3 * K))
+    m = np.asarray(m.resize((w, h), Image.LANCZOS)).astype(np.float32) / 255 * 0.9
+    m = cv2.GaussianBlur(m, (0, 0), 0.5)[..., None]
+    line = np.array([30, 20, 25], float)  # BGR outline ink
+    return (img * (1 - m) + line * m).clip(0, 255).astype(np.uint8)
+
+
 def fix(name):
     cfg = STILLS[name]
     rel = cfg["file"]
     img = cv2.imread(original(rel), cv2.IMREAD_COLOR)
     before = img.copy()
     if cfg.get("erase"):
-        img = erase(img, cfg["erase"])
+        img = erase(img, cfg["erase"], cfg.get("below"))
+    if cfg.get("bare"):
+        img = bare(img, cfg["bare"])
     if cfg.get("script"):
         img = lay_script(img, cfg["script"])
     if cfg.get("fist"):
