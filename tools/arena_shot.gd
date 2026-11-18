@@ -49,6 +49,10 @@ func _process(_d: float) -> void:
 		if "--shades" in OS.get_cmdline_user_args():   # Duff in his round shades (gear screen toggle)
 			m.shades = true
 			m.player.shades = true
+		if "--maxpad" in OS.get_cmdline_user_args():   # every touch button on screen (specials, swap, demon) for layout checks
+			m.combat.level = 10
+			m.combat.demon_unlocked = true
+			m.combat.heat = 100.0
 		m.close_overlay()
 		m.dialog.clear()
 		m.no_loading = true
