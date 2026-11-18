@@ -10,6 +10,10 @@ extends Node
 ##               (world_ready), and so do the Fork, arenas and minigames (main.gd _after_world).
 ##   extra.pck   knockout stills, boss intro cards, most loading screens, minigame backdrops. Nothing waits
 ##               for it; every loader already copes with a missing texture until it lands.
+## Returning players: every push to main redeploys (itch even moves each build to a new folder), so the browser's
+## HTTP cache misses every time. CI writes packs.json next to the packs ({"street.pck": md5, ...}); the copy each
+## download left in user:// (browser storage) is mounted straight away when its md5 still matches, so a build that
+## only changed code costs a returning player no pack download at all. No packs.json = download as before.
 ## After each mount the art and audio caches forget their "missing" answers and group "extra_pack" gets
 ## extra_pack_loaded(). Desktop/Android builds have everything in one pack, so this does nothing there.
 
@@ -31,6 +35,8 @@ static var retrying: = ""         # set while a gating pack is between failed tr
 var _http: HTTPRequest
 var _i: = 0
 var _tries: = 0
+var _want: = {}   # packs.json: pack name -> md5 of this build's copy
+var _manifest: HTTPRequest
 
 static func _present(probe: String) -> bool:
 	if not probe.ends_with("/"):
@@ -58,10 +64,38 @@ func _ready() -> void:
 	_http.accept_gzip = false
 	add_child(_http)
 	_http.request_completed.connect(_on_done)
+	_manifest = HTTPRequest.new()
+	_manifest.use_threads = false
+	_manifest.accept_gzip = false
+	_manifest.timeout = 6.0   # a slow or missing packs.json only costs the cache, never the game
+	add_child(_manifest)
+	_manifest.request_completed.connect(_on_manifest)
+	if _manifest.request(_url("packs.json")) != OK:
+		_fetch()
+
+func _on_manifest(result: int, code: int, _h: PackedStringArray, body: PackedByteArray) -> void:
+	if result == HTTPRequest.RESULT_SUCCESS and code == 200:
+		var d: Variant = JSON.parse_string(body.get_string_from_utf8())
+		if d is Dictionary:
+			_want = d
+	_manifest.queue_free()
+	_manifest = null
 	_fetch()
 
+## The md5 a pack should have for this build ("" = unknown).
+static func want_md5(want: Dictionary, name: String) -> String:
+	return str(want.get(name, "")).to_lower()
+
+## Is the copy at path the very pack this build ships? Only then is it safe to mount without downloading.
+static func cached_ok(path: String, md5: String) -> bool:
+	return md5 != "" and FileAccess.file_exists(path) and FileAccess.get_md5(path) == md5
+
+func _url(file: String) -> String:
+	# relative to the page, so it follows itch's per-build upload folder
+	return str(JavaScriptBridge.eval("new URL('%s', document.baseURI).href" % file, true))
+
 func _process(_d: float) -> void:
-	if _http and _i < PACKS.size():
+	if _http and _i < PACKS.size() and _http.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
 		var total: = _http.get_body_size()
 		got_mb = _http.get_downloaded_bytes() / 1048576.0
 		progress = clampf(float(_http.get_downloaded_bytes()) / total, 0.0, 1.0) if total > 0 else -1.0
@@ -74,10 +108,13 @@ func _fetch() -> void:
 	fetching = _i
 	progress = 0.0
 	got_mb = 0.0
+	if _tries == 1 and cached_ok(_local(), want_md5(_want, PACKS[_i][0])) and ProjectSettings.load_resource_pack(_local(), false):
+		print("%s: mounted from storage, same as this build" % PACKS[_i][0])
+		progress = 1.0
+		_next.call_deferred()
+		return
 	_http.download_file = _local()
-	# relative to the page, so it follows itch's per-build upload folder (no stale cache across builds)
-	var url: = str(JavaScriptBridge.eval("new URL('%s', document.baseURI).href" % PACKS[_i][0], true))
-	var err: = _http.request(url)
+	var err: = _http.request(_url(PACKS[_i][0]))
 	if err != OK:
 		push_warning("%s: request failed to start (%d)" % [PACKS[_i][0], err])
 

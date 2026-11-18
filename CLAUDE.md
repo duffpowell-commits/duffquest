@@ -67,6 +67,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `Image.create` (use `create_empty`), WorldEnvironment via ClassDB only. Changed the profile? Run
   that workflow and play-test the build. Storefront/prop sizes are baked in `data/art_rects.json`
   (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
+  **Pack cache (Nov 18):** CI writes `packs.json` (md5 per pack) beside the packs; `extra_pack.gd` re-mounts a pack already in
+  browser storage (user://) when its md5 matches, so a code-only deploy costs returning players no pack download. Keep packs
+  deterministic (no timestamps) and keep packs.json next to them in every web copy.
   Branch builds publish to the `web-preview` release (sessions can't download Actions artifacts).
   **Lossy sprites (Nov 17):** every `ch_*`, `duff_*`, `kf_*`, `sf_*`, `sd_*` sheet imports lossy 0.8 (`compress/mode=1`):
   street.pck 4.8 -> 2.0 MB, world.pck 12.8 -> 6.0 MB, so Continue downloads 8 MB instead of 17.6. No visible change
