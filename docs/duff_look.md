@@ -42,10 +42,10 @@ Duff has full tattoo sleeves on BOTH arms:
   designs: flower-of-life circles on the upper arm, a large petal mandala with a central eye on the outer elbow, chevron and
   triangle bands down the forearm.
 - Back of the LEFT hand (Duff confirmed Nov 18: "Left matched the sleeve and it has the mandala eye effect"): an eye in the
-  centre, a ring of triangle teeth around it, a spiked sun whose points reach the finger bases; the whole back of the hand is
-  blackwork and runs straight into the sleeve at the wrist. Dots on the fingers: three stacked on the ring finger, small dots on
-  the middle and index fingers. A SILVER SIGNET RING on the LEFT PINKY, face = an infinity sign over a double cross.
-  Canonical design: `docs/ref/duff/hand_left_eye_mandala.png` + `hand_left_pinky_ring.png` (see "Hands" below).
+  centre, a ring of triangle teeth around it, a spiked sun whose points run onto the BACKS OF THE FINGERS (Duff, Nov 18: "The mandala is on the
+  back of the fingers"); the whole back of the hand is blackwork and runs straight into the sleeve at the wrist. Dots on the fingers: three stacked on the ring finger, small dots on
+  the middle and index fingers, a single dot by the pinky. **NO RING** (Duff, Nov 18: "Take the ring off tho"; the ring in the
+  older photo is not part of the look). Canonical design: `docs/ref/duff/hand_left_eye_mandala.png` (see "Hands" below).
 - RIGHT upper arm: a large grey-wash biomechanical piece — organic horn/flame shapes with eye-like openings, wrapping the outer
   arm from shoulder to just above the elbow (NOT solid black flames — the fox art got this wrong). Small piece on the back of the
   right shoulder.
@@ -73,18 +73,18 @@ Photos win over the fox art wherever they disagree.
 Every image that shows Duff's hands copies these, no inventing, no approximating:
 | File | What |
 |---|---|
-| `photo_left_hand_eye_2026-11-18.jpg` | **the truth**, LEFT hand, daylight: eye mandala, finger dots, pinky signet ring |
+| `photo_left_hand_eye_2026-11-18.jpg` | LEFT hand, daylight: eye mandala, finger dots. It shows a pinky ring: IGNORE it, no ring in any art |
 | `photo_right_hand_script_2026-11-18.jpg` | **the truth**, RIGHT hand, daylight: the calligraphy |
 | `hand_left_eye_mandala.png` | clean design master (alpha = ink), top = wrist, bottom = knuckles |
 | `hand_right_script.png` | clean design master, "This Red / Right Hand / Points Me / South" in Kaushan Script (OFL), top = wrist |
-| `hand_left_pinky_ring.png` | the ring face: silver rim, black face, infinity over a double cross |
+| `photo_left_hand_back_fingers_2026-11-18.jpg`, `..._fingers2_...` | **the truth**, LEFT hand, no ring: sun spikes onto the finger backs, dot clusters |
 | `hand_tattoos_canon.png` | one-page reference sheet (photos + masters); attach it to every art prompt that shows his hands |
 
 - Sprites: never hand-paint them. `python3 tools/hand_tattoos/stamp.py` maps the masters onto every hand frame of every Duff
   sheet (reads originals from git, so re-running never double-inks), then `python3 tools/hand_tattoos/atlas.py` carries the
   3D sheet's change into the true-3D atlas. New or re-made Duff sheet: add it to `SHEETS` in stamp.py and re-run both.
 - Big art (KO stills, loading screens, covers, promo frames): the eye mandala on the LEFT hand, the four lines on the RIGHT,
-  the pinky ring on the LEFT. Check sides with the fox (LEFT side of the neck) and the blackout sleeve (LEFT arm).
+  NO ring on either hand. Check sides with the fox (LEFT side of the neck) and the blackout sleeve (LEFT arm).
 - The old note "illegible blackletter on the right hand" is retired: it is calligraphy with real words.
 
 **Check on every Duff image:** run the D1-D7 checklist in `docs/art_rules.md` (buff, blackout sleeve on the LEFT arm, creature head (not a panther) on the RIGHT forearm, both hand tattoos, fox on the left side of the neck).

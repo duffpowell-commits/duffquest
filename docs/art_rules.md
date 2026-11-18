@@ -15,7 +15,7 @@ Any **HARD** rule failure is an automatic FIX or REDO.
 - **D3 Other arm.** Grey-wash horns or flames on the upper arm. On the forearm: a dark creature head with
   orange eyes. It is **not a panther**, and it is not a lion or a cat.
 - **D4 Hands (HARD, Nov 18).** LEFT hand (the blackout-arm hand): eye mandala (eye, ring of triangle teeth, spiked
-  sun to the finger bases), finger dots, silver signet ring on the LEFT pinky (infinity over a double cross). RIGHT hand:
+  sun whose spikes run onto the backs of the fingers), dot clusters on the fingers, NO RING (Duff: "Take the ring off"). RIGHT hand:
   four lines of brush calligraphy, "This Red / Right Hand / Points Me / South", swirl under "South", fingers bare.
   Readable letters must spell exactly that. Masters + photos: `docs/duff_look.md` "Hands". Sprites come from
   `tools/hand_tattoos/stamp.py`, never a hand edit or an AI repaint.
