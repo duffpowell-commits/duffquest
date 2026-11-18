@@ -14,6 +14,9 @@ from pathlib import Path
 
 import numpy as np
 
+sys.path.insert(0, str(Path(__file__).resolve().parent / "edm"))
+from synth import boom  # noqa: E402  (the shared 808 drop, same 22050 Hz)
+
 SR = 22050
 BPM = 140.0
 BEAT = 60.0 / BPM
@@ -187,6 +190,20 @@ def main(out_path: Path, wav_path: Path | None) -> None:
             n = at(0.22)
             duck[s:s + n] = np.minimum(duck[s:s + n], 0.25 + 0.75 * np.linspace(0, 1, n) ** 2)
     mix = music * duck + drums * 0.9
+    # re-drops (Duff, Nov 18: "more bass drops for the boss fights"): half a beat of silence, then an 808 boom,
+    # at bars 8 and 12; lighter booms on 6, 10 and 14
+    gate = np.ones(N)
+    f = at(0.012)
+    for bar in (8, 12):
+        s0, ln = at(bar * BAR - BEAT / 2), at(BEAT / 2)
+        gate[s0 - f:s0] = np.minimum(gate[s0 - f:s0], np.linspace(1, 0, f))
+        gate[s0:s0 + ln] = 0
+        gate[s0 + ln:s0 + ln + f] = np.linspace(0, 1, f)
+    mix *= gate
+    fx = np.zeros(N)
+    for bar, lv in ((4, 1.0), (8, 1.0), (12, 1.0), (6, 0.7), (10, 0.7), (14, 0.7)):
+        add(fx, boom(level=lv), bar * BAR)
+    mix += fx
     # gentle high-pass to keep the sub tidy, then glue and limit
     mix = mix - svf(mix, 30, 0.7, "lp")
     # level-match the other mus_* tracks (RMS ~0.17, peaks under 0.85): soft-clip the transients, then scale
