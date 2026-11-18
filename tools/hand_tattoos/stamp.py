@@ -7,7 +7,7 @@
 Masters (tools/hand_tattoos/designs.py, from Duff's own photos, Nov 18 2026):
   docs/ref/duff/hand_left_eye_mandala.png  LEFT hand: eye in a ring of teeth in a spiked sun
   docs/ref/duff/hand_right_script.png      RIGHT hand: "This Red / Right Hand / Points Me / South"
-  docs/ref/duff/hand_left_pinky_ring.png   silver signet ring, LEFT pinky
+  NO ring on either hand (Duff, Nov 18 2026: "Take the ring off").
 The left forearm also goes to blackout (docs/duff_look.md: the hand blends into the sleeve).
 
 How a frame is read: skin = opaque warm pixels (+ the old blue tattoo lines inside them). The
@@ -37,7 +37,6 @@ BACKUP = os.path.join(ROOT, "grok_art", "hand_tattoos", "_work", "originals")
 RENDERS = os.path.join(ROOT, "docs", "renders", "hand_tattoos")
 
 INK = np.array([34, 30, 40], float)       # blackout ink (matches tools/tattoo_sprites.py ramp)
-SILVER = np.array([200, 202, 210], float)
 
 # name -> (path, rows, hands_only). rows = facing per sheet row; None = skip that row.
 FOUR = ["front", "back", "right", "left"]
@@ -242,11 +241,7 @@ def stamp_cell(cell, C, facing, hands_only, eye, script):
             # finger dots: a short stacked row on the knuckle edge
             kn = (v > 0.86) & (np.abs(u - 0.38) < 0.05)
             new[kn] = INK * 0.9
-            # signet ring: pinky side of the knuckle edge
-            body_x = shirt.nonzero()[1].mean() if shirt.any() else C / 2
-            outer_right = hp[:, 1].mean() > body_x
-            ring = (v > 0.80) & ((u > 0.86) if outer_right else (u < 0.14))
-            new[ring] = SILVER * np.clip(0.7 + lm[ring, None] / 400, 0.7, 1.2)
+            # no ring: Duff, Nov 18 2026, "Take the ring off"
             rgb[yi, xi] = new
             # forearm: blackout with skin chevrons
             if not hands_only:
