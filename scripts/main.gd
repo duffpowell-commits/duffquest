@@ -2079,7 +2079,12 @@ func music_track() -> String:
 		return str(overlay_node.get("music"))
 	match location:
 		"gala": return "gala"
-		"arena": return "willnot" if arena_id == "willnot" else ("kitchen" if arena_mode == "waffle" else "boss")
+		"arena":
+			if arena_id == "willnot":
+				return "willnot"
+			if arena_id == "djvape":   # Nov 18: Club Cloud 9 gets dubstep (tools/synth_dubstep.py)
+				return "club"
+			return "kitchen" if arena_mode == "waffle" else "boss"
 		"home": return "home"
 	return "neighborhood"
 
