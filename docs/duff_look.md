@@ -41,16 +41,21 @@ Duff has full tattoo sleeves on BOTH arms:
   elbow; a big STAR MANDALA on the outer forearm; an EYE inside the band at the wrist. All of it a heavy blackout sacred-geometry sleeve — mostly solid black ink with skin-tone negative-space
   designs: flower-of-life circles on the upper arm, a large petal mandala with a central eye on the outer elbow, chevron and
   triangle bands down the forearm.
-- Back of the LEFT hand: a large all-seeing eye inside a ring of sharp black triangles (a spiked sun/mandala) covering the whole
-  back of the hand, blending into the sleeve at the wrist; small dot tattoos on the fingers and knuckles.
+- Back of the LEFT hand (Duff confirmed Nov 18: "Left matched the sleeve and it has the mandala eye effect"): an eye in the
+  centre, a ring of triangle teeth around it, a spiked sun whose points run onto the BACKS OF THE FINGERS (Duff, Nov 18: "The mandala is on the
+  back of the fingers"); the whole back of the hand is blackwork and runs straight into the sleeve at the wrist. Dots on the fingers: three stacked on the ring finger, small dots on
+  the middle and index fingers, a single dot by the pinky. **NO RING** (Duff, Nov 18: "Take the ring off tho"; the ring in the
+  older photo is not part of the look). Canonical design: `docs/ref/duff/hand_left_eye_mandala.png` (see "Hands" below).
 - RIGHT upper arm: a large grey-wash biomechanical piece — organic horn/flame shapes with eye-like openings, wrapping the outer
   arm from shoulder to just above the elbow (NOT solid black flames — the fox art got this wrong). Small piece on the back of the
   right shoulder.
 - RIGHT forearm: NOT a panther (Duff, Nov 9). A dark creature head with several glowing eyes (orange in colour photos), a snout
   with a nose and freckle dots and its pink tongue curling out, framed by leaves (orange-gold), with two lines of small script
   above it. A thin black bracelet on the wrist.
-- Back of the RIGHT hand: several lines of bold gothic blackletter script running from the knuckles down onto the wrist
-  (draw it as illegible blackletter; never invent readable words).
+- Back of the RIGHT hand: FOUR lines of brush calligraphy, wrist to knuckles, reading exactly
+  **"This Red / Right Hand / Points Me / South"** (Duff, Nov 18), with a swirl flourish under "South". Fingers bare.
+  It reads upright when his arm hangs at his side (fingers down), so "This Red" is at the wrist. Where the letters are big
+  enough to read they must spell exactly that; never other words. Canonical design: `docs/ref/duff/hand_right_script.png`.
 - LEFT side of the neck: a realistic fox head with pale blue crystal shards and a pale blue rose.
   **Canonical design (Nov 15): `docs/ref/duff/duff_fox_neck_tattoo.png`**, cut from Duff's own photo (alpha = the
   tattoo outline). It runs from under the left ear down to the collarbone: blue geometric shards fan out behind the
@@ -63,5 +68,23 @@ At sprite size (64 px) this reads as: LEFT arm almost solid dark ink shoulder to
 upper arm and a darker forearm patch with an orange fleck; a dark mark on the left side of the neck.
 
 Photos win over the fox art wherever they disagree.
+
+## Hands (Nov 18, 2026: Duff: "these are my hand tattoos ... done looks like a perfect replication ... so that the mistakes stop happening")
+Every image that shows Duff's hands copies these, no inventing, no approximating:
+| File | What |
+|---|---|
+| `photo_left_hand_eye_2026-11-18.jpg` | LEFT hand, daylight: eye mandala, finger dots. It shows a pinky ring: IGNORE it, no ring in any art |
+| `photo_right_hand_script_2026-11-18.jpg` | **the truth**, RIGHT hand, daylight: the calligraphy |
+| `hand_left_eye_mandala.png` | clean design master (alpha = ink), top = wrist, bottom = knuckles |
+| `hand_right_script.png` | clean design master, "This Red / Right Hand / Points Me / South" in Kaushan Script (OFL), top = wrist |
+| `photo_left_hand_back_fingers_2026-11-18.jpg`, `..._fingers2_...` | **the truth**, LEFT hand, no ring: sun spikes onto the finger backs, dot clusters |
+| `hand_tattoos_canon.png` | one-page reference sheet (photos + masters); attach it to every art prompt that shows his hands |
+
+- Sprites: never hand-paint them. `python3 tools/hand_tattoos/stamp.py` maps the masters onto every hand frame of every Duff
+  sheet (reads originals from git, so re-running never double-inks), then `python3 tools/hand_tattoos/atlas.py` carries the
+  3D sheet's change into the true-3D atlas. New or re-made Duff sheet: add it to `SHEETS` in stamp.py and re-run both.
+- Big art (KO stills, loading screens, covers, promo frames): the eye mandala on the LEFT hand, the four lines on the RIGHT,
+  NO ring on either hand. Check sides with the fox (LEFT side of the neck) and the blackout sleeve (LEFT arm).
+- The old note "illegible blackletter on the right hand" is retired: it is calligraphy with real words.
 
 **Check on every Duff image:** run the D1-D7 checklist in `docs/art_rules.md` (buff, blackout sleeve on the LEFT arm, creature head (not a panther) on the RIGHT forearm, both hand tattoos, fox on the left side of the neck).

@@ -188,6 +188,17 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   stop at "Start over?"). Ids: 01 `at:540,150,720 --3d`, 06 `ask --3d`, 07 `gala_say:fences --3d`, 08 `at:300,215,1260 --3d`,
   10/11/12 `cold` (cold_1/3/4), 13 `notes`, 14 `gig`, 15 `evicted`.
 
+- **True 3D slice (Nov 17, test only, OFF for players):** web link `#true3d` (or env `DQ_TRUE3D=1` for renders) swaps
+  Duff from a painted card to a real 3D model in the 3D view (porch pirate entries exist but have no model yet:
+  their 1x art gave Hunyuan a slab/box, so they stay cards) (`scripts/view3d/true3d.gd`; view3d
+  hands each captured sheet frame to `true3d.claim()` first). Nothing else changes; never saved, not in Settings.
+  Models: `assets/model3d/<key>.res` (skinned ArrayMesh, 7 bones in its "bones" metadata) + `<key>_atlas.png`
+  (front/back/left/right tiles of the sheet's idle frames, projected on). Excluded from every export preset except
+  the web's late `extra.pck` (cards until it lands). Animation is code: walk swing from ground speed, idle breathing,
+  facing from movement, sheet column 3 = attack swing (Duff gets a 3D skillet), roll = tumble, KO tilt follows the 2D
+  rotation. His shades overlay is dropped (not on the model yet). Rebuild a model (CPU, ~7 min shape): see
+  `tools/true3d/README.md`. Turnaround render: `tools/true3d/model_shot.gd -- <key>`.
+
 - **HUD = Duff's phone (Nov 17):** `hud.gd` draws the strip as his status bar (clock, heart + signal bars = {partner},
   battery = Energy, cash pill, chevron), the drawer as a notification shade (`ROW_APPS` tile per `drawer_lines` tag),
   peeks/toasts as banners. New drawer row? Give it a tag + a `ROW_APPS` entry. Rects in `layout()` unchanged.
@@ -252,6 +263,11 @@ History of everything built: `TRACKER.md` (newest first).
 
 ## Art pipeline
 - House style C: `docs/art_direction/STYLE_LOCK.md`. Duff always has both tattoo sleeves + fox neck piece (`docs/duff_look.md`).
+- **Duff's hands (Nov 18, HARD, Duff: "so that the mistakes stop happening"):** LEFT = eye mandala (sun spikes run onto the
+  finger backs) + finger dots, NO RING (Duff Nov 18: "Take the ring off"); RIGHT = calligraphy "This Red / Right Hand / Points Me / South". Copy the masters in
+  `docs/ref/duff/hand_*.png` (photos `photo_*_hand_*_2026-11-18.jpg`, sheet `hand_tattoos_canon.png`), never invent. Any new or
+  re-made Duff sprite sheet: `python3 tools/hand_tattoos/stamp.py <sheet>` then `tools/hand_tattoos/atlas.py`. Audit of the
+  stills/promos still to redo: `docs/reviews/hand_tattoo_audit_2026-11-18.md`.
 - **Fully automatic art pipeline (Nov 10), no Duff steps:** Canva `generate-image` -> put each media id full-bleed on
   its own 1920x1080 page of one Canva design (`edit-design` insert_fill, commit) -> `export-design` png -> Zapier
   Google Drive "Upload File" (connection `023ae0fb-19cc-8509-b28e-979de3a98f75`, pass it as connection_id) with the
