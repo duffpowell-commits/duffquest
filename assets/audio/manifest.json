@@ -37,7 +37,11 @@
   "gala": 27.27,
   "date": 30.0,
   "credits": 36.93,
-  "club": 27.43
+  "club": 27.43,
+  "edm_neighborhood": 25.6,
+  "edm_night": 28.8,
+  "edm_kitchen": 30.0,
+  "edm_boss": 30.0
  },
- "credits": "Music by Duff (the game's author). Club Cloud 9 dubstep (DJ Vape's fight) synthesized in code (tools/synth_dubstep.py). SFX synthesized in code. Date theme: Brahms' Lullaby (1868, public domain). Everything else original."
+ "credits": "Music by Duff (the game's author). The optional EDM soundtrack (Settings) and the Club Cloud 9 dubstep (DJ Vape's fight) are synthesized in code (tools/edm/, tools/synth_dubstep.py). SFX synthesized in code. Date theme: Brahms' Lullaby (1868, public domain). Everything else original."
 }

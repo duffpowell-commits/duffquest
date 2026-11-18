@@ -20,6 +20,7 @@ var gore: = true                             # "Cartoon gore" in the KO cutscene
 ## "True 3D" test slice (real models for Duff + porch pirates in the 3D view): web link #true3d or env DQ_TRUE3D=1.
 ## Never saved, never in Settings: off for players until Duff says otherwise.
 var true3d: = OS.get_environment("DQ_TRUE3D") == "1"
+var edm: = false                              # Settings > EDM soundtrack (Nov 18): mus_edm_<name> over mus_<name>
 var view3d: = true                           # 3D town view (scripts/view3d/, game.gd); only on engines with 3D. Default since Nov 16
 var current: = ""
 var played: Array = []
@@ -99,7 +100,7 @@ func set_muted(on: bool) -> void:
 
 func to_dict() -> Dictionary:
 	return {"music": music_vol, "sfx": sfx_vol, "mute": muted, "clean": bool(CastScript.clean), "gore": gore,
-		"screen_shake": bool(JuiceScript.shake_on), "view3d": view3d, "view3d_v": 2 }
+		"screen_shake": bool(JuiceScript.shake_on), "view3d": view3d, "view3d_v": 2, "edm": edm }
 
 func set_screen_shake(on: bool) -> void:
 	JuiceScript.shake_on = on
@@ -112,6 +113,14 @@ func set_clean(on: bool) -> void:
 func set_view3d(on: bool) -> void:
 	view3d = on
 	save_settings()
+
+## Swap soundtracks now: the same place's track restarts from the other set.
+func set_edm(on: bool) -> void:
+	edm = on
+	save_settings()
+	var want: = current
+	current = "__"
+	play_music(want)
 
 func set_gore(on: bool) -> void:
 	gore = on
@@ -139,6 +148,7 @@ func load_settings() -> void:
 	CastScript.clean = bool(d.get("clean", portal))
 	gore = bool(d.get("gore", not portal))
 	JuiceScript.shake_on = bool(d.get("screen_shake", true))
+	edm = bool(d.get("edm", false))
 	# 3D became the default Nov 16 (view3d_v 2): settings saved before that carry the old "off" default, so they
 	# start in 3D once; after that the player's own Settings choice sticks
 	view3d = bool(d.get("view3d", true)) if int(d.get("view3d_v", 1)) >= 2 else true
@@ -174,6 +184,19 @@ func play_sfx(name: String, pitch: float = 1.0) -> void:
 	best.pitch_scale = pitch * randf_range(0.96, 1.04)
 	best.play()
 
+## Which files can play for a place, best first: the EDM version when the toggle is on, then the original,
+## then a stand-in for places only the EDM set scores ("night" -> the neighborhood theme).
+const MUSIC_FALLBACK: = {"night": "neighborhood"}
+func _music_candidates(name: String) -> Array:
+	var out: Array = []
+	for n in [name, str(MUSIC_FALLBACK.get(name, ""))]:
+		if n == "":
+			continue
+		if edm:
+			out.append("edm_" + n)
+		out.append(n)
+	return out
+
 func play_music(name: String) -> void:
 	if name == current:
 		return
@@ -181,7 +204,11 @@ func play_music(name: String) -> void:
 	if name == "" or silent:
 		music_player.stop()
 		return
-	var s: = stream(DIR + "mus_" + name + ".ogg")
+	var s: AudioStream = null
+	for n in _music_candidates(name):
+		s = stream(DIR + "mus_" + n + ".ogg")
+		if s != null:
+			break
 	if s == null:
 		current = ""   # not here yet (web world pack still downloading): ask again next time
 		return
