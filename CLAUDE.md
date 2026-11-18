@@ -206,6 +206,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `python3 tools/import_vans.py grok_art/2026-11-17-vans/_work/vans_v1.png`). A mirrored 2D draw shows as get_scale().y < 0, not x.
   Squash: `juice.squash(node, big)`. Swing smear / roll dust: `combat_fx.swing()` / `dust()`. Wipe: `hud.wipe_t`.
 
+- **Music (Nov 18):** `mus_<name>.ogg` in assets/audio (mono 22 kHz Vorbis, ~25 s loops, RMS ~0.17), picked by `main.music_track()`, listed in `assets/audio/manifest.json`. DJ Vape's arena plays `club` (dubstep, `python3 tools/synth_dubstep.py assets/audio/mus_club.ogg` regenerates it). Keep the credits line in credits.gd + PAGE.md + manifest in sync.
 - **iPhone hardening (Nov 18):** iPhones start Lite once (`perf_guard` cfg `ios_lite`). Big one-off art is dropped from `Art._tex` on room change (`Art.drop_big`, prefixes `bg_ arena_ gala`); never hold a 1280x720 texture forever in a cache. `main._watchdog` frees a stuck loading screen (10 s) or a dead menu. A tap anywhere advances dialogue. Bug reports: Settings > Send a bug report (`main.bug_report()`); ask testers for one before guessing.
 - **Kitchen tickets (Nov 17):** spec lines are picture tiles (`minigame.ticket_spec()`), the fryer is a colour gauge (`fryer._draw_gauge`). Don't add small explanatory text to play screens; put it on the how-to card.
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
