@@ -263,7 +263,7 @@ History of everything built: `TRACKER.md` (newest first).
 ## Art pipeline
 - House style C: `docs/art_direction/STYLE_LOCK.md`. Duff always has both tattoo sleeves + fox neck piece (`docs/duff_look.md`).
 - **Duff's hands (Nov 18, HARD, Duff: "so that the mistakes stop happening"):** LEFT = eye mandala (sun spikes run onto the
-  finger backs) + finger dots, NO RING (Duff Nov 18: "Take the ring off"); RIGHT = calligraphy "This Red / Right Hand / Points Me / South". Copy the masters in
+  finger backs) + finger dots, NO RING (Duff Nov 18: "Take the ring off"); RIGHT = calligraphy "This Red / Right Hand / Points Me / South" in RED ink, blended into the skin (Duff Nov 18: "blend the right hand tattoo and make the ink red"). Copy the masters in
   `docs/ref/duff/hand_*.png` (photos `photo_*_hand_*_2026-11-18.jpg`, sheet `hand_tattoos_canon.png`), never invent. Any new or
   re-made Duff sprite sheet: `python3 tools/hand_tattoos/stamp.py <sheet>` then `tools/hand_tattoos/atlas.py`. Audit of the
   stills/promos still to redo: `docs/reviews/hand_tattoo_audit_2026-11-18.md`.

@@ -37,6 +37,7 @@ BACKUP = os.path.join(ROOT, "grok_art", "hand_tattoos", "_work", "originals")
 RENDERS = os.path.join(ROOT, "docs", "renders", "hand_tattoos")
 
 INK = np.array([34, 30, 40], float)       # blackout ink (matches tools/tattoo_sprites.py ramp)
+RED_INK = np.array([170, 24, 32], float)  # RIGHT-hand script is red ink (Duff, Nov 18 2026)
 
 # name -> (path, rows, hands_only). rows = facing per sheet row; None = skip that row.
 FOUR = ["front", "back", "right", "left"]
@@ -257,7 +258,7 @@ def stamp_cell(cell, C, facing, hands_only, eye, script):
         else:
             a = sample(script, u * 0.9 + 0.05, v * 0.92 + 0.02)
             k = 0.92 if C >= 256 else 0.6   # tiny hands: keep it script-like, not a black blob
-            rgb[yi, xi] = ink_blend(px, lm, a * k, INK)
+            rgb[yi, xi] = ink_blend(px, lm, a * k, RED_INK)
         n_ink += len(hp)
     out[..., :3] = np.clip(rgb, 0, 255).astype(np.uint8)
     return out, n_ink

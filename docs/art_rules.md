@@ -16,7 +16,7 @@ Any **HARD** rule failure is an automatic FIX or REDO.
   orange eyes. It is **not a panther**, and it is not a lion or a cat.
 - **D4 Hands (HARD, Nov 18).** LEFT hand (the blackout-arm hand): eye mandala (eye, ring of triangle teeth, spiked
   sun whose spikes run onto the backs of the fingers), dot clusters on the fingers, NO RING (Duff: "Take the ring off"). RIGHT hand:
-  four lines of brush calligraphy, "This Red / Right Hand / Points Me / South", swirl under "South", fingers bare.
+  four lines of brush calligraphy, "This Red / Right Hand / Points Me / South", swirl under "South", fingers bare, RED ink blended into the skin (Duff, Nov 18).
   Readable letters must spell exactly that. Masters + photos: `docs/duff_look.md` "Hands". Sprites come from
   `tools/hand_tattoos/stamp.py`, never a hand edit or an AI repaint.
 
