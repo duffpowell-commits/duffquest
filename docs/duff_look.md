@@ -53,7 +53,7 @@ Duff has full tattoo sleeves on BOTH arms:
   with a nose and freckle dots and its pink tongue curling out, framed by leaves (orange-gold), with two lines of small script
   above it. A thin black bracelet on the wrist.
 - Back of the RIGHT hand: FOUR lines of brush calligraphy, wrist to knuckles, reading exactly
-  **"This Red / Right Hand / Points Me / South"** (Duff, Nov 18), with a swirl flourish under "South". Fingers bare.
+  **"This Red / Right Hand / Points Me / South"** (Duff, Nov 18), with a swirl flourish under "South". Fingers bare. In ALL art the script is RED ink, blended into the skin, not black (Duff, Nov 18: "make the ink red").
   It reads upright when his arm hangs at his side (fingers down), so "This Red" is at the wrist. Where the letters are big
   enough to read they must spell exactly that; never other words. Canonical design: `docs/ref/duff/hand_right_script.png`.
 - LEFT side of the neck: a realistic fox head with pale blue crystal shards and a pale blue rose.
