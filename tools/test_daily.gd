@@ -25,7 +25,7 @@ func _init() -> void:
 		au._music_candidates("night") == ["edm_night", "night", "edm_neighborhood", "neighborhood"])
 	au.edm = false
 	check("EDM off: original first", au._music_candidates("boss") == ["boss"])
-	for n in ["neighborhood", "night", "kitchen", "boss"]:
+	for n in ["neighborhood", "night", "kitchen", "boss", "home", "gala", "willnot", "date", "credits"]:
 		check("EDM track mus_edm_%s.ogg ships" % n, ResourceLoader.exists("res://assets/audio/mus_edm_%s.ogg" % n))
 	au.free()
 	check("data/art_rects.json matches sf_/sd_ art (re-run tools/bake_art_rects.gd)",
