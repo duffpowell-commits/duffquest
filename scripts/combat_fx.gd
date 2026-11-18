@@ -34,6 +34,18 @@ func ring(pos: Vector2, radius: float, col: Color) -> void:
 func cut(pos: Vector2, dir: Vector2) -> void:
 	items.append({"type": "cut", "pos": pos, "dir": dir.normalized().rotated(randf_range(-0.6, 0.6)), "t": 0.0, "dur": 0.6 })
 
+## Nov 17 fight impact: a white smear arc that follows the swing (finishers: wider, gold-edged), and dust puffs at
+## Duff's feet when a roll starts and when it lands (watched in _process, so player.gd needs no FX code).
+func swing(owner: Node2D, dir: Vector2, big: bool) -> void:
+	items.append({"type": "swing", "owner": owner, "dir": dir.normalized() if dir.length() > 0.01 else Vector2.RIGHT,
+		"big": big, "t": 0.0, "dur": 0.16 if not big else 0.22})
+
+func dust(pos: Vector2, dir: Vector2) -> void:
+	var puffs: Array = []
+	for i in 5:
+		puffs.append([Vector2(randf_range(-1, 1), randf_range(-0.4, 0.2)) - dir * randf_range(0.3, 0.9), randf_range(2.0, 3.6)])
+	items.append({"type": "dust", "pos": pos, "puffs": puffs, "t": 0.0, "dur": 0.38})
+
 func receipt(pos: Vector2) -> void:
 	items.append({"type": "receipt", "pos": pos, "t": 0.0, "dur": 1.6 })
 
@@ -41,8 +53,16 @@ func beam(owner: Node2D, dir: Vector2, length: float, width: float, dur: float, 
 	beams.append({"owner": owner, "dir": dir, "len": length, "w": width, "t": 0.0, "dur": dur,
 		"dmg": tick_dmg, "tick": 0.0 })
 
+var _was_rolling: = false
+
 func _process(delta: float) -> void:
 	var paused: = get_tree().paused
+	var pl: Node = c.m.player if c != null and c.m != null and c.m.get("player") != null else null
+	if pl != null and pl.has_method("rolling"):
+		var r: bool = pl.rolling()
+		if r != _was_rolling:
+			dust(pl.global_position + Vector2(0, 10), pl.get("roll_dir") if pl.get("roll_dir") != null else Vector2.ZERO)
+		_was_rolling = r
 	for it in items:
 		if it["type"] == "receipt" or not paused:
 			it["t"] += delta
@@ -130,6 +150,23 @@ func _draw() -> void:
 				for j in 3:
 					var o: Vector2 = it["pos"] + Vector2(0, -6) + it["dir"] * (j - 1) * 3.0
 					draw_line(o - d * 9.0, o + d * 9.0, Color(1, 1, 1, k), 1.0)
+			"swing":
+				if not is_instance_valid(it["owner"]):
+					continue
+				var o: Vector2 = (it["owner"] as Node2D).global_position + Vector2(0, -7)
+				var dv: Vector2 = it["dir"]
+				var e2: = 1.0 - k
+				var span: = 1.9 if it["big"] else 1.4
+				var a0: = dv.angle() - span * 0.5 + span * e2 * 0.35
+				var rad: = (17.0 if it["big"] else 14.0)
+				draw_arc(o, rad, a0, a0 + span * (0.5 + e2 * 0.5), 18, Color(1, 1, 1, 0.75 * k), 4.0 if it["big"] else 3.0)
+				draw_arc(o, rad + 2.5, a0, a0 + span * (0.5 + e2 * 0.5), 18, Color(1.0, 0.82, 0.4, 0.55 * k) if it["big"] else Color(0.8, 0.9, 1.0, 0.35 * k), 1.5)
+			"dust":
+				var e3: = 1.0 - k
+				for pf in it["puffs"]:
+					var off: Vector2 = pf[0]
+					var pp: Vector2 = it["pos"] + off * (3.0 + e3 * 9.0)
+					draw_circle(pp, float(pf[1]) * (0.6 + e3 * 0.9), Color(0.82, 0.76, 0.66, 0.6 * k))
 			"receipt":
 
 				var t: float = it["t"]

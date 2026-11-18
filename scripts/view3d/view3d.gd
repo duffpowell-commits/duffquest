@@ -13,6 +13,7 @@ const Art: = preload("res://scripts/art.gd")
 const Ground: = preload("res://scripts/ground.gd")
 const HdPresentation: = preload("res://scripts/hd_presentation.gd")
 const AudioScript: = preload("res://scripts/audio.gd")
+const TownLife: = preload("res://scripts/town_life.gd")
 
 const U: = 0.1                              # metres per 2D world unit
 const CAM_OFF: = Vector3(0, 12.5, 16.0)     # fixed-yaw follow camera, pitched ~38 degrees like the 2D 3/4 view
@@ -29,6 +30,11 @@ var env: Environment
 var ground: MeshInstance3D
 var live: = false
 var pool: Array = []                        # Sprite3D cards for captured actor draws, reused every frame
+## Top-down vehicle art (town vans, the HONK delivery truck): stood up as a card it read as a van tipped on its side
+## (Duff's phone test, Nov 17). In 3D it swaps for a standing van drawn for this camera (tools/import_vans.py):
+## the side view for vans driving across (mirrored when going left), the front for vans coming toward the camera,
+## the back for vans driving away.
+const VANS: = ["truck_h", "truck_v"]
 var buildings: Array = []                   # [building dict, card]
 var lamps: Array = []                       # [OmniLight3D, base energy]
 var marks: Array = []                       # Label3D pool: quest/story markers + house names
@@ -68,8 +74,12 @@ var low: = false
 const MAX_K: = 3.0
 const LOW_K: = 1.5
 
+## Tilt-shift diorama blur (shaders/tilt_shift.gdshader) on this container: only the 3D frame, off in Lite.
+var tilt_mat: ShaderMaterial
+
 func set_low(on: bool) -> void:
 	low = on
+	material = null if low else tilt_mat
 	vp.msaa_3d = Viewport.MSAA_DISABLED if low else Viewport.MSAA_2X
 	env.glow_enabled = not low
 	if low:
@@ -84,6 +94,9 @@ static func to3(p: Vector2, h: float = 0.0) -> Vector3:
 func _ready() -> void:
 	name = "View3D"
 	stretch = false   # sized by hand in _fit(): native pixels, not the 640x360 logical size
+	tilt_mat = ShaderMaterial.new()
+	tilt_mat.shader = preload("res://shaders/tilt_shift.gdshader")
+	material = tilt_mat
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
 	vp = SubViewport.new()
@@ -455,6 +468,7 @@ func _sync_actors(dt: float = 0.016) -> void:
 			s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF if flat else GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 			s.texture = tx
 			s.flip_h = sc.x < 0.0
+			s.flip_v = false
 			var mod: Color = d[4]
 			s.modulate = mod
 			s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD if mod.a > 0.95 else SpriteBase3D.ALPHA_CUT_DISABLED
@@ -475,12 +489,18 @@ func _sync_actors(dt: float = 0.016) -> void:
 				s.region_enabled = false
 				s.offset = Vector2(-float(org2[0]), 0.0)
 				s.pixel_size = U / dens * isc * absf(sc.y)
+				if name in VANS and _van(s, name, full * pos, sc, toward * k):
+					k += 1
+					continue
 				if flat:   # top-left corner on the floor, image runs south
 					s.offset = Vector2(-float(org2[0]), -float(tx.get_height()) + float(org2[1]))
 					s.position = to3(full * pos, 0.0)
 				else:
 					var bottom: = pos + Vector2(0, (float(tx.get_height()) - float(org2[1])) * isc / dens)
 					s.position = to3(full * bottom) + toward * k
+					if name == "amb_puff":   # roof steam: stand on the facade front, lifted by its 2D height above it
+						var gp: Vector2 = full * bottom
+						s.position = to3(Vector2(gp.x, TownLife.PUFF_BASE_Y + 1.0)) + Vector3(0, (TownLife.PUFF_BASE_Y - gp.y) * U, 0)
 			if s.flip_h:
 				s.offset.x = -float(s.region_rect.size.x if s.region_enabled else tx.get_width()) - s.offset.x
 			k += 1
@@ -488,6 +508,25 @@ func _sync_actors(dt: float = 0.016) -> void:
 		(pool[i] as Sprite3D).visible = false
 	if true3d != null:
 		true3d.end_frame()
+
+## A town van / delivery truck as a standing card (see VANS). `at` = the van's centre on the road, `sc` = the 2D
+## draw's scale (its sign is the direction). False when the van art isn't in the build (then the old card shows).
+func _van(s: Sprite3D, name: String, at: Vector2, sc: Vector2, nudge: Vector3) -> bool:
+	var vname: = "van_side" if name == "truck_h" else ("van_front" if sc.y > 0.0 else "van_back")
+	var tx: = Art.tex(vname)
+	if tx == null:
+		return false
+	s.texture = tx
+	s.region_enabled = false
+	s.rotation_degrees.x = 0.0
+	s.flip_h = name == "truck_h" and sc.y < 0.0   # get_scale() reports a mirror (negative determinant) on y
+	s.flip_v = false
+	s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	s.pixel_size = U / 4.0
+	s.offset = Vector2(-tx.get_width() * 0.5, 0.0)
+	# stand on the van's near edge, so its body sits over the lane it drives in
+	s.position = to3(at + Vector2(0, 5.0 if name == "truck_h" else 0.0)) + nudge
+	return true
 
 # --- the static town ------------------------------------------------------------------------------------------
 

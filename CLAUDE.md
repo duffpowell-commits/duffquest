@@ -19,7 +19,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   from the icon: no Safari bars. Native iOS builds are out (no Mac, no Apple developer account).
   Godot's service worker is cache-first, so CI injects `tools/web_shell/pwa_autoupdate.html` into the Pages
   `index.html`: at boot a waiting new build takes over and reloads once (Nov 16: Brittany saw a stale "Mazikeen").
-- **IGN review v3: 7.9/10** (`docs/reviews/ign_review_2026-11-11_v3.md`). Duff + Brittany played it Nov 11: "it's
+- **IGN review v4: 8.4/10** (`docs/reviews/ign_review_2026-11-17_v4.md`; v3 was 7.9). Duff + Brittany played it Nov 11: "it's
   come a long way."
 - **Last session's handoff (read it): `docs/handoffs/2026-11-11_painted_minigames_ign_v3.md`.** It covers what
   shipped, the step-by-step prop-art pipeline, the ranked next list and the gotchas.
@@ -68,6 +68,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   that workflow and play-test the build. Storefront/prop sizes are baked in `data/art_rects.json`
   (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
   Branch builds publish to the `web-preview` release (sessions can't download Actions artifacts).
+  **Lossy sprites (Nov 17):** every `ch_*`, `duff_*`, `kf_*`, `sf_*`, `sd_*` sheet imports lossy 0.8 (`compress/mode=1`):
+  street.pck 4.8 -> 2.0 MB, world.pck 12.8 -> 6.0 MB, so Continue downloads 8 MB instead of 17.6. No visible change
+  (`docs/renders/lossy_sprites_before_after.png`). A NEW sheet imports lossless by default: set mode 1 / 0.8 in its .import.
 
 - **Cold open (Nov 13):** new game = porch-pirate fight first, rules after (`main.gd cold_open()`, flag
   `story.cold_open`). Web packs are now street -> world -> extra: `street.pck` (STREET globs in
@@ -179,7 +182,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `tools/duff_hd3d/shades_hd.py` (eye centres measured per frame: re-measure if the HD sheet is rebuilt). Render: `--shades`. Renders: `arena_shot -- at:X,Y[,MIN] --3d` / `--2d`.
   Low-end phones (Nov 17): `perf_guard.gd` steps 3D down in order: Lite, then 640x360, then the flat 2D view with a
   toast (Settings > 3D view switches back). Profile with `tools/perf_run.tscn -- view=3d|2d [low]`. Store screens in
-  `docs/itch/screens/` are 3D shots since Nov 17 (`docs/renders/store_screens_3d_before_after.jpg`).
+  `docs/itch/screens/` are 3D shots on the Duffphone UI (re-shot Nov 17 late, `docs/renders/store_screens_phone_ui_before_after.jpg`).
+  Re-shoot: `XDG_DATA_HOME=<fresh dir with settings.json {"clean":true,"gore":false}> xvfb-run -a godot --path . --rendering-driver opengl3
+  --resolution 1920x1080 --fixed-fps 30 res://tools/arena_shot.tscn -- <id>`, one fresh XDG dir per run (a leftover save makes `cold`
+  stop at "Start over?"). Ids: 01 `at:540,150,720 --3d`, 06 `ask --3d`, 07 `gala_say:fences --3d`, 08 `at:300,215,1260 --3d`,
+  10/11/12 `cold` (cold_1/3/4), 13 `notes`, 14 `gig`, 15 `evicted`.
 
 - **True 3D slice (Nov 17, test only, OFF for players):** web link `#true3d` (or env `DQ_TRUE3D=1` for renders) swaps
   Duff from a painted card to a real 3D model in the 3D view (porch pirate entries exist but have no model yet:
@@ -192,12 +199,34 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   rotation. His shades overlay is dropped (not on the model yet). Rebuild a model (CPU, ~7 min shape): see
   `tools/true3d/README.md`. Turnaround render: `tools/true3d/model_shot.gd -- <key>`.
 
+- **HUD = Duff's phone (Nov 17):** `hud.gd` draws the strip as his status bar (clock, heart + signal bars = {partner},
+  battery = Energy, cash pill, chevron), the drawer as a notification shade (`ROW_APPS` tile per `drawer_lines` tag),
+  peeks/toasts as banners. New drawer row? Give it a tag + a `ROW_APPS` entry. Rects in `layout()` unchanged.
+  Render: `res://tools/hud_shot.tscn -- DIR` (town/fight/drawer/peek/rent_due).
+  UI language (Nov 17): menus are glass sheets (`card.gd`), buttons there are pills (`minigame.pill_buttons`,
+  `UiStyle.pill_button`), panels use `UiStyle.glass`. Settings = phone Settings app, Gear = icon grid; rows/tiles are
+  buttons with `"hide": true` (drawn by the screen, still tappable + key-bound). Minigame play screens keep the chunky
+  key-cap buttons on purpose (big thumb targets on the line).
+  Loading screens double as wallpapers (`scripts/wallpaper.gd`): phone home = one per day, menus with no world
+  frame = a blurred one. Draw them via ImageTexture (sandbox GL renders the lossy CompressedTexture white).
+
+- **Living town + motion (Nov 17):** `scripts/town_life.gd` (child of main, y-sorted entity nodes, own RNG, nothing
+  collides): vans, walkers, pigeons, roof steam, screen-space weather. New ambient thing? Add an `Ent` kind and draw it
+  with `Art.*` so 3D mirrors it. Tilt-shift: `shaders/tilt_shift.gdshader` on View3D (`tilt_mat`, null in Lite).
+  Vans: 2D draws top-down `truck_h`/`truck_v`; 3D swaps in standing `van_side`/`van_front`/`van_back` (`view3d._van`; re-cut with
+  `python3 tools/import_vans.py grok_art/2026-11-17-vans/_work/vans_v1.png`). A mirrored 2D draw shows as get_scale().y < 0, not x.
+  Squash: `juice.squash(node, big)`. Swing smear / roll dust: `combat_fx.swing()` / `dust()`. Wipe: `hud.wipe_t`.
+
+- **iPhone hardening (Nov 18):** iPhones start Lite once (`perf_guard` cfg `ios_lite`). Big one-off art is dropped from `Art._tex` on room change (`Art.drop_big`, prefixes `bg_ arena_ gala`); never hold a 1280x720 texture forever in a cache. `main._watchdog` frees a stuck loading screen (10 s) or a dead menu. A tap anywhere advances dialogue. Bug reports: Settings > Send a bug report (`main.bug_report()`); ask testers for one before guessing.
+- **Kitchen tickets (Nov 17):** spec lines are picture tiles (`minigame.ticket_spec()`), the fryer is a colour gauge (`fryer._draw_gauge`). Don't add small explanatory text to play screens; put it on the how-to card.
 - **Mini-game coach (Nov 16):** first-time HOW TO PLAY card + slow first go (0.7, then 0.85, then 1.0) for every
   action mini-game. New mini-game: add `func howto() -> Array` (1-3 steps `{"i": kf_ art or "", "v": tap|drag|hold|beat|mash|read, "s": <= 80 chars}`;
   test_daily checks it). Multi-phase games override `coach_key()` and call `coach_start()` / `coach_done()` per phase
   (see prep.gd). `coach_pace = false` in `_setup` = card only. Renders: `ui_audit_shot.tscn -- coach`.
 
 ## Next (in order)
+0. **Visual plan built Nov 17** (living town, UI motion, diorama 3D, fight impact; TRACKER entry): needs Duff's
+   phone test, mainly the tilt-shift cost on his Android (perf_guard Lite turns it off). Store screens re-shot Nov 17 late.
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
 2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
 3. **Grease boss art:** done Nov 12 (own sprite `ch_grease`, alley arena already its own). Left: nothing unless Duff asks.
