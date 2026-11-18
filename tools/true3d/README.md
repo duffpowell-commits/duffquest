@@ -1,0 +1,24 @@
+# True 3D models (test slice, `#true3d`)
+
+Turns a 2D character sheet into a rigged 3D model for `scripts/view3d/true3d.gd`. Free, CPU only, no accounts.
+
+1. Python deps (fresh container): `pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu`,
+   then `pip install hy3dgen==2.0.2 transformers==4.49.0 diffusers==0.31.0 trimesh scipy accelerate fast-simplification`.
+2. Inputs: the sheet's idle column (col 0) cut per row into `/tmp/h3d/in/<name>_{front,back,right,left}.png`
+   (row 0 front, 1 back, 2 faces screen-right, 3 faces screen-left), cropped to the figure, centred on a
+   transparent square at ~82% fill, 1024 px. Small 1x/2x sheets: upscale with NEAREST (LANCZOS blur made
+   Hunyuan return a flat slab for the porch pirates).
+3. Shape (~7 min each on 4 CPU threads, first run downloads ~5 GB of weights from Hugging Face):
+   `python3 tools/true3d/shape.py <name>[,<name>...] [front,back[,left,right]]` -> `/tmp/h3d/out/<name>_shape.glb`.
+4. Rig + texture: `python3 tools/true3d/rig.py <key> /tmp/h3d/out/<name>_shape.glb /tmp/h3d/rig [faces] [<name>]`
+   (decimates to ~5-7k faces, projects the four views into a 1024 atlas, weights 7 bones from the front silhouette).
+5. Into the game: copy `/tmp/h3d/rig/<key>_atlas.png` to `assets/model3d/`, set its `.import` to
+   `compress/mode=1` + `mipmaps/generate=true`, `godot --headless --path . --import`, then
+   `godot --headless --path . --script tools/true3d/build_mesh.gd -- /tmp/h3d/rig <key>` -> `assets/model3d/<key>.res`.
+6. Check: `xvfb-run -a godot --path . --rendering-driver opengl3 --script tools/true3d/model_shot.gd -- <key>`
+   (turnaround: front, 3/4, side, back, stride, swing) and in game
+   `DQ_TRUE3D=1 xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn --fixed-fps 30 -- cold`.
+
+Known limits of the CPU path: no texture model (the art is projected flat, so arm sides smear), faces at
+3/4 angles stretch, magenta key fringe gets masked out but a few flecks survive. A GPU textured pass
+(Hunyuan3D-2 paint, needs Kaggle or HF_TOKEN) would fix the texture; the rig and game code stay the same.
