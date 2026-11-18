@@ -72,6 +72,10 @@ func _init() -> void:
 	var bytes: = 0
 	for src in files:
 		var imp: String = src + ".import"
+		if not FileAccess.file_exists(imp):   # a plain saved resource (assets/model3d/*.res): packed as is
+			pk.add_file(src, src)
+			bytes += FileAccess.get_file_as_bytes(src).size()
+			continue
 		var dest: = _remap_path(imp)
 		if dest == "" or not FileAccess.file_exists(dest):
 			push_error("make_extra_pack: %s has no imported data (run --import first)" % src)
@@ -102,7 +106,7 @@ static func deferred_patterns() -> PackedStringArray:
 func _walk(dir: String, pats: PackedStringArray, out: Array) -> void:
 	for f in DirAccess.get_files_at(dir):
 		var full: = dir.path_join(f)
-		if f.ends_with(".import") or not FileAccess.file_exists(full + ".import"):
+		if f.ends_with(".import") or not (FileAccess.file_exists(full + ".import") or f.ends_with(".res")):
 			continue
 		var rel: = full.trim_prefix("res://")
 		for g in pats:

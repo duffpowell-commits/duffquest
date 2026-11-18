@@ -17,6 +17,9 @@ var music_vol: = 0.7
 var sfx_vol: = 0.8
 var muted: = false
 var gore: = true                             # "Cartoon gore" in the KO cutscenes (knockout.gd reads this)
+## "True 3D" test slice (real models for Duff + porch pirates in the 3D view): web link #true3d or env DQ_TRUE3D=1.
+## Never saved, never in Settings: off for players until Duff says otherwise.
+var true3d: = OS.get_environment("DQ_TRUE3D") == "1"
 var view3d: = true                           # 3D town view (scripts/view3d/, game.gd); only on engines with 3D. Default since Nov 16
 var current: = ""
 var played: Array = []
@@ -146,6 +149,7 @@ func load_settings() -> void:
 			view3d = true
 		elif h.contains("2d"):
 			view3d = false
+		true3d = true3d or h.contains("true3d")
 	apply()
 
 func play_sfx(name: String, pitch: float = 1.0) -> void:
