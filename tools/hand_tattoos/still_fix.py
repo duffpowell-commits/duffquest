@@ -61,7 +61,8 @@ STILLS = {
     },
     "duff_fin3": {
         "file": "assets/art/ko/duff_fin3.jpg",
-        "fist": ("duff_fin3_v4.png", (745, 80, 1275, 660), (740, 1280)),  # Duff's photo was a mirrored selfie
+        "fist": ("duff_fin3_v4.png", (755, 95, 1265, 645), (740, 1280), 82),  # Duff's photo was a mirrored selfie
+        "cut": ((775, 135, 470, 445), (740, 160, 510, 420)),  # grabCut rects: new fist, old fist
         "crop2": (700, 120, 1280, 620),
     },
     "duff_fin2": {
@@ -123,13 +124,38 @@ def lay_script(img, quad, bold=2):
     return out.clip(0, 255).astype(np.uint8)
 
 
-def lay_fist(img, fist):
+def grab(img, rect):
+    """Biggest grabCut foreground blob inside rect (x, y, w, h), holes closed."""
+    m = np.zeros(img.shape[:2], np.uint8)
+    cv2.grabCut(img, m, rect, np.zeros((1, 65)), np.zeros((1, 65)), 6, cv2.GC_INIT_WITH_RECT)
+    fm = ((m == 1) | (m == 3)).astype(np.uint8)
+    n, lab, st, _ = cv2.connectedComponentsWithStats(fm)
+    fm = (lab == 1 + np.argmax(st[1:, 4])).astype(np.uint8)
+    return cv2.morphologyEx(fm, cv2.MORPH_CLOSE, np.ones((15, 15), np.uint8))
+
+
+def cut_fist(img, new, rect_new, rect_old):
+    """Paste only the redrawn fist (grabCut) and paint the old fist's leftovers out with the burst around it."""
+    fm = cv2.morphologyEx(grab(new, rect_new), cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (41, 41)))
+    old = grab(img, rect_old)
+    rest = cv2.dilate(old & (1 - fm), np.ones((7, 7), np.uint8))
+    img = cv2.inpaint(img, rest * 255, 9, cv2.INPAINT_TELEA)
+    a = cv2.GaussianBlur(fm.astype(np.float32), (0, 0), 1.5)[..., None]
+    return (img * (1 - a) + new * a).clip(0, 255).astype(np.uint8)
+
+
+def lay_fist(img, fist, cut=None):
     src, (x0, y0, x1, y1) = fist[:2]
     h, w = img.shape[:2]
     new = cv2.resize(cv2.imread(os.path.join(REGEN, src), cv2.IMREAD_COLOR), (w, h), interpolation=cv2.INTER_AREA)
     if len(fist) > 2:  # (fx0, fx1): mirror this column band left-right (selfie refs come out mirrored)
         fx0, fx1 = fist[2]
         new[:, fx0:fx1] = new[:, fx0:fx1][:, ::-1].copy()
+    if len(fist) > 3:  # rotate the redraw (degrees, CCW) about the ellipse centre to match the old fist's pose
+        R = cv2.getRotationMatrix2D(((fist[2][0] + fist[2][1]) / 2, 370), fist[3], 1.0)
+        new = cv2.warpAffine(new, R, (w, h), flags=cv2.INTER_CUBIC, borderMode=cv2.BORDER_REFLECT)
+    if cut:
+        return cut_fist(img, new, *cut)
     m = np.zeros((h, w), np.uint8)
     cv2.ellipse(m, ((x0 + x1) // 2, (y0 + y1) // 2), ((x1 - x0) // 2, (y1 - y0) // 2), 0, 0, 360, 255, -1)
     m = cv2.GaussianBlur(m, (0, 0), 6).astype(np.float32)[..., None] / 255.0
@@ -146,7 +172,7 @@ def fix(name):
     if cfg.get("script"):
         img = lay_script(img, cfg["script"])
     if cfg.get("fist"):
-        img = lay_fist(img, cfg["fist"])
+        img = lay_fist(img, cfg["fist"], cfg.get("cut"))
     out = os.path.join(ROOT, rel)
     if rel.endswith(".jpg"):
         cv2.imwrite(out, img, [cv2.IMWRITE_JPEG_QUALITY, 92])
