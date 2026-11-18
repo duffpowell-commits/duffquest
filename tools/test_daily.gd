@@ -924,6 +924,30 @@ func _touch_tut_checks(main: Node) -> void:
 	check("touch tut: not shown twice", not main.tut.active())
 	var T: = preload("res://scripts/touch_controls.gd")
 	check("touch buttons: G, S, swap, D all >= A", T.BTN_G_R >= T.BTN_R and T.BTN_S_R >= T.BTN_R and T.BTN_SW_R >= T.BTN_R and T.BTN_D_R >= T.BTN_R)
+	# Nov 18 (Duff: fat fingers): every thumb button >= 12 units across the radius, >= 8 units of clear gap between
+	# any two, and a tap in the gap goes to the nearer one (never the first in a list).
+	var pad: Array = [[T.BTN_A, T.BTN_A_R], [T.BTN_B, T.BTN_R], [T.BTN_G, T.BTN_G_R], [T.BTN_S, T.BTN_S_R],
+		[T.BTN_SW, T.BTN_SW_R], [T.BTN_D, T.BTN_D_R]]
+	var min_gap: = INF
+	for i in pad.size():
+		for j in range(i + 1, pad.size()):
+			min_gap = minf(min_gap, (pad[i][0] as Vector2).distance_to(pad[j][0]) - float(pad[i][1]) - float(pad[j][1]))
+	check("touch buttons: radius >= 12 and >= 8 units clear between any two (got %.1f)" % min_gap,
+		T.BTN_R >= 12.0 and T.BTN_A_R >= 12.0 and min_gap >= 8.0)
+	main.dialog.clear()
+	var tc: Node2D = main.touch
+	var near_b: Vector2 = T.BTN_B + (T.BTN_A - T.BTN_B).normalized() * (T.BTN_R + 2.0)   # just outside B, toward A
+	check("touch buttons: a near miss goes to the closer button", tc._hit(near_b) == "b" and tc._hit(T.BTN_A) == "a")
+	var BoxScript: = preload("res://scripts/minigames/card.gd")
+	var cd: Node = BoxScript.new()
+	cd.opts = [["a", "One", 0], ["b", "Two", 0], ["c", "Three", 0], ["d", "Four", 0]]
+	cd._setup()
+	var ra: Rect2 = cd.buttons[0]["rect"]
+	var rb: Rect2 = cd.buttons[1]["rect"]
+	var rc: Rect2 = cd.buttons[2]["rect"]
+	check("cards: >= 6 units between choices", rb.position.x - ra.end.x >= 6.0 and rc.position.y - ra.end.y >= 6.0)
+	check("cards: a tap just off a choice still picks it", cd._button_at(ra.end + Vector2(2, -4)).get("id", "") == "a")
+	cd.free()
 	Cast.touch = was
 
 

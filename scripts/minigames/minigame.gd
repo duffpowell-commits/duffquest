@@ -228,6 +228,25 @@ func pic(name: String, c: Vector2, h: float, mod: Color = Color.WHITE) -> bool:
 	draw_texture_rect(tx, Rect2(c - Vector2(w, h) * 0.5, Vector2(w, h)), false, mod)
 	return true
 
+## Nov 18 (Duff's fat-finger note): a tap inside a button hits it; a near miss within BUTTON_REACH of one goes to
+## the nearest enabled button, so a thumb that lands on the gap between two still picks the one it was closest to.
+const BUTTON_REACH: = 5.0
+
+func _button_at(p: Vector2) -> Dictionary:
+	var best: Dictionary = {}
+	var best_d: = BUTTON_REACH
+	for b in buttons:
+		if not b["enabled"]:
+			continue
+		var r: Rect2 = b["rect"]
+		if r.has_point(p):
+			return b
+		var d: = p.distance_to(Vector2(clampf(p.x, r.position.x, r.end.x), clampf(p.y, r.position.y, r.end.y)))
+		if d < best_d:
+			best = b
+			best_d = d
+	return best
+
 func add_button(id: String, rect: Rect2, label: String, key: int = 0, col: Color = Color("#57504e")) -> Dictionary:
 	var b: = {"id": id, "rect": rect, "label": label, "key": key, "enabled": true, "col": col }
 	buttons.append(b)
@@ -296,12 +315,12 @@ func _input(e: InputEvent) -> void:
 		var st: = e as InputEventScreenTouch
 		var sp: = ui_point(st.position)
 		if st.pressed:
-			for b in buttons:
-				if b["enabled"] and (b["rect"] as Rect2).has_point(sp):
-					b["press_ms"] = Time.get_ticks_msec()
-					_on_button(b["id"])
-					get_viewport().set_input_as_handled()
-					return
+			var hb: = _button_at(sp)
+			if not hb.is_empty():
+				hb["press_ms"] = Time.get_ticks_msec()
+				_on_button(hb["id"])
+				get_viewport().set_input_as_handled()
+				return
 			cursor = sp
 			pen_down = true
 			_pointer_down(sp)
