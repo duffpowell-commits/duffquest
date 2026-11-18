@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from synth import (SR, Drums, Track, env, master, note, ns, riser, saw, sine, square, supersaw, svf, tt,  # noqa: E402
+from synth import (SR, Drums, Track, boom, env, master, note, ns, riser, saw, sine, square, supersaw, svf, tt,  # noqa: E402
                    write)
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -60,6 +60,8 @@ def neighborhood():
                 v = svf(square(vib, n), 900, 4.0, "bp") + 0.6 * svf(square(vib, n), 2300, 5.0, "bp")
                 T.add(v * env(n, 0.01, 0.1, 0.6, 0.08) * 0.35, rep * 2 * T.bar + off * T.beat, "lead")
     kicks = [b * T.bar for b in range(4, T.bars)] + [b * T.bar + 2.5 * T.beat for b in range(4, T.bars)]
+    T.drop(4)
+    T.drop(12, rise_level=0.2)
     duck = T.duck(kicks, 0.55, 0.25)
     return T.mix({"chords": 1.0, "lead": 1.0, "bass": 0.9, "drums": 0.95}, duck, ("chords", "bass"))
 
@@ -106,6 +108,7 @@ def night():
     for k in (1, 2, 3):
         echo += np.roll(lead, dl * k) * 0.45 ** k
     T.bus["lead"] = echo
+    T.drop(8, rise_level=0.2, boom_level=0.8)
     return T.mix({"pad": 1.0, "arp": 1.0, "bass": 0.9, "drums": 0.9, "lead": 1.0})
 
 
@@ -141,6 +144,8 @@ def kitchen():
                 s = sum(saw(note(m), ln) + saw(note(m) * 1.012, ln) for m in ch)
                 T.add(svf(s, 2400, 1.1) * env(ln, 0.002, 0.12, 0, 0.02) * 0.11, t0 + off * T.beat, "stab")
     T.add(riser(ns(2 * T.bar), level=0.25), 2 * T.bar, "fx")
+    T.drop(4, rise_level=0.0)
+    T.drop(12)
     duck = T.duck(kicks, 0.5, 0.16)
     return T.mix({"drums": 0.9, "bass": 1.0, "stab": 1.0, "fx": 1.0}, duck, ("bass", "stab"))
 
@@ -191,6 +196,8 @@ def boss():
         pos += step
     r = riser(ns(BUILD * T.bar - T.beat), top=8000, level=0.5)
     T.add(r, 0, "fx")
+    T.drop(4, gap_beats=1, rise_level=0.0, boom_level=1.0)
+    T.drop(12, boom_level=1.0)
     duck = T.duck(kicks, 0.6, 0.18)
     return T.mix({"drums": 0.95, "bass": 1.0, "lead": 1.0, "fx": 1.0}, duck, ("lead", "bass"))
 
@@ -285,6 +292,8 @@ def gala():
         st = ns(b * T.bar)
         pad[st:st + n] += (svf(p, 1100, 0.6) * env(n, 0.4, 0.2, 0.8, 0.4) * 0.05)[: T.n - st]
     T.bus["pad"] = pad
+    T.drop(4, rise_level=0.2)
+    T.drop(8, rise_level=0.2)
     duck = T.duck(kicks, 0.45, 0.2)
     return T.mix({"stab": 1.0, "bass": 1.0, "drums": 0.85, "pad": 1.0}, duck, ("stab", "bass", "pad"))
 
@@ -325,6 +334,8 @@ def willnot():
                 s = sum(saw(note(x), ns_) for x in (m, m + 3, m + 7))
                 T.add(svf(s, 3000, 1.0) * env(ns_, 0.002, 0.12, 0, 0.02) * 0.1, t0 + off * T.beat, "stab")
     T.add(riser(ns(2 * T.bar), top=5000, level=0.16), 0, "fx")
+    T.drop(2, rise_level=0.0, boom_level=1.0)
+    T.drop(10, boom_level=1.0)
     duck = T.duck(kicks, 0.4, 0.12)
     return T.mix({"drums": 0.95, "bass": 1.0, "stab": 1.0, "fx": 1.0}, duck, ("bass",))
 
@@ -338,36 +349,74 @@ LULLABY = [(0.0, 64, 0.5), (0.5, 64, 0.5), (1.0, 67, 2.0), (3.0, 64, 0.5), (3.5,
 
 
 def date():
-    """Chillwave, 90 BPM, C major. Brahms' Lullaby (public domain) on a soft square lead through a long echo,
-    warbly detuned pads, lazy half-time drums. 6 bars of the tune, 4 bars of drift."""
-    T = Track(90, 10)
+    """Chillwave into a bass drop, 90 BPM, C major. Bars 0-5: Brahms' Lullaby (public domain) on a soft square
+    lead through a long echo over warbly pads and lazy drums, filter opening into a riser. Bars 6-11: the drop:
+    gliding 808 sub, trap hat rolls, a hard clap, chopped and stuttered lullaby phrases an octave up."""
+    T = Track(90, 12)
     D = Drums(81)
+    DROP = 6
     chords = [[60, 64, 67], [60, 64, 67], [55, 59, 62], [55, 59, 65], [55, 59, 65], [60, 64, 67],
-              [57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62]]   # C C G G7 G7 C | Am F C G
+              [57, 60, 64], [53, 57, 60], [60, 64, 67], [55, 59, 62], [57, 60, 64], [53, 57, 60]]
+    kicks = []
     for b in range(T.bars):
         t0 = b * T.bar
         n = ns(T.bar)
+        drop = b >= DROP
         wob = 1 + 0.004 * np.sin(2 * np.pi * 0.7 * tt(n))      # tape warble
         p = sum(supersaw(note(m) * wob, n, 4, 0.008, np.random.default_rng(b * 5 + m)) for m in chords[b])
-        T.add(svf(p, 1300, 0.6) * env(n, 0.5, 0.2, 0.85, 0.5) * 0.09, t0, "pad")
-        T.add(sine(note(chords[b][0] - 24), n) * env(n, 0.05, 0.3, 0.7, 0.3) * 0.4, t0, "bass")
-        T.add(D.kick(0.6, 7, 50) * 0.8, t0, "drums")
-        T.add(D.kick(0.6, 7, 50) * 0.5, t0 + 2.5 * T.beat, "drums")
-        T.add(D.snare(170, 2000, 8) * 0.5, t0 + 2 * T.beat, "drums")
+        cut = 2600 if drop else 900 + 120 * b
+        T.add(svf(p, cut, 0.6) * env(n, 0.5 if not drop else 0.02, 0.2, 0.85, 0.5) * 0.09, t0, "pad")
+        if not drop:
+            T.add(sine(note(chords[b][0] - 24), n) * env(n, 0.05, 0.3, 0.7, 0.3) * 0.4, t0, "bass")
+            T.add(D.kick(0.6, 7, 50) * 0.8, t0, "drums")
+            T.add(D.kick(0.6, 7, 50) * 0.5, t0 + 2.5 * T.beat, "drums")
+            T.add(D.snare(170, 2000, 8) * 0.5, t0 + 2 * T.beat, "drums")
+            for i in range(8):
+                T.add(D.hat(level=0.1 if i % 2 else 0.14), t0 + i * T.beat / 2, "drums")
+            continue
+        # the drop: 808 that glides between notes, half-time kick/clap, trap hats with rolls
+        root = chords[b][0] - 24
+        for off, m, d in ((0, root, 1.4), (1.5, root, 0.9), (2.75, root + 12, 0.5), (3.25, root + 7, 0.7)):
+            ln = ns(T.beat * d)
+            f = note(m) * (1 + 0.5 * np.exp(-tt(ln) * 25))       # pitch slides down into the note
+            s = np.tanh(np.sin(2 * np.pi * np.cumsum(f) / SR) * 2.4) * env(ln, 0.003, 0.4, 0.8, 0.06)
+            T.add(s * 0.5, t0 + off * T.beat, "bass")
+        for off in (0, 1.5, 2.75):
+            T.add(D.kick(1.0, 8, 48), t0 + off * T.beat, "drums")
+            kicks.append(t0 + off * T.beat)
+        T.add(D.clap() * 1.1, t0 + 2 * T.beat, "drums")
+        T.add(D.snare(200, 2600, 12, False) * 0.4, t0 + 2 * T.beat, "drums")
         for i in range(8):
-            T.add(D.hat(level=0.1 if i % 2 else 0.14), t0 + i * T.beat / 2, "drums")
+            if b % 2 == 1 and i in (6, 7):                     # roll: 32nds ramping up
+                for k in range(4):
+                    T.add(D.hat(level=0.08 + 0.03 * k), t0 + (i / 2 + k / 8) * T.beat, "drums")
+            else:
+                T.add(D.hat(level=0.13 if i % 2 else 0.18), t0 + i * T.beat / 2, "drums")
     lead = np.zeros(T.n)
-    for off, m, d in LULLABY:
+
+    def put(off, m, d, gain=0.14, cut=2400):
         ln = ns(T.beat * d * 0.95)
-        s = svf(square(note(m + 12), ln, 0.4) + 0.5 * sine(note(m + 12), ln), 2400, 0.7) * env(ln, 0.02, 0.2, 0.6, 0.15)
+        s = svf(square(note(m), ln, 0.4) + 0.5 * sine(note(m), ln), cut, 0.7) * env(ln, 0.01, 0.2, 0.6, 0.1)
         st = ns(off * T.beat)
-        lead[st:st + ln] += (s * 0.14)[: T.n - st]
+        lead[st:st + ln] += (s * gain)[: T.n - st]
+
+    for off, m, d in LULLABY:                                  # the tune, bars 0-5
+        put(off, m + 12, d)
+    first = [x for x in LULLABY if x[0] < 6.0]                 # "lul-la-by, and good-night" phrase
+    for rep in range(3):                                       # chopped an octave up in the drop
+        base = (DROP + rep * 2) * 4
+        for off, m, d in first:
+            put(base + off, m + 24, min(d, 0.5), 0.11, 3800)
+        for k in range(4):                                     # stutter on the phrase's last note
+            put(base + 6.5 + k * 0.25, first[-1][1] + 24, 0.2, 0.09, 3800)
     echo = lead.copy()
     dl = ns(T.beat * 0.75)
     for k in (1, 2, 3, 4):
         echo += np.roll(svf(lead, 2400 - 400 * k, 0.7), dl * k) * 0.5 ** k
     T.bus["lead"] = echo
-    return T.mix({"pad": 1.0, "bass": 0.8, "drums": 0.75, "lead": 1.0})
+    T.drop(DROP, gap_beats=1, rise_level=0.35, boom_level=1.0)
+    duck = T.duck(kicks, 0.5, 0.22)
+    return T.mix({"pad": 1.0, "bass": 1.0, "drums": 0.8, "lead": 1.0}, duck, ("pad",))
 
 
 # ------------------------------------------------------------------------------------------------ credits
@@ -407,6 +456,7 @@ def credits():
             ln = ns(T.beat * 0.9)
             s = supersaw(note(m), ln, 5, 0.012, np.random.default_rng(m)) * env(ln, 0.02, 0.3, 0.6, 0.2)
             T.add(svf(s, 4200, 0.8) * 0.14, rep * 2 * T.bar + off * T.beat, "lead")
+    T.drop(6, gap_beats=1)
     duck = T.duck(kicks, 0.5, 0.2)
     return T.mix({"pad": 1.0, "arp": 1.0, "drums": 0.9, "bass": 1.0, "lead": 1.0}, duck, ("pad", "arp", "bass", "lead"))
 
