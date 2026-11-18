@@ -24,7 +24,7 @@ import sys
 
 import cv2
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
@@ -64,6 +64,19 @@ STILLS = {
         "fist": ("duff_fin3_v4.png", (755, 95, 1265, 645), (740, 1280), 82),  # Duff's photo was a mirrored selfie
         "cut": ((775, 135, 470, 445), (740, 160, 510, 420)),  # grabCut rects: new fist, old fist
         "crop2": (700, 120, 1280, 620),
+    },
+    "duff_stance": {
+        # Right hand reaches out curled, knuckle side to us: the back of the hand is hidden under the
+        # forearm, so no script fits. The invented blackletter on the fingers goes (fingers are bare),
+        # then the finger gaps and knuckle bumps are redrawn. Left fist already reads as the eye mandala.
+        "file": "assets/art/ko/duff_stance.jpg",
+        "bare": {
+            "poly": [(487, 304), (512, 299), (530, 298), (546, 308), (551, 318), (553, 345), (532, 353), (500, 349), (487, 336)],
+            "gaps": [[(500, 346), (502, 334), (505, 322)], [(520, 353), (521, 341), (524, 327)],
+                     [(539, 352), (540, 341), (543, 329)], [(551, 316), (554, 330), (552, 346)]],
+            "knuckles": [(493, 318, 8), (511, 314, 9), (530, 317, 9), (547, 322, 7)],
+        },
+        "crop": (440, 250, 620, 380),
     },
     "duff_fin2": {
         "file": "assets/art/ko/duff_fin2.jpg",
@@ -162,6 +175,31 @@ def lay_fist(img, fist, cut=None):
     return (img * (1 - m) + new * m).clip(0, 255).astype(np.uint8)
 
 
+def bare(img, cfg):
+    """Wipe every dark mark inside the polygon (fingers drawn with made-up ink), then redraw
+    the finger gaps (dark) and knuckle bumps (half-strength) as soft lines."""
+    h, w = img.shape[:2]
+    area = np.zeros((h, w), np.uint8)
+    cv2.fillPoly(area, [np.array(cfg["poly"], np.int32)], 255)
+    lum = img.astype(float) @ [0.114, 0.587, 0.299]
+    ink = cv2.dilate(((lum < 120) & (area > 0)).astype(np.uint8) * 255, np.ones((3, 3), np.uint8)) & area
+    img = cv2.inpaint(img, ink, 5, cv2.INPAINT_TELEA)
+    soft = cv2.bilateralFilter(img, 7, 30, 5)  # the inpaint leaves speckles; smooth skin only in the area
+    a = cv2.GaussianBlur(area.astype(np.float32) / 255, (0, 0), 1.0)[..., None]
+    img = (img * (1 - a) + soft * a).astype(np.uint8)
+    K = 4
+    m = Image.new("L", (w * K, h * K), 0)
+    d = ImageDraw.Draw(m)
+    for pts in cfg.get("gaps", []):
+        d.line([(x * K, y * K) for x, y in pts], fill=255, width=int(1.8 * K), joint="curve")
+    for cx, cy, r in cfg.get("knuckles", []):
+        d.arc([(cx - r) * K, (cy - r * 0.6) * K, (cx + r) * K, (cy + r * 0.6) * K], 200, 340, fill=150, width=int(1.3 * K))
+    m = np.asarray(m.resize((w, h), Image.LANCZOS)).astype(np.float32) / 255 * 0.9
+    m = cv2.GaussianBlur(m, (0, 0), 0.5)[..., None]
+    line = np.array([30, 20, 25], float)  # BGR outline ink
+    return (img * (1 - m) + line * m).clip(0, 255).astype(np.uint8)
+
+
 def fix(name):
     cfg = STILLS[name]
     rel = cfg["file"]
@@ -169,6 +207,8 @@ def fix(name):
     before = img.copy()
     if cfg.get("erase"):
         img = erase(img, cfg["erase"])
+    if cfg.get("bare"):
+        img = bare(img, cfg["bare"])
     if cfg.get("script"):
         img = lay_script(img, cfg["script"])
     if cfg.get("fist"):
