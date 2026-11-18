@@ -76,7 +76,8 @@ Every image that shows Duff's hands copies these, no inventing, no approximating
 | `photo_left_hand_eye_2026-11-18.jpg` | LEFT hand, daylight: eye mandala, finger dots. It shows a pinky ring: IGNORE it, no ring in any art |
 | `photo_right_hand_script_2026-11-18.jpg` | **the truth**, RIGHT hand, daylight: the calligraphy |
 | `hand_left_eye_mandala.png` | clean design master (alpha = ink), top = wrist, bottom = knuckles |
-| `hand_right_script.png` | clean design master, "This Red / Right Hand / Points Me / South" in Kaushan Script (OFL), top = wrist |
+| `photo_right_hand_script_closeup_2026-11-18.jpg`, `..._side_...` | **the truth** (Duff, Nov 18, "better context"): slanted connected script, swash capital T, a pennant swash sweeping LEFT under "Points", a spiral curl left of the big S in "South"; the letters run over the thumb-side edge toward the wrist. The close-up shows a ring: ignore it |
+| `hand_right_script.png` | clean design master traced from the close-up (Canva stencil + swash), alpha = ink, top = wrist |
 | `photo_left_hand_back_fingers_2026-11-18.jpg`, `..._fingers2_...` | **the truth**, LEFT hand, no ring: sun spikes onto the finger backs, dot clusters |
 | `hand_tattoos_canon.png` | one-page reference sheet (photos + masters); attach it to every art prompt that shows his hands |
 
