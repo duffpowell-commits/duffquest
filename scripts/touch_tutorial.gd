@@ -99,7 +99,7 @@ func _draw() -> void:
 		return
 	var c: Array = CARDS[card]
 	var fp: = _focus_point(str(c[2]))
-	var fr: = 30.0 if c[2] == "joy" else 16.0
+	var fr: = 32.0 if c[2] == "joy" else (19.0 if c[2] == "a" else 17.0)
 	# Dim everything except a soft hole around the control being taught.
 	draw_rect(Rect2(0, 0, W, H), Color(0, 0, 0, 0.62))
 	var pulse: = 1.0 + 0.08 * sin(t * 6.0)
@@ -111,7 +111,7 @@ func _draw() -> void:
 		draw_circle(fp, TouchScript.JOY_R, Color(0.94, 0.89, 0.77, 0.18))
 		draw_circle(k, 8, Color(0.94, 0.89, 0.77, 0.75))
 	else:
-		UiStyle.round_button(self, fp, TouchScript.BTN_R, Color("#4e7a3a") if c[2] == "a" else Color("#a43a2c"), "A" if c[2] == "a" else "B", 1.0)
+		UiStyle.round_button(self, fp, TouchScript.BTN_A_R if c[2] == "a" else TouchScript.BTN_R, Color("#4e7a3a") if c[2] == "a" else Color("#a43a2c"), "A" if c[2] == "a" else "B", 1.0)
 	# Card on the side away from the control.
 	var cw: = 170.0
 	var cx: = 150.0 if c[2] == "joy" else 14.0

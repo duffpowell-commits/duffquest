@@ -28,9 +28,11 @@ func _setup() -> void:
 		var o: Array = opts[i]
 		var r: = i / cols
 		var c: = i % cols
-		var y: = 176.0 - (rows - r) * 24.0
-		var x: = (6.0 + c * (W - 12.0 - bw + 4.0)) if flank else (6.0 + c * bw)
-		add_button(o[0], Rect2(x, y, bw - 4, 21), o[1], o[2], UiStyle.BTN_MAIN if i == 0 else UiStyle.BTN_ALT)
+		# Nov 18 (Duff: fat fingers): 6-8 units between choices (was 3-4); taller rows when there's room.
+		var pitch: = 28.0 if rows <= 2 else 26.0
+		var y: = 177.0 - (rows - r) * pitch
+		var x: = (6.0 + c * (W - 12.0 - bw + 8.0)) if flank else (10.0 + c * bw)
+		add_button(o[0], Rect2(x, y, bw - 8, 22), o[1], o[2], UiStyle.BTN_MAIN if i == 0 else UiStyle.BTN_ALT)
 	if _sliding():
 		position.y = SLIDE_PX
 
