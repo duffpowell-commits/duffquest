@@ -23,7 +23,11 @@ func _init() -> void:
 	au.edm = true
 	check("EDM: night -> edm_night first, falls back to the neighborhood theme",
 		au._music_candidates("night") == ["edm_night", "night", "edm_neighborhood", "neighborhood"])
+	check("EDM sting: on -> sting_ko", au.sting_name("ko", "") == "sting_ko")
 	au.edm = false
+	check("EDM sting: off -> old sfx", au.sting_name("levelup", "achievement") == "achievement" and au.sting_name("ko", "") == "")
+	for n in au.STINGS:
+		check("EDM sting sting_%s.wav ships" % n, ResourceLoader.exists("res://assets/audio/sting_%s.wav" % n))
 	check("EDM off: original first", au._music_candidates("boss") == ["boss"])
 	for n in ["neighborhood", "night", "kitchen", "boss", "home", "gala", "willnot", "date", "credits"]:
 		check("EDM track mus_edm_%s.ogg ships" % n, ResourceLoader.exists("res://assets/audio/mus_edm_%s.ogg" % n))

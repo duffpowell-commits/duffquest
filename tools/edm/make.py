@@ -10,6 +10,7 @@ DJ Vape keeps his dubstep (tools/synth_dubstep.py) in both soundtracks.
 """
 import subprocess
 import sys
+import wave
 from pathlib import Path
 
 import numpy as np
@@ -463,11 +464,125 @@ def credits():
     return T.mix({"pad": 1.0, "arp": 1.0, "drums": 0.9, "bass": 1.0, "lead": 1.0}, duck, ("pad", "arp", "bass", "lead"))
 
 
+
+# ------------------------------------------------------------------------------------------------ stings
+# One-shots for the EDM soundtrack (audio.gd sting()): played over the music, short, mono 22 kHz WAV like the sfx.
+def _norm(x, peak=0.8):
+    x = x - svf(x, 28, 0.7, "lp")
+    fade = ns(0.03)
+    x[-fade:] *= np.linspace(1, 0, fade)
+    return x / (np.max(np.abs(x)) + 1e-9) * peak
+
+
+def sting_ko():
+    """Ex knocked out: half a beat of riser, then a huge drop: 808 boom, clap, a supersaw stab chord."""
+    D = Drums(101)
+    n = ns(2.2)
+    x = np.zeros(n)
+    r = riser(ns(0.45), top=6000, level=0.5)
+    x[:len(r)] += r
+    t0 = ns(0.45)
+    b = boom(1.75, f0=130, f1=36, level=1.2)
+    x[t0:t0 + len(b)] += b[: n - t0]
+    k = D.kick(1.2, 6)
+    x[t0:t0 + len(k)] += k * 0.8
+    c = D.clap() * 1.2
+    x[t0:t0 + len(c)] += c
+    ln = ns(0.9)
+    st = sum(supersaw(note(m), ln, 7, 0.02, np.random.default_rng(m)) for m in (66, 69, 73, 78))   # F#m
+    x[t0:t0 + ln] += svf(st, 4500, 0.8) * env(ln, 0.003, 0.5, 0.3, 0.3) * 0.25
+    return _norm(x)
+
+
+def sting_rent():
+    """Rent paid: a bright rising major arpeggio (cash-register pluck) landing on a chord, with a sub thump."""
+    n = ns(1.4)
+    x = np.zeros(n)
+    for i, m in enumerate((72, 76, 79, 84, 88)):
+        ln = ns(0.5)
+        p = svf(saw(note(m), ln) + 0.5 * square(note(m), ln), 4200, 1.2) * env(ln, 0.002, 0.18, 0.2, 0.1)
+        st = ns(i * 0.07)
+        x[st:st + ln] += p[: n - st] * 0.4
+    ln = ns(1.0)
+    ch = sum(supersaw(note(m), ln, 5, 0.012, np.random.default_rng(m)) for m in (60, 64, 67, 72))
+    st = ns(0.35)
+    x[st:st + ln] += svf(ch, 3500, 0.8) * env(ln, 0.005, 0.4, 0.4, 0.4) * 0.22
+    b = boom(0.9, f0=110, f1=45, level=0.6)
+    x[st:st + len(b)] += b[: n - st]
+    return _norm(x, 0.7)
+
+
+def sting_levelup():
+    """Level up: a fast filtered riser, a white-noise sweep and a sparkle chord on top, then a boom."""
+    n = ns(1.8)
+    x = np.zeros(n)
+    rl = ns(0.7)
+    k = tt(rl) / tt(rl)[-1]
+    f = note(60) * 2 ** (k * 2)                    # two octaves up
+    sw = np.sin(2 * np.pi * np.cumsum(f) / SR) + 0.5 * np.sin(4 * np.pi * np.cumsum(f) / SR)
+    x[:rl] += sw * k ** 1.5 * 0.3
+    r = riser(rl, top=9000, level=0.5)
+    x[:rl] += r
+    ln = ns(1.1)
+    ch = sum(supersaw(note(m), ln, 5, 0.015, np.random.default_rng(m)) for m in (72, 76, 79, 83, 86))   # Cmaj9
+    x[rl:rl + ln] += svf(ch, 6000, 0.7) * env(ln, 0.003, 0.5, 0.35, 0.4) * 0.22
+    b = boom(1.0, f0=120, f1=48, level=0.8)
+    x[rl:rl + len(b)] += b[: n - rl]
+    return _norm(x, 0.75)
+
+
+def sting_tapestop():
+    """Evicted / game over: a minor chord + beat that slows to a halt (tape stop), then a low thud."""
+    D = Drums(103)
+    src_len = ns(1.6)
+    src = np.zeros(src_len)
+    for i in range(4):
+        k = D.kick(1.0, 8)
+        st = ns(i * 0.3)
+        src[st:st + len(k)] += k[: src_len - st] * 0.8
+    ch = sum(saw(note(m), src_len) + saw(note(m) * 1.01, src_len) for m in (57, 60, 64))   # Am
+    src += svf(ch, 1800, 0.8) * 0.12
+    src += sine(note(33), src_len) * 0.4
+    # tape stop: read the source with a playback speed that falls 1 -> 0 over 1.3 s
+    out_len = ns(1.3)
+    speed = np.linspace(1, 0, out_len) ** 1.3
+    pos = np.cumsum(speed)
+    pos = np.clip(pos, 0, src_len - 2)
+    x = np.interp(pos, np.arange(src_len), src)
+    tail = np.zeros(ns(0.5))
+    th = boom(0.5, f0=70, f1=30, level=0.5)
+    tail[:len(th)] += th[: len(tail)]
+    return _norm(np.concatenate([x, tail]), 0.75)
+
+
+STINGS = {"ko": sting_ko, "rent": sting_rent, "levelup": sting_levelup, "tapestop": sting_tapestop}
+
+
+def write_wav(x, path):
+    pcm = (np.clip(x, -1, 1) * 32767).astype(np.int16)
+    with wave.open(str(path), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(SR)
+        w.writeframes(pcm.tobytes())
+
 TRACKS = {"neighborhood": neighborhood, "night": night, "kitchen": kitchen, "boss": boss,
           "home": home, "gala": gala, "willnot": willnot, "date": date, "credits": credits}
 
 
 def main(argv):
+    if "--stings" in argv:          # python3 tools/edm/make.py --stings [--preview DIR]
+        prev = Path(argv[argv.index("--preview") + 1]) if "--preview" in argv else None
+        for name, fn in STINGS.items():
+            out = OUT / f"sting_{name}.wav"
+            x = fn()
+            write_wav(x, out)
+            print(f"{out.name}: {len(x) / SR:.2f} s")
+            if prev:
+                prev.mkdir(parents=True, exist_ok=True)
+                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(out), "-c:a", "libmp3lame", "-q:a", "4",
+                                str(prev / f"sting_{name}_preview.mp3")], check=True)
+        return
     names = [a for a in argv if not a.startswith("--") and a in TRACKS] or list(TRACKS)
     prev = Path(argv[argv.index("--preview") + 1]) if "--preview" in argv else None
     for name in names:
