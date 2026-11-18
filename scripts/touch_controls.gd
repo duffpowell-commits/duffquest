@@ -12,21 +12,27 @@ signal swap_pressed
 signal d_pressed
 signal drawer_pressed
 
-const JOY_HOME: = Vector2(36, 142)
-const JOY_R: = 20.0
-const BTN_A: = Vector2(296, 140)
-const BTN_B: = Vector2(272, 160)
-const BTN_R: = 11.0
-const BTN_G: = Vector2(306, 112)
-const BTN_G_R: = 11.0     # = BTN_R (IGN v2: every thumb button as big as A)
+const JOY_HOME: = Vector2(38, 140)
+const JOY_R: = 22.0
+## Nov 18 (Duff: "space the buttons out further, my fat fingers have trouble"): bigger buttons, ~9-13 units of
+## clear space between any two (1 unit ~ 0.4 mm on a phone), and a tap goes to the NEAREST button within reach
+## instead of the first one in a list, so a near miss never fires the neighbour. Keep clear of the boss bar
+## (hud "boss", x <= 228, y >= 156) and the level panel (combat_ui.PANEL_R, y <= 98).
+const BTN_A: = Vector2(296, 154)
+const BTN_A_R: = 14.0
+const BTN_B: = Vector2(258, 164)
+const BTN_R: = 12.0       # every other thumb button
+const BTN_G: = Vector2(272, 124)
+const BTN_G_R: = 12.0
 const BTN_P: = Vector2(195, 9)     # hud.gd layout()["phone"]
 const BTN_P_R: = 9.0
-const BTN_S: = Vector2(248, 148)
-const BTN_S_R: = 11.0
-const BTN_SW: = Vector2(240, 126)
-const BTN_SW_R: = 11.0
-const BTN_D: = Vector2(282, 116)
-const BTN_D_R: = 11.0
+const BTN_S: = Vector2(240, 132)
+const BTN_S_R: = 12.0
+const BTN_SW: = Vector2(206, 140)
+const BTN_SW_R: = 12.0
+const BTN_D: = Vector2(304, 118)
+const BTN_D_R: = 12.0
+const REACH: = 5.0        # a tap this far outside a button's rim still counts (nearest button wins)
 var s_idx: = -1
 
 var m: Node = null
@@ -67,29 +73,30 @@ func _input(e: InputEvent) -> void:
 		if not visible:
 			return
 		if t.pressed:
-			if tp.distance_to(BTN_A) < BTN_R + 5.0:
+			var hit: = _hit(tp)
+			if hit == "a":
 				a_pressed.emit()
 				get_viewport().set_input_as_handled()
-			elif not dialog_open() and tp.distance_to(BTN_B) < BTN_R + 5.0:
+			elif hit == "p":
+				p_pressed.emit()
+				get_viewport().set_input_as_handled()
+			elif hit == "b":
 				b_pressed.emit()
 				get_viewport().set_input_as_handled()
-			elif not dialog_open() and not _fighting() and tp.distance_to(BTN_G) < BTN_G_R + 4.0:
+			elif hit == "g":
 				g_pressed.emit()
-				get_viewport().set_input_as_handled()
-			elif tp.distance_to(BTN_P) < BTN_P_R:
-				p_pressed.emit()
 				get_viewport().set_input_as_handled()
 			elif not dialog_open() and _on_hud(tp):
 				drawer_pressed.emit()
 				get_viewport().set_input_as_handled()
-			elif not dialog_open() and _special_shown() and tp.distance_to(BTN_S) < BTN_S_R + 4.0:
+			elif hit == "s":
 				s_idx = t.index
 				s_pressed.emit()
 				get_viewport().set_input_as_handled()
-			elif not dialog_open() and tp.distance_to(BTN_SW) < BTN_SW_R + 4.0:
+			elif hit == "sw":
 				swap_pressed.emit()
 				get_viewport().set_input_as_handled()
-			elif not dialog_open() and _demon_shown() and tp.distance_to(BTN_D) < BTN_D_R + 4.0:
+			elif hit == "d":
 				d_pressed.emit()
 				get_viewport().set_input_as_handled()
 			elif dialog_open() and not _on_hud(tp):   # Nov 18: a tap anywhere moves the line on (not just A)
@@ -113,6 +120,35 @@ func _input(e: InputEvent) -> void:
 	if player:
 		player.joy_vec = joy_knob / JOY_R
 	queue_redraw()
+
+## Which button a tap at tp belongs to ("" = none): the nearest shown button whose rim is within REACH.
+func _hit(tp: Vector2) -> String:
+	var best: = ""
+	var best_d: = INF
+	for b in shown_buttons():
+		var d: = tp.distance_to(b[1]) - float(b[2])
+		if d < REACH and d < best_d:
+			best = b[0]
+			best_d = d
+	if best == "" and tp.distance_to(BTN_P) < BTN_P_R:
+		best = "p"
+	return best
+
+## [id, centre, radius] of every button on screen right now (dialogue = A only).
+func shown_buttons() -> Array:
+	var out: Array = [["a", BTN_A, BTN_A_R]]
+	if dialog_open():
+		return out
+	out.append(["b", BTN_B, BTN_R])
+	if not _fighting():
+		out.append(["g", BTN_G, BTN_G_R])
+	if _special_shown():
+		out.append(["s", BTN_S, BTN_S_R])
+	if m != null and m.get("combat") != null and m.combat.unlocked().size() > 1:
+		out.append(["sw", BTN_SW, BTN_SW_R])
+	if _demon_shown():
+		out.append(["d", BTN_D, BTN_D_R])
+	return out
 
 ## Taps on the HUD's top strip (or the open drawer) toggle the detail drawer.
 func _on_hud(tp: Vector2) -> bool:
@@ -153,7 +189,7 @@ func release_all() -> void:
 static func rects() -> Dictionary:
 
 	return {"joy": Rect2(JOY_HOME - Vector2(JOY_R, JOY_R), Vector2(JOY_R, JOY_R) * 2.0),
-		"a": Rect2(BTN_A - Vector2(BTN_R, BTN_R), Vector2(BTN_R, BTN_R) * 2.0),
+		"a": Rect2(BTN_A - Vector2(BTN_A_R, BTN_A_R), Vector2(BTN_A_R, BTN_A_R) * 2.0),
 		"b": Rect2(BTN_B - Vector2(BTN_R, BTN_R), Vector2(BTN_R, BTN_R) * 2.0),
 		"g": Rect2(BTN_G - Vector2(BTN_G_R, BTN_G_R), Vector2(BTN_G_R, BTN_G_R) * 2.0) }
 
@@ -166,27 +202,27 @@ func _draw() -> void:
 	if not talk:
 		draw_circle(joy_center, JOY_R, Color(0.94, 0.89, 0.77, 0.12))
 		draw_arc(joy_center, JOY_R, 0, TAU, 32, Color(0.94, 0.89, 0.77, 0.4), 0.67)
-		draw_circle(joy_center + joy_knob, 8, Color(0.94, 0.89, 0.77, 0.42))
+		draw_circle(joy_center + joy_knob, 9, Color(0.94, 0.89, 0.77, 0.42))
 		_btn(BTN_B, BTN_R, Color("#a43a2c"), "B", f)
-		_hint(BTN_B + Vector2(0, -13), "roll")
+		_hint(BTN_B + Vector2(-21, 2), "roll")
 		if not _fighting():   # Nov 17 review: five buttons in a fight; gear is a between-fights thing
 			_btn(BTN_G, BTN_G_R, Color("#d8982e"), "G", f)
-			_hint(BTN_G + Vector2(0, -13), "gear")
+			_hint(BTN_G + Vector2(0, -14), "gear")
 		var c = m.combat if m != null and m.get("combat") != null else null
 		if c != null:
 			var sp: Dictionary = c.current()
 			if not sp.is_empty():   # no special before Pinwheel (Lv 2): just A and B
 				var ok: bool = c.heat >= c.cost_of(sp)
 				_btn(BTN_S, BTN_S_R, Color("#e0702a") if ok else Color("#6a4a3a"), "S", f)
-				_hint(BTN_S + Vector2(0, 17), str(sp["short"]))
+				_hint(BTN_S + Vector2(0, -14), str(sp["short"]))
 			if c.unlocked().size() > 1:
 				_btn(BTN_SW, BTN_SW_R, Color("#7a6a8a"), "", f)
 				draw_string(f, BTN_SW + Vector2(-5, 2.5), "<>", HORIZONTAL_ALIGNMENT_CENTER, 10, 7, Color("#f0ead8"))
 			if _demon_shown():
 				var glow: bool = c.demon_ready() or c.demon_t > 0.0
 				_btn(BTN_D, BTN_D_R, Color("#c02a6a") if glow else Color("#4a2a3a"), "D", f)
-	_btn(BTN_A, BTN_R, Color("#4e7a3a"), "A", f)
-	_hint(BTN_A + Vector2(0, 18), "next" if talk else ("talk/use" if _near_thing() else "bonk"))
+	_btn(BTN_A, BTN_A_R, Color("#4e7a3a"), "A", f)
+	_hint(BTN_A + Vector2(0, 21), "next" if talk else ("talk/use" if _near_thing() else "bonk"))
 
 ## Button captions: 6 px, near-opaque, with a dark outline so they read on any floor (review: 5 px at 55% was invisible).
 func _hint(at: Vector2, s: String) -> void:
