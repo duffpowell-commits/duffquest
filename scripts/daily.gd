@@ -29,7 +29,7 @@ static func _read(path: String) -> Dictionary:
 	return d if d is Dictionary else {}
 
 static func new_state() -> Dictionary:
-	return {"day": -1, "id": "", "recent": [], "falcor": ""}
+	return {"day": -1, "id": "", "recent": [], "falcor": "", "thanks_day": -1}
 
 static func clean(d) -> Dictionary:
 	var out: = new_state()
@@ -37,6 +37,7 @@ static func clean(d) -> Dictionary:
 		out["day"] = int(d.get("day", -1))
 		out["id"] = str(d.get("id", ""))
 		out["falcor"] = str(d.get("falcor", ""))
+		out["thanks_day"] = int(d.get("thanks_day", -1))
 		var r = d.get("recent", [])
 		if typeof(r) == TYPE_ARRAY:
 			for x in r:
