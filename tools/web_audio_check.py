@@ -68,7 +68,8 @@ def main():
         from playwright.sync_api import sync_playwright
     except ImportError:
         subprocess.run([sys.executable, "-m", "pip", "install", "-q", "--break-system-packages", "playwright"], check=True)
-        from playwright.sync_api import sync_playwright
+        # a fresh user site-packages isn't on this process's path yet: start over so the import sees it
+        os.execv(sys.executable, [sys.executable] + sys.argv)
 
     httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), functools.partial(Quiet, directory=web))
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
