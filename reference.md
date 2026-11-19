@@ -239,7 +239,9 @@ stay raw.
   NEXT card when it has no special context (`can_autopilot`). It scores `AUTOPILOT_SCORE` 0.72 = B.
 - **Rush:** `RUSH_POOL` fryer/sandwich/salad/garnish/temp, 8 tickets, 150 s, combo multiplier.
 - **Fork seniority (pay titles):** `main.TIERS` by `shifts_worked`: 0 Line Cook ×1.0, 5 Lead ×1.3, 12 Sous ×1.6,
-  21 Chef de Cuisine ×2.0, 32 Executive ×2.5, 45 Celebrity ×3.0 (flattened Nov 19; was up to ×8.0). This is separate from the combat "Seniority Lv".
+  21 Chef de Cuisine ×2.0, 32 Executive ×2.5, 45 Celebrity ×3.0 (flattened Nov 19; was up to ×8.0). Shift meal = the shift's Energy cost on A/S, half on B (Nov 19).
+  Fights start at 100 Energy but you leave with 10 less than you walked in with (`_fight_out`). Rent: a full week of back
+  rent is a strike even when the base is paid; late fee $15 + 10% of the debt carried. XP to next level: 24 + 18L. This is separate from the combat "Seniority Lv".
 - Kitchen props: `kp_*` sprites (Gemini G6) are used by fryer and sandwich. The rest are flat bars.
 - **Test/render:** `tools/shift_shot.tscn` → `docs/renders/shift_autopilot.png`; `tools/arena_shot.tscn -- fryer|sandwich`;
   web `#dq=<station>`.

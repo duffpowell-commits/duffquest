@@ -487,7 +487,13 @@ func _fail_state_checks(main: Node) -> void:
 	check("short Monday = strike one", main.rent_strikes == 1)
 	main.money = main.weekly_base()
 	main.pay_rent()
-	check("covering the week (not the back rent) clears strikes", main.rent_strikes == 0 and main.rent_debt > 0)
+	check("covering the week while a FULL week behind is still a strike (Nov 19)", main.rent_strikes == 2 and main.rent_debt >= main.weekly_base())
+	main.rent_strikes = 1
+	main.rent_debt = 30
+	main.money = main.weekly_base()
+	main.pay_rent()
+	check("covering the week with a little back rent clears strikes", main.rent_strikes == 0 and main.rent_debt > 0 and main.rent_debt < main.weekly_base())
+	check("late fee grows with the debt (+10% of what's owed)", main.late_fee(0) == main.LATE_FEE and main.late_fee(200) == main.LATE_FEE + 20)
 	main.money = 100000
 	main.rent_strikes = 2
 	main.pay_rent()
@@ -1557,6 +1563,8 @@ func _side_quest_checks(main: Node) -> void:
 	main.gala_unlocked = false
 	main.gala_beaten = false
 	check("audit2: Demon Time has a hard cap", main.combat.DEMON_MAX > 0.0 and main.combat.DEMON_MAX < 60.0)
+	var MEP: = load("res://tools/make_extra_pack.gd")
+	check("packs: public edition drops originals that have a _pub copy", MEP.has_pub("res://assets/art/sf_fork.png") and not MEP.has_pub("res://assets/art/sf_kwik.png") and MEP.is_pub("res://assets/art/sf_fork_pub.png") and not MEP.has_pub("res://assets/art/sf_fork_pub.png"))
 	check("brittany quests: boss entries exist", preload("res://scripts/boss.gd").BOSSES.has("brayden") and preload("res://scripts/boss.gd").BOSSES.has("earljr"))
 	main.close_overlay()
 	main.side_quests = {}

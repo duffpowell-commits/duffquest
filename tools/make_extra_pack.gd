@@ -9,6 +9,11 @@ extends SceneTree
 ##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/street.pck street
 ##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/world.pck world
 ##   godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck [late]
+## Optional 3rd arg = edition (Nov 19, round-2 audit: both editions' art shipped in every pack, so the public build
+## carried the family originals and anyone could pull them out):
+##   public  leaves out every original that has a <name>_pub copy (Art.pub() loads the _pub one in public builds)
+##   family  leaves out the _pub copies
+##   (none)  both, as before
 ## Every packed texture = its .import remap + the imported .ctex it points to, same as a normal export.
 
 ## Globs (also in the Web preset's exclude_filter) that go in world.pck. Storefront/prop walls come from
@@ -40,6 +45,7 @@ func _init() -> void:
 		out = args[0]
 	if args.size() > 1:
 		tier = args[1]
+	var edition: = args[2] if args.size() > 2 else ""
 	var pats: = deferred_patterns()
 	for g in WORLD:
 		if not pats.has(g):
@@ -67,6 +73,10 @@ func _init() -> void:
 			files = files.filter(func(f): return street_files.has(f))
 		else:
 			files = files.filter(func(f): return not street_files.has(f))
+	if edition == "public":
+		files = files.filter(func(f): return not has_pub(f))
+	elif edition == "family":
+		files = files.filter(func(f): return not is_pub(f))
 	var pk: = PCKPacker.new()
 	if pk.pck_start(out) != OK:
 		push_error("make_extra_pack: can't write " + out)
@@ -88,7 +98,7 @@ func _init() -> void:
 		pk.add_file(dest, dest)
 		bytes += FileAccess.get_file_as_bytes(dest).size()
 	pk.flush(false)
-	print("%s pack: %d files, %.1f MB -> %s" % [tier, files.size(), bytes / 1048576.0, out])
+	print("%s pack%s: %d files, %.1f MB -> %s" % [tier, (" (" + edition + ")") if edition != "" else "", files.size(), bytes / 1048576.0, out])
 	quit(0)
 
 ## The asset globs the Web preset leaves out of index.pck (export_presets.cfg, preset "Web").
@@ -118,6 +128,12 @@ func _walk(dir: String, pats: PackedStringArray, out: Array) -> void:
 				break
 	for d in DirAccess.get_directories_at(dir):
 		_walk(dir.path_join(d), pats, out)
+
+static func is_pub(f: String) -> bool:
+	return f.get_basename().ends_with("_pub")
+
+static func has_pub(f: String) -> bool:
+	return not is_pub(f) and FileAccess.file_exists(f.get_basename() + "_pub." + f.get_extension())
 
 static func _remap_path(imp: String) -> String:
 	var cf: = ConfigFile.new()
