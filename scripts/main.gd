@@ -20,6 +20,7 @@ const ExtraPack: = preload("res://scripts/extra_pack.gd")
 const ShopScript: = preload("res://scripts/minigames/shop.gd")
 const BabyScript: = preload("res://scripts/minigames/baby.gd")
 const StealthScript: = preload("res://scripts/minigames/stealth.gd")
+const CatHeistScript: = preload("res://scripts/minigames/cat_heist.gd")
 const EnemyScript: = preload("res://scripts/enemy.gd")
 const Gear: = preload("res://scripts/gear.gd")
 const WL: = preload("res://scripts/wordle_logic.gd")
@@ -1409,7 +1410,8 @@ func interact(id: String) -> void:
 		"bed": bed_menu()
 		"freya":
 			AudioScript.sfx("hiss")
-			freya_menu()
+			if not quest_talk("freya"):
+				freya_menu()
 		"crib": check_crib()
 		"fridge": show_calendar()
 		"shower": shower()
@@ -1422,7 +1424,9 @@ func interact(id: String) -> void:
 			if not quest_talk("mail"):
 				mail_menu()
 		"plasma": open_plasma()
-		"bowls": feed_cats()
+		"bowls":
+			if not quest_talk("bowls"):
+				feed_cats()
 		"pharmacy": open_pharmacy()
 		"grocery": open_grocery()
 		_:
@@ -3164,6 +3168,8 @@ func enemy_defeated(e: Node) -> void:
 		_say(lines)
 	elif e.has_meta("quest_porch"):
 		_say([msg, porch_quest_won()])
+	elif e.has_meta("quest_king"):
+		_say([msg, king_runner_caught(str(e.get_meta("quest_king")))])
 	elif e.has_meta("cold_open"):
 		first_bet_pitch(msg)
 	else:
@@ -3172,6 +3178,8 @@ func enemy_defeated(e: Node) -> void:
 func enemy_gone(e: Node) -> void:
 	if e.has_meta("quest_porch"):
 		_toast("Cheeto Chad clears the fence. He lives next door, genius. Knock again.")
+	if e.has_meta("quest_king"):
+		_toast("The runner's gone. He dropped nothing. Check that spot again, they always come back.")
 	if e.kind == "pirate" and str(e.loot) != "":
 		_toast("%s gets away with %s. He's gonna resell it on Marketplace as 'gently loved.'" % [e.display_name(), Cast.T(loot_name(str(e.loot)))])
 	if e.has_meta("cold_open"):
@@ -4289,7 +4297,7 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
 func quest_talk(npc: String) -> bool:
-	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc) or _lunch_talk(npc) or _cover_talk(npc) or _double_talk(npc) or _chef_talk(npc)
+	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc) or _lunch_talk(npc) or _cover_talk(npc) or _double_talk(npc) or _chef_talk(npc) or _cats_talk(npc) or _king_talk(npc)
 
 ## Lost & Found, Omaha: a flyer in the mail, three things hidden around the block, returned to the Seen Cafe paper box.
 ## Each find is a clue named after the thing ("ring", "collar", "shoe"); all three advance to the return stage.
@@ -4702,8 +4710,8 @@ func start_quest_fight(kind: String) -> void:
 	add_child(b)
 	arena_boss = b
 	b.set_physics_process(not busy())
-	var pre: Array = ["After close. I'm crouched behind the dumpster. The side door opens. Hairnet. Spatula. A to-go box with a label.", "I step out. He screams. I scream. He swings."] if kind == "brayden" \
-		else ["Out back of the {fork_nick}. {coworker}'s filming. Dolores is on FaceTime, propped on a milk crate, knitting. $%d on the line." % double_stake]
+	var pre: Array = ["The garage behind HOA HQ. Shelves of boxes to the ceiling. A recliner. A crown made out of packing tape.", "He stands up. The crown stays on."] if kind == "king" else (["After close. I'm crouched behind the dumpster. The side door opens. Hairnet. Spatula. A to-go box with a label.", "I step out. He screams. I scream. He swings."] if kind == "brayden" \
+		else ["Out back of the {fork_nick}. {coworker}'s filming. Dolores is on FaceTime, propped on a milk crate, knitting. $%d on the line." % double_stake])
 	_say(pre + [str(BossScript.BOSSES[kind]["intro"])])
 	_sync_world()
 
@@ -4714,7 +4722,7 @@ func _quest_fight_out() -> void:
 	var kind: = quest_fight
 	quest_fight = ""
 	_leave_arena()
-	player.position = (BACKDOOR_PT + Vector2(0, 10)) if kind == "brayden" else (BRITT_POS + Vector2(0, 16))
+	player.position = {"brayden": BACKDOOR_PT + Vector2(0, 10), "king": KING_GARAGE + Vector2(0, 10)}.get(kind, BRITT_POS + Vector2(0, 16))
 	_set_camera()
 
 func quest_fight_won(b: Node) -> void:
@@ -4723,7 +4731,7 @@ func quest_fight_won(b: Node) -> void:
 	combat.gain_xp("boss_bounty", combat.level)
 	_quest_fight_out()
 	var lines: Array = [str(BossScript.BOSSES[kind]["defeat"])]
-	lines.append_array(lunch_caught() if kind == "brayden" else double_won())
+	lines.append_array(lunch_caught() if kind == "brayden" else (king_won() if kind == "king" else double_won()))
 	_say(lines)
 	save_game()
 
@@ -4735,6 +4743,10 @@ func quest_fight_lost() -> void:
 		_say(["I wake up with a burnt patty on my chest. Brayden's gone. So's tonight's lunch. Try again another night."])
 		save_game()
 		return
+	if kind == "king":
+		_say(["I wake up on the garage floor under a pile of Amazon boxes. The King is gone. His garage isn't. Try again."])
+		save_game()
+		return
 	_say(double_lost())
 
 func _draw_quest_fight_hud(f: Font, o: Vector2) -> void:
@@ -4742,6 +4754,8 @@ func _draw_quest_fight_hud(f: Font, o: Vector2) -> void:
 		draw_rect(Rect2(o + Vector2(40, 62), Vector2(240, 10)), Color(0, 0, 0, 0.6))
 		draw_string(f, o + Vector2(40, 70), Cast.T("DOUBLE OR NOTHING: $%d ON THE LINE" % double_stake), HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
 		_draw_britt_rec(f, o)
+	elif quest_fight == "king":
+		_arena_caption(f, o, "THE KING'S GARAGE  -  EVERY BOX ON THE BLOCK", Color("#ffd23f"))
 	else:
 		_arena_caption(f, o, "BEHIND {FORK}  -  AFTER CLOSE  -  THE LUNCH THIEF", Color("#ffd23f"))
 
@@ -4895,6 +4909,135 @@ func chef_shift_done(r: Dictionary) -> void:
 		lines.append("ACHIEVEMENT UNLOCKED: Chef's Right Hand")
 	_say(lines)
 
+## ---- The Cats' Heist (Nov 19): {cat1} and {cat2} steal one thing a night (keys, wallet, the binky) and stash it
+## under the bed. Each night after 9 PM, sneak to the stash (cat_heist.gd, the baby-asleep floor). One try a night.
+const HEIST_ITEMS: = ["keys", "wallet", "binky"]
+const HEIST_NAMES: = {"keys": "my keys", "wallet": "my wallet", "binky": "{baby}'s binky"}
+
+func heist_night() -> bool:
+	var c: = fmod(clock, 1440.0)
+	return c >= 1260.0 or c < 300.0
+
+func _cats_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "cats"
+	if npc == "bowls" and SideQuests.offerable(st, q, day_count, show_hidden_quests, quest_ctx()):
+		SideQuests.start(st, q)
+		feed_cats()
+		_say(["I go to grab my keys off the hook. No keys. The hook is just a hook now.",
+			"{cat1} is sitting in front of the bed like a bouncer. {cat2} is licking a paw and making eye contact. They know.",
+			"Everything that goes missing in this house goes under that bed. I can't get it while the house is awake. Tonight, after 9.",
+			"New side quest: The Cats' Heist (phone > Notes)."])
+		save_game()
+		return true
+	if npc != "freya" or not SideQuests.is_active(st, q):
+		return false
+	var item: String = HEIST_ITEMS[SideQuests.stage(st, q) - 1]
+	if SideQuests.has_clue(st, q, "night:%d" % day_count):
+		_say(["The cats are on high alert after last time. {cat1} is literally sitting on the stash. Tomorrow night."])
+		return true
+	if not heist_night():
+		_say(["{cat3} hisses from under the bed. Behind her, something glints: %s. Not now. Tonight, after 9, when {baby}'s down." % HEIST_NAMES[item]])
+		return true
+	SideQuests.add_clue(st, q, "night:%d" % day_count)
+	var g: = CatHeistScript.new()
+	g.item = item
+	_run_game(g, func (_n: Node, sc: float, _notes: Array) -> void:
+		_say(heist_result(sc > 0.0)))
+	return true
+
+func heist_result(ok: bool) -> Array:
+	var st: = side_quests
+	var stage: = SideQuests.stage(st, "cats")
+	var item: String = HEIST_ITEMS[stage - 1]
+	if not ok:
+		energy = maxf(1.0, energy - 10.0)
+		save_game()
+		return ["CREAK. {baby} is up. {cat2} watches me pace with her like this was the plan all along. It was. -10 Energy.",
+			"%s stays under the bed. Tomorrow night." % HEIST_NAMES[item].capitalize()]
+	SideQuests.add_clue(st, "cats", item)
+	if stage < HEIST_ITEMS.size():
+		SideQuests.advance(st, "cats")
+		save_game()
+		return ["Got %s. Also under there: a sock, a hair tie, a single AirPod, and a whole bagel." % HEIST_NAMES[item],
+			["By morning my wallet's gone. {cat1} is lying on the dresser like a cat who doesn't know what a wallet is.",
+				"Next morning: no binky. {baby} is furious. {cat2} has never looked more innocent. Which is how I know."][stage - 1]]
+	SideQuests.finish(st, "cats")
+	gain_happy(8.0)
+	inventory["treats"] = int(inventory.get("treats", 0)) + 3
+	var lines: Array = ["Got %s back. {baby} plugs right back in and goes out like a light." % HEIST_NAMES[item],
+		"Under the bed I also find the TV remote from March. {cat3} had it. {cat3} was the mastermind. I respect it.",
+		"Truce: I put three treats down. The heist crew accepts. {partner} wants the remote back. (+happy, +3 treats). Quest done."]
+	if not achievements.has("Cat Burglar Burglar"):
+		achievements.append("Cat Burglar Burglar")
+		lines.append("ACHIEVEMENT UNLOCKED: Cat Burglar Burglar")
+	save_game()
+	return lines
+
+## ---- Porch Pirate King (Nov 19): after the porch mystery, Cheeto Chad snitches on his buyer. Three runners with
+## boxes on the street (fleeing pirates; KO each), then the King in his garage behind HOA HQ (alley fight).
+const KING_SPOTS: = {"north": Vector2(300, 190), "east": Vector2(620, 215), "south": Vector2(165, 340)}
+const KING_GARAGE: = Vector2(100, 318)
+
+func _king_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "king"
+	if npc == "neighbor" and SideQuests.offerable(st, q, day_count, show_hidden_quests, quest_ctx()):
+		if phase() == "Night":
+			return false
+		SideQuests.start(st, q)
+		_say(["Cheeto Chad answers before I knock. He's been waiting. He's holding a Flamin' Hot bag like a peace offering.",
+			"Cheeto Chad: \"Okay. So. I didn't keep the boxes. I sold 'em. There's a guy. Everybody sells to the guy. They call him the King.\"",
+			"Cheeto Chad: \"He's got three runners on this block. Find a runner, find the boxes. Find the boxes, find the King.\"",
+			"New side quest: Porch Pirate King (phone > Notes). Look for runners with boxes around the neighborhood."])
+		SideQuests.advance(st, q)
+		save_game()
+		return true
+	if not SideQuests.is_active(st, q):
+		return false
+	if KING_SPOTS.has(npc) and SideQuests.stage(st, q) == 2 and not SideQuests.has_clue(st, q, npc):
+		if get_tree().get_nodes_in_group("enemy").any(func (e): return e.has_meta("quest_king")):
+			return true
+		var e: = spawn_enemy("pirate", KING_SPOTS[npc] + Vector2(6, 2))
+		e.pname = ["Runner Ricky", "Runner Ronda", "Runner Rob"][KING_SPOTS.keys().find(npc)]
+		e.max_hp = 8.0
+		e.hp = 8.0
+		e.set_meta("quest_king", npc)
+		e.state = "flee"
+		e.st = 9.0
+		_toast("A guy with a stack of boxes sees me and bolts. Of course he bolts.")
+		return true
+	if npc == "garage" and SideQuests.stage(st, q) == 3:
+		if energy < 25.0:
+			_say(["I'm too wiped to take on a King. Eat something. Kings wait. That's the whole point of kings."])
+			return true
+		start_quest_fight("king")
+		return true
+	return false
+
+func king_runner_caught(spot: String) -> String:
+	var st: = side_quests
+	SideQuests.add_clue(st, "king", spot)
+	var n: = KING_SPOTS.keys().filter(func (k): return SideQuests.has_clue(st, "king", k)).size()
+	if n >= KING_SPOTS.size():
+		SideQuests.advance(st, "king")
+		save_game()
+		return "Three runners down. All three had the same receipt: 'STORAGE, BEHIND HOA HQ.' The King's garage. Let's go."
+	save_game()
+	return "The runner drops his boxes. One's ours. A shipping label says 'KING' in Sharpie. Runners caught: %d of 3." % n
+
+func king_won() -> Array:
+	SideQuests.finish(side_quests, "king")
+	money += 200
+	gain_happy(10.0)
+	var lines: Array = ["The garage door rattles up. Shelves to the ceiling. Every package this block has lost since 2019, in alphabetical order.",
+		"I find ours. All of ours. And $200 in a coffee can labeled 'ROYAL TREASURY'. Finder's fee. +$200, and {partner} gets her stuff back (+happy). Quest done."]
+	if not achievements.has("Kingslayer (Porch Division)"):
+		achievements.append("Kingslayer (Porch Division)")
+		lines.append("ACHIEVEMENT UNLOCKED: Kingslayer (Porch Division)")
+	save_game()
+	return lines
+
 ## The Grease Trap: the 86 List grows an unsigned entry; after close the board sends Duff out back to fight it.
 func _grease_talk(npc: String) -> bool:
 	var st: = side_quests
@@ -5008,6 +5151,15 @@ func quest_interactables() -> Array:
 	if SideQuests.is_active(side_quests, "lunch") and SideQuests.stage(side_quests, "lunch") in [1, 2]:
 		out.append({"id": "quest_backdoor", "pos": BACKDOOR_PT, "r": 14.0,
 			"label": "{fork_nick} side door" if SideQuests.stage(side_quests, "lunch") == 1 else "Stake out the side door"})
+	if SideQuests.offerable(side_quests, "king", day_count, show_hidden_quests, quest_ctx()) and phase() != "Night":
+		out.append({"id": "quest_neighbor", "pos": NEIGHBOR_DOOR, "r": 16.0, "label": "Cheeto Chad's door (he's waving)"})
+	if SideQuests.is_active(side_quests, "king"):
+		if SideQuests.stage(side_quests, "king") == 2:
+			for k in KING_SPOTS:
+				if not SideQuests.has_clue(side_quests, "king", k):
+					out.append({"id": "quest_" + k, "pos": KING_SPOTS[k], "r": 14.0, "label": "A stack of suspicious boxes"})
+		elif SideQuests.stage(side_quests, "king") == 3:
+			out.append({"id": "quest_garage", "pos": KING_GARAGE, "r": 16.0, "label": "The King's garage"})
 	if not SideQuests.is_active(side_quests, "porch"):
 		return out
 	match SideQuests.stage(side_quests, "porch"):
@@ -5039,6 +5191,9 @@ func quest_spots() -> Dictionary:
 		"lostbox": ["outside", LOSTBOX_PT + Vector2(0, -24)],
 		"backdoor": ["outside", BACKDOOR_PT + Vector2(0, -22)],
 		"fork": ["outside", FORK_DOOR + Vector2(10, -34)],
+		"bowls": ["home", BOWLS_PT + Vector2(0, -14)],
+		"freya": ["home", FREYA_PT + Vector2(0, -16)],
+		"garage": ["outside", KING_GARAGE + Vector2(0, -24)],
 	}
 
 func draw_quest_markers(ci: CanvasItem) -> void:
