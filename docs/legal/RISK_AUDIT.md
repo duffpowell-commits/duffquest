@@ -129,3 +129,8 @@ Wordle, Gucchi, Nakatomeh, Bruce Willnot, Brittany) appear only in family data; 
 
 **Still open from before:** written OKs from the real people (item 5); family art files still ride in the public packs
 (data-miners only); Duff's reference photos in the public repo (`docs/ref/duff`); whether Fork management knows (ASK).
+
+## Nov 19 update: snack and chain brands
+Public edition renames (tokens in `data/cast.json` / `data/cast_public.json`, checked by test_daily):
+`{chad}` Cheeto Chad -> Chip Dust Chad, `{hot_chips}` Flamin' Hot -> Blaze Puffs, `{chain_grill}` Applebee's -> Grillbee's.
+The family edition keeps the originals.

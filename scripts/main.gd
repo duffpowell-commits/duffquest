@@ -3185,7 +3185,7 @@ func enemy_defeated(e: Node) -> void:
 
 func enemy_gone(e: Node) -> void:
 	if e.has_meta("quest_porch"):
-		_toast("Cheeto Chad clears the fence. He lives next door, genius. Knock again.")
+		_toast("{chad} clears the fence. He lives next door, genius. Knock again.")
 	if e.has_meta("watch"):
 		_toast("He got away. He'll be back. They always come back. Check the spot again.")
 	if e.has_meta("quest_king"):
@@ -4471,7 +4471,7 @@ func _lunch_talk(npc: String) -> bool:
 		SideQuests.start(st, q)
 		_say(["{coworker}: Somebody ate my lunch. Again. Third time. It had a LABEL. It said '{COWORKER_SHORT}'S. DO NOT.' in Sharpie.",
 			"{coworker}: Leftover lo mein. I was gonna film myself eating it. That was CONTENT.",
-			"{coworker}: You're the porch guy. You found Cheeto Chad. Find my lo mein guy.",
+			"{coworker}: You're the porch guy. You found {chad}. Find my lo mein guy.",
 			"New side quest: Who Ate {coworker}'s Lunch? (phone > Notes). Start at the {fork_nick}'s side door."])
 		save_game()
 		return true
@@ -4990,7 +4990,7 @@ func heist_result(ok: bool) -> Array:
 	save_game()
 	return lines
 
-## ---- Porch Pirate King (Nov 19): after the porch mystery, Cheeto Chad snitches on his buyer. Three runners with
+## ---- Porch Pirate King (Nov 19): after the porch mystery, {chad} snitches on his buyer. Three runners with
 ## boxes on the street (fleeing pirates; KO each), then the King in his garage behind HOA HQ (alley fight).
 const KING_SPOTS: = {"north": Vector2(300, 190), "east": Vector2(620, 215), "south": Vector2(165, 340)}
 const KING_GARAGE: = Vector2(100, 318)
@@ -5002,9 +5002,9 @@ func _king_talk(npc: String) -> bool:
 		if phase() == "Night":
 			return false
 		SideQuests.start(st, q)
-		_say(["Cheeto Chad answers before I knock. He's been waiting. He's holding a Flamin' Hot bag like a peace offering.",
-			"Cheeto Chad: \"Okay. So. I didn't keep the boxes. I sold 'em. There's a guy. Everybody sells to the guy. They call him the King.\"",
-			"Cheeto Chad: \"He's got three runners on this block. Find a runner, find the boxes. Find the boxes, find the King.\"",
+		_say(["{chad} answers before I knock. He's been waiting. He's holding a {hot_chips} bag like a peace offering.",
+			"{chad}: \"Okay. So. I didn't keep the boxes. I sold 'em. There's a guy. Everybody sells to the guy. They call him the King.\"",
+			"{chad}: \"He's got three runners on this block. Find a runner, find the boxes. Find the boxes, find the King.\"",
 			"New side quest: Porch Pirate King (phone > Notes). Look for runners with boxes around the neighborhood."])
 		SideQuests.advance(st, q)
 		save_game()
@@ -5258,7 +5258,7 @@ func _porch_talk(npc: String) -> bool:
 		["porch", 2]:
 			SideQuests.add_clue(st, q, "gas-station receipt")
 			SideQuests.advance(st, q)
-			_say(["Orange dust on the railing. A receipt underneath: one Flamin' Hot bag, two energy drinks, 3:12 AM.",
+			_say(["Orange dust on the railing. A receipt underneath: one {hot_chips} bag, two energy drinks, 3:12 AM.",
 				"The receipt's got a loyalty number on it. And an address. The house next door.",
 				"Clue: gas-station receipt. I know who it is. I always knew. I just didn't want to talk to him."])
 			return true
@@ -5269,10 +5269,10 @@ func _porch_talk(npc: String) -> bool:
 			if get_tree().get_nodes_in_group("enemy").any(func (e): return e.has_meta("quest_porch")):
 				return true
 			_say(["I knock. The door opens two inches. Orange fingers on the frame.",
-				"Cheeto Chad: \"Packages? Never heard of 'em. ...Is that a RECEIPT?\"",
+				"{chad}: \"Packages? Never heard of 'em. ...Is that a RECEIPT?\"",
 				"He bolts. Of course he bolts."])
 			var e: = spawn_enemy("pirate", NEIGHBOR_DOOR + Vector2(0, 4))
-			e.pname = "Cheeto Chad"
+			e.pname = "{chad}"
 			e.max_hp = 6.0
 			e.hp = 6.0
 			e.set_meta("quest_porch", true)
@@ -5301,7 +5301,7 @@ func quest_interactables() -> Array:
 	if not wt.is_empty():
 		out.append({"id": "quest_watch", "pos": wt["pos"], "r": 14.0, "label": "Watch: " + str(wt["label"])})
 	if SideQuests.offerable(side_quests, "king", day_count, show_hidden_quests, quest_ctx()) and phase() != "Night":
-		out.append({"id": "quest_neighbor", "pos": NEIGHBOR_DOOR, "r": 16.0, "label": "Cheeto Chad's door (he's waving)"})
+		out.append({"id": "quest_neighbor", "pos": NEIGHBOR_DOOR, "r": 16.0, "label": "{chad}'s door (he's waving)"})
 	if SideQuests.is_active(side_quests, "king"):
 		if SideQuests.stage(side_quests, "king") == 2:
 			for k in KING_SPOTS:
@@ -5700,7 +5700,7 @@ func spritz_cologne() -> void:
 	inventory["cologne"] -= 1
 	grant_buff("charisma", Buffs.CHARISMA_MINS)
 	advance_clock(1.0)
-	var lines: Array = ["*psst psst* I hit myself with {cologne}. Notes of leather, venture capital and Applebee's parking lot. CHARISMA 6 hrs: 20% off stores, bigger tips, +25% {partner} happiness."]
+	var lines: Array = ["*psst psst* I hit myself with {cologne}. Notes of leather, venture capital and {chain_grill} parking lot. CHARISMA 6 hrs: 20% off stores, bigger tips, +25% {partner} happiness."]
 	text("madison", "madison", "who are you trying to impress. it's working. come home")
 	unread["madison"] = true
 	ping_t = 2.0
