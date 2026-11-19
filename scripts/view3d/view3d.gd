@@ -1074,6 +1074,7 @@ func _room_light() -> void:
 	sun.shadow_enabled = not low
 	env.ambient_light_color = Color("#d8d0e8")
 	env.ambient_light_energy = 0.55
+	env.tonemap_exposure = 1.0   # the street dims it at midday
 	env.glow_intensity = 0.35
 	env.adjustment_contrast = 1.1
 	env.background_color = Color("#141018")
@@ -1097,11 +1098,15 @@ func _sync_sky() -> void:
 	sun.light_color = Color(1.0, 0.97, 0.9).lerp(sky, 0.7) if dark < 0.5 else Color("#8aa0ff")
 	# warm = golden hour / dusk (the 2D grade loses green + blue), dark = night
 	var warm: = clampf((1.0 - sky.b) * 2.5, 0.0, 1.0) * (1.0 - dark)
-	sun.light_energy = lerpf(0.82, 0.28, dark) + 0.25 * warm
+	# IGN v5: noon washed the sidewalks to flat cream. Midday runs a little darker (sun, exposure, glow, haze);
+	# golden hour and night keep their old values (the 'day' factor is 0 there).
+	var noon: = (1.0 - warm) * (1.0 - dark)
+	sun.light_energy = lerpf(0.82, 0.28, dark) + 0.25 * warm - 0.1 * noon
+	env.tonemap_exposure = 1.0 - 0.08 * noon
 	sun.shadow_enabled = dark < 0.6 and not low     # moonlight shadows read as stray dark polygons on the lawns
 	env.ambient_light_color = sky.lerp(Color("#8a86b8"), 0.4)
 	env.ambient_light_energy = lerpf(0.3, 0.6, maxf(warm, dark * 0.6))
-	env.glow_intensity = lerpf(0.3, 0.9, maxf(warm, dark))
+	env.glow_intensity = lerpf(0.3, 0.9, maxf(warm, dark)) - 0.15 * noon
 	env.adjustment_contrast = lerpf(1.14, 1.06, warm)
 	env.background_color = Color("#9cc8e8").lerp(sky, 0.5).darkened(dark * 0.6)
 	env.fog_light_color = Color("#c8dcef").lerp(sky, 0.6).darkened(dark * 0.5)
@@ -1112,7 +1117,7 @@ func _sync_sky() -> void:
 	env.fog_depth_begin = lerpf(19.0, 6.0, dark)
 	env.fog_depth_end = 52.0
 	env.fog_depth_curve = 1.1
-	env.fog_density = lerpf(lerpf(0.24, 0.3, warm), 0.4, dark) if not low else 0.1
+	env.fog_density = (lerpf(lerpf(0.24, 0.3, warm), 0.4, dark) - 0.08 * noon) if not low else 0.1
 
 func _cam_off() -> Vector3:
 	return CAM_OFF.rotated(Vector3.UP, deg_to_rad(yaw))
