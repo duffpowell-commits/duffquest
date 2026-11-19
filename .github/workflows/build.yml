@@ -104,9 +104,16 @@ jobs:
           mkdir -p build/web && touch build/.gdignore
           godot --headless --path . --export-release "Web" build/web/index.html
           # after-boot packs: the art the Web preset leaves out of index.pck; game streams them after boot (extra_pack.gd)
-          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/street.pck street
-          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/world.pck world
-          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck late
+          # public edition packs (itch, portals, Pages root): no family originals that have a _pub copy (Nov 19)
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/street.pck street public
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/world.pck world public
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/web/extra.pck late public
+          # family edition packs (Pages /family/): no _pub copies
+          mkdir -p build/family_packs
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/family_packs/street.pck street family
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/family_packs/world.pck world family
+          godot --headless --path . --script tools/make_extra_pack.gd -- build/family_packs/extra.pck late family
+          python3 -c "import hashlib,json; print(json.dumps({n: hashlib.md5(open('build/family_packs/'+n,'rb').read()).hexdigest() for n in ['street.pck','world.pck','extra.pck']}))" > build/family_packs/packs.json
           test -s build/web/street.pck
           test -s build/web/world.pck
           test -s build/web/extra.pck
@@ -132,13 +139,14 @@ jobs:
           mkdir -p build/pages
           godot --headless --path . --export-release "Web" build/pages/index.html
           # Family edition (real names and places, docs/legal/RISK_AUDIT.md): same export with the "family"
-          # feature tag, at the unlisted /family/ path. The packs are art only, so both editions share them.
+          # feature tag, at the unlisted /family/ path, with its own packs (build/family_packs: originals, no _pub).
           sed -i 's/^custom_features=""/custom_features="family"/' export_presets.cfg
           mkdir -p build/pages/family
           godot --headless --path . --export-release "Web" build/pages/family/index.html
           cp /tmp/presets.bak export_presets.cfg
           for d in build/pages build/pages/family; do
-            cp build/web/street.pck build/web/world.pck build/web/extra.pck build/web/packs.json $d/
+            src=build/web; [ "$d" = build/pages/family ] && src=build/family_packs
+            cp $src/street.pck $src/world.pck $src/extra.pck $src/packs.json $d/
             gzip -9 -k -n $d/index.wasm
             # iOS reads these from the page, not only the manifest
             title="Duff Quest"; [ "$d" = build/pages/family ] && title="Duff Quest Family"
