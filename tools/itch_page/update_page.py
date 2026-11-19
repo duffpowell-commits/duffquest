@@ -35,13 +35,16 @@ def finish(code, page=None, shot="final"):
 
 def blocked(page):
     html = page.content().lower()
-    for word in ("recaptcha", "hcaptcha", "captcha", "verify you are human", "cf-challenge"):
+    for word in ("recaptcha", "hcaptcha", "captcha", "verify you are human", "cf-challenge", "challenge-platform", "just a moment", "attention required", "access denied"):
         if word in html: return word
     return None
 
 def login(page):
     page.goto("https://itch.io/login", wait_until="domcontentloaded"); pause(1.5, 3)
     if (w := blocked(page)): say(f"STOP: login page shows {w}. Not trying."); finish(2, page, "login_blocked")
+    if not page.query_selector("input[name=username]"):
+        say(f"STOP: login page has no username box. Title: {page.title()!r}. Text: {page.inner_text('body')[:300]!r}")
+        finish(2, page, "login_odd")
     page.click("input[name=username]"); page.keyboard.type(os.environ["ITCH_USERNAME"], delay=random.randint(60, 140)); pause()
     page.click("input[name=password]"); page.keyboard.type(os.environ["ITCH_PASSWORD"], delay=random.randint(60, 140)); pause()
     page.keyboard.press("Enter")
@@ -58,13 +61,15 @@ def login(page):
         finish(2, page, "login_failed")
     say("Logged in with username + password.")
 
-with sync_playwright() as p:
+CUR = {}
+
+def run(p):
     browser = p.chromium.launch(headless=False, args=["--disable-blink-features=AutomationControlled"])
     ctx_args = dict(viewport={"width": 1366, "height": 900}, locale="en-US", timezone_id="America/Chicago")
     if STATE and os.path.exists(STATE):
         ctx_args["storage_state"] = STATE
     ctx = browser.new_context(**ctx_args)
-    page = ctx.new_page()
+    page = ctx.new_page(); CUR['page'] = page
     edit = f"https://itch.io/game/edit/{GAME_ID}"
     page.goto(edit, wait_until="domcontentloaded"); pause(1.5, 3)
     if "/login" in page.url:
@@ -114,3 +119,17 @@ with sync_playwright() as p:
     if marker in text:
         say(f"VERIFIED live: public page shows \"{marker}\"."); finish(0, pub, "live")
     say(f"STOP: saved, but the public page doesn't show \"{marker}\" yet."); finish(3, pub, "live_missing")
+
+
+with sync_playwright() as p:
+    try:
+        run(p)
+    except SystemExit:
+        raise
+    except Exception as e:
+        pg = CUR.get("page")
+        where = ""
+        try: where = f" at {pg.url} (title {pg.title()!r})"
+        except Exception: pass
+        say(f"CRASH{where}: {type(e).__name__}: {str(e).splitlines()[0][:200]}")
+        finish(4, pg, "crash")
