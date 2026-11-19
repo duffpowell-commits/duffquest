@@ -31,6 +31,7 @@ TAP = r"""
         const ctx = dest.context;
         if (!ctx.__dq_an) {
           const an = ctx.createAnalyser(); an.fftSize = 2048; ctx.__dq_an = an; window.__dq_ctx++;
+          window.__dq_ac = ctx;
           const buf = new Float32Array(an.fftSize);
           setInterval(() => {
             an.getFloatTimeDomainData(buf);
@@ -101,6 +102,7 @@ def main():
             peak = page.evaluate("window.__dq_peak")
             n = page.evaluate("window.__dq_ctx")
             print("title: peak %.3f over %.0f s (%d audio context(s) tapped)" % (peak, a.listen, n))
+            print("audio context:", page.evaluate("(() => { const c = window.__dq_ac; return c ? {state: c.state, t: c.currentTime, rate: c.sampleRate, lat: c.baseLatency} : null; })()"))
             if peak < PEAK_MIN:
                 fails.append("title is silent (peak %.3f < %.2f)" % (peak, PEAK_MIN))
         browser.close()
