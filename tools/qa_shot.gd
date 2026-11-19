@@ -22,7 +22,7 @@ func _ready() -> void:
 	game = load("res://game.tscn").instantiate()
 	add_child(game)
 	steps = [
-		["dialog_long", func(): _clean(); m._say(["*psst psst* I hit myself with {cologne}. Notes of leather, venture capital and Applebee's parking lot. CHARISMA 6 hrs: 20% off stores, bigger tips, +25% {partner} happiness."])],
+		["dialog_long", func(): _clean(); m._say(["*psst psst* I hit myself with {cologne}. Notes of leather, venture capital and {chain_grill} parking lot. CHARISMA 6 hrs: 20% off stores, bigger tips, +25% {partner} happiness."])],
 		["dialog_madison", func(): _clean(); m._say(["{partner}: You said you'd be home by six. It is nine. The baby has learned three new words and two of them are about you."])],
 		["toast_long", func(): _clean(); m._toast("I break free! Now he's knocking on {sister}'s door. She'll eat him alive. Meanwhile I'm out here with a fryer burn, no rent money and a cat judging me from the porch.")],
 		["home", func(): _clean(); m.enter_home(); m.dialog.clear()],
