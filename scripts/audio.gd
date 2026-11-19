@@ -37,6 +37,8 @@ static func stream(path: String) -> AudioStream:
 ## Web: forget "missing" answers once a late pack (music) is mounted (scripts/extra_pack.gd).
 static func clear_cache() -> void:
 	_streams.clear()
+	if inst != null and is_instance_valid(inst):
+		inst.current = ""   # re-pick: a better file (the EDM version) may have just landed; same file keeps playing
 
 static func sfx(name: String, pitch: float = 1.0) -> void:
 	if inst != null and is_instance_valid(inst):
@@ -225,6 +227,8 @@ func play_music(name: String) -> void:
 	if s == null:
 		current = ""   # not here yet (web world pack still downloading): ask again next time
 		return
+	if music_player.stream == s and music_player.playing:
+		return   # already playing this file (a re-pick after a pack mount): don't restart it
 	if s is AudioStreamOggVorbis:
 		(s as AudioStreamOggVorbis).loop = true
 	music_player.stream = s
