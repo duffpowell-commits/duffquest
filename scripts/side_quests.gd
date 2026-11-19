@@ -14,7 +14,7 @@ const Cast: = preload("res://scripts/cast.gd")
 
 const LIST: = [
 	{
-		"id": "porch", "kind": "mystery", "title": "Who Took The Porch?", "giver": "madison", "ready": true, "from_day": 2,
+		"id": "porch", "kind": "mystery", "title": "Who Took the Porch?", "giver": "madison", "ready": true, "from_day": 2,
 		"pitch": "Third package this month. {partner} wants a name.",
 		"stages": [
 			{"text": "Ask around. Somebody on this block saw something.", "at": "brittany"},
@@ -39,12 +39,13 @@ const LIST: = [
 			{"text": "Sleep on it. Tomorrow, tell {coworker} how it went.", "at": "brittany"},
 		],
 		"choices": ["cover", "rat"],
+		"choice_text": {"cover": "Covered for her. Ranch Cartel.", "rat": "Told Chef. Manny kept his job."},
 	},
 	{
 		"id": "alley", "kind": "explore", "title": "Lost & Found, Omaha", "giver": "mail", "ready": true, "from_day": 3,
 		"pitch": "A flyer in the mail. Someone lost something in this neighborhood. Three somethings.",
 		"stages": [
-			{"text": "Find Gail's three things: a ring 'where the street drinks', a cat collar 'in the bin by the gas station', a left shoe 'look up, by the bus stop'.", "at": ""},
+			{"text": "Find Gail's ring (storm drain), cat collar (gas station bin) and left shoe (up a tree, bus stop).", "at": ""},
 			{"text": "Bring it all to the green paper box outside the Seen Cafe.", "at": "lostbox"},
 		],
 	},
@@ -58,6 +59,7 @@ const LIST: = [
 			{"text": "Tell {coworker} who's been eating her lunch. Or don't. Tell her something.", "at": "brittany"},
 		],
 		"choices": ["truth", "raccoon"],
+		"choice_text": {"truth": "Told her. She adopted Gerald.", "raccoon": "Blamed the raccoon. Technically true."},
 	},
 	{
 		"id": "double", "kind": "bounty", "title": "Double or Nothing", "giver": "brittany", "ready": true, "from_day": 4,
@@ -77,6 +79,7 @@ const LIST: = [
 			{"text": "Tell {coworker} how her station went. Leave out the fire.", "at": "brittany"},
 		],
 		"choices": ["covered", "nope", "flaked"],
+		"choice_text": {"covered": "Covered her station. She owes me.", "nope": "Said no. She got over it. Mostly.", "flaked": "Promised and didn't show. Oops."},
 	},
 	{
 		"id": "chef", "kind": "character", "title": "Chef's Bad Week", "giver": "fork", "ready": true, "from_day": 10,
@@ -290,14 +293,23 @@ static func journal(st: Dictionary, show_hidden: bool = false) -> Array:
 			continue
 		var q: = get_q(st, id)
 		var row: = {"id": id, "title": Cast.T(str(e["title"])), "status": stv, "new": bool(q["new"]),
-			"step": "", "clues": (q["clues"] as Array).duplicate(), "progress": "%d/%d" % [int(q["stage"]), stage_count(id)]}
+			"step": "", "clues": _shown_clues(q["clues"]), "progress": "%d/%d" % [int(q["stage"]), stage_count(id)]}
 		if stv == "active":
 			row["step"] = Cast.T(str((e["stages"] as Array)[int(q["stage"]) - 1]["text"]))
 			act.append(row)
 		else:
-			row["step"] = "Done." + ((" (%s)" % str(q["choice"])) if str(q["choice"]) != "" else "")
+			var ch: = str(q["choice"])
+			row["step"] = "Done." + ((" " + Cast.T(str((e.get("choice_text", {}) as Dictionary).get(ch, "")))) if ch != "" and (e.get("choice_text", {}) as Dictionary).has(ch) else "")
 			fin.append(row)
 	return act + fin
+
+## day:N / go:N / night:N clues are bookkeeping, not something to show the player.
+static func _shown_clues(cl: Array) -> Array:
+	var out: Array = []
+	for c in cl:
+		if not ":" in str(c):
+			out.append(str(c))
+	return out
 
 static func unread(st: Dictionary, show_hidden: bool = false) -> int:
 	var n: = 0

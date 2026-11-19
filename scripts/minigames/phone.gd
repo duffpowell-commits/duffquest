@@ -42,6 +42,11 @@ func show_screen(s: String) -> void:
 			_app(add_button("notes", Rect2(218, 152, 92, 22), "Notes" + (" (%d)" % n_new if n_new > 0 else ""), KEY_7, Color("#2f8a80")), "kf_app_notes", false)
 		"notes":
 			add_button("back", Rect2(110, 156, 100, 20), "Back", KEY_ESCAPE)
+			_notes_rows = SideQuests.journal(m.side_quests, m.show_hidden_quests) if m else []
+			var pages: = _notes_pages().size()
+			if pages > 1:
+				notes_page = notes_page % pages
+				add_button("notes_more", Rect2(216, 156, 98, 20), "More %d/%d" % [notes_page + 1, pages], KEY_RIGHT, Color("#2f8a80"))
 		"messages":
 			var ml: = "{partner} <3" + ("   * NEW *" if m and m.unread.get("madison", false) else "") + "\n" + _preview("madison")
 			add_button("thread_madison", Rect2(6, 18, 308, 30), ml, KEY_1, CLEAR)
@@ -119,6 +124,9 @@ func _on_button(id: String) -> void:
 				"asset", "portfolio": show_screen("stonks")
 				"thread_sister", "gala_thread", "thread_madison": show_screen("messages")
 				_: show_screen("home")
+		"notes_more":
+			notes_page += 1
+			show_screen("notes")
 		"messages", "stonks", "fund", "thread_sister", "gala_thread", "thread_madison", "notes": show_screen(id)
 		"gear": _close_with("gear")
 		"settings": _close_with("settings")
@@ -402,33 +410,60 @@ func _draw_errand_status() -> void:
 
 ## Notes app = the side-quest journal. NEW rows glow until the screen has been seen once.
 var _notes_rows: Array = []
+var notes_page: = 0
+const NOTES_TOP: = 28.0
+const NOTES_BOTTOM: = 152.0
+
+## Active quests get a tall row (title, wrapped step, clues); done ones a one-line row. Greedy pages.
+func _row_h(row: Dictionary) -> float:
+	if str(row["status"]) == "done":
+		return 14.0
+	var w: = W - 22.0
+	var lines: = 1
+	if font != null and font.get_string_size(Cast.T(str(row["step"])), HORIZONTAL_ALIGNMENT_LEFT, -1, 7).x > w:
+		lines = 2
+	return 23.0 + (lines - 1) * 9.0 + (9.0 if not (row["clues"] as Array).is_empty() else 0.0)
+
+func _notes_pages() -> Array:
+	var pages: Array = [[]]
+	var y: = NOTES_TOP
+	for row in _notes_rows:
+		var h: = _row_h(row)
+		if y + h > NOTES_BOTTOM and not (pages[-1] as Array).is_empty():
+			pages.append([])
+			y = NOTES_TOP
+		(pages[-1] as Array).append(row)
+		y += h + 3.0
+	return pages
 
 func _draw_notes() -> void:
-	if _notes_rows.is_empty() or not _notes_seen:
+	if not _notes_seen:
 		_notes_rows = SideQuests.journal(m.side_quests, m.show_hidden_quests)
 		SideQuests.mark_read(m.side_quests)
 		_notes_seen = true
-	draw_rect(Rect2(0, 12, W, 12), Color("#123b38"))
-	txt(Vector2(4, 21), "NOTES  -  stuff I said I'd handle", 7, Color("#9fe8de"))
 	if _notes_rows.is_empty():
 		txt(Vector2(0, 80), "Nothing yet. Somebody on this block always needs something.", 7, Color(1, 1, 1, 0.55), HORIZONTAL_ALIGNMENT_CENTER, W)
 		return
-	var y: = 28.0
-	for row in _notes_rows:
-		if y > 140.0:
-			break
+	var pages: = _notes_pages()
+	var y: = NOTES_TOP
+	for row in pages[notes_page % pages.size()]:
 		var done: = str(row["status"]) == "done"
-		var r: = Rect2(4, y, W - 8, 30)
+		var r: = Rect2(4, y, W - 8, _row_h(row))
 		draw_rect(r, Color("#24302c") if not done else Color("#1f1c19"))
 		draw_rect(Rect2(r.position, Vector2(3, r.size.y)), UiStyle.TEAL if not done else Color("#6a6258"))
+		if done:
+			txt(r.position + Vector2(8, 10), str(row["title"]), 7, Color(1, 1, 1, 0.55))
+			mtxt(r.position + Vector2(118, 10), str(row["step"]), r.size.x - 124, 6, Color(1, 1, 1, 0.4), 1)
+			y += r.size.y + 3.0
+			continue
 		var head: = str(row["title"]) + ("   NEW" if bool(row["new"]) else "")
-		txt(r.position + Vector2(8, 9), head, 8, Color.WHITE if not done else Color(1, 1, 1, 0.5))
-		txt(r.position + Vector2(r.size.x - 34, 9), str(row["progress"]) if not done else "DONE", 7, UiStyle.GOLD if not done else Color(1, 1, 1, 0.4))
-		txt(r.position + Vector2(8, 19), str(row["step"]), 7, Color("#d8f0ea") if not done else Color(1, 1, 1, 0.4))
+		txt(r.position + Vector2(8, 9), head, 8, Color.WHITE)
+		txt(r.position + Vector2(r.size.x - 34, 9), str(row["progress"]), 7, UiStyle.GOLD)
+		mtxt(r.position + Vector2(8, 19), str(row["step"]), r.size.x - 14, 7, Color("#d8f0ea"), 2)
 		var cl: Array = row["clues"]
 		if not cl.is_empty():
 			var cs: = "Clues: " + ", ".join(cl)
-			txt(r.position + Vector2(8, 28), cs.substr(0, 70) + ("..." if cs.length() > 70 else ""), 6, Color("#f2c66a"))
-		y += 34.0
+			txt(r.position + Vector2(8, r.size.y - 3), cs.substr(0, 70) + ("..." if cs.length() > 70 else ""), 6, Color("#f2c66a"))
+		y += r.size.y + 3.0
 
 var _notes_seen: = false

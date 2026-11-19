@@ -63,6 +63,15 @@ func _process(_d: float) -> void:
 				m.leave_home()
 				m.dialog.clear()
 			m.player.position = Vector2(float(xy[0]), float(xy[1]))
+		elif id == "notes_full":  # phone Notes with a full journal (active rows wrap, done rows compact, More pages)
+			for q in ["porch", "gig", "alley", "lunch", "grease"]:
+				m.SideQuests.finish(m.side_quests, q, {"gig": "cover", "lunch": "raccoon"}.get(q, ""))
+			m.dev_warp_quest("chef", 2)
+			m.dev_warp_quest("cats", 1)
+			m.dev_warp_quest("king", 2)
+			m.SideQuests.add_clue(m.side_quests, "king", "north")
+			m.SideQuests.add_clue(m.side_quests, "cats", "night:1")
+			m.dialog.clear()
 		elif id in ["quest", "type", "notes"]:  # side quests: '?' over Brittany / a typewriter line mid-reveal / phone Notes
 			m.dev_warp_quest("porch", 1)
 			m.SideQuests.add_clue(m.side_quests, "porch", "orange crumbs")
@@ -263,6 +272,10 @@ func _process(_d: float) -> void:
 		m.toast_t = 0.0   # the DEV warp toast would sit on top of the marker
 	if frame == 250 and id == "type":
 		m._say(["Brittany: Package thief? Oh, I've SEEN him. Tall. Orange fingers. Smells like a gas station hot case."])
+	if frame == 230 and id == "notes_full":
+		m.dialog.clear()
+		m.close_overlay()
+		m.open_phone("notes")
 	if frame == 230 and id == "notes":
 		m.dialog.clear()   # a quest line queued since frame 200 would block the phone
 		m.close_overlay()
@@ -309,7 +322,7 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["street", "prep", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover", "backdoor", "cover", "lunch_pick", "double", "dolores_book", "chef_day", "heist", "trivia", "watch", "king_boxes"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look") and id != "ask" and not id.begins_with("gala_say:"):
+	if frame == 230 and not id in ["street", "prep", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover", "notes_full", "backdoor", "cover", "lunch_pick", "double", "dolores_book", "chef_day", "heist", "trivia", "watch", "king_boxes"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look") and id != "ask" and not id.begins_with("gala_say:"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
