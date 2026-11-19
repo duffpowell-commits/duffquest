@@ -84,6 +84,8 @@ func _exit_tree() -> void:
 		_streams.clear()
 		preload("res://scripts/art.gd").clear_cache()
 
+## Music + SFX normally come from res://default_bus_layout.tres (Nov 19): on the web, Godot's sample playback only
+## routes buses that exist at boot, so buses added here at runtime played nothing (the whole game was silent).
 func _ensure_bus(n: String) -> void:
 	if AudioServer.get_bus_index(n) == -1:
 		AudioServer.add_bus()
