@@ -32,7 +32,20 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   (day 4+, 86 List after 10 PM, boss `grease` reuses Grill-Boy tinted; `arena_shot` `grease86` / `bounty:grease`).
   **Brittany's Side Gig** (day 5+, cover-or-rat choice card, payoff next day; `arena_shot` `gig`).
   **Lost & Found, Omaha** (day 3+, flyer at the home mail table, 3 glinting finds outside, return to the Seen Cafe
-  paper box; `arena_shot` `lost`). All four quests are live.
+  paper box; `arena_shot` `lost`). **{coworker} round two (Nov 19):** Who Ate {coworker}'s Lunch? (day 7+, after gig; side door
+  `BACKDOOR_PT`, night fight `brayden`), Double or Nothing (after 3 bets won; fight `earljr`, stake $50/$100), Cover My Shift
+  (day 9+, after lunch; work any shift that day -> $40 + IOU refunding the next lost bet, `story.britt_iou`). LIST keys
+  `"after"` / `"needs_bets"` gate them (`quest_ctx()`). Fights: arena_mode `quest`, `start_quest_fight(kind)`. `arena_shot`
+  `backdoor` / `lunch_pick` / `cover` / `double` / `qfight:<kind>`.
+  **Nov 19 content batch:** Dolores's book (Waffle Haus side bet at clock-in after the first graveyard, `DOLORES_BETS`,
+  settled by `dolores_settle` in end_waffle; record `story.dolores_w/_l`). Chef's Bad Week (quest `chef`, day 10+, the Fork
+  door; `chef_force()` sets shift.gd force keys inspector / eighty_six / grill_boy, `chef_shift_done(r)` grades it).
+  The Cats' Heist (quest `cats`, day 6+, starts at the bowls, played at "freya" after 9 PM; `minigames/cat_heist.gd`
+  extends stealth.gd). Porch Pirate King (quest `king`, after porch; Chad's door, 3 fleeing runners at `KING_SPOTS`, boss
+  `king` in `KING_GARAGE`). Trivia night (Thursdays 6-10 PM at `TRIVIA_DOOR`, `minigames/trivia.gd` = quiz.gd with its own
+  bank; `story.trivia_w/_l`, 4 wins = season). Neighborhood Watch (after porch: one `WATCH` request a day in the morning
+  lines, spot `quest_watch`; `story.watch_n`, 7 = Block Captain). `arena_shot` `dolores_book` / `chef_day` / `heist` /
+  `trivia` / `watch` / `king_boxes` / `qfight:king`. Eleven side quests live.
 - **Storefronts (Nov 12):** all 13 exteriors repainted at 4x density (`sf_*`, manifest "s": 4). Re-import one with
   `python3 tools/import_storefront_hd.py grok_art/2026-11-12-storefronts/_work/<name>_v1.png <name> [--up N]` (masters: Drive "97 Gemini art drops", `sf_<name>_v1.png`), then touch +
   `--import`. Keep each lot's bottom edge and door x; check doors with the before/after map render.

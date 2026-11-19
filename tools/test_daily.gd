@@ -1183,7 +1183,7 @@ func _side_quest_checks(main: Node) -> void:
 	if chad:
 		main.enemy_defeated(chad)
 	check("porch: catching him finishes the quest and pays", SQ.is_done(main.side_quests, "porch") and main.money >= cash0 + 60 and main.achievements.has("Neighborhood Watch"))
-	check("porch: done quest leaves no interactables", main.quest_interactables().is_empty())
+	check("porch: done quest leaves no interactables", main.quest_interactables().filter(func (it): return not str(it["id"]) in ["quest_watch", "quest_neighbor"]).is_empty())   # the watch app + Pirate King start after porch
 	# the Grease Trap, end to end: 86 List entry -> night -> alley fight -> paid, achievement, bounty day untouched
 	main.side_quests = {}
 	main.dialog.clear()
@@ -1269,12 +1269,252 @@ func _side_quest_checks(main: Node) -> void:
 	main.dialog.clear()
 	check("alley: done = nothing left on the street, mail is mail", main.quest_interactables().is_empty() and not main.quest_talk("mail"))
 	main.dialog.clear()
+	# {coworker} round two (Nov 19): Lunch Thief -> Cover My Shift chain off gig; Double or Nothing off her bet record
+	main.side_quests = {}
+	main.clock = 600.0
+	main.day_count = 7
+	check("lunch: locked until the Side Gig is done", not SQ.offerable(main.side_quests, "lunch", 7, false, main.quest_ctx()) and SQ.marker_for(main.side_quests, "brittany", false, 7, {"bets_won": 0}) == "!")
+	SQ.finish(main.side_quests, "gig", "cover")
+	check("lunch: offered by Brittany once gig is done", SQ.offerable(main.side_quests, "lunch", 7, false, main.quest_ctx()) and main.quest_talk("brittany") and SQ.stage(main.side_quests, "lunch") == 1)
+	main.dialog.clear()
+	check("lunch: the back door shows up outside", main.quest_interactables().any(func (it): return str(it["id"]) == "quest_backdoor") and SQ.marker_for(main.side_quests, "backdoor") == "?")
+	check("lunch: back door by day = two clues, stage 2", main.quest_talk("backdoor") and SQ.has_clue(main.side_quests, "lunch", "hairnet") and SQ.stage(main.side_quests, "lunch") == 2)
+	main.dialog.clear()
+	check("lunch: stakeout refused in daylight", main.quest_talk("backdoor") and main.location != "arena")
+	main.dialog.clear()
+	check("lunch: caught -> Gerald, stage 3", lunch_ok(main))
+	main.dialog.clear()
+	var lm0: int = main.money
+	main.lunch_payoff("raccoon")
+	check("lunch: payoff + achievement, choice kept", SQ.is_done(main.side_quests, "lunch") and SQ.choice(main.side_quests, "lunch") == "raccoon" and main.money == lm0 + 50 and main.achievements.has("Lunch Detective"))
+	main.dialog.clear()
+	check("lunch: back door leaves the street when done", not main.quest_interactables().any(func (it): return str(it["id"]) == "quest_backdoor"))
+	# Cover My Shift: day 9+, after lunch
+	main.day_count = 8
+	check("cover: not before day 9", not SQ.offerable(main.side_quests, "cover", 8, false, main.quest_ctx()))
+	main.day_count = 9
+	main.bet["won"] = 0
+	check("cover: offered day 9", main.quest_talk("brittany") and SQ.stage(main.side_quests, "cover") == 1)
+	main.dialog.clear()
+	main.close_overlay()
+	main.cover_choose("covered")
+	check("cover: accepted -> stage 2, tied to today", SQ.stage(main.side_quests, "cover") == 2 and SQ.has_clue(main.side_quests, "cover", "day:9"))
+	main.dialog.clear()
+	main.cover_shift_done()
+	check("cover: a shift today moves to the payoff", SQ.stage(main.side_quests, "cover") == 3)
+	main.dialog.clear()
+	var cm0: int = main.money
+	check("cover: payoff pays + IOU", main.quest_talk("brittany") and SQ.is_done(main.side_quests, "cover") and main.money == cm0 + main.COVER_PAY and bool(main.story.get("britt_iou", false)) and main.achievements.has("Shift Swap"))
+	main.dialog.clear()
+	main.bet_kind = "nohit"
+	main.bet_stake = 25
+	var bm0: int = main.money
+	main._end_bet(false, "")
+	check("cover: the IOU eats one lost bet, once", main.money == bm0 and not bool(main.story.get("britt_iou", false)))
+	main.dialog.clear()
+	main.bet_kind = "nohit"
+	main._end_bet(false, "")
+	check("cover: the next loss costs again", main.money == bm0 - 25)
+	main.dialog.clear()
+	# flake: promised, never clocked in -> next morning she knows
+	SQ.warp(main.side_quests, "cover", 0)
+	SQ.start(main.side_quests, "cover")
+	main.cover_choose("covered")
+	main.day_count = 10
+	check("cover: no shift = flaked next day", not main.cover_new_day().is_empty() and SQ.choice(main.side_quests, "cover") == "flaked")
+	main.dialog.clear()
+	SQ.warp(main.side_quests, "cover", 0)
+	SQ.start(main.side_quests, "cover")
+	main.cover_choose("nope")
+	check("cover: 'can't' ends it and kills today's bet", SQ.choice(main.side_quests, "cover") == "nope" and int(main.bet["day"]) == main.day_count)
+	main.dialog.clear()
+	# Double or Nothing
+	main.bet["won"] = 2
+	check("double: locked under 3 bets won", not SQ.offerable(main.side_quests, "double", 10, false, main.quest_ctx()))
+	main.bet["won"] = 3
+	check("double: offered at 3 bets won", SQ.offerable(main.side_quests, "double", 10, false, main.quest_ctx()) and main.quest_talk("brittany") and SQ.is_active(main.side_quests, "double"))
+	main.dialog.clear()
+	main.money = 200
+	main.double_stake = 100
+	SQ.add_clue(main.side_quests, "double", "day:10")
+	check("double: one go a day, then Brittany's back to bets", not main.quest_talk("brittany"))
+	main.double_lost()
+	check("double: a loss costs the stake, quest stays", main.money == 100 and SQ.is_active(main.side_quests, "double"))
+	main.dialog.clear()
+	main.double_stake = 50
+	main.double_won()
+	check("double: a win doubles it and finishes", main.money == 200 and SQ.is_done(main.side_quests, "double") and main.achievements.has("Double or Nothing"))
+	main.dialog.clear()
+	# Dolores's book (Waffle Haus side bet)
+	check("dolores: clean grill = zero burnt", main.dolores_bet_won("clean", {"burnt": 0}) and not main.dolores_bet_won("clean", {"burnt": 1}))
+	check("dolores: full house = 3 of 4 served", main.dolores_bet_won("house", {"delivered": 9, "orders": 12}) and not main.dolores_bet_won("house", {"delivered": 8, "orders": 12}))
+	check("dolores: a KO loses any bet", not main.dolores_bet_won("nowalk", {"walked": 0, "ko": true}))
+	main.waffle_bet = {"kind": "clean", "stake": 20}
+	var dm0: int = main.money
+	var dl: Array = main.dolores_settle({"burnt": 0})
+	check("dolores: a win pays stake x3 and counts", main.money == dm0 + 60 and int(main.story.get("dolores_w", 0)) >= 1 and dl.size() >= 1 and main.waffle_bet.is_empty())
+	main.waffle_bet = {"kind": "nowalk", "stake": 50}
+	dm0 = main.money
+	main.dolores_settle({"walked": 2})
+	check("dolores: a loss keeps the (already paid) stake", main.money == dm0 and int(main.story.get("dolores_l", 0)) >= 1)
+	check("dolores: no bet = nothing in the report", main.dolores_settle({}).is_empty())
+	# Chef's Bad Week
+	main.day_i = 1   # a weekday
+	main.clock = 600.0
+	main.day_count = 9
+	check("chef: not before day 10", not main.quest_talk("fork"))
+	main.dialog.clear()
+	main.day_count = 10
+	check("chef: offered at the {fork_nick} door", main.quest_talk("fork") and SQ.stage(main.side_quests, "chef") == 1)
+	main.dialog.clear()
+	check("chef: day 1 forces the inspector", main.chef_force().get("inspector", false) == true)
+	main.chef_shift_done({"grade": "B", "inspector": "fail"})
+	check("chef: failed inspection = try again", SQ.stage(main.side_quests, "chef") == 1)
+	main.chef_shift_done({"grade": "B", "inspector": "pass"})
+	check("chef: a passed inspection (C+) moves to day 2", SQ.stage(main.side_quests, "chef") == 2)
+	main.dialog.clear()
+	check("chef: one bad day per day", main.chef_force().is_empty() and not main.quest_talk("fork"))
+	main.day_count = 11
+	check("chef: day 2 = the walk-in (86'd)", main.chef_force().get("eighty_six", false) == true)
+	main.chef_shift_done({"grade": "C"})
+	main.day_count = 12
+	main.chef_force()
+	main.chef_shift_done({"grade": "C"})
+	check("chef: the critic needs a B", SQ.stage(main.side_quests, "chef") == 3)
+	main.day_count = 13
+	main.chef_force()
+	var chm0: int = main.money
+	main.chef_shift_done({"grade": "A"})
+	check("chef: B+ on day 3 finishes, pays $150", SQ.is_done(main.side_quests, "chef") and main.money == chm0 + 150 and main.achievements.has("Chef's Right Hand"))
+	main.dialog.clear()
+	check("chef: done = the door just clocks in", not main.quest_talk("fork") and main.chef_force().is_empty())
+	main.dialog.clear()
+	# The Cats' Heist
+	main.side_quests = {}
+	main.day_count = 6
+	main.clock = 600.0
+	check("cats: feeding them starts it (day 6+)", main.quest_talk("bowls") and SQ.stage(main.side_quests, "cats") == 1)
+	main.dialog.clear()
+	check("cats: daytime = not now", main.quest_talk("freya") and not SQ.has_clue(main.side_quests, "cats", "night:6"))
+	main.dialog.clear()
+	main.clock = 1300.0
+	check("cats: night = one heist try", main.quest_talk("freya") and SQ.has_clue(main.side_quests, "cats", "night:6") and main.overlay_node != null)
+	main.close_overlay()
+	main.dialog.clear()
+	var ce0: float = main.energy
+	main.heist_result(false)
+	check("cats: woke the baby = energy hit, same item", main.energy < ce0 and SQ.stage(main.side_quests, "cats") == 1)
+	check("cats: one try a night", main.quest_talk("freya") and main.overlay_node == null)
+	main.dialog.clear()
+	main.heist_result(true)
+	main.heist_result(true)
+	main.heist_result(true)
+	check("cats: three heists finish it, +3 treats, achievement", SQ.is_done(main.side_quests, "cats") and main.achievements.has("Cat Burglar Burglar") and SQ.has_clue(main.side_quests, "cats", "binky"))
+	main.dialog.clear()
+	check("cats: done = Freya's menu again", not main.quest_talk("freya"))
+	main.dialog.clear()
+	main.close_overlay()
+	# Porch Pirate King
+	main.day_count = 8
+	check("king: locked until the porch mystery is done", not SQ.offerable(main.side_quests, "king", 8, false, main.quest_ctx()))
+	SQ.finish(main.side_quests, "porch")
+	check("king: Chad's door shows up once porch is done", main.quest_interactables().any(func (it): return str(it["id"]) == "quest_neighbor"))
+	check("king: Chad snitches -> runners", main.quest_talk("neighbor") and SQ.stage(main.side_quests, "king") == 2)
+	main.dialog.clear()
+	var kid: Array = main.quest_interactables().map(func (it): return str(it["id"]))
+	check("king: three box stacks on the street", kid.has("quest_north") and kid.has("quest_east") and kid.has("quest_south"))
+	check("king: a stack spawns a fleeing runner", main.quest_talk("north") and main.get_tree().get_nodes_in_group("enemy").any(func (e): return e.has_meta("quest_king")))
+	main.clear_enemies()
+	main.dialog.clear()
+	main.king_runner_caught("north")
+	main.king_runner_caught("east")
+	main.king_runner_caught("south")
+	check("king: three runners -> the garage", SQ.stage(main.side_quests, "king") == 3 and main.quest_interactables().any(func (it): return str(it["id"]) == "quest_garage"))
+	var km0: int = main.money
+	main.king_won()
+	check("king: the garage pays $200, achievement", SQ.is_done(main.side_quests, "king") and main.money == km0 + 200 and main.achievements.has("Kingslayer (Porch Division)"))
+	main.dialog.clear()
+	check("brittany quests: king boss exists", preload("res://scripts/boss.gd").BOSSES.has("king"))
+	# Trivia night
+	main.day_i = 3   # Thursday
+	main.day_count = 11
+	main.clock = 1140.0
+	check("trivia: Thursday evening = the club door is open", main.trivia_tonight() and main.quest_interactables().any(func (it): return str(it["id"]) == "trivia"))
+	main.clock = 600.0
+	check("trivia: not in the daytime", not main.trivia_tonight())
+	main.day_i = 4
+	main.clock = 1140.0
+	check("trivia: not on a Friday", not main.trivia_tonight())
+	var b0: int = main.trivia_bros_score()
+	check("trivia: the bros score 3-6 and it's steady per night", b0 >= 3 and b0 <= 6 and b0 == main.trivia_bros_score())
+	main.story.erase("trivia_w")
+	var tm0: int = main.money
+	main.trivia_result(6, 4)
+	check("trivia: a win pays the half pot", main.money == tm0 + main.TRIVIA_POT and int(main.story["trivia_w"]) == 1)
+	tm0 = main.money
+	main.trivia_result(2, 5)
+	check("trivia: a loss costs nothing", main.money == tm0 and int(main.story.get("trivia_l", 0)) >= 1)
+	main.trivia_result(4, 4)
+	main.trivia_result(7, 3)
+	tm0 = main.money
+	main.trivia_result(5, 3)
+	check("trivia: four wins = season prize + achievement", main.achievements.has("Trivia Night Champs") and main.money == tm0 + main.TRIVIA_POT + 100)
+	check("trivia: every question has 4 answers", preload("res://scripts/minigames/trivia.gd").TRIVIA.all(func (q): return (q["a"] as Array).size() == 4 and str(q["why"]) != ""))
+	main.dialog.clear()
+	# Neighborhood Watch
+	main.side_quests = {}
+	main.story.erase("watch_day")
+	main.story.erase("watch_n")
+	check("watch: nothing until the porch mystery is solved", main.watch_today().is_empty() and main.watch_new_day().is_empty())
+	SQ.finish(main.side_quests, "porch")
+	check("watch: a request in the morning + a spot outside", not main.watch_new_day().is_empty() and main.quest_interactables().any(func (it): return str(it["id"]) == "quest_watch"))
+	var wm0: int = main.money
+	var wk: = str(main.watch_today()["kind"])
+	main.watch_done()
+	check("watch: done pays and clears today", main.money == wm0 + (15 if wk == "find" else 25) and main.watch_today().is_empty())
+	for i in 6:
+		main.day_count += 1
+		main.watch_done()
+	check("watch: 7 done = Block Captain", main.achievements.has("Block Captain"))
+	main.day_count += 1
+	var shoo: = -1
+	for i in main.WATCH.size():
+		if str(main.WATCH[i]["kind"]) == "shoo":
+			shoo = i
+	main.day_count = shoo + main.WATCH.size() * 3
+	check("watch: a shoo request spawns somebody to shoo", main.quest_talk("watch") and main.get_tree().get_nodes_in_group("enemy").any(func (e): return e.has_meta("watch")))
+	main.clear_enemies()
+	main.dialog.clear()
+	main.side_quests = {}
+	# Nov 19 story keys survive save -> load (clean_story whitelists them)
+	main.story["britt_iou"] = true
+	main.story["dolores_w"] = 2
+	main.story["trivia_w"] = 3
+	main.story["watch_n"] = 5
+	var sd: Dictionary = JSON.parse_string(JSON.stringify(main.to_dict()))
+	main.from_dict(sd)
+	check("save: IOU, Dolores, trivia, watch survive a reload", bool(main.story.get("britt_iou", false)) and int(main.story.get("dolores_w", 0)) == 2 and int(main.story.get("trivia_w", 0)) == 3 and int(main.story.get("watch_n", 0)) == 5)
+	check("brittany quests: boss entries exist", preload("res://scripts/boss.gd").BOSSES.has("brayden") and preload("res://scripts/boss.gd").BOSSES.has("earljr"))
+	main.close_overlay()
 	main.side_quests = {}
 	main.day_count = dc0
 	main.clock = ck0
 	main.dialog.clear()
 	main.show_hidden_quests = false
 	main.dialog.clear()
+
+## Lunch Thief stakeout: by night the back door starts the Brayden fight; a win reveals Gerald (stage 3).
+func lunch_ok(main: Node) -> bool:
+	var SQ: = preload("res://scripts/side_quests.gd")
+	main.clock = 1380.0
+	main.energy = 100.0
+	main.quest_talk("backdoor")
+	var started: bool = main.arena_mode == "quest" and main.quest_fight == "brayden"
+	main.dialog.clear()
+	if main.arena_boss:
+		main.quest_fight_won(main.arena_boss)
+	main.clock = 600.0
+	return started and SQ.stage(main.side_quests, "lunch") == 3 and SQ.has_clue(main.side_quests, "lunch", "Gerald") and main.location == "outside"
 
 ## Madison's mornings (mornings.gd): rolls, the slow-morning chores, the 10 AM self-up text, saves.
 func _morning_checks(main: Node) -> void:

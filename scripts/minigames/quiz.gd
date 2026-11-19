@@ -4,6 +4,7 @@ const Bank: = preload("res://scripts/minigames/quiz_bank.gd")
 const Q_TIME: = 15.0
 
 var count: = 5
+var bank: Array = []   # trivia.gd swaps in its own questions
 var picks: Array = []
 var idx: = 0
 var order: Array = []
@@ -19,7 +20,9 @@ func _setup() -> void:
 	backdrop_dim = 0.45
 	time_limit = 0.0
 	space_is_pen = false
-	var ids: = range(Bank.BANK.size())
+	if bank.is_empty():
+		bank = Bank.BANK
+	var ids: = range(bank.size())
 	ids.shuffle()
 	picks = ids.slice(0, count)
 	var rects: = [Rect2(6, 96, 151, 37), Rect2(163, 96, 151, 37), Rect2(6, 138, 151, 37), Rect2(163, 138, 151, 37)]
@@ -32,7 +35,7 @@ func _setup() -> void:
 	_load_q()
 
 func current() -> Dictionary:
-	return Bank.BANK[picks[mini(idx, count - 1)]]
+	return bank[picks[mini(idx, count - 1)]]
 
 func _load_q() -> void:
 	order = [0, 1, 2, 3]

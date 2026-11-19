@@ -94,6 +94,32 @@ const BOSSES: = {
 		"taunts": ["Smell that? That's me. That's always been me.", "The last health inspector came down here once. He's still down here. Kidding. Mostly.", "Change the oil? Change the OIL? I AM the oil.", "Your mop is a toothbrush to me."],
 		"rage": "The Grease Trap: Fine. Deep fry mode. 375 degrees of feelings.",
 		"defeat": "The Grease Trap: ...Okay. Okay. I'll go back down the drain. Tell Chef to call a plumber. A real one this time." },
+	# Side quest "Who Ate {coworker}'s Lunch?": the thief, caught at the side door after close. Borrows the 2x sushi
+	# chef sheet (kitchen whites + headband), warm tint; the old 1x ch_grillboy looked blurry next to the HD cast.
+	# Short fight: he's a kid with a spatula, not a boss.
+	"brayden": {"name": "Grill-Boy Brayden", "hp": 90.0, "attacks": ["posting", "charge"], "sprite": "sushi_chef", "tint": Color(1.0, 0.93, 0.85),
+		"labels": {"post": "BURNT" }, "tele": {"posting": "*flings a burnt patty*", "charge": "I CAN EXPLAIN! *does not explain*" },
+		"intro": "Grill-Boy Brayden: It's not what it looks like! It's... okay it's exactly what it looks like. But there's a REASON.",
+		"taunts": ["I burn food because I care TOO much.", "Chef says I'm 'a lot'. I say I'm 'a vibe'.", "This spatula has seen things.", "Please don't tell her. She has a camera. She ALWAYS has a camera."],
+		"rage": "Grill-Boy Brayden: Fine! Well-done mode! Like everything I cook!",
+		"defeat": "Grill-Boy Brayden: Okay! OKAY. I'll show you. Just... be cool. He's shy." },
+	# Side quest "Double or Nothing": Dolores's book at the Waffle Haus sends her fighter. Earl's son, borrowing
+	# Earl's sheet with a tint (same build, forty years younger, somehow older).
+	"earljr": {"name": "Earl Jr.", "hp": 240.0, "attacks": ["curl", "charge", "posting", "curl"], "sprite": "regular",
+		"tint": Color(0.82, 0.9, 1.0), "swap": {"dumbbell": "mug" }, "labels": {"post": "DECAF" },
+		"tele": {"curl": "*slurps Dad's coffee. Louder than Dad.*", "charge": "That's MY dad's stool's COUSIN!", "posting": "*hurls a sugar packet. Several.*" },
+		"intro": "Earl Jr.: Dolores says you're the line cook. Dad says you make good hash browns. I'm gonna make YOU hash browns.",
+		"taunts": ["Dad sat on that stool since '94. I've been standing since '96. Waiting.", "Dolores has forty on me. Dolores is never wrong.", "Refill! ...Sorry. Family habit.", "Your coworker's filming. Get my good side. It's both."],
+		"rage": "Earl Jr.: Okay. I'm putting down Dad's coffee. NOBODY puts down Dad's coffee.",
+		"defeat": "Earl Jr.: ...Tell Dolores I tried. Tell Dad I didn't. He'll be proud either way." },
+	# Side quest "Porch Pirate King": the buyer behind every porch pirate. Biggest pirate sheet, gold tint.
+	"king": {"name": "The Porch Pirate King", "hp": 210.0, "attacks": ["posting", "charge", "coins"], "sprite": "pirate3",
+		"tint": Color(1.0, 0.9, 0.55), "labels": {"post": "SIGN HERE", "coin": "BOX" },
+		"tele": {"posting": "*holds up a delivery slip* 'Sorry we missed you.'", "charge": "Signature REQUIRED!", "coins": "*throws your own packages at you*" },
+		"intro": "The Porch Pirate King: Every box on this block passes through me. I'm not a thief. I'm a LOGISTICS COMPANY.",
+		"taunts": ["Left at front door. Then left with ME.", "Your order has been delayed. By me. Forever.", "I have a five-star seller rating. All the reviews are stolen too.", "Free shipping! From your porch to my garage."],
+		"rage": "The Porch Pirate King: That's it. Two-day shipping. Two days in the HOSPITAL.",
+		"defeat": "The Porch Pirate King: ...Return to sender. Return to sender! Take it all, just take the crown off me, it's taped to my hair." },
 	"coupon": {"name": "Coupon Carol", "hp": 150.0, "attacks": ["storm", "coins", "update"],
 		"labels": {"coin": "%", "trap": "EXP", "coupon": "EXP" }, "tele": {"coins": "These are DEFINITELY still valid!", "update": "Expired? It's EXTENDED. In my heart.", "storm": "*upends a purse made entirely of coupons*" },
 		"intro": "Coupon Carol: 46 coupons, sweetie. Every one's for a different restaurant. Honor ALL of them.",
