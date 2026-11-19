@@ -77,11 +77,35 @@ const LOW_K: = 1.5
 ## Tilt-shift diorama blur (shaders/tilt_shift.gdshader) on this container: only the 3D frame, off in Lite.
 var tilt_mat: ShaderMaterial
 
+## Depth pass (Nov 19, Duff: "slightly more of a three-dimensional feel"). All of it is off in Lite.
+## Camera sway: the follow camera turns a few degrees round Duff as he walks off centre (and leads his walk a
+## little), so near things slide past far ones and the box sides of the buildings show. Standing cards turn with
+## it, so nobody goes paper-thin. Fights open with a short push-in.
+const YAW_MAX: = 7.0            # degrees at the map's (or room's) edge
+const YAW_ROOM: = 4.0
+const YAW_LEAD: = 2.0           # extra degrees toward where Duff is walking
+var yaw: = 0.0                  # current camera yaw, degrees (smoothed)
+var _last_p: = Vector2.INF
+var _room_key: = ""
+var _push: = 0.0                # 1 at a fight's start, eases to 0
+const PUSH_T: = 1.1
+## Round cut-outs: characters, trees and street props get shaders/card3d.gdshader (silhouette = height map, so
+## the sun and lamps wrap round them; trees bend in the wind). Facades stay flat painted cards.
+var card_shader: Shader = preload("res://shaders/card3d.gdshader")
+var ao_shader: Shader = preload("res://shaders/ao_blob.gdshader")
+var ao_nodes: Array = []        # contact shadows (buildings, props, room walls): hidden in Lite
+var round_cards: Array = []     # static dressing cards with the round material: [Sprite3D, ShaderMaterial]
+var wall_ao: MeshInstance3D
+
 func set_low(on: bool) -> void:
 	low = on
 	material = null if low else tilt_mat
 	vp.msaa_3d = Viewport.MSAA_DISABLED if low else Viewport.MSAA_2X
 	env.glow_enabled = not low
+	for a in ao_nodes:
+		(a as Node3D).visible = not low
+	for e in round_cards:
+		(e[0] as Sprite3D).material_override = null if low else e[1]
 	if low:
 		sun.shadow_enabled = false
 	elif live:
@@ -179,6 +203,7 @@ func _process(_d: float) -> void:
 	if not in_room:
 		floor_card.visible = false
 		wall_card.visible = false
+		wall_ao.visible = false
 	_sync_sky()
 	_sync_town()
 	_sync_actors(_d)
@@ -234,6 +259,7 @@ func _build_room_parts() -> void:
 			q.rotation_degrees.x = 90.0
 		q.set_meta("i", i)
 		room_dark.add_child(q)
+	wall_ao = _ao(world, Vector3.ZERO, Vector2(1, 0.01), 1.4, 0.42)
 	caption = Label3D.new()
 	caption.billboard = BaseMaterial3D.BILLBOARD_DISABLED
 	caption.outline_size = 8
@@ -266,6 +292,12 @@ func _place_room(name: String, tx: Texture2D, inf: Dictionary, pos: Vector2, isc
 		wall_card.region_rect = Rect2(0, 0, w, band)
 		wall_card.offset = Vector2.ZERO
 		wall_card.position = to3(base, 0.0)
+	# contact shadow where the back wall meets the floor
+	var ww: = w * isc / dens * U
+	(wall_ao.material_override as ShaderMaterial).set_shader_parameter("extent", Vector2(ww * 0.5, 0.01))
+	(wall_ao.mesh as PlaneMesh).size = Vector2(ww + 2.8, 2.82)
+	wall_ao.position = to3(base + Vector2(w * isc / dens * 0.5, 0), 0.006)
+	wall_ao.visible = band > 0.0 and not low
 	for q in room_dark.get_children():
 		if int(q.get_meta("i")) == 0:
 			q.position = to3(base, -0.02)
@@ -384,6 +416,55 @@ func _card() -> Sprite3D:
 	s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
 	return s
 
+## The round material for one card (shaders/card3d.gdshader). `dens` = art pixels per world unit: the bevel's
+## width is set in world units, so HD art (16 px/unit) rolls off as wide as the 4 px/unit sheets.
+func _round_mat(tx: Texture2D, dens: float, bevel: float = 1.0) -> ShaderMaterial:
+	var m: = ShaderMaterial.new()
+	m.shader = card_shader
+	m.set_shader_parameter("tex", tx)
+	m.set_shader_parameter("bevel", bevel)
+	m.set_shader_parameter("spread", 3.0 * maxf(1.0, dens / 4.0))
+	return m
+
+## Pool cards: reuse each card's own material, point it at this frame's texture.
+func _round_pool(s: Sprite3D, tx: Texture2D, dens: float, on: bool) -> void:
+	if not on or low:
+		s.material_override = null
+		return
+	var m: ShaderMaterial = s.get_meta("rm") if s.has_meta("rm") else null
+	if m == null:
+		m = _round_mat(tx, dens)
+		s.set_meta("rm", m)
+		s.set_meta("rm_tx", tx)
+		s.set_meta("rm_d", dens)
+	if s.get_meta("rm_tx") != tx:
+		m.set_shader_parameter("tex", tx)
+		s.set_meta("rm_tx", tx)
+	if float(s.get_meta("rm_d")) != dens:
+		m.set_shader_parameter("spread", 3.0 * maxf(1.0, dens / 4.0))
+		s.set_meta("rm_d", dens)
+	s.material_override = m
+
+## A soft dark contact shadow on the ground: a rounded rect (half size `half`, metres) fading out over `fall`.
+## Fakes the ambient occlusion the Compatibility renderer can't do: walls and props stop floating on the street.
+func _ao(parent: Node3D, centre: Vector3, half: Vector2, fall: float, strength: float) -> MeshInstance3D:
+	var q: = MeshInstance3D.new()
+	var pm: = PlaneMesh.new()
+	pm.size = (half + Vector2(fall, fall)) * 2.0
+	q.mesh = pm
+	var m: = ShaderMaterial.new()
+	m.shader = ao_shader
+	m.set_shader_parameter("extent", half)
+	m.set_shader_parameter("fall", fall)
+	m.set_shader_parameter("strength", strength)
+	q.material_override = m
+	q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	q.position = centre
+	parent.add_child(q)
+	ao_nodes.append(q)
+	q.visible = not low
+	return q
+
 ## Point a card at one cell of a 2D sheet (cell/origin/density from art_manifest.gd), feet on `foot`.
 func _show_cell(s: Sprite3D, sheet: String, col: int, row: int, foot: Vector2) -> void:
 	var tx: = Art.tex(sheet)
@@ -472,6 +553,9 @@ func _sync_actors(dt: float = 0.016) -> void:
 			var mod: Color = d[4]
 			s.modulate = mod
 			s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD if mod.a > 0.95 else SpriteBase3D.ALPHA_CUT_DISABLED
+			s.rotation_degrees.y = yaw   # face the swayed camera
+			# round only solid sheet frames (people, critters); fading cards and plain images keep the flat material
+			_round_pool(s, tx, dens, d[6] and mod.a > 0.95)
 			var pos: Vector2 = d[1]
 			if d[6]:   # sheet frame
 				var cell: Array = inf.get("cell", [tx.get_width(), tx.get_height()])
@@ -519,6 +603,7 @@ func _van(s: Sprite3D, name: String, at: Vector2, sc: Vector2, nudge: Vector3) -
 	s.texture = tx
 	s.region_enabled = false
 	s.rotation_degrees.x = 0.0
+	s.material_override = null
 	s.flip_h = name == "truck_h" and sc.y < 0.0   # get_scale() reports a mirror (negative determinant) on y
 	s.flip_v = false
 	s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
@@ -578,9 +663,20 @@ func _build_town() -> void:
 		else:
 			c.offset = Vector2(-float(org2[0]), -(float(tx2.get_height()) - float(org2[1])))
 			c.position = to3(p)
+			c.add_to_group("view3d_face")   # turns with the camera sway
+			var rm: = _round_mat(tx2, k2, 0.8)
+			var hm: = float(tx2.get_height()) * c.pixel_size
 			if it.get("tree", false):
 				c.set_meta("sway", randf() * TAU)
 				c.add_to_group("view3d_sway")
+				rm.set_shader_parameter("sway", clampf(hm * 0.035, 0.03, 0.18))
+				rm.set_shader_parameter("sway_phase", float(c.get_meta("sway")))
+				rm.set_shader_parameter("card_h", hm)
+			round_cards.append([c, rm])
+			c.material_override = null if low else rm
+			# contact shadow under its foot (wider for a tree's trunk spread / a bench's legs)
+			var wm: = float(tx2.get_width()) * c.pixel_size
+			_ao(town, to3(p, 0.012), Vector2(wm * 0.32, 0.12), 0.35 if it.get("tree", false) else 0.2, 0.45)
 		town.add_child(c)
 
 ## The painted facade is a card; behind it a solid box gives the building real depth: a roof you see past the
@@ -668,10 +764,25 @@ func _box(b: Dictionary, tx: Texture2D, k: float, left_x: float, bottom_y: float
 	cap.material_override = rmat
 	cap.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	root.add_child(cap)
+	# eave: a thin lip along the top of the facade that juts out over the street and throws a real shadow line
+	# down the painted front (coloured like the roof patch, a shade darker)
+	var eave: = MeshInstance3D.new()
+	var em: = BoxMesh.new()
+	var lip: = 0.22
+	em.size = Vector3(bw + 0.1, 0.07, lip)
+	eave.mesh = em
+	eave.position = Vector3(0, bh - 0.02, bd * 0.5 + lip * 0.5 + 0.03)
+	var emat: = _flat(_avg(strip, Rect2i(0, 0, strip.get_width(), strip.get_height())).darkened(0.25))
+	emat.emission_enabled = true
+	emat.emission = emat.albedo_color * 0.35
+	eave.material_override = emat
+	root.add_child(eave)
+	# contact shadow round the whole box (spills out in front of the facade onto the sidewalk)
+	_ao(root, Vector3(0, 0.008, 0.02), Vector2(bw * 0.5, bd * 0.5 + 0.03), 0.9, 0.5)
 	# 2D area where Duff is hidden behind this building: across its width, from the facade back past the box
 	# by as far as its top hides the ground from the ~38 degree camera (+ Duff's own height)
 	var hide_back: = bd / U + (bh / U) * CAM_OFF.z / CAM_OFF.y + 4.0
-	return {"mats": [wmat, rmat], "x0": left_x + float(x0) / k, "x1": left_x + float(x1) / k, "y0": bottom_y - hide_back, "y1": bottom_y - 2.0}
+	return {"mats": [wmat, rmat, emat], "x0": left_x + float(x0) / k, "x1": left_x + float(x1) / k, "y0": bottom_y - hide_back, "y1": bottom_y - 2.0}
 
 ## Duff behind a building: fade its facade and box see-through (like any 3D game), back to solid when he leaves.
 func _fade_buildings(delta: float) -> void:
@@ -794,8 +905,19 @@ func _sync_town() -> void:
 	if town.visible:
 		_sync_signs()
 	var t: = Time.get_ticks_msec() / 1000.0
+	var wind: = 1.0
+	var tl: Node = main.get("town_life")
+	if tl != null and tl.has_method("weather_kind"):
+		wind = {"rain": 1.7, "snow": 1.3}.get(str(tl.weather_kind()), 1.0)
 	for s in get_tree().get_nodes_in_group("view3d_sway"):
-		s.rotation_degrees.z = sin(t * 1.3 + float(s.get_meta("sway"))) * 0.9
+		if low:   # flat material: the old whole-card rock
+			s.rotation_degrees.z = sin(t * 1.3 + float(s.get_meta("sway"))) * 0.9
+		else:
+			s.rotation_degrees.z = 0.0
+	for e in round_cards:
+		(e[1] as ShaderMaterial).set_shader_parameter("wind", wind)
+	for s in get_tree().get_nodes_in_group("view3d_face"):
+		(s as Node3D).rotation_degrees.y = yaw
 	for e in buildings:
 		var tint: = Color(0.72, 0.72, 0.78) if main.building_shut(e[0]) else Color.WHITE
 		tint.a = float(e[3])
@@ -946,6 +1068,7 @@ func _room_light() -> void:
 	env.adjustment_contrast = 1.1
 	env.background_color = Color("#141018")
 	env.fog_enabled = false
+	env.fog_mode = Environment.FOG_MODE_EXPONENTIAL
 
 ## Sun, ambient and sky follow the same clock keys as the 2D grade (hd_presentation.gd SKY).
 func _sync_sky() -> void:
@@ -973,10 +1096,31 @@ func _sync_sky() -> void:
 	env.background_color = Color("#9cc8e8").lerp(sky, 0.5).darkened(dark * 0.6)
 	env.fog_light_color = Color("#c8dcef").lerp(sky, 0.6).darkened(dark * 0.5)
 	env.fog_enabled = true
-	env.fog_density = lerpf(0.0012, 0.004, maxf(warm, dark))
+	# distance haze: the street up the screen (further from the camera) goes a little paler and bluer
+	env.fog_mode = Environment.FOG_MODE_DEPTH
+	# (it starts well short of Duff: the old flat fog lifted his black shirt at night; keep that much at his depth)
+	env.fog_depth_begin = lerpf(19.0, 6.0, dark)
+	env.fog_depth_end = 52.0
+	env.fog_depth_curve = 1.1
+	env.fog_density = lerpf(lerpf(0.24, 0.3, warm), 0.4, dark) if not low else 0.1
 
 func _cam_off() -> Vector3:
-	return CAM_OFF
+	return CAM_OFF.rotated(Vector3.UP, deg_to_rad(yaw))
+
+## Where the camera yaw wants to be: off-centre Duff turns it toward the middle (you see past him into the
+## street), and it leads a little toward where he walks. Rooms turn less (their painted walls end at the sides).
+func _yaw_target(dt: float) -> float:
+	if low or main.player == null:
+		return 0.0
+	var p: Vector2 = main.player.position
+	var v: = 0.0
+	if _last_p != Vector2.INF and dt > 0.0:
+		v = clampf((p.x - _last_p.x) / dt / 60.0, -1.0, 1.0)
+	_last_p = p
+	var rr: = room()
+	if rr.size != Vector2.ZERO:
+		return clampf((p.x - rr.get_center().x) / (rr.size.x * 0.5), -1.0, 1.0) * YAW_ROOM + v * YAW_LEAD * 0.5
+	return clampf((p.x - 320.0) / 210.0, -1.0, 1.0) * YAW_MAX + v * YAW_LEAD
 
 func _cam_target() -> Vector3:
 	var rr: = room()
@@ -995,6 +1139,17 @@ func _cam_target() -> Vector3:
 	return to3(c, 0.8)
 
 func _sync_cam() -> void:
+	var dt: = get_process_delta_time()
+	# a new room (door, fight) snaps the yaw too; a fight opens with a short push-in
+	var key: = str(main.location) + ":" + str(main.arena_id)
+	if key != _room_key:
+		var first: = _room_key == ""
+		_room_key = key
+		_last_p = Vector2.INF
+		yaw = _yaw_target(0.0)
+		_push = 1.0 if str(main.location) == "arena" and not first and not low else 0.0
+	yaw = lerpf(yaw, _yaw_target(dt), clampf(dt * 1.8, 0.0, 1.0))
+	_push = move_toward(_push, 0.0, dt / PUSH_T)
 	var want: = _cam_target() + _cam_off()
 	# snap on a room change (doors cut in 2D too), glide while walking the town
 	var jump: = cam_base.distance_to(want) > 30.0
@@ -1006,7 +1161,8 @@ func _sync_cam() -> void:
 	var off: = c2.offset if c2 != null else Vector2.ZERO
 	cam.position += cam.basis.x * off.x * U - cam.basis.y * off.y * U
 	var punch: = c2.zoom.x / 2.0 if c2 != null and c2.zoom.x > 0.0 else 1.0
-	cam.fov = CAM_FOV / clampf(punch, 0.9, 1.2)
+	var ease: = _push * _push * (3.0 - 2.0 * _push)   # smoothstep: holds close a beat, then eases out
+	cam.fov = CAM_FOV / clampf(punch, 0.9, 1.2) * (1.0 - 0.1 * ease)
 
 ## What the 2D world still draws under the 3D view (sparks, slashes, damage numbers, HP bars, telegraphs,
 ## speech bubbles) is laid over the 3D frame: the world canvas gets the affine map that best matches the
