@@ -29,6 +29,9 @@ func _init() -> void:
 	for n in au.STINGS:
 		check("EDM sting sting_%s.wav ships" % n, ResourceLoader.exists("res://assets/audio/sting_%s.wav" % n))
 	check("EDM off: original first", au._music_candidates("boss") == ["boss"])
+	var layout: = load("res://default_bus_layout.tres") as AudioBusLayout
+	check("web audio: Music + SFX buses exist at boot (default_bus_layout.tres; runtime add_bus is silent in web sample playback)",
+		layout != null and str(layout.get("bus/1/name")) == "Music" and str(layout.get("bus/2/name")) == "SFX")
 	var street_globs: Array = load("res://tools/make_extra_pack.gd").STREET
 	for mname in ["home", "neighborhood", "boss"]:   # title, cold open, Marketplace Mike: street.pck, both soundtracks
 		for pre in ["", "edm_"]:
