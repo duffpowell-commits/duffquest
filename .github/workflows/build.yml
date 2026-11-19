@@ -157,6 +157,10 @@ jobs:
             grep -q "postMessage('update')" $d/index.html
           done
           test -s build/pages/family/index.pck
+          # itch description copy page (docs/itch/copy.html): https://duffpowell-commits.github.io/duffquest/itch/
+          mkdir -p build/pages/itch
+          cp docs/itch/copy.html build/pages/itch/index.html
+          cp docs/itch/page.html build/pages/itch/page.html
           touch build/pages/.nojekyll
           ls -la build/pages
           grep -o '<head>.\{0,400\}' build/pages/index.html | head -c 600; echo

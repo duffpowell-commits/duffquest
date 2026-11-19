@@ -1,6 +1,6 @@
 # Duff Quest: itch page copy (Nov 9, 2026)
 
-**Nov 19: the live description is `docs/itch/page.html` (HTML). Edit that file; on merge to main the itch page bot (`.github/workflows/itch_page.yml`) pastes it into itch. The copy below is the older source.**
+**Nov 19: the live description is `docs/itch/page.html` (HTML). Edit that file; paste it into itch from https://duffpowell-commits.github.io/duffquest/itch/ (the bot is disabled). Footage lives in `docs/itch/slots/`. The copy below is the older source.**
 
 Page: https://dufftkyosht.itch.io/duff-quest. Paste-ready. Real names are approved for public (Nov 9); get each real person's OK in writing before ads go out (docs/legal/RISK_AUDIT.md).
 Not entering the itch "2026 Jam" (it bans AI art). Images: `cover.png`, `logo_banner.png`, `icon_512.png`, `screens/`, `knockout.gif`, `boss_intro.gif`.
