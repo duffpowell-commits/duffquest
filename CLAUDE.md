@@ -258,6 +258,11 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   test_daily checks it). Multi-phase games override `coach_key()` and call `coach_start()` / `coach_done()` per phase
   (see prep.gd). `coach_pace = false` in `_setup` = card only. Renders: `ui_audit_shot.tscn -- coach`.
 
+- **Signing key (Nov 19):** every APK is signed with the shared games key (`signing/games.keystore.enc`, same as
+  Lethemoor + godot-game-starter), unlocked by the `LM_KEYSTORE_PASS` repo secret; `version/code` = CI run number.
+  Never generate a new key. Copies installed before this need one last uninstall. No in-app updater yet (gap report:
+  /mnt/project-files/game-starter/gap_report_2026-11-19.md; godot-game-starter has the one to port).
+
 ## Next (in order)
 0. **Visual plan built Nov 17** (living town, UI motion, diorama 3D, fight impact; TRACKER entry): needs Duff's
    phone test, mainly the tilt-shift cost on his Android (perf_guard Lite turns it off). Store screens re-shot Nov 17 late.
