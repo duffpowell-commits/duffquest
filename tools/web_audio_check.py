@@ -59,7 +59,7 @@ class Quiet(http.server.SimpleHTTPRequestHandler):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("web", nargs="?", default="build/web")
-    ap.add_argument("--listen", type=float, default=8.0, help="seconds to listen per scene")
+    ap.add_argument("--listen", type=float, default=30.0, help="max seconds to wait for sound on the title")
     ap.add_argument("--timeout", type=float, default=240.0, help="seconds to reach the title")
     a = ap.parse_args()
     web = os.path.abspath(a.web)
@@ -98,10 +98,16 @@ def main():
             # a click unlocks the AudioContext like a real first tap would (autoplay flag covers most of it)
             page.mouse.click(640, 40)
             page.evaluate("window.__dq_peak = 0")
-            time.sleep(a.listen)
+            # the title theme rides street.pck, which mounts a few seconds after the title shows (CI once read
+            # 0.000 over a fixed 8 s): listen until it plays or the window runs out
+            t1 = time.time()
+            while time.time() - t1 < a.listen and page.evaluate("window.__dq_peak") < PEAK_MIN:
+                time.sleep(0.5)
+            time.sleep(1.0)
             peak = page.evaluate("window.__dq_peak")
+            print("first sound after %.1f s" % (time.time() - t1 - 1.0) if peak >= PEAK_MIN else "no sound in %.0f s" % a.listen)
             n = page.evaluate("window.__dq_ctx")
-            print("title: peak %.3f over %.0f s (%d audio context(s) tapped)" % (peak, a.listen, n))
+            print("title: peak %.3f (%d audio context(s) tapped)" % (peak, n))
             print("audio context:", page.evaluate("(() => { const c = window.__dq_ac; return c ? {state: c.state, t: c.currentTime, rate: c.sampleRate, lat: c.baseLatency} : null; })()"))
             if peak < PEAK_MIN:
                 fails.append("title is silent (peak %.3f < %.2f)" % (peak, PEAK_MIN))
