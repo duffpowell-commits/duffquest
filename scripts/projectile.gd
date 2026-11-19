@@ -99,7 +99,7 @@ func _special(delta: float) -> void:
 				radius += 120.0 * delta
 				if p and not used and absf(global_position.distance_to(p.global_position) - radius) < 5.0:
 					used = true
-					if not p.rolling():
+					if not p.rolling() and not p.invulnerable():   # audit Nov 19: no stun during i-frames
 						m.stun_player(0.9, "The bass DROPPED. So did I. Damn.")
 						m.hurt_player(dmg, global_position, 120.0, "bass")
 				if radius > 220.0:
@@ -142,13 +142,13 @@ func _special(delta: float) -> void:
 				radius += 110.0 * delta
 				if p and not used and absf(global_position.distance_to(p.global_position) - radius) < 5.0:
 					used = true
-					if not p.rolling():
+					if not p.rolling() and not p.invulnerable():
 						m.stun_player(1.0, _thrower_line("stun_wave", "Your {hero} ran into a problem and needs to restart."))
 						m.hurt_player(dmg, global_position, 0.0, "bsod" if kind == "wave" else kind)
 				if radius > 220.0:
 					life = 0.0
 		"trap":
-			if fuse <= 0.0 and _hit_check(8.0) and not p.rolling():
+			if fuse <= 0.0 and _hit_check(8.0) and not p.rolling() and not p.invulnerable():
 				m.stun_player(1.5, _thrower_line("stun_trap", "Installing update 1 of 47... do not turn off your {hero}."))
 				m.hurt_player(dmg, global_position, 0.0, "update")
 				life = 0.0

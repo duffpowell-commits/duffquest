@@ -14,7 +14,7 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - name: Install Godot
@@ -33,8 +33,17 @@ jobs:
             fi
           done
           exit $fail
+      - name: Unit tests (tools/test_daily.gd)
+        # Audit Nov 19: CI never ran the suite, so its checks (leak words, art_rects bake, _pub copies, button gaps,
+        # how-to cards, saves...) were only enforced on a session's machine. A failure now stops the ship.
+        run: |
+          set -o pipefail
+          XDG_DATA_HOME="$RUNNER_TEMP/xdg" timeout 900 godot --headless --path . --script tools/test_daily.gd 2>&1 | tee daily.log
+          grep -q "ALL PASS (0 failed)" daily.log
+          ! grep -E "SCRIPT ERROR|Parse Error" daily.log
       - name: Smoke test (boot, new game, walk, phone)
         run: |
+          set -o pipefail
           sudo apt-get install -y -qq xvfb >/dev/null
           xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 --quit-after 600 2>&1 | tee smoke.log
           ! grep -E "SCRIPT ERROR|Parse Error" smoke.log

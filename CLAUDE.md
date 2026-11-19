@@ -272,6 +272,7 @@ History of everything built: `TRACKER.md` (newest first).
   as four tiny 1x guys in 3D). Fix: `rm .godot/editor/filesystem_cache10`, delete `.godot/imported/<file>-*` for any
   file whose params you changed, `--import`, and commit the new `.godot/imported` files (CI ships the committed ones
   when md5s match).
+- **CI runs test_daily too (Nov 19):** build.yml's test job fails unless it prints `ALL PASS (0 failed)`, so a red suite no longer ships.
 - **Tests (before every push):** `XDG_DATA_HOME=/tmp/xdg_x godot --headless --path . --script tools/test_daily.gd`
   must print `ALL PASS (0 failed)` with no `SCRIPT ERROR`; then `git checkout -- .godot/exported`.
 - Soak (30 days, every system through real code, ~10+ min):

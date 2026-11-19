@@ -14,6 +14,7 @@ var cream_scores: Array = []
 var cherries: Array = []
 var cherry_scores: Array = []
 var cream_used: Array = []
+var cherry_used: Array = []
 
 func _setup() -> void:
 	title = "Dessert: Black Forest Garnish"
@@ -79,9 +80,16 @@ func tap(p: Vector2) -> void:
 			phase = "cherry"
 			flash("Cherry on each rosette.", Color.WHITE, 1.0)
 	elif phase == "cherry":
+		# Audit Nov 19: each rosette takes one cherry (all three on one used to score 100%).
 		var bd2: = 1000000000.0
-		for c in creams:
-			bd2 = minf(bd2, p.distance_to(c))
+		var bi: = -1
+		for i in creams.size():
+			if cherry_used.has(i): continue
+			var dd: = p.distance_to(creams[i])
+			if dd < bd2:
+				bd2 = dd
+				bi = i
+		cherry_used.append(bi)
 		cherries.append(p)
 		cherry_scores.append(clampf(1.0 - bd2 / 10.0, 0.0, 1.0))
 		if cherries.size() >= 3:

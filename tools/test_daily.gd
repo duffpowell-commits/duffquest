@@ -1538,6 +1538,25 @@ func _side_quest_checks(main: Node) -> void:
 	check("audit: Thanksgiving bonus day survives a reload", int(dd0["thanks_day"]) == 27)
 	main.dialog.clear()
 	main.close_overlay()
+	# second audit (Nov 19)
+	var gs = GroceryS.new()
+	check("audit2: grocery respawn points are never inside a shelf", not gs._blocked(gs._free_near(gs.COUPON.get_center() + Vector2(-30, -1))) and not gs._blocked(gs._free_near(gs.KIOSK.get_center() + Vector2(30, -1))) and not gs._blocked(gs._free_near(Vector2(274, 125))))
+	gs.free()
+	var HudS: = preload("res://scripts/hud.gd")
+	var ff: = ThemeDB.fallback_font
+	var long: = "This is a long dialogue line that needs wrapping across several rows so the cache has something to do here."
+	check("audit2: cached dialogue wrap = uncached", HudS.wrap_words(ff, long, 120.0, 7) == HudS._wrap_uncached(ff, long, 120.0, 7) and HudS.wrap_words(ff, long, 120.0, 7) == HudS._wrap_uncached(ff, long, 120.0, 7))
+	main.gala_unlocked = true
+	main.gala_beaten = true
+	main.gala_day = main.day_count
+	main.dialog.clear()
+	main.start_gala()
+	check("audit2: one gala rematch a day", main.location != "gala")
+	main.dialog.clear()
+	main.gala_day = -1
+	main.gala_unlocked = false
+	main.gala_beaten = false
+	check("audit2: Demon Time has a hard cap", main.combat.DEMON_MAX > 0.0 and main.combat.DEMON_MAX < 60.0)
 	check("brittany quests: boss entries exist", preload("res://scripts/boss.gd").BOSSES.has("brayden") and preload("res://scripts/boss.gd").BOSSES.has("earljr"))
 	main.close_overlay()
 	main.side_quests = {}

@@ -336,7 +336,8 @@ func _rush_done(res: Dictionary) -> void:
 	_rush_next()
 
 func _process(delta: float) -> void:
-	if mode == "rush" and current and not (current is Card) and not bool(current.get("done")):
+	# Audit Nov 19: the rush clock ran while the how-to card was open (first rush = lost seconds on a menu).
+	if mode == "rush" and current and not (current is Card) and not bool(current.get("done")) and not bool(current.get("coach_open")):
 		rush_t += delta
 		rush_spawn += delta
 		if rush_spawn >= 7.0:
