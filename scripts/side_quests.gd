@@ -102,9 +102,9 @@ const LIST: = [
 	{
 		"id": "king", "kind": "mystery", "title": "Porch Pirate King", "giver": "neighbor", "ready": true, "from_day": 8,
 		"after": "porch",
-		"pitch": "Cheeto Chad sold the boxes to somebody. Everybody sells to the King.",
+		"pitch": "{chad} sold the boxes to somebody. Everybody sells to the King.",
 		"stages": [
-			{"text": "Hear Cheeto Chad out.", "at": "neighbor"},
+			{"text": "Hear {chad} out.", "at": "neighbor"},
 			{"text": "Catch the King's three runners: stacks of boxes around the block (north, east, south).", "at": ""},
 			{"text": "The receipts all say 'STORAGE, BEHIND HOA HQ'. Hit the King's garage.", "at": "garage"},
 		],
