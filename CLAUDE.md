@@ -27,7 +27,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 - **Side quests (Nov 12):** `scripts/side_quests.gd` + phone Notes journal + `!`/`?` markers + typewriter dialogue.
   New quests: add to `SideQuests.LIST`, wire triggers in main.gd, then flip `ready: true`. Dev: Settings > "Dev:
-  quests" (debug builds), `#dq=quest:<id>:<stage>` (web), `arena_shot` ids `quest` / `type` / `notes`.
+  quests" (debug builds), `#dq=quest:<id>:<stage>` (web; since Nov 19 a `#dq=` link saves to its own slot `DEV_LINK_SAVE`, never the player's save), `arena_shot` ids `quest` / `type` / `notes`.
   **Live: porch mystery** (day 2+, ends fighting Cheeto Chad; `arena_shot` `porch` / `chad`) and **The Grease Trap**
   (day 4+, 86 List after 10 PM, boss `grease` reuses Grill-Boy tinted; `arena_shot` `grease86` / `bounty:grease`).
   **Brittany's Side Gig** (day 5+, cover-or-rat choice card, payoff next day; `arena_shot` `gig`).
@@ -217,7 +217,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   wall (stands in for SSAO, which Compatibility lacks). Raised curbs were dropped: the street is one painting with no
   curb data. (4) Trees bend from the crown in the shader (`sway`), gustier in rain/snow (`wind`). (5) Haze = depth fog
   (`FOG_MODE_DEPTH`, starts 19 m by day, 6 m at night: the old flat fog lifted Duff's black shirt at night, keep that).
-  (6) Eaves: a thin lip along each building box top (`_box`). Render `docs/renders/depth_pass_before_after.jpg`.
+  (6) Eaves: a thin lip along each building box top (`_box`). Render `docs/renders/depth_pass_before_after.jpg`. Noon (IGN v5): midday runs darker (`noon` factor in `_sync_sky`: sun -0.1, `tonemap_exposure` 0.92, glow -0.15, haze -0.08; rooms reset exposure to 1) and the tilt-shift band is wider/softer (0.28, radius 1.7). Render `docs/renders/noon_3d_before_after.jpg`.
 - **True 3D slice (Nov 17, test only, OFF for players):** web link `#true3d` (or env `DQ_TRUE3D=1` for renders) swaps
   Duff from a painted card to a real 3D model in the 3D view (porch pirate entries exist but have no model yet:
   their 1x art gave Hunyuan a slab/box, so they stay cards) (`scripts/view3d/true3d.gd`; view3d
@@ -249,7 +249,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 - **Music (Nov 18):** `mus_<name>.ogg` in assets/audio (mono 22 kHz Vorbis, ~25 s loops, RMS ~0.17), picked by `main.music_track()`, listed in `assets/audio/manifest.json`. DJ Vape's arena plays `club` (dubstep, `python3 tools/synth_dubstep.py assets/audio/mus_club.ogg` regenerates it). Keep the credits line in credits.gd + PAGE.md + manifest in sync.
   EDM soundtrack (Settings toggle `audio.edm`; batch 2 Nov 18 covers every music id: neighborhood, night, kitchen, boss, home, gala, willnot, date, credits; club stays dubstep): `mus_edm_<name>.ogg` beats `mus_<name>.ogg` (`audio._music_candidates`, `MUSIC_FALLBACK` for ids only the EDM set has, e.g. `night`). Regenerate with `python3 tools/edm/make.py [names] [--preview DIR]`; new tracks go in `make.py TRACKS` + the test_daily list. Stings (EDM on only, else the old sfx): `AudioScript.sting(name, fallback)` plays `sting_<name>.wav` (ko, rent, levelup, tapestop; `make.py --stings`).
-- **Web audio buses (Nov 19):** buses must exist at boot: `default_bus_layout.tres` (Master/Music/SFX). Web sample playback ignores buses added at runtime (the whole web game was silent). New bus? Add it to that file, not `AudioServer.add_bus`.
+- **Web audio buses (Nov 19):** buses must exist at boot: `default_bus_layout.tres` (Master/Music/SFX). Web sample playback ignores buses added at runtime (the whole web game was silent). New bus? Add it to that file, not `AudioServer.add_bus`. CI now runs `tools/web_audio_check.py build/web` after the web export (headless Chrome, analyser on the speakers, title music must peak > 0.05): a silent build goes red and never ships.
 - **iPhone hardening (Nov 18):** iPhones start Lite once (`perf_guard` cfg `ios_lite`). Big one-off art is dropped from `Art._tex` on room change (`Art.drop_big`, prefixes `bg_ arena_ gala`); never hold a 1280x720 texture forever in a cache. `main._watchdog` frees a stuck loading screen (10 s) or a dead menu. A tap anywhere advances dialogue. Bug reports: Settings > Send a bug report (`main.bug_report()`); ask testers for one before guessing.
 - **Thumb buttons (Nov 18, Duff: fat fingers):** touch pad buttons are radius 12 (A 14) with >= 8 units clear between any two; taps go to the nearest button within `REACH` (touch_controls `_hit`), menu/minigame buttons the same via `minigame._button_at`. test_daily enforces the gap. Moving a button? Keep it off the boss bar (x <= 228, y >= 156) and the level panel (y <= 98). Render: `arena_shot -- <id> --3d --maxpad` (every button showing).
 - **Kitchen tickets (Nov 17):** spec lines are picture tiles (`minigame.ticket_spec()`), the fryer is a colour gauge (`fryer._draw_gauge`). Don't add small explanatory text to play screens; put it on the how-to card.

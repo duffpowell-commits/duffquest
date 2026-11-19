@@ -123,6 +123,12 @@ jobs:
           # pre-gzipped engine: index.html unzips it in the browser (export_presets.cfg html/head_include)
           gzip -9 -k -n build/web/index.wasm
           ls -la build/web
+      - name: Web audio check (a silent build never ships)
+        # Nov 19: the whole web game shipped silent and nothing caught it. Boots build/web in headless Chrome,
+        # listens at the speakers on the title screen, fails if the music peak is ~0.
+        run: |
+          python3 -m pip install -q playwright
+          python3 tools/web_audio_check.py build/web
       - name: Export web as a home-screen app (GitHub Pages)
         # Same game, exported with the PWA switched on so iPhone players can Share -> Add to Home Screen
         # and launch it full screen with no Safari bars (iPhone Safari has no fullscreen API for games,
