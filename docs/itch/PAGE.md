@@ -1,5 +1,7 @@
 # Duff Quest: itch page copy (Nov 9, 2026)
 
+**Nov 19: the live description is `docs/itch/page.html` (HTML). Edit that file; on merge to main the itch page bot (`.github/workflows/itch_page.yml`) pastes it into itch. The copy below is the older source.**
+
 Page: https://dufftkyosht.itch.io/duff-quest. Paste-ready. Real names are approved for public (Nov 9); get each real person's OK in writing before ads go out (docs/legal/RISK_AUDIT.md).
 Not entering the itch "2026 Jam" (it bans AI art). Images: `cover.png`, `logo_banner.png`, `icon_512.png`, `screens/`, `knockout.gif`, `boss_intro.gif`.
 Upload order (first image shows biggest): `knockout.gif`, `boss_intro.gif`, `screens/07_gala_landlord_ex.png`, `04_kitchen_sandwich_station.png`, `05_fridge_calendar.png`, `06_dialogue_madison.png`, `08_street_night.png`, then `01`, `09`, `02`, `03`. Screens are 1920x1080 engine renders (Nov 13; 01/06-08/10-15 re-shot Nov 17 on the phone UI), clean language, gore off.
