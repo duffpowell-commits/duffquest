@@ -1183,7 +1183,7 @@ func _side_quest_checks(main: Node) -> void:
 	if chad:
 		main.enemy_defeated(chad)
 	check("porch: catching him finishes the quest and pays", SQ.is_done(main.side_quests, "porch") and main.money >= cash0 + 60 and main.achievements.has("Neighborhood Watch"))
-	check("porch: done quest leaves no interactables", main.quest_interactables().is_empty())
+	check("porch: done quest leaves no interactables", main.quest_interactables().filter(func (it): return not str(it["id"]) in ["quest_watch", "quest_neighbor"]).is_empty())   # the watch app + Pirate King start after porch
 	# the Grease Trap, end to end: 86 List entry -> night -> alley fight -> paid, achievement, bounty day untouched
 	main.side_quests = {}
 	main.dialog.clear()
@@ -1435,6 +1435,65 @@ func _side_quest_checks(main: Node) -> void:
 	check("king: the garage pays $200, achievement", SQ.is_done(main.side_quests, "king") and main.money == km0 + 200 and main.achievements.has("Kingslayer (Porch Division)"))
 	main.dialog.clear()
 	check("brittany quests: king boss exists", preload("res://scripts/boss.gd").BOSSES.has("king"))
+	# Trivia night
+	main.day_i = 3   # Thursday
+	main.day_count = 11
+	main.clock = 1140.0
+	check("trivia: Thursday evening = the club door is open", main.trivia_tonight() and main.quest_interactables().any(func (it): return str(it["id"]) == "trivia"))
+	main.clock = 600.0
+	check("trivia: not in the daytime", not main.trivia_tonight())
+	main.day_i = 4
+	main.clock = 1140.0
+	check("trivia: not on a Friday", not main.trivia_tonight())
+	var b0: int = main.trivia_bros_score()
+	check("trivia: the bros score 3-6 and it's steady per night", b0 >= 3 and b0 <= 6 and b0 == main.trivia_bros_score())
+	main.story.erase("trivia_w")
+	var tm0: int = main.money
+	main.trivia_result(6, 4)
+	check("trivia: a win pays the half pot", main.money == tm0 + main.TRIVIA_POT and int(main.story["trivia_w"]) == 1)
+	tm0 = main.money
+	main.trivia_result(2, 5)
+	check("trivia: a loss costs nothing", main.money == tm0 and int(main.story.get("trivia_l", 0)) >= 1)
+	main.trivia_result(4, 4)
+	main.trivia_result(7, 3)
+	tm0 = main.money
+	main.trivia_result(5, 3)
+	check("trivia: four wins = season prize + achievement", main.achievements.has("Trivia Night Champs") and main.money == tm0 + main.TRIVIA_POT + 100)
+	check("trivia: every question has 4 answers", preload("res://scripts/minigames/trivia.gd").TRIVIA.all(func (q): return (q["a"] as Array).size() == 4 and str(q["why"]) != ""))
+	main.dialog.clear()
+	# Neighborhood Watch
+	main.side_quests = {}
+	main.story.erase("watch_day")
+	main.story.erase("watch_n")
+	check("watch: nothing until the porch mystery is solved", main.watch_today().is_empty() and main.watch_new_day().is_empty())
+	SQ.finish(main.side_quests, "porch")
+	check("watch: a request in the morning + a spot outside", not main.watch_new_day().is_empty() and main.quest_interactables().any(func (it): return str(it["id"]) == "quest_watch"))
+	var wm0: int = main.money
+	var wk: = str(main.watch_today()["kind"])
+	main.watch_done()
+	check("watch: done pays and clears today", main.money == wm0 + (15 if wk == "find" else 25) and main.watch_today().is_empty())
+	for i in 6:
+		main.day_count += 1
+		main.watch_done()
+	check("watch: 7 done = Block Captain", main.achievements.has("Block Captain"))
+	main.day_count += 1
+	var shoo: = -1
+	for i in main.WATCH.size():
+		if str(main.WATCH[i]["kind"]) == "shoo":
+			shoo = i
+	main.day_count = shoo + main.WATCH.size() * 3
+	check("watch: a shoo request spawns somebody to shoo", main.quest_talk("watch") and main.get_tree().get_nodes_in_group("enemy").any(func (e): return e.has_meta("watch")))
+	main.clear_enemies()
+	main.dialog.clear()
+	main.side_quests = {}
+	# Nov 19 story keys survive save -> load (clean_story whitelists them)
+	main.story["britt_iou"] = true
+	main.story["dolores_w"] = 2
+	main.story["trivia_w"] = 3
+	main.story["watch_n"] = 5
+	var sd: Dictionary = JSON.parse_string(JSON.stringify(main.to_dict()))
+	main.from_dict(sd)
+	check("save: IOU, Dolores, trivia, watch survive a reload", bool(main.story.get("britt_iou", false)) and int(main.story.get("dolores_w", 0)) == 2 and int(main.story.get("trivia_w", 0)) == 3 and int(main.story.get("watch_n", 0)) == 5)
 	check("brittany quests: boss entries exist", preload("res://scripts/boss.gd").BOSSES.has("brayden") and preload("res://scripts/boss.gd").BOSSES.has("earljr"))
 	main.close_overlay()
 	main.side_quests = {}
