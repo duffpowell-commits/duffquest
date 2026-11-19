@@ -27,7 +27,10 @@ const STREET: = ["assets/art/sf_*", "assets/art/sd_*", "assets/art/ground_painte
 	# {coworker}'s first bet follows the porch fight in minute two: the alley, Marketplace Mike, her portrait and the
 	# boss music ride in street.pck so that fight never waits on world.pck's loading card (~0.7 MB).
 	"assets/art/arena_alley*", "assets/art/ch_mike*", "assets/art/ch_brittany*", "assets/art/portraits_hd/brittany*",
-	"assets/audio/mus_boss*"]
+	"assets/audio/mus_boss*", "assets/audio/mus_edm_boss*",
+	# title (home theme) + the cold open's street, both soundtracks (Duff Nov 19: title, cold open and Mike were
+	# silent / not EDM until world.pck landed): ~0.7 MB
+	"assets/audio/mus_home*", "assets/audio/mus_edm_home*", "assets/audio/mus_neighborhood*", "assets/audio/mus_edm_neighborhood*"]
 
 func _init() -> void:
 	var out: = "build/web/extra.pck"

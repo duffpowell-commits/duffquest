@@ -29,6 +29,11 @@ func _init() -> void:
 	for n in au.STINGS:
 		check("EDM sting sting_%s.wav ships" % n, ResourceLoader.exists("res://assets/audio/sting_%s.wav" % n))
 	check("EDM off: original first", au._music_candidates("boss") == ["boss"])
+	var street_globs: Array = load("res://tools/make_extra_pack.gd").STREET
+	for mname in ["home", "neighborhood", "boss"]:   # title, cold open, Marketplace Mike: street.pck, both soundtracks
+		for pre in ["", "edm_"]:
+			var f: = "assets/audio/mus_%s%s.ogg" % [pre, mname]
+			check("web: %s rides street.pck" % f, street_globs.any(func(g): return f.match(g)))
 	for n in ["neighborhood", "night", "kitchen", "boss", "home", "gala", "willnot", "date", "credits"]:
 		check("EDM track mus_edm_%s.ogg ships" % n, ResourceLoader.exists("res://assets/audio/mus_edm_%s.ogg" % n))
 	au.free()
