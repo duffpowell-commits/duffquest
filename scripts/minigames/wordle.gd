@@ -50,6 +50,8 @@ func _setup() -> void:
 		y += 25.0
 	add_button("giveup", Rect2(262, 91, 54, 13), "give up", KEY_ESCAPE, Color("#4a3a3a"))
 
+var giveup_armed: = -10.0
+
 func type_letter(ch: String) -> void:
 	if ended or cur.length() >= 5:
 		return
@@ -120,7 +122,12 @@ func _on_button(id: String) -> void:
 	match id:
 		"ENTER": submit()
 		"DEL": backspace()
-		"giveup": give_up()
+		"giveup":   # audit Nov 19: it sits just above O/P; a near-miss used to end the Daily. Tap twice.
+			if t - giveup_armed > 3.0:
+				giveup_armed = t
+				flash("Tap give up again to give up.", Color("#e06a4a"), 2.0)
+			else:
+				give_up()
 		_: type_letter(id)
 
 func _pointer_down(_p: Vector2) -> void:

@@ -972,7 +972,7 @@ func _sync_labels() -> void:
 					continue
 				var a: = clampf(sin(t * 2.4 + i * 2.1) * 1.6 - 0.6, 0.0, 1.0)
 				if a > 0.0:
-					want.append([to3(main.LOST_SPOTS[k], 0.6), "+", Color(1.0, 0.95, 0.6, a), int(16 + a * 16)])
+					want.append([to3(main.LOST_SPOTS[k], 0.6), "+", Color(1.0, 0.95, 0.6, a), 26])   # fade, don't resize
 		for b in main.buildings:
 			if not _shown(b):
 				continue
@@ -1016,9 +1016,18 @@ func _sync_labels() -> void:
 		if not l.visible:
 			continue
 		var w: Array = want[i]
-		l.text = str(w[1])
+		# Audit Nov 19: text / font_size reshape the label mesh, so only write them when they change (a sign used to be
+		# set full-size then shrunk every frame, and the glints changed size every frame).
+		var fs: = int(w[3])
+		if w.size() > 5 and w[5] == "sign" and not cam.is_position_behind(w[0]):
+			var near0: = cam.global_position.distance_to(w[0]) / CAM_OFF.length()
+			if near0 < 1.0:
+				fs = maxi(8, int(float(w[3]) * near0))
+		if l.text != str(w[1]):
+			l.text = str(w[1])
+		if l.font_size != fs:
+			l.font_size = fs
 		l.modulate = w[2]
-		l.font_size = int(w[3])
 		l.outline_modulate = w[4] if w.size() > 4 else Color("#1a1024")
 		l.outline_modulate.a = (w[2] as Color).a
 		l.position = w[0]
@@ -1030,9 +1039,7 @@ func _sync_labels() -> void:
 			# a roof sign on a shop that sits low in the frame is close to the camera: oversized, under the touch pad
 			l.visible = cam.unproject_position(l.position).y < float(vp.size.y) * 0.75   # near the bottom it is also close and huge
 			# closer than the camera target, perspective blows it up past the shop's width: shrink it back to its size at the target
-			var near: = cam.global_position.distance_to(l.position) / CAM_OFF.length()
-			if near < 1.0:
-				l.font_size = maxi(8, int(float(w[3]) * near))
+
 
 ## A marker over someone's head: the label is a billboard, the person a card that perspective leans, so a point
 ## straight above the feet lands off to the side of the head. Slide it sideways until it is plumb over the feet.
