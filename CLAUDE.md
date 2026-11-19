@@ -19,7 +19,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   from the icon: no Safari bars. Native iOS builds are out (no Mac, no Apple developer account).
   Godot's service worker is cache-first, so CI injects `tools/web_shell/pwa_autoupdate.html` into the Pages
   `index.html`: at boot a waiting new build takes over and reloads once (Nov 16: Brittany saw a stale "Mazikeen").
-- **IGN review v6: 8.9/10** (`docs/reviews/ign_review_2026-11-19_v6.md`; v5 8.7). Store page is live, play alerts armed Nov 19; #1 now: share the link, get Duff + Brittany playtest notes (check the active-vs-lazy money gap). Duff + Brittany played it Nov 11: "it's
+- **IGN review v7: game 8.9/10, launch 3/10** (`docs/reviews/ign_review_2026-11-19_v7.md`). First Reddit posts (r/playmygame + 2 crossposts, bare "Duff Quest" title, logo first) moved itch views 25 -> 27. Next: a fresh r/WebGames post with a hook title + knockout GIF first; Duff + Brittany playtest. Duff + Brittany played it Nov 11: "it's
   come a long way."
 - **Last session's handoff (read it): `docs/handoffs/2026-11-11_painted_minigames_ign_v3.md`.** It covers what
   shipped, the step-by-step prop-art pipeline, the ranked next list and the gotchas.

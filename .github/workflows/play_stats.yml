@@ -38,7 +38,9 @@ jobs:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
         run: |
           if [ -z "$BUTLER_API_KEY" ]; then echo "::error::BUTLER_API_KEY secret not set"; exit 1; fi
-          curl -sf "https://itch.io/api/1/$BUTLER_API_KEY/my-games" -o games.json || { echo "::error::itch API rejected the key"; exit 1; }
+          # Nov 19: one run failed on a passing itch blip (the next run was fine): retry before giving up
+          ok=0; for i in 1 2 3; do curl -sf --max-time 30 "https://itch.io/api/1/$BUTLER_API_KEY/my-games" -o games.json && { ok=1; break; }; sleep 20; done
+          [ $ok = 1 ] || { echo "::error::itch API failed 3 times (key rejected or itch down)"; exit 1; }
           python3 tools/play_stats.py --games games.json --stats stats_wt/stats --config .github/play_alerts.json --alerts alerts.txt
           rm -f games.json
       - name: Save snapshot
