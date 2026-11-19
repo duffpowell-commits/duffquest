@@ -54,8 +54,8 @@ costs ten minutes, is still open.
 6. **The 3D day look is blown out.** Bright daytime street renders wash toward flat yellow, and tilt-shift blurs the
    top of the screen where the storefronts are. Night and rooms look great; noon looks overexposed. And tilt-shift's
    cost on Duff's Android is still untested.
-7. **Public-edition loose ends.** "Cheeto Chad" / "Flamin' Hot" (11 uses) and "Applebee's" are real brands in the
-   public build, and `#dq=` dev links work in release builds (a player can start a new game over their save).
+7. **A dev door left open.** `#dq=` dev links work in release builds (a player can start a new game over their save).
+   (The public-edition brand names, Cheeto Chad / Flamin' Hot / Applebee's, were renamed later the same day, PR #165.)
 
 ## Top fixes, ranked
 
@@ -66,7 +66,7 @@ costs ten minutes, is still open.
 3. **Put an audio check in CI** so a silent build goes red instead of live.
 4. **Two outside players for balance**, then one pass on the economy spread.
 5. **Tame the 3D noon look** (less bloom/exposure by day, lighter tilt-shift at the top edge).
-6. **Rename the brands for public and gate `#dq=` to debug builds.** Small, do it before the page goes up.
+6. **Gate `#dq=` to debug builds.** Small, do it before the page goes up.
 
 ## Closing
 
