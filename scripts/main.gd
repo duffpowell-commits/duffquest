@@ -144,7 +144,9 @@ const STORY: = [
 		"cash": 500, "scrap": 25, "ach": "Forty Floors, Zero Shoes", "where": "{final_tower} (the tower up north)",
 		"tip": "{partner}: Babe. All my exes are hiding out in {final_tower} with some guy named {ex_final}. No shoes. Lots of attitude. Clock's ticking, apparently." },
 ]
-const TIERS: = [[0, 1.0, "Line Cook"], [5, 1.6, "Lead Line Cook"], [12, 2.5, "Sous Chef"], [21, 3.8, "Chef de Cuisine"], [32, 5.5, "Executive Chef"], [45, 8.0, "Celebrity Chef"]]
+## Fork seniority pay. Nov 19 (Duff, after the round-2 audit: "flatten it, 3x at the top"): was x1.6/2.5/3.8/5.5/8.0,
+## which made rent irrelevant by week 3 (a full S shift paid $928 at the top).
+const TIERS: = [[0, 1.0, "Line Cook"], [5, 1.3, "Lead Line Cook"], [12, 1.6, "Sous Chef"], [21, 2.0, "Chef de Cuisine"], [32, 2.5, "Executive Chef"], [45, 3.0, "Celebrity Chef"]]
 const FUND_HAPPY_CAP: = 15.0
 const PETE_FIRST_DAY: = 7
 const PETE_REST_DAYS: = 3

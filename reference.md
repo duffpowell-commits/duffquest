@@ -238,8 +238,8 @@ stay raw.
   (`record_station_bests`; autopilot runs don't count). A station with a best of S shows **Autopilot (B)** on its
   NEXT card when it has no special context (`can_autopilot`). It scores `AUTOPILOT_SCORE` 0.72 = B.
 - **Rush:** `RUSH_POOL` fryer/sandwich/salad/garnish/temp, 8 tickets, 150 s, combo multiplier.
-- **Fork seniority (pay titles):** `main.TIERS` by `shifts_worked`: 0 Line Cook ×1.0, 5 Lead ×1.6, 12 Sous ×2.5,
-  21 Chef de Cuisine ×3.8, 32 Executive ×5.5, 45 Celebrity ×8.0. This is separate from the combat "Seniority Lv".
+- **Fork seniority (pay titles):** `main.TIERS` by `shifts_worked`: 0 Line Cook ×1.0, 5 Lead ×1.3, 12 Sous ×1.6,
+  21 Chef de Cuisine ×2.0, 32 Executive ×2.5, 45 Celebrity ×3.0 (flattened Nov 19; was up to ×8.0). This is separate from the combat "Seniority Lv".
 - Kitchen props: `kp_*` sprites (Gemini G6) are used by fryer and sandwich. The rest are flat bars.
 - **Test/render:** `tools/shift_shot.tscn` → `docs/renders/shift_autopilot.png`; `tools/arena_shot.tscn -- fryer|sandwich`;
   web `#dq=<station>`.
