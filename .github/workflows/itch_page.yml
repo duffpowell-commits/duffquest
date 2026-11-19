@@ -1,0 +1,103 @@
+# Itch page bot: pastes docs/itch/page.html into the Duff Quest itch description.
+# itch has no API for this, so tools/itch_page/update_page.py drives a real browser.
+# Runs ONLY when page.html changes on main, or by hand (Actions > itch page > Run workflow).
+# Needs repo secrets ITCH_USERNAME + ITCH_PASSWORD (+ ITCH_TOTP_SECRET if itch 2FA is on) and BUTLER_API_KEY.
+# Anti-flag: one run at a time, at most one login per run (the session is kept, encrypted, in the Actions
+# cache and reused), never retries, stops on captcha/2FA/anything odd. See the script's docstring.
+name: itch page
+on:
+  push:
+    branches: [main]
+    paths: [docs/itch/page.html]
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: log in and find the field, change nothing"
+        type: boolean
+        default: true
+concurrency:
+  group: itch-page
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  page:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check secrets
+        env:
+          U: ${{ secrets.ITCH_USERNAME }}
+          P: ${{ secrets.ITCH_PASSWORD }}
+          K: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          missing=""; [ -z "$U" ] && missing="$missing ITCH_USERNAME"; [ -z "$P" ] && missing="$missing ITCH_PASSWORD"; [ -z "$K" ] && missing="$missing BUTLER_API_KEY"
+          if [ -n "$missing" ]; then echo "::error::Missing repo secrets:$missing"; echo "Missing repo secrets:$missing" >> "$GITHUB_STEP_SUMMARY"; exit 1; fi
+      - name: Find the game id
+        id: game
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+        run: |
+          games=$(curl -sf "https://itch.io/api/1/$BUTLER_API_KEY/my-games")
+          id=$(echo "$games" | jq -r '[.games[] | select(.title|ascii_downcase|test("duff"))][0].id')
+          url=$(echo "$games" | jq -r '[.games[] | select(.title|ascii_downcase|test("duff"))][0].url')
+          [ "$id" = "null" ] && { echo "::error::No Duff game on this itch account"; exit 1; }
+          echo "id=$id" >> "$GITHUB_OUTPUT"; echo "url=$url" >> "$GITHUB_OUTPUT"; echo "itch game $id $url"
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Install browser
+        run: |
+          pip install playwright==1.49.1 pyotp
+          python -m playwright install --with-deps chromium
+      - name: Restore saved itch session
+        uses: actions/cache/restore@v4
+        with:
+          path: itch_state.enc
+          key: itch-session-${{ github.run_id }}
+          restore-keys: itch-session-
+      - name: Decrypt session
+        env:
+          P: ${{ secrets.ITCH_PASSWORD }}
+        run: |
+          if [ -f itch_state.enc ]; then
+            openssl enc -d -aes-256-cbc -pbkdf2 -pass env:P -in itch_state.enc -out "$RUNNER_TEMP/itch_state.json" 2>/dev/null \
+              && echo "Saved session found." || { echo "Saved session unreadable, will log in."; rm -f "$RUNNER_TEMP/itch_state.json"; }
+          fi
+      - name: Update the page
+        env:
+          ITCH_USERNAME: ${{ secrets.ITCH_USERNAME }}
+          ITCH_PASSWORD: ${{ secrets.ITCH_PASSWORD }}
+          ITCH_TOTP_SECRET: ${{ secrets.ITCH_TOTP_SECRET }}
+          GAME_ID: ${{ steps.game.outputs.id }}
+          GAME_URL: ${{ steps.game.outputs.url }}
+          PAGE_FILE: docs/itch/page.html
+          STATE_FILE: ${{ runner.temp }}/itch_state.json
+          DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && '1' || '0' }}
+          OUT: itch_page_out
+        run: xvfb-run -a python tools/itch_page/update_page.py
+      - name: Report
+        if: always()
+        run: |
+          echo "## itch page bot" >> "$GITHUB_STEP_SUMMARY"
+          cat itch_page_out/summary.md >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || echo "- no summary (crashed early)" >> "$GITHUB_STEP_SUMMARY"
+      - name: Encrypt session
+        if: always()
+        env:
+          P: ${{ secrets.ITCH_PASSWORD }}
+        run: |
+          rm -f itch_state.enc
+          [ -f "$RUNNER_TEMP/itch_state.json" ] && openssl enc -aes-256-cbc -pbkdf2 -salt -pass env:P -in "$RUNNER_TEMP/itch_state.json" -out itch_state.enc || true
+      - name: Save session
+        if: always() && hashFiles('itch_state.enc') != ''
+        uses: actions/cache/save@v4
+        with:
+          path: itch_state.enc
+          key: itch-session-${{ github.run_id }}
+      - name: Screenshots (for Claude to check)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: itch-page-shots
+          path: itch_page_out/*.png
+          retention-days: 1
