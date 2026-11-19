@@ -9,3 +9,4 @@ build/
 # history is never rewritten). Work in grok_art/<drop>/_work/ or any *_tmp* path; keep originals + keepers only.
 grok_art/**/_work/
 grok_art/**/*_tmp*
+__pycache__/
