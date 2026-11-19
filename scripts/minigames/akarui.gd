@@ -161,9 +161,9 @@ func _on_button(id: String) -> void:
 func _tick(d: float) -> void:
 	phase_t += d
 	grab_cd = maxf(0.0, grab_cd - d)
-	if state == "listen" and phase_t >= LISTEN_T:
-		go("order")
-	elif state == "conveyor":
+	# Nov 19 (round-2 audit): the order used to vanish after 6 s (one long line, five slots to remember). It now
+	# stays up until "Got it".
+	if state == "conveyor":
 		belt_t += d
 		spawn_t -= d
 		if spawn_t <= 0.0 and belt_t < BELT_T - 3.0:

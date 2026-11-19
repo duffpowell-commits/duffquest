@@ -122,6 +122,8 @@ const BOSS_ORDER: = ["husk", "bozos", "fences", "baron", "donald"]
 ## The gala invite lands on this story day's morning (Duff, Nov 9: the $100k fund gate was
 ## unreachable in 30 days). Open from then to the end of the month and after.
 const GALA_DAY: = 24
+const GALA_XP_LEVEL: = 12
+const GALA_REMATCH_PAY: = 75
 const ARENA_ORIGIN: = Vector2(760, 440)
 const ARENA_SIZE: = Vector2(320, 180)
 const ARENA_SPAWN: = Vector2(920, 590)
@@ -799,6 +801,7 @@ func start_first_bet() -> void:
 	player.position = ARENA_SPAWN
 	player.stun_t = 0.0
 	_set_camera()
+	fight_in = energy   # Nov 19: fights start at full but cost 10 off what you walked in with (see _fight_out)
 	energy = 100.0
 	var b: = BossScript.new()
 	b.kind = "mike"
@@ -1875,18 +1878,31 @@ func pay_rent() -> Array:
 			"I pay $%d (%s%s). $%d left. Landlord's third boat thanks me." % [due, parts, (", back rent $%d" % (due - base)) if due > base else "", money]]
 	var partial: = maxi(0, money)
 	money -= partial
-	rent_debt = due - partial + LATE_FEE
+	# Nov 19 (Duff: "add all of those ideas", round-2 audit): the late fee grows with the debt (+10% of what was
+	# already owed), and being a full week behind is a strike even when this week's base got paid. Before, paying
+	# the base every Monday let back rent grow forever with no eviction.
+	var fee: = late_fee(rent_debt)
+	rent_debt = due - partial + fee
 	late_notices += 1
-	# a strike = couldn't even cover this week (back rent alone carries over, no strike)
-	rent_strikes = rent_strikes + 1 if partial < base else 0
+	var short: = partial < base
+	var behind: = rent_debt >= weekly_base()
+	rent_strikes = rent_strikes + 1 if (short or behind) else 0
 	happiness = maxf(0.0, happiness - 20.0)
 	set_upset("rent")
 	var out: = [LATE_NOTICES[(late_notices - 1) % LATE_NOTICES.size()],
-		"Can't cover $%d (%s). I pay what I've got ($%d). Late fee $%d, because being broke is expensive. Owe $%d next Monday. {partner}'s stressed. -20 Happiness" % [due, parts, partial, LATE_FEE, rent_debt]]
+		"Can't cover $%d (%s). I pay what I've got ($%d). Late fee $%d, because being broke is expensive. Owe $%d next Monday. {partner}'s stressed. -20 Happiness" % [due, parts, partial, fee, rent_debt]]
+	if behind and not short:
+		out.append("I covered this week, but I'm a whole week behind now. The landlord counts that too.")
+	if rent_debt >= weekly_base() * 2:
+		out.append("Knock knock. The landlord, in person, in a polo. \"Two weeks behind, chief. I've got a nephew who wants this place.\" He photographs the door. For 'records'.")
 	if rent_strikes > 0 and rent_strikes < EVICT_STRIKES:
 		out.append(["Strike one with the landlord. Three short Mondays in a row and we're out on the curb.",
 			"Strike TWO. One more short Monday and the landlord changes the locks. Cover at least $%d next Monday." % weekly_base()][mini(rent_strikes, 2) - 1])
 	return out
+
+## Flat fee plus 10% of the back rent already carried (debt compounds a little each week).
+func late_fee(old_debt: int) -> int:
+	return LATE_FEE + int(ceil(0.1 * maxi(0, old_debt)))
 
 func rent_due() -> int:
 	return (int(ceil(weekly_base() / 2.0)) if first_week_prorate() else weekly_base()) + rent_debt
@@ -2486,6 +2502,10 @@ func _update_inspector(delta: float) -> void:
 func _check_debug_hash() -> bool:
 
 	if not OS.has_feature("web"):
+		return false
+	# Nov 19 (round-2 audit): a #dq= link starts a new game over the save, so it only works in Duff's family copy
+	# (Pages /family/) and debug builds, never on itch / the public Pages root.
+	if not (Cast.family or OS.is_debug_build()):
 		return false
 	var h: = str(JavaScriptBridge.eval("window.location.hash"))
 	if not h.begins_with("#dq="):
@@ -3550,6 +3570,7 @@ func start_gala(first: int = 0) -> void:
 	location = "gala"
 	player.position = GALA_SPAWN
 	_set_camera()
+	fight_in = energy   # Nov 19: fights start at full but cost 10 off what you walked in with (see _fight_out)
 	energy = 100.0
 	gala_stage = first
 	_say(["So a limo picks me up. Smells like money, shrimp and tax evasion.", "THE ELITE GALA. Charity thing. A butler takes my phone and my dignity. Bet he sells both to a tip line.", "{partner} reads the guest list and goes pale. Four of the names are her exes. All four 'made it.'", "{partner}: Babe. Four of them. One room. Hold my hand and don't let go of my drink.", "Four exes. One rich host. One line cook. Alright. Let's fucking cook."])
@@ -3588,7 +3609,7 @@ func boss_defeated(b: Node) -> void:
 		return
 	var line: = str(BossScript.BOSSES[b.kind]["defeat"])
 	kills[b.kind] = int(kills.get(b.kind, 0)) + 1
-	combat.gain_xp("boss_gala", combat.level)
+	combat.gain_xp("boss_gala", GALA_XP_LEVEL)   # fixed level: out-level the gala and it pays less XP (was always full)
 	clear_enemies()
 	gala_boss = null
 	gala_stage += 1
@@ -3616,9 +3637,9 @@ func gala_win(line: String) -> void:
 		if not achievements.has("Gala Crasher"):
 			achievements.append("Gala Crasher")
 	else:
-		money += 250
+		money += GALA_REMATCH_PAY   # Nov 19: was $250 a day, ~9x a week's rent; the gala stays fun, not a salary
 		gear["scraps"] = int(gear["scraps"]) + 10
-		lines.append("Rematch bonus: +$250 in loose cufflinks and +10 scrap. Still more than their tax rate.")
+		lines.append("Rematch bonus: +$%d in loose cufflinks and +10 scrap. Still more than their tax rate." % GALA_REMATCH_PAY)
 	lines.append("{partner}: You beat up FOUR of my exes in one night?? ...Put the spatula in the dishwasher.")
 	apply_gear()
 	_leave_gala()
@@ -3638,6 +3659,7 @@ func gala_lose() -> void:
 	save_game()
 
 func _leave_gala() -> void:
+	_fight_out()
 	location = "outside"
 	player.position = OUTSIDE_SPAWN
 	player.stun_t = 0.0
@@ -3741,6 +3763,7 @@ func start_story_fight(id: String) -> void:
 	player.position = ARENA_SPAWN
 	player.stun_t = 0.0
 	_set_camera()
+	fight_in = energy   # Nov 19: fights start at full but cost 10 off what you walked in with (see _fight_out)
 	energy = 100.0
 	story["attempts"] = int(story.get("attempts", 0)) + 1
 	var b: = BossScript.new()
@@ -3913,7 +3936,18 @@ func _retry_from(snap: Dictionary, kind: String) -> void:
 	else:
 		_say(["Day %d, %s, %s. Again. Same coffee, better plan." % [day_count, DAY_NAMES[day_i % 7], clock_text()], next_fact()])
 
+var fight_in: = -1.0   # Energy when the current fight started (-1 = not in a fight)
+
+## Nov 19 (Duff, round-2 audit): every fight topped Energy to 100 and a win kept it, a free refill. Now you walk out
+## with 10 less than you walked in with (a loss still sets its own floor afterwards).
+func _fight_out() -> void:
+	if fight_in < 0.0:
+		return
+	energy = clampf(minf(energy, fight_in - 10.0), 1.0, energy_cap())
+	fight_in = -1.0
+
 func _leave_arena() -> void:
+	_fight_out()
 	arena_mode = ""
 	location = "outside"
 	player.position = OUTSIDE_SPAWN
@@ -4216,7 +4250,9 @@ func open_grocery(extra: Dictionary = {}) -> void:
 	if not Errands.is_open("grocery", clock):
 		_say(["{grocery}'s closed (6 AM - 11 PM). One lone cart rolls across the lot, freer than any of us."])
 		return
-	if TooLoud.available(day_count, day_i, too_loud_seen):
+	# Nov 19 (Duff OK'd, round-2 audit): Too Loud used to hijack the day's grocery ERRAND trip (cart left, home
+	# 30+ min later, errand at risk). It waits for a Saturday trip with no grocery errand on.
+	if TooLoud.available(day_count, day_i, too_loud_seen) and not (errand["kind"] == "grocery" and errand["status"] == "active"):
 		too_loud_story()
 		return
 	if errand["kind"] == "grocery" and errand["status"] == "active":
@@ -4743,6 +4779,7 @@ func start_quest_fight(kind: String) -> void:
 	player.position = ARENA_SPAWN
 	player.stun_t = 0.0
 	_set_camera()
+	fight_in = energy   # Nov 19: fights start at full but cost 10 off what you walked in with (see _fight_out)
 	energy = 100.0
 	var b: = BossScript.new()
 	b.kind = kind
@@ -6225,7 +6262,7 @@ func resolve_bill(id: String, choice: String) -> Array:
 				rent_bump += int(e["hike"])
 				out.append("Rent is now $%d a week." % (RENT + rent_bump))
 			else:
-				if fmod(clock, 1440.0) >= 1080.0 or energy < 35.0:
+				if fmod(clock, 1440.0) >= 1080.0 or fmod(clock, 1440.0) < 360.0 or energy < 35.0:   # after midnight too (Nov 19)
 					return ["I'm too late or too wrecked for a 4-hour catering gig. (Before 6 PM, 35+ Energy.)"]
 				money += int(e["gig"])
 				energy = maxf(1.0, energy - 30.0)
@@ -6400,6 +6437,7 @@ func start_bounty(id: String) -> void:
 	player.position = ARENA_SPAWN
 	player.stun_t = 0.0
 	_set_camera()
+	fight_in = energy   # Nov 19: fights start at full but cost 10 off what you walked in with (see _fight_out)
 	energy = 100.0
 	var b: = BossScript.new()
 	b.kind = id
@@ -6665,6 +6703,7 @@ func start_bet(kind: String, stake: int) -> void:
 	player.position = ARENA_SPAWN
 	player.stun_t = 0.0
 	_set_camera()
+	fight_in = energy   # Nov 19: fights start at full but cost 10 off what you walked in with (see _fight_out)
 	energy = 100.0
 	_say(["{coworker} drags me behind the {fork_nick}. \"Best lighting in town. It's the dumpster. The dumpster's the lighting.\"", "{coworker}: %s Go!" % str(BETS[kind]["name"]).to_upper()])
 	_sync_world()

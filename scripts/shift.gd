@@ -349,7 +349,8 @@ func _draw_overlay() -> void:
 	if mode != "rush" or current == null or current is Card:
 		return
 	var f: = ThemeDB.fallback_font
-	overlay.draw_rect(Rect2(118, 0, 160, 12), Color(0, 0, 0, 0.85))
+	# Nov 19: ends at x 258 now, clear of the "?" help button at x ~267 (round-2 audit); 8 tickets still fit
+	overlay.draw_rect(Rect2(118, 0, 140, 12), Color(0, 0, 0, 0.85))
 	overlay.draw_string(f, Vector2(120, 9), "RAIL", HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color(1, 1, 1, 0.6))
 	for i in rail.size():
 		var r: = Rect2(138 + i * 12, 1, 10, 10)
@@ -379,7 +380,9 @@ func _finish_shift() -> void:
 	report["avg"] = avg
 	report["injuries"] = injuries
 	report["energy_cost"] = int(ENERGY_COST.get(mode, 15))
-	report["meal"] = 40 if grade in ["S", "A", "B"] else 0
+	# Nov 19 (Duff, round-2 audit): the +40 meal was more than any shift cost, so working GAINED energy. Now it
+	# refills what the shift took on A/S, half on B, nothing below.
+	report["meal"] = int(report["energy_cost"]) if grade in ["S", "A"] else (int(report["energy_cost"]) / 2 if grade == "B" else 0)
 	report["inspector"] = inspector_result
 	report["achievement"] = "Chef's Kiss" if grade == "S" else ""
 	report["best_combo"] = best_combo

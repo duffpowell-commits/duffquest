@@ -143,8 +143,9 @@ func reset() -> void:
 func heat_max() -> float:
 	return HEAT_BASE + 10.0 * stats["heat"]
 
+## Nov 19 (Duff, round-2 audit): was 15 + 10L, Lv 20 by day 14-17 for an active player. ~1.6x the total XP now.
 func xp_to_next() -> int:
-	return 15 + 10 * level
+	return 24 + 18 * level
 
 func dmg_mult() -> float:
 	var k: float = 1.0 + 0.08 * stats["str"]

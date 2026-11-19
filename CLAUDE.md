@@ -80,6 +80,9 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   `Image.create` (use `create_empty`), WorldEnvironment via ClassDB only. Changed the profile? Run
   that workflow and play-test the build. Storefront/prop sizes are baked in `data/art_rects.json`
   (`tools/bake_art_rects.gd`, test_daily checks it): re-run the bake after re-importing sf_/sd_ art.
+  **Per-edition packs (Nov 19):** `make_extra_pack.gd -- OUT tier public|family`: CI ships public packs (itch, portals, Pages
+  root; no originals that have a `_pub` copy) and family packs (Pages /family/, own packs.json; no `_pub`). `#dq=` links
+  only work in the family copy / debug builds.
   **Pack cache (Nov 18):** CI writes `packs.json` (md5 per pack) beside the packs; `extra_pack.gd` re-mounts a pack already in
   browser storage (user://) when its md5 matches, so a code-only deploy costs returning players no pack download. Keep packs
   deterministic (no timestamps) and keep packs.json next to them in every web copy.
