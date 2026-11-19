@@ -1193,13 +1193,16 @@ func _side_quest_checks(main: Node) -> void:
 	main.clock = 600.0
 	check("grease: the 86 List hands it out", main.quest_talk("bounty_board") and SQ.stage(main.side_quests, "grease") == 2)
 	main.dialog.clear()
-	check("grease: daytime = come back later, no fight", main.quest_talk("bounty_board") and main.location == "outside" and main.arena_boss == null)
+	check("grease: daytime = the normal 86 List, no fight", not main.quest_talk("bounty_board") and main.location == "outside" and main.arena_boss == null)
 	main.dialog.clear()
 	main.clock = 1380.0
 	main.energy = 100.0
 	var bday0 = main.bounties["day"]
 	var gcash0: int = main.money
-	check("grease: after 10 PM the board starts the fight", main.quest_talk("bounty_board") and main.location == "arena" and main.arena_boss != null and str(main.arena_boss.kind) == "grease")
+	var gcard: bool = main.quest_talk("bounty_board") and main.overlay_node != null
+	main.close_overlay()
+	main.start_grease_fight()
+	check("grease: after 10 PM the board offers it, and it starts the fight", gcard and main.location == "arena" and main.arena_boss != null and str(main.arena_boss.kind) == "grease")
 	if main.arena_boss != null:
 		main.boss_defeated(main.arena_boss)
 	check("grease: beating it finishes the quest and pays", SQ.is_done(main.side_quests, "grease") and main.money >= gcash0 + 90 and main.achievements.has("Fryer Exorcist") and main.location == "outside")
@@ -1230,7 +1233,7 @@ func _side_quest_checks(main: Node) -> void:
 		main.gig_choose(pick)
 		check("gig(%s): choice stored, stage 3" % pick, SQ.choice(main.side_quests, "gig") == pick and SQ.stage(main.side_quests, "gig") == 3)
 		main.dialog.clear()
-		check("gig(%s): same day = not yet" % pick, main.quest_talk("brittany") and SQ.is_active(main.side_quests, "gig"))
+		check("gig(%s): same day = not yet, and her daily bet still works" % pick, not main.quest_talk("brittany") and SQ.is_active(main.side_quests, "gig"))
 		main.dialog.clear()
 		main.day_count = 6
 		var gm0: int = main.money
@@ -1338,20 +1341,23 @@ func _side_quest_checks(main: Node) -> void:
 	main.double_stake = 100
 	SQ.add_clue(main.side_quests, "double", "day:10")
 	check("double: one go a day, then Brittany's back to bets", not main.quest_talk("brittany"))
+	main.money -= main.double_stake   # start_quest_fight takes the stake as the fight starts
 	main.double_lost()
 	check("double: a loss costs the stake, quest stays", main.money == 100 and SQ.is_active(main.side_quests, "double"))
 	main.dialog.clear()
 	main.double_stake = 50
+	main.money -= 50
 	main.double_won()
-	check("double: a win doubles it and finishes", main.money == 200 and SQ.is_done(main.side_quests, "double") and main.achievements.has("Double or Nothing"))
+	check("double: a win doubles it and finishes", main.money == 150 and SQ.is_done(main.side_quests, "double") and main.achievements.has("Double or Nothing"))
 	main.dialog.clear()
 	# Dolores's book (Waffle Haus side bet)
-	check("dolores: clean grill = zero burnt", main.dolores_bet_won("clean", {"burnt": 0}) and not main.dolores_bet_won("clean", {"burnt": 1}))
+	check("dolores: clean grill = zero burnt AND real work", main.dolores_bet_won("clean", {"burnt": 0, "delivered": 6, "orders": 10}) and not main.dolores_bet_won("clean", {"burnt": 1, "delivered": 9, "orders": 10}))
+	check("dolores: idling a whole shift doesn't win clean grill", not main.dolores_bet_won("clean", {"burnt": 0, "delivered": 0, "orders": 12}) and not main.dolores_bet_won("clean", {"burnt": 0, "delivered": 3, "orders": 12}))
 	check("dolores: full house = 3 of 4 served", main.dolores_bet_won("house", {"delivered": 9, "orders": 12}) and not main.dolores_bet_won("house", {"delivered": 8, "orders": 12}))
 	check("dolores: a KO loses any bet", not main.dolores_bet_won("nowalk", {"walked": 0, "ko": true}))
 	main.waffle_bet = {"kind": "clean", "stake": 20}
 	var dm0: int = main.money
-	var dl: Array = main.dolores_settle({"burnt": 0})
+	var dl: Array = main.dolores_settle({"burnt": 0, "delivered": 8, "orders": 10})
 	check("dolores: a win pays stake x3 and counts", main.money == dm0 + 60 and int(main.story.get("dolores_w", 0)) >= 1 and dl.size() >= 1 and main.waffle_bet.is_empty())
 	main.waffle_bet = {"kind": "nowalk", "stake": 50}
 	dm0 = main.money
@@ -1395,7 +1401,7 @@ func _side_quest_checks(main: Node) -> void:
 	main.clock = 600.0
 	check("cats: feeding them starts it (day 6+)", main.quest_talk("bowls") and SQ.stage(main.side_quests, "cats") == 1)
 	main.dialog.clear()
-	check("cats: daytime = not now", main.quest_talk("freya") and not SQ.has_clue(main.side_quests, "cats", "night:6"))
+	check("cats: daytime = not now (Freya's own menu)", not main.quest_talk("freya") and not SQ.has_clue(main.side_quests, "cats", "night:6"))
 	main.dialog.clear()
 	main.clock = 1300.0
 	check("cats: night = one heist try", main.quest_talk("freya") and SQ.has_clue(main.side_quests, "cats", "night:6") and main.overlay_node != null)
@@ -1404,7 +1410,7 @@ func _side_quest_checks(main: Node) -> void:
 	var ce0: float = main.energy
 	main.heist_result(false)
 	check("cats: woke the baby = energy hit, same item", main.energy < ce0 and SQ.stage(main.side_quests, "cats") == 1)
-	check("cats: one try a night", main.quest_talk("freya") and main.overlay_node == null)
+	check("cats: one try a night", not main.quest_talk("freya") and main.overlay_node == null)
 	main.dialog.clear()
 	main.heist_result(true)
 	main.heist_result(true)
@@ -1494,6 +1500,42 @@ func _side_quest_checks(main: Node) -> void:
 	var sd: Dictionary = JSON.parse_string(JSON.stringify(main.to_dict()))
 	main.from_dict(sd)
 	check("save: IOU, Dolores, trivia, watch survive a reload", bool(main.story.get("britt_iou", false)) and int(main.story.get("dolores_w", 0)) == 2 and int(main.story.get("trivia_w", 0)) == 3 and int(main.story.get("watch_n", 0)) == 5)
+	# audit fixes (Nov 19)
+	main.side_quests = {}
+	SQ.start(main.side_quests, "grease")
+	SQ.advance(main.side_quests, "grease")
+	main.clock = 600.0
+	check("audit: Grease Trap doesn't lock the 86 List by day", not main.quest_talk("bounty_board"))
+	main.clock = 1380.0
+	check("audit: at night the board offers grease OR the list", main.quest_talk("bounty_board") and main.overlay_node != null)
+	main.close_overlay()
+	main.dialog.clear()
+	main.side_quests = {}
+	SQ.finish(main.side_quests, "gig", "cover")
+	SQ.finish(main.side_quests, "lunch", "truth")
+	SQ.start(main.side_quests, "cover")
+	main.day_i = 5   # Saturday, past the first weekend
+	main.day_count = 9
+	main.clock = 600.0
+	check("audit: Cover My Shift isn't offered while the {fork_nick}'s closed", not main.fork_open_now() and not main.quest_talk("brittany") or main.overlay_node == null or str(main.overlay_node.get("heading")).find("COVER") < 0)
+	main.close_overlay()
+	main.dialog.clear()
+	check("audit: no Chef marker on a closed {fork_nick}", main.quest_marker("fork") == "")
+	main.side_quests = {}
+	SQ.start(main.side_quests, "gig")
+	SQ.add_clue(main.side_quests, "gig", "day:9")
+	check("audit: journal hides bookkeeping clues", SQ.journal(main.side_quests)[0]["clues"].is_empty())
+	SQ.finish(main.side_quests, "gig", "rat")
+	check("audit: journal shows a done choice in words", str(SQ.journal(main.side_quests)[0]["step"]).find("Told Chef") >= 0)
+	main.side_quests = {}
+	SQ.start(main.side_quests, "cats")
+	main.clock = 600.0
+	check("audit: cats heist by day leaves Freya's menu alone", not main.quest_talk("freya"))
+	main.side_quests = {}
+	var dd0: = preload("res://scripts/daily.gd").clean({"thanks_day": 27})
+	check("audit: Thanksgiving bonus day survives a reload", int(dd0["thanks_day"]) == 27)
+	main.dialog.clear()
+	main.close_overlay()
 	check("brittany quests: boss entries exist", preload("res://scripts/boss.gd").BOSSES.has("brayden") and preload("res://scripts/boss.gd").BOSSES.has("earljr"))
 	main.close_overlay()
 	main.side_quests = {}
