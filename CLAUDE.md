@@ -111,7 +111,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   sync. Privacy policy: `docs/legal/PRIVACY.md`.
 - **Editions (Nov 13):** public = default export (itch, Pages root, `duffquest-public.apk`): `data/cast_public.json`
   overrides cast.json and `Art.pub()` loads `<name>_pub.<ext>` art. Family = feature tag `family` (Pages
-  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (both editions since Nov 16: she OKed her real name and asked for redder hair; still write `{coworker}`, not her name, in new lines). The kitchen's nickname is `{fork_nick}` (family Fork, public Spatula; test_daily fails on a bare "Fork" in any string). New real brand or
+  `/family/`, `duffquest.apk`, same package id as before): real names, real Fork, Bruce Willnot, Brittany (both editions since Nov 16: she OKed her real name and asked for redder hair; still write `{coworker}`, not her name, in new lines). Snack/chain brands are tokens too (`{chad}`, `{hot_chips}`, `{chain_grill}`, Nov 19). The kitchen's nickname is `{fork_nick}` (family Fork, public Spatula; test_daily fails on a bare "Fork" in any string). New real brand or
   real person? Put the family name in cast.json, the public one in cast_public.json, add a test_daily leak word.
   Re-make the `_pub` art with `python3 tools/make_public_art.py` (keeps sizes; set big ones to lossy in .import).
   The `_pub` set: Fork + Walgrumps signs, the alley dumpster (`arena_alley`), the pharmacy shelves (`bg_pharmacy`: no real
