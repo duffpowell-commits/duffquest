@@ -48,6 +48,36 @@ const LIST: = [
 			{"text": "Bring it all to the green paper box outside the Seen Cafe.", "at": "lostbox"},
 		],
 	},
+	{
+		"id": "lunch", "kind": "mystery", "title": "Who Ate {coworker}'s Lunch?", "giver": "brittany", "ready": true, "from_day": 7,
+		"after": "gig",
+		"pitch": "Somebody keeps eating {coworker}'s labeled lunch out of the walk-in. She wants blood. Or at least a name.",
+		"stages": [
+			{"text": "Check the {fork_nick}'s side door. A lunch thief needs a way out.", "at": "backdoor"},
+			{"text": "Stake out the side door after close (10 PM to 5 AM). Bring snacks. Not hers.", "at": "backdoor"},
+			{"text": "Tell {coworker} who's been eating her lunch. Or don't. Tell her something.", "at": "brittany"},
+		],
+		"choices": ["truth", "raccoon"],
+	},
+	{
+		"id": "double", "kind": "bounty", "title": "Double or Nothing", "giver": "brittany", "ready": true, "from_day": 4,
+		"needs_bets": 3,
+		"pitch": "{coworker} bet her whole tip jar on me against Dolores's book. Dolores has a guy.",
+		"stages": [
+			{"text": "Put your money down with {coworker} and fight Dolores's guy out back. Daytime. One go a day.", "at": "brittany"},
+		],
+	},
+	{
+		"id": "cover", "kind": "character", "title": "Cover My Shift", "giver": "brittany", "ready": true, "from_day": 9,
+		"after": "lunch",
+		"pitch": "{coworker} has a 'thing' today. She needs somebody on her station. Guess who.",
+		"stages": [
+			{"text": "Hear {coworker} out. She's doing the eyes.", "at": "brittany"},
+			{"text": "Work a shift at the {fork_nick} TODAY. Any shift. Her station's yours. Miss it and she'll know.", "at": ""},
+			{"text": "Tell {coworker} how her station went. Leave out the fire.", "at": "brittany"},
+		],
+		"choices": ["covered", "nope", "flaked"],
+	},
 ]
 
 const STATUSES: = ["", "active", "done"]
@@ -189,12 +219,20 @@ static func warp(st: Dictionary, id: String, to_stage: int) -> void:
 static func visible(id: String, show_hidden: bool) -> bool:
 	return show_hidden or bool(entry(id).get("ready", false))
 
-## Can a player be offered this quest today? Ready, not started, and past its first day.
-static func offerable(st: Dictionary, id: String, day: int, show_hidden: bool = false) -> bool:
-	return visible(id, show_hidden) and status(st, id) == "" and day >= int(entry(id).get("from_day", 1))
+## Extra unlock rules beyond the first day: "after" = another quest must be done first (one {coworker} quest at a
+## time), "needs_bets" = that many of her daily bets won. ctx = {"bets_won": int}; a missing key passes (tests).
+static func gate_ok(st: Dictionary, e: Dictionary, ctx: Dictionary = {}) -> bool:
+	var after: = str(e.get("after", ""))
+	if after != "" and status(st, after) != "done":
+		return false
+	return int(ctx.get("bets_won", 1 << 30)) >= int(e.get("needs_bets", 0))
+
+## Can a player be offered this quest today? Ready, not started, past its first day and its unlock rules.
+static func offerable(st: Dictionary, id: String, day: int, show_hidden: bool = false, ctx: Dictionary = {}) -> bool:
+	return visible(id, show_hidden) and status(st, id) == "" and day >= int(entry(id).get("from_day", 1)) and gate_ok(st, entry(id), ctx)
 
 ## "!" = a giver with a quest to hand out, "?" = the active stage wants you to talk here, "" = nothing.
-static func marker_for(st: Dictionary, npc: String, show_hidden: bool = false, day: int = 1 << 30) -> String:
+static func marker_for(st: Dictionary, npc: String, show_hidden: bool = false, day: int = 1 << 30, ctx: Dictionary = {}) -> String:
 	var bang: = false
 	for e in LIST:
 		var id: = str(e["id"])
@@ -207,7 +245,7 @@ static func marker_for(st: Dictionary, npc: String, show_hidden: bool = false, d
 				if at == npc:
 					return "?"
 			"":
-				if str(e.get("giver", "")) == npc and day >= int(e.get("from_day", 1)):
+				if str(e.get("giver", "")) == npc and day >= int(e.get("from_day", 1)) and gate_ok(st, e, ctx):
 					bang = true
 	return "!" if bang else ""
 

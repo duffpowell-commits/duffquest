@@ -1269,12 +1269,103 @@ func _side_quest_checks(main: Node) -> void:
 	main.dialog.clear()
 	check("alley: done = nothing left on the street, mail is mail", main.quest_interactables().is_empty() and not main.quest_talk("mail"))
 	main.dialog.clear()
+	# {coworker} round two (Nov 19): Lunch Thief -> Cover My Shift chain off gig; Double or Nothing off her bet record
+	main.side_quests = {}
+	main.clock = 600.0
+	main.day_count = 7
+	check("lunch: locked until the Side Gig is done", not SQ.offerable(main.side_quests, "lunch", 7, false, main.quest_ctx()) and SQ.marker_for(main.side_quests, "brittany", false, 7, {"bets_won": 0}) == "!")
+	SQ.finish(main.side_quests, "gig", "cover")
+	check("lunch: offered by Brittany once gig is done", SQ.offerable(main.side_quests, "lunch", 7, false, main.quest_ctx()) and main.quest_talk("brittany") and SQ.stage(main.side_quests, "lunch") == 1)
+	main.dialog.clear()
+	check("lunch: the back door shows up outside", main.quest_interactables().any(func (it): return str(it["id"]) == "quest_backdoor") and SQ.marker_for(main.side_quests, "backdoor") == "?")
+	check("lunch: back door by day = two clues, stage 2", main.quest_talk("backdoor") and SQ.has_clue(main.side_quests, "lunch", "hairnet") and SQ.stage(main.side_quests, "lunch") == 2)
+	main.dialog.clear()
+	check("lunch: stakeout refused in daylight", main.quest_talk("backdoor") and main.location != "arena")
+	main.dialog.clear()
+	check("lunch: caught -> Gerald, stage 3", lunch_ok(main))
+	main.dialog.clear()
+	var lm0: int = main.money
+	main.lunch_payoff("raccoon")
+	check("lunch: payoff + achievement, choice kept", SQ.is_done(main.side_quests, "lunch") and SQ.choice(main.side_quests, "lunch") == "raccoon" and main.money == lm0 + 50 and main.achievements.has("Lunch Detective"))
+	main.dialog.clear()
+	check("lunch: back door leaves the street when done", not main.quest_interactables().any(func (it): return str(it["id"]) == "quest_backdoor"))
+	# Cover My Shift: day 9+, after lunch
+	main.day_count = 8
+	check("cover: not before day 9", not SQ.offerable(main.side_quests, "cover", 8, false, main.quest_ctx()))
+	main.day_count = 9
+	main.bet["won"] = 0
+	check("cover: offered day 9", main.quest_talk("brittany") and SQ.stage(main.side_quests, "cover") == 1)
+	main.dialog.clear()
+	main.close_overlay()
+	main.cover_choose("covered")
+	check("cover: accepted -> stage 2, tied to today", SQ.stage(main.side_quests, "cover") == 2 and SQ.has_clue(main.side_quests, "cover", "day:9"))
+	main.dialog.clear()
+	main.cover_shift_done()
+	check("cover: a shift today moves to the payoff", SQ.stage(main.side_quests, "cover") == 3)
+	main.dialog.clear()
+	var cm0: int = main.money
+	check("cover: payoff pays + IOU", main.quest_talk("brittany") and SQ.is_done(main.side_quests, "cover") and main.money == cm0 + main.COVER_PAY and bool(main.story.get("britt_iou", false)) and main.achievements.has("Shift Swap"))
+	main.dialog.clear()
+	main.bet_kind = "nohit"
+	main.bet_stake = 25
+	var bm0: int = main.money
+	main._end_bet(false, "")
+	check("cover: the IOU eats one lost bet, once", main.money == bm0 and not bool(main.story.get("britt_iou", false)))
+	main.dialog.clear()
+	main.bet_kind = "nohit"
+	main._end_bet(false, "")
+	check("cover: the next loss costs again", main.money == bm0 - 25)
+	main.dialog.clear()
+	# flake: promised, never clocked in -> next morning she knows
+	SQ.warp(main.side_quests, "cover", 0)
+	SQ.start(main.side_quests, "cover")
+	main.cover_choose("covered")
+	main.day_count = 10
+	check("cover: no shift = flaked next day", not main.cover_new_day().is_empty() and SQ.choice(main.side_quests, "cover") == "flaked")
+	main.dialog.clear()
+	SQ.warp(main.side_quests, "cover", 0)
+	SQ.start(main.side_quests, "cover")
+	main.cover_choose("nope")
+	check("cover: 'can't' ends it and kills today's bet", SQ.choice(main.side_quests, "cover") == "nope" and int(main.bet["day"]) == main.day_count)
+	main.dialog.clear()
+	# Double or Nothing
+	main.bet["won"] = 2
+	check("double: locked under 3 bets won", not SQ.offerable(main.side_quests, "double", 10, false, main.quest_ctx()))
+	main.bet["won"] = 3
+	check("double: offered at 3 bets won", SQ.offerable(main.side_quests, "double", 10, false, main.quest_ctx()) and main.quest_talk("brittany") and SQ.is_active(main.side_quests, "double"))
+	main.dialog.clear()
+	main.money = 200
+	main.double_stake = 100
+	SQ.add_clue(main.side_quests, "double", "day:10")
+	check("double: one go a day, then Brittany's back to bets", not main.quest_talk("brittany"))
+	main.double_lost()
+	check("double: a loss costs the stake, quest stays", main.money == 100 and SQ.is_active(main.side_quests, "double"))
+	main.dialog.clear()
+	main.double_stake = 50
+	main.double_won()
+	check("double: a win doubles it and finishes", main.money == 200 and SQ.is_done(main.side_quests, "double") and main.achievements.has("Double or Nothing"))
+	main.dialog.clear()
+	check("brittany quests: boss entries exist", preload("res://scripts/boss.gd").BOSSES.has("brayden") and preload("res://scripts/boss.gd").BOSSES.has("earljr"))
+	main.close_overlay()
 	main.side_quests = {}
 	main.day_count = dc0
 	main.clock = ck0
 	main.dialog.clear()
 	main.show_hidden_quests = false
 	main.dialog.clear()
+
+## Lunch Thief stakeout: by night the back door starts the Brayden fight; a win reveals Gerald (stage 3).
+func lunch_ok(main: Node) -> bool:
+	var SQ: = preload("res://scripts/side_quests.gd")
+	main.clock = 1380.0
+	main.energy = 100.0
+	main.quest_talk("backdoor")
+	var started: bool = main.arena_mode == "quest" and main.quest_fight == "brayden"
+	main.dialog.clear()
+	if main.arena_boss:
+		main.quest_fight_won(main.arena_boss)
+	main.clock = 600.0
+	return started and SQ.stage(main.side_quests, "lunch") == 3 and SQ.has_clue(main.side_quests, "lunch", "Gerald") and main.location == "outside"
 
 ## Madison's mornings (mornings.gd): rolls, the slow-morning chores, the 10 AM self-up text, saves.
 func _morning_checks(main: Node) -> void:
