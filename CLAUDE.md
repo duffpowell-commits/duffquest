@@ -191,7 +191,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   stop at "Start over?"). Ids: 01 `at:540,150,720 --3d`, 06 `ask --3d`, 07 `gala_say:fences --3d`, 08 `at:300,215,1260 --3d`,
   10/11/12 `cold` (cold_1/3/4), 13 `notes`, 14 `gig`, 15 `evicted`.
 
-- **Depth pass (Nov 19, branch `ccr-ee4c7593-gc9zbv`, draft PR, waits on Duff's phone test):** six 3D-view tweaks, all
+- **Depth pass (Nov 19, PR #161 MERGED, Duff said merge):** six 3D-view tweaks, all
   in `scripts/view3d/view3d.gd`, all off in Lite except the eaves. (1) Camera sway: yaw follows Duff off centre (`YAW_MAX` 7°,
   rooms `YAW_ROOM` 4°, `YAW_LEAD` toward his walk); actor + dressing cards turn with it (group `view3d_face`); a fight
   opens with a 10% push-in (`_push`, `PUSH_T`). (2) Round cut-outs: `shaders/card3d.gdshader` on character sheet frames
