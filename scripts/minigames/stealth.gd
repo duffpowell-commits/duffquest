@@ -14,6 +14,7 @@ var noise: = 0.0
 var peak: = 0.0
 var last_move: = -10.0
 var cat_t: = 0.0
+var goal_label: = "BED"   # cat_heist.gd: "STASH"
 
 func _setup() -> void:
 	coach_pace = false
@@ -202,7 +203,7 @@ func _draw_game() -> void:
 	Art.frame(self, "baby_hd", _tile_rect(Vector2i(0, 2)).get_center(), 0, 0)
 	var g: = _tile_rect(goal)
 	var bed: = Rect2(g.position.x - 2, g.position.y - 10, W - g.position.x - 2, g.size.y + 20)
-	UiStyle.label(self, Vector2(bed.position.x, bed.end.y + 9), "BED", 8, UiStyle.GOLD, bed.size.x, HORIZONTAL_ALIGNMENT_CENTER, 2)
+	UiStyle.label(self, Vector2(bed.position.x, bed.end.y + 9), goal_label, 8, UiStyle.GOLD, bed.size.x, HORIZONTAL_ALIGNMENT_CENTER, 2)
 	for c in cats:
 		var dv: Vector2i = c["d"]
 		var cs: = {"{cat1}": "cat_alastor", "{cat2}": "cat_lucifer" }.get(str(c["n"]), "cat_freya") as String

@@ -1389,6 +1389,52 @@ func _side_quest_checks(main: Node) -> void:
 	main.dialog.clear()
 	check("chef: done = the door just clocks in", not main.quest_talk("fork") and main.chef_force().is_empty())
 	main.dialog.clear()
+	# The Cats' Heist
+	main.side_quests = {}
+	main.day_count = 6
+	main.clock = 600.0
+	check("cats: feeding them starts it (day 6+)", main.quest_talk("bowls") and SQ.stage(main.side_quests, "cats") == 1)
+	main.dialog.clear()
+	check("cats: daytime = not now", main.quest_talk("freya") and not SQ.has_clue(main.side_quests, "cats", "night:6"))
+	main.dialog.clear()
+	main.clock = 1300.0
+	check("cats: night = one heist try", main.quest_talk("freya") and SQ.has_clue(main.side_quests, "cats", "night:6") and main.overlay_node != null)
+	main.close_overlay()
+	main.dialog.clear()
+	var ce0: float = main.energy
+	main.heist_result(false)
+	check("cats: woke the baby = energy hit, same item", main.energy < ce0 and SQ.stage(main.side_quests, "cats") == 1)
+	check("cats: one try a night", main.quest_talk("freya") and main.overlay_node == null)
+	main.dialog.clear()
+	main.heist_result(true)
+	main.heist_result(true)
+	main.heist_result(true)
+	check("cats: three heists finish it, +3 treats, achievement", SQ.is_done(main.side_quests, "cats") and main.achievements.has("Cat Burglar Burglar") and SQ.has_clue(main.side_quests, "cats", "binky"))
+	main.dialog.clear()
+	check("cats: done = Freya's menu again", not main.quest_talk("freya"))
+	main.dialog.clear()
+	main.close_overlay()
+	# Porch Pirate King
+	main.day_count = 8
+	check("king: locked until the porch mystery is done", not SQ.offerable(main.side_quests, "king", 8, false, main.quest_ctx()))
+	SQ.finish(main.side_quests, "porch")
+	check("king: Chad's door shows up once porch is done", main.quest_interactables().any(func (it): return str(it["id"]) == "quest_neighbor"))
+	check("king: Chad snitches -> runners", main.quest_talk("neighbor") and SQ.stage(main.side_quests, "king") == 2)
+	main.dialog.clear()
+	var kid: Array = main.quest_interactables().map(func (it): return str(it["id"]))
+	check("king: three box stacks on the street", kid.has("quest_north") and kid.has("quest_east") and kid.has("quest_south"))
+	check("king: a stack spawns a fleeing runner", main.quest_talk("north") and main.get_tree().get_nodes_in_group("enemy").any(func (e): return e.has_meta("quest_king")))
+	main.clear_enemies()
+	main.dialog.clear()
+	main.king_runner_caught("north")
+	main.king_runner_caught("east")
+	main.king_runner_caught("south")
+	check("king: three runners -> the garage", SQ.stage(main.side_quests, "king") == 3 and main.quest_interactables().any(func (it): return str(it["id"]) == "quest_garage"))
+	var km0: int = main.money
+	main.king_won()
+	check("king: the garage pays $200, achievement", SQ.is_done(main.side_quests, "king") and main.money == km0 + 200 and main.achievements.has("Kingslayer (Porch Division)"))
+	main.dialog.clear()
+	check("brittany quests: king boss exists", preload("res://scripts/boss.gd").BOSSES.has("king"))
 	check("brittany quests: boss entries exist", preload("res://scripts/boss.gd").BOSSES.has("brayden") and preload("res://scripts/boss.gd").BOSSES.has("earljr"))
 	main.close_overlay()
 	main.side_quests = {}

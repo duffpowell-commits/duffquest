@@ -87,6 +87,25 @@ const LIST: = [
 			{"text": "Bad day 3: a food critic, and Brayden's on grill. Clock in and get a B or better.", "at": "fork"},
 		],
 	},
+	{
+		"id": "cats", "kind": "character", "title": "The Cats' Heist", "giver": "bowls", "ready": true, "from_day": 6,
+		"pitch": "Things keep going missing. The cats know where.",
+		"stages": [
+			{"text": "My keys are under the bed. Tonight after 9, sneak to the stash (check under the bed).", "at": "freya"},
+			{"text": "Now it's my wallet. Tonight after 9, sneak to the stash again.", "at": "freya"},
+			{"text": "They took the binky. This is war. Tonight after 9, one more heist.", "at": "freya"},
+		],
+	},
+	{
+		"id": "king", "kind": "mystery", "title": "Porch Pirate King", "giver": "neighbor", "ready": true, "from_day": 8,
+		"after": "porch",
+		"pitch": "Cheeto Chad sold the boxes to somebody. Everybody sells to the King.",
+		"stages": [
+			{"text": "Hear Cheeto Chad out.", "at": "neighbor"},
+			{"text": "Catch the King's three runners: stacks of boxes around the block (north, east, south).", "at": ""},
+			{"text": "The receipts all say 'STORAGE, BEHIND HOA HQ'. Hit the King's garage.", "at": "garage"},
+		],
+	},
 ]
 
 const STATUSES: = ["", "active", "done"]
