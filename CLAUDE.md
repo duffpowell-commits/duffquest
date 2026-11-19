@@ -19,7 +19,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   from the icon: no Safari bars. Native iOS builds are out (no Mac, no Apple developer account).
   Godot's service worker is cache-first, so CI injects `tools/web_shell/pwa_autoupdate.html` into the Pages
   `index.html`: at boot a waiting new build takes over and reloads once (Nov 16: Brittany saw a stale "Mazikeen").
-- **IGN review v6: 8.9/10** (`docs/reviews/ign_review_2026-11-19_v6.md`; v5 8.7). Store page is live; #1 now: arm play alerts, share the link, get Duff + Brittany playtest notes (check the active-vs-lazy money gap). Duff + Brittany played it Nov 11: "it's
+- **IGN review v6: 8.9/10** (`docs/reviews/ign_review_2026-11-19_v6.md`; v5 8.7). Store page is live, play alerts armed Nov 19; #1 now: share the link, get Duff + Brittany playtest notes (check the active-vs-lazy money gap). Duff + Brittany played it Nov 11: "it's
   come a long way."
 - **Last session's handoff (read it): `docs/handoffs/2026-11-11_painted_minigames_ign_v3.md`.** It covers what
   shipped, the step-by-step prop-art pipeline, the ranked next list and the gotchas.
@@ -167,7 +167,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   every batch before merge.
 
 - **Play stats (Nov 14):** `play_stats.yml` snapshots itch counts every 3 h into the `stats` branch; alerts (GitHub
-  issues @mentioning Duff) start when `.github/play_alerts.json` says `"armed": true`, set it the day DuffQuest debuts.
+  issues @mentioning Duff) start when `.github/play_alerts.json` says `"armed": true` (armed Nov 19).
   itch's API gives views/downloads/purchases, not browser plays. CrazyGames/GameDistribution have no stats API.
 
 - **Menu backdrop + dialogue (Nov 15):** the purple sunburst behind cards/settings/credits/phone is gone: `main.open_overlay` lays a blurred, darkened snapshot of the last world frame (`_veil_snapshot`, CPU blur, world still stops drawing) under any overlay and sets `veiled` on it; minigames with painted art cover it; no snapshot (shifts, cold boot) = old burst. Dialogue box: speaker name tab (`hud.speaker()` splits "Name: line"; Duff's lines get his name), gold keyline, bobbing next arrow.
