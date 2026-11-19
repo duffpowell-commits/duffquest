@@ -234,6 +234,7 @@ var trees: Array = Dressing.tree_points(dressing)
 var skip_title: = false
 var life_events: = true
 var save_path: = SaveGame.DEFAULT_PATH
+const DEV_LINK_SAVE: = "user://devlink_save.json"   # #dq= web dev links save here, never over the player's game
 
 var player: CharacterBody2D
 var raccoons: Array = []
@@ -2488,6 +2489,9 @@ func _check_debug_hash() -> bool:
 	var h: = str(JavaScriptBridge.eval("window.location.hash"))
 	if not h.begins_with("#dq="):
 		return false
+	# IGN v5: a player opening a #dq= link wiped their save (new game + snapshot erase). Dev links now play on
+	# their own slot, so the real save and its morning/week rollbacks are never touched.
+	save_path = DEV_LINK_SAVE
 	_after_world(func () -> void:
 		new_game(false)
 		debug_station.call_deferred(h.substr(4)))

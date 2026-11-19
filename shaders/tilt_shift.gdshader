@@ -3,8 +3,8 @@ shader_type canvas_item;
 // blurred, never the HUD): a sharp band around Duff, soft top and bottom, like a photo of a miniature model.
 // Compatibility renderer has no depth of field, so this is a screen-space blur that grows with distance from the band.
 uniform float focus_y = 0.58;   // where Duff stands on screen (fraction of height)
-uniform float band = 0.24;      // half-height of the sharp band
-uniform float radius = 2.2;     // blur at the edges, in render pixels per unit scale
+uniform float band = 0.28;      // half-height of the sharp band (IGN v5: 0.24 blurred the storefronts at the top)
+uniform float radius = 1.7;     // blur at the edges, in render pixels per unit scale
 uniform float boost = 1.06;     // a touch more saturation in the band (toy-like)
 void fragment() {
 	float d = clamp((abs(UV.y - focus_y) - band) / (0.5 - band), 0.0, 1.0);
