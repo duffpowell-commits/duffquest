@@ -1721,6 +1721,7 @@ func _wake(energy_penalty: int) -> void:
 	calendar_pending = not no_loading
 	show_loading()
 	lines.append_array(daily_new_day())
+	lines.append_array(cover_new_day())
 	lines.append_array(couch_lines)
 	lines.append_array(mood_new_day())
 	lines.append_array(morning_new_day(not couch_lines.is_empty()))
@@ -2388,6 +2389,7 @@ func end_shift(r: Dictionary) -> void:
 	if r.get("left", false):
 		return
 	apply_shift_result(r)
+	cover_shift_done()
 	save_game()
 
 ## Muscle memory: remember the best grade per station (autopilot runs don't count).
@@ -3528,6 +3530,7 @@ func boss_defeated(b: Node) -> void:
 		match arena_mode:
 			"bounty": grease_defeated(b) if str(b.kind) == "grease" else bounty_defeated(b)
 			"firstbet": first_bet_won(b)
+			"quest": quest_fight_won(b)
 			"waffle": waffle_regular_defeated(b)
 			_: story_boss_defeated(b)
 		return
@@ -3733,6 +3736,10 @@ func _arena_process(delta: float) -> void:
 	if arena_mode == "firstbet":
 		if energy <= 0.0:
 			first_bet_lost()
+		return
+	if arena_mode == "quest":
+		if energy <= 0.0:
+			quest_fight_lost()
 		return
 	if finale_t > 0.0:
 		finale_t -= delta
@@ -3944,6 +3951,8 @@ func _draw_arena() -> void:
 				draw_rect(Rect2(o + Vector2(40, 62), Vector2(240, 10)), Color(0, 0, 0, 0.6))
 				draw_string(f, o + Vector2(40, 70), Cast.T("{COWORKER}'S BETS: DROP MIKE, WIN $%d" % FIRST_BET_PAY), HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
 				_draw_britt_rec(f, o)
+			elif arena_mode == "quest":
+				_draw_quest_fight_hud(f, o)
 			else:
 				_arena_caption(f, o, "BEHIND {FORK}  -  86 LIST ENFORCEMENT ZONE", Color("#ffd23f"))
 	if finale_t > 0.0:
@@ -4274,7 +4283,7 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
 func quest_talk(npc: String) -> bool:
-	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc)
+	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc) or _lunch_talk(npc) or _cover_talk(npc) or _double_talk(npc)
 
 ## Lost & Found, Omaha: a flyer in the mail, three things hidden around the block, returned to the Seen Cafe paper box.
 ## Each find is a clue named after the thing ("ring", "collar", "shoe"); all three advance to the return stage.
@@ -4409,6 +4418,327 @@ func gig_payoff() -> Array:
 	save_game()
 	return lines
 
+## ---- {coworker} quests, round two (Nov 19): Lunch Thief, Double or Nothing, Cover My Shift. Data in side_quests.gd.
+## One {coworker} quest at a time ("after" in LIST); Double or Nothing unlocks off her bet record instead.
+const BACKDOOR_PT: = Vector2(482, 318)    # the {fork_nick}'s side door, at the building's left corner
+const DOUBLE_STAKES: = [50, 100]
+const COVER_PAY: = 40
+
+func quest_ctx() -> Dictionary:
+	return {"bets_won": int(bet["won"])}
+
+func _britt_gone() -> bool:
+	if phase() != "Night":
+		return false
+	_say(["{coworker}'s gone home. She left a sticky note on the {fork_nick} door: \"tmrw. bring snacks. NOT MINE.\""])
+	return true
+
+## Who Ate {coworker}'s Lunch? Clue at the side door by day, Grill-Boy Brayden caught there after close (alley fight),
+## then the reveal: he's been feeding her lunch to a raccoon named Gerald. Tell her the truth or blame the raccoon.
+func _lunch_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "lunch"
+	if npc == "brittany" and SideQuests.offerable(st, q, day_count, show_hidden_quests, quest_ctx()):
+		if _britt_gone():
+			return true
+		SideQuests.start(st, q)
+		_say(["{coworker}: Somebody ate my lunch. Again. Third time. It had a LABEL. It said '{COWORKER_SHORT}'S. DO NOT.' in Sharpie.",
+			"{coworker}: Leftover lo mein. I was gonna film myself eating it. That was CONTENT.",
+			"{coworker}: You're the porch guy. You found Cheeto Chad. Find my lo mein guy.",
+			"New side quest: Who Ate {coworker}'s Lunch? (phone > Notes). Start at the {fork_nick}'s side door."])
+		save_game()
+		return true
+	if not SideQuests.is_active(st, q):
+		return false
+	match [npc, SideQuests.stage(st, q)]:
+		["backdoor", 1]:
+			SideQuests.add_clue(st, q, "tiny teeth marks")
+			SideQuests.add_clue(st, q, "hairnet")
+			SideQuests.advance(st, q)
+			_say(["By the side door: an empty takeout box. '{COWORKER_SHORT}'S. DO NOT.' Licked clean. Like, CLEAN clean.",
+				"The lid has tiny teeth marks. Tiny. And snagged on the door hinge: a hairnet. Only one guy here wears his hairnet outside.",
+				"Clues: tiny teeth marks, a hairnet. Whoever it is uses this door after close. Come back after 10 PM."])
+			save_game()
+			return true
+		["backdoor", 2]:
+			if phase() != "Night":
+				_say(["Nobody sneaks out a back door at %s. Come back after 10 PM. Stake it out." % clock_text()])
+				return true
+			if energy < 25.0:
+				_say(["I'm too wiped for a stakeout. I'd fall asleep in the dumpster. Again. Eat something first."])
+				return true
+			start_quest_fight("brayden")
+			return true
+		["brittany", 3]:
+			if _britt_gone():
+				return true
+			_menu("WHO ATE {COWORKER}'S LUNCH?", ["{coworker}: Well? Who is it. Say a name. I have a video ready. It just needs a face.",
+				"Brayden's been feeding her lunch to a raccoon named Gerald. Gerald has a limp. Brayden made him a little bed out of fryer boxes."],
+				[["truth", "Tell her it's Brayden", KEY_1], ["raccoon", "Blame the raccoon", KEY_2], ["bet", "Not yet (today's bet)", KEY_3], ["later", "Not yet", KEY_ESCAPE]],
+				func (ch: String) -> void:
+					if ch in ["truth", "raccoon"]:
+						_say(lunch_payoff(ch))
+					elif ch == "bet":
+						bet_menu())
+			return true
+	return false
+
+func lunch_caught() -> Array:
+	SideQuests.add_clue(side_quests, "lunch", "Gerald")
+	SideQuests.advance(side_quests, "lunch")
+	return ["Brayden leads me behind the dumpster. A cardboard bed. A water dish. A raccoon with a limp, eating lo mein with his hands.",
+		"Grill-Boy Brayden: This is Gerald. Chef won't let me bring him scraps. {coworker}'s lunch is the only good food in that walk-in.",
+		"Grill-Boy Brayden: Please don't tell her. Gerald's never had a bad day since I started. Not one.",
+		"Clue: Gerald. Now I've got to tell {coworker} something."]
+
+func lunch_payoff(ch: String) -> Array:
+	SideQuests.finish(side_quests, "lunch", ch)
+	var lines: Array = []
+	if ch == "truth":
+		money += 30
+		lines = ["{coworker}: Brayden?! BRAYDEN. I'm gonna-- wait. A raccoon? With a LIMP? Named GERALD?",
+			"{coworker} goes out back. Ten minutes later she's posted a video called 'meet my son'. It has 4,000 views. Brayden's in the background, crying.",
+			"{coworker}: Finder's fee. And I'm packing two lunches now. One says GERALD. +$30. Quest done."]
+	else:
+		money += 50
+		lines = ["I tell {coworker} it was a raccoon. Technically true. Gerald did eat it.",
+			"{coworker}: A RACCOON? In the WALK-IN? ...Okay. I'm putting out a decoy lunch. I'm gonna catch him on camera.",
+			"Brayden slips me $50 in a napkin. Tomorrow the decoy lunch is gone. So is Brayden, for about ten minutes. +$50. Quest done."]
+	if not achievements.has("Lunch Detective"):
+		achievements.append("Lunch Detective")
+		lines.append("ACHIEVEMENT UNLOCKED: Lunch Detective")
+	save_game()
+	return lines
+
+## Double or Nothing: after 3 of her daily bets won, {coworker} puts her tip jar on Duff against Dolores's book.
+## Duff stakes $50 or $100 of his own; win = double back, lose = gone, try again tomorrow. One go a day.
+func _double_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "double"
+	if npc != "brittany":
+		return false
+	if SideQuests.offerable(st, q, day_count, show_hidden_quests, quest_ctx()):
+		if _britt_gone():
+			return true
+		SideQuests.start(st, q)
+		_say(["{coworker}: Okay. You're %d and %d against me. I've been losing money on you. Time I MADE money on you." % [int(bet["won"]), int(bet["lost"])],
+			"{coworker}: Dolores at the Waffle Haus runs book. Thirty-one years. She's never lost. She says she's got a guy.",
+			"{coworker}: I put my whole tip jar on you. You put in your own money too, so you care. Double or nothing. Talk to me when you're ready.",
+			"New side quest: Double or Nothing (phone > Notes)."])
+		save_game()
+		return true
+	if not SideQuests.is_active(st, q):
+		return false
+	if _britt_gone():
+		return true
+	if SideQuests.has_clue(st, q, "day:%d" % day_count):
+		return false   # one go a day; her daily bet still works
+	var lines: Array = ["{coworker}: Dolores's guy is out back. He's big. He's drinking coffee. He's drinking it AT you.",
+		"Win and I double your stake. Lose and Dolores keeps it. Your call."]
+	var opts: Array = []
+	for i in DOUBLE_STAKES.size():
+		var amt: int = DOUBLE_STAKES[i]
+		if money >= amt:
+			opts.append([str(amt), "Put down $%d" % amt, [KEY_1, KEY_2][i]])
+	if opts.is_empty():
+		lines.append("{coworker}: You have $%d. Dolores doesn't take IOUs. She takes cash and souls. Come back with $%d." % [money, DOUBLE_STAKES[0]])
+	opts.append(["bet", "Just today's bet", KEY_3])
+	opts.append(["no", "Not today", KEY_ESCAPE])
+	_menu("DOUBLE OR NOTHING", lines, opts, func (ch: String) -> void:
+		if ch.is_valid_int():
+			start_double(int(ch))
+		elif ch == "bet":
+			bet_menu())
+	return true
+
+var double_stake: = 0
+
+func start_double(stake: int) -> void:
+	if busy() or money < stake:
+		return
+	double_stake = stake
+	SideQuests.add_clue(side_quests, "double", "day:%d" % day_count)
+	start_quest_fight("earljr")
+
+func double_won() -> Array:
+	money += double_stake * 2
+	SideQuests.finish(side_quests, "double")
+	var lines: Array = ["{coworker} is screaming. Not words. Just a sound. She's still filming.",
+		"{coworker}: DOLORES. DOLORES, CHECK YOUR PHONE. ...She texted back 'bless your heart'. That one I'm hearing as a loss. HER loss.",
+		"She doubles my stake: +$%d. Her tip jar is now a tip bucket. Quest done." % (double_stake * 2)]
+	if not achievements.has("Double or Nothing"):
+		achievements.append("Double or Nothing")
+		lines.append("ACHIEVEMENT UNLOCKED: Double or Nothing")
+	double_stake = 0
+	save_game()
+	return lines
+
+func double_lost() -> Array:
+	money = maxi(0, money - double_stake)
+	var lines: Array = ["I wake up by the dumpster. Earl Jr. is buying {coworker} a coffee. Out of pity. With my money.",
+		"{coworker}: Okay. That's -$%d for you and my whole tip jar for me. We go again tomorrow. I don't lose to Dolores twice." % double_stake]
+	double_stake = 0
+	save_game()
+	return lines
+
+## Cover My Shift: {coworker} asks in person (daytime). Cover = work any {fork_nick} shift the same day, then she owes
+## Duff: $COVER_PAY and an IOU that refunds his next lost daily bet. Skip the shift and she finds out at day's end.
+func _cover_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "cover"
+	if npc != "brittany":
+		return false
+	if SideQuests.offerable(st, q, day_count, show_hidden_quests, quest_ctx()):
+		if _britt_gone():
+			return true
+		SideQuests.start(st, q)
+		_say(["{coworker}: Hiiii. So. I have a thing today. A dentist thing. A dentist-ADJACENT thing. Don't ask.",
+			"{coworker} is doing the eyes. The big ones. She learned them from a cat.",
+			"New side quest: Cover My Shift (phone > Notes). Talk to her again."])
+		save_game()
+		return true
+	if not SideQuests.is_active(st, q):
+		return false
+	match SideQuests.stage(st, q):
+		1:
+			if _britt_gone():
+				return true
+			if clock >= 1080.0:
+				return false   # too late to cover today; she asks again tomorrow, bets still work
+			_menu("COVER MY SHIFT", ["{coworker}: Cover my station today. Any shift, I don't care, just be on the line so Chef doesn't count heads.",
+				"{coworker}: I'll owe you. Like, OWE you. Big owe. Venmo and a favor.",
+				"(It eats the day. {partner}'s errand still needs doing too.)"],
+				[["covered", "Cover for her", KEY_1], ["nope", "Can't today", KEY_2], ["bet", "Let me think (today's bet)", KEY_3], ["later", "Let me think", KEY_ESCAPE]],
+				func (ch: String) -> void:
+					if ch == "bet":
+						bet_menu()
+					else:
+						cover_choose(ch))
+			return true
+		2:
+			if _britt_gone():
+				return true
+			_say(["{coworker}: Why are you OUT HERE. My station's in THERE. Go! Clock in! I'm leaving in, like, a minute!"])
+			return true
+		3:
+			if _britt_gone():
+				return true
+			_say(cover_payoff())
+			return true
+	return false
+
+func cover_choose(ch: String) -> void:
+	if not SideQuests.is_active(side_quests, "cover") or SideQuests.stage(side_quests, "cover") != 1:
+		return
+	if ch == "nope":
+		SideQuests.finish(side_quests, "cover", "nope")
+		bet["day"] = day_count   # she's not betting with you today
+		_say(["{coworker}: Wow. Okay. No, it's fine. It's FINE. I'll just call in. And lie. Which you made me do.",
+			"She's cold for the rest of the day. No bet today. Quest done."])
+		save_game()
+		return
+	if ch != "covered":
+		return
+	SideQuests.add_clue(side_quests, "cover", "day:%d" % day_count)
+	SideQuests.advance(side_quests, "cover")
+	_say(["{coworker}: YOU'RE THE BEST. Okay. My station's the fryer. The fryer hates me. It'll love you. Bye!",
+		"She's already in her car. Clock in at the {fork_nick} today."])
+	save_game()
+
+## end_shift hook: a shift worked on the day he promised counts.
+func cover_shift_done() -> void:
+	var st: = side_quests
+	if SideQuests.is_active(st, "cover") and SideQuests.stage(st, "cover") == 2 and SideQuests.has_clue(st, "cover", "day:%d" % day_count):
+		SideQuests.advance(st, "cover")
+		_toast("{coworker}'s station: covered. Chef counted heads. Chef counted mine twice. Go tell her.")
+
+## New day: promised yesterday, never clocked in. She heard from Chef.
+func cover_new_day() -> Array:
+	var st: = side_quests
+	if SideQuests.is_active(st, "cover") and SideQuests.stage(st, "cover") == 2 and not SideQuests.has_clue(st, "cover", "day:%d" % day_count):
+		SideQuests.finish(st, "cover", "flaked")
+		return ["Text from {coworker}: \"chef called me. i wasnt there. U WERENT THERE. we're good. we're FINE. (we're not fine)\" Quest done."]
+	return []
+
+func cover_payoff() -> Array:
+	SideQuests.finish(side_quests, "cover", "covered")
+	money += COVER_PAY
+	story["britt_iou"] = true
+	var lines: Array = ["{coworker}: You did it! Chef didn't notice! Chef said I was 'weirdly fast today'. I'm taking that.",
+		"{coworker}: Here. $%d. AND an IOU: next bet you lose, I don't take your money. One time. I wrote it on a napkin, it's legally binding." % COVER_PAY,
+		"+$%d, one napkin IOU (your next lost bet is free). Quest done." % COVER_PAY]
+	if not achievements.has("Shift Swap"):
+		achievements.append("Shift Swap")
+		lines.append("ACHIEVEMENT UNLOCKED: Shift Swap")
+	save_game()
+	return lines
+
+## Alley fights for {coworker}'s quests (arena_mode "quest", quest_fight = boss kind). Day or night is the caller's call.
+var quest_fight: = ""
+
+func start_quest_fight(kind: String) -> void:
+	if busy() or _world_gate(func () -> void: start_quest_fight(kind)):
+		return
+	show_loading()
+	clear_enemies()
+	arena_id = "alley"
+	arena_mode = "quest"
+	quest_fight = kind
+	location = "arena"
+	player.position = ARENA_SPAWN
+	player.stun_t = 0.0
+	_set_camera()
+	energy = 100.0
+	var b: = BossScript.new()
+	b.kind = kind
+	b.m = self
+	b.position = ARENA_ORIGIN + Vector2(160, 80)
+	add_child(b)
+	arena_boss = b
+	b.set_physics_process(not busy())
+	var pre: Array = ["After close. I'm crouched behind the dumpster. The side door opens. Hairnet. Spatula. A to-go box with a label.", "I step out. He screams. I scream. He swings."] if kind == "brayden" \
+		else ["Out back of the {fork_nick}. {coworker}'s filming. Dolores is on FaceTime, propped on a milk crate, knitting. $%d on the line." % double_stake]
+	_say(pre + [str(BossScript.BOSSES[kind]["intro"])])
+	_sync_world()
+
+func _quest_fight_out() -> void:
+	clear_enemies()
+	arena_boss = null
+	arena_id = ""
+	var kind: = quest_fight
+	quest_fight = ""
+	_leave_arena()
+	player.position = (BACKDOOR_PT + Vector2(0, 10)) if kind == "brayden" else (BRITT_POS + Vector2(0, 16))
+	_set_camera()
+
+func quest_fight_won(b: Node) -> void:
+	var kind: = str(b.kind)
+	kills[kind] = int(kills.get(kind, 0)) + 1
+	combat.gain_xp("boss_bounty", combat.level)
+	_quest_fight_out()
+	var lines: Array = [str(BossScript.BOSSES[kind]["defeat"])]
+	lines.append_array(lunch_caught() if kind == "brayden" else double_won())
+	_say(lines)
+	save_game()
+
+func quest_fight_lost() -> void:
+	var kind: = quest_fight
+	_quest_fight_out()
+	energy = 35.0
+	if kind == "brayden":
+		_say(["I wake up with a burnt patty on my chest. Brayden's gone. So's tonight's lunch. Try again another night."])
+		save_game()
+		return
+	_say(double_lost())
+
+func _draw_quest_fight_hud(f: Font, o: Vector2) -> void:
+	if quest_fight == "earljr":
+		draw_rect(Rect2(o + Vector2(40, 62), Vector2(240, 10)), Color(0, 0, 0, 0.6))
+		draw_string(f, o + Vector2(40, 70), Cast.T("DOUBLE OR NOTHING: $%d ON THE LINE" % double_stake), HORIZONTAL_ALIGNMENT_CENTER, 240, 6, Color("#ffd23f"))
+		_draw_britt_rec(f, o)
+	else:
+		_arena_caption(f, o, "BEHIND {FORK}  -  AFTER CLOSE  -  THE LUNCH THIEF", Color("#ffd23f"))
+
 ## The Grease Trap: the 86 List grows an unsigned entry; after close the board sends Duff out back to fight it.
 func _grease_talk(npc: String) -> bool:
 	var st: = side_quests
@@ -4519,6 +4849,9 @@ func quest_interactables() -> Array:
 					out.append({"id": "quest_" + k, "pos": LOST_SPOTS[k], "r": 14.0, "label": labels[k]})
 		else:
 			out.append({"id": "quest_lostbox", "pos": LOSTBOX_PT, "r": 12.0, "label": "Green paper box (Gail's drop)"})
+	if SideQuests.is_active(side_quests, "lunch") and SideQuests.stage(side_quests, "lunch") in [1, 2]:
+		out.append({"id": "quest_backdoor", "pos": BACKDOOR_PT, "r": 14.0,
+			"label": "{fork_nick} side door" if SideQuests.stage(side_quests, "lunch") == 1 else "Stake out the side door"})
 	if not SideQuests.is_active(side_quests, "porch"):
 		return out
 	match SideQuests.stage(side_quests, "porch"):
@@ -4548,6 +4881,7 @@ func quest_spots() -> Dictionary:
 		"porch": ["outside", PORCH_PT + Vector2(0, -16)],
 		"neighbor": ["outside", NEIGHBOR_DOOR + Vector2(0, -26)],
 		"lostbox": ["outside", LOSTBOX_PT + Vector2(0, -24)],
+		"backdoor": ["outside", BACKDOOR_PT + Vector2(0, -22)],
 	}
 
 func draw_quest_markers(ci: CanvasItem) -> void:
@@ -4557,7 +4891,7 @@ func draw_quest_markers(ci: CanvasItem) -> void:
 	for npc in spots:
 		if str(spots[npc][0]) != location:
 			continue
-		var mk: = SideQuests.marker_for(side_quests, str(npc), show_hidden_quests, day_count)
+		var mk: = SideQuests.marker_for(side_quests, str(npc), show_hidden_quests, day_count, quest_ctx())
 		if mk != "":
 			UiStyle.quest_marker(ci, spots[npc][1] + Vector2(0, sin(t * 3.2) * 1.5), mk)
 	# Lost & Found has no '?' while hunting: each unfound thing just glints now and then.
@@ -5861,10 +6195,14 @@ func _end_bet(won: bool, extra: String) -> void:
 			achievements.append("{coworker} Owes Me")
 			lines.append("ACHIEVEMENT UNLOCKED: {coworker} Owes Me (5 bets won. She says it's rigged.)")
 	else:
-		money = maxi(0, money - bet_stake)
 		bet["lost"] = int(bet["lost"]) + 1
 		lines.append("{coworker}: " + str(b["lose"]))
-		lines.append("-$%d. Record vs {coworker}: %d-%d." % [bet_stake, int(bet["won"]), int(bet["lost"])])
+		if bool(story.get("britt_iou", false)):   # Cover My Shift payoff: one lost bet on the house
+			story["britt_iou"] = false
+			lines.append("{coworker} sighs and tears up the napkin IOU. \"Covered. We're even. Don't get used to it.\" Record vs {coworker}: %d-%d." % [int(bet["won"]), int(bet["lost"])])
+		else:
+			money = maxi(0, money - bet_stake)
+			lines.append("-$%d. Record vs {coworker}: %d-%d." % [bet_stake, int(bet["won"]), int(bet["lost"])])
 	bet_kind = ""
 	energy = maxf(30.0, energy)
 	_say(lines)

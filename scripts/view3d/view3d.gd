@@ -956,7 +956,7 @@ func _sync_labels() -> void:
 		for npc in spots:
 			if str(spots[npc][0]) != loc:
 				continue
-			var mk: String = main.SideQuests.marker_for(main.side_quests, str(npc), main.show_hidden_quests, main.day_count)
+			var mk: String = main.SideQuests.marker_for(main.side_quests, str(npc), main.show_hidden_quests, main.day_count, main.quest_ctx())
 			if mk != "":
 				want.append([_float(spots[npc][1] + Vector2(0, sin(t * 3.2) * 1.5)), mk, Color("#ffd640") if mk == "!" else Color("#7fd0ff"), 64])
 	if loc == "outside":
