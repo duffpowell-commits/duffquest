@@ -99,7 +99,7 @@ func _setup() -> void:
 	if str(ctx.get("start", "")) in ["checkout", "bagging"]:
 		for id in items:
 			cart[id] = int(Errands.PRICES.get(id, 2))
-		pos = KIOSK.get_center() + Vector2(0, -12)
+		pos = _free_near(KIOSK.get_center() + Vector2(0, -12))
 		begin_scan()
 		if str(ctx["start"]) == "bagging":
 			scan_i = gag_at + 1
@@ -184,6 +184,11 @@ func cart_total() -> int:
 
 func _tick(d: float) -> void:
 	show_cursor = false
+	if leave_armed > 0.0 and t - leave_armed > 3.0 and state == "shop":
+		leave_armed = -10.0
+		var lb: = get_button("leave")
+		if not lb.is_empty():
+			lb["label"] = "Leave"
 	title = "{GROCERY}     " + ("Budget $%d" % budget if has_errand else "Your $%d" % (m.money if m else 0)) + "     Cart $%d" % cart_total()
 	match state:
 		"shop": _tick_shop(d)
@@ -248,6 +253,19 @@ func _tick_shop(d: float) -> void:
 		else:
 			say = "My list isn't done. Missing: %s. Check out anyway?" % ", ".join(missing_items().map(func (x): return str(Errands.LABELS.get(x, x)).to_lower()))
 			go("confirm")
+
+## Nearest unblocked point (spiral out in 2-unit steps), so a respawn can never park the cart inside a shelf.
+var leave_armed: = -10.0
+
+func _free_near(p: Vector2) -> Vector2:
+	if not _blocked(p):
+		return p
+	for r in range(2, 40, 2):
+		for k in 16:
+			var q: = p + Vector2.from_angle(TAU * k / 16.0) * r
+			if not _blocked(q):
+				return q
+	return START
 
 func _blocked(p: Vector2) -> bool:
 	if not FLOOR.grow(-R).has_point(p):
@@ -314,7 +332,7 @@ func scan_in_zone() -> bool:
 func _end_coupons(msg: String) -> void:
 	coupons_done = true
 	say = msg
-	pos = COUPON.get_center() + Vector2(-6, -16)
+	pos = _free_near(COUPON.get_center() + Vector2(-30, -1))   # audit Nov 19: the old spot was inside shelf 4 (cart frozen)
 	go("shop")
 
 func _gag_resolved(msg: String) -> void:
@@ -401,6 +419,15 @@ func pay() -> void:
 func _on_button(id: String) -> void:
 	match id:
 		"leave":
+			# Audit Nov 19: Leave sits right under the floor, so a steer near the bottom could abandon the errand.
+			# First tap arms it, a second within 3 s leaves.
+			if t - leave_armed > 3.0:
+				leave_armed = t
+				var b: = get_button("leave")
+				if not b.is_empty():
+					b["label"] = "Sure?"
+				flash("Tap Leave again to abandon the cart.", Color("#e06a4a"), 2.0)
+				return
 			say = "Abandoned the cart in aisle 2. Sorry, man. I know that's your night now."
 			finish(0.0)
 		"skip":
@@ -414,7 +441,7 @@ func _on_button(id: String) -> void:
 				skipped.append(x)
 			begin_scan()
 		"no":
-			pos = KIOSK.get_center() + Vector2(14, -16)
+			pos = _free_near(KIOSK.get_center() + Vector2(30, -1))
 			say = "Back to the aisles."
 			go("shop")
 		"scan":

@@ -61,7 +61,8 @@ func _load_items() -> void:
 	openers = data.get("openers", ["Look at this."])
 	var raw: Array = (data.get("items", []) as Array).duplicate()
 
-	var ff: = FileAccess.open(FAMILY_PATH, FileAccess.READ)
+	# Audit Nov 19: the family-only file (real show/plush names) loaded in the public edition too.
+	var ff: = FileAccess.open(FAMILY_PATH, FileAccess.READ) if Cast.family else null
 	if ff != null:
 		var fam = JSON.parse_string(ff.get_as_text())
 		if typeof(fam) == TYPE_DICTIONARY:

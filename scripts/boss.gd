@@ -189,6 +189,7 @@ var enraged: = false
 var contact_cd: = 0.0
 var t: = 0.0
 var stun: = 0.0
+var stun_immune: = 0.0   # audit Nov 19: the skillet stunned every swing (boss stunned ~95% of the fight)
 var stolen: = 0
 var buddy: = false
 var hidden_t: = 0.0
@@ -251,6 +252,7 @@ func _physics_process(delta: float) -> void:
 	line_t = maxf(0.0, line_t - delta)
 	contact_cd = maxf(0.0, contact_cd - delta)
 	stun = maxf(0.0, stun - delta)
+	stun_immune = maxf(0.0, stun_immune - delta)
 	if m == null or m.player == null:
 		return
 	var p: CharacterBody2D = m.player
@@ -528,8 +530,9 @@ func take_hit(dir: Vector2, dmg: float, special: String = "") -> float:
 	hp -= dmg
 	flash = 0.12
 	knock = dir * 90.0
-	if special == "stun":
+	if special == "stun" and stun_immune <= 0.0:
 		stun = 0.4
+		stun_immune = 1.6
 	if not enraged and hp <= max_hp * 0.5 and hp > 0.0:
 		enraged = true
 		say(str(BOSSES[kind]["rage"]), 2.5)

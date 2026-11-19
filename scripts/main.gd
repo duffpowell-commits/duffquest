@@ -337,6 +337,7 @@ var bus_rides: = 0
 var last_text_day: = -1
 var gala_unlocked: = false
 var gala_beaten: = false
+var gala_day: = -1   # last day of a gala rematch (one a day)
 var gala_runs: = 0
 var fund_happy_day: = -1
 var fund_happy_today: = 0.0
@@ -865,7 +866,7 @@ func to_dict() -> Dictionary:
 		"has_car": has_car, "bus_pass_until": bus_pass_until, "bus_rides": bus_rides,
 		"market": market.duplicate(true), "brokerage": brokerage.duplicate(true), "college": college.duplicate(true),
 		"threads": threads.duplicate(true), "unread": unread.duplicate(), "last_text_day": last_text_day,
-		"gala_unlocked": gala_unlocked, "gala_beaten": gala_beaten, "gala_runs": gala_runs,
+		"gala_unlocked": gala_unlocked, "gala_beaten": gala_beaten, "gala_runs": gala_runs, "gala_day": gala_day,
 		"fund_happy_day": fund_happy_day, "fund_happy_today": fund_happy_today,
 		"combat": combat.to_dict(),
 	}
@@ -995,6 +996,7 @@ func from_dict(d: Dictionary) -> void:
 	last_text_day = int(d.get("last_text_day", -1))
 	gala_unlocked = bool(d.get("gala_unlocked", false))
 	gala_beaten = bool(d.get("gala_beaten", false))
+	gala_day = int(d.get("gala_day", -1))
 	gala_runs = int(d.get("gala_runs", 0))
 	if not gala_unlocked and gala_due():
 		check_gala_unlock(false)   # save from before the day-24 gate, already past the invite morning
@@ -1034,6 +1036,9 @@ func load_game() -> bool:
 			after_dialog = func () -> void: first_bet_pitch("")
 		else:
 			_say(cold_open_rules(false))
+	elif story_beaten("willnot") and not bool(story.get("ending_seen", false)):
+		# Audit Nov 19: quitting during the finale or credits used to lose the ending (and the minivan) for good.
+		after_dialog = func () -> void: start_ending()
 	jen_text_daily()
 	_say(errand_new_day())
 	return true
@@ -1324,13 +1329,16 @@ func _on_player_attack(pos: Vector2, dir: Vector2) -> void:
 			if not e_sp in ["flip", "stun", "pierce"]:
 				e_sp = "crit"
 			_toast("CRIT! The Cleaver hungers." if sp == "execute" else "CRIT! Generational damage. Like their wealth, but useful.")
-		if sp == "golden":
-			money += 1
 		var hd: Vector2 = (e.global_position - player.global_position).normalized() if sweep else dir
-		combat.hit(e, hd, dmg, e_sp, combat.finisher_heat() if fin else combat.HEAT_PER_HIT)
+		var dealt: float = combat.hit(e, hd, dmg, e_sp, combat.finisher_heat() if fin else combat.HEAT_PER_HIT)
+		if sp == "golden" and dealt > 0.0:   # audit Nov 19: paid $1 even on intros, flexes and the unkillable driver
+			money += 1
 		if sp == "execute":
 			energy = minf(energy_cap(), energy + energy_gain(2.0))
 	for pr in get_tree().get_nodes_in_group("projectile"):
+		# audit Nov 19: Willnot's floor glass, coupon litter, walls and traps aren't swattable (it erased the glass mechanic)
+		if is_instance_valid(pr) and str(pr.get("kind")) in combat.FLOOR_PROPS:
+			continue
 		if is_instance_valid(pr) and pr.global_position.distance_to(center) < reach + 2.0:
 			pr.queue_free()
 			_toast("Swatted it. Complaint escalated to nobody.")
@@ -1736,7 +1744,9 @@ func _wake(energy_penalty: int) -> void:
 	lines.append_array(watch_new_day())
 	lines.append_array(couch_lines)
 	lines.append_array(mood_new_day())
-	lines.append_array(morning_new_day(not couch_lines.is_empty()))
+	var morning_at: = lines.size()
+	var morning_lines: = morning_new_day(not couch_lines.is_empty())
+	lines.append_array(morning_lines)
 	if couch_lines.is_empty() and str(morning["kind"]) == "":
 		lines.append_array(kindness_new_day())
 	if day_i % 7 == 0:
@@ -1747,6 +1757,13 @@ func _wake(energy_penalty: int) -> void:
 			return
 	jen_text_daily()
 	var missed: = errand_new_day()
+	# Audit Nov 19: rent / a missed errand can upset her AFTER today's morning was rolled. Mornings never land on an
+	# upset day (mornings.gd rule), so drop it again.
+	if mood_kind() == "upset" and str(morning["kind"]) != "" and not morning_lines.is_empty():
+		morning = Mornings.new_state()
+		morning["day"] = day_count
+		for i in morning_lines.size():
+			lines.remove_at(morning_at)
 	if not missed.is_empty():
 		lines = missed + lines
 	lines.append(errand_brief())
@@ -2311,6 +2328,7 @@ func _process(delta: float) -> void:
 			restless_notify()
 		if happiness <= 0.0:
 			happiness = 30.0
+			couch_night = true   # audit Nov 19: the line promised the couch; now it happens
 			_say(["{partner}'s really hurt. I'm on the couch tonight. She still tosses me the good blanket.", "Mood reset to 30. Make it right, chef."])
 		if energy <= 0.0 and not location in ["gala", "arena"]:
 			_pass_out()
@@ -3520,6 +3538,12 @@ func gala_new_day() -> Array:
 func start_gala(first: int = 0) -> void:
 	if not gala_unlocked or busy() or _world_gate(func () -> void: start_gala(first)):
 		return
+	if gala_beaten and gala_day == day_count:   # audit Nov 19: rematches were unlimited (+$250 each, no clock cost)
+		_say(["The gala's done for tonight. The caterers are stacking chairs. Rich people only party once a day. Allegedly."])
+		return
+	if gala_beaten:
+		gala_day = day_count
+		save_game()
 	clear_enemies()
 	location = "gala"
 	player.position = GALA_SPAWN
