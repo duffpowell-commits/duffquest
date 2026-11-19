@@ -191,6 +191,17 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   stop at "Start over?"). Ids: 01 `at:540,150,720 --3d`, 06 `ask --3d`, 07 `gala_say:fences --3d`, 08 `at:300,215,1260 --3d`,
   10/11/12 `cold` (cold_1/3/4), 13 `notes`, 14 `gig`, 15 `evicted`.
 
+- **Depth pass (Nov 19, PR #161 MERGED, Duff said merge):** six 3D-view tweaks, all
+  in `scripts/view3d/view3d.gd`, all off in Lite except the eaves. (1) Camera sway: yaw follows Duff off centre (`YAW_MAX` 7°,
+  rooms `YAW_ROOM` 4°, `YAW_LEAD` toward his walk); actor + dressing cards turn with it (group `view3d_face`); a fight
+  opens with a 10% push-in (`_push`, `PUSH_T`). (2) Round cut-outs: `shaders/card3d.gdshader` on character sheet frames
+  and dressing (not facades, vans, plain images or fading cards): normals from the art's own alpha at mip 2, no extra
+  textures. Sprite3D won't bind its texture under a material_override: `tex` is set by hand (`_round_mat`/`_round_pool`).
+  (3) Contact shadows: `shaders/ao_blob.gdshader` (`_ao`) under every building box, prop/tree and along a room's back
+  wall (stands in for SSAO, which Compatibility lacks). Raised curbs were dropped: the street is one painting with no
+  curb data. (4) Trees bend from the crown in the shader (`sway`), gustier in rain/snow (`wind`). (5) Haze = depth fog
+  (`FOG_MODE_DEPTH`, starts 19 m by day, 6 m at night: the old flat fog lifted Duff's black shirt at night, keep that).
+  (6) Eaves: a thin lip along each building box top (`_box`). Render `docs/renders/depth_pass_before_after.jpg`.
 - **True 3D slice (Nov 17, test only, OFF for players):** web link `#true3d` (or env `DQ_TRUE3D=1` for renders) swaps
   Duff from a painted card to a real 3D model in the 3D view (porch pirate entries exist but have no model yet:
   their 1x art gave Hunyuan a slab/box, so they stay cards) (`scripts/view3d/true3d.gd`; view3d
