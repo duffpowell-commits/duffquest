@@ -21,6 +21,7 @@ const ShopScript: = preload("res://scripts/minigames/shop.gd")
 const BabyScript: = preload("res://scripts/minigames/baby.gd")
 const StealthScript: = preload("res://scripts/minigames/stealth.gd")
 const CatHeistScript: = preload("res://scripts/minigames/cat_heist.gd")
+const TriviaScript: = preload("res://scripts/minigames/trivia.gd")
 const EnemyScript: = preload("res://scripts/enemy.gd")
 const Gear: = preload("res://scripts/gear.gd")
 const WL: = preload("res://scripts/wordle_logic.gd")
@@ -1424,6 +1425,7 @@ func interact(id: String) -> void:
 			if not quest_talk("mail"):
 				mail_menu()
 		"plasma": open_plasma()
+		"trivia": trivia_menu()
 		"bowls":
 			if not quest_talk("bowls"):
 				feed_cats()
@@ -1728,6 +1730,7 @@ func _wake(energy_penalty: int) -> void:
 	show_loading()
 	lines.append_array(daily_new_day())
 	lines.append_array(cover_new_day())
+	lines.append_array(watch_new_day())
 	lines.append_array(couch_lines)
 	lines.append_array(mood_new_day())
 	lines.append_array(morning_new_day(not couch_lines.is_empty()))
@@ -2174,12 +2177,12 @@ func dev_tools_on() -> bool:
 ## Dev: pick a side quest, then a stage; the quest jumps there and Duff warps to whoever the stage needs.
 func dev_quest_menu() -> void:
 	var opts: Array = []
-	var keys: = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8]
+	var keys: = [KEY_1, KEY_2, KEY_3, KEY_4, KEY_5, KEY_6, KEY_7, KEY_8, KEY_9, KEY_Q, KEY_W, KEY_E, KEY_R, KEY_T, KEY_Y, KEY_U]
 	var i: = 0
 	for e in SideQuests.LIST:
 		var id: = str(e["id"])
 		var stv: = SideQuests.status(side_quests, id)
-		opts.append([id, "%s %s %d/%d" % [str(e["title"]).substr(0, 18), {"": "-", "active": ">", "done": "OK"}[stv], SideQuests.stage(side_quests, id), SideQuests.stage_count(id)], keys[i]])
+		opts.append([id, "%s %s %d/%d" % [str(e["title"]).substr(0, 18), {"": "-", "active": ">", "done": "OK"}[stv], SideQuests.stage(side_quests, id), SideQuests.stage_count(id)], keys[i] if i < keys.size() else KEY_NONE])
 		i += 1
 	opts.append(["hidden", "Hidden quests: %s" % ("SHOWN" if show_hidden_quests else "hidden"), KEY_H])
 	opts.append(["leave", "Close", KEY_ESCAPE])
@@ -3168,6 +3171,8 @@ func enemy_defeated(e: Node) -> void:
 		_say(lines)
 	elif e.has_meta("quest_porch"):
 		_say([msg, porch_quest_won()])
+	elif e.has_meta("watch"):
+		_say([msg] + watch_done())
 	elif e.has_meta("quest_king"):
 		_say([msg, king_runner_caught(str(e.get_meta("quest_king")))])
 	elif e.has_meta("cold_open"):
@@ -3178,6 +3183,8 @@ func enemy_defeated(e: Node) -> void:
 func enemy_gone(e: Node) -> void:
 	if e.has_meta("quest_porch"):
 		_toast("Cheeto Chad clears the fence. He lives next door, genius. Knock again.")
+	if e.has_meta("watch"):
+		_toast("He got away. He'll be back. They always come back. Check the spot again.")
 	if e.has_meta("quest_king"):
 		_toast("The runner's gone. He dropped nothing. Check that spot again, they always come back.")
 	if e.kind == "pirate" and str(e.loot) != "":
@@ -4297,7 +4304,7 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
 func quest_talk(npc: String) -> bool:
-	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc) or _lunch_talk(npc) or _cover_talk(npc) or _double_talk(npc) or _chef_talk(npc) or _cats_talk(npc) or _king_talk(npc)
+	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc) or _lunch_talk(npc) or _cover_talk(npc) or _double_talk(npc) or _chef_talk(npc) or _cats_talk(npc) or _king_talk(npc) or _watch_talk(npc)
 
 ## Lost & Found, Omaha: a flyer in the mail, three things hidden around the block, returned to the Seen Cafe paper box.
 ## Each find is a clue named after the thing ("ring", "collar", "shoe"); all three advance to the return stage.
@@ -5038,6 +5045,127 @@ func king_won() -> Array:
 	save_game()
 	return lines
 
+## ---- Trivia night (Nov 19): Thursdays 6-10 PM at Club Cloud 9, from day 4. Duff + {coworker} ("The Fry Hards") vs
+## the finance bros ("Long Positions"). 7 pub questions (trivia.gd); beat the bros' score for a $40 pot. Season =
+## 4 wins: $100 prize + achievement. One night a week.
+const TRIVIA_DOOR: = Vector2(372, 290)
+const TRIVIA_POT: = 40
+const TRIVIA_SEASON: = 4
+
+func trivia_tonight() -> bool:
+	var c: = fmod(clock, 1440.0)
+	return day_i % 7 == 3 and c >= 1080.0 and c < 1320.0 and day_count >= 4
+
+func trivia_menu() -> void:
+	if int(story.get("trivia_day", -1)) == day_count:
+		_say(["We already played tonight. {coworker} is arguing with the host about question four. She's going to lose that one too."])
+		return
+	var w: = int(story.get("trivia_w", 0))
+	var l: = int(story.get("trivia_l", 0))
+	_menu("TRIVIA NIGHT", ["Thursday trivia at Club Cloud 9. {coworker} saved us a table and named the team 'The Fry Hards'. She's already two drinks in.",
+		"Across the room: the Long Positions. Four guys in vests. One brought a laptop. To trivia.",
+		"Seven questions. Beat their score, split the $%d pot. Season: %d-%d (%d wins takes the season)." % [TRIVIA_POT * 2, w, l, TRIVIA_SEASON]],
+		[["go", "Play", KEY_1], ["no", "Not tonight", KEY_ESCAPE]], func (ch: String) -> void:
+			if ch == "go":
+				start_trivia())
+
+func start_trivia() -> void:
+	story["trivia_day"] = day_count
+	var g: = TriviaScript.new()
+	_run_game(g, func (_n: Node, sc: float, _notes: Array) -> void:
+		_say(trivia_result(int(round(sc * 7.0)), trivia_bros_score())))
+
+## The bros' score: 3-6 of 7, steady per night (seeded off the day).
+func trivia_bros_score() -> int:
+	var rng: = RandomNumberGenerator.new()
+	rng.seed = day_count * 7919 + 13
+	return rng.randi_range(3, 6)
+
+func trivia_result(ours: int, theirs: int) -> Array:
+	var lines: Array = ["Final: Fry Hards %d, Long Positions %d." % [ours, theirs]]
+	var won: = ours > theirs
+	if ours == theirs:
+		lines.append("Tie. Tiebreaker: closest guess to the year the Old Market's first brick was laid. {coworker} says '1880-something'. The bros say 'Q3'.")
+		won = true
+	if won:
+		money += TRIVIA_POT
+		story["trivia_w"] = int(story.get("trivia_w", 0)) + 1
+		lines.append("{coworker} stands on her chair. The Long Positions demand a recount. +$%d (our half of the pot)." % TRIVIA_POT)
+	else:
+		story["trivia_l"] = int(story.get("trivia_l", 0)) + 1
+		lines.append("The Long Positions high-five without making eye contact. One of them says 'diversify'. {coworker} throws a fry at him.")
+	lines.append("Season: %d-%d." % [int(story.get("trivia_w", 0)), int(story.get("trivia_l", 0))])
+	if int(story.get("trivia_w", 0)) >= TRIVIA_SEASON and not achievements.has("Trivia Night Champs"):
+		achievements.append("Trivia Night Champs")
+		money += 100
+		lines.append("That's the season. The host gives us a $100 bar tab and a trophy that's a spray-painted bowling pin. {coworker} kisses it.")
+		lines.append("ACHIEVEMENT UNLOCKED: Trivia Night Champs")
+	save_game()
+	return lines
+
+## ---- Neighborhood Watch (Nov 19): once the porch mystery is solved, the block's watch app sends one small
+## request a day (find something / shoo someone). Shows in the morning lines; the spot is on the street until done.
+## 7 done = Block Captain.
+const WATCH: = [
+	{"kind": "find", "pos": Vector2(327, 168), "ask": "Mrs. Kowalski's garden gnome is missing. 'He's named Gerald. A different Gerald.' Last seen by the storm drain.",
+		"done": "Gnome found in the storm drain, face down, ashamed. Mrs. Kowalski gives me $15 and a hug I didn't consent to.", "label": "A gnome-shaped lump"},
+	{"kind": "shoo", "pos": Vector2(620, 215), "enemy": "drunk", "ask": "Somebody's been yelling at the bus stop since 6 AM. Can somebody please.",
+		"done": "He's asleep on the bench now. The block chips in $25. I'm basically the police.", "label": "The yelling guy"},
+	{"kind": "find", "pos": Vector2(500, 136), "ask": "Lost: one (1) grocery list. 'It has my mother's lasagna on the back. PLEASE.' Near the gas station bins.",
+		"done": "The lasagna recipe is real. It has eleven cheeses. Ruth gives me $15 and a photocopy.", "label": "A crumpled list"},
+	{"kind": "shoo", "pos": Vector2(165, 340), "enemy": "scammer", "ask": "Guy going door to door selling 'roof inspections'. We don't have roofs. We have apartments.",
+		"done": "He flees, roof clipboard and all. The block chips in $25.", "label": "Roof inspection guy"},
+	{"kind": "find", "pos": Vector2(186, 262), "ask": "Kid lost his Pokémon card on the way to the bus. 'It's holo. It's my whole net worth.'",
+		"done": "Found it in a pine needle pile. The kid's dad sends $15 and a voice memo of the kid screaming.", "label": "Something shiny in the needles"},
+	{"kind": "shoo", "pos": Vector2(300, 190), "enemy": "heckler", "ask": "There's a man keying cars on the north side and narrating it. Like a podcast.",
+		"done": "His podcast is cancelled. The block chips in $25, and the guy with the Civic sends a thumbs up.", "label": "The car-keying podcaster"},
+	{"kind": "find", "pos": Vector2(258, 166), "ask": "Somebody left a whole baby stroller outside the Seen Cafe. No baby. Just a stroller. And a latte. Whose is it?",
+		"done": "It's the barista's. She was on break. For three hours. She gives me $15 and an oat milk latte I didn't ask for.", "label": "An abandoned stroller"},
+]
+const WATCH_GOAL: = 7
+
+func watch_today() -> Dictionary:
+	if not SideQuests.is_done(side_quests, "porch") or int(story.get("watch_day", -1)) == day_count:
+		return {}
+	return WATCH[day_count % WATCH.size()]
+
+func watch_new_day() -> Array:
+	var w: = watch_today()
+	if w.is_empty():
+		return []
+	return ["Neighborhood Watch app: \"%s\"" % w["ask"]]
+
+func _watch_talk(npc: String) -> bool:
+	if npc != "watch":
+		return false
+	var w: = watch_today()
+	if w.is_empty():
+		return false
+	if str(w["kind"]) == "shoo":
+		if get_tree().get_nodes_in_group("enemy").any(func (e): return e.has_meta("watch")):
+			return true
+		var e: = spawn_enemy(str(w["enemy"]), Vector2(w["pos"]) + Vector2(8, 0))
+		e.set_meta("watch", true)
+		_toast("There he is. Watch time.")
+		return true
+	_say(watch_done())
+	return true
+
+func watch_done() -> Array:
+	var w: = watch_today()
+	if w.is_empty():
+		return []
+	story["watch_day"] = day_count
+	story["watch_n"] = int(story.get("watch_n", 0)) + 1
+	money += 15 if str(w["kind"]) == "find" else 25
+	gain_happy(2.0)
+	var lines: Array = [str(w["done"]), "Watch requests handled: %d." % int(story["watch_n"])]
+	if int(story["watch_n"]) >= WATCH_GOAL and not achievements.has("Block Captain"):
+		achievements.append("Block Captain")
+		lines.append("ACHIEVEMENT UNLOCKED: Block Captain (the watch app gives me a badge. It's a JPEG. I love it.)")
+	save_game()
+	return lines
+
 ## The Grease Trap: the 86 List grows an unsigned entry; after close the board sends Duff out back to fight it.
 func _grease_talk(npc: String) -> bool:
 	var st: = side_quests
@@ -5151,6 +5279,11 @@ func quest_interactables() -> Array:
 	if SideQuests.is_active(side_quests, "lunch") and SideQuests.stage(side_quests, "lunch") in [1, 2]:
 		out.append({"id": "quest_backdoor", "pos": BACKDOOR_PT, "r": 14.0,
 			"label": "{fork_nick} side door" if SideQuests.stage(side_quests, "lunch") == 1 else "Stake out the side door"})
+	if trivia_tonight():
+		out.append({"id": "trivia", "pos": TRIVIA_DOOR, "r": 12.0, "label": "Trivia night (Club Cloud 9)"})
+	var wt: = watch_today()
+	if not wt.is_empty():
+		out.append({"id": "quest_watch", "pos": wt["pos"], "r": 14.0, "label": "Watch: " + str(wt["label"])})
 	if SideQuests.offerable(side_quests, "king", day_count, show_hidden_quests, quest_ctx()) and phase() != "Night":
 		out.append({"id": "quest_neighbor", "pos": NEIGHBOR_DOOR, "r": 16.0, "label": "Cheeto Chad's door (he's waving)"})
 	if SideQuests.is_active(side_quests, "king"):
@@ -5179,6 +5312,18 @@ func porch_quest_won() -> String:
 	save_game()
 	return msg
 
+## Street spots with something to do that aren't a quest stage: today's watch request and unfound King box stacks.
+func street_markers() -> Array:
+	var out: Array = []
+	var wt: = watch_today()
+	if not wt.is_empty():
+		out.append(Vector2(wt["pos"]))
+	if SideQuests.is_active(side_quests, "king") and SideQuests.stage(side_quests, "king") == 2:
+		for k in KING_SPOTS:
+			if not SideQuests.has_clue(side_quests, "king", k):
+				out.append(KING_SPOTS[k])
+	return out
+
 ## Where each side-quest NPC/prop stands, so its !/? marker can float over it.
 func quest_spots() -> Dictionary:
 	return {
@@ -5206,6 +5351,9 @@ func draw_quest_markers(ci: CanvasItem) -> void:
 		var mk: = SideQuests.marker_for(side_quests, str(npc), show_hidden_quests, day_count, quest_ctx())
 		if mk != "":
 			UiStyle.quest_marker(ci, spots[npc][1] + Vector2(0, sin(t * 3.2) * 1.5), mk)
+	if location == "outside":   # Nov 19: today's watch request + the King's box stacks (view3d mirrors street_markers())
+		for p in street_markers():
+			UiStyle.quest_marker(ci, p + Vector2(0, -18 + sin(t * 3.2) * 1.5), "!")
 	# Lost & Found has no '?' while hunting: each unfound thing just glints now and then.
 	if location == "outside" and SideQuests.is_active(side_quests, "alley") and SideQuests.stage(side_quests, "alley") == 1:
 		var i: = 0

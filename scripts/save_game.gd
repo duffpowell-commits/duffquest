@@ -206,4 +206,10 @@ static func clean_story(st) -> Dictionary:
 	out["attempts"] = int(st.get("attempts", 0))
 	out["cold_open"] = bool(st.get("cold_open", false))   # Nov 13: new game's porch fight still running (old saves: no)
 	out["first_bet"] = bool(st.get("first_bet", false))   # Nov 14: {coworker}'s first-day bet already pitched
+	# Nov 19 content: Cover My Shift IOU, Dolores's book, trivia season, Neighborhood Watch (main.gd). Kept only when set.
+	if bool(st.get("britt_iou", false)):
+		out["britt_iou"] = true
+	for k in ["dolores_w", "dolores_l", "trivia_w", "trivia_l", "trivia_day", "watch_n", "watch_day"]:
+		if st.has(k):
+			out[k] = int(st[k])
 	return out

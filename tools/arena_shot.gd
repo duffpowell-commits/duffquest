@@ -1,6 +1,6 @@
 extends Node
 ## In-game shot of one boss arena (fight view), for M7 backdrop checks. Run:
-##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "gala_say:<boss>" ({partner}'s setup line as the ex walks in), "ask" ({partner} asks for diapers), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "look"/"look_text" (her phone over the dialogue), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "porch"/"chad" (porch mystery: '?' on the neighbor door / the suspect fleeing), "grease86" (Grease Trap '?' on the 86 List at night; the fight itself is "bounty:grease"), "gig" (Brittany's Side Gig choice card), "backdoor"/"lunch_pick"/"cover"/"double" (round-two quests: back-door '?', choice cards), "qfight:brayden"/"qfight:earljr" (their alley fights), "lost" (Lost & Found hunt: glints at the storm drain), "at:X,Y[,MIN]" (outdoors at a world point, optional clock minute), or "fryer"/"sandwich" = the kitchen station with food in it)
+##   (ids: a boss arena, "bounty:<id>" (alley bounty fight), "gala:<boss>" (gala ex fight), "gala_say:<boss>" ({partner}'s setup line as the ex walks in), "ask" ({partner} asks for diapers), "move:<bounty>:<attack>:<frames>" (fire one boss attack, shoot N frames later), "title", "home", "hint" (home, standing by Madison), "dolores" (her dialogue line), "waffle" (Waffle Haus shift), "look"/"look_text" (her phone over the dialogue), "quest"/"type"/"notes" (side-quest marker, typewriter mid-line, phone Notes), "porch"/"chad" (porch mystery: '?' on the neighbor door / the suspect fleeing), "grease86" (Grease Trap '?' on the 86 List at night; the fight itself is "bounty:grease"), "gig" (Brittany's Side Gig choice card), "backdoor"/"lunch_pick"/"cover"/"double" (round-two quests: back-door '?', choice cards), "qfight:brayden"/"qfight:earljr"/"qfight:king" (quest alley fights), "dolores_book"/"chef_day"/"heist"/"trivia"/"watch"/"king_boxes" (Nov 19 content), "lost" (Lost & Found hunt: glints at the storm drain), "at:X,Y[,MIN]" (outdoors at a world point, optional clock minute), or "fryer"/"sandwich" = the kitchen station with food in it)
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/arena_shot.tscn -- gymbro
 ## -> /tmp/qa/arena_<id>.png   (id "title" = the title screen -> /tmp/qa/title.png)
 var _street: Array = []
@@ -89,6 +89,19 @@ func _process(_d: float) -> void:
 			else:
 				m.money = 180
 				m.dev_warp_quest("double", 1)
+			m.dialog.clear()
+		elif id in ["dolores_book", "chef_day", "heist", "trivia", "watch", "king_boxes"]:  # Nov 19 content: Dolores's book card /
+			# Chef's Bad Week card / cat heist floor / trivia clipboard / a watch request spot / the King's runners
+			m.clock = 600.0
+			m.SideQuests.finish(m.side_quests, "porch")
+			if id == "dolores_book":
+				m.waffle_data["shifts"] = 2
+				m.money = 120
+			elif id == "chef_day":
+				m.day_i = 1
+				m.dev_warp_quest("chef", 2)
+			elif id == "king_boxes":
+				m.dev_warp_quest("king", 2)
 			m.dialog.clear()
 		elif id == "gig":  # Brittany's Side Gig: the cover-or-rat choice card
 			m.clock = 600.0
@@ -211,6 +224,28 @@ func _process(_d: float) -> void:
 		m.clock = 1380.0
 		m.dialog.clear()
 		m.player.position = m.BOARD_PT + Vector2(-4, 6)
+	if frame == 240 and id == "dolores_book":
+		m.toast_t = 0.0
+		m.dolores_book()
+	if frame == 240 and id == "chef_day":
+		m.toast_t = 0.0
+		m.quest_talk("fork")
+	if frame == 240 and id == "heist":
+		m.toast_t = 0.0
+		var g = m.CatHeistScript.new()
+		g.item = "wallet"
+		m._run_game(g, func (_n, _s, _x) -> void: pass)
+	if frame == 240 and id == "trivia":
+		m.toast_t = 0.0
+		m._run_game(m.TriviaScript.new(), func (_n, _s, _x) -> void: pass)
+	if frame >= 236 and id == "watch":
+		m.toast_t = 0.0
+		m.dialog.clear()
+		m.player.position = Vector2(m.watch_today()["pos"]) + Vector2(-12, 8)
+	if frame >= 236 and id == "king_boxes":
+		m.toast_t = 0.0
+		m.dialog.clear()
+		m.player.position = m.KING_SPOTS["north"] + Vector2(-14, 8)
 	if frame == 240 and id == "gig":
 		m.toast_t = 0.0
 		m.quest_talk("brittany")
@@ -274,7 +309,7 @@ func _process(_d: float) -> void:
 		m.dialog.clear()
 		if id == "hint":
 			m.player.position = m.MADISON_POS + Vector2(16, 4)
-	if frame == 230 and not id in ["street", "prep", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover", "backdoor", "cover", "lunch_pick", "double"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look") and id != "ask" and not id.begins_with("gala_say:"):
+	if frame == 230 and not id in ["street", "prep", "fryer", "sandwich", "home", "dolores", "waffle", "hint", "quest", "type", "notes", "porch", "chad", "grease86", "gig", "lost", "evicted", "gameover", "backdoor", "cover", "lunch_pick", "double", "dolores_book", "chef_day", "heist", "trivia", "watch", "king_boxes"] and not id.begins_with("at:") and not id.begins_with("morning_") and not id.begins_with("zebra") and not id.begins_with("loud") and not id.begins_with("look") and id != "ask" and not id.begins_with("gala_say:"):
 		m.dialog.clear()
 		m.player.position = (m.GALA_SPAWN + Vector2(40, -10)) if id.begins_with("gala:") else m.ARENA_ORIGIN + Vector2(200, 140)
 	if id.begins_with("move:"):
