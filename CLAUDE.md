@@ -259,7 +259,7 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 0. **Visual plan built Nov 17** (living town, UI motion, diorama 3D, fight impact; TRACKER entry): needs Duff's
    phone test, mainly the tilt-shift cost on his Android (perf_guard Lite turns it off). Store screens re-shot Nov 17 late.
 1. **Ask Duff for his and Brittany's playtest notes first** (iPhone + his Android). They outrank the rest.
-2. **Itch page:** Duff pastes `docs/itch/PAGE.md` + images (sessions can't reach itch.io).
+2. **Itch page:** source is `docs/itch/page.html`; Duff pastes it from https://duffpowell-commits.github.io/duffquest/itch/ (Copy button). Footage = `docs/itch/slots/slotN.*` (replace the file, keep the name, no paste needed). The itch page bot is disabled: itch's Cloudflare bot check blocks GitHub runners, and we don't get around bot checks.
 3. **Grease boss art:** done Nov 12 (own sprite `ch_grease`, alley arena already its own). Left: nothing unless Duff asks.
 4. **Boot:** done Nov 13 (title in 9.3 s on throttled 4G, was 19.9 s). See the Web packs note above.
 5. **Balance re-check** after the playtest (gates 45-65, wait drain floor 40).
