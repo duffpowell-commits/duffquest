@@ -612,13 +612,14 @@ func _edition_checks() -> void:
 	C.set_family(false)
 	var shown: = " ".join(PackedStringArray(C.names().values().map(func(v): return str(v))))
 	var leaked: = []
-	for w in ["Twisted", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh"]:
+	for w in ["Twisted", "Wordle", "Willnot", "Gucchi", "aisle-ish", "Nakatomeh", "Cheeto", "Flamin", "Applebee"]:
 		if w in shown:
 			leaked.append(w)
 	check("public edition: no real brand / real-ex names in cast (%s)" % ", ".join(leaked), leaked.is_empty())
 	check("public edition: the house sandwich is renamed with the restaurant", C.T("{HOUSE_SANDWICH}") == "SPATULA CLASSIC")
 	check("public edition: {FORK} and {wordle} renamed, Brittany kept (her OK, Nov 16)", C.T("{FORK} / {wordle} / {coworker}") == "THE BUSTED SPATULA / Word Brawl / Brittany")
 	check("public edition: {COWORKER}'S BETS reads BRITTANY'S BETS, no Mazikeen left", C.T("{COWORKER}'S BETS") == "BRITTANY'S BETS" and not "Maz" in shown)
+	check("public edition: snack + chain brands renamed (Nov 19)", C.T("{chad} / {hot_chips} / {chain_grill}") == "Chip Dust Chad / Blaze Puffs / Grillbee's")
 	check("public edition: the Fork nickname and club sandwich follow the rename", C.T("{fork_nick} / {club_sandwich}") == "Spatula / Club Spatula")
 	var bare: = _bare_fork_lines()
 	check("public edition: no bare 'Fork' left in player-facing strings (%s)" % ", ".join(bare), bare.is_empty())
@@ -633,6 +634,7 @@ func _edition_checks() -> void:
 	check("public edition: *_pub art exists at the original size (%s)" % ", ".join(bad), bad.is_empty())
 	C.set_family(true)
 	check("family edition: real names kept", C.T("{fork} {wordle} {ex_final} {coworker}") == "The Twisted Fork Wordle Bruce Willnot Brittany")
+	check("family edition: snack + chain names kept", C.T("{chad} / {hot_chips} / {chain_grill}") == "Cheeto Chad / Flamin' Hot / Applebee's")
 	check("family edition: the Fork nickname kept", C.T("{fork_nick} / {club_sandwich}") == "Fork / Club Fork")
 	check("family edition: original art kept", A.pub("res://assets/art/sf_fork.png") == "res://assets/art/sf_fork.png")
 	C.set_family(was)
@@ -1176,7 +1178,7 @@ func _side_quest_checks(main: Node) -> void:
 	for e in main.get_tree().get_nodes_in_group("enemy"):
 		if e.has_meta("quest_porch"):
 			chad = e
-	check("porch: knocking flushes out the suspect", chad != null and chad.display_name() == "Cheeto Chad")
+	check("porch: knocking flushes out the suspect", chad != null and chad.display_name() == preload("res://scripts/cast.gd").T("{chad}"))
 	main.quest_talk("neighbor")
 	check("porch: knocking again doesn't clone him", main.get_tree().get_nodes_in_group("enemy").filter(func (e): return e.has_meta("quest_porch")).size() == 1)
 	var cash0: int = main.money
