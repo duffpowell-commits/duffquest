@@ -74,6 +74,9 @@ var heat: = 50.0
 var selected: = 0
 var demon_unlocked: = false
 var demon_t: = 0.0
+const DEMON_MAX: = 12.0
+## Projectile-group things that sit on the floor and aren't attacks: never swatted, hollered away or countered.
+const FLOOR_PROPS: = ["glass"]   # Willnot's floor glass hurts HIM; keep it on the floor
 var crash_t: = 0.0
 var counter_t: = 0.0
 var feast_t: = 0.0
@@ -217,7 +220,7 @@ func _tick(delta: float) -> void:
 	if demon_t > 0.0:
 		demon_t -= delta
 		heat = maxf(0.0, heat - DEMON_DRAIN * delta)
-		if heat <= 0.0:
+		if heat <= 0.0 or demon_t <= 0.0:   # audit Nov 19: hit refunds could keep it going forever; now 12 s max
 			_end_demon()
 	elif crash_t > 0.0:
 		crash_t -= delta
@@ -417,7 +420,7 @@ func demon_pressed() -> void:
 		AudioScript.sfx("fail")
 		m._toast("Demon Time needs a FULL Heat meter.")
 		return
-	demon_t = 999.0
+	demon_t = DEMON_MAX
 	AudioScript.sfx("explosion")
 	if ui:
 		ui.demon_card()
@@ -497,7 +500,7 @@ func _holler(sp: Dictionary) -> void:
 			if not e.is_in_group("boss"):
 				e.stun = 1.6
 	for pr in get_tree().get_nodes_in_group("projectile"):
-		if is_instance_valid(pr) and pr.global_position.distance_to(c) < 62.0:
+		if is_instance_valid(pr) and pr.global_position.distance_to(c) < 62.0 and not str(pr.get("kind")) in FLOOR_PROPS:
 			pr.queue_free()
 
 func _counter(sp: Dictionary) -> void:
@@ -525,7 +528,8 @@ func counter_success(from: Vector2, kind: String) -> void:
 func _counter_scan() -> void:
 	var p: Node = m.player
 	for pr in get_tree().get_nodes_in_group("projectile"):
-		if is_instance_valid(pr) and not pr.is_queued_for_deletion() and pr.global_position.distance_to(p.global_position) < 16.0:
+		if is_instance_valid(pr) and not pr.is_queued_for_deletion() and pr.global_position.distance_to(p.global_position) < 16.0 \
+				and not str(pr.get("kind")) in FLOOR_PROPS:
 			var from: Vector2 = pr.global_position
 			pr.queue_free()
 			counter_success(from - (p.global_position - from), "projectile")

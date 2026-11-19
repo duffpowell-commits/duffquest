@@ -62,6 +62,8 @@ func _setup() -> void:
 		add_button("comp", Rect2(210, 104, 50, 20), "COMP IT", KEY_C, Color("#a8406a"))
 		get_button(eighty_six)["enabled"] = false
 		get_button(eighty_six)["label"] = "86'd"
+	# Audit Nov 19: no way back from a mis-tap (one stray allergen capped the plate at 0.2). Sandwich has UNDO too.
+	add_button("undo", Rect2(154 if eighty_six != "" else 210, 104, 50, 20), "UNDO", KEY_BACKSPACE)
 
 func _roll_mods() -> void:
 	var options: Array = []
@@ -127,6 +129,9 @@ func _on_button(id: String) -> void:
 			flash("Fresh gloves, sanitized board. Inspector-approved.", Color("#c0d890"), 1.2)
 			get_button("gloves")["enabled"] = false
 		"serve": serve()
+		"undo":
+			if not built.is_empty():
+				built.pop_back()
 		"comp":
 			notes.append("I comp the salad after the 86.")
 			finish(0.7)

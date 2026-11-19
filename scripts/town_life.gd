@@ -158,8 +158,12 @@ func _w_pos(w: Dictionary) -> Vector2:
 	var o: float = w["off"]
 	return Vector2(float(w["line"]) + o, float(w["at"])) if w["v"] else Vector2(float(w["at"]), float(w["line"]) + o)
 
+const ExtraPackScript: = preload("res://scripts/extra_pack.gd")
+
 func _tick_walkers(delta: float) -> void:
 	var want: = 1 if _night() else 4
+	if not ExtraPackScript.world_ready:   # audit Nov 19: their sheets ride world.pck; before it lands they were bare shadows
+		want = 0
 	var p: Vector2 = m.player.global_position
 	var foes: Array = m.live_enemies()
 	for i in walkers.size():

@@ -169,6 +169,10 @@ func _finish_dress() -> void:
 	go("ride")
 
 func _on_button(id: String) -> void:
+	# Audit Nov 19: these states put buttons where the NOD / RUN thumb was; a tap carried over from the last
+	# state used to clap between movements or buy a snack. Ignore taps for a moment after the swap.
+	if state in ["between", "intermission", "bravo"] and phase_t < 0.35:
+		return
 	match id:
 		"top", "shoes", "extra":
 			dress[id] = (int(dress[id]) + 1) % (DRESS[id] as Array).size()

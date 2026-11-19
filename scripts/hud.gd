@@ -151,7 +151,21 @@ func _t(f: Font, p: Vector2, s: String, size: int, col: Color, width: float = -1
 
 ## Typewriter: wrap the WHOLE line first (spaces become newlines, same length), then cut it at the
 ## revealed count, so words never jump to the next row mid-reveal.
+## Audit Nov 19: it measured the row once per character, 3 calls a frame (~12 ms/frame on desktop for a long line,
+## worse on a phone). Same result, cached per (line, width, size).
+static var _wrap_cache: = {}
+
 static func wrap_words(f: Font, s: String, width: float, size: int) -> String:
+	var key: = "%s|%d|%d" % [s, int(width * 10.0), size]
+	if _wrap_cache.has(key):
+		return _wrap_cache[key]
+	if _wrap_cache.size() > 64:
+		_wrap_cache.clear()
+	var out: = _wrap_uncached(f, s, width, size)
+	_wrap_cache[key] = out
+	return out
+
+static func _wrap_uncached(f: Font, s: String, width: float, size: int) -> String:
 	var out: = s
 	var row_start: = 0
 	var last_space: = -1
