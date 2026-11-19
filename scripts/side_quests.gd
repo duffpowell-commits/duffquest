@@ -78,6 +78,15 @@ const LIST: = [
 		],
 		"choices": ["covered", "nope", "flaked"],
 	},
+	{
+		"id": "chef", "kind": "character", "title": "Chef's Bad Week", "giver": "fork", "ready": true, "from_day": 10,
+		"pitch": "Chef's knees say it's going to be a bad week. His knees are never wrong.",
+		"stages": [
+			{"text": "Bad day 1: the health inspector. Clock in at the {fork_nick} and pass inspection.", "at": "fork"},
+			{"text": "Bad day 2: the walk-in died. Clock in and cook around half the menu.", "at": "fork"},
+			{"text": "Bad day 3: a food critic, and Brayden's on grill. Clock in and get a B or better.", "at": "fork"},
+		],
+	},
 ]
 
 const STATUSES: = ["", "active", "done"]

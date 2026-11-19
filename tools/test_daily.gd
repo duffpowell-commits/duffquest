@@ -1345,6 +1345,50 @@ func _side_quest_checks(main: Node) -> void:
 	main.double_won()
 	check("double: a win doubles it and finishes", main.money == 200 and SQ.is_done(main.side_quests, "double") and main.achievements.has("Double or Nothing"))
 	main.dialog.clear()
+	# Dolores's book (Waffle Haus side bet)
+	check("dolores: clean grill = zero burnt", main.dolores_bet_won("clean", {"burnt": 0}) and not main.dolores_bet_won("clean", {"burnt": 1}))
+	check("dolores: full house = 3 of 4 served", main.dolores_bet_won("house", {"delivered": 9, "orders": 12}) and not main.dolores_bet_won("house", {"delivered": 8, "orders": 12}))
+	check("dolores: a KO loses any bet", not main.dolores_bet_won("nowalk", {"walked": 0, "ko": true}))
+	main.waffle_bet = {"kind": "clean", "stake": 20}
+	var dm0: int = main.money
+	var dl: Array = main.dolores_settle({"burnt": 0})
+	check("dolores: a win pays stake x3 and counts", main.money == dm0 + 60 and int(main.story.get("dolores_w", 0)) >= 1 and dl.size() >= 1 and main.waffle_bet.is_empty())
+	main.waffle_bet = {"kind": "nowalk", "stake": 50}
+	dm0 = main.money
+	main.dolores_settle({"walked": 2})
+	check("dolores: a loss keeps the (already paid) stake", main.money == dm0 and int(main.story.get("dolores_l", 0)) >= 1)
+	check("dolores: no bet = nothing in the report", main.dolores_settle({}).is_empty())
+	# Chef's Bad Week
+	main.day_i = 1   # a weekday
+	main.clock = 600.0
+	main.day_count = 9
+	check("chef: not before day 10", not main.quest_talk("fork"))
+	main.dialog.clear()
+	main.day_count = 10
+	check("chef: offered at the {fork_nick} door", main.quest_talk("fork") and SQ.stage(main.side_quests, "chef") == 1)
+	main.dialog.clear()
+	check("chef: day 1 forces the inspector", main.chef_force().get("inspector", false) == true)
+	main.chef_shift_done({"grade": "B", "inspector": "fail"})
+	check("chef: failed inspection = try again", SQ.stage(main.side_quests, "chef") == 1)
+	main.chef_shift_done({"grade": "B", "inspector": "pass"})
+	check("chef: a passed inspection (C+) moves to day 2", SQ.stage(main.side_quests, "chef") == 2)
+	main.dialog.clear()
+	check("chef: one bad day per day", main.chef_force().is_empty() and not main.quest_talk("fork"))
+	main.day_count = 11
+	check("chef: day 2 = the walk-in (86'd)", main.chef_force().get("eighty_six", false) == true)
+	main.chef_shift_done({"grade": "C"})
+	main.day_count = 12
+	main.chef_force()
+	main.chef_shift_done({"grade": "C"})
+	check("chef: the critic needs a B", SQ.stage(main.side_quests, "chef") == 3)
+	main.day_count = 13
+	main.chef_force()
+	var chm0: int = main.money
+	main.chef_shift_done({"grade": "A"})
+	check("chef: B+ on day 3 finishes, pays $150", SQ.is_done(main.side_quests, "chef") and main.money == chm0 + 150 and main.achievements.has("Chef's Right Hand"))
+	main.dialog.clear()
+	check("chef: done = the door just clocks in", not main.quest_talk("fork") and main.chef_force().is_empty())
+	main.dialog.clear()
 	check("brittany quests: boss entries exist", preload("res://scripts/boss.gd").BOSSES.has("brayden") and preload("res://scripts/boss.gd").BOSSES.has("earljr"))
 	main.close_overlay()
 	main.side_quests = {}

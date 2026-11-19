@@ -1402,7 +1402,9 @@ func interact(id: String) -> void:
 		"home_door": enter_home()
 		"door_out": leave_home()
 		"shop": open_shop()
-		"fork": try_shift()
+		"fork":
+			if not quest_talk("fork"):
+				try_shift()
 		"madison": _talk_to_madison()
 		"bed": bed_menu()
 		"freya":
@@ -2374,6 +2376,9 @@ func start_shift() -> void:
 	shift.modes = Daily.shift_modes(today_event())
 	if Daily.inspector(today_event()):
 		shift.force["inspector"] = true
+	var cf: = chef_force()       # Chef's Bad Week: today's bad day
+	for k in cf:
+		shift.force[k] = cf[k]
 	shift.shift_over.connect(end_shift)
 	shift_layer.add_child(shift)
 	shift.start()
@@ -2390,6 +2395,7 @@ func end_shift(r: Dictionary) -> void:
 		return
 	apply_shift_result(r)
 	cover_shift_done()
+	chef_shift_done(r)
 	save_game()
 
 ## Muscle memory: remember the best grade per station (autopilot runs don't count).
@@ -4283,7 +4289,7 @@ func _closed_plaque(ci: CanvasItem, r: Rect2, f: Font) -> void:
 ## ---- Side quest: "Who Took The Porch?" (mystery). Stages live in side_quests.gd. ----
 ## Talk hooks return true when the quest took over the conversation.
 func quest_talk(npc: String) -> bool:
-	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc) or _lunch_talk(npc) or _cover_talk(npc) or _double_talk(npc)
+	return _porch_talk(npc) or _grease_talk(npc) or _gig_talk(npc) or _alley_talk(npc) or _lunch_talk(npc) or _cover_talk(npc) or _double_talk(npc) or _chef_talk(npc)
 
 ## Lost & Found, Omaha: a flyer in the mail, three things hidden around the block, returned to the Seen Cafe paper box.
 ## Each find is a clue named after the thing ("ring", "collar", "shoe"); all three advance to the return stage.
@@ -4739,6 +4745,156 @@ func _draw_quest_fight_hud(f: Font, o: Vector2) -> void:
 	else:
 		_arena_caption(f, o, "BEHIND {FORK}  -  AFTER CLOSE  -  THE LUNCH THIEF", Color("#ffd23f"))
 
+## ---- Dolores's book (Nov 19): a side bet on tonight's Waffle Haus graveyard, taken at clock-in once Duff has
+## worked one graveyard. Stake comes out up front; a win pays stake x mult. A KO loses it. Record in story.
+const DOLORES_BETS: = {
+	"clean": {"name": "Clean Grill", "pitch": "Not one burnt plate all night.", "mult": 3},
+	"house": {"name": "Full House", "pitch": "Serve three of every four tables that walk in.", "mult": 2},
+	"nowalk": {"name": "Nobody Walks", "pitch": "Not one customer walks out on you.", "mult": 3},
+}
+const DOLORES_ORDER: = ["clean", "house", "nowalk"]
+const DOLORES_STAKES: = [20, 50]
+var waffle_bet: = {}
+
+func dolores_bet_today() -> String:
+	return DOLORES_ORDER[day_count % DOLORES_ORDER.size()]
+
+static func dolores_bet_won(kind: String, r: Dictionary) -> bool:
+	if bool(r.get("ko", false)):
+		return false
+	match kind:
+		"clean": return int(r.get("burnt", 0)) == 0
+		"house": return int(r.get("delivered", 0)) * 4 >= int(r.get("orders", 0)) * 3 and int(r.get("orders", 0)) > 0
+		"nowalk": return int(r.get("walked", 0)) == 0
+	return false
+
+## Clock-in at the Waffle Haus: Dolores offers her book first (after the first graveyard), then the shift starts.
+func dolores_book() -> void:
+	waffle_bet = {}
+	if int(waffle_data["shifts"]) < 1:
+		start_waffle()
+		return
+	var kind: = dolores_bet_today()
+	var b: Dictionary = DOLORES_BETS[kind]
+	var lines: Array = ["Dolores slides a steno pad across the counter. Thirty-one years of bets in pencil. Nobody's ever beat her twice.",
+		"Dolores: \"Tonight's line, hon: %s. %s Pays %d to 1.\"" % [b["name"], b["pitch"], int(b["mult"])],
+		"Her book vs me: %d-%d." % [int(story.get("dolores_w", 0)), int(story.get("dolores_l", 0))]]
+	if SideQuests.is_done(side_quests, "double"):
+		lines.append("Dolores: \"Earl Jr. still won't sit on the stool. Says it 'knows'. So you owe me a little action.\"")
+	var opts: Array = []
+	for i in DOLORES_STAKES.size():
+		var amt: int = DOLORES_STAKES[i]
+		if money >= amt:
+			opts.append([str(amt), "Bet $%d" % amt, [KEY_1, KEY_2][i]])
+	opts.append(["no", "No bet, just cook", KEY_3])
+	_menu("DOLORES'S BOOK", lines, opts, func (ch: String) -> void:
+		if ch.is_valid_int() and money >= int(ch):
+			money -= int(ch)
+			waffle_bet = {"kind": kind, "stake": int(ch)}
+		start_waffle())
+
+## end_waffle hook: settle tonight's bet into the night report.
+func dolores_settle(r: Dictionary) -> Array:
+	if waffle_bet.is_empty():
+		return []
+	var kind: = str(waffle_bet["kind"])
+	var stake: = int(waffle_bet["stake"])
+	waffle_bet = {}
+	var b: Dictionary = DOLORES_BETS[kind]
+	if dolores_bet_won(kind, r):
+		var pay: = stake * int(b["mult"])
+		money += pay
+		story["dolores_w"] = int(story.get("dolores_w", 0)) + 1
+		var out: Array = ["Dolores's book: %s. I hit it. She pays $%d in ones, licks her pencil, writes my name in the margin. Book vs me: %d-%d." % [b["name"], pay, int(story["dolores_w"]), int(story.get("dolores_l", 0))]]
+		if int(story["dolores_w"]) >= 3 and not achievements.has("Beat the Book"):
+			achievements.append("Beat the Book")
+			out.append("ACHIEVEMENT UNLOCKED: Beat the Book (three wins off Dolores. She's 'impressed'. In pencil.)")
+		return out
+	story["dolores_l"] = int(story.get("dolores_l", 0)) + 1
+	return ["Dolores's book: %s. Missed it. She keeps my $%d. \"Bless your heart.\" Book vs me: %d-%d." % [b["name"], stake, int(story.get("dolores_w", 0)), int(story["dolores_l"])]]
+
+## ---- Chef's Bad Week (Nov 19): three bad days at the {fork_nick}, one per shift-day. Each forces a shift event
+## (shift.gd force keys): inspector, a dead walk-in (half the menu 86'd), a food critic with Grill-Boy on the line.
+## Stage 3 needs a B or better. Pays $150 + 5 scrap.
+const CHEF_FORCE: = [{"inspector": true}, {"eighty_six": true}, {"grill_boy": true, "eighty_six": false}]
+const CHEF_PITCH: = [
+	["Chef's at the door before I'm through it. \"Inspector's coming. Surprise visit. Somebody tipped him off that it's a surprise.\"",
+		"Chef: \"Clean station. Labeled everything. If he finds one unlabeled tub I'm putting YOUR name on it.\""],
+	["The walk-in died overnight. It's 61 degrees in there. Chef is sitting on a milk crate, staring at forty pounds of shrimp.",
+		"Chef: \"Half the menu's 86'd. Cook around it. Smile. Lie with your face.\""],
+	["Chef's in a clean jacket. CHEF IS IN A CLEAN JACKET. \"Critic. Table nine. Paper's sending the guy with the scarf.\"",
+		"Chef: \"Brayden's on grill. I couldn't stop him. Nobody can stop him. Get me a B. I need a B.\""],
+]
+
+func _chef_talk(npc: String) -> bool:
+	var st: = side_quests
+	var q: = "chef"
+	if npc != "fork":
+		return false
+	if not fork_open_now():
+		return false
+	if SideQuests.is_active(st, q) and not SideQuests.has_clue(st, q, "day:%d" % day_count) and not SideQuests.has_clue(st, q, "go:%d" % day_count):
+		var stage: = SideQuests.stage(st, q)
+		_menu("CHEF'S BAD WEEK: DAY %d OF 3" % stage, CHEF_PITCH[stage - 1],
+			[["go", "Clock in", KEY_1], ["no", "Not yet", KEY_ESCAPE]], func (ch: String) -> void:
+				if ch == "go":
+					try_shift())
+		return true
+	if not SideQuests.offerable(st, q, day_count, show_hidden_quests, quest_ctx()):
+		return false
+	SideQuests.start(st, q)
+	_say(["Chef blocks the door. Chef never blocks the door. Chef's eye is twitching.",
+		"Chef: \"It's gonna be a bad week, Duff. I can feel it in my knees. My knees are never wrong.\"",
+		"Chef: \"Next three days you work, you're my guy. Inspector, walk-in, critic. One a day. Don't make me find a new guy.\"",
+		"New side quest: Chef's Bad Week (phone > Notes). Clock in to start day one."])
+	save_game()
+	return true
+
+func fork_open_now() -> bool:
+	var c: = fmod(clock, 1440.0)
+	return not (c >= 1320.0 or c < 360.0) and calendar_event() != "thanksgiving" and (not Daily.is_weekend(day_i % 7) or first_weekend())
+
+## start_shift hook: the forced event for today's bad day (once a day), plus Chef's pitch lines on the shift.
+func chef_force() -> Dictionary:
+	var st: = side_quests
+	if not SideQuests.is_active(st, "chef") or SideQuests.has_clue(st, "chef", "day:%d" % day_count):
+		return {}
+	SideQuests.add_clue(st, "chef", "go:%d" % day_count)
+	return CHEF_FORCE[SideQuests.stage(st, "chef") - 1]
+
+## end_shift hook: did today's bad day go well enough?
+func chef_shift_done(r: Dictionary) -> void:
+	var st: = side_quests
+	if not SideQuests.is_active(st, "chef") or not SideQuests.has_clue(st, "chef", "go:%d" % day_count) or SideQuests.has_clue(st, "chef", "day:%d" % day_count):
+		return
+	var stage: = SideQuests.stage(st, "chef")
+	var grade: = str(r.get("grade", "F"))
+	var ok: = ShiftScript.grade_rank(grade) >= (2 if stage == 3 else 1)
+	if stage == 1 and str(r.get("inspector", "")) == "fail":
+		ok = false
+	if not ok:
+		_toast(["Inspector wrote me up. Chef wrote ME up. Next shift, we go again.", "The walk-in won. Chef's still on the milk crate. Next shift, we go again.",
+			"The critic left before dessert. Scarf and all. Next shift, we go again (need a B)."][stage - 1])
+		return
+	SideQuests.add_clue(st, "chef", "day:%d" % day_count)
+	SideQuests.add_clue(st, "chef", ["passed inspection", "survived the walk-in", "fed the critic"][stage - 1])
+	if stage < 3:
+		SideQuests.advance(st, "chef")
+		_toast(["Inspector Tiny: \"...Adequate.\" Chef hugs me. Chef has never hugged anyone. Bad day 1 of 3: done.",
+			"Cooked around a dead walk-in for six hours. Chef says I'm 'a cockroach' and means it nicely. Bad day 2 of 3: done."][stage - 1])
+		return
+	SideQuests.finish(st, "chef")
+	money += 150
+	gear["scraps"] = int(gear["scraps"]) + 5
+	apply_gear()
+	var lines: Array = ["The critic's review is up by close: 'The {fork_nick} is a mess run by people who clearly love it. Three and a half forks.'",
+		"Chef reads it out loud twice. Then he hands me an envelope: $150, and five pieces of scrap from the old walk-in. \"For your little armor thing.\"",
+		"Chef: \"Good week, Duff.\" It was a terrible week. +$150, +5 scrap. Quest done."]
+	if not achievements.has("Chef's Right Hand"):
+		achievements.append("Chef's Right Hand")
+		lines.append("ACHIEVEMENT UNLOCKED: Chef's Right Hand")
+	_say(lines)
+
 ## The Grease Trap: the 86 List grows an unsigned entry; after close the board sends Duff out back to fight it.
 func _grease_talk(npc: String) -> bool:
 	var st: = side_quests
@@ -4882,6 +5038,7 @@ func quest_spots() -> Dictionary:
 		"neighbor": ["outside", NEIGHBOR_DOOR + Vector2(0, -26)],
 		"lostbox": ["outside", LOSTBOX_PT + Vector2(0, -24)],
 		"backdoor": ["outside", BACKDOOR_PT + Vector2(0, -22)],
+		"fork": ["outside", FORK_DOOR + Vector2(10, -34)],
 	}
 
 func draw_quest_markers(ci: CanvasItem) -> void:
@@ -5971,7 +6128,7 @@ func waffle_menu() -> void:
 		lines.append("Dolores leans through the window: \"Earl's coming in tonight, hon. Earl don't leave till he's ready.\"")
 	_menu("WAFFLE HAUS", lines, [["go", "Clock in (graveyard)", KEY_1], ["no", "Not tonight", KEY_2]], func (ch: String) -> void:
 		if ch == "go":
-			start_waffle())
+			dolores_book())
 
 func start_waffle() -> void:
 	if busy() or _world_gate(func () -> void: start_waffle()):
@@ -6046,6 +6203,7 @@ func end_waffle(r: Dictionary) -> void:
 		if grade == "S" and not achievements.has("Scattered, Smothered, Covered"):
 			achievements.append("Scattered, Smothered, Covered")
 			night_report.append("ACHIEVEMENT UNLOCKED: Scattered, Smothered, Covered (S grade on a graveyard)")
+	night_report.append_array(dolores_settle(r))
 	happiness = maxf(0.0, happiness - 6.0)
 	night_report.append("I roll home at 6:20 AM smelling like hash browns. {partner} did the 3 AM bottle alone. Note on the fridge: \"Proud of you. Shower. -{partner}\" -6 Happiness")
 	_wake(55)
