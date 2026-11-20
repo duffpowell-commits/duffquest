@@ -260,10 +260,10 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
 
 - **Signing key (Nov 20, the keystone):** APKs are signed with the keystone, the one key for every Duff game except
   Lethemoor (Lethemoor keeps its own; Duff's call). `signing/unlock.sh` picks it: keystone (`KEYSTONE_PASS` secret; no
-  local copy = fetched from godot-game-starter, fingerprint checked) -> bridge: the old Lethemoor-shared key
-  (`signing/games.keystore.enc` + `LM_KEYSTORE_PASS`) until the keystone exists -> throwaway. Once a build log says
-  "Signing with the keystone key": commit the keystone files here, delete `games.keystore.enc` + the LM secret line in
-  build.yml. The switch costs one last uninstall. Never generate another key. Setup: godot-game-starter docs/SIGNING.md.
+  local copy = fetched from godot-game-starter, fingerprint checked) -> else a throwaway key + warning. Every DuffQuest
+  APK before this was throwaway-signed (the LM secret was never set when a build ran), so the switch costs one last
+  uninstall and nothing else. Once a build log says "Signing with the keystone key", commit the keystone files here.
+  Never generate another key. Setup: godot-game-starter docs/SIGNING.md.
   `version/code` = CI run number. No in-app updater yet (gap report:
   /mnt/project-files/game-starter/gap_report_2026-11-19.md; godot-game-starter has the one to port).
 
