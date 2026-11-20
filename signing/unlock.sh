@@ -3,9 +3,7 @@
 #   1. The keystone (signing/keystone.keystore.enc, unlocked by the KEYSTONE_PASS secret). If this
 #      repo has no copy yet it is fetched from godot-game-starter (public), and its fingerprint must
 #      match signing/keystone.sha256.
-#   2. Bridge, DuffQuest only and only until the keystone exists: the old shared key
-#      (signing/games.keystore.enc + LM_KEYSTORE_PASS). Delete that file once the keystone signs.
-#   3. Else a throwaway key + a warning (that APK can't update an installed copy).
+#   2. Else a throwaway key + a warning (that APK can't update an installed copy).
 # Key inside: alias androiddebugkey, store/key password android. The encryption is the real lock.
 set -uo pipefail
 cd "$(dirname "$0")/.."
@@ -32,18 +30,13 @@ if [ -n "$KP" ] && [ -f "$ENC" ]; then
      && [ "$(fp_of "$OUT")" = "$(tr -d '[:space:]' < "$FP")" ]; then
     echo "Signing with the keystone key, SHA-256 $(cat "$FP")"; exit 0
   fi
+  rm -f "$OUT"
   echo "::error::KEYSTONE_PASS doesn't unlock the keystone (wrong passphrase, or the file changed)."
   exit 1
 fi
 [ -f "$ENC" ] && echo "::warning::KEYSTONE_PASS not set in this repo (docs/SIGNING.md)."
-LP=$(strip "${LM_KEYSTORE_PASS:-}")
-if [ -n "$LP" ] && [ -f signing/games.keystore.enc ]; then
-  export LP
-  if openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in signing/games.keystore.enc -out "$OUT" -pass env:LP 2>/dev/null; then
-    echo "::warning::Bridge: signing with the old shared (Lethemoor) key until the keystone is set up."; exit 0
-  fi
-fi
+rm -f "$OUT"  # a failed decrypt can leave junk that keytool would refuse to overwrite
 echo "::warning::Throwaway signing key: this APK can't update an installed copy. See docs/SIGNING.md"
 keytool -genkeypair -keystore "$OUT" -storepass android -alias androiddebugkey -keypass android \
-  -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" >/dev/null 2>&1
-test -f "$OUT"
+  -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US" 2>&1 | grep -v "_JAVA_OPTIONS\|JAVA_TOOL_OPTIONS" || true
+keytool -list -keystore "$OUT" -storepass android -alias androiddebugkey >/dev/null 2>&1 || { echo "::error::throwaway keystore unreadable"; exit 1; }
