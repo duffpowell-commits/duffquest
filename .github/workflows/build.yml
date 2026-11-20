@@ -87,7 +87,6 @@ jobs:
         # every Duff game except Lethemoor (own key). signing/unlock.sh picks the key; docs/SIGNING.md.
         env:
           KEYSTONE_PASS: ${{ secrets.KEYSTONE_PASS }}
-          LM_KEYSTORE_PASS: ${{ secrets.LM_KEYSTORE_PASS }}
         run: |
           bash signing/unlock.sh
           # Android needs version/code to rise for an update: use the run number.
