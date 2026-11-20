@@ -82,27 +82,14 @@ jobs:
           else
             echo "no trimmed web template release: stock web template"
           fi
-      - name: Android SDK paths + signing key (the same one for every game)
-        # Android only installs an update over an app signed with the SAME key. Until Nov 19 this
-        # made a new random key every build, so each APK needed an uninstall (and lost the save).
-        # Now one key signs all of Duff's games: signing/games.keystore.enc (same file as
-        # Lethemoor and godot-game-starter; alias androiddebugkey, store/key password android),
-        # unlocked by the LM_KEYSTORE_PASS repo secret. No secret = throwaway key + a warning.
+      - name: Android SDK paths + signing key (the keystone)
+        # Android only installs an update over an app signed with the SAME key. The keystone signs
+        # every Duff game except Lethemoor (own key). signing/unlock.sh picks the key; docs/SIGNING.md.
         env:
+          KEYSTONE_PASS: ${{ secrets.KEYSTONE_PASS }}
           LM_KEYSTORE_PASS: ${{ secrets.LM_KEYSTORE_PASS }}
         run: |
-          LM_KEYSTORE_PASS=$(printf '%s' "$LM_KEYSTORE_PASS" | tr -d '[:space:]`')
-          export LM_KEYSTORE_PASS
-          if [ -n "$LM_KEYSTORE_PASS" ]; then
-            openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -in signing/games.keystore.enc \
-              -out debug.keystore -pass env:LM_KEYSTORE_PASS
-            keytool -list -keystore debug.keystore -storepass android | grep -i "SHA-256"
-            echo "Signing with the shared games key"
-          else
-            echo "::warning::LM_KEYSTORE_PASS not set: throwaway signing key, this APK can't update an installed one"
-            keytool -genkeypair -v -keystore debug.keystore -storepass android -alias androiddebugkey \
-              -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-          fi
+          bash signing/unlock.sh
           # Android needs version/code to rise for an update: use the run number.
           sed -i "s/^version\/code=.*/version\/code=${{ github.run_number }}/" export_presets.cfg
           grep -n "^version/code" export_presets.cfg
