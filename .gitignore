@@ -10,3 +10,4 @@ build/
 grok_art/**/_work/
 grok_art/**/*_tmp*
 __pycache__/
+*.keystore
