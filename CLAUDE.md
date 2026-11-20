@@ -262,8 +262,8 @@ and `docs/handoffs/*.md`. Work queue detail: `QUEUE.md`.
   Lethemoor (Lethemoor keeps its own; Duff's call). `signing/unlock.sh` picks it: keystone (`KEYSTONE_PASS` secret; no
   local copy = fetched from godot-game-starter, fingerprint checked) -> else a throwaway key + warning. Every DuffQuest
   APK before this was throwaway-signed (the LM secret was never set when a build ran), so the switch costs one last
-  uninstall and nothing else. Once a build log says "Signing with the keystone key", commit the keystone files here.
-  Never generate another key. Setup: godot-game-starter docs/SIGNING.md.
+  uninstall and nothing else. Live Nov 20: run 849 signed with it (SHA-256 F4:67:23:EE...); a copy of
+  `signing/keystone.keystore.enc` + `keystone.sha256` is committed here. Never generate another key. Setup: godot-game-starter docs/SIGNING.md.
   `version/code` = CI run number. No in-app updater yet (gap report:
   /mnt/project-files/game-starter/gap_report_2026-11-19.md; godot-game-starter has the one to port).
 
