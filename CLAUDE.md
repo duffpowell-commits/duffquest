@@ -39,14 +39,18 @@ it short). Search it before touching a system. Also `CLAUDE_REFERENCE.md`, `QUEU
   2D nodes. New big sprite sheets import lossy 0.8.
 - **Signing:** the keystone (one key for every game but Lethemoor). Never generate another key.
 - Phone-only Duff: GDScript only, no desktop steps. No keys or tokens in the repo, logs or chat; Duff sets secrets.
-- One session per repo. Push after every chunk; merge to main after every milestone (up to three per session);
+- `git fetch` before starting and before pushing (bots commit to main and `stats`). Netlify credits are spent;
+  builds go out via the `dev` release and itch.
+- One session per repo. Push after every chunk; merge to main after every milestone (up to three per session;
+  no work left on a branch);
   update this file + `TRACKER.md` after each. Real engine renders for visual calls, saved in `docs/renders/`.
 
 ## Guards (enforced)
 - `.claude/hooks/guard.py` blocks force push, direct push to main, pushing code the tests didn't pass on, writing or
   generating signing keys and committing secrets. Run `tools/test.sh` before a push.
 - PRs: the `fresh-eyes` status stays pending until a fresh-context review posts `FRESH-EYES REVIEW: PASS` on the head
-  commit (`docs/FRESH_EYES.md`). Pending is not green: no merge.
+  commit (`docs/FRESH_EYES.md`). Pending is not green: sessions check the combined status and don't merge
+  (GitHub itself doesn't block it).
 
 ## Commands (cloud sandbox; the rest are in docs/HANDOFF_LOG.md)
 - Godot: 4.5-stable Linux zip from GitHub releases -> `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`.
