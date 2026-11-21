@@ -7,25 +7,17 @@ Deeper references: `CLAUDE_REFERENCE.md` (stable facts), `CLAUDE.md` (history lo
 ---
 
 ## 1. What this is
-DuffQuest: a comedy action RPG about Duff Powell's real life in Omaha (line cook at "the Twisted Fork", partner
-Madison, baby Octavia, three cats). 30-day November calendar, rent/shifts/errands, street fights, 17 bosses with
+DuffQuest: a comedy action RPG. 30-day November calendar, rent/shifts/errands, street fights, 17 bosses with
 comic-panel knockout cutscenes. Godot 4.5, GDScript, landscape, 640x360 game + HD overlay layer. Web build on itch.
 **Duff works from his phone only** (Godot Android editor). No desktop steps, ever. Automate everything.
 
 ## 2. Start of session (no questions for Duff)
-1. **Keys** live in the Cloudflare D1 vault `duff-vault` (id `af975dad-2989-45e3-92c9-03caf55f14e3`). Cloudflare MCP:
-   `d1_database_query` -> `SELECT name, value FROM secrets` -> `GITLAB_TOKEN`, `BUTLER_API_KEY`.
-   Never ask Duff to paste keys. Keys stay in env vars only (never repo, `.git/config`, memory, chat).
-   GitLab token **expires 2026-12-08** (remind Duff ~Dec 1; replace the vault row with `INSERT OR REPLACE`).
-   It has NO `api` scope (can't set CI variables).
-2. **Clone:** `git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/dufftkyosht-group/duffquest.git` then
-   `git remote set-url origin https://gitlab.com/dufftkyosht-group/duffquest.git`.
-   **Push:** `git push https://oauth2:$GITLAB_TOKEN@gitlab.com/dufftkyosht-group/duffquest.git HEAD:main`.
-   GitHub `duffpowell-commits` is suspended (appeal filed); `duffpowell/duffquest` on GitLab is an empty stub.
-3. **Ship:** `BUTLER_API_KEY=... tools/ship_itch.sh [--web-check]` installs Godot 4.5 + web templates + butler if
+1. **Secrets** live only in GitHub Actions secrets that Duff adds. Never commit them, and never ask him to paste one.
+2. **Repo:** GitHub `duffpowell-commits/duffquest`. `git fetch` before starting and before pushing.
+3. **Ship:** `tools/ship_itch.sh [--web-check]` installs Godot 4.5 + web templates + butler if
    missing, sets lossy imports, imports, runs test_daily (fails on SCRIPT ERROR too), 600-frame smoke, exports,
-   scans for secrets, pushes to **`dufftkyosht/duff-quest:html`** (NOT `html5`). `--no-push` = build only.
-   `--web-check` boots it in headless Chrome as a phone.
+   scans for secrets, and pushes to **`dufftkyosht/duff-quest:html`** (NOT `html5`) when the itch key is in the
+   environment. `--no-push` = build only. `--web-check` boots it in headless Chrome as a phone.
 
 ## 3. State at handoff
 - **Nov 9 evening (QA milestone):** new-game intro now quotes the real weekly bill (`weekly_base()`, $195, was $150);
@@ -55,7 +47,7 @@ comic-panel knockout cutscenes. Godot 4.5, GDScript, landscape, 640x360 game + H
 - **Build:** 54-56 MB (38 MB = stock engine wasm). Auto Lite graphics on slow phones.
 
 ## 4. Decisions Duff made (Nov 9) — don't relitigate
-- Real names (Madison, Octavia, Jen, Brittany) are OK on the public build.
+- The public build keeps the names already shipping in the game. New personal details stay out of the repo.
 - **Art style C** for every HD image (cards, portraits, KO stills, loading): card-style faces + thick tapered ink +
   flat colour, KO panels keep speed lines + light hatching. `docs/art_direction/STYLE_LOCK.md`, checklist ST1-ST7 in
   `docs/art_rules.md` §7. No image outside the lock.

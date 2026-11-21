@@ -1,7 +1,6 @@
 extends RefCounted
-## "Too Loud": Madison's autism (noise overload, masking, the crash after). Lines approved by Duff, Nov 14 2026:
-## never change a line here without his sign-off. Facts are hers: noise is the trigger, headphones help, she masks
-## in public and crashes after, and what she wants to talk about at length is herself (her day, all of it, in order).
+## "Too Loud": lines approved by Duff, Nov 14 2026: never change a line here without his sign-off.
+## Grocery noise, headphones, then home.
 ## First Saturday trip to Hy-Whee from FIRST_DAY on, once. No fail state: if the meter fills, they leave the cart.
 
 const FIRST_DAY: = 6

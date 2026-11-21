@@ -2,26 +2,15 @@
 
 Short and stable. `CLAUDE.md` = status log; this = ops (secrets, hosting, shipping); `reference.md` = how the GAME works (systems, data, art, tools). Update when a fact changes.
 
-## Secrets (never ask Duff to paste keys again)
-- Vault: Cloudflare D1 database **`duff-vault`** (id `af975dad-2989-45e3-92c9-03caf55f14e3`), table `secrets(name, value, note, expires)`.
-  Read with the Cloudflare MCP: `d1_database_query` -> `SELECT name, value FROM secrets`.
-  - `GITLAB_TOKEN`: user duffpowell, expires **2026-12-08** (remind Duff a week before). Scopes: read/write repo, read_api.
-    NO `api` scope, so it can't set CI variables or project settings.
-  - `BUTLER_API_KEY`: itch.io user `dufftkyosht`.
-- Keys live in env vars for the session only. Never in the repo, `.git/config`, memory, or chat.
-  Clone: `git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/dufftkyosht-group/duffquest.git`, then
-  `git remote set-url origin https://gitlab.com/dufftkyosht-group/duffquest.git` (strip the token).
-  Push: `git push https://oauth2:$GITLAB_TOKEN@gitlab.com/dufftkyosht-group/duffquest.git main`.
-- New key? Insert/replace a row: `INSERT OR REPLACE INTO secrets (name,value,note,expires) VALUES (...)`.
+## Secrets
+- This repo is public. Tokens live only in GitHub Actions secrets that Duff adds. Never commit them, never put them in a clone URL, and never ask Duff to paste one in chat.
 
 ## Repos and hosting
-- Code: GitLab `dufftkyosht-group/duffquest` (private). `duffpowell/duffquest` is an empty stub; ignore it.
-  GitHub `duffpowell-commits` is suspended (appeal filed).
+- Code: GitHub `duffpowell-commits/duffquest`.
 - Itch: https://dufftkyosht.itch.io/duff-quest, butler target **`dufftkyosht/duff-quest:html`** (NOT `html5`).
-- Ship: `BUTLER_API_KEY=... tools/ship_itch.sh` (installs Godot 4.5 + web templates + butler if missing,
+- Ship: `tools/ship_itch.sh` (installs Godot 4.5 + web templates + butler if missing,
   then import, test_daily, smoke, export, secret scan, push). `--no-push` to build only.
-- `.gitlab-ci.yml`: tests on every push; deploys to itch from `main` only if a `BUTLER_API_KEY` CI variable
-  exists (needs a token with `api` scope or Duff adding it in GitLab > Settings > CI/CD > Variables).
+  The itch key is the `BUTLER_API_KEY` Actions secret, not a file in the repo.
 
 ## Art pipeline (Nov 9)
 - House style = C (docs/art_direction/STYLE_LOCK.md); canonical Duff ref = docs/art_direction/duff_face_sheet.png; no image outside the lock.
@@ -33,10 +22,10 @@ Short and stable. `CLAUDE.md` = status log; this = ops (secrets, hosting, shippi
 - Claude does everything in code: keying, cutting sheets, recolors (`tools/tattoo_sprites.py`), fixes
   (`tools/fix_sheet_cells.py`), procedural SFX, in-engine effects (blood/spit lives in code, Canva blocks it).
 - Rules: `docs/art_rules.md` (Duff's look D1-D7, gore H2), `docs/duff_look.md`, voice `docs/voice.md`.
-- "Place" (Cursor/Grok art agent) hands drops in `grok_art/<date>-<name>/HANDOFF.md`.
+- DuffQuest art drops from Place now go to the bot Quase (Art Team). This repo keeps game art, not bot prompts.
 
 ## Decisions (Nov 9)
-- Real names (Madison, Octavia, Jen, Brittany) are fine on the public itch build. Parody-name swap via data/cast.json not needed.
+- The public itch build uses the names already in the game. New personal or family details stay out of this repo.
 - House art style = C (docs/art_direction/). Gala unlocks story day 24.
 - 2026 Jam is out (bans AI art). Seasonal RPG Game Jam #1 (closes Dec 23 5:59 PM CT; host artistotel; born on Melonland forum) has no AI rule; Duff asked the host on the jam's itch Community tab.
 

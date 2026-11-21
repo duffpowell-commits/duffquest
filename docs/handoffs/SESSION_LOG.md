@@ -28,7 +28,7 @@ Newest first. History only: CLAUDE.md is the live handoff, TRACKER.md the Built 
 - **Nov 10 ~04:30: gala exes' sprites + IGN review** (branch `gala-exes-sheets`): Canva face-ref uploads are blocked for these sessions, so the 4 gala exes' `ch_<id>` sheets were repainted in code from repo sheets (`tools/sheet_repaint/<id>.py`; bases: old ch_husk, old ch_donald, ch_crypto, ch_gymbro; old sheets in `grok_art/2026-11-10-gala-exes/old/`). Review `docs/reviews/gala_exes_sheets.md`, render `docs/renders/gala_exes_sheets_ingame.png`. Fixed `ch_crypto` side rows (were reversed vs `Art.row_for`). Outside review: `docs/reviews/ign_review_2026-11-10.md` (6.4/10) with a ranked fix list; good source for the next milestone.
 - **Nov 9 ~14:45: QA milestone merged** (branch `qa-nov9-evening`): intro rent text = `weekly_base()` ($195); KO x-ray `b_anchor` per boss in `data/knockouts.json` (willnot, dasher = 0, impacts remapped); render `docs/renders/ko_xray_crop_fix.png`. **GitLab CI fails with 0 jobs because Duff's GitLab account isn't verified** (GraphQL failureReason); local `ship_itch.sh` is the gate until he verifies. See `HANDOFF.md`.
 - **Nov 9 ~13:10: STOPPING POINT. FULL HANDOFF: `HANDOFF.md` in the repo root (read it first; `docs/HANDOFF_NOV9_PM.md` has same-day detail).** All art is house style C (KO + loading converted). itch `html` channel = `532e95b`, BUT the page still embeds the old manual upload until Duff switches it (see handoff). Logo + page copy in `docs/itch/`.
-- **Nov 9 ~09:00: MULTI-AGENT PUSH (session_01V3sbx).** Merged + live on itch (build `bb95ad0`, 56 MB): build shrink 113->54 MB (`tools/set_lossy_imports.py`, run by ship script; HD art ships as WebP), portrait green-halo cleanup (`tools/clean_halo.py`), in-engine cartoon gore on KOs (`scripts/ko_gore.gd`, per-boss `"impact"` key, Settings toggle), screen-shake toggle, grocery labels, footpaths to doors, bark cap + `scripts/barks.gd` (max 2 bubbles, numbers on top), outdoor y-sort of actors + dressing (`dressing_front.gd` rewritten), HUD declutter (one top strip + Tab/tap drawer), Willnot intro QA fix, **all 17 KOs live** (last 6 stills), itch page kit `docs/itch/`. **Gala bosses are now Madison's exes:** Tyler Pivot (husk), Grant Gratuity (bozos), Landlord Lance (fences), Chip Leverage (donald, final). Names in `data/cast.json`; old billionaire art/scripts in `docs/dlc_concepts/billionaires/`; their old cards hidden via `RETIRED_CARDS` (scripts/art.gd) and KOs `live:false` until new art (brief: `docs/gala_exes_art_brief.md`). **JAM:** the itch 2026 Jam bans AI art; DuffQuest can't enter it. Options + ranked list in tasks/todo.md. **Art direction:** comparison A/B/C running (`docs/art_direction/`); pick ONE comic style, then lock it before more images. Gotcha: test_daily prints ALL PASS even on compile errors; ship script now also fails on SCRIPT ERROR. `.godot/editor/` untracked. **Later Nov 9:** soak test (`tools/soak.sh`, 30 days x 6 seeds clean; 2 bugs fixed), phone perf + auto Lite graphics + `ship_itch.sh --web-check` merged; itch build `8ac17f8`. Balance decisions pending in tasks/todo.md (happiness gates strict). **Later still (Nov 9 ~11:30):** gala unlocks story day 24 (`GALA_DAY` in main.gd; soak verifies it). **Art style C locked** (`docs/art_direction/STYLE_LOCK.md`, checklist ST1-ST7 in art_rules.md section 7); canonical Duff face sheet `docs/art_direction/duff_face_sheet.png` = Canva `MAHacL92VLk`, FIRST ref for every Duff image. Gala exes have style-C portraits, lettered cards (`tools/letter_card.py`) and live KOs; `RETIRED_CARDS` empty. Their `ch_<id>` sprite sheets were repainted in code Nov 10 (`tools/sheet_repaint/`). itch build `cac220e`. Gotcha: after merging new art, `touch` the files before `--import` or the tracked cache keeps old art; untracked `*.gd.uid` files can silently block `git merge` (check its exit).
+- **Nov 9 ~09:00: MULTI-AGENT PUSH.** Merged + live on itch (build `bb95ad0`, 56 MB): build shrink 113->54 MB (`tools/set_lossy_imports.py`, run by ship script; HD art ships as WebP), portrait green-halo cleanup (`tools/clean_halo.py`), in-engine cartoon gore on KOs (`scripts/ko_gore.gd`, per-boss `"impact"` key, Settings toggle), screen-shake toggle, grocery labels, footpaths to doors, bark cap + `scripts/barks.gd` (max 2 bubbles, numbers on top), outdoor y-sort of actors + dressing (`dressing_front.gd` rewritten), HUD declutter (one top strip + Tab/tap drawer), Willnot intro QA fix, **all 17 KOs live** (last 6 stills), itch page kit `docs/itch/`. **Gala bosses are now Madison's exes:** Tyler Pivot (husk), Grant Gratuity (bozos), Landlord Lance (fences), Chip Leverage (donald, final). Names in `data/cast.json`; old billionaire art/scripts in `docs/dlc_concepts/billionaires/`; their old cards hidden via `RETIRED_CARDS` (scripts/art.gd) and KOs `live:false` until new art (brief: `docs/gala_exes_art_brief.md`). **JAM:** the itch 2026 Jam bans AI art; DuffQuest can't enter it. Options + ranked list in tasks/todo.md. **Art direction:** comparison A/B/C running (`docs/art_direction/`); pick ONE comic style, then lock it before more images. Gotcha: test_daily prints ALL PASS even on compile errors; ship script now also fails on SCRIPT ERROR. `.godot/editor/` untracked. **Later Nov 9:** soak test (`tools/soak.sh`, 30 days x 6 seeds clean; 2 bugs fixed), phone perf + auto Lite graphics + `ship_itch.sh --web-check` merged; itch build `8ac17f8`. Balance decisions pending in tasks/todo.md (happiness gates strict). **Later still (Nov 9 ~11:30):** gala unlocks story day 24 (`GALA_DAY` in main.gd; soak verifies it). **Art style C locked** (`docs/art_direction/STYLE_LOCK.md`, checklist ST1-ST7 in art_rules.md section 7); canonical Duff face sheet `docs/art_direction/duff_face_sheet.png` = Canva `MAHacL92VLk`, FIRST ref for every Duff image. Gala exes have style-C portraits, lettered cards (`tools/letter_card.py`) and live KOs; `RETIRED_CARDS` empty. Their `ch_<id>` sprite sheets were repainted in code Nov 10 (`tools/sheet_repaint/`). itch build `cac220e`. Gotcha: after merging new art, `touch` the files before `--import` or the tracked cache keeps old art; untracked `*.gd.uid` files can silently block `git merge` (check its exit).
 - **Nov 9 07:30: ITCH IS CURRENT (build `7cd1f78`, all art fixes + tattoos + KO sfx).** Full handoff: `docs/HANDOFF_NOV9.md` (secrets in gitignored `.env`; Canva scratch now `DAHabf2Qa9U`). Next: jam submission + itch page polish, title-screen tattoos, in-engine KO blood.
 - **Nov 9 (M12): Falcor + Thanksgiving LIVE.** Falcor = the stray Madison feeds (`{stray}` in cast.json), never drawn. Notes on days 3/7/9/11/13. Day 10 wake opens the SUNDAY card (`FALCOR_LINES`, text approved by Duff, quiet `living_night` backdrop): Stay with her (+10 Happiness, morning gone) / Give her some space; saved in `daily.falcor`. Days 11-13: no fussy rolls, a soft wake line each day, Madison's bowl text on day 11. Day 28 Thanksgiving: Fork closed, Waffle Haus, +10 Happiness +20 Energy. Render `docs/renders/falcor_day.jpg` (`tools/wake_shot.tscn -- 9`). test_daily 43/43. **Tests must not touch the real save** (see tasks/lessons.md).
 - **Nov 9: DUFF HAS FULL TATTOO SLEEVES.** Every Duff prompt must include the TATTOOS block from `docs/duff_look.md` and attach
@@ -106,8 +106,7 @@ Newest first. History only: CLAUDE.md is the live handoff, TRACKER.md the Built 
   modern high-detail pixel art like **Sea of Stars** (saturated, warm sun, soft coloured shadows,
   lush detail), same 64 px 4×4 sheet format. Dialogue portraits + boss intros: bold cartoon like
   **Hazbin Hotel** (thick tapered ink lines, angular shapes, exaggerated faces, flat cel shading;
-  humans, not demons). Keep it bright and sunny, opposite of Lethemoor. Prompts: Drive doc
-  "DuffQuest — Style bible + Grok prompts" (https://docs.google.com/document/d/1lmADUpw6NO0A_rvmwdox_t2oJoh8yZVLc1AXliRUwnE/edit); capability test doc updated to match.
+  humans, not demons). Keep it bright and sunny, opposite of Lethemoor. Image prompts are not stored in this repo.
   **Solved (Nov 8): HD dialogue portraits.** Root scene is now `game.tscn` (`scripts/game.gd`): the
   pixel game (`main.tscn`, unchanged) renders at 640×360 in a SubViewport (nearest, snapped), and
   `scripts/hd_portrait_overlay.gd` draws the cartoon portraits on a CanvasLayer at the screen's real
@@ -121,22 +120,9 @@ Newest first. History only: CLAUDE.md is the live handoff, TRACKER.md the Built 
   render `docs/renders/hd_portraits_dialogue.png`. Tools that need the raw world (`map_shot`) still
   boot `main.tscn` directly.
 - **Grok art drop (Nov 7):** new files in `grok_art/2026-11-07/`; see `grok_art/NEXT_STEPS_FROM_GROK.md`. Duff is the only playable character. Board 2 is the world style reference.
-- **Art personality pass (EarthBound-era brief, partly superseded):** Duff makes art with Grok. Brief + prompts:
-  `docs/art_brief.md` (also a Google Doc "READ ME FIRST - Grok prompts" in Drive folder
-  **DuffQuest Art Inbox**, with `reference_current_HD.png`). One Drive folder per design, three
-  options (A/B/C) each: 00 Style board (pick first), 01 Storefronts (13 buildings, one folder
-  each), 02 Trees, 03 Street clutter. Duff marks winners with a star in the filename or says so.
-
-- **Grok capability test (Nov 7):** Doc "DuffQuest — Grok capability test" in Drive folder
-  DuffQuest Art Inbox (https://docs.google.com/document/d/1ay5y-iWh__M8sJx4JbcHVWp0WvOMgoi8g2gFnHzAtC4/edit).
-  Tests D1–D7 (4×4 sheet in the game's exact format, Duff upgrade, DBZ combo, hurt, portraits,
-  sign spelling, show-off). Results go in Drive subfolder **99 Grok capability test**
-  (`d1_try1.png`...). Attach `reference_duff_sheet.png` (inbox) = `assets/art/duff_home.png` on
-  magenta. When Duff says it's in: pull, score (rubric in the doc), make GIFs, fill the doc's
-  results table, then write the real design prompts around what passed.
-- **Gemini capability test (Nov 8): Grok is nearly out of usage.** Doc "DuffQuest — Gemini capability test"
-  (https://docs.google.com/document/d/13q2fog54B7WVbSIWjhQQzf9AOtz1NRHlV7Q8EThOh0s/edit) in DuffQuest Art Inbox;
-  refs + results in subfolder **98 Gemini capability test** (`ref_room_home`, `ref_sheet_duff`, `ref_sheet_boss`,
+- **Art personality pass (EarthBound-era brief, partly superseded):** style boards, storefronts, trees, and street clutter. Duff marked winners. Image prompts are not stored in this repo.
+- **Capability tests (Nov 7–8):** results landed as art drops under `grok_art/`. The prompt docs are not in this repo.
+  Refs and results were in a Drive subfolder (`ref_room_home`, `ref_sheet_duff`, `ref_sheet_boss`,
   `ref_portrait_madison`, `ref_style_board_2`; results `g1_try1.png`...). Tests are real next assets: G1 home redraw
   keeping layout (unlocks all M7 backgrounds), G2 IRON TEMPLE arena + sign, G3 Duff tux sheet edit, G4 Porch Pirate
   sheet, G5 Dolores portraits, G6 kitchen props 4×4, G7 show-off. 2 tries each. When Duff says it's in: pull,
@@ -155,12 +141,9 @@ Newest first. History only: CLAUDE.md is the live handoff, TRACKER.md the Built 
   **Next:** native-res dialogue layer so these keep their lines, then swap them in for `portrait_duff`.
   The walking sprite should be updated to match (undercut/ponytail, black tee).
 
-- **Production list (Nov 7, made by another agent):** Google Sheet "DuffQuest — Full sprite list
-  (Sea of Stars + Hazbin)" https://docs.google.com/spreadsheets/d/1nQ9h_KqccoSbITQw3A6a8Oh5zX7YyHh33gvkr1L62Aw/edit
-  223 rows: all 131 manifest ids + 92 new (59 HD portraits, 17 boss splashes, 13 storefronts, trees,
-  clutter, style board), each with a ready-to-paste Grok prompt (column F), priority, status.
-  Tab 1 holds the approved likenesses (Duff, Madison, Brittany, Octavia) and open questions.
-  Style boards 1–3 are in `grok_art/2026-11-07/`; **Duff picked board 2**. Treat this sheet as the art to-do list.
+- **Production list (Nov 7):** 223 rows: all 131 manifest ids + 92 new (59 HD portraits, 17 boss splashes, 13 storefronts, trees,
+  clutter, style board), with priority and status. The prompt column is not stored in this repo.
+  Style boards 1–3 are in `grok_art/2026-11-07/`; **Duff picked board 2**.
 - **Approved cast portraits (Nov 7):** PR #3 (Cursor, merged) put 4 green-screen sheets in
   `duffquesthd/portraits/` (Duff v3 with jacket, Madison, Octavia, Brittany). Cut with
   `tools/import_portrait.py` (now: equal-slice fallback + keep-largest-island) ->
@@ -374,7 +357,7 @@ Newest first. History only: CLAUDE.md is the live handoff, TRACKER.md the Built 
 - **Done (Nov 8): ChatGPT apartment swapped in (Duff's call).** ChatGPT C1 (`grok_art/2026-11-08-chatgpt-test/c1_try1.png`,
   11/12) kept Gemini G1's layout almost exactly (Duff likely attached the finished room), so no collision changes; sharper
   and warmer. Render: `docs/renders/m7_home_chatgpt.png`, `chatgpt_c1_vs_gemini_g1.png`. `arena_shot.tscn -- home` added.
-  Shootout brief: `grok_art/requests/AI_ART_SHOOTOUT.md`; Gemini's copy is a Google Doc in Drive `geminiart`.
+  The shootout prompt file is not in this repo.
   Note: importing `tools/make_m7_guides.py` from Python runs it (no main guard) and rewrites the guides.
 - **Done (Nov 8): ChatGPT gym + tux.** C2 try 2 (straight-on, racks only along the back wall, sign spelled right) replaced
   Gemini's `arena_gymbro`; its extra walls shrank to one racks band (`ARENA_EXTRA_WALLS gymbro = [Rect2(0,0,320,56)]`).
@@ -393,13 +376,12 @@ Newest first. History only: CLAUDE.md is the live handoff, TRACKER.md the Built 
   C4 Porch Pirate 12 (both tries: real back view, box hidden in front, throw column) -> `ch_pirate0/2` (try 1),
   `ch_pirate1/3` (try 2) via `import_big_sheet.py`; render `docs/renders/porch_pirate_chatgpt.png`. X2 seamless tile:
   PASS by eye (3x3 tiling continues the checker; edge-diff numbers are high only because the edge is a grout line).
-  Missing: X3. Next: ChatGPT vs Grok rematch, brief `grok_art/requests/CHATGPT_VS_GROK.txt` (Drive Doc "ChatGPT vs Grok
-  rematch (Nov 8)" in `geminiart`). Results: R1 Kwik: Grok wins (ChatGPT drew it isometric with a lot/car/trees; try-2 prompt
+  Missing: X3. Rematch results: R1 Kwik: Grok wins (ChatGPT drew it isometric with a lot/car/trees; the retry
   asks straight-on, building only; render `docs/renders/rematch_r1_kwik.png`). R2 trees: ChatGPT wins, maple/oak/ash/pine/lilac
   swapped in by `tools/import_chatgpt_trees.py` (scaled to Grok's heights, placements unchanged; Grok's long hedge kept);
   renders `rematch_r2_trees.png`, `rematch_r2_trees_ingame.png`. Also fixed: 'Madison texts: ...' lines showed Duff's portrait.
   R1 try 2 (straight-on, building only) WON and replaced `sf_kwik` via new `tools/swap_storefront.py SRC NAME` (fits the
   footprint canvas, bottom-aligned; door/shop trigger unchanged). Shot: `arena_shot.tscn -- at:535,128`; render
-  `docs/renders/rematch_r1_kwik_ingame.png`. Storefront prompts must say straight-on + building only. List: R1 Kwik storefront, R2 trees, R3 clutter, R4 Gym Bro intro card, R5 Brittany
-  portraits (redo), R6 Earl sheet, R7 Duff apron; Grok's original prompts, results `r1_chatgpt.png`...
+  `docs/renders/rematch_r1_kwik_ingame.png`. Storefronts are straight-on, building only. List: R1 Kwik storefront, R2 trees, R3 clutter, R4 Gym Bro intro card, R5 Brittany
+  portraits (redo), R6 Earl sheet, R7 Duff apron. Results: `r1_chatgpt.png`...
 

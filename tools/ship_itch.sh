@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One command: install tools if missing -> import -> tests -> smoke -> web export -> butler push to itch.
-# Needs BUTLER_API_KEY in the env (from the Cloudflare D1 vault `duff-vault`, see CLAUDE_REFERENCE.md).
+# Needs BUTLER_API_KEY in the env (GitHub Actions secret; Duff adds it. Never commit it).
 # Usage (repo root): BUTLER_API_KEY=... tools/ship_itch.sh   [--no-push] [--web-check]
 #   --no-push    build only, don't upload
 #   --web-check  after export, boot build/web in headless mobile Chrome (tools/web_boot_check.py);
@@ -57,5 +57,5 @@ if [ "$WEB_CHECK" = 1 ]; then
   python3 tools/web_boot_check.py --no-export || { echo "WEB CHECK FAILED"; exit 1; }
 fi
 [ "$NO_PUSH" = 1 ] && exit 0
-: "${BUTLER_API_KEY:?set BUTLER_API_KEY (vault: duff-vault)}"
+: "${BUTLER_API_KEY:?set BUTLER_API_KEY (GitHub Actions secret)}"
 echo "== butler push"; butler push build/web dufftkyosht/duff-quest:html --userversion "${CI_COMMIT_SHORT_SHA:-$(git rev-parse --short HEAD 2>/dev/null || echo local)}"
