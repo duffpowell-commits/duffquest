@@ -1,6 +1,6 @@
 # Duff Quest: reference
 
-This file explains how the game works. `CLAUDE.md` is the session log (status and what happened when). `CLAUDE_REFERENCE.md` covers ops: secrets vault, hosting, shipping to itch. This file is
+This file explains how the game works. `CLAUDE.md` is the session log (status and what happened when). `CLAUDE_REFERENCE.md` covers ops: hosting and shipping to itch. This file is
 not a changelog. When the code and this file disagree, the code wins: fix this file.
 Facts were checked against the source on Nov 9, 2026. Anything not checked is marked **(unverified)**.
 
@@ -152,17 +152,16 @@ stay raw.
 - **Happiness** (0-100, starts at 60): drains 0.2/s while a quest is open. Hits 0 → couch night, reset to 30.
   Gains go through `gain_happy(x)` (×1.25 with CHA, ×`Dates.GLOW_HAPPY` during the date glow). It gates the story
   bosses (`STORY[i].happy`) and date invites (`INVITE_HAPPY` 50).
-- **Madison's mornings** (`mornings.gd`, state `main.morning`, save key `morning`). She has Ehlers-Danlos syndrome
-  (hip is the big joint) and migraines. **Every line was approved by Duff; don't change one without his OK.** Rolled at
+- **Madison's mornings** (`mornings.gd`, state `main.morning`, save key `morning`). Slow mornings (hip) and migraines.
+  **Every line was approved by Duff; don't change one without his OK.** Rolled at
   wake (`morning_new_day`), day 2+, never two in a row, never on a fussy/upset/couch/calendar-special morning:
   `slow` (0.26) / `migraine` (0.14) = she's in bed (`madison_in_bed`, drawn on the pillow under the quilt, a wince at the
   hip, the room dark on a migraine); `!` walks you crib (bottle) -> kitchen (two coffees) -> her (`morning_talk`, +8,
   she's up 90 min later with one "later" line). Not done by 10 AM: she gets herself up and texts, no penalty
   (`morning_tick`). `good` (0.15): she's making the coffee; card Sit down (+5) / Take over (she says she's got it).
   Pain lines use her deadpan portrait (`Mornings.pained`). Renders: `arena_shot` `morning_slow|migraine|bring|good`.
-  Off-limits (Duff): the mess of her stuff, and that she's on disability.
 - **The Zebra** (`zebra.gd`, flag `main.zebra_seen`, save key `zebra_seen`): her diagnosis story, lines approved by
-  Duff (hypermobile joint syndrome as a kid, Ehlers-Danlos named in 2020, the Beighton test). She loves zebras: a plush
+  Duff. She loves zebras: a plush
   on the shelf over the bed (`ZEBRA_PLUSH`) and a framed print by the shower (`ZEBRA_PIC`), pixel art `home_zebra_plush` / `home_zebra_print` at the room's s:2 density (plush `tools/zebra_plush_pixels.py`, after her Wild Republic plush; print `tools/zebra_pixels.py`).
   Day 4+, stand at the foot of the bed (`ZEBRA_PT`) once: 8 lines, +5. Her story lines always use her happy face
   (`Zebra.warm`). Renders: `arena_shot` `zebra|zebra_talk`.
@@ -622,14 +621,8 @@ stay raw.
   `butler push build/web dufftkyosht/duff-quest:html --userversion <sha>`; check with `butler status dufftkyosht/duff-quest`.
   Embed settings: 1280×720, mobile friendly, landscape, fullscreen button, SAB off, click-to-play. Phone fallback upload: `docs/itch_deploy.md`.
   Jam: itch "2026 Jam", closes Dec 31 (our deadline Dec 28). Add a blood/violence content tag and an AI-use disclosure.
-- **Secrets:** `.env` in the repo root (gitignored and excluded from exports) holds `BUTLER_API_KEY` and `GITLAB_TOKEN`. Load it with
-  `set -a; . ./.env; set +a`. A fresh clone won't have it: ask Duff and recreate it with `umask 077`. **Never commit, print or
-  paste secret values. Never put tokens in `.git/config`.**
-- **Git remote:** private GitLab `dufftkyosht-group/duffquest`, remote name `gitlab` (the GitHub account is suspended). Push:
-  write a temp `/tmp/askpass.sh` (user `oauth2`, prints `$GITLAB_TOKEN`), run `git push gitlab main`, delete the script.
-  GitLab has no CI. The old `.github/workflows/build.yml` (parse, smoke, web + debug APK, `dev` release, optional butler
-  step) can't run while GitHub is suspended, and the Netlify credits are spent. `git fetch` before starting and before pushing (one
-  session per repo).
+- **Secrets:** never committed. GitHub Actions secrets that Duff adds are the only copy. A local `.env` is gitignored. Never commit, print, or paste secret values, and never put tokens in `.git/config`.
+- **Git remote:** GitHub `duffpowell-commits/duffquest`. `git fetch` before starting and before pushing (one session per repo).
 - **Android** (preset 1): arm64-v8a only, version 0.11.0 (code 11), signed, immersive, no gradle build, output
   `build/android/duffquest.apk`. Package id is in `export_presets.cfg`. Signing keystore setup unverified.
 - **Windows** (preset 2): embedded pck, x86_64. Its `include_filter` is empty, so `data/*.json`/`.txt` may not be packed

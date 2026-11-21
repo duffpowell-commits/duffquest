@@ -16,12 +16,12 @@ DuffQuest is a comedy RPG about Duff's real life in Omaha, built in Godot 4.5 wi
   Duff wants two entries if we can manage it: DuffQuest, plus Chaos Is the Mother of Order (a separate repo and session).
 
 ## WARNING: two sessions touched this repo on Nov 9
-Session `session_01V3sbxP3j4WYR7ytqqi2uUE` pushed itch build `d49898c` (commit `357f489`) while this session was working.
+Another session pushed itch build `d49898c` (commit `357f489`) while this session was working.
 The house rule is one Claude session per repo. Always run `git fetch` before starting and before pushing.
 
 ## Secrets
-- Keys live in the [redacted] vault `[redacted]` (read with the Cloudflare MCP). Never ask Duff to paste them. Details: `CLAUDE_REFERENCE.md`.
-- One-command ship: `BUTLER_API_KEY=... tools/ship_itch.sh`.
+- Tokens live only in GitHub Actions secrets that Duff adds. Never commit them and never ask him to paste one.
+- One-command ship: `tools/ship_itch.sh` (the itch key comes from the environment, not the repo).
 
 ## Build the web version
 ```

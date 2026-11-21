@@ -1,7 +1,6 @@
 extends RefCounted
-## "Look At This": Madison's ADHD (she shows Duff her phone screen all the time, and cutting in before he finishes is
-## hard for her). Lines approved by Duff, Nov 14 2026: never change a line here without his sign-off. Facts are hers:
-## her screen is usually reels and texts. The joke is the bit, never her; he gives up the story gladly.
+## "Look At This": lines approved by Duff, Nov 14 2026: never change a line here without his sign-off.
+## She shows a reel and a text. The joke is the bit; he gives up the story gladly.
 ## Talking to her at home from FIRST_DAY on, once (when there's nothing to hand over). No fail state.
 
 const FIRST_DAY: = 3

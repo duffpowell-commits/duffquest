@@ -1,6 +1,6 @@
 extends RefCounted
-## Madison's mornings (EDS + migraines). Approved line by line by Duff, Nov 13 2026: never change a line here without
-## his sign-off. She has Ehlers-Danlos syndrome; her hip is the big joint and she gets a lot of migraines.
+## Madison's mornings (slow / migraine / good). Approved line by line by Duff, Nov 13 2026: never change a line here without
+## his sign-off. Slow mornings are the hip; migraines want the room dark and quiet.
 ##  - "slow": she's in bed, hurting. Duff feeds {baby}, makes two coffees, brings hers to the nightstand for her meds.
 ##  - "migraine": same chores, room dark and quiet.
 ##  - "good": she's up making the coffee herself (she does that on good days so she doesn't feel useless). Let her.

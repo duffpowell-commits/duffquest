@@ -57,8 +57,7 @@ Hi Claude, these are from Duff's Grok art assistant. Duff approved everything in
   - Brittany has a longer oval face, a side part, teal eyes and stronger eyeliner.
 - `full_sprite_list.csv`:
   - All 223 assets: the 131 in the manifest plus 92 new ones the new direction needs.
-  - Each has a priority and a ready-to-paste Grok prompt.
-  - Live copy: https://docs.google.com/spreadsheets/d/1nQ9h_KqccoSbITQw3A6a8Oh5zX7YyHh33gvkr1L62Aw/edit
+  - Each has a priority and a status. Prompt text is not stored in this repo.
 
 ## What's next (suggested)
 1. Integrate `duff_sheet_sos_256.png` as Duff's player sprite in duffquesthd. Key the green, keep the 32,60 origin, and check the walk cycle in Godot. Report any cell that pops or jitters so Grok can redo it.

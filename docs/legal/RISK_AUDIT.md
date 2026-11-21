@@ -20,9 +20,8 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
    Saying a real person committed a crime against a real business is the classic defamation fact pattern, even as a
    joke, and the restaurant (or her real manager) didn't consent. PROPOSE: rename the restaurant (new name + new
    sign art) and either make the thief a made-up coworker or get Brittany's written OK. **LAWYER** if both stay real.
-   PUBLIC: restaurant renamed. Brittany was "Mazikeen" in the public build until Nov 16, when she told Duff in writing
-   (Snapchat) "I like it being my name" and called "Brittanys Bets" catchy; her real name is back in both editions
-   (`{coworker}` token). Keep that screenshot on file as her written OK.
+   PUBLIC: restaurant renamed. She later approved her real name in writing for both editions
+   (`{coworker}` token). Keep that written OK on file outside this repo.
 2. **The Twisted Fork in general.** Real business name and a look-alike green sign, shown with a health
    inspector, ranch theft, a villain buying it, "Nobody tips the fry cook". Even if Duff works there, the owner can
    object to its name in a game sold or advertised to the public, and an employer can discipline staff for it.
@@ -33,13 +32,10 @@ family art files (unused), so a data-miner could find them; low risk, fixable la
    PUBLIC: "Word Brawl" everywhere players see it (`{wordle}` token); internal ids kept.
 4. **Madison's exes.** The itch page says "Madison's exes. All of them." Madison is real and named, so if any boss
    is drawn from a real ex, people in Omaha who know them can identify them, and the game shows them beaten bloody.
-   ANSWERED (Nov 13): Willnot was based on a real ex (renamed and redrawn in the public edition, item 10); the
+   ANSWERED (Nov 13): Willnot was renamed and redrawn in the public edition (item 10); the
    other four story exes and the four gala exes are invented. The notice is accurate.
-5. **Consent from real people.** Madison, Jen, Brittany, Octavia (a minor: both parents' OK) and anyone else real
-   (Chef, Manny, Earl, Deb, Gail?). A verbal "sure" isn't proof. FIX ON DUFF'S SIDE: get a text or email from each
-   adult: "I'm OK with my name, likeness and story appearing in Duff Quest, a public game that will be advertised."
-   Madison's health content (EDS, autism, ADHD) needs her explicit written OK; that already runs through her
-   per-change approval. Keep the screenshots.
+5. **Consent from real people.** Anyone whose real name, likeness, or health shows up in the game needs written OK
+   kept outside this repo. A verbal "sure" isn't proof.
 
 ## Medium
 

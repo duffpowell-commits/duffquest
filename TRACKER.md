@@ -4,6 +4,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 (the handoff) and `QUEUE.md` (the work queue). Newest first.
 
 ## Built
+- **2026-11-21** **Public-repo guardrails.** Gitleaks on PRs and main (`gitleaks.yml`). `.gitignore` covers `.env`, keystores, `*.jks`, `*.pem`, `secrets/`, and local handoff/prompt files. `CLAUDE.md` has the public repo rules. Vault locators, private chat handoffs, and image prompts are out of the tree. `STATUS.md` is the short status page. Place's DuffQuest art work has moved to the bot Quase (Art Team).
 - **2026-11-19** **IGN review v7 (game 8.9, launch 3/10) + stats retry.** First Reddit launch: 3 posts (2 crossposts, name-only title, logo first) -> itch views 25 -> 27. Relaunch plan in `docs/reviews/ign_review_2026-11-19_v7.md`. `play_stats.yml` now retries the itch API 3 times (a 20:45 run failed on a blip; the rerun read 27 views).
 - **2026-11-19** **Play alerts armed (Duff: "Arm alerts").** `.github/play_alerts.json` `armed: true`: the next `play_stats` run (every 3 h) saves a baseline (24 views so far), then first traffic, view milestones, 24 h spikes and purchases open a GitHub issue that @mentions Duff.
 - **2026-11-19** **IGN review v6: 8.9/10** (`docs/reviews/ign_review_2026-11-19_v6.md`). Up from v5 for the live itch page, the CI audio + test gates, audit round 2 and the balance pass. Held back by zero players (alerts unarmed), a balance tuned only by soaks (active $324 vs lazy $247 at day 30), unplayed new quests, the unconfirmed iPhone freeze, two sessions on main at once, and page footage hotlinked from raw GitHub.
@@ -79,8 +80,8 @@ One page: what's built, what's next, what could be better. Updated at every mile
   daily bet. New boss `mike` (alley, 70 HP, hustler sprite tinted). Bosses with no HD portrait (mike, grease) no longer
   show an empty portrait frame. 14 test_daily checks; `arena_shot -- cold` now runs through the bet
   (cold_3 card, cold_4 fight, cold_5 payout); render `docs/renders/first_bet.png`.
-- **Look At This (Nov 14):** Madison's ADHD. Home talk from day 3, once: Duff starts a story, she cuts in with a reel and a text, phone popup over the dialogue (+3 Happiness). Lines approved by Duff. Render `docs/renders/madison_look_at_this.png`.
-- **2026-11-14** **Too Loud (Madison's autism).** Duff approved the lines. First Saturday trip to {grocery} from day 6:
+- **Look At This (Nov 14):** Home talk from day 3, once: Duff starts a story, she cuts in with a reel and a text, phone popup over the dialogue (+3 Happiness). Lines approved by Duff. Render `docs/renders/madison_look_at_this.png`.
+- **2026-11-14** **Too Loud.** Duff approved the lines. First Saturday trip to {grocery} from day 6:
   the store gets loud, she masks ("Totally good."), you dig her headphones out of her bag before the noise meter fills
   (`minigames/noise.gd`; meter full = leave the cart, no fail state), then home for the crash and "Ask me about my day.
   All of it. In order." +5. `scripts/too_loud.gd`, save key `too_loud_seen`, 11 test_daily checks, render
@@ -118,16 +119,15 @@ One page: what's built, what's next, what could be better. Updated at every mile
   someone to hit ~2 s later (was a rules wall and no enemy for 20+ s). The Fork, arenas, gala and minigames wait on
   world.pck behind a loading card (`_world_gate`). `docs/renders/cold_open_before_after.png`;
   `arena_shot -- cold` (with `--fixed-fps 30`).
-- **2026-11-13** **The Zebra (Madison's diagnosis story).** Duff approved every line; facts from Madison (hypermobile
-  joint syndrome as a kid, Ehlers-Danlos in 2020, Beighton test). Her zebras are in the room for good: a plush on the
+- **2026-11-13** **The Zebra.** Duff approved every line. Her zebras are in the room for good: a plush on the
   shelf over the bed and a zebra picture in the frame by the shower, both in the room's warm palette. Day 4+, once, at the foot of the bed: 8 lines, +5, happy face throughout.
   `scripts/zebra.gd`, save key `zebra_seen`, 6 test_daily checks, render `docs/renders/madison_zebra.png`.
-- **2026-11-13** **Madison's mornings (EDS + migraines).** Duff approved every line. About two hard mornings a week
+- **2026-11-13** **Mornings (slow / migraine / good).** Duff approved every line. About two hard mornings a week
   she's in bed hurting (hip, or a migraine with the blinds down): bottle for Octavia, two coffees (hers cream and sugar,
   his honey), bring hers for her meds (+8). Skip it and she gets herself up and texts; no penalty. About one good
   morning a week she makes the coffee herself: Sit down (+5) or Take over. `scripts/mornings.gd`, save key `morning`
   (old saves load as no morning), 12 test_daily checks, render `docs/renders/madison_mornings.png`. Next in this arc
-  (each pitched to Duff first): her diagnosis story, an autism quest, her ADHD made visible.
+  (each pitched to Duff first): The Zebra, Too Loud, Look At This.
 - **2026-11-13** **CrazyGames-ready zip.** CI now also ships `duffquest-crazygames.zip` (dev release): no plain
   index.wasm (29 MB total vs the 50 MB no-SDK cap), `window.DQ_PORTAL` makes new players start clean + gore off
   (PEGI 12). Checklist + what's left (covers, preview video, SDK for Full Launch, GameDistribution gameId):

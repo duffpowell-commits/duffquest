@@ -7015,7 +7015,7 @@ func dev_morning(kind: String) -> void:
 	morning["kind"] = kind
 	clock = 450.0
 
-## ---- "Look At This" (look_at_this.gd): her ADHD. Duff starts a story, she has a reel and a text to show him ----
+## ---- "Look At This" (look_at_this.gd). Duff starts a story, she has a reel and a text to show him ----
 func look_story() -> void:
 	look_seen = true
 	gain_happy(LookAtThis.HAPPY)
@@ -7050,8 +7050,8 @@ func _draw_zebras() -> void:
 	Art.image(self, "home_zebra_print", ZEBRA_PIC)
 	Art.image(self, "home_zebra_plush", ZEBRA_PLUSH)
 
-## ---- "Too Loud" (too_loud.gd): her autism, approved line by line. First Saturday trip to the grocery from day 6:
-## the store gets loud, she masks, you dig her headphones out of her bag (noise.gd), then home for the crash. ----
+## ---- "Too Loud" (too_loud.gd), approved line by line. First Saturday trip to the grocery from day 6:
+## headphones from her bag (noise.gd), then home. ----
 func too_loud_story() -> void:
 	_say(TooLoud.STORE)
 	after_dialog = func () -> void:
