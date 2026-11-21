@@ -23,15 +23,6 @@ def git(repo, *args):
     r = subprocess.run(["git", "-C", repo, *args], capture_output=True, text=True)
     return r.stdout.strip() if r.returncode == 0 else ""
 
-def repo_of(cmd, cwd):
-    """The repo a command acts on: a leading `cd X` or `git -C X` wins over the session cwd."""
-    m = re.search(r"(?:^|&&|;)\s*cd\s+([^\s;&]+)", cmd) or re.search(r"git\s+-C\s+([^\s]+)", cmd)
-    path = os.path.expanduser(m.group(1)) if m else cwd
-    if not os.path.isabs(path):
-        path = os.path.join(cwd, path)
-    top = git(path, "rev-parse", "--show-toplevel")
-    return top or None
-
 def cfg(repo):
     out = {}
     p = os.path.join(repo, ".claude/hooks/guard.cfg")
@@ -72,37 +63,105 @@ def code_changed(repo, c):
     files = git(repo, "diff", "--name-only", base, "HEAD").splitlines() if base else []
     return any(pat.search(f) and not f.startswith(SKIP) for f in files)
 
+import shlex
+
+SECRET = re.compile(r"(^|/)\.env(\.|$)|\.(jks|p12|pem)$|\.keystore$|(^|/)secrets?\.")
+
+
+def segments(cmd):
+    """Split a shell line into simple commands (on && || ; | and newlines), each as a token list.
+    Quoted text stays inside its token, so a commit message can't trip a rule."""
+    out, cur = [], []
+    try:
+        lex = shlex.shlex(cmd, posix=True, punctuation_chars=";&|")
+        lex.whitespace_split = True
+        lex.commenters = ""
+        toks = list(lex)
+    except ValueError:
+        toks = cmd.split()
+    for t in toks:
+        if t and set(t) <= set(";&|"):
+            if cur:
+                out.append(cur)
+            cur = []
+        else:
+            cur.append(t)
+    if cur:
+        out.append(cur)
+    return out
+
+
+def git_sub(tokens):
+    """('push', args after it) for `git [-C dir] [-c k=v] push ...`, else (None, [], None)."""
+    if not tokens or os.path.basename(tokens[0]) != "git":
+        return None, [], None
+    i, cdir = 1, None
+    while i < len(tokens) and tokens[i].startswith("-"):
+        if tokens[i] in ("-C", "-c") and i + 1 < len(tokens):
+            if tokens[i] == "-C":
+                cdir = tokens[i + 1]
+            i += 2
+        else:
+            i += 1
+    if i >= len(tokens):
+        return None, [], cdir
+    return tokens[i], tokens[i + 1:], cdir
+
+
+def short_flags(args):
+    return "".join(a[1:] for a in args if a.startswith("-") and not a.startswith("--"))
+
+
 def check_bash(cmd, cwd):
-    if re.search(r"\bgit\b[^|;&]*\bpush\b", cmd):
-        if re.search(r"\s(--force(?!-with-lease)|-f\b)|\s\+\S+", cmd):
-            deny("force push. House rule: never force push. Merge the remote branch in instead "
-                 "(git fetch origin <branch> && git merge --no-edit FETCH_HEAD).")
-        if re.search(r"\bpush\b.*\s(\S+:)?(refs/heads/)?(main|master)\b(?!-)", cmd):
-            deny("direct push to main. main ships to players: push your branch, open a PR, "
-                 "let CI go green, then merge the PR.")
-        repo = repo_of(cmd, cwd)
-        if repo:
-            c = cfg(repo)
-            if c.get("test_cmd") and code_changed(repo, c):
-                tree = code_hash(repo, True)
-                mark = os.path.join(repo, ".claude/state/tests_pass")
-                passed = open(mark).read().strip() if os.path.exists(mark) else ""
-                if tree != passed:
-                    deny("tests have not passed on this exact commit. Run `tools/test.sh` in %s "
-                         "(it runs: %s), commit, then push." % (repo, c["test_cmd"]))
-    if re.search(r"keytool\b.*-genkey", cmd):
-        deny("generating a signing key. Every game signs with the keystone (docs/SIGNING.md in "
-             "godot-game-starter); Lethemoor keeps its own. Never make another key.")
-    if re.search(r"\bgit\b[^|;&]*\bcommit\b", cmd):
-        repo = repo_of(cmd, cwd)
-        if repo:
-            staged = git(repo, "diff", "--cached", "--name-only").splitlines()
-            if "-a" in cmd.split() or "--all" in cmd:
-                staged += git(repo, "diff", "--name-only").splitlines()
-            bad = [f for f in staged if re.search(r"(^|/)\.env(\.|$)|\.(jks|p12|pem)$|\.keystore$|(^|/)secrets?\.", f)]
+    here = cwd
+    adds = False
+    for tok in segments(cmd):
+        if tok and tok[0] == "cd" and len(tok) > 1:
+            p = os.path.expanduser(tok[1])
+            here = p if os.path.isabs(p) else os.path.join(here, p)
+            continue
+        sub, args, cdir = git_sub(tok)
+        repo_dir = cdir if cdir and os.path.isabs(cdir) else (os.path.join(here, cdir) if cdir else here)
+        repo = git(repo_dir, "rev-parse", "--show-toplevel") or None
+        if tok and tok[0] == "keytool" and any(a.startswith("-genkey") for a in tok):
+            deny("generating a signing key. Every game signs with the keystone (docs/SIGNING.md in "
+                 "godot-game-starter); Lethemoor keeps its own. Never make another key.")
+        if tok and tok[0] in ("cp", "mv", "tee", "install") and any(
+                re.search(r"(^|/)signing/[^/]*\.(keystore|enc|sha256|jks)$", a) for a in tok[1:]):
+            deny("writing a signing key file with %s. Keys never change; Lethemoor's never leaves its repo." % tok[0])
+        if sub == "add":
+            adds = True
+        if sub == "push":
+            flags = short_flags(args)
+            if "--force" in args or "f" in flags or any(a.startswith("+") for a in args):
+                deny("force push. House rule: never force push. Merge the remote branch in instead "
+                     "(git fetch origin <branch> && git merge --no-edit FETCH_HEAD).")
+            pos = [a for a in args if not a.startswith("-")]
+            refs = pos[1:]
+            if any(re.fullmatch(r"(\S*:)?(refs/heads/)?(main|master)", r) for r in refs):
+                deny("direct push to main. main ships to players: push your branch, open a PR, "
+                     "let CI go green, then merge the PR.")
+            if repo and (not refs or refs == ["HEAD"]):
+                if git(repo, "rev-parse", "--abbrev-ref", "HEAD") in ("main", "master"):
+                    deny("push while on main. Make a branch (git checkout -b <name>), push that, open a PR.")
+            if repo:
+                c = cfg(repo)
+                if c.get("test_cmd") and code_changed(repo, c):
+                    mark = os.path.join(repo, ".claude/state/tests_pass")
+                    passed = open(mark).read().strip() if os.path.exists(mark) else ""
+                    if code_hash(repo, True) != passed:
+                        deny("tests have not passed on the code in this commit. Run `tools/test.sh` in %s "
+                             "(it runs: %s), commit, then push in a separate command (a commit and push in "
+                             "one line is checked before the commit exists)." % (repo, c["test_cmd"]))
+        if sub == "commit" and repo:
+            files = git(repo, "diff", "--cached", "--name-only").splitlines()
+            if adds or "a" in short_flags(args) or "--all" in args:
+                files += git(repo, "ls-files", "-mo", "--exclude-standard").splitlines()
+            bad = sorted({f for f in files if SECRET.search(f)})
             if bad:
-                deny("secret-looking files staged: %s. Keys only go in as *.keystore.enc; "
+                deny("secret-looking files would be committed: %s. Keys only go in as *.keystore.enc; "
                      "secrets live in GitHub Actions secrets, which Duff sets himself." % ", ".join(bad))
+
 
 def check_write(path):
     if re.search(r"(^|/)signing/[^/]*\.(keystore|enc|sha256|jks)$", path or ""):

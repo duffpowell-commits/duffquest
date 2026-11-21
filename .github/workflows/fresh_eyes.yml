@@ -1,14 +1,15 @@
 # Fresh-eyes gate (Duff, Nov 21): green PRs merge themselves, so before one does, a reviewer with a
 # FRESH context (not the session that wrote it) reads the diff, not the author's summary.
 # This sets a commit status "fresh-eyes" on the PR's head commit: pending until a PR review on THAT
-# commit contains "FRESH-EYES REVIEW: PASS"; a new push resets it. Pending = not green = no merge.
+# commit contains "FRESH-EYES REVIEW: PASS"; a new push resets it. GitHub doesn't block the merge by
+# itself (no branch protection: bots push to main), so every session treats pending as not green.
 # How to review: docs/FRESH_EYES.md.
 name: fresh-eyes
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   pull_request_review:
-    types: [submitted, edited]
+    types: [submitted, edited, dismissed]
 permissions:
   statuses: write
   pull-requests: read

@@ -3,7 +3,9 @@
 Green PRs merge themselves (Duff, Nov 14). The one gate before that is a review by a reader with a
 **fresh context**: it never saw the session that wrote the code, so it can't share its blind spots.
 CI enforces it: the `fresh-eyes` status on the PR stays **pending** until a PR review on the exact
-head commit says `FRESH-EYES REVIEW: PASS`. Push again and it goes back to pending.
+head commit says `FRESH-EYES REVIEW: PASS`. Push again and it goes back to pending. GitHub doesn't
+block a merge on it by itself (no branch protection, because bots push to main), so before merging
+every session checks the PR's combined status, not just the check runs.
 
 ## Steps (the session that opened the PR does this, once CI is green)
 1. Start a reviewer with no history: a subagent, or the `code-review` skill. Give it ONLY the PR
