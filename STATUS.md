@@ -31,3 +31,6 @@ Place's DuffQuest art work has moved to the bot Quase (Art Team). This repo keep
 - `scripts/art_manifest.gd` sprite and backdrop map.
 - `tools/` tests, soak, renders, art import. `docs/renders/` renders. `docs/reviews/` reviews.
 - Signing: `signing/unlock.sh` uses the `KEYSTONE_PASS` Actions secret. Never commit a passphrase or a plain keystore.
+
+## History rewrite
+History was rewritten on 2026-11-21. Every clone (Blace, Quase, Claude, the local machine) must re-clone or hard-reset to origin. Old commit ids no longer exist on the remote.
