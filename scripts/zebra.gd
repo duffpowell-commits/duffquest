@@ -1,7 +1,6 @@
 extends RefCounted
-## "The Zebra": Madison's diagnosis story (EDS). Approved line by line by Duff, Nov 13 2026: never change a line here
-## without his sign-off. Facts are hers: hypermobile joint syndrome as a kid, the Ehlers-Danlos realization in 2020.
-## She loves zebras (pictures, plushies); the zebra is the EDS symbol ("think horses, not zebras").
+## "The Zebra": approved line by line by Duff, Nov 13 2026: never change a line here without his sign-off.
+## She loves zebras (pictures, plushies).
 ## One look at the plush on the shelf over the bed, any day after FIRST_DAY. The zebra stays in the room for good.
 
 const FIRST_DAY: = 4

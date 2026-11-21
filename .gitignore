@@ -1,9 +1,22 @@
 build/
 
-# local secrets
+# local secrets (this repo is public)
 .env
 .env.*
+*.jks
+*.p12
+*.pem
+*.key
+secrets/
 .godot/editor/
+
+# local handoff notes and AI prompt drafts
+handoff.local.md
+HANDOFF.local.md
+*.handoff.local.md
+prompts.local/
+*.prompt.md
+*system-prompt*
 
 # grok_art: scratch from conversions/repaints never gets committed (the repo is already 1.1 GB and
 # history is never rewritten). Work in grok_art/<drop>/_work/ or any *_tmp* path; keep originals + keepers only.

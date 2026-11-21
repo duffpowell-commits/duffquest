@@ -1,18 +1,13 @@
 # DuffQuest handoff — Nov 9, 2026 (afternoon)
 
-Paste-ready for a new session. Read in this order: `CLAUDE_REFERENCE.md` (keys, itch, art tools, decisions),
-`CLAUDE.md` "Where things stand" (top bullets), `QUEUE.md` NOW, `tasks/todo.md` top sections, `tasks/lessons.md`,
+Read in this order: `CLAUDE.md` "Where things stand" (top bullets), `QUEUE.md` NOW, `tasks/todo.md` top sections, `tasks/lessons.md`,
 `docs/art_rules.md` + `docs/art_direction/STYLE_LOCK.md`.
 
 ## Start of session (2 minutes, no questions for Duff)
-1. Keys: Cloudflare MCP `[redacted]` on db `[redacted]` (`[redacted]`):
-   `[redacted]` -> `GITLAB_TOKEN`, `BUTLER_API_KEY`. Never ask Duff to paste keys.
-2. Clone: `git clone https://oauth2:$GITLAB_TOKEN@gitlab.com/dufftkyosht-group/duffquest.git`, then
-   `git remote set-url origin https://gitlab.com/dufftkyosht-group/duffquest.git` (keep the token out of .git/config).
-   Push with `git push https://oauth2:$GITLAB_TOKEN@gitlab.com/dufftkyosht-group/duffquest.git HEAD:main`.
-3. Ship: `BUTLER_API_KEY=... tools/ship_itch.sh [--web-check]` (installs Godot 4.5 + web templates + butler if missing;
-   import, test_daily, smoke, export, secret scan, push to `dufftkyosht/duff-quest:html`). `--no-push` = build only.
-4. GitLab token expires **2026-12-08**: remind Duff around Dec 1 to make a new one; update the vault row.
+1. Secrets stay in GitHub Actions secrets that Duff adds. Never commit them and never ask him to paste one.
+2. Repo is GitHub `duffpowell-commits/duffquest`. `git fetch` before starting and before pushing.
+3. Ship: `tools/ship_itch.sh [--web-check]` (installs Godot 4.5 + web templates + butler if missing;
+   import, test_daily, smoke, export, secret scan, push to `dufftkyosht/duff-quest:html` when the itch key is set). `--no-push` = build only.
 
 ## Where the game is (end of Nov 9)
 - itch: https://dufftkyosht.itch.io/duff-quest, channel `html`. Build = latest main (see CLAUDE.md top bullet).

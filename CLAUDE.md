@@ -3,11 +3,20 @@
 Comedy RPG about Duff's real life in Omaha: keep Madison happy, pay the rent, work the line at the Twisted Fork,
 fight exes and porch pirates. Godot 4.5, GDScript, 640×360 viewport (1280×720 window), 3D view by default. Owner: Duff.
 
-**Read order:** this file -> `TRACKER.md` (Built / Next / Could improve) -> `reference.md` (how every system works).
+**Read order:** this file -> `STATUS.md` -> `TRACKER.md` (Built / Next / Could improve) -> `reference.md` (how every system works).
 **Every system's details, re-import steps and gotchas: `docs/HANDOFF_LOG.md`** (moved out of this file Nov 21 to keep
-it short). Search it before touching a system. Also `CLAUDE_REFERENCE.md`, `QUEUE.md`, `docs/handoffs/`.
+it short). Search it before touching a system. Also `QUEUE.md`.
+
+## Public repo rules
+This repo is public.
+- Never commit secrets, passwords, keys, tokens, keystore passphrases, or `.env` files. Secrets go only in GitHub Actions secrets added by Duff.
+- Never commit AI prompts, bot instructions, persona text, or private chat handoffs.
+- Never commit personal or family info.
+- Never copy code, data, signals, or results from swinglifeaway or other private trading repos.
+- Game art, code, and design docs are fine.
 
 ## Where things stand (Nov 21)
+- This repo is public. Secrets, prompts, private handoffs, and personal details stay out. See Public repo rules.
 - main is green and live. Every push to main ships: CI parses, runs test_daily + smoke, exports web + APK, refreshes
   the `dev` release and pushes the web build to itch (`dufftkyosht/duff-quest:html`). Red CI = nothing ships.
 - Web: itch + PWA at https://duffpowell-commits.github.io/duffquest/ (family copy at `/family/`). APKs: `dev` release
@@ -23,8 +32,7 @@ it short). Search it before touching a system. Also `CLAUDE_REFERENCE.md`, `QUEU
 5. In-app updater: port godot-game-starter's (gap report `/mnt/project-files/game-starter/gap_report_2026-11-19.md`).
 
 ## Hard rules (Duff's; each one exists because it went wrong before)
-- **Madison is a real person:** Duff approves EVERY line about her EDS, autism and ADHD before it ships, one pitch at a
-  time. Off-limits: the mess of her stuff, and that she's on disability. No Madison lines on fail screens.
+- **Partner lines:** Duff approves every line about his partner before it ships, one pitch at a time. No partner lines on fail screens.
 - **Duff's hands:** copy the masters in `docs/ref/duff/hand_*.png`, never invent. LEFT = eye mandala, NO RING; RIGHT =
   red calligraphy "This Red Right Hand Points Me South". New Duff sheet: `tools/hand_tattoos/stamp.py` then `atlas.py`.
   Fox neck tattoo master: `docs/ref/duff/duff_fox_neck_tattoo.png` (`docs/duff_look.md`).

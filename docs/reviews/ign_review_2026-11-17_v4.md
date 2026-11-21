@@ -13,8 +13,8 @@ looks like it came from a different game.
 ## Biggest strengths
 
 1. **The writing has a pulse nobody else has.** A line cook in Omaha, rent due Monday, a baby at 3 AM, exes as
-   bosses. The jokes are specific ("Left on read. Stings worse than a fryer burn."). Madison's EDS, autism and
-   ADHD stories (*The Zebra*, *Too Loud*, *Look At This*) are written from real life with her sign-off, and they
+   bosses. The jokes are specific ("Left on read. Stings worse than a fryer burn."). *The Zebra*, *Too Loud*, and
+   *Look At This* were approved before they shipped, and they
    land as warmth, not a punchline. That is the reason to play.
 2. **It's real.** The kitchen games come from a real line: oil held at 350-375°F, allergen cross-contact on the
    lineup quiz, a ticket stolen mid-build, temp-probing the thickest part. Nineteen mini-games now each open with

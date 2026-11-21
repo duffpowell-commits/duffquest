@@ -118,15 +118,13 @@ Moved word for word out of CLAUDE.md on Nov 21 2026 (lean harness: CLAUDE.md loa
   `_pub` file is a byte copy of its original (redraw the original -> re-run the script).
   Render either edition: `arena_shot.tscn -- <id> --family`.
 
-- **Madison's mornings (Nov 13):** EDS slow / migraine / good mornings, `scripts/mornings.gd` (see reference.md).
-  Madison is a real person: Duff approves EVERY line about her EDS, autism and ADHD before it ships. One pitch at a
-  time. Off-limits: the mess of her stuff, and that she's on disability.
-  Her diagnosis story "The Zebra" is `scripts/zebra.gd` (same approval rule). Her autism: "Too Loud"
-  (`scripts/too_loud.gd` + `minigames/noise.gd`): first Saturday grocery trip from day 6, noise overload, her headphones,
-  home crash. Facts from Duff: noise is the trigger, headphones help, she masks then crashes, she info-dumps about herself.
-  Her ADHD: "Look At This" (`scripts/look_at_this.gd`, same approval rule): talking to her at home from day 3, once, she
-  cuts into his story with a reel and a text; `hud.gd _draw_her_screen` draws the phone over the dialogue. Facts: she
-  shows him her phone screen constantly (reels, texts) and finds it hard to let him finish. `arena_shot` `look` / `look_text`.
+- **Mornings (Nov 13):** slow / migraine / good mornings, `scripts/mornings.gd` (see reference.md).
+  Duff approves every partner line before it ships, one pitch at a time. No partner lines on fail screens.
+  "The Zebra" is `scripts/zebra.gd` (same approval rule). "Too Loud"
+  (`scripts/too_loud.gd` + `minigames/noise.gd`): first Saturday grocery trip from day 6, headphones, then home.
+  "Look At This" (`scripts/look_at_this.gd`, same approval rule): talking at home from day 3, once, she
+  cuts into his story with a reel and a text; `hud.gd _draw_her_screen` draws the phone over the dialogue.
+  `arena_shot` `look` / `look_text`.
 - **Portal fit (Nov 13 late):** windows where integer scaling wastes >10% now scale fractionally (`HdPresentation.use_fractional`), so CrazyGames' 907x510 iframe is filled. Touch pad on the web shows up front only on iOS/Android browsers, else on the first real touch (`TouchControls.default_visible()/real_touch()`; mouse-emulated touches have device -1). Listing copy: `docs/portals/LISTING.md`.
 - **Portal polish (Nov 14):** keyboard/mouse players: the cold-open line says "WASD or arrows to walk, Space to bonk"; the level/heat panel sits bottom-right (`combat_ui.PANEL_R_KEYS`) instead of floating where the touch buttons would be; enemy name + Lv labels are on ink plates. The sandwich ticket's house item is `{house_sandwich}` (public: Spatula Classic). Renders in keyboard mode: add `--keys` after the id (xvfb reports a touchscreen).
 - **First bet (Nov 14):** the cold-open pirate's KO/escape -> `main.first_bet_pitch()` -> {coworker}'s bet card ->

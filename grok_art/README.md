@@ -3,11 +3,8 @@
 Duff's Grok designs for DuffQuest, waiting to go in the game. Nothing here ships (`.gdignore`).
 Duff designs with Grok, Claude converts and integrates.
 
-**Style + prompts:** Drive doc "DuffQuest — Style bible + Grok prompts"
-https://docs.google.com/document/d/1lmADUpw6NO0A_rvmwdox_t2oJoh8yZVLc1AXliRUwnE/edit
-(world/sprites = Sea of Stars-style pixel art; portraits = bold Hazbin-style cartoon, humans).
-**Capability test:** https://docs.google.com/document/d/1ay5y-iWh__M8sJx4JbcHVWp0WvOMgoi8g2gFnHzAtC4/edit
-(results go in Drive: DuffQuest Art Inbox / 99 Grok capability test).
+**Style:** world/sprites = Sea of Stars-style pixel art; portraits = bold Hazbin-style cartoon, humans.
+Image-generation prompts are not stored in this repo. Art direction: `docs/art_direction/`.
 
 ## Open requests
 - **M7 backgrounds (Nov 8):** `requests/REQUEST_M7_backdrops.md`, 19 full-screen backgrounds with layout guides in `requests/m7/`.
@@ -56,7 +53,7 @@ What stayed: the files the import tools in `tools/` still read, plus `requests/`
 | `2026-11-07/sos_cast_inspection.png` | All 4 overworld sheets side by side | reference (Nov 7) | QA still for the walk sheets. |
 | `2026-11-07/sos_walk_inspection.gif` | Walk-cycle preview of the 4 sheets | reference (Nov 7) | QA still. |
 | `2026-11-07/madison_vs_brittany.png` | Madison vs Brittany face comparison | reference (Nov 7) | Shows the deliberate face split. |
-| `2026-11-07/full_sprite_list.csv` | Full sprite list (223 assets) | **APPROVED** reference (Nov 7) | Header plus 223 rows: the 131 manifest ids plus 92 new ones the new direction needs. Each row has a priority and a ready-to-paste Grok prompt. Live copy: https://docs.google.com/spreadsheets/d/1nQ9h_KqccoSbITQw3A6a8Oh5zX7YyHh33gvkr1L62Aw/edit |
+| `2026-11-07/full_sprite_list.csv` | Full sprite list (223 assets) | **APPROVED** reference (Nov 7) | Header plus 223 rows: the 131 manifest ids plus 92 new ones the new direction needs. Priority and status only. Prompt text is not stored in this repo. |
 | `2026-11-07/HANDOFF.md` | Grok's notes for this batch | note (Nov 7) | Duff approved the batch, with the caveats in that file. Current tasks live in `grok_art/NEXT_STEPS_FROM_GROK.md`. Claude integrates; nothing here is wired into the game. |
 | `2026-11-07-ground/` | v2 ground tiles for the town TileMap | **APPROVED** (Nov 7) | Duff wants Claude to start coding the town map from these, after Duff's player sprite. Straight-on 3/4 camera, board 2 palette. `new_ground_textures.png` is 1536×1024, 3×2 of 512 (grass, sidewalk, asphalt / brick, dirt, gravel). `new_ground_edges.png` is 1024×1024, 4×4 of 256 (markings, fixtures, straight transitions). `new_ground_corners.png` is 2048×1280, 8×5 of 256: sidewalk/asphalt (with curb), grass/sidewalk, grass/asphalt, dirt/grass, each with 4 straights, 4 outer corners, and 4 inner corners. `ground_tilemap.json` is the cell map. Downscale nearest-neighbour; keep the swatch phase. Not a 47-tile blob set. Row 225's old parking wording is superseded by the JSON. See `HANDOFF.md`. Previews: `batch1_v2_town_mock.png`, `batch1_v2_preview.png`, `batch1_v2_board_comparison.png`. |
 | `2026-11-08-storefronts/` | All 13 storefronts, one building per PNG | **delivered** (Nov 8) | Complete set, together. Straight-on 3/4, same camera as the ground tiles. Flat key (`#00FF00` or `#FF00FF`; pink buildings use green), 8px margin, bottom edge is the footprint. Sizes match sprite-list column C. Signs: KWIK-N-GO, THE TWISTED FORK, HOA HQ, SEEN CAFE, IRON TEMPLE, CLUB CLOUD 9, MINING RIG, NAKATOMEH PLAZA, WALGRUMPS, HY-WHEE MARKET, PLAZMART PLASMA. Home and the neighbor have no sign. `storefronts_street_mock.png` is illustrative only, not a collision layout. See `HANDOFF.md`. |
