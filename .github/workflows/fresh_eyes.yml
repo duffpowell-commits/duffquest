@@ -1,0 +1,36 @@
+# Fresh-eyes gate (Duff, Nov 21): green PRs merge themselves, so before one does, a reviewer with a
+# FRESH context (not the session that wrote it) reads the diff, not the author's summary.
+# This sets a commit status "fresh-eyes" on the PR's head commit: pending until a PR review on THAT
+# commit contains "FRESH-EYES REVIEW: PASS"; a new push resets it. GitHub doesn't block the merge by
+# itself (no branch protection: bots push to main), so every session treats pending as not green.
+# How to review: docs/FRESH_EYES.md.
+name: fresh-eyes
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+permissions:
+  statuses: write
+  pull-requests: read
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fresh-eyes review on this exact commit?
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          n=$(gh api "repos/$REPO/pulls/$PR/reviews" --paginate \
+            --jq "[.[] | select(.commit_id == \"$SHA\" and (.body | test(\"FRESH-EYES REVIEW: PASS\")))] | length" \
+            | awk '{s+=$1} END {print s+0}')
+          if [ "$n" -gt 0 ]; then
+            state=success; desc="Fresh-eyes review passed on this commit"
+          else
+            state=pending; desc="Waiting for a fresh-eyes review of this commit (docs/FRESH_EYES.md)"
+          fi
+          gh api "repos/$REPO/statuses/$SHA" -f state="$state" -f context=fresh-eyes -f description="$desc" >/dev/null
+          echo "fresh-eyes: $state ($n passing reviews on $SHA)"

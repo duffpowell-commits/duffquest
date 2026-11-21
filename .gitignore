@@ -11,3 +11,7 @@ grok_art/**/_work/
 grok_art/**/*_tmp*
 __pycache__/
 *.keystore
+
+# test-pass marker for the push guard (tools/test.sh)
+.claude/state/
+.claude/settings.local.json
