@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://branding/studio_boot.gd" id="1"]
+[ext_resource type="PackedScene" path="res://branding/studio_splash.tscn" id="2"]
+
+[node name="StudioBoot" type="Node"]
+script = ExtResource("1")
+entry_scene = "res://game.tscn"
+
+[node name="StudioSplash" parent="." instance=ExtResource("2")]

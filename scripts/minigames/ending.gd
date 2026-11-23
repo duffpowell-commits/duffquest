@@ -1,5 +1,7 @@
 extends "res://scripts/minigames/minigame.gd"
 
+const StudioSplash = preload("res://branding/studio_splash.gd")
+
 const SCENE_LINES: = [
 	"Later that night. No sirens. No vents. Just the couch.",
 	"{partner}: You fought a guy in a tank top in a burning tower... for us?",
@@ -26,7 +28,7 @@ func _setup() -> void:
 
 static func credits_lines() -> Array:
 	var c: Array = [
-		"{GAME_TITLE}", "",
+		"{GAME_TITLE}", "Published by " + StudioSplash.PUBLISHER, "",
 		"STARRING", "{hero} ... as himself", "{partner} ... his whole heart", "{baby} ... the boss of everyone",
 		"{cat1} and {cat2} ... chaos, 3 AM division", "{cat3} ... (refused to sign the release)", "{sister_full} ... texts, {wordle}, roasts", "",
 		"THE EXES (parody nicknames)", "{ex_1}", "{ex_2}", "{ex_3}", "{ex_4}", "",

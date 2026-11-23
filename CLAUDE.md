@@ -16,6 +16,7 @@ This repo is public.
 - Game art, code, and design docs are fine.
 
 ## Where things stand (Nov 21)
+- The approved 3 Eyed Fox Studios publisher card appears before the title. Settings, ending credits, and itch copy credit the studio.
 - This repo is public. Secrets, prompts, private handoffs, and personal details stay out. See Public repo rules.
 - main is green and live. Every push to main ships: CI parses, runs test_daily + smoke, exports web + APK, refreshes
   the `dev` release and pushes the web build to itch (`dufftkyosht/duff-quest:html`). Red CI = nothing ships.
