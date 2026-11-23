@@ -1,5 +1,7 @@
 extends RefCounted
 
+const GRAIN_SHADER = preload("porch_surface.gdshader")
+
 # Build each prop into one indexed, vertex-colored surface. Collision belongs to the scene.
 class Sculpture:
 	var surface := SurfaceTool.new()
@@ -76,6 +78,15 @@ class Sculpture:
 		return visual
 
 
+static func surface_detail(visual: MeshInstance3D, grain: float, scale: Vector3, lawn := false) -> void:
+	var material := ShaderMaterial.new()
+	material.shader = GRAIN_SHADER
+	material.set_shader_parameter("grain", grain)
+	material.set_shader_parameter("grain_scale", scale)
+	material.set_shader_parameter("lawn", lawn)
+	visual.material_override = material
+
+
 const SKIN := Color("#d38a59")
 const BLACK := Color("#25242c")
 const GOLD := Color("#e3ab55")
@@ -127,7 +138,11 @@ static func person(parent: Node3D, hood: bool) -> Node3D:
 				body.form(Vector3(side * (.13 + lock * .022), 1.26 - lock * .032, .121), Vector3(.13, .40, .19), hair.darkened(.05 * lock), Vector3(.29, 0, -.37))
 		# Duff faces -Z, so his anatomical left is scene -X.
 		animal_ink(body, Vector3(-.119, 1.054, -.038), Color("#92503d"), false, PI / 2.0)
-	body.finish(model, "TorsoAndHead")
+	if hood:
+		body.form(Vector3(0, .651, -.148), Vector3(.42, .187, .113), shirt.darkened(.16))
+		for side in [-1.0, 1.0]:
+			body.form(Vector3(side * .119, .674, -.195), Vector3(.034, .12, .018), shirt.lightened(.13), Vector3(0, 0, side * .45), 8)
+	surface_detail(body.finish(model, "TorsoAndHead"), .12, Vector3(88, 123, 92))
 	for side in [-1.0, 1.0]:
 		var tag := "Left" if side < 0 else "Right"
 		var leg := Sculpture.new()
@@ -137,7 +152,9 @@ static func person(parent: Node3D, hood: bool) -> Node3D:
 		leg.form(Vector3(side * .026, -.421, -.048), Vector3(.248, .15, .33), BLACK if hood else Color("#77332f"))
 		for lace in 3:
 			leg.form(Vector3(side * .026, -.354 + lace * .009, -.135 + lace * .034), Vector3(.126, .014, .017), TRIM, Vector3.ZERO, 8)
-		leg.finish(model, tag + "Leg", Vector3(side * .146, .53, .008))
+		for fold in 3:
+			leg.form(Vector3(side * .02, -.20 - fold * .064, -.113 + fold * .016), Vector3(.184, .042, .053), trousers.lightened(.055), Vector3(0, 0, side * .22), 8)
+		surface_detail(leg.finish(model, tag + "Leg", Vector3(side * .146, .53, .008)), .17, Vector3(91, 137, 91))
 		var arm := Sculpture.new()
 		var gripping: bool = hood and side < 0
 		arm.form(Vector3(side * .037, -.064, -.025), Vector3(.22, .24, .225), shirt, Vector3(0, 0, side * .25))
@@ -200,7 +217,7 @@ static func planter(parent: Node3D, at: Vector3, width: float, depth: float) -> 
 		for petal in 9:
 			var orbit := petal * 2.4
 			mesh.form(bloom + Vector3(cos(orbit) * .056, .026 * (petal % 3), sin(orbit) * .052), Vector3(.083, .076, .081), Color("#c07669").lightened(.055 * (petal % 3)), Vector3.ZERO, 7)
-	mesh.finish(parent, "FlowerPlanter", at)
+	surface_detail(mesh.finish(parent, "FlowerPlanter", at), .35, Vector3(16, 145, 16))
 
 
 static func frontage(parent: Node3D) -> void:
@@ -260,7 +277,12 @@ static func frontage(parent: Node3D) -> void:
 	mesh.form(Vector3(.486, 1.19, -3.151), Vector3(.074, .074, .083), GOLD)
 	mesh.form(Vector3(0, 2.63, -3.16), Vector3(.18, .25, .20), Color("#ffd487"))
 	mesh.form(Vector3(0, 2.765, -3.16), Vector3(.22, .13, .22), BLACK)
-	mesh.finish(parent, "BrickAndClapboardFrontage")
+	for i in 4:
+		var angle := (i + .5) * TAU / 4.0
+		mesh.box(Vector3(cos(angle) * .081, 2.623, -3.16 + sin(angle) * .086), Vector3(.016, .218, .016), BLACK)
+	for y in [2.532, 2.709]:
+		mesh.band(Vector3(0, y, -3.16), .089, BLACK, Vector3.ZERO, .009)
+	surface_detail(mesh.finish(parent, "BrickAndClapboardFrontage"), .39, Vector3(27, 63, 42))
 	var lamp := OmniLight3D.new()
 	lamp.position = Vector3(0, 2.58, -3.03)
 	lamp.light_color = Color("#ffb15e")
@@ -281,7 +303,9 @@ static func stoop(parent: Node3D) -> void:
 			var high := .99 - .075 * post
 			mesh.box(Vector3(x, (high + .24) * .5, z), Vector3(.045, high - .24, .043), BLACK)
 		mesh.box(Vector3(x, .84, -2.88), Vector3(.075, .065, 1.01), BLACK, Vector3(.329, 0, 0))
-	mesh.finish(parent, "StoopAndRails")
+	for rib in 14:
+		mesh.box(Vector3(0, .259, -3.144 + rib * .024), Vector3(.87, .008, .008), WOOD.darkened(.21))
+	surface_detail(mesh.finish(parent, "StoopAndRails"), .35, Vector3(62, 62, 62))
 
 
 static func fence(parent: Node3D, x: float) -> void:
@@ -298,7 +322,9 @@ static func fence(parent: Node3D, x: float) -> void:
 		var z := -5.35 + i * 2.14
 		mesh.box(Vector3(0, .724, z), Vector3(.29, 1.448, .30), WOOD.darkened(.18))
 		mesh.box(Vector3(0, 1.463, z), Vector3(.333, .105, .339), TRIM.darkened(.21))
-	mesh.finish(parent, "TimberFence", Vector3(x, 0, 0))
+		for nail in [-1.0, 1.0]:
+			mesh.form(Vector3(-signf(x) * .155, 1.07, z + nail * .074), Vector3(.018, .033, .033), BLACK, Vector3.ZERO, 6)
+	surface_detail(mesh.finish(parent, "TimberFence", Vector3(x, 0, 0)), .34, Vector3(40, 9, 105))
 
 
 static func pavement(parent: Node3D) -> void:
@@ -308,30 +334,31 @@ static func pavement(parent: Node3D) -> void:
 		var x := -7.25 + i * 1.32
 		mesh.box(Vector3(x, .012, 2.91), Vector3(1.306, .043, 1.45), CONCRETE.lightened(.027 * (i % 4)))
 		mesh.box(Vector3(x, .029, 3.672), Vector3(1.304, .078, .16), CONCRETE.darkened(.10))
-	mesh.finish(parent, "SidewalkAndCurb")
+	surface_detail(mesh.finish(parent, "SidewalkAndCurb"), .35, Vector3(77, 77, 77))
 
 
 static func garden(parent: Node3D) -> void:
 	var mesh := Sculpture.new()
 	var rng := RandomNumberGenerator.new()
 	rng.seed = 341
-	mesh.box(Vector3(0, -.146, -.5), Vector3(22, .28, 12), Color("#77834c"))
-	for i in 230:
+	var ground := Sculpture.new()
+	ground.box(Vector3(0, -.146, -.5), Vector3(22, .28, 12), Color("#74814b"))
+	surface_detail(ground.finish(parent, "Lawn"), .55, Vector3(61, 12, 76), true)
+	for i in 460:
 		var x := rng.randf_range(-6.84, 6.84)
-		var z := rng.randf_range(-3.4, 2.16)
-		var blade := LEAF.lightened(rng.randf_range(-.18, .14))
-		if i % 4 == 0:
-			mesh.form(Vector3(x, -.001, z), Vector3(rng.randf_range(.16, .62), .012, rng.randf_range(.12, .41)), blade.darkened(.04), Vector3.ZERO, 8)
-		else:
-			for leaf in 4:
-				var offset := Vector3(rng.randf_range(-.055, .055), 0, rng.randf_range(-.055, .055))
-				mesh.blade(Vector3(x, 0, z) + offset, offset * 1.3, rng.randf_range(.026, .076), blade)
+		var z := rng.randf_range(-3.32, 2.18)
+		if i % 2 == 0:
+			z = lerpf(z, 2.12 if i % 4 == 0 else -3.19, .79)
+		var blade := LEAF.lightened(rng.randf_range(-.20, .16))
+		for leaf in 4:
+			var offset := Vector3(rng.randf_range(-.075, .075), 0, rng.randf_range(-.075, .075))
+			mesh.blade(Vector3(x, 0, z) + offset, offset * 1.3, rng.randf_range(.045, .14), blade)
 	for center in [-4.8, -2.15, 2.18, 4.85]:
-		for i in 17:
-			mesh.form(Vector3(center + rng.randf_range(-.43, .43), rng.randf_range(.08, .49), -2.96 + rng.randf_range(-.22, .21)), Vector3(.35, .30, .31), LEAF.darkened(rng.randf_range(-.12, .25)), Vector3.ZERO, 8)
+		for i in 26:
+			mesh.form(Vector3(center + rng.randf_range(-.43, .43), rng.randf_range(.08, .49), -2.96 + rng.randf_range(-.22, .21)), Vector3(.26, .17, .31), LEAF.darkened(rng.randf_range(-.12, .25)), Vector3.ZERO, 8)
 	for side in [-1.0, 1.0]:
 		var x: float = side * 6.31
 		mesh.form(Vector3(x, 1.18, -4.6), Vector3(.55, 2.66, .54), WOOD.darkened(.44), Vector3(.16, 0, side * .11))
 		for i in 17:
 			mesh.form(Vector3(x + rng.randf_range(-.91, .91), rng.randf_range(2.0, 3.85), -4.67 + rng.randf_range(-.8, .68)), Vector3(1.25, 1.28, 1.2), LEAF.lightened(rng.randf_range(-.24, .12)), Vector3.ZERO, 10)
-	mesh.finish(parent, "LawnAndPlanting")
+	mesh.finish(parent, "GrassAndPlanting")
