@@ -3,6 +3,8 @@ extends "res://scripts/minigames/minigame.gd"
 ## has to ship (Godot's MIT text + its third-party notices, the four OFL fonts). Drag, mouse wheel or
 ## the arrow keys scroll. Built once on open; only the visible lines are drawn.
 
+const StudioSplash = preload("res://branding/studio_splash.gd")
+
 const FONT_FILES: = ["OFL-Baloo2.txt", "OFL-Nunito.txt", "OFL-Caveat.txt", "OFL-PatrickHand.txt"]
 const BOX: = Rect2(8, 17, 304, 144)
 const LINE_H: = 8.0
@@ -63,6 +65,7 @@ func _build() -> void:
 	var dim: = Color(1, 1, 1, 0.7)
 	lines.append([Cast.T("{GAME_TITLE}"), Color("#ff6aa8")])
 	_para(Cast.T("Made by {hero}, a line cook in {city}, on a phone."))
+	_para("Published by " + StudioSplash.PUBLISHER)
 	_head("NOTICE")
 	for s in notice():
 		_para(s)
