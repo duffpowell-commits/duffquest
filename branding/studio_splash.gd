@@ -3,6 +3,7 @@ extends Control
 
 signal dismissed
 
+const UiStyle = preload("res://scripts/ui_style.gd")
 const PUBLISHER := "3 Eyed Fox Studios"
 const DISPLAY_SECONDS := 0.75
 
@@ -10,7 +11,17 @@ var finished := false
 
 
 func _ready() -> void:
-	%Skip.pressed.connect(_dismiss)
+	var skip: Button = %Skip
+	for state: String in ["normal", "hover", "pressed"]:
+		var fill := StyleBoxFlat.new()
+		fill.bg_color = UiStyle.BTN_ALT
+		if state == "hover":
+			fill.bg_color = fill.bg_color.lightened(0.15)
+		elif state == "pressed":
+			fill.bg_color = fill.bg_color.darkened(0.15)
+		fill.set_corner_radius_all(22)
+		skip.add_theme_stylebox_override(state, fill)
+	skip.pressed.connect(_dismiss)
 	get_tree().create_timer(DISPLAY_SECONDS).timeout.connect(_dismiss)
 
 
