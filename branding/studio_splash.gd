@@ -5,7 +5,7 @@ signal dismissed
 
 const UiStyle = preload("res://scripts/ui_style.gd")
 const PUBLISHER := "3 Eyed Fox Studios"
-const DISPLAY_SECONDS := 0.75
+const DISPLAY_SECONDS := 2.5
 
 var finished := false
 
