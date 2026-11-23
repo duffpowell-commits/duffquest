@@ -1,5 +1,15 @@
 # True 3D models (test slice, `#true3d`)
 
+The opening preview uses Duff’s authored mesh and rigged low-poly porch pirate stand-ins when authored pirate meshes are unavailable. The preview is opt-in via `#true3d` on web or `DQ_TRUE3D=1` for a local run. Web Duff may appear as a sprite until his model pack mounts.
+
+## Conversion order
+
+1. Finish the porch and Marketplace Mike as one playable 3D opening. Replace the pirate stand-ins with textured models and verify movement, attacks, dodge, hit feedback and camera visibility on a phone.
+2. Convert the first kitchen shift and home interiors, then cover each arena and street NPC. Use the existing art and room layouts as references.
+3. Move navigation, collisions and combat placement to 3D scene coordinates in each converted area. Check input, save migration, and web/mobile performance before making that path the default. Keep HUD and dialogue as screen-space interfaces.
+
+The opening preview currently uses the game's existing 2D simulation for positions and combat. Audit ideas are tracked in #185.
+
 Turns a 2D character sheet into a rigged 3D model for `scripts/view3d/true3d.gd`. Free, CPU only, no accounts.
 
 1. Python deps (fresh container): `pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu`,
