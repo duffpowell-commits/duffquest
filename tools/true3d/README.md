@@ -2,6 +2,16 @@
 
 The opening preview uses Duff’s authored mesh and rigged low-poly porch pirate stand-ins when authored pirate meshes are unavailable. The preview is opt-in via `#true3d` on web or `DQ_TRUE3D=1` for a local run. Web Duff may appear as a sprite until his model pack mounts.
 
+## Porch Pirate 0 art review
+
+[Concept sheet](../../docs/art/porch-pirate-0-concepts.jpg) based on the approved Porch Pirate 0 sprite. A keeps the sprite’s compact proportions. B uses longer limbs and a leaner silhouette. The first block model was declined. The concept choice is pending.
+
+After Duff approves A or B, hand-model that direction and review the still pose in Godot at the gameplay camera before rigging the walk and throw. Keep the parcel against the chest and preserve the hood silhouette and forward lean.
+
+## Merge gate
+
+Keep PR #186 in draft during the conversion. Merge only after the full campaign runs in 3D and the branch passes gameplay, save migration, and phone/browser checks. The opening preview alone does not satisfy the merge gate.
+
 ## Conversion order
 
 1. Finish the porch and Marketplace Mike as one playable 3D opening. Replace the pirate stand-ins with textured models and verify movement, attacks, dodge, hit feedback and camera visibility on a phone.
