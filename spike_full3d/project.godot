@@ -1,7 +1,7 @@
 config_version=5
 
 [application]
-config/name="Duff Quest - 3D Porch Sample"
+config/name="Duff Quest - Porch Encounter"
 run/main_scene="res://porch.tscn"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 
@@ -14,3 +14,6 @@ window/handheld/orientation=6
 [rendering]
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[input_devices]
+pointing/emulate_touch_from_mouse=true

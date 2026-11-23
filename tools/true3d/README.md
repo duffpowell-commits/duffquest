@@ -23,7 +23,7 @@ Duff, Madison, and Britney require Duff’s approval for new or revised sprite a
 - Dad jacket: use the earlier loose, swept-back hair-down style.
 - Kitchen and Gala: hair tied back. Apron in the kitchen only.
 
-The revised everyday look is pending approval.
+The approved everyday look has a plain black tee, four alternating gold and black hoops above each gold-rimmed black gauge, a fox on Duff’s left neck and a seven-eyed wolf on his right forearm. See the [standalone 3D porch encounter](../../spike_full3d/README.md) for the playable slice.
 
 ## Porch Pirate 0 art review
 
