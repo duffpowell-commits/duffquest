@@ -17,6 +17,14 @@ The approved render is an art reference. The earlier static review mesh is super
 
 Duff, Madison, and Britney require Duff’s approval for new or revised sprite art and its 3D adaptation. Show the likeness and gameplay-camera silhouette before finalizing each character. For the rest of the cast, use the approved Porch Pirate standard and check the result at gameplay size. Individual approval is optional for those characters.
 
+## Duff hairstyle by outfit
+
+- Everyday: hair down, swept toward Duff’s anatomical left.
+- Dad jacket: use the earlier loose, swept-back hair-down style.
+- Kitchen and Gala: hair tied back. Apron in the kitchen only.
+
+The revised everyday look is pending approval.
+
 ## Porch Pirate 0 art review
 
 [Concept sheet](../../docs/art/porch-pirate-0-concepts.jpg) based on the approved Porch Pirate 0 sprite. A keeps the sprite’s compact proportions. B uses longer limbs and a leaner silhouette. The first block model was declined. Duff approved concept A as the modeling reference.
