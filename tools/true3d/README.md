@@ -8,6 +8,8 @@ The opening preview uses Duff’s authored mesh and rigged low-poly porch pirate
 
 Hand-model concept A and review the still pose in Godot at the gameplay camera before rigging the walk and throw. Keep the parcel against the chest and preserve the hood silhouette and forward lean.
 
+Concept A now has a [static review mesh](../../docs/art/porch-pirate-a-review.glb) and a [review sheet](../../docs/art/Porch-Pirate-A-Review.jpg). Godot headless import and instantiation passed. The review sheet was rendered separately using the default camera pitch, field of view, and viewport size. Approval, rigging, and live scene integration are pending.
+
 ## Merge gate
 
 Keep PR #186 in draft during the conversion. Merge only after the full campaign runs in 3D and the branch passes gameplay, save migration, and phone/browser checks. The opening preview alone does not satisfy the merge gate.
