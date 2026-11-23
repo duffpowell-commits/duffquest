@@ -2,13 +2,24 @@
 
 The opening preview uses Duff’s authored mesh and rigged low-poly porch pirate stand-ins when authored pirate meshes are unavailable. The preview is opt-in via `#true3d` on web or `DQ_TRUE3D=1` for a local run. Web Duff may appear as a sprite until his model pack mounts.
 
+## Character art standard
+
+[Approved Porch Pirate A render](../../docs/art/3d-character-standard.jpg) sets the visual standard for Duff Quest’s 3D characters. Carry its level of sculpting and stylization into each character’s own design.
+
+- Match the approved sprite’s proportions, silhouette, and recognizable details. Preserve personality in the stance and weight shift.
+- Shape clothing around the body with continuous contours, broad fabric folds, matte surfaces, and clear material contrast. Keep paint and fine texture secondary to the silhouette at gameplay size.
+- Fit hands to props, with a visible grip and convincing contact. For the Porch Pirate, the hood frames the face, the knees bend into a forward lean, and the left hand wraps around the parcel held against the chest.
+- Review front, side, and back silhouettes and the still pose at Duff Quest’s gameplay camera before rigging. Verify the animated model in Godot once the still pose is approved.
+
+The approved render is an art reference. The earlier static review mesh is superseded as an art candidate. The production mesh still needs to be built and reviewed.
+
 ## Porch Pirate 0 art review
 
 [Concept sheet](../../docs/art/porch-pirate-0-concepts.jpg) based on the approved Porch Pirate 0 sprite. A keeps the sprite’s compact proportions. B uses longer limbs and a leaner silhouette. The first block model was declined. Duff approved concept A as the modeling reference.
 
 Hand-model concept A and review the still pose in Godot at the gameplay camera before rigging the walk and throw. Keep the parcel against the chest and preserve the hood silhouette and forward lean.
 
-Concept A now has a [static review mesh](../../docs/art/porch-pirate-a-review.glb) and a [review sheet](../../docs/art/Porch-Pirate-A-Review.jpg). Godot headless import and instantiation passed. The review sheet was rendered separately using the default camera pitch, field of view, and viewport size. Approval, rigging, and live scene integration are pending.
+Concept A now has a [static review mesh](../../docs/art/porch-pirate-a-review.glb) and a [review sheet](../../docs/art/Porch-Pirate-A-Review.jpg). Godot headless import and instantiation passed. The review sheet was rendered separately using the default camera pitch, field of view, and viewport size. This was an earlier mesh review. The approved render above is the reference for its replacement.
 
 ## Merge gate
 
