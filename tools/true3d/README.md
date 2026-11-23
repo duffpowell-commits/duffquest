@@ -13,6 +13,10 @@ The opening preview uses Duff’s authored mesh and rigged low-poly porch pirate
 
 The approved render is an art reference. The earlier static review mesh is superseded as an art candidate. The production mesh still needs to be built and reviewed.
 
+## Character approvals
+
+Duff, Madison, and Britney require Duff’s approval for new or revised sprite art and its 3D adaptation. Show the likeness and gameplay-camera silhouette before finalizing each character. For the rest of the cast, use the approved Porch Pirate standard and check the result at gameplay size. Individual approval is optional for those characters.
+
 ## Porch Pirate 0 art review
 
 [Concept sheet](../../docs/art/porch-pirate-0-concepts.jpg) based on the approved Porch Pirate 0 sprite. A keeps the sprite’s compact proportions. B uses longer limbs and a leaner silhouette. The first block model was declined. Duff approved concept A as the modeling reference.
