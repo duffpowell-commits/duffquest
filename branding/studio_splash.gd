@@ -4,7 +4,7 @@ extends Control
 signal dismissed
 
 const PUBLISHER := "3 Eyed Fox Studios"
-const DISPLAY_SECONDS := 2.5
+const DISPLAY_SECONDS := 3.5
 
 var finished := false
 var _visible_since_ms := -1
