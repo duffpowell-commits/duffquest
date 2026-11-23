@@ -4,9 +4,9 @@ The opening preview uses Duff’s authored mesh and rigged low-poly porch pirate
 
 ## Porch Pirate 0 art review
 
-[Concept sheet](../../docs/art/porch-pirate-0-concepts.jpg) based on the approved Porch Pirate 0 sprite. A keeps the sprite’s compact proportions. B uses longer limbs and a leaner silhouette. The first block model was declined. The concept choice is pending.
+[Concept sheet](../../docs/art/porch-pirate-0-concepts.jpg) based on the approved Porch Pirate 0 sprite. A keeps the sprite’s compact proportions. B uses longer limbs and a leaner silhouette. The first block model was declined. Duff approved concept A as the modeling reference.
 
-After Duff approves A or B, hand-model that direction and review the still pose in Godot at the gameplay camera before rigging the walk and throw. Keep the parcel against the chest and preserve the hood silhouette and forward lean.
+Hand-model concept A and review the still pose in Godot at the gameplay camera before rigging the walk and throw. Keep the parcel against the chest and preserve the hood silhouette and forward lean.
 
 ## Merge gate
 
