@@ -1,26 +1,26 @@
-class_name RigActor
 extends Node3D
 ## A Meshy character on its real 24-bone humanoid skeleton, driven by real clips
 ## (models/<who>.glb + models/<who>_clips.res, see tools/bake_clips.gd).
 ## Faces -Z like the rest of the porch code; set rotation.y to turn it.
 
 const BLEND := .12
-const ONE_SHOTS := ["jab", "hook", "dodge", "hit", "ko"]
 
 var skeleton: Skeleton3D
 var player: AnimationPlayer
 var current := ""
 var locked := 0.0  ## seconds a one-shot keeps priority over locomotion
 
-static func make(parent: Node3D, who: String, height := 1.6) -> RigActor:
-	var actor := RigActor.new()
+## No class_name: the main project parse-checks every .gd from its own root, where this folder is
+## .gdignored, so a global class here would not resolve. porch.gd preloads this script instead.
+static func make(parent: Node3D, who: String, height := 1.6) -> Node3D:
+	var actor = (load("res://rig_actor.gd") as GDScript).new()
 	actor.name = who.capitalize()
 	parent.add_child(actor)
 	var body: Node3D = (load("res://models/%s.glb" % who) as PackedScene).instantiate()
 	body.rotation.y = PI  # glTF faces +Z
 	actor.add_child(body)
 	actor.skeleton = body.find_child("Skeleton3D", true, false)
-	var top := actor.skeleton.get_bone_global_rest(actor.skeleton.find_bone("Head")).origin.y
+	var top: float = actor.skeleton.get_bone_global_rest(actor.skeleton.find_bone("Head")).origin.y
 	body.scale = Vector3.ONE * (height / ((top + 14.0) * .01))  # head bone sits ~14 cm under the crown
 	actor.player = body.find_child("AnimationPlayer", true, false)
 	actor.player.add_animation_library("rig", load("res://models/%s_clips.res" % who))

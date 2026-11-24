@@ -1,6 +1,7 @@
 extends Node3D
 
 const Art = preload("porch_art.gd")
+const RigActor = preload("rig_actor.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
@@ -167,6 +168,7 @@ func _attack() -> void:
 	_show_impact(pirate.position)
 	if pirate_hp > 0:
 		pirate_model.strike("hit", HIT_ANIM)
+		pirate_recovery = maxf(pirate_recovery, HIT_ANIM)  # staggered: no jab back during the hit clip
 	if pirate_hp == 0:
 		var drop := pirate.position + Vector3.UP * .22
 		package.reparent(self)

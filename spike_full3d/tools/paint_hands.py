@@ -32,7 +32,7 @@ RED_INK = np.array([170, 24, 32], float)
 # side -> (master, ink, v range along the hand as fraction of wrist->fingertip, width fraction)
 HANDS = {
     "LeftHand": ("hand_left_eye_mandala.png", BLACK_INK, (0.06, 0.78), 0.96),
-    "RightHand": ("hand_right_script.png", RED_INK, (0.02, 0.6), 0.68),
+    "RightHand": ("hand_right_script.png", RED_INK, (0.02, 0.6), 0.6),
 }
 
 
