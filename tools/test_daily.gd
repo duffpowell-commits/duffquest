@@ -14,6 +14,12 @@ func check(name: String, ok: bool) -> void:
 		fails += 1
 
 func _init() -> void:
+	# In-app updater (Nov 23 review): LATER holds for that build; a newer one is still offered.
+	var Up: = load("res://scripts/updater.gd")
+	check("updater: newer build offered", Up.should_offer(5, 4, 0))
+	check("updater: LATER holds for that build", not Up.should_offer(5, 4, 5))
+	check("updater: a build newer than the one put off is offered", Up.should_offer(6, 4, 5))
+	check("updater: editor build (0) never offered", not Up.should_offer(9, 0, 0))
 	# web: walls come from baked rects (world.pck carries the art); they must match the textures
 	check("3D Duff sheet: plain black sleeves, no print (rebuild only with tools/duff_hd3d/build_duff_hd.sh)",
 		_sleeve_print_px("res://assets/art3d/duff_home_hd3d.png") < 1000)

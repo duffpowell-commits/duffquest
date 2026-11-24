@@ -14,6 +14,7 @@ extends CanvasLayer
 ## Off-phone check: UPDATER_TEST=1 UPDATER_CODE=1 UPDATER_URL=<json url> UPDATER_SHOT=<png>.
 
 const RELEASE_URL := "https://github.com/duffpowell-commits/duffquest/releases/download/dev/"
+const UiStyle := preload("res://scripts/ui_style.gd")
 const APK_PATH := "user://update.apk"
 const RECHECK_S := 120.0
 
@@ -26,10 +27,18 @@ var box: PanelContainer
 var line: Label
 var go_btn: Button
 var installing := false
+## Build the player said LATER to. Why (Nov 23 review): LATER has to hold; the open-app poll
+## re-offered the same build every 2 minutes, mid-fight included. Cleared on resume.
+var dismissed := 0
 
 
 static func is_newer(remote: int, local: int) -> bool:
 	return local > 0 and remote > local
+
+
+## Offer only a newer build the player hasn't already put off.
+static func should_offer(remote: int, local: int, put_off: int) -> bool:
+	return is_newer(remote, local) and remote > put_off
 
 
 func _ready() -> void:
@@ -42,13 +51,14 @@ func _ready() -> void:
 		return
 	if FileAccess.file_exists(APK_PATH):
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(APK_PATH))
-	var poll := Timer.new()
-	poll.wait_time = RECHECK_S
-	poll.timeout.connect(_check_if_due)
-	add_child(poll)
-	poll.start()
 	await get_tree().create_timer(1.5).timeout
 	check()
+	# Why 30 s (Nov 23 review): a 120 s timer against the 120 s gate skipped every other tick.
+	var poll := Timer.new()
+	poll.wait_time = 30.0
+	poll.timeout.connect(_on_poll)
+	add_child(poll)
+	poll.start()
 
 
 func _enabled() -> bool:
@@ -65,7 +75,22 @@ func _local_code() -> int:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_RESUMED:
+		dismissed = 0
 		_check_if_due()
+
+
+## Why (Nov 23 review): the sheet blocks every touch and doesn't pause the game, so the open-app
+## poll waits for the title screen or a pause. Launch and resume checks still run.
+func _on_poll() -> void:
+	if not _in_play():
+		_check_if_due()
+
+
+func _in_play() -> bool:
+	if get_tree().paused:
+		return false
+	var scene := get_tree().current_scene
+	return scene != null and "in_title" in scene and not scene.in_title
 
 
 func _check_if_due() -> void:
@@ -107,31 +132,38 @@ func _on_version(result: int, code: int, _h: PackedStringArray, body: PackedByte
 		return
 	new_code = int(data["code"])
 	print("UPDATER mine %d, release %d" % [my_code, new_code])
-	if is_newer(new_code, my_code):
+	if should_offer(new_code, my_code, dismissed):
 		_offer()
 
 
 func _offer() -> void:
 	if box != null:
 		return
+	# Why this look (Nov 23 review): the first-install line was clipped off a 640-wide screen and
+	# the buttons ignored the MAIN/ALT roles and the 8-unit touch gap (CLAUDE.md hard rules).
+	var dim := ColorRect.new()
+	dim.color = Color(UiStyle.INK, 0.72)
+	dim.mouse_filter = Control.MOUSE_FILTER_STOP
+	add_child(dim)
+	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var center := CenterContainer.new()
-	add_child(center)
+	dim.add_child(center)
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	box = PanelContainer.new()
+	box.add_theme_stylebox_override("panel", _style(UiStyle.PANEL, 16))
 	center.add_child(box)
 	var content := VBoxContainer.new()
+	content.add_theme_constant_override("separation", 12)
 	box.add_child(content)
-	line = Label.new()
-	line.text = "Build %d is available. You have build %d." % [new_code, my_code]
+	var head := _label("UPDATE AVAILABLE", 22, UiStyle.GOLD)
+	head.add_theme_font_override("font", UiStyle.display)
+	content.add_child(head)
+	line = _label("Build %d is available. You have build %d." % [new_code, my_code], 16, UiStyle.CREAM)
 	content.add_child(line)
-	go_btn = Button.new()
-	go_btn.text = "UPDATE NOW"
-	go_btn.custom_minimum_size.y = 40
+	go_btn = _button("UPDATE NOW", UiStyle.BTN_MAIN)
 	go_btn.pressed.connect(_go)
 	content.add_child(go_btn)
-	var later := Button.new()
-	later.text = "LATER"
-	later.custom_minimum_size.y = 40
+	var later := _button("LATER", UiStyle.BTN_ALT)
 	later.pressed.connect(_close)
 	content.add_child(later)
 	if OS.get_environment("UPDATER_SHOT") != "":
@@ -141,11 +173,13 @@ func _offer() -> void:
 
 
 func _close() -> void:
+	if not installing:
+		dismissed = new_code
 	installing = false
 	if http != null and busy:
 		http.cancel_request()
 		busy = false
-	box.get_parent().queue_free()
+	box.get_parent().get_parent().queue_free()
 	box = null
 
 
@@ -200,3 +234,43 @@ func _failed() -> void:
 	busy = false
 	go_btn.disabled = false
 	line.text = "Download failed. Check your signal and tap UPDATE NOW again."
+
+
+func _style(fill: Color, pad: float) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = fill
+	sb.border_color = UiStyle.INK
+	sb.set_border_width_all(3)
+	sb.set_corner_radius_all(10)
+	sb.set_content_margin_all(pad)
+	return sb
+
+
+func _label(text: String, size: int, col: Color) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.custom_minimum_size.x = 380
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", col)
+	l.add_theme_color_override("font_outline_color", UiStyle.INK)
+	l.add_theme_constant_override("outline_size", 4)
+	return l
+
+
+func _button(text: String, role: Color) -> Button:
+	var b := Button.new()
+	b.text = text
+	b.focus_mode = Control.FOCUS_NONE
+	b.custom_minimum_size = Vector2(380, 44)
+	b.add_theme_font_override("font", UiStyle.display)
+	b.add_theme_font_size_override("font_size", 20)
+	b.add_theme_color_override("font_color", UiStyle.CREAM)
+	b.add_theme_color_override("font_outline_color", UiStyle.INK)
+	b.add_theme_constant_override("outline_size", 4)
+	b.add_theme_stylebox_override("normal", _style(role, 6))
+	b.add_theme_stylebox_override("hover", _style(role.lightened(0.1), 6))
+	b.add_theme_stylebox_override("pressed", _style(role.darkened(0.15), 6))
+	b.add_theme_stylebox_override("disabled", _style(role.darkened(0.4), 6))
+	return b
