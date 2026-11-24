@@ -30,7 +30,6 @@ var installing := false
 ## Build the player said LATER to. Why (Nov 23 review): LATER has to hold; the open-app poll
 ## re-offered the same build every 2 minutes, mid-fight included. Holds until the app restarts.
 var dismissed := 0
-var poll_check := false           # the running check came from the open-app poll
 
 
 static func is_newer(remote: int, local: int) -> bool:
@@ -79,7 +78,6 @@ func _notification(what: int) -> void:
 		# Why (Nov 23 re-review): DuffQuest doesn't pause on focus-out, so a resume mid-fight
 		# waits for the title like the poll does.
 		if not _in_play():
-			poll_check = true
 			_check_if_due()
 
 
@@ -87,7 +85,6 @@ func _notification(what: int) -> void:
 ## poll and resume checks wait for the title screen or a pause. The launch check still runs.
 func _on_poll() -> void:
 	if not _in_play():
-		poll_check = true
 		_check_if_due()
 
 
@@ -137,8 +134,8 @@ func _on_version(result: int, code: int, _h: PackedStringArray, body: PackedByte
 		return
 	new_code = int(data["code"])
 	print("UPDATER mine %d, release %d" % [my_code, new_code])
-	# Why (Nov 23 re-review): the reply can land after the player has started playing.
-	if poll_check and _in_play():
+	# Why (Nov 23 re-review): any reply (launch included) can land after the player left the title.
+	if _in_play():
 		return
 	if should_offer(new_code, my_code, dismissed):
 		_offer()
