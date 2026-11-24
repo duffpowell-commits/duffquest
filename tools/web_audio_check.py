@@ -84,6 +84,7 @@ def main():
         ctx = browser.new_context(viewport={"width": 1280, "height": 720})
         ctx.add_init_script(TAP)
         page = ctx.new_page()
+        if os.environ.get("DQ_CONSOLE"): page.on("console", lambda m: print("CONSOLE:", m.text[:200]))
         page.goto(url, wait_until="load")
         t0, state = time.time(), None
         while time.time() - t0 < a.timeout:
