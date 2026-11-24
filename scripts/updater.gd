@@ -76,12 +76,15 @@ func _local_code() -> int:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_RESUMED:
-		poll_check = false
-		_check_if_due()
+		# Why (Nov 23 re-review): DuffQuest doesn't pause on focus-out, so a resume mid-fight
+		# waits for the title like the poll does.
+		if not _in_play():
+			poll_check = true
+			_check_if_due()
 
 
 ## Why (Nov 23 review): the sheet blocks every touch and doesn't pause the game, so the open-app
-## poll waits for the title screen or a pause. Launch and resume checks still run.
+## poll and resume checks wait for the title screen or a pause. The launch check still runs.
 func _on_poll() -> void:
 	if not _in_play():
 		poll_check = true
