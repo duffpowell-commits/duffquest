@@ -3,8 +3,15 @@
 A standalone Godot 4.7.2 vertical slice, fully 3D. Duff and the Porch Pirate are Meshy models on a real
 24-bone humanoid skeleton (glTF), driven by real clips: idle, walk, run, jab, hook, dodge, hit and KO
 (the pirate has idle, walk, run, jab, hit and KO). The frontage, stoop, fence, yard and planter from the
-first pass (`porch_art.gd`) stay on the world collision layer; both fighters use it to check strike
+first pass (`porch_art.gd`) stay on the world collision layer; every fighter uses it to check strike
 obstruction. The parcel rides against the pirate's chest until he drops it.
+
+Grab the parcel and **Marketplace Mike** (boss `mike` in `scripts/boss.gd`, 6 HP, easy on purpose) walks
+in from the street. Up close he jabs. From range he alternates two specials, each with a wind-up and a
+HUD line: posting (throws his OBO sign, dodge through it) and the charge ("Cash only! No lowballers!", a
+straight rush; a miss or a fence leaves him dizzy for free hits). At half health he rages (chest-pound
+taunt, faster, shorter cooldown). His KO secures the porch. Numbers are the `MIKE_*` / `SIGN_*` /
+`CHARGE_*` constants in `porch.gd`.
 
 Nov 24, 2026: the hand-coded block people were replaced with Meshy models (Duff asked for a small, fully 3D
 slice to see how it feels). Duff's model comes from his own approved turnaround
@@ -16,13 +23,16 @@ slice to see how it feels). Duff's model comes from his own approved turnaround
 Phone: Releases -> `dev` -> `duffquest-porch3d.apk` (built on every push to main, own package id so it sits
 next to the real game). Desktop: open this folder as a Godot project. Arrows/WASD move, Space hits (jab
 then hook), Shift dodges, R retries; the on-screen buttons do the same. Beat the pirate, walk over the
-parcel. The top-right counter shows FPS: the bar is 60 on Duff's phone.
+parcel, then beat Marketplace Mike. The top-right counter shows FPS: the bar is 60 on Duff's phone.
 
 ## Files
 
 - `rig_actor.gd` loads `models/<who>.glb` + `models/<who>_clips.res` and picks idle/walk/run from speed;
   one-shots (`strike`) are squeezed into the gameplay timing in `porch.gd` (`ATTACK_ANIM` etc.).
-- `models/duff.glb`, `models/pirate.glb`: rigged Meshy meshes (~14.5k / ~12.3k triangles, one 2K texture).
+- `models/duff.glb`, `models/pirate.glb`, `models/mike.glb`: rigged Meshy meshes (~12-14.5k triangles, one
+  2K base-colour texture each). Meshy gave Mike normal + metal/rough maps too; `tools/strip_pbr.py`
+  drops them (phone fill rate, same look under the porch lighting).
+- `tools/clip_sheet.gd <who> <outdir>`: one frame per clip at 0/33/66 %, to eyeball a new character.
 - `models/*_clips.res`: the clips, baked by `tools/bake_clips.gd` from the Meshy clip GLBs. The clip GLBs
   are not in git (each carries a full mesh copy): they live in the project files folder
   `duffquest-3d-slice/meshy_source/`. Copy them into `models/clips/` to re-bake.
@@ -56,7 +66,11 @@ judged on the phone.
 | Pirate model, 12k tris, 2K texture | image-to-3d 01a20f81-fc3a… | 30 |
 | Pirate rig + 4 clips (idle 0, jab 191, hit 178, KO 187) | rigging 01a20f83-e400… | 5 + 12 |
 
-Walk and run come free with each rig. Total about 148 credits.
+| Mike A-pose reference from his sprite sheet (`assets/art/ch_mike.png`) | image-to-image 01a20fc2-6e22… | 9 |
+| Mike model, 12k tris, 2K texture | image-to-3d 01a20fc3-6c02… | 30 |
+| Mike rig + 7 clips (idle 0, jab 191, over-shoulder throw 421, head-down charge 512, chest-pound taunt 88, hit 178, KO 187) | rigging 01a20fc5-226f… | 5 + 21 |
+
+Walk and run come free with each rig. Total about 213 credits (Mike: 65).
 
 ## Merge gate
 

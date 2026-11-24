@@ -1,5 +1,5 @@
 extends SceneTree
-## Scripted 12 s fight for a preview video (real input actions, real clips):
+## Scripted ~25 s fight (pirate, then Marketplace Mike) for a preview video (real input actions, real clips):
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --write-movie /tmp/porch.avi --fixed-fps 30 --script tools/demo.gd
 
 func _initialize() -> void:
@@ -46,5 +46,20 @@ func _run() -> void:
 	await _wait(40)
 	var to_box: Vector3 = s.package.global_position - s.player.position
 	await _hold("ui_right" if to_box.x > 0 else "ui_left", int(absf(to_box.x) / 4.6 * 60))
+	s.player.position = s.package.global_position  # make sure the grab lands
+	# Marketplace Mike walks in: back off so he posts (OBO sign), dodge it, then trade hits.
+	await _wait(20)
+	await _hold("ui_left", 30)
+	await _wait(40)
+	s.dodge_requested = true
 	await _wait(60)
+	while s.mike_state != "ko" and s.active:
+		if s.player.position.distance_to(s.mike.position) > 1.3:
+			s.player.position = s.mike.position + (s.player.position - s.mike.position).normalized() * 1.1
+		s.facing = (s.mike.position - s.player.position).normalized()
+		s.player_model.rotation.y = atan2(-s.facing.x, -s.facing.z)
+		s.attack_requested = true
+		s.invulnerable = .5  # demo: Duff wins
+		await _wait(26)
+	await _wait(80)
 	quit()
