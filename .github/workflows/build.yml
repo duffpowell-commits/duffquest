@@ -200,6 +200,16 @@ jobs:
           sed -i 's/^package\/unique_name="com.duffpowell.duffquest"/package\/unique_name="com.duffpowell.duffquest.pub"/' export_presets.cfg
           godot --headless --path . --export-debug "Android" build/android/duffquest-public.apk 2>&1 | tee -a export.log
           cp /tmp/presets.bak export_presets.cfg
+          # Fully 3D porch slice (spike_full3d/, its own Godot project): own package id, same keystone.
+          sed -i "s/^version\/code=.*/version\/code=${{ github.run_number }}/" spike_full3d/export_presets.cfg
+          godot --headless --path spike_full3d --import >/dev/null 2>&1 || true
+          # smoke.gd reports failures as "ERROR: FAIL: ..." (push_error), so match FAIL anywhere.
+          godot --headless --path spike_full3d --script smoke.gd > smoke3d.log 2>&1 || { cat smoke3d.log; exit 1; }
+          cat smoke3d.log
+          grep -q "^PASS" smoke3d.log || { echo "::error::porch slice smoke printed no PASS"; exit 1; }
+          if grep -qE "FAIL|SCRIPT ERROR" smoke3d.log; then echo "::error::porch slice smoke failed"; exit 1; fi
+          godot --headless --path spike_full3d --export-debug "Android" "$PWD/build/android/duffquest-porch3d.apk" 2>&1 | tee -a export.log
+          test -f build/android/duffquest-porch3d.apk
           grep -A8 "configuration errors" export.log || true
           test -f build/android/duffquest.apk
           test -f build/android/duffquest-public.apk
@@ -248,6 +258,7 @@ jobs:
             fi
           done
           gh release upload dev build/android/duffquest.apk build/android/duffquest-public.apk --clobber
+          gh release upload dev build/android/duffquest-porch3d.apk --clobber
           printf '{"code":%s,"sha":"%s"}\n' "${{ github.run_number }}" "${GITHUB_SHA::7}" > build/version.json
           gh release upload dev build/version.json --clobber
           gh release edit dev --notes "Rebuilt on every push to main. Last: ${GITHUB_SHA::7}"

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#211b29">
+  <title>$GODOT_PROJECT_NAME</title>
+  $GODOT_HEAD_INCLUDE
+  <style>
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body { background: #211b29; color: #fff1de; font: 1rem system-ui, sans-serif; }
+    canvas { display: block; outline: none; touch-action: none; }
+    main { position: fixed; inset: 0; display: grid; place-content: center; text-align: center;
+           padding: 1rem; background: radial-gradient(ellipse at 50% 20%, #51363c, #211b29 70%); }
+    main[hidden], [hidden] { display: none; }
+    h1 { margin: 0; color: #ffcc90; font: bold clamp(2.6rem, 9vw, 5rem) Georgia, serif; }
+    p { margin: .45rem 0 1.5rem; }
+    button { justify-self: center; min-height: 48px; padding: .55rem 1.5rem;
+             border: 1px solid #ffdeac; border-radius: .5rem; background: #efb277;
+             color: #281b21; font: 700 1rem system-ui, sans-serif; cursor: pointer; }
+    button:focus-visible { outline: 2px solid white; outline-offset: 4px; }
+    progress { justify-self: center; width: min(16rem, 90vw); accent-color: #efb277; }
+    #error { max-width: 36rem; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" aria-label="Duff Quest 3D porch encounter"></canvas>
+  <main id="start">
+    <h1>Duff Quest</h1>
+    <p>Porch Pirate encounter</p>
+    <button type="button" id="play">Play</button>
+    <progress id="loading" aria-label="Loading game" hidden></progress>
+    <p id="error" role="alert" hidden></p>
+    <noscript>Enable JavaScript to play.</noscript>
+  </main>
+  <script src="$GODOT_URL"></script>
+  <script>
+    const config = $GODOT_CONFIG;
+
+    // Static hosts can serve the compressed engine as a regular file.
+    const wasm = config.executable + '.wasm';
+    const get = window.fetch.bind(window);
+    if (typeof DecompressionStream !== 'undefined') {
+      window.fetch = async (input, options) => {
+        if (typeof input !== 'string' || !input.endsWith(wasm)) return get(input, options);
+        try {
+          const response = await get(input + '.gz', options);
+          if (response.ok && response.body) {
+            const alreadyDecoded = /gzip/i.test(response.headers.get('Content-Encoding') || '');
+            const body = alreadyDecoded ? response.body : response.body.pipeThrough(new DecompressionStream('gzip'));
+            return new Response(body, { headers: {
+              'Content-Type': 'application/wasm',
+              'Content-Length': config.fileSizes[wasm]
+            } });
+          }
+        } catch (_) {
+          // The downloadable build also includes the uncompressed engine.
+        }
+        return get(input, options);
+      };
+    }
+    const play = document.querySelector('#play');
+    const loading = document.querySelector('#loading');
+    const error = document.querySelector('#error');
+    play.addEventListener('click', async () => {
+      play.hidden = true;
+      error.hidden = true;
+      loading.hidden = false;
+      try {
+        const missing = Engine.getMissingFeatures({ threads: $GODOT_THREADS_ENABLED });
+        if (missing.length) throw new Error(missing.join(' '));
+        if (!config.fileSizes[wasm]) throw new Error('The game engine is missing.');
+        await new Engine(config).startGame({ onProgress(current, total) {
+          if (total > 0) {
+            loading.max = total;
+            loading.value = current;
+          }
+        } });
+        document.querySelector('#start').hidden = true;
+        document.querySelector('#canvas').focus();
+      } catch (reason) {
+        loading.hidden = true;
+        error.textContent = String(reason);
+        error.hidden = false;
+        play.hidden = false;
+      }
+    });
+  </script>
+</body>
+</html>

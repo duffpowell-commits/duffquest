@@ -1,5 +1,53 @@
 # True 3D models (test slice, `#true3d`)
 
+The opening preview uses Duff’s authored mesh and rigged low-poly porch pirate stand-ins when authored pirate meshes are unavailable. The preview is opt-in via `#true3d` on web or `DQ_TRUE3D=1` for a local run. Web Duff may appear as a sprite until his model pack mounts.
+
+## Character art standard
+
+[Approved Porch Pirate A render](../../docs/art/3d-character-standard.jpg) sets the visual standard for Duff Quest’s 3D characters. Carry its level of sculpting and stylization into each character’s own design.
+
+- Match the approved sprite’s proportions, silhouette, and recognizable details. Preserve personality in the stance and weight shift.
+- Shape clothing around the body with continuous contours, broad fabric folds, matte surfaces, and clear material contrast. Keep paint and fine texture secondary to the silhouette at gameplay size.
+- Fit hands to props, with a visible grip and convincing contact. For the Porch Pirate, the hood frames the face, the knees bend into a forward lean, and the left hand wraps around the parcel held against the chest.
+- Review front, side, and back silhouettes and the still pose at Duff Quest’s gameplay camera before rigging. Verify the animated model in Godot once the still pose is approved.
+
+The approved render is an art reference. The earlier static review mesh is superseded as an art candidate. The production mesh still needs to be built and reviewed.
+
+## Character approvals
+
+Duff, Madison, and Britney require Duff’s approval for new or revised sprite art and its 3D adaptation. Show the likeness and gameplay-camera silhouette before finalizing each character. For the rest of the cast, use the approved Porch Pirate standard and check the result at gameplay size. Individual approval is optional for those characters.
+
+## Duff hairstyle by outfit
+
+- Everyday: hair down, swept toward Duff’s anatomical left.
+- Dad jacket: use the earlier loose, swept-back hair-down style.
+- Kitchen and Gala: hair tied back. Apron in the kitchen only.
+
+The approved everyday look has a plain black tee, four alternating gold and black hoops above each gold-rimmed black gauge, a fox on Duff’s left neck and a seven-eyed wolf on his right forearm. See the [standalone 3D porch encounter](../../spike_full3d/README.md) for the playable slice.
+
+## Porch Pirate 0 art review
+
+[Concept sheet](../../docs/art/porch-pirate-0-concepts.jpg) based on the approved Porch Pirate 0 sprite. A keeps the sprite’s compact proportions. B uses longer limbs and a leaner silhouette. The first block model was declined. Duff approved concept A as the modeling reference.
+
+Hand-model concept A and review the still pose in Godot at the gameplay camera before rigging the walk and throw. Keep the parcel against the chest and preserve the hood silhouette and forward lean.
+
+Concept A now has a [static review mesh](../../docs/art/porch-pirate-a-review.glb) and a [review sheet](../../docs/art/Porch-Pirate-A-Review.jpg). Godot headless import and instantiation passed. The review sheet was rendered separately using the default camera pitch, field of view, and viewport size. This was an earlier mesh review. The approved render above is the reference for its replacement.
+
+## Merge gate
+
+Nov 24, 2026: the standalone porch slice (`spike_full3d/`, Meshy models on a real skeleton) ships as its own
+APK and doesn't touch the main game, so it merges once green and fresh-eyes reviewed. Making 3D the main
+game's path still waits until the full campaign runs in 3D and passes gameplay, save migration, and
+phone/browser checks.
+
+## Conversion order
+
+1. Finish the porch and Marketplace Mike as one playable 3D opening. Replace the pirate stand-ins with textured models and verify movement, attacks, dodge, hit feedback and camera visibility on a phone.
+2. Convert the first kitchen shift and home interiors, then cover each arena and street NPC. Use the existing art and room layouts as references.
+3. Move navigation, collisions and combat placement to 3D scene coordinates in each converted area. Check input, save migration, and web/mobile performance before making that path the default. Keep HUD and dialogue as screen-space interfaces.
+
+The opening preview currently uses the game's existing 2D simulation for positions and combat. Audit ideas are tracked in #185.
+
 Turns a 2D character sheet into a rigged 3D model for `scripts/view3d/true3d.gd`. Free, CPU only, no accounts.
 
 1. Python deps (fresh container): `pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu`,

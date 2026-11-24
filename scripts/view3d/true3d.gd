@@ -1,8 +1,8 @@
 extends Node3D
 ## "True 3D" test slice (web link #true3d, env DQ_TRUE3D=1): Duff and the porch pirates stand in the 3D view as
 ## real meshes instead of painted cards. OFF for players: view3d.gd only creates this node when the switch is on.
-## The meshes come from the 2D sheets (tools/true3d/: image-to-3D shape, the sheet's own front/back/side art
-## projected on as the texture, bone weights from the front silhouette) and are animated here in code: walk
+## Duff uses the mesh built from his 2D sheets (tools/true3d/). Porch pirates can use a low-poly stand-in
+## until their authored meshes are available. Both use the same animation poses: walk
 ## swing, idle breathing, the skillet swing on attack frames, a tumble on the dodge roll. The game still runs
 ## in 2D: view3d hands every captured sheet draw to claim() first; a claimed draw gets a model, not a card.
 
@@ -16,6 +16,19 @@ const MODELS: = {"duff": {"res": "res://assets/model3d/duff.res", "h": 26.0, "ar
 	"pirate3": {"res": "res://assets/model3d/pirate3.res", "h": 26.0, "arm": 0.08}}
 ## sheet row -> facing yaw (model front is +z, the camera looks down -z): 0 front, 1 back, 2 right, 3 left
 const ROW_YAW: = [0.0, PI, PI / 2.0, -PI / 2.0]
+
+# Joint positions are in normalized model space (+Z is forward).
+const PIRATE_BONES: Array = [
+	["spine", -1, [0.0, 0.53, 0.0]],
+	["head", 0, [0.0, 0.78, 0.0]],
+	["arm_l", 0, [0.19, 0.72, 0.01]],
+	["arm_r", 0, [-0.19, 0.72, 0.01]],
+	["leg_l", -1, [0.09, 0.49, 0.0]],
+	["leg_r", -1, [-0.09, 0.49, 0.0]],
+]
+const PIRATE_CLOTHES: Array[Color] = [
+	Color("#26252e"), Color("#30313c"), Color("#243534"), Color("#382d38"),
+]
 
 var _mesh: = {}            # model key -> ArrayMesh (or null if missing from this build)
 var actors: = {}           # "<canvas id>:<key>" -> Rig
@@ -36,6 +49,8 @@ class Rig:
 	var roll: = -1.0
 	var skillet: Node3D
 	var arm: = 0.45
+	var pirate_clothes: StandardMaterial3D
+	var pirate_color: Color
 
 static func model_for(sheet: String) -> String:
 	if sheet.begins_with("duff_shades") or sheet.begins_with("duff_"):
@@ -63,7 +78,9 @@ func end_frame() -> void:
 func claim(id: int, d: Array, foot: Vector3, flip: bool, dt: float, tilt: float = 0.0) -> bool:
 	var sheet: String = d[0]
 	var key: = model_for(sheet)
-	if key == "" or not d[6] or _model_mesh(key) == null:
+	if key == "" or not d[6] or not MODELS.has(key):
+		return false
+	if key == "duff" and _model_mesh(key) == null:
 		return false
 	if sheet.begins_with("duff_shades"):
 		return true   # his shades aren't on the model yet: drop the 2D overlay rather than float it
@@ -92,7 +109,7 @@ func _make(key: String) -> Rig:
 	r.arm = float(MODELS[key]["arm"])
 	r.skel = Skeleton3D.new()
 	r.turn.add_child(r.skel)
-	var bones: Array = mesh.get_meta("bones")
+	var bones: Array = mesh.get_meta("bones") if mesh != null else PIRATE_BONES
 	for b in bones:
 		r.skel.add_bone(str(b[0]))
 	for i in bones.size():
@@ -107,6 +124,9 @@ func _make(key: String) -> Rig:
 		r.skel.set_bone_rest(i, Transform3D(Basis(), off))
 		r.skel.reset_bone_pose(i)
 		r.bone[str(b[0])] = i
+	if mesh == null:
+		_build_pirate(r, key)
+		return r
 	r.mi = MeshInstance3D.new()
 	r.mi.mesh = mesh
 	r.mat = (mesh.surface_get_material(0) as StandardMaterial3D).duplicate()
@@ -120,6 +140,50 @@ func _make(key: String) -> Rig:
 		r.skel.add_child(r.skillet)
 		r.skillet.visible = false
 	return r
+
+func _build_pirate(r: Rig, key: String) -> void:
+	r.pirate_color = PIRATE_CLOTHES[int(key.right(1))]
+	r.pirate_clothes = _pirate_material(r.pirate_color)
+	var skin: = _pirate_material(Color("#be896e"))
+	var dark: = _pirate_material(Color("#14151d"))
+	var cardboard: = _pirate_material(Color("#be8b50"))
+	var tape: = _pirate_material(Color("#e8ca8e"))
+	var spine: = _joint(r, "spine")
+	_pirate_box(spine, Vector3(0, 0.09, 0), Vector3(0.31, 0.28, 0.21), r.pirate_clothes)
+	var head: = _joint(r, "head")
+	_pirate_box(head, Vector3(0, 0.09, -0.015), Vector3(0.25, 0.26, 0.22), r.pirate_clothes)
+	_pirate_box(head, Vector3(0, 0.075, 0.093), Vector3(0.175, 0.16, 0.06), skin)
+	_pirate_box(head, Vector3(0, 0.103, 0.13), Vector3(0.183, 0.047, 0.02), dark)
+	for side in ["l", "r"]:
+		var leg: = _joint(r, "leg_" + side)
+		_pirate_box(leg, Vector3(0, -0.21, 0), Vector3(0.145, 0.42, 0.135), dark)
+		_pirate_box(leg, Vector3(0, -0.44, 0.032), Vector3(0.15, 0.1, 0.21), r.pirate_clothes)
+		var arm: = _joint(r, "arm_" + side)
+		_pirate_box(arm, Vector3(0, -0.09, 0.04), Vector3(0.115, 0.21, 0.12), r.pirate_clothes)
+		_pirate_box(arm, Vector3(0, -0.18, 0.115), Vector3(0.107, 0.105, 0.19), r.pirate_clothes)
+		_pirate_box(arm, Vector3(0, -0.18, 0.215), Vector3(0.085, 0.08, 0.065), skin)
+	_pirate_box(spine, Vector3(0, 0.04, 0.245), Vector3(0.31, 0.20, 0.24), cardboard)
+	_pirate_box(spine, Vector3(0, 0.141, 0.245), Vector3(0.055, 0.006, 0.24), tape)
+
+func _joint(r: Rig, bone_name: String) -> BoneAttachment3D:
+	var joint: = BoneAttachment3D.new()
+	r.skel.add_child(joint)
+	joint.bone_name = bone_name
+	return joint
+
+func _pirate_material(color: Color) -> StandardMaterial3D:
+	var material: = StandardMaterial3D.new()
+	material.albedo_color = color
+	return material
+
+func _pirate_box(parent: Node3D, offset: Vector3, size: Vector3, material: StandardMaterial3D) -> void:
+	var part: = MeshInstance3D.new()
+	var box: = BoxMesh.new()
+	box.size = size
+	part.mesh = box
+	part.material_override = material
+	part.position = offset
+	parent.add_child(part)
 
 ## A cast-iron skillet for the attack swing (the 2D attack frames draw one; the model has empty hands).
 func _skillet() -> Node3D:
@@ -186,6 +250,9 @@ func _pose(r: Rig, sheet: String, col: int, row: int, flip: bool, foot: Vector3,
 	else:
 		r.roll = -1.0
 	_apply(r)
+	if r.pirate_clothes != null:
+		r.pirate_clothes.albedo_color = r.pirate_color * Color(mod.r, mod.g, mod.b)
+		return
 	r.mat.albedo_color = Color(mod.r, mod.g, mod.b, 1.0)
 	var see_through: = mod.a < 0.95
 	r.mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA if see_through else BaseMaterial3D.TRANSPARENCY_DISABLED
