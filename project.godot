@@ -47,3 +47,4 @@ renderer/rendering_method.mobile="gl_compatibility"
 [autoload]
 
 UiFonts="*res://scripts/ui_style.gd"
+Updater="*res://scripts/updater.gd"

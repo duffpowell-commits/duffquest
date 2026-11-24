@@ -92,6 +92,7 @@ jobs:
           # Android needs version/code to rise for an update: use the run number.
           sed -i "s/^version\/code=.*/version\/code=${{ github.run_number }}/" export_presets.cfg
           grep -n "^version/code" export_presets.cfg
+          echo "${{ github.run_number }}" > build_code.txt
           mkdir -p ~/.config/godot
           cat > ~/.config/godot/editor_settings-4.5.tres <<TRES
           [gd_resource type="EditorSettings" format=3]
@@ -193,6 +194,14 @@ jobs:
           grep -A8 "configuration errors" export.log || true
           test -f build/android/duffquest.apk
           test -f build/android/duffquest-public.apk
+          AAPT="$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)aapt"
+          for apk in build/android/duffquest.apk build/android/duffquest-public.apk; do
+            "$AAPT" dump permissions "$apk" > apk-permissions.txt
+            grep -q 'android.permission.REQUEST_INSTALL_PACKAGES' apk-permissions.txt
+            grep -q 'android.permission.INTERNET' apk-permissions.txt
+            "$AAPT" dump badging "$apk" > apk-badging.txt
+            grep -q "versionCode='${{ github.run_number }}'" apk-badging.txt
+          done
           ls -la build/android
       - uses: actions/upload-artifact@v4
         with:
@@ -218,7 +227,20 @@ jobs:
           (cd build/portal && zip -qr ../duffquest-crazygames.zip .)
           ls -la build/duffquest-crazygames.zip
           gh release view dev >/dev/null 2>&1 || gh release create dev --prerelease --title "Latest dev build" --notes "Rebuilt on every push to main."
-          gh release upload dev build/android/duffquest.apk build/android/duffquest-public.apk build/duffquest-web.zip build/duffquest-crazygames.zip --clobber
+          gh release upload dev build/duffquest-web.zip build/duffquest-crazygames.zip --clobber
+          # Keep the prior Android release when CI fell back to a temporary signing key.
+          APKSIGNER="$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner"
+          EXPECTED="$(tr -d ':[:space:]' < signing/keystone.sha256 2>/dev/null | tr '[:upper:]' '[:lower:]')" || EXPECTED=""
+          for apk in build/android/duffquest.apk build/android/duffquest-public.apk; do
+            ACTUAL="$("$APKSIGNER" verify --print-certs "$apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')"
+            if [ -z "$EXPECTED" ] || [ "$ACTUAL" != "$EXPECTED" ]; then
+              echo "::warning::Keeping previous Android update because this APK does not use the keystone certificate."
+              exit 0
+            fi
+          done
+          gh release upload dev build/android/duffquest.apk build/android/duffquest-public.apk --clobber
+          printf '{"code":%s,"sha":"%s"}\n' "${{ github.run_number }}" "${GITHUB_SHA::7}" > build/version.json
+          gh release upload dev build/version.json --clobber
           gh release edit dev --notes "Rebuilt on every push to main. Last: ${GITHUB_SHA::7}"
       - name: Publish a branch preview of the web build (pushes off main)
         # So a session can boot-test a branch on throttled 4G (artifact storage is not reachable from sessions).
