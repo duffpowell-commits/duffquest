@@ -113,13 +113,20 @@ func _fetch() -> void:
 		progress = 1.0
 		_next.call_deferred()
 		return
-	_http.download_file = _local()
+	# Godot 4.7 web: HTTPRequest.download_file never writes the file (result 0, nothing on disk), so on the
+	# web the body comes back in memory and _on_done saves it. Native builds still stream to disk.
+	_http.download_file = "" if OS.has_feature("web") else _local()
 	var err: = _http.request(_url(PACKS[_i][0]))
 	if err != OK:
 		push_warning("%s: request failed to start (%d)" % [PACKS[_i][0], err])
 
 func _on_done(result: int, code: int, _h: PackedStringArray, _b: PackedByteArray) -> void:
 	var name: String = PACKS[_i][0]
+	if result == HTTPRequest.RESULT_SUCCESS and code == 200 and _http.download_file == "":
+		var f: = FileAccess.open(_local(), FileAccess.WRITE)
+		if f:
+			f.store_buffer(_b)
+			f.close()
 	if result == HTTPRequest.RESULT_SUCCESS and code == 200 and ProjectSettings.load_resource_pack(_local(), false):
 		print("%s: mounted (probe %s)" % [name, PACKS[_i][1]])
 		_next()
