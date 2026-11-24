@@ -20,6 +20,22 @@ func _init() -> void:
 	check("updater: LATER holds for that build", not Up.should_offer(5, 4, 5))
 	check("updater: a build newer than the one put off is offered", Up.should_offer(6, 4, 5))
 	check("updater: editor build (0) never offered", not Up.should_offer(9, 0, 0))
+	# Nov 24 review: main.gd (in_title) lives inside game.gd's SubViewport; find it there.
+	var fake_main: = GDScript.new()
+	fake_main.source_code = "extends Node\nvar in_title := true\n"
+	fake_main.reload()
+	var fake_root: = GDScript.new()
+	fake_root.source_code = "extends Node\nvar _vp: SubViewport\n"
+	fake_root.reload()
+	var root_n: Node = fake_root.new()
+	root_n._vp = SubViewport.new()
+	var main_n: Node = fake_main.new()
+	root_n._vp.add_child(main_n)
+	check("updater: offers on the title inside the SubViewport", Up.on_title(root_n))
+	main_n.in_title = false
+	check("updater: no offer once play starts inside the SubViewport", not Up.on_title(root_n))
+	root_n._vp.free()
+	root_n.free()
 	# web: walls come from baked rects (world.pck carries the art); they must match the textures
 	check("3D Duff sheet: plain black sleeves, no print (rebuild only with tools/duff_hd3d/build_duff_hd.sh)",
 		_sleeve_print_px("res://assets/art3d/duff_home_hd3d.png") < 1000)

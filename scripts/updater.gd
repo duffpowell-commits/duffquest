@@ -88,11 +88,23 @@ func _on_poll() -> void:
 		_check_if_due()
 
 
+## Why (Nov 24 review): the current scene is game.gd, and main.gd (which owns in_title) sits inside
+## its SubViewport, so the old check never saw play. Offers now open only on the title screen; a
+## paused game counts as play too, since unpausing would leave the sheet over the fight.
 func _in_play() -> bool:
-	if get_tree().paused:
+	return not on_title(get_tree().current_scene)
+
+
+static func on_title(scene: Node) -> bool:
+	if scene == null:
 		return false
-	var scene := get_tree().current_scene
-	return scene != null and "in_title" in scene and not scene.in_title
+	if "in_title" in scene:
+		return scene.in_title
+	if "_vp" in scene and scene._vp != null:
+		for c in scene._vp.get_children():
+			if "in_title" in c:
+				return c.in_title
+	return true   # boot / studio card: no play yet
 
 
 func _check_if_due() -> void:
