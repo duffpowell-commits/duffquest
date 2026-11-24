@@ -28,8 +28,9 @@ var line: Label
 var go_btn: Button
 var installing := false
 ## Build the player said LATER to. Why (Nov 23 review): LATER has to hold; the open-app poll
-## re-offered the same build every 2 minutes, mid-fight included. Cleared on resume.
+## re-offered the same build every 2 minutes, mid-fight included. Holds until the app restarts.
 var dismissed := 0
+var poll_check := false           # the running check came from the open-app poll
 
 
 static func is_newer(remote: int, local: int) -> bool:
@@ -75,7 +76,7 @@ func _local_code() -> int:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_RESUMED:
-		dismissed = 0
+		poll_check = false
 		_check_if_due()
 
 
@@ -83,6 +84,7 @@ func _notification(what: int) -> void:
 ## poll waits for the title screen or a pause. Launch and resume checks still run.
 func _on_poll() -> void:
 	if not _in_play():
+		poll_check = true
 		_check_if_due()
 
 
@@ -132,6 +134,9 @@ func _on_version(result: int, code: int, _h: PackedStringArray, body: PackedByte
 		return
 	new_code = int(data["code"])
 	print("UPDATER mine %d, release %d" % [my_code, new_code])
+	# Why (Nov 23 re-review): the reply can land after the player has started playing.
+	if poll_check and _in_play():
+		return
 	if should_offer(new_code, my_code, dismissed):
 		_offer()
 
@@ -173,8 +178,7 @@ func _offer() -> void:
 
 
 func _close() -> void:
-	if not installing:
-		dismissed = new_code
+	dismissed = new_code
 	installing = false
 	if http != null and busy:
 		http.cancel_request()
