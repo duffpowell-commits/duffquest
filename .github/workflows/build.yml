@@ -256,7 +256,7 @@ jobs:
             # verifier's own output so a mismatch says why.
             "$APKSIGNER" verify --print-certs "$apk" > /tmp/apksig.txt 2>&1 || true
             grep -iE "signer|error|warning|not verify" /tmp/apksig.txt | head -8
-            ACTUAL="$(sed -n 's/^Signer.* certificate SHA-256 digest: //p' /tmp/apksig.txt | tr -d ': \t\r' | tr '[:upper:]' '[:lower:]' | sort -u)"
+            ACTUAL="$(sed -n 's/^.*Signer.* certificate SHA-256 digest: //p' /tmp/apksig.txt | tr -d ': \t\r' | tr '[:upper:]' '[:lower:]' | sort -u)"
             # Fallback only when apksigner is missing (a DOES NOT VERIFY result must stay refused): the JAR cert via keytool.
             [ -x "$APKSIGNER" ] || ACTUAL="$(keytool -printcert -jarfile "$apk" 2>/dev/null | sed -n 's/^[[:space:]]*SHA256: //p' | tr -d ': \t\r' | tr '[:upper:]' '[:lower:]' | sort -u)"
             echo "$apk signer: ${ACTUAL:-none} (keystone: $EXPECTED)"
