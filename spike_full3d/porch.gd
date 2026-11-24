@@ -9,17 +9,31 @@ const PLAYER_SPEED := 4.6
 const PIRATE_SPEED := 2.1
 const PLAYER_HP := 5
 const PIRATE_HP := 3
+const DUFF_HEIGHT := 1.7
+const PIRATE_HEIGHT := 1.4
+## Game time each one-shot clip is squeezed into (gameplay timing stays the same as the block-model slice).
+const ATTACK_ANIM := .42
+const DODGE_ANIM := .45
+const HIT_ANIM := .4
+const PIRATE_ATTACK_ANIM := .55
+## Closer than the block-model slice (9.25) so the real models read on a phone; follows Duff sideways.
+const CAMERA_SIZE := 6.6
+const CAMERA_OFFSET := Vector3(0, 9.6, 13)
+const CAMERA_X_LIMIT := 2.6
 
 var player: CharacterBody3D
 var pirate: CharacterBody3D
-var player_model: Node3D
-var pirate_model: Node3D
+var player_model: RigActor
+var pirate_model: RigActor
+var jab_next := true
 var package: Node3D
 var hit_marker: MeshInstance3D
 var impact: MeshInstance3D
 var impact_time := 0.0
 var health: Label
 var message: Label
+var fps_label: Label
+var camera: Camera3D
 var player_hp := PLAYER_HP
 var pirate_hp := PIRATE_HP
 var attack_time := 0.0
@@ -29,8 +43,6 @@ var pirate_recovery := 0.0
 var invulnerable := 0.0
 var facing := Vector3.FORWARD
 var active := true
-var stride := 0.0
-var pirate_stride := 0.0
 var dodge_requested := false
 var attack_requested := false
 var touch: Dictionary = {}
@@ -39,9 +51,9 @@ func _ready() -> void:
 	_build_street()
 	player = _actor(Vector3(-2, 0, 3))
 	pirate = _actor(Vector3(3, 0, -1))
-	player_model = Art.person(player, false)
-	pirate_model = Art.person(pirate, true)
-	package = Art.parcel(pirate_model, Vector3(-.144, .806, -.395))
+	player_model = RigActor.make(player, "duff", DUFF_HEIGHT)
+	pirate_model = RigActor.make(pirate, "pirate", PIRATE_HEIGHT)
+	package = Art.parcel(pirate_model, Vector3(0, .78, -.3))
 	hit_marker = _strike_arc(player_model)
 	hit_marker.hide()
 	var burst := Art.Sculpture.new()
@@ -53,6 +65,11 @@ func _ready() -> void:
 	impact.hide()
 	_build_hud()
 	_update_hud()
+
+func _process(delta: float) -> void:
+	var target_x := clampf(player.position.x, -CAMERA_X_LIMIT, CAMERA_X_LIMIT)
+	camera.position.x = lerpf(camera.position.x, target_x, minf(1.0, delta * 4.0))
+	fps_label.text = "%d FPS" % Engine.get_frames_per_second()
 
 func _physics_process(delta: float) -> void:
 	if not active:
@@ -79,8 +96,7 @@ func _physics_process(delta: float) -> void:
 	var motion := facing * 8.8 if dodge_time > 0 else direction * PLAYER_SPEED
 	_move(player, motion)
 	var speed := Vector2(player.get_real_velocity().x, player.get_real_velocity().z).length()
-	stride += delta * speed * 4.2
-	_animate(player_model, stride, minf(speed / PLAYER_SPEED, 1.0), attack_time / .27, dodge_time > 0)
+	player_model.move(minf(speed / PLAYER_SPEED, 1.0))
 	if pirate_hp > 0:
 		_tick_pirate()
 	elif player.position.distance_to(package.position) <= .85:
@@ -118,10 +134,10 @@ func _tick_pirate() -> void:
 		pirate_model.rotation.y = atan2(-direction.x, -direction.z)
 	_move(pirate, direction * PIRATE_SPEED if distance > .85 else Vector3.ZERO)
 	var speed := Vector2(pirate.get_real_velocity().x, pirate.get_real_velocity().z).length()
-	pirate_stride += get_physics_process_delta_time() * speed * 5.1
-	_animate(pirate_model, pirate_stride, minf(speed / PIRATE_SPEED, 1.0), maxf(0, (pirate_recovery - .94) / .21), false, true)
+	pirate_model.move(minf(speed / PIRATE_SPEED, 1.0) * .55)
 	if distance <= 1.04 and pirate_recovery <= 0 and _clear_strike(pirate, player):
 		pirate_recovery = 1.15
+		pirate_model.strike("jab", PIRATE_ATTACK_ANIM)
 		if invulnerable <= 0:
 			player_hp -= 1
 			_show_impact(player.position)
@@ -130,12 +146,17 @@ func _tick_pirate() -> void:
 			if player_hp == 0:
 				active = false
 				hit_marker.hide()
+				player_model.strike("ko")
 				message.text = "Duff is down. Retry the encounter."
+			else:
+				player_model.strike("hit", HIT_ANIM)
 
 func _attack() -> void:
 	if not active or attack_time > 0 or pirate_hp <= 0 or dodge_time > 0:
 		return
 	attack_time = .27
+	player_model.strike("jab" if jab_next else "hook", ATTACK_ANIM)
+	jab_next = not jab_next
 	var offset := pirate.position - player.position
 	offset.y = 0
 	if offset.length() > 1.75 or facing.dot(offset.normalized()) < .38:
@@ -144,12 +165,14 @@ func _attack() -> void:
 		return
 	pirate_hp -= 1
 	_show_impact(pirate.position)
+	if pirate_hp > 0:
+		pirate_model.strike("hit", HIT_ANIM)
 	if pirate_hp == 0:
 		var drop := pirate.position + Vector3.UP * .22
 		package.reparent(self)
 		package.position = drop
 		package.rotation = Vector3(0, .25, 0)
-		pirate.hide()
+		pirate_model.strike("ko")
 		pirate.collision_layer = 0
 		pirate.collision_mask = 0
 		message.text = "Walk over to grab the parcel."
@@ -162,19 +185,10 @@ func _clear_strike(attacker: CharacterBody3D, target: CharacterBody3D) -> bool:
 	)
 	return get_world_3d().direct_space_state.intersect_ray(ray).is_empty()
 
-func _animate(model: Node3D, phase: float, pace: float, strike: float, rolling: bool, carrying := false) -> void:
-	var swing := sin(phase) * pace * .42
-	model.get_node("LeftLeg").rotation.x = swing
-	model.get_node("RightLeg").rotation.x = -swing
-	if not carrying:
-		model.get_node("LeftArm").rotation.x = -swing * .66
-	model.get_node("RightArm").rotation.x = swing * .66 - sin(strike * PI) * 1.6
-	model.rotation.x = -.32 if rolling else (sin(phase * 2.0) * pace * .035 - (.10 if carrying else 0.0))
-	model.position.y = absf(sin(phase)) * pace * .065
-
 func _dodge() -> void:
 	if active and dodge_recovery <= 0:
 		dodge_time = .23
+		player_model.strike("dodge", DODGE_ANIM)
 		dodge_recovery = .65
 		invulnerable = maxf(invulnerable, .27)
 
@@ -239,12 +253,12 @@ func _build_street() -> void:
 	sun.light_energy = 1.02
 	sun.shadow_enabled = true
 	add_child(sun)
-	var camera := Camera3D.new()
+	camera = Camera3D.new()
 	add_child(camera)
-	camera.position = Vector3(0, 9.6, 13)
+	camera.position = CAMERA_OFFSET
 	camera.look_at(Vector3(0, .55, -.35))
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 9.25
+	camera.size = CAMERA_SIZE
 	camera.make_current()
 	Art.garden(self)
 	Art.pavement(self)
@@ -270,6 +284,7 @@ func _build_hud() -> void:
 	health = _hud_label(layer, Vector2(22, 47), 16, Color.WHITE)
 	message = _hud_label(layer, Vector2(22, 73), 16, Color("#ffe7ca"))
 	message.text = "Stop the Porch Pirate and recover the parcel."
+	fps_label = _hud_label(layer, Vector2(800, 22), 14, Color("#eddbd0"))
 	var hint := _hud_label(layer, Vector2(22, 512), 14, Color("#eddbd0"))
 	hint.text = "WASD / arrows  ·  Space to hit  ·  Shift to dodge  ·  R to retry"
 	_button(layer, "", Vector2(84, 381), "up", 0.0)

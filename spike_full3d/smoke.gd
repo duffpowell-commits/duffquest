@@ -25,6 +25,14 @@ func _run() -> void:
 	_check(sample.player is CharacterBody3D and sample.pirate is CharacterBody3D
 		and root.get_camera_3d() is Camera3D, "3D actors and camera")
 	_check(sample.package.get_parent() == sample.pirate_model, "parcel starts in pirate grip")
+	for actor in [sample.player_model, sample.pirate_model]:
+		_check(actor.skeleton.get_bone_count() == 24 and actor.skeleton.find_bone("RightHand") >= 0,
+			"%s is a skinned mesh on the 24-bone humanoid skeleton" % actor.name)
+		var clips := ["idle", "walking", "running", "jab", "hit", "ko"]
+		if actor == sample.player_model:
+			clips += ["hook", "dodge"]
+		_check(clips.all(func(c): return actor.has_clip(c)), "%s has real clips %s" % [actor.name, clips])
+		_check(actor.current in ["idle", "walking"] and actor.player.is_playing(), "%s starts in an idle or walk clip" % actor.name)
 
 	# Walk freely on both axes, then walk into and dodge against the planter.
 	sample.pirate.position = Vector3(-5, 0, -2)
@@ -108,9 +116,10 @@ func _run() -> void:
 		sample.attack_time = 0
 		sample._attack()
 		_check(sample.pirate_hp == expected, "unobstructed Duff attack brings pirate HP to %d" % expected)
+	_check(sample.player_model.current in ["jab", "hook"], "Duff's attack plays a jab or hook clip")
 	_check(sample.package.get_parent() == sample and sample.package.visible
-		and not sample.pirate.visible and sample.pirate.collision_layer == 0,
-		"defeated pirate drops the visible parcel and clears actor collision")
+		and sample.pirate_model.current == "ko" and sample.pirate.collision_layer == 0,
+		"defeated pirate plays its KO clip, drops the visible parcel and clears actor collision")
 	sample.player.position = sample.package.position
 	sample.set_physics_process(true)
 	await _frames(3)

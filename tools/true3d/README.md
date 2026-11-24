@@ -35,7 +35,10 @@ Concept A now has a [static review mesh](../../docs/art/porch-pirate-a-review.gl
 
 ## Merge gate
 
-Keep PR #186 in draft during the conversion. Merge only after the full campaign runs in 3D and the branch passes gameplay, save migration, and phone/browser checks. The opening preview alone does not satisfy the merge gate.
+Nov 24, 2026: the standalone porch slice (`spike_full3d/`, Meshy models on a real skeleton) ships as its own
+APK and doesn't touch the main game, so it merges once green and fresh-eyes reviewed. Making 3D the main
+game's path still waits until the full campaign runs in 3D and passes gameplay, save migration, and
+phone/browser checks.
 
 ## Conversion order
 
