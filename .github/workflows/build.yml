@@ -250,8 +250,16 @@ jobs:
           # Keep the prior Android release when CI fell back to a temporary signing key.
           APKSIGNER="$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner"
           EXPECTED="$(tr -d ':[:space:]' < signing/keystone.sha256 2>/dev/null | tr '[:upper:]' '[:lower:]')" || EXPECTED=""
-          for apk in build/android/duffquest.apk build/android/duffquest-public.apk; do
-            ACTUAL="$("$APKSIGNER" verify --print-certs "$apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')"
+          for apk in build/android/duffquest.apk build/android/duffquest-public.apk build/android/duffquest-porch3d.apk; do
+            # Nov 24: every keystone-signed APK had been held back since Nov 23 although keytool shows the
+            # keystone cert on them. Match any "Signer ... SHA-256 digest" line, normalise it, and log the
+            # verifier's own output so a mismatch says why.
+            "$APKSIGNER" verify --print-certs "$apk" > /tmp/apksig.txt 2>&1 || true
+            grep -iE "signer|error|warning|not verify" /tmp/apksig.txt | head -8
+            ACTUAL="$(sed -n 's/^Signer.* certificate SHA-256 digest: //p' /tmp/apksig.txt | tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]' | sort -u)"
+            # Fallback when apksigner itself can't run here: the JAR signature's cert, read by keytool.
+            [ -n "$ACTUAL" ] || ACTUAL="$(keytool -printcert -jarfile "$apk" 2>/dev/null | sed -n 's/^[[:space:]]*SHA256: //p' | tr -d ':[:space:]' | tr '[:upper:]' '[:lower:]' | sort -u)"
+            echo "$apk signer: ${ACTUAL:-none} (keystone: $EXPECTED)"
             if [ -z "$EXPECTED" ] || [ "$ACTUAL" != "$EXPECTED" ]; then
               echo "::warning::Keeping previous Android update because this APK does not use the keystone certificate."
               exit 0
