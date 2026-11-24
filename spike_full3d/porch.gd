@@ -267,7 +267,10 @@ func _tick_mike(delta: float) -> void:
 				_mike_special(direction)
 			var speed := MIKE_RAGE_SPEED if mike_raged else MIKE_SPEED
 			var walking := distance > .9 and mike_state == "stalk"
-			_move(mike, direction * speed if walking else Vector3.ZERO)
+			var heading := direction
+			if not _clear_strike(mike, player):
+				heading = (direction + direction.cross(Vector3.UP)).normalized()  # step around the planter
+			_move(mike, heading * speed if walking else Vector3.ZERO)
 			var pace := Vector2(mike.get_real_velocity().x, mike.get_real_velocity().z).length()
 			mike_model.move(minf(pace / MIKE_SPEED, 1.0) * .55)
 		"post":
@@ -374,9 +377,8 @@ func _tick_sign(delta: float) -> void:
 	obo_sign.rotation.z = sin(sign_life * 14.0) * .35  # tumbling wobble
 	var gap := obo_sign.position - player.position
 	gap.y = 0
-	if gap.length() <= SIGN_RADIUS:
-		obo_sign.hide()
-		_hurt_duff()
+	if gap.length() <= SIGN_RADIUS and _hurt_duff():
+		obo_sign.hide()  # a dodged sign keeps flying past him
 
 ## Mike's OBO sign, readable from both sides.
 func _obo_sign() -> Node3D:

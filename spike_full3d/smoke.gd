@@ -159,7 +159,8 @@ func _run() -> void:
 	sample.invulnerable = 1.0
 	for i in 40:
 		sample._tick_sign(1.0 / 60)
-	_check(sample.player_hp == 4, "dodge immunity lets the sign pass harmlessly")
+	_check(sample.player_hp == 4 and sample.obo_sign.position.x < sample.player.position.x - .3,
+		"dodge immunity lets the sign fly past harmlessly")
 
 	# Charge: telegraph, then a straight rush that hits Duff and leaves Mike dizzy.
 	sample.invulnerable = 0
