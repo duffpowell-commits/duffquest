@@ -10,7 +10,7 @@ on:
       - .github/workflows/web_template_3d.yml
 
 env:
-  GODOT_TAG: 4.5-stable
+  GODOT_TAG: 4.7.2-stable
   EM_VERSION: 4.0.11
 
 jobs:

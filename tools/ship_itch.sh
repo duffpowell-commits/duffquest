@@ -15,7 +15,7 @@ for a in "$@"; do
     *) echo "unknown flag: $a"; exit 2 ;;
   esac
 done
-GV=4.5-stable
+GV=4.7.2-stable
 T=${TOOLS_DIR:-/tmp/tools}; mkdir -p "$T"
 # Per-run log dir, so parallel ships (several worktrees) don't clobber each other's logs.
 L=$(mktemp -d /tmp/ship.XXXXXX)
