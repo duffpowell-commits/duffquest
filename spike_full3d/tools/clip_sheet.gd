@@ -2,7 +2,7 @@ extends SceneTree
 ## One frame per clip at 0 / 33 / 66 % of its length, to eyeball a new character's clips.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --script tools/clip_sheet.gd -- <who> <outdir>
 
-const RigActor = preload("res://rig_actor.gd")
+## load(), not preload: the main project parse-checks this file from its own root (rig_actor.gd is not there).
 
 func _initialize() -> void:
 	var args := OS.get_cmdline_user_args()
@@ -22,7 +22,7 @@ func _initialize() -> void:
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-35, 30, 0)
 	world.add_child(sun)
-	var actor = RigActor.make(world, who, 1.7)
+	var actor = (load("res://rig_actor.gd") as GDScript).make(world, who, 1.7)
 	var cam := Camera3D.new()
 	cam.fov = 35
 	world.add_child(cam)
