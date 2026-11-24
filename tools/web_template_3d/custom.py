@@ -33,3 +33,7 @@ for m in ["basis_universal", "camera", "csg", "cvtt", "dds", "enet", "fbx", "glt
           # textures ship pre-imported (.ctex), so no runtime jpg/svg loaders or encoders; no TLS on web
           "jpg", "svg", "noise", "etcpak", "astcenc", "mbedtls", "zip"]:
     globals()["module_%s_enabled" % m] = "no"
+# SCons reads this file with exec(..., {}, values): the globals() writes above land in a throwaway dict, so
+# those modules still build. Only plain assignments reach SCons. CSG must be off for real: on 4.7.2 its
+# smoothing setters are compiled out with 3D physics off and the wasm link fails (Nov 24). Nothing uses CSG.
+module_csg_enabled = "no"
