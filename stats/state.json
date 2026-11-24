@@ -9,7 +9,7 @@
  },
  "sent": {
   "5316309": {
-   "first": false,
+   "first": true,
    "milestones": [],
    "purchases": 0,
    "spike_day": ""
