@@ -203,8 +203,11 @@ jobs:
           # Fully 3D porch slice (spike_full3d/, its own Godot project): own package id, same keystone.
           sed -i "s/^version\/code=.*/version\/code=${{ github.run_number }}/" spike_full3d/export_presets.cfg
           godot --headless --path spike_full3d --import >/dev/null 2>&1 || true
-          godot --headless --path spike_full3d --script smoke.gd 2>&1 | tee smoke3d.log
-          grep -q "^PASS" smoke3d.log && ! grep -qE "^FAIL|SCRIPT ERROR" smoke3d.log
+          # smoke.gd reports failures as "ERROR: FAIL: ..." (push_error), so match FAIL anywhere.
+          godot --headless --path spike_full3d --script smoke.gd > smoke3d.log 2>&1 || { cat smoke3d.log; exit 1; }
+          cat smoke3d.log
+          grep -q "^PASS" smoke3d.log || { echo "::error::porch slice smoke printed no PASS"; exit 1; }
+          if grep -qE "FAIL|SCRIPT ERROR" smoke3d.log; then echo "::error::porch slice smoke failed"; exit 1; fi
           godot --headless --path spike_full3d --export-debug "Android" "$PWD/build/android/duffquest-porch3d.apk" 2>&1 | tee -a export.log
           test -f build/android/duffquest-porch3d.apk
           grep -A8 "configuration errors" export.log || true
