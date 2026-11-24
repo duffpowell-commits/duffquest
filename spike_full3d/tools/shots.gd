@@ -54,6 +54,54 @@ func _run() -> void:
 	s._attack()
 	await _frames(70)
 	await _snap("06_pirate_ko")
+	# Marketplace Mike: arrives, posts (OBO sign), charges, goes down.
+	s.player.position = s.package.position
+	while s.mike_state == "away":
+		await physics_frame
+	s.player_hp = 999  # arrival refills Duff to 5; renders keep him standing
+	# Staged with physics paused so each move is caught at its readable moment.
+	s.set_physics_process(false)
+	s.player.position = Vector3(-1.6, 0, 1.8)
+	s.mike.position = Vector3(2.4, 0, 1.0)
+	s.mike_state = "stalk"
+	s.mike_cool = 9.0
+	s._tick_mike(.016)
+	s.message.text = "Marketplace Mike: That pirate was my best guy. Porch box goes for twelve bucks. Or best offer."
+	await _frames(12)
+	await _snap("07_mike_arrives")
+	s.charge_next = false
+	s.mike_cool = 0
+	s._tick_mike(.016)
+	await _frames(8)
+	await _snap("08_mike_posting")
+	s._tick_mike(s.POST_TELE)
+	for i in 18:
+		s._tick_sign(1.0 / 60)
+	await _frames(3)
+	await _snap("09_obo_sign")
+	s.obo_sign.hide()
+	s.mike_state = "stalk"
+	s.mike.position = Vector3(3.0, 0, 1.0)
+	s.charge_next = true
+	s.mike_cool = 0
+	s._tick_mike(.016)
+	s._tick_mike(s.CHARGE_TELE + .01)
+	for i in 14:
+		s._tick_mike(1.0 / 60)
+		await physics_frame
+	await _frames(2)
+	await _snap("10_mike_charge")
+	s.set_physics_process(true)
+	s.mike_state = "dizzy"
+	s.mike_timer = 9.0
+	s.mike_hp = 1
+	s.player.position = s.mike.position + Vector3(-.9, 0, .1)
+	s.facing = Vector3.RIGHT
+	s.player_model.rotation.y = -PI / 2
+	s.attack_time = 0
+	s._attack()
+	await _frames(70)
+	await _snap("11_mike_ko")
 	# Frame time over a busy stretch.
 	var t0 := Time.get_ticks_usec()
 	for i in 120:
@@ -71,10 +119,16 @@ func _run() -> void:
 		layer.hide()
 	s.player.position = Vector3(-2.5, 0, 1.5)
 	s.pirate.position = Vector3(2.5, 0, 1.5)
-	for who in [s.player_model, s.pirate_model]:
+	s.mike.position = Vector3(0, 0, 1.5)
+	var everyone = [s.player_model, s.pirate_model, s.mike_model]
+	for who in everyone:
+		for other in everyone:
+			other.get_parent().visible = other == who
 		who.rotation.y = 0
 		who.locked = 0
 		who.play("idle", true)
+		who.player.play("rig/idle", 0)  # no blend: speed 0 would freeze a half-finished blend
+		who.player.seek(0, true)
 		who.player.speed_scale = 0.0
 		var base: Vector3 = who.global_position
 		for i in 4:

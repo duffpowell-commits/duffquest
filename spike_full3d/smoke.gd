@@ -120,10 +120,100 @@ func _run() -> void:
 	_check(sample.package.get_parent() == sample and sample.package.visible
 		and sample.pirate_model.current == "ko" and sample.pirate.collision_layer == 0,
 		"defeated pirate plays its KO clip, drops the visible parcel and clears actor collision")
+	_check(not sample.mike.visible and sample.mike.collision_layer == 0 and sample.mike_state == "away",
+		"Marketplace Mike waits off-screen during the pirate fight")
+	sample.player_hp = 2
 	sample.player.position = sample.package.position
 	sample.set_physics_process(true)
 	await _frames(3)
-	_check(not sample.active and not sample.package.visible, "walking over the parcel recovers it and wins")
+	_check(sample.active and not sample.package.visible and sample.mike.visible
+		and sample.mike_state == "stalk" and sample.player_hp == 5,
+		"grabbing the parcel brings Marketplace Mike in and refills Duff")
+	var mm = sample.mike_model
+	_check(mm.skeleton.get_bone_count() == 24 and ["idle", "walking", "running", "jab", "throw", "charge", "taunt", "hit", "ko"].all(
+		func(c): return mm.has_clip(c)), "Mike is on the 24-bone skeleton with jab, throw, charge, taunt, hit and KO clips")
+
+	# Posting: wind-up plays the throw clip, then the OBO sign flies and lands on a Duff who stays put.
+	sample.set_physics_process(false)
+	sample.player.position = Vector3(-1.5, 0, 2)
+	sample.mike.position = Vector3(2, 0, 2)
+	sample.invulnerable = 0
+	sample.dodge_time = 0
+	sample.charge_next = false
+	sample.mike_cool = 0
+	await _frames(2)
+	sample._tick_mike(.016)
+	_check(sample.mike_state == "post" and mm.current == "throw", "Mike winds up a sign throw from range")
+	sample._tick_mike(sample.POST_TELE + .01)
+	_check(sample.obo_sign.visible, "the OBO sign leaves his hand")
+	for i in 40:
+		sample._tick_sign(1.0 / 60)
+	_check(sample.player_hp == 4 and not sample.obo_sign.visible, "a sign that reaches Duff costs one HP")
+
+	# Dodging through the sign: immunity means no damage.
+	sample.mike_state = "stalk"
+	sample.mike_cool = 0
+	sample.charge_next = false
+	sample._tick_mike(.016)
+	sample._tick_mike(sample.POST_TELE + .01)
+	sample.invulnerable = 1.0
+	for i in 40:
+		sample._tick_sign(1.0 / 60)
+	_check(sample.player_hp == 4, "dodge immunity lets the sign pass harmlessly")
+
+	# Charge: telegraph, then a straight rush that hits Duff and leaves Mike dizzy.
+	sample.invulnerable = 0
+	sample.mike_state = "stalk"
+	sample.mike_cool = 0
+	sample.charge_next = true
+	sample.player.position = Vector3(-1.5, 0, 2)
+	sample.mike.position = Vector3(2, 0, 2)
+	await _frames(2)
+	sample._tick_mike(.016)
+	_check(sample.mike_state == "charge_tele", "Mike telegraphs his charge")
+	sample._tick_mike(sample.CHARGE_TELE + .01)
+	_check(sample.mike_state == "charge" and mm.current == "charge", "the charge plays its run clip")
+	for i in 40:
+		if sample.mike_state != "charge":
+			break
+		sample._tick_mike(1.0 / 60)
+		await physics_frame
+	_check(sample.player_hp == 3 and sample.mike_state == "dizzy", "the charge hits Duff and leaves Mike dizzy")
+
+	# A charge into the fence bonks him too.
+	sample.invulnerable = 0
+	sample.mike_state = "charge"
+	sample.mike_timer = 2.0
+	sample.charge_dir = Vector3.RIGHT
+	sample.mike.position = Vector3(5.5, 0, 0)
+	sample.player.position = Vector3(-3, 0, 2)
+	await _frames(2)
+	for i in 60:
+		if sample.mike_state != "charge":
+			break
+		sample._tick_mike(1.0 / 60)
+		await physics_frame
+	_check(sample.mike_state == "dizzy" and sample.mike.position.x < 6.6 and sample.player_hp == 3,
+		"a charge into the fence stops at the fence and leaves him dizzy")
+
+	# Beat him: halfway he rages (taunt), then KO wins the encounter.
+	sample.mike_state = "dizzy"
+	sample.mike_timer = 5.0
+	sample.player.position = Vector3(0, 0, 2)
+	sample.mike.position = Vector3(0, 0, 1)
+	sample.facing = Vector3.FORWARD
+	await _frames(2)
+	for i in 3:
+		sample.attack_time = 0
+		sample._attack()
+	_check(sample.mike_hp == 3 and sample.mike_raged and sample.mike_state == "taunt" and mm.current == "taunt",
+		"at half health Mike rages with his taunt")
+	sample.mike_timer = 5.0
+	for i in 3:
+		sample.attack_time = 0
+		sample._attack()
+	_check(sample.mike_hp == 0 and mm.current == "ko" and not sample.active and sample.mike.collision_layer == 0,
+		"Mike's KO clip plays and the porch is secured")
 
 	sample._reset()
 	await scene_changed

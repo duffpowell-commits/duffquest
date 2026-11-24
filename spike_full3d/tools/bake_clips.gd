@@ -4,10 +4,10 @@ extends SceneTree
 ## of a full mesh copy per clip. Run after adding clips:
 ##   godot --headless --path . --import && godot --headless --path . --script tools/bake_clips.gd
 
-const LOOPS := ["idle", "walking", "running"]
+const LOOPS := ["idle", "walking", "running", "charge"]
 
 func _initialize() -> void:
-	for who in ["duff", "pirate"]:
+	for who in ["duff", "pirate", "mike"]:
 		var lib := AnimationLibrary.new()
 		var dir := DirAccess.open("res://models/clips")
 		for file in dir.get_files():
