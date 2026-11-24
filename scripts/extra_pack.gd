@@ -123,6 +123,9 @@ func _fetch() -> void:
 func _on_done(result: int, code: int, _h: PackedStringArray, _b: PackedByteArray) -> void:
 	var name: String = PACKS[_i][0]
 	if result == HTTPRequest.RESULT_SUCCESS and code == 200 and _http.download_file == "":
+		# Drop the old copy first: if this write fails (storage full), the mount below must fail too, not
+		# pick up the previous build's stale pack.
+		DirAccess.remove_absolute(_local())
 		var f: = FileAccess.open(_local(), FileAccess.WRITE)
 		if f:
 			f.store_buffer(_b)
