@@ -129,7 +129,7 @@ Duff wanted a dashing fire-fist special ("burn knuckle" feel; ours is original: 
   fist cocked behind the shoulder, released into the punch); `RRH_PEAK` (.76) is where the fist is fully out. Duff turned
   down the Meshy "Kung Fu Punch" (96) cut ("doesn't look like a punch at all"); that clip is a spinning routine. Bigger
   wind-up, then even bigger, were his calls.
-- Preview: `tools/rrh_shots.gd`. Smoke is 90 checks.
+- Preview: `tools/rrh_shots.gd`, render `docs/renders/porch3d/20_red_right_hand.jpg`. Smoke is 90 checks.
 
 ## HUD and menus (Nov 25 2026)
 
