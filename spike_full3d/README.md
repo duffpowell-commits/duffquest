@@ -41,6 +41,14 @@ separate, smoothed. Default `low` = low beat-'em-up angle with the house as the 
 tilted view; `close` = the old top-down orthographic view, closer. Change `MODE` there or pass `--cam=<mode>`.
 Options compared in `docs/renders/porch3d/camera_compare.jpg` (`tools/cam_shots.gd`).
 
+## Reskins: new characters for 0 credits (Nov 25 2026)
+
+`tools/reskin.py <body.glb> <body texture> <recipe> <out.jpg>` repaints a rigged body's texture by body region
+and colour class, keeping the shading; `tools/reskin_shot.gd` renders base and reskin side by side. First test:
+Mike's body as Sir Sends-It-Back (`tools/reskins/sendback_Image_0.jpg`, `docs/renders/porch3d/reskin_sendback.png`).
+Same body shape, so it suits minor bosses; story bosses stay custom. Free Meshy community bodies + a 5-credit rig
++ the shared clips are the other cheap route (pick list: project files `meshy-backup/community_picks.md`).
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the
