@@ -83,10 +83,10 @@ const RRH_CLIP := "burn"       ## Duff's right straight with a big coil (tools/b
 ## Shoulder Throw, Duff's pick Nov 25; tools/bake_toss.gd). Times are in the toss clip's seconds.
 const RTS_CLIP := "toss"
 const RTS_RANGE := 1.45       ## the foe this close and in front: R grabs instead of dashing
-const RTS_SPEED := 1.4        ## the clip plays this much faster than Meshy's
+const RTS_SPEED := 2.0        ## the clip plays this much faster than Meshy's
 const RTS_GRAB := .5          ## hands close on him
 const RTS_RELEASE := 2.2      ## thrown over the shoulder
-const RTS_FLY := .5           ## real seconds in the air
+const RTS_FLY := .42          ## real seconds in the air
 const RTS_FLYUP_LAND := .9    ## seconds into the foe's flyup clip where he hits the ground flat (tools/bake_victim.gd)
 const RTS_THROW := 2.0        ## m from Duff where he lands
 const RTS_DAMAGE := 3
@@ -646,7 +646,7 @@ func _return_to_sender(foe: CharacterBody3D) -> void:
 	toss_foe = foe
 	toss_t = 0
 	toss_fly = -1
-	special_time = length / RTS_SPEED
+	special_time = maxf(length / RTS_SPEED, RTS_RELEASE / RTS_SPEED + RTS_FLY + .05)  # he always lands before it ends
 	special_hit = true  # never a dash
 	invulnerable = maxf(invulnerable, special_time)
 	attack_time = special_time
@@ -655,7 +655,7 @@ func _return_to_sender(foe: CharacterBody3D) -> void:
 	offset.y = 0
 	facing = offset.normalized()
 	player_model.rotation.y = atan2(-facing.x, -facing.z)
-	player_model.strike(RTS_CLIP, special_time)
+	player_model.strike(RTS_CLIP, length / RTS_SPEED)
 	player_model.locked = special_time
 	if foe == mike and mike_state == "taunt":
 		mike_state = "stalk"  # grabbed mid-rant
