@@ -34,6 +34,13 @@ under 50 for 3 s it drops glow and MSAA ("LITE" shows next to the FPS counter). 
 `--plain` keeps the old daylight look. Picked from three looks on one frame: `docs/renders/porch3d/look_compare.jpg`.
 Don't use `Environment.adjustment_*` here: in Compatibility it washes the whole frame milky.
 
+## Camera: fight camera (Nov 25 2026)
+
+`porch_camera.gd` frames Duff and the foe he is fighting (pirate, then Mike) and pulls back as they
+separate, smoothed. Default `low` = low beat-'em-up angle with the house as the backdrop; `frame` = higher
+tilted view; `close` = the old top-down orthographic view, closer. Change `MODE` there or pass `--cam=<mode>`.
+Options compared in `docs/renders/porch3d/camera_compare.jpg` (`tools/cam_shots.gd`).
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the

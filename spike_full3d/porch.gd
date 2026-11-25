@@ -4,6 +4,7 @@ const Art = preload("porch_art.gd")
 const RigActor = preload("rig_actor.gd")
 const Kit = preload("porch_kit.gd")
 const Look = preload("porch_look.gd")
+const FightCam = preload("porch_camera.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
@@ -35,10 +36,6 @@ const CHARGE_SPEED := 7.2
 const CHARGE_TIME := .85
 const MIKE_DIZZY := 1.0          ## after a charge: free hits
 const MIKE_SPAWN := Vector3(5.6, 0, 3.4)
-## Closer than the block-model slice (9.25) so the real models read on a phone; follows Duff sideways.
-const CAMERA_SIZE := 7.0
-const CAMERA_OFFSET := Vector3(0, 9.6, 13)
-const CAMERA_X_LIMIT := 2.6
 
 var player: CharacterBody3D
 var pirate: CharacterBody3D
@@ -67,6 +64,7 @@ var message: Label
 var fps_label: Label
 var look: Node  ## porch_look.gd (golden hour); null with --plain
 var camera: Camera3D
+var fight_cam  ## porch_camera.gd: frames Duff and his current foe
 var player_hp := PLAYER_HP
 var pirate_hp := PIRATE_HP
 var attack_time := 0.0
@@ -103,14 +101,22 @@ func _ready() -> void:
 		burst.form(offset * .25, Vector3(.22, .056, .045), Color("#ffca79"), Vector3(0, 0, angle), 6)
 	impact = burst.finish(self, "Impact")
 	impact.hide()
+	fight_cam.snap(player.position, current_foe())
 	if not OS.get_cmdline_user_args().has("--plain"):
 		look = Look.apply(self, [player_model, pirate_model, mike_model])
 	_build_hud()
 	_update_hud()
 
+## The foe the camera keeps in frame: the pirate until he drops, then Mike once he is in.
+func current_foe():
+	if pirate_hp > 0:
+		return pirate.position
+	if mike.visible and mike_state != "ko":
+		return mike.position
+	return null
+
 func _process(delta: float) -> void:
-	var target_x := clampf(player.position.x, -CAMERA_X_LIMIT, CAMERA_X_LIMIT)
-	camera.position.x = lerpf(camera.position.x, target_x, minf(1.0, delta * 4.0))
+	fight_cam.follow(delta, player.position, current_foe())
 	fps_label.text = "%d FPS%s" % [Engine.get_frames_per_second(), " LITE" if look and look.lite else ""]
 
 func _physics_process(delta: float) -> void:
@@ -482,11 +488,8 @@ func _build_street() -> void:
 	add_child(sun)
 	camera = Camera3D.new()
 	add_child(camera)
-	camera.position = CAMERA_OFFSET
-	camera.look_at(Vector3(0, .55, -.9))
-	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = CAMERA_SIZE
 	camera.make_current()
+	fight_cam = FightCam.new(camera)
 	if OS.get_cmdline_user_args().has("--kit"):  # our own set, to compare with the Meshy one
 		Kit.build(self, PLANTER_AT, PLANTER_SIZE)
 		Art.ground(self)

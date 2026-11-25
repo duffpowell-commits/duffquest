@@ -46,6 +46,23 @@ func _run() -> void:
 	look.set_lite(true)
 	_check(not look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_DISABLED, "lite drops glow and MSAA")
 	look.set_lite(false)
+	sample.fight_cam.snap(sample.player.position, sample.pirate.position)
+	var cam: Camera3D = sample.camera
+	var view := sample.get_viewport().get_visible_rect().size
+	var framed := true
+	for body in [sample.player, sample.pirate]:
+		var p := cam.unproject_position(body.position + Vector3.UP * .8)
+		framed = framed and p.x > view.x * .08 and p.x < view.x * .92 and p.y > view.y * .1 and p.y < view.y * .9
+	var feet := cam.unproject_position(sample.player.position)
+	var head := cam.unproject_position(sample.player.position + Vector3.UP * sample.DUFF_HEIGHT)
+	_check(framed and feet.y - head.y > view.y * .25,
+		"fight camera frames Duff and the pirate; Duff stands %d%% of the screen tall" % int((feet.y - head.y) / view.y * 100))
+	sample.mike.position = sample.player.position + Vector3(4.5, 0, -1)
+	var near_tf: Transform3D = sample.fight_cam.goal(sample.player.position, sample.player.position + Vector3(1, 0, 0))
+	var far_tf: Transform3D = sample.fight_cam.goal(sample.player.position, sample.mike.position)
+	_check(far_tf.origin.distance_to(sample.player.position) > near_tf.origin.distance_to(sample.player.position),
+		"fight camera pulls back when the foe is far")
+	sample.mike.position = sample.MIKE_SPAWN
 	for actor in [sample.player_model, sample.pirate_model]:
 		_check(actor.skeleton.get_bone_count() == 24 and actor.skeleton.find_bone("RightHand") >= 0,
 			"%s is a skinned mesh on the 24-bone humanoid skeleton" % actor.name)
