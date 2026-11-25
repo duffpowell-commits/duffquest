@@ -419,6 +419,59 @@ func _run() -> void:
 	sample.active = true
 	sample.special_time = 0
 	sample.attack_time = 0
+	# Return to Sender: a full meter next to him grabs instead of dashing, and the throw lands 3 through his guard.
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.player.position = Vector3(0, 0, 1.5)
+	sample.pirate.position = Vector3(0, 0, .5)
+	sample.pirate_recovery = 9.0
+	sample.chain = {sample.pirate: [5, sample.clock]}
+	sample.meter = 100
+	_plain(sample)
+	sample.red_right_hand()
+	_check(sample.toss_foe == sample.pirate and sample.meter == 0 and sample.special_time > 0 and sample.invulnerable > 0,
+		"a full meter within %.2f m grabs him: Return to Sender, Duff untouchable" % sample.RTS_RANGE)
+	sample.set_physics_process(true)
+	await create_timer(1.0, true, false, true).timeout
+	_check(sample.pirate.collision_layer == 0 and sample.pirate_model.current == "flail" and sample.pirate.position.y > .3,
+		"held over Duff's shoulder he flails, off the ground, no collision (y %.2f)" % sample.pirate.position.y)
+	await create_timer(2.2, true, false, true).timeout
+	sample.set_physics_process(false)
+	var thrown := Vector2(sample.toss_land.x - sample.player.position.x, sample.toss_land.z - sample.player.position.z).length()
+	_check(sample.toss_foe == null and sample.special_time == 0 and sample.pirate_hp == sample.PIRATE_HP - sample.RTS_DAMAGE
+		and sample.pirate.collision_layer == sample.ACTOR_LAYER and absf(sample.pirate.position.y) < .05 and thrown > 1.2,
+		"the throw lands %d through his guard %.1f m away and gives him his collision back (%d HP)" % [sample.RTS_DAMAGE, thrown, sample.pirate_hp])
+	await create_timer(1.6, true, false, true).timeout
+	_check(sample.pirate_model.current != "flyup" and sample.pirate_model.locked <= 0,
+		"a thrown pirate who isn't KO'd gets back up (%s)" % sample.pirate_model.current)
+	# Out of reach it is the Red Right Hand dash, not a grab.
+	sample.pirate.position = Vector3(-3, 0, -1)
+	sample.player.position = Vector3(-3, 0, 2.5)
+	sample.meter = 100
+	sample.red_right_hand()
+	_check(sample.toss_foe == null and is_equal_approx(sample.special_time, sample.RRH_TIME), "out of grab range the special is the dash")
+	sample._end_special()
+	sample.special_time = 0
+	sample.attack_time = 0
+	sample.player_model.locked = 0
+	# The fight ending mid-carry puts him back on his feet with his collision.
+	sample.pirate.position = Vector3(-3, 0, 1.5)
+	sample.pirate_recovery = 9.0
+	sample.meter = 100
+	sample.red_right_hand()
+	sample.set_physics_process(true)
+	await create_timer(1.0, true, false, true).timeout
+	sample.set_physics_process(false)
+	sample.active = false
+	await process_frame
+	await process_frame
+	_check(sample.toss_foe == null and sample.pirate.collision_layer == sample.ACTOR_LAYER and absf(sample.pirate.position.y) < .05
+		and is_zero_approx(sample.pirate_model.rotation.x) and sample.pirate_model.current not in ["flail", "flyup"],
+		"a fight that ends mid-carry drops him back on his feet with his collision")
+	sample.active = true
+	sample.special_time = 0
+	sample.attack_time = 0
+	sample.player_model.locked = 0
+	sample.invulnerable = 0
 	sample.pirate_recovery = 0
 	sample.launched = {}
 	sample.player.position = Vector3(0, 0, 2)
@@ -588,4 +641,19 @@ func _run() -> void:
 	await scene_changed
 	_check(current_scene.active and current_scene.player_hp == 5 and not paused and current_scene.hud.screen == "",
 		"retry after defeat restores Duff and skips the title")
+	# Return to Sender as the KO: he stays down and the parcel sails back onto the stoop.
+	sample = current_scene
+	sample.set_physics_process(false)
+	sample.player.position = Vector3(0, 0, 2)
+	sample.pirate.position = Vector3(0, 0, 1)
+	sample.pirate_recovery = 9.0
+	sample.pirate_hp = sample.RTS_DAMAGE
+	sample.meter = 100
+	await _frames(2)
+	sample.red_right_hand()
+	sample.set_physics_process(true)
+	await create_timer(4.0, true, false, true).timeout  # grab, carry, throw, then the parcel's flight
+	_check(sample.pirate_hp == 0 and sample.pirate_model.current == "ko" and sample.pirate.collision_layer == 0
+		and sample.package.get_parent() == sample and sample.package.position.distance_to(sample.STOOP_AT) < .05,
+		"a Return to Sender KO leaves him down and lands the parcel on the stoop (%s)" % sample.package.position)
 	quit(1 if failures else 0)
