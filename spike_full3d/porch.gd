@@ -67,6 +67,18 @@ const KICK_COOL := .9          ## seconds between kicks: going through a guard h
 const KICK_KNOCK := 2.2       ## times a punch's shove
 const LAUNCH_KNOCK := 3.4     ## A A K: the kick ends the combo as a launcher
 const WALL_TIME := .5         ## a launched foe that hits a wall, fence or planter within this takes 1 more
+const METER_HIT := 14         ## special meter (0..100): per landed hit
+const METER_HURT := 10        ## and per hit Duff takes
+const RRH_WINDUP := .4        ## Red Right Hand: feet planted, the fist catches fire
+const RRH_DASH := .4          ## then he rockets forward fist first for this long
+const RRH_SPEED := 10.0       ## m/s: about 4 m of porch
+const RRH_RECOVER := .45      ## a whiff leaves him skidding, wide open
+const RRH_TIME := RRH_WINDUP + RRH_DASH + RRH_RECOVER
+const RRH_HIT_RADIUS := 1.05  ## the fist connects with anyone this close along the dash
+const RRH_DAMAGE := 3
+const RRH_KNOCK := 4.0        ## times a punch's shove
+const RRH_PEAK := .55         ## fraction of the swing clip where the arm is fully out: held through the dash
+const RRH_CLIP := "burn"       ## the lunging right Duff picked; the left hook stands in until it is baked
 const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
 
@@ -136,6 +148,14 @@ var wall_hits := 0             ## launched foes that hit a wall (for tests)
 var perfect_at := -99.0       ## clock of the last dodge that slipped a hit
 var kick_requested := false
 var kick_cool := 0.0
+var meter := 0.0              ## fills on hits landed and taken; full = Red Right Hand
+var special_time := 0.0       ## > 0 while Red Right Hand plays
+var special_hit := false
+var special_requested := false
+var rrh_glow: OmniLight3D
+var rrh_trail: MeshInstance3D
+var rrh_fire: CPUParticles3D
+var rrh_points: Array[Vector3] = []
 var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
 var callout_time := 0.0
 
@@ -239,9 +259,14 @@ func _physics_process(delta: float) -> void:
 	invulnerable = maxf(0, invulnerable - delta)
 	kick_cool = maxf(0, kick_cool - delta)
 	var direction := _movement()
-	if dodge_time <= 0 and direction != Vector3.ZERO:
+	if dodge_time <= 0 and special_time <= 0 and direction != Vector3.ZERO:
 		facing = direction.normalized()
 		player_model.rotation.y = atan2(-direction.x, -direction.z)
+	if special_requested:
+		special_requested = false
+		red_right_hand()
+	if special_time > 0:
+		_tick_special(delta)
 	if dodge_requested:
 		dodge_requested = false
 		_dodge()
@@ -257,6 +282,8 @@ func _physics_process(delta: float) -> void:
 			launched.erase(foe)
 	hit_marker.visible = attack_time > .14
 	var motion := facing * 8.8 if dodge_time > 0 else direction * PLAYER_SPEED
+	if special_time > 0:
+		motion = facing * RRH_SPEED if _dashing() else Vector3.ZERO
 	_move(player, motion)
 	var speed := Vector2(player.get_real_velocity().x, player.get_real_velocity().z).length()
 	player_model.move(minf(speed / PLAYER_SPEED, 1.0))
@@ -279,6 +306,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			dodge_requested = true
 		elif event.physical_keycode in [KEY_K, KEY_C]:
 			kick_requested = true
+		elif event.physical_keycode in [KEY_E, KEY_V]:
+			special_requested = true
 		elif event.physical_keycode == KEY_R:
 			retry()
 
@@ -342,6 +371,7 @@ func _hurt_duff(from: Vector3) -> bool:
 	if invulnerable > 0 or not active:
 		return false
 	player_hp -= 1
+	meter = minf(100, meter + METER_HURT)
 	_show_impact(player.position)
 	if feel:
 		feel.hurt(player, from)
@@ -470,6 +500,8 @@ func _kick() -> void:
 
 ## Hit damage on a foe, with the pirate's or Mike's reaction (stun = seconds he can't swing).
 func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
+	if special_time <= 0:
+		meter = minf(100, meter + METER_HIT)
 	if foe == mike:
 		_hit_mike(damage)
 		if mike_state == "stalk":
@@ -513,6 +545,161 @@ func _wall_splat(foe: CharacterBody3D) -> void:
 		feel.add_trauma(.4)
 		feel.hit_stop(feel.HIT_STOP)
 	_damage(foe, 1, FINISHER_STUN)
+
+## Red Right Hand (special, full meter): Duff's tattooed right hand glows red, winds up and lands a haymaker
+## that goes through any guard (even Mike's rant) for 3 and throws the foe across the porch.
+func red_right_hand() -> void:
+	var foe := _foe()
+	if not active or meter < 100 or special_time > 0 or foe == null:
+		return
+	meter = 0
+	special_time = RRH_TIME
+	special_hit = false
+	invulnerable = maxf(invulnerable, RRH_WINDUP + RRH_DASH)  # a whiff leaves him open
+	combo = 0
+	var offset := foe.position - player.position
+	offset.y = 0
+	facing = offset.normalized()
+	player_model.rotation.y = atan2(-facing.x, -facing.z)
+	player_model.strike(RRH_CLIP if player_model.has_clip(RRH_CLIP) else "hook", RRH_WINDUP / RRH_PEAK)  # reaches full extension as the dash starts
+	attack_time = RRH_TIME
+	_call("RED RIGHT HAND!")
+	if rrh_glow == null:
+		_build_rrh()
+	rrh_glow.visible = true
+	rrh_trail.visible = true
+	rrh_fire.emitting = true
+	rrh_points.clear()
+	if feel:
+		feel.sfx("tele", 0.0, 2.0)
+
+func _tick_special(delta: float) -> void:
+	special_time = maxf(0, special_time - delta)
+	var into := RRH_TIME - special_time
+	rrh_glow.light_energy = clampf(into / RRH_WINDUP, 0, 1) * 2.5 if not special_hit else maxf(0, rrh_glow.light_energy - delta * 8)
+	var hand := player_model.skeleton.global_transform * player_model.skeleton.get_bone_global_pose(player_model.skeleton.find_bone("RightHand")).origin
+	rrh_points.push_front(hand)
+	if rrh_points.size() > 14:
+		rrh_points.pop_back()
+	_draw_trail()
+	var anim := player_model.player
+	if _dashing() and anim.speed_scale != 0.0:
+		anim.seek(anim.current_animation_length * RRH_PEAK, true)  # fist out, frozen: he flies arm-first
+		anim.speed_scale = 0.0
+	elif not _dashing() and anim.speed_scale == 0.0:
+		anim.speed_scale = 1.6  # snap back
+	if _dashing() and not special_hit:
+		var foe := _foe()
+		if foe:
+			var offset := foe.position - player.position
+			offset.y = 0
+			if offset.length() <= RRH_HIT_RADIUS + .4 and facing.dot(offset.normalized()) > .2:
+				special_hit = true
+				special_time = minf(special_time, RRH_RECOVER * .6)  # connected: stop the dash, short recovery
+				if foe == mike and mike_state == "taunt":
+					mike_state = "stalk"  # the hand goes through his rant
+				if feel:
+					feel.landed(foe, player.position, true)
+					feel.push(foe, facing, feel.KNOCK_HIT * RRH_KNOCK)
+					feel.add_trauma(.7)
+					feel.sfx("sting_ko", 0.0, -2.0)
+				hud.flash(Color(0.85, 0.08, 0.06), .35)
+				_damage(foe, RRH_DAMAGE, FINISHER_STUN * 1.5)
+	if special_time <= 0:
+		rrh_fire.emitting = false
+		rrh_glow.visible = false
+		rrh_trail.visible = false
+
+func _dashing() -> bool:
+	var into := RRH_TIME - special_time
+	return special_time > 0 and not special_hit and into >= RRH_WINDUP and into < RRH_WINDUP + RRH_DASH
+
+func _build_rrh() -> void:
+	rrh_glow = OmniLight3D.new()
+	rrh_glow.light_color = Color(1.0, 0.12, 0.08)
+	rrh_glow.omni_range = .5  # the hand, not the whole body
+	rrh_glow.omni_attenuation = 2.0
+	rrh_glow.light_energy = 0
+	rrh_glow.visible = false
+	var socket := BoneAttachment3D.new()
+	socket.bone_name = "RightHand"
+	player_model.skeleton.add_child(socket)
+	socket.add_child(rrh_glow)
+	var ember := MeshInstance3D.new()  # the fist itself burns red
+	var ball := SphereMesh.new()
+	ball.radius = .09
+	ball.height = .18
+	ember.mesh = ball
+	var hot := StandardMaterial3D.new()
+	hot.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	hot.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	hot.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	hot.albedo_color = Color(1, .18, .1, .7)
+	ember.material_override = hot
+	ember.scale = Vector3.ONE / player_model.skeleton.get_parent().global_transform.basis.get_scale()
+	rrh_glow.add_child(ember)
+	rrh_fire = CPUParticles3D.new()  # flames off the fist, left behind in the world as he moves
+	rrh_fire.local_coords = false
+	rrh_fire.amount = 48
+	rrh_fire.lifetime = .4
+	rrh_fire.emitting = false
+	rrh_fire.direction = Vector3.UP
+	rrh_fire.spread = 35
+	rrh_fire.gravity = Vector3(0, 1.6, 0)
+	rrh_fire.initial_velocity_min = .3
+	rrh_fire.initial_velocity_max = .9
+	rrh_fire.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	rrh_fire.emission_sphere_radius = .08
+	var flame := SphereMesh.new()
+	flame.radius = .07
+	flame.height = .14
+	flame.radial_segments = 8
+	flame.rings = 4
+	var flame_mat := StandardMaterial3D.new()
+	flame_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	flame_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	flame_mat.vertex_color_use_as_albedo = true
+	flame.material = flame_mat
+	rrh_fire.mesh = flame
+	var ramp := Gradient.new()
+	ramp.set_color(0, Color(1, .85, .3, 1))
+	ramp.set_color(1, Color(.8, .05, .02, 0))
+	ramp.add_point(.45, Color(1, .25, .05, .9))
+	rrh_fire.color_ramp = ramp
+	var shrink := Curve.new()
+	shrink.add_point(Vector2(0, 1))
+	shrink.add_point(Vector2(1, .2))
+	rrh_fire.scale_amount_curve = shrink
+	rrh_fire.scale_amount_min = 1.0
+	rrh_fire.scale_amount_max = 1.8
+	rrh_glow.add_child(rrh_fire)
+	rrh_trail = MeshInstance3D.new()
+	rrh_trail.mesh = ImmediateMesh.new()
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.vertex_color_use_as_albedo = true
+	rrh_trail.material_override = mat
+	rrh_trail.visible = false
+	add_child(rrh_trail)
+
+## A red ribbon along the hand's last few positions, widest and brightest at the hand.
+func _draw_trail() -> void:
+	var mesh := rrh_trail.mesh as ImmediateMesh
+	mesh.clear_surfaces()
+	if rrh_points.size() < 2:
+		return
+	mesh.surface_begin(Mesh.PRIMITIVE_TRIANGLE_STRIP)
+	for i in rrh_points.size():
+		var k := 1.0 - float(i) / rrh_points.size()
+		var up := Vector3.UP * .26 * k
+		var fire := Color(1, .1, .05).lerp(Color(1, .8, .25), k * k)  # yellow-hot at the fist, red down the tail
+		mesh.surface_set_color(Color(fire, k))
+		mesh.surface_add_vertex(rrh_points[i] + up)
+		mesh.surface_set_color(Color(fire, k))
+		mesh.surface_add_vertex(rrh_points[i] - up)
+	mesh.surface_end()
 
 func _call(text: String) -> void:
 	callout = text
@@ -921,6 +1108,7 @@ func _build_hud() -> void:
 	_button(layer, Hud.A_AT, Hud.A_R, "attack")
 	_button(layer, Hud.B_AT, Hud.B_R, "dodge")
 	_button(layer, Hud.K_AT, Hud.K_R, "kick")
+	_button(layer, Hud.R_AT, Hud.R_R, "special")
 	_build_bubble(layer)
 	hud = Hud.make(self, layer)  # last: its menus cover everything else
 
@@ -973,13 +1161,14 @@ func _button(layer: CanvasLayer, centre: Vector2, radius: float, action: String)
 	button.shape = bounds
 	button.shape_centered = false
 	layer.add_child(button)
-	var down: String = {"attack": "a_down", "dodge": "b_down", "kick": "k_down"}[action]
+	var down: String = {"attack": "a_down", "dodge": "b_down", "kick": "k_down", "special": "r_down"}[action]
 	button.pressed.connect(func() -> void: hud.set(down, true))
 	button.released.connect(func() -> void: hud.set(down, false))
 	match action:
 		"attack": button.pressed.connect(func() -> void: attack_requested = true)
 		"dodge": button.pressed.connect(func() -> void: dodge_requested = true)
 		"kick": button.pressed.connect(func() -> void: kick_requested = true)
+		"special": button.pressed.connect(func() -> void: special_requested = true)
 
 ## Speech bubble over whoever talks, in the main game's dialogue look: plum glass, cream text, pink name tag.
 func _build_bubble(layer: CanvasLayer) -> void:

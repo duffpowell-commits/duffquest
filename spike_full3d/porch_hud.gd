@@ -31,6 +31,9 @@ const B_R := 48.0
 const K_AT := Vector2(870, 300)  ## the push kick, above A
 const K_R := 48.0
 const K_COL := Color("#c7802a")
+const R_AT := Vector2(738, 212)  ## Red Right Hand: its ring is the special meter, it glows when full
+const R_R := 44.0
+const R_COL := Color("#c0201c")
 const START_MIN := 7 * 60    ## the cold open starts 7:00 AM, like the main game
 const GAME_MIN_PER_SEC := .2 ## the clock creeps: one game minute every 5 seconds
 
@@ -41,6 +44,10 @@ var heart: Texture2D
 var a_down := false
 var b_down := false
 var k_down := false
+var r_down := false
+var flash_col := Color.TRANSPARENT
+var flash_time := 0.0
+var flash_len := 1.0
 var minutes := 0.0
 var menu: Control        ## the open title / pause / end screen, or null
 var screen := ""         ## "", "title", "pause", "settings", "ko", "win"
@@ -110,6 +117,7 @@ func start() -> void:
 func _process(delta: float) -> void:
 	if screen == "" and game.active:
 		minutes += delta * GAME_MIN_PER_SEC
+	flash_time = maxf(0, flash_time - delta / maxf(Engine.time_scale, .05))
 	queue_redraw()
 
 ## ---------------------------------------------------------------- drawing helpers (ui_style.gd, x3)
@@ -161,6 +169,8 @@ func _hint(at: Vector2, text: String) -> void:
 ## ---------------------------------------------------------------- the HUD
 
 func _draw() -> void:
+	if flash_time > 0:
+		draw_rect(Rect2(Vector2.ZERO, size), Color(flash_col, .45 * flash_time / flash_len))
 	if screen == "title":
 		return  # the title card stands alone over the porch, like the main game's
 	_strip()
@@ -171,10 +181,30 @@ func _draw() -> void:
 	if game.active:
 		_round(B_AT, B_R, B_COL, "B", b_down)
 		_hint(B_AT + Vector2(-B_R - 38, 7), "roll")
+		_meter_button()
 		_round(K_AT, K_R, K_COL, "K", k_down)
 		_hint(K_AT + Vector2(-K_R - 38, 7), "kick")
 		_round(A_AT, A_R, A_COL, "A", a_down)
 		_hint(A_AT + Vector2(-A_R - 44, 26), "bonk")
+
+## The special: a dark button whose red ring fills with the meter; full, it lights up and pulses.
+func _meter_button() -> void:
+	var full: bool = game.meter >= 100
+	if full:
+		var pulse := .5 + .5 * sin(Time.get_ticks_msec() / 130.0)
+		draw_circle(R_AT, R_R + 8 + 4 * pulse, Color(R_COL, .25 + .2 * pulse))
+		_round(R_AT, R_R, R_COL, "R", r_down)
+	else:
+		_round(R_AT, R_R, PANEL, "R", false)
+		var frac: float = game.meter / 100.0
+		if frac > 0:
+			draw_arc(R_AT, R_R - 4, -PI / 2, -PI / 2 + TAU * frac, 48, R_COL, 6)
+	_hint(R_AT + Vector2(-R_R - 46, 7), "special")
+
+func flash(col: Color, seconds: float) -> void:
+	flash_col = col
+	flash_time = seconds
+	flash_len = seconds
 
 func clock_text() -> String:
 	var m := START_MIN + int(minutes)
@@ -226,7 +256,7 @@ func _pause_button() -> void:
 	_text(Vector2(PAUSE.position.x - 96, PAUSE.end.y + 22), "%d FPS%s" % [Engine.get_frames_per_second(),
 		" LITE" if game.look and game.look.lite else ""], 15, DIM, 150, HORIZONTAL_ALIGNMENT_RIGHT)
 
-## Combo callout under the strip, right side: gold "2 HIT", "KNOCKDOWN!", "DASH HOOK!" that pops and fades.
+## Combo callout under the strip, centred: gold "2 HIT", "KNOCKDOWN!", "DASH HOOK!" that pops and fades.
 func _callout() -> void:
 	if game.callout_time <= 0 or game.callout == "":
 		return
@@ -234,7 +264,7 @@ func _callout() -> void:
 	var pop := 1.0 + .35 * clampf((t - (game.CALLOUT_TIME - .12)) / .12, 0, 1)  # starts big, settles
 	var a := clampf(t / .25, 0, 1)
 	var size := int(44 * pop)
-	_label(Vector2(600, 150 + size * .3), game.callout, size, Color(GOLD, a), 340, HORIZONTAL_ALIGNMENT_RIGHT, display, 9)
+	_label(Vector2(0, 150 + size * .3), game.callout, size, Color(GOLD, a), 960, HORIZONTAL_ALIGNMENT_CENTER, display, 9)
 
 ## Bottom centre: the foe's name plate and health bar (the main game's boss bar).
 func _foe_plate() -> void:
