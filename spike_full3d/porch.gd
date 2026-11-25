@@ -490,7 +490,7 @@ func _build_street() -> void:
 	lamp.omni_range = 2.8
 	add_child(lamp)
 	_collider("Ground", Vector3(0, -.16, 0), Vector3(16, .32, 11))
-	_collider("FrontageCollider", Vector3(0, 1.4, -4.6), Vector3(10.6, 2.8, 2.4))
+	_collider("FrontageCollider", Vector3(0, 1.4, -4.85), Vector3(10.6, 2.8, 1.9))
 	_collider("StoopCollider", Vector3(0, .119, -2.95), Vector3(2.84, .238, 1.03))
 	_collider("StepCollider", Vector3(0, .066, -2.35), Vector3(2.92, .132, .22))
 	for x in [-6.9, 6.9]:
@@ -498,6 +498,9 @@ func _build_street() -> void:
 	_collider("StreetLimit", Vector3(0, .6, 5.39), Vector3(15, 1.2, .23))
 	_collider("RearLimit", Vector3(0, .7, -5.51), Vector3(15, 1.4, .25))
 	_collider("PlanterCollider", PLANTER_AT + Vector3.UP * PLANTER_SIZE.y * .5, PLANTER_SIZE)
+	for x in [-6.0, 6.0]:
+		_collider("TrunkCollider", Vector3(x, .9, -4.2), Vector3(.5, 1.8, .5))
+	_collider("MailboxCollider", Vector3(6.1, .62, 2.45), Vector3(.42, 1.25, .5))
 
 func _build_hud() -> void:
 	var layer := CanvasLayer.new()

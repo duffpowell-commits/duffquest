@@ -77,7 +77,6 @@ class Sculpture:
 		visual.position = at
 		return visual
 
-
 static func surface_detail(visual: MeshInstance3D, grain: float, scale: Vector3, lawn := false) -> void:
 	var material := ShaderMaterial.new()
 	material.shader = GRAIN_SHADER
@@ -86,14 +85,10 @@ static func surface_detail(visual: MeshInstance3D, grain: float, scale: Vector3,
 	material.set_shader_parameter("lawn", lawn)
 	visual.material_override = material
 
-
 const SKIN := Color("#d38a59")
 const BLACK := Color("#25242c")
 const GOLD := Color("#e3ab55")
-const WOOD := Color("#a77953")
 const TRIM := Color("#e6c393")
-const CONCRETE := Color("#ae9580")
-const LEAF := Color("#74803e")
 
 static func person(parent: Node3D, hood: bool) -> Node3D:
 	var model := Node3D.new()
@@ -168,7 +163,6 @@ static func person(parent: Node3D, hood: bool) -> Node3D:
 		arm.finish(model, tag + "Arm", Vector3(side * .27, .925, 0))
 	return model
 
-
 static func animal_ink(mesh: Sculpture, at: Vector3, ink: Color, wolf: bool, yaw := 0.0) -> void:
 	var pose := Basis(Vector3.UP, yaw)
 	mesh.form(at, Vector3(.09, .108, .018), ink, Vector3(0, yaw, 0), 8)
@@ -181,7 +175,6 @@ static func animal_ink(mesh: Sculpture, at: Vector3, ink: Color, wolf: bool, yaw
 	for eye in eyes:
 		mesh.form(at + pose * Vector3(eye.x, eye.y, -.013), Vector3(.012, .008, .008), GOLD, Vector3(0, yaw, 0), 6)
 
-
 static func parcel(parent: Node3D, at: Vector3) -> Node3D:
 	var mesh := Sculpture.new()
 	mesh.box(Vector3.ZERO, Vector3(.34, .36, .25), Color("#bc7c42"))
@@ -190,19 +183,6 @@ static func parcel(parent: Node3D, at: Vector3) -> Node3D:
 	mesh.box(Vector3(0, .137, .127), Vector3(.089, .088, .005), TRIM.darkened(.12))
 	mesh.box(Vector3(.086, .034, -.128), Vector3(.086, .07, .004), Color("#e6d7ae"))
 	return mesh.finish(parent, "Parcel", at)
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # --- Meshy set dressing (Nov 24): props made in the same render style as the characters. ---
 # Each GLB is normalised (largest side ~1.9) and centred, so place() fits it to a target size.
@@ -238,7 +218,6 @@ static func place(parent: Node3D, file: String, at: Vector3, size: Vector3, yaw 
 	prop.position = at - Basis(Vector3.UP, yaw) * Vector3(centre.x, 0, centre.z) - Vector3(0, box.position.y * fit.y, 0)
 	return prop
 
-
 ## World z of a placed prop's front-most point.
 static func _front(prop: Node3D) -> float:
 	var front := -INF
@@ -248,7 +227,6 @@ static func _front(prop: Node3D) -> float:
 		for i in 8:
 			front = maxf(front, (prop.transform * visual.transform * local.get_endpoint(i)).z)
 	return front
-
 
 static func textured(visual: MeshInstance3D, file: String, tiles_per_metre: float, tint := Color.WHITE) -> void:
 	var material := StandardMaterial3D.new()
@@ -260,11 +238,11 @@ static func textured(visual: MeshInstance3D, file: String, tiles_per_metre: floa
 	material.roughness = .95
 	visual.material_override = material
 
-
 static func meshy_set(parent: Node3D, planter_at: Vector3, planter_size: Vector3) -> void:
 	# House: front wall + stoop where the old frontage stood; the roof runs back out of the way.
 	var house := place(parent, "house", Vector3(0, 0, -4.6), Vector3(10.4, 0, 0))
 	house.scale.y *= .78  # a little squat so the door and windows stay on screen under the high camera
+	house.position.y *= .78  # the squash pivots on the origin; keep the base on the ground
 	house.position.z += -2.3 - _front(house)  # stoop's front edge on the old step line
 	for x in [-6.9, 6.9]:
 		for i in 5:
