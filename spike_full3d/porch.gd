@@ -8,16 +8,17 @@ const FightCam = preload("porch_camera.gd")
 const Feel = preload("porch_feel.gd")
 const Hud = preload("porch_hud.gd")
 const FoeMike = preload("foe_mike.gd")
+const FoePirate = preload("foe_pirate.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
 const PLANTER_SIZE := Vector3(1.06, .62, .82)
 const PLAYER_SPEED := 4.6
-const PIRATE_SPEED := 2.1
+const PIRATE_SPEED := FoePirate.SPEED
 const PLAYER_HP := 5
-const PIRATE_HP := 5
+const PIRATE_HP := FoePirate.HP
 const DUFF_HEIGHT := 1.7
-const PIRATE_HEIGHT := 1.4
+const PIRATE_HEIGHT := FoePirate.HEIGHT
 ## Game time each one-shot clip is squeezed into (gameplay timing stays the same as the block-model slice).
 const ATTACK_ANIM := .42
 const DODGE_ANIM := .45
@@ -32,12 +33,9 @@ const MIKE_SPAWN := FoeMike.SPAWN
 const MIKE_JAB_TELE := FoeMike.JAB_TELE
 ## Body widths: fighters stay an arm's length apart instead of standing inside each other.
 const DUFF_RADIUS := .42
-const PIRATE_RADIUS := .42
-const PIRATE_STOP := 1.0     ## the pirate stops walking in at this distance
-const PIRATE_REACH := 1.15   ## and jabs from here
+const PIRATE_REACH := FoePirate.REACH
 ## Real fight (Duff, Nov 25: "the pirate fights back harder", "Mike uses his sign and charge up close")
-const PIRATE_TELE := .4       ## the pirate's wind-up before a jab: dodge it or hit him first
-const PIRATE_REST := .9       ## after his jab
+const PIRATE_TELE := FoePirate.TELE
 const COUNTER_TELE := .18     ## a blocked hit gets this quick counter
 const CHAIN_WINDOW := .9      ## hits closer together than this are one flurry
 const GUARD_AFTER := 2        ## a foe blocks the hit after this many in a flurry, then counters
@@ -90,9 +88,12 @@ const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
 
 var player: CharacterBody3D
-var pirate: CharacterBody3D
+var thief  ## foe_pirate.gd: the Porch Pirate. The names below read and write his state (old spelling).
+var pirate: CharacterBody3D:
+	get: return thief.body
 var player_model: RigActor
-var pirate_model: RigActor
+var pirate_model: RigActor:
+	get: return thief.model
 var boss  ## foe_mike.gd: Marketplace Mike. The names below read and write his state (old spelling).
 var mike: CharacterBody3D:
 	get: return boss.body
@@ -136,11 +137,15 @@ var camera: Camera3D
 var fight_cam  ## porch_camera.gd: frames Duff and his current foe
 var feel  ## porch_feel.gd: sound, hit-stop, shake, knockback
 var player_hp := PLAYER_HP
-var pirate_hp := PIRATE_HP
+var pirate_hp: int:
+	get: return thief.hp
+	set(v): thief.hp = v
 var attack_time := 0.0
 var dodge_time := 0.0
 var dodge_recovery := 0.0
-var pirate_recovery := 0.0
+var pirate_recovery: float:
+	get: return thief.recovery
+	set(v): thief.recovery = v
 var invulnerable := 0.0
 var facing := Vector3.FORWARD
 var active := true
@@ -153,7 +158,9 @@ var bubble_tail: Polygon2D
 var bubble_from: Node3D
 var bubble_time := 0.0
 var clock := 0.0
-var pirate_wind := 0.0        ## > 0 while the pirate winds up a jab
+var pirate_wind: float:
+	get: return thief.wind
+	set(v): thief.wind = v
 var chain := {}               ## foe -> [hits landed in this flurry, clock of the last]
 var tell_ring: MeshInstance3D
 var tell_foe: CharacterBody3D ## whose wind-up the red ring marks
@@ -197,10 +204,8 @@ var callout_time := 0.0
 func _ready() -> void:
 	_build_street()
 	player = _actor(Vector3(-2, 0, 3), DUFF_RADIUS)
-	pirate = _actor(Vector3(3, 0, -1), PIRATE_RADIUS)
 	player_model = RigActor.make(player, "duff", DUFF_HEIGHT)
-	pirate_model = RigActor.make(pirate, "pirate", PIRATE_HEIGHT)
-	pirate_model.fit_head_bone()  # every head matches Duff's (Duff, Nov 25)
+	thief = FoePirate.make(self)
 	package = Art.parcel(pirate_model, Vector3(0, .78, -.3))
 	boss = FoeMike.make(self)
 	hit_marker = _strike_arc(player_model)
@@ -371,35 +376,10 @@ func _move(actor: CharacterBody3D, motion: Vector3) -> void:
 		_wall_splat(actor)
 
 func _tick_pirate(delta := 1.0 / 60) -> void:
-	var offset := player.position - pirate.position
-	offset.y = 0
-	var distance := offset.length()
-	var direction := offset.normalized()
-	if direction != Vector3.ZERO:
-		pirate_model.rotation.y = atan2(-direction.x, -direction.z)
-	if pirate_wind > 0:
-		_move(pirate, Vector3.ZERO)
-		pirate_model.move(0)
-		pirate_wind -= delta
-		if pirate_wind <= 0:
-			_tell(null)
-			pirate_recovery = PIRATE_REST
-			if distance <= PIRATE_REACH + .25 and _clear_strike(pirate, player):
-				_hurt_duff(pirate.position)
-		return
-	var lane := _side_spot(pirate, PIRATE_STOP) - pirate.position
-	lane.y = 0
-	_move(pirate, lane.normalized() * PIRATE_SPEED if lane.length() > .12 else Vector3.ZERO)
-	var speed := Vector2(pirate.get_real_velocity().x, pirate.get_real_velocity().z).length()
-	pirate_model.move(minf(speed / PIRATE_SPEED, 1.0) * .55)
-	if distance <= PIRATE_REACH and pirate_recovery <= 0 and _clear_strike(pirate, player):
-		_pirate_windup(PIRATE_TELE)
+	thief.tick(delta)
 
-## The pirate draws back for a jab: the red ring and the slow start of the clip are the tell.
 func _pirate_windup(seconds: float) -> void:
-	pirate_wind = seconds
-	pirate_model.strike("jab", seconds + .3)
-	_tell(pirate)
+	thief.windup(seconds)
 
 ## One point of damage unless Duff is in dodge / hit immunity. Returns true when it landed.
 func _hurt_duff(from: Vector3) -> bool:
@@ -546,24 +526,7 @@ func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
 		if mike_state == "stalk":
 			mike_recovery = maxf(mike_recovery, stun)
 		return
-	pirate_hp = maxi(pirate_hp - damage, 0)
-	_show_impact(pirate.position)
-	if pirate_hp > 0:
-		pirate_recovery = maxf(pirate_recovery, stun)
-		if pirate_wind <= 0:
-			pirate_model.strike("hit", HIT_ANIM)
-	else:
-		_tell(null)
-	if pirate_hp == 0:
-		var drop := pirate.position + Vector3.UP * .22
-		package.reparent(self)
-		package.position = drop
-		package.rotation = Vector3(0, .25, 0)
-		pirate_model.strike("ko")
-		pirate.collision_layer = 0
-		pirate.collision_mask = 0
-		message.text = "Walk over to grab the parcel."
-	_update_hud()
+	thief.hit(damage, stun)
 
 func _hit_wall(actor: CharacterBody3D) -> bool:
 	for i in actor.get_slide_collision_count():

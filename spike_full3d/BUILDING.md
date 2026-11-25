@@ -19,7 +19,8 @@ root stays live on itch until the 3D game covers everything it does. Don't touch
 
 | File | Job |
 |---|---|
-| `porch.gd` | The game: input, Duff, the pirate's AI, combat rules, specials, meter, grade, win/lose (see "Next refactor") |
+| `porch.gd` | The game: input, Duff, combat rules, specials, meter, grade, win/lose (see "Next refactor") |
+| `foe_pirate.gd` | The Porch Pirate: approach, jab wind-up, guard, KO drops the parcel. Same pattern as `foe_mike.gd` |
 | `foe_mike.gd` | Marketplace Mike: his state, AI, sign throw and charge. The pattern for every new foe (made by `porch.gd`, ticked from its physics loop, `game` = porch.gd's shared services) |
 | `porch_hud.gd` | HUD strip, buttons, meter ring, callouts, title / pause / settings / KO / win cards |
 | `porch_feel.gd` | Hit-stop, shake, knockback, sound pool, music |
@@ -107,7 +108,7 @@ Visual changes also need a real engine render saved in `docs/renders/porch3d/`
 
 ## Next refactor (do this before adding a third zone)
 
-Step 1 is done (Nov 25): Mike moved to `foe_mike.gd`; `porch.gd` keeps his old variable names as
+Step 1 is done (Nov 25): Mike moved to `foe_mike.gd`, the pirate to `foe_pirate.gd`; `porch.gd` keeps their old variable names as
 getters/setters so tests and tools didn't change. Next, before more foes:
 1. `fight_core.gd`: Duff's moves, meter, specials, `_damage`/`_hurt_duff`, grade.
 2. `foe_brain.gd`: one AI driven by data (HP, attacks with wind-up/damage/range, armour, taunts). Read the
