@@ -228,6 +228,9 @@ func current_foe():
 
 func _process(delta: float) -> void:
 	_place_bubble(delta)
+	if special_time > 0 and not active:
+		special_time = 0  # the fight ended mid-special (his KO punch, or Duff KO'd in the recovery)
+		_end_special()
 	if opening > 0:
 		opening -= delta
 		if opening <= 0 and active and pirate_hp > 0 and bubble_from == player:
@@ -306,9 +309,9 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			dodge_requested = true
 		elif event.physical_keycode in [KEY_K, KEY_C]:
 			kick_requested = true
-		elif event.physical_keycode in [KEY_E, KEY_V]:
-			special_requested = true
-		elif event.physical_keycode == KEY_R:
+		elif event.physical_keycode in [KEY_R, KEY_E, KEY_V]:
+			special_requested = true  # R like the button
+		elif event.physical_keycode == KEY_BACKSPACE:
 			retry()
 
 ## Keys (WASD / arrows) or the on-screen stick, which presses the ui_* actions with analog strength.
@@ -562,6 +565,7 @@ func red_right_hand() -> void:
 	facing = offset.normalized()
 	player_model.rotation.y = atan2(-facing.x, -facing.z)
 	player_model.strike(RRH_CLIP if player_model.has_clip(RRH_CLIP) else "hook", RRH_WINDUP / RRH_PEAK)  # reaches full extension as the dash starts
+	player_model.locked = RRH_TIME  # keep locomotion off the frozen fist for the whole dash
 	attack_time = RRH_TIME
 	_call("RED RIGHT HAND!")
 	if rrh_glow == null:
@@ -606,6 +610,13 @@ func _tick_special(delta: float) -> void:
 				hud.flash(Color(0.85, 0.08, 0.06), .35)
 				_damage(foe, RRH_DAMAGE, FINISHER_STUN * 1.5)
 	if special_time <= 0:
+		_end_special()
+
+## Fire out, glow and trail off, the frozen fist let go.
+func _end_special() -> void:
+	if player_model.player.speed_scale == 0.0:
+		player_model.player.speed_scale = 1.0
+	if rrh_glow:
 		rrh_fire.emitting = false
 		rrh_glow.visible = false
 		rrh_trail.visible = false
@@ -968,7 +979,7 @@ func _clear_strike(attacker: CharacterBody3D, target: CharacterBody3D) -> bool:
 	return get_world_3d().direct_space_state.intersect_ray(ray).is_empty()
 
 func _dodge() -> void:
-	if active and dodge_recovery <= 0:
+	if active and dodge_recovery <= 0 and special_time <= 0:  # no rolling out of the special: a whiff stays open
 		dodge_time = .23
 		player_model.strike("dodge", DODGE_ANIM)
 		dodge_recovery = .65

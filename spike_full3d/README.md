@@ -22,7 +22,7 @@ slice to see how it feels). Duff's model comes from his own approved turnaround
 
 Phone: Releases -> `dev` -> `duffquest-porch3d.apk` (built on every push to main, own package id so it sits
 next to the real game). Desktop: open this folder as a Godot project. Arrows/WASD move, Space hits (jab
-then hook), Shift dodges, R retries; the on-screen buttons do the same. Beat the pirate, walk over the
+then hook), Shift dodges, K kicks, R (or E/V) fires the special, Backspace retries; the on-screen buttons do the same. Beat the pirate, walk over the
 parcel, then beat Marketplace Mike. The top-right counter shows FPS: the bar is 60 on Duff's phone.
 
 ## Look: golden hour (Duff's pick, Nov 25 2026)
@@ -121,7 +121,7 @@ Duff: "add a kick button" and "lets discuss specials and combos". He picked the 
 ## Red Right Hand, the first special (Nov 25 2026)
 
 Duff wanted a dashing fire-fist special ("burn knuckle" feel; ours is original: name from his own right-hand tattoo).
-- **Meter**: +14 per landed hit, +10 per hit taken. The red **R** button (or E/V) shows it as a ring and pulses when full.
+- **Meter**: +14 per landed hit, +10 per hit taken. The red **R** button (or R/E/V; retry moved to Backspace) shows it as a ring and pulses when full.
 - **R** with a full meter: .9 s wind-up: crouch, big twist, the burning fist held cocked (untouchable), then a 4 m dash in .4 s with the fist frozen fully out, fire and a
   red trail coming off the right hand. Contact does 3 through any guard (even Mike's rant), big shove, red flash. A whiff
   skids to a stop in a .45 s recovery with no protection.
@@ -129,7 +129,7 @@ Duff wanted a dashing fire-fist special ("burn knuckle" feel; ours is original: 
   fist cocked behind the shoulder, released into the punch); `RRH_PEAK` (.76) is where the fist is fully out. Duff turned
   down the Meshy "Kung Fu Punch" (96) cut ("doesn't look like a punch at all"); that clip is a spinning routine. Bigger
   wind-up, then even bigger, were his calls.
-- Preview: `tools/rrh_shots.gd`, render `docs/renders/porch3d/20_red_right_hand.jpg`. Smoke is 90 checks.
+- Preview: `tools/rrh_shots.gd`, render `docs/renders/porch3d/20_red_right_hand.jpg`. Smoke is 92 checks.
 
 ## HUD and menus (Nov 25 2026)
 

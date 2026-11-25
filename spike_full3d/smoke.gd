@@ -405,6 +405,18 @@ func _run() -> void:
 	sample.set_physics_process(false)
 	_check(not sample.special_hit and sample.pirate_hp == sample.PIRATE_HP and sample.special_time > 0 and sample.invulnerable == 0,
 		"a whiffed Red Right Hand leaves Duff open in the recovery")
+	sample.dodge_recovery = 0
+	sample._dodge()
+	_check(sample.dodge_time == 0 and sample.invulnerable == 0, "B can't roll out of the special: the whiff stays open")
+	# The fight ending mid-special (his KO punch, or Duff KO'd in the recovery) puts the fire out.
+	sample.player_model.player.speed_scale = 0.0
+	sample.rrh_fire.emitting = true
+	sample.active = false
+	await process_frame
+	await process_frame
+	_check(sample.special_time == 0 and not sample.rrh_fire.emitting and not sample.rrh_glow.visible
+		and sample.player_model.player.speed_scale != 0.0, "a fight that ends mid-special lets go of the fist and puts the fire out")
+	sample.active = true
 	sample.special_time = 0
 	sample.attack_time = 0
 	sample.pirate_recovery = 0
