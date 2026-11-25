@@ -81,6 +81,34 @@ func _run() -> void:
 		_check(clips.all(func(c): return actor.has_clip(c)), "%s has real clips %s" % [actor.name, clips])
 		_check(actor.current in ["idle", "walking"] and actor.player.is_playing(), "%s starts in an idle or walk clip" % actor.name)
 
+	# Phone controls: a 4.7 VirtualJoystick on the left, big round HIT and DODGE on the right.
+	_check(sample.stick is VirtualJoystick and sample.stick.action_left == &"ui_left"
+		and sample.stick.joystick_mode == VirtualJoystick.JOYSTICK_DYNAMIC, "the stick is Godot 4.7's VirtualJoystick, dynamic")
+	var hit_btn: TouchScreenButton = sample.find_child("Attack", true, false)
+	var dodge_btn: TouchScreenButton = sample.find_child("Dodge", true, false)
+	var hit_box := Rect2(hit_btn.position, hit_btn.shape.size)
+	var dodge_box := Rect2(dodge_btn.position, dodge_btn.shape.size)
+	_check(hit_box.size.x >= 120 and dodge_box.size.x >= 90 and not hit_box.grow(8).intersects(dodge_box)
+		and hit_box.end.x <= view.x and hit_box.end.y <= view.y, "HIT and DODGE are big thumb buttons, 8+ apart, on screen")
+	var tap := InputEventScreenTouch.new()
+	tap.index = 0
+	tap.position = Vector2(150, 400)
+	tap.pressed = true
+	sample.get_viewport().push_input(tap, true)  # straight to the GUI: headless has no display to deliver it
+	var drag := InputEventScreenDrag.new()
+	drag.index = 0
+	drag.position = Vector2(150, 330)
+	drag.relative = Vector2(0, -70)
+	sample.get_viewport().push_input(drag, true)
+	await _frames(2)
+	var pushed := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	tap.pressed = false
+	tap.position = drag.position
+	sample.get_viewport().push_input(tap, true)
+	await _frames(2)
+	_check(pushed.y < -.5 and Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down") == Vector2.ZERO,
+		"a thumb dragged up on the left half walks Duff up, and letting go stops him (%s)" % pushed)
+
 	# Walk freely on both axes, then walk into and dodge against the planter.
 	sample.pirate.position = Vector3(-5, 0, -2)
 	var start: Vector3 = sample.player.position
@@ -203,6 +231,13 @@ func _run() -> void:
 	_check(sample.active and not sample.package.visible and sample.mike.visible
 		and sample.mike_state == "stalk" and sample.player_hp == 5,
 		"grabbing the parcel brings Marketplace Mike in and refills Duff")
+	sample.mike.position = sample.player.position + Vector3(1.5, 0, 0)  # on screen, as he walks in
+	sample._place_bubble(0.0)
+	var bubble_head: Vector2 = sample.camera.unproject_position(sample.mike.global_position + Vector3.UP * 1.95)
+	_check(sample.bubble.visible and sample.bubble_from == sample.mike and "best offer" in sample.bubble_text.text
+		and sample.bubble_tail.position.distance_to(bubble_head) < 60
+		and not Rect2(sample.bubble.position, sample.bubble.size).has_point(bubble_head),
+		"Mike's line is a speech bubble over his head (%s, tail %s, head %s)" % [sample.bubble.position, sample.bubble_tail.position, bubble_head])
 	var mm = sample.mike_model
 	_check(mm.skeleton.get_bone_count() == 24 and ["idle", "walking", "running", "jab", "throw", "charge", "taunt", "hit", "ko"].all(
 		func(c): return mm.has_clip(c)), "Mike is on the 24-bone skeleton with jab, throw, charge, taunt, hit and KO clips")
