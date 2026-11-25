@@ -63,6 +63,15 @@ func _run() -> void:
 	_check(far_tf.origin.distance_to(sample.player.position) > near_tf.origin.distance_to(sample.player.position),
 		"fight camera pulls back when the foe is far")
 	sample.mike.position = sample.MIKE_SPAWN
+	var corners_ok := true
+	for spot in [[Vector3(-6.4, 0, 4.9), null], [Vector3(6.4, 0, 0), null], [Vector3(0, 0, 4.9), null],
+			[Vector3(-6.4, 0, 3), sample.MIKE_SPAWN], [Vector3(6.4, 0, -2.2), Vector3(-6.4, 0, 4.9)]]:
+		cam.global_transform = sample.fight_cam.goal(spot[0], spot[1])
+		for body in ([spot[0]] if spot[1] == null else [spot[0], spot[1]]):
+			for y in [0.0, 1.8]:
+				var q := cam.unproject_position(body + Vector3.UP * y)
+				corners_ok = corners_ok and q.x >= 0 and q.x <= view.x and q.y >= 0 and q.y <= view.y
+	_check(corners_ok, "fight camera keeps Duff (and his foe) fully on screen at the fences and the street edge")
 	for actor in [sample.player_model, sample.pirate_model]:
 		_check(actor.skeleton.get_bone_count() == 24 and actor.skeleton.find_bone("RightHand") >= 0,
 			"%s is a skinned mesh on the 24-bone humanoid skeleton" % actor.name)

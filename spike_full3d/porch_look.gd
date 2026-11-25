@@ -12,6 +12,7 @@ const RIM_TINT := Color("#ffd29a")
 
 var env: Environment
 var lite := false
+static var stay_lite := false  ## once the phone proved slow, retries start lite too
 var slow_for := 0.0
 var warmup := 2.0  ## ignore the first seconds (shader compiles) before judging speed
 
@@ -45,7 +46,7 @@ func _setup(scene: Node3D, fighters: Array) -> void:
 		_pop(actor)
 		_contact_shadow(actor.get_parent())
 	_vignette(scene)
-	set_lite(OS.get_cmdline_user_args().has("--lite"))
+	set_lite(stay_lite or OS.get_cmdline_user_args().has("--lite"))
 
 func set_lite(on: bool) -> void:
 	lite = on
@@ -60,6 +61,7 @@ func _process(delta: float) -> void:
 		return
 	slow_for = slow_for + delta if Engine.get_frames_per_second() < LITE_BELOW else 0.0
 	if slow_for >= LITE_AFTER:
+		stay_lite = true
 		set_lite(true)
 
 ## Soft warm rim + thin ink outline, keeping each model's own Meshy texture.

@@ -16,8 +16,10 @@ const MODES := {
 const CLOSE_SIZE := 4.4
 const CLOSE_OFFSET := Vector3(0, 5.76, 7.8)
 const FOLLOW := 5.0     ## how fast it catches up (per second)
-const X_LIMIT := 3.4    ## keeps the fences at the edge of frame
-const Z_RANGE := Vector2(-1.2, 3.0)
+const X_LIMIT := 5.2    ## aim stops short of the fences; FIT pulls back for the rest
+const Z_RANGE := Vector2(-1.2, 4.6)
+const FIT_MARGIN := .86 ## every fighter's head and feet stay inside this share of the frame
+const FIT_MAX := 16.0   ## farthest it will pull back to keep both in frame
 
 var camera: Camera3D
 var mode := MODE
@@ -52,8 +54,29 @@ func goal(duff: Vector3, foe = null) -> Transform3D:
 	var dist := clampf(m[2] + apart * m[3], m[4], m[5])
 	var pitch := deg_to_rad(m[0])
 	var aim := mid + Vector3(0, m[6], 0)
-	var from := aim + Vector3(0, sin(pitch), cos(pitch)) * dist
-	return Transform3D.IDENTITY.translated(from).looking_at(aim)
+	var dir := Vector3(0, sin(pitch), cos(pitch))
+	var points := [duff, duff + Vector3.UP * 1.8]
+	if foe != null:
+		points += [foe, foe + Vector3.UP * 1.8]
+	var tf := Transform3D.IDENTITY.translated(aim + dir * dist).looking_at(aim)
+	while dist < FIT_MAX and not _fits(tf, points):  # never lose a fighter off the edge
+		dist += .25
+		tf = Transform3D.IDENTITY.translated(aim + dir * dist).looking_at(aim)
+	return tf
+
+## True when every point lands inside FIT_MARGIN of the frame seen from `tf` (perspective modes).
+func _fits(tf: Transform3D, points: Array) -> bool:
+	var size := camera.get_viewport().get_visible_rect().size if camera.is_inside_tree() else Vector2(16, 9)
+	var half_y := tan(deg_to_rad(camera.fov) * .5)
+	var half_x := half_y * size.x / size.y
+	var inv := tf.affine_inverse()
+	for p in points:
+		var local: Vector3 = inv * p
+		if local.z > -.1:
+			return false
+		if absf(local.x / -local.z) > half_x * FIT_MARGIN or absf(local.y / -local.z) > half_y * FIT_MARGIN:
+			return false
+	return true
 
 func snap(duff: Vector3, foe = null) -> void:
 	camera.global_transform = goal(duff, foe)
