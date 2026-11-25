@@ -104,6 +104,21 @@ instead of standing inside each other. `tools/play_bot.gd` plays the porch with 
 - Lite (the auto fallback under 50 FPS) also draws the 3D at 3/4 size and scales it up with 4.7's nearest filter,
   about 44% fewer pixels. Full vs lite: `docs/renders/porch3d/17_lite_nearest.jpg`.
 
+## HUD and menus (Nov 25 2026)
+
+Duff: "get the slice closer to the original hud and menus ... improve them". `porch_hud.gd` draws the main game's
+look (`scripts/ui_style.gd` + `hud.gd` colours and fonts, numbers x3 for the 960-wide view):
+- Phone status strip: clock from 7:00 AM, "Wed Day 1", Duff's HP as hearts, green cash pill. Objective line under it
+  with the gold "!" badge. Foe name plate + bar at the bottom (Porch Pirate, then Marketplace Mike).
+- Round A (bonk) and B (roll) buttons like the main game's; the TouchScreenButtons under them are invisible.
+  The VirtualJoystick is a faint cream ring with an ink-rimmed tip.
+- Speech bubbles in the dialogue look: plum panel, cream text, pink name tag. Duff opens with a line, the pirate answers.
+- Menus (pill buttons, MAIN teal / ALT plum / EXIT red): title card (APK only, or `-- --title`), pause sheet
+  (Resume, Retry, Graphics Full/Lite, Sound On/Off, Quit to title) from the pause button, Esc/P or Android back,
+  and on losing focus; KNOCKED OUT and PORCH SECURED cards with Retry / Play again. Retry skips the title.
+- Fonts Baloo 2 + Nunito (OFL, licences in `fonts/`), heart icon from the main game's `assets/art/ic_heart.png`.
+- Render: `docs/renders/porch3d/18_hud_menus.jpg` (`tools/hud_shots.gd`). Smoke is 68 checks.
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the

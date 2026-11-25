@@ -83,6 +83,19 @@ func _run() -> void:
 		_check(clips.all(func(c): return actor.has_clip(c)), "%s has real clips %s" % [actor.name, clips])
 		_check(actor.current in ["idle", "walking"] and actor.player.is_playing(), "%s starts in an idle or walk clip" % actor.name)
 
+	# HUD + menus in the main game's style (porch_hud.gd).
+	var hud = sample.hud
+	_check(hud != null and hud.screen == "" and sample.foe_status() == ["Porch Pirate", sample.PIRATE_HP, sample.PIRATE_HP]
+		and sample.bubble_name.text == "Duff" and hud.clock_text() == "7:00 AM",
+		"HUD up with the pirate's plate, 7:00 AM, and Duff opens the fight")
+	_check(hud.find_child("Pause", true, false) is TouchScreenButton and Rect2(hud.PAUSE).end.x <= view.x,
+		"phone-style pause button on screen")
+	hud.open_pause()
+	_check(paused and hud.screen == "pause" and hud.menu.find_children("*", "Button", true, false).size() == 5,
+		"pause sheet: Resume, Retry, Graphics, Sound, Quit to title; the fight stops")
+	hud.close_menu()
+	_check(not paused and hud.screen == "", "Resume closes the sheet and the fight runs again")
+
 	# Phone controls: a 4.7 VirtualJoystick on the left, big round HIT and DODGE on the right.
 	_check(sample.stick is VirtualJoystick and sample.stick.action_left == &"ui_left"
 		and sample.stick.joystick_mode == VirtualJoystick.JOYSTICK_DYNAMIC, "the stick is Godot 4.7's VirtualJoystick, dynamic")
@@ -355,6 +368,9 @@ func _run() -> void:
 	_check(sample.mike_hp == 0 and mm.current == "ko" and not sample.active and sample.mike.collision_layer == 0,
 		"Mike's KO clip plays and the porch is secured")
 
+	await _frames(120)  # the win card follows Mike's last line
+	_check(sample.hud.screen == "win" and paused, "PORCH SECURED card after Mike goes down")
+
 	Input.action_press("ui_right", .8)  # thumb still on the stick when Retry is tapped
 	sample._reset()
 	await scene_changed
@@ -371,7 +387,10 @@ func _run() -> void:
 	sample._tick_pirate()
 	sample._tick_pirate(sample.PIRATE_TELE + .01)
 	_check(sample.player_hp == 0 and not sample.active, "last pirate hit ends the encounter in defeat")
-	sample._reset()
+	await _frames(90)
+	_check(sample.hud.screen == "ko" and paused, "KNOCKED OUT card after Duff goes down")
+	sample.retry()
 	await scene_changed
-	_check(current_scene.active and current_scene.player_hp == 5, "retry after defeat restores Duff")
+	_check(current_scene.active and current_scene.player_hp == 5 and not paused and current_scene.hud.screen == "",
+		"retry after defeat restores Duff and skips the title")
 	quit(1 if failures else 0)
