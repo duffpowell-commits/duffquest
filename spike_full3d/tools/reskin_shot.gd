@@ -9,7 +9,7 @@ func _run() -> void:
 	var args := OS.get_cmdline_user_args()
 	var out: String = args[0] if args.size() > 0 else "/tmp/reskin.png"
 	var base: String = args[1] if args.size() > 1 else "mike"
-	var skin: String = args[2] if args.size() > 2 else "res://models/sendback_Image_0.jpg"
+	var skin: String = args[2] if args.size() > 2 else "res://tools/reskins/sendback_Image_0.jpg"
 	root.size = Vector2i(1280, 720)
 	var world := Node3D.new()
 	root.add_child(world)

@@ -2,7 +2,7 @@
 body -> Sir Sends-It-Back). Paints the base-colour texture by body region (from vertex height, rasterised
 into UV space) and colour class (skin / shirt / shorts / dark), keeping the original shading.
 
-    python3 tools/reskin.py models/mike.glb models/mike_Image_0.jpg <recipe> <out.jpg>
+    python3 tools/reskin.py models/mike.glb models/mike_Image_0.jpg <recipe> <out.jpg>   (keep outputs in tools/reskins/ until a fight uses them: tools/ never ships)
 recipe: sendback (the only one so far; add more in RECIPES).
 """
 import sys
