@@ -22,7 +22,7 @@ slice to see how it feels). Duff's model comes from his own approved turnaround
 
 Phone: Releases -> `dev` -> `duffquest-porch3d.apk` (built on every push to main, own package id so it sits
 next to the real game). Desktop: open this folder as a Godot project. Arrows/WASD move, Space hits (jab
-then hook), Shift dodges, R retries; the on-screen buttons do the same. Beat the pirate, walk over the
+then hook), Shift dodges, K kicks, R (or E/V) fires the special, Backspace retries; the on-screen buttons do the same. Beat the pirate, walk over the
 parcel, then beat Marketplace Mike. The top-right counter shows FPS: the bar is 60 on Duff's phone.
 
 ## Look: golden hour (Duff's pick, Nov 25 2026)
@@ -118,6 +118,19 @@ Duff: "add a kick button" and "lets discuss specials and combos". He picked the 
 - Kicks have a .9 s cooldown and a plain kick only staggers (HIT_ANIM); only the launcher arms the wall +1.
 - Bot: careful wins; the masher (taps again mid-swing) and the kick spammer (`kickmash`) are KO'd. Preview: `tools/combo_shots.gd`.
 
+## Red Right Hand, the first special (Nov 25 2026)
+
+Duff wanted a dashing fire-fist special ("burn knuckle" feel; ours is original: name from his own right-hand tattoo).
+- **Meter**: +14 per landed hit, +10 per hit taken. The red **R** button (or R/E/V; retry moved to Backspace) shows it as a ring and pulses when full.
+- **R** with a full meter: .9 s wind-up: crouch, big twist, the burning fist held cocked (untouchable), then a 4 m dash in .4 s with the fist frozen fully out, fire and a
+  red trail coming off the right hand. Contact does 3 through any guard (even Mike's rant), big shove, red flash. A whiff
+  skids to a stop in a .45 s recovery with no protection.
+- Swing: Duff's own right straight (`jab`) with a big coil baked in by `tools/bake_burn.gd` (hips -32 deg, chest -62 deg, a 9 cm crouch, a .3 s hold,
+  fist cocked behind the shoulder, released into the punch); `RRH_PEAK` (.76) is where the fist is fully out. Duff turned
+  down the Meshy "Kung Fu Punch" (96) cut ("doesn't look like a punch at all"); that clip is a spinning routine. Bigger
+  wind-up, then even bigger, were his calls.
+- Preview: `tools/rrh_shots.gd`, render `docs/renders/porch3d/20_red_right_hand.jpg`. Smoke is 92 checks.
+
 ## HUD and menus (Nov 25 2026)
 
 Duff: "get the slice closer to the original hud and menus ... improve them". `porch_hud.gd` draws the main game's
@@ -178,6 +191,7 @@ judged on the phone.
 | Duff rig + 6 clips (idle 0, jab 192, hook 193, dodge 156, hit 178, KO 187) | rigging 01a20f85… | 5 + 18 |
 | Duff re-rig (Nov 25; the first rig's full id wasn't recorded and Meshy can't list rigs) | rigging 01a2139a-2c8e-704b-b2e6-af6cb09b81f3 | 5 |
 | Duff push kick (Spartan Kick, 206), on that rig; baked into `duff_clips.res` as `kick` | animate 01a2139a-82d8-72a3-b49b-0f65e56136a8 | 3 |
+| Duff Red Right Hand swing (Kung Fu Punch, 96), cut by `tools/bake_burn.gd` into `burn` | animate 01a213c7-dde8-76e2-aa4d-ed471a567610 | 3 |
 | Pirate A-pose reference from the approved render | image-to-image 01a20f81-9222… | 9 |
 | Pirate model, 12k tris, 2K texture | image-to-3d 01a20f81-fc3a… | 30 |
 | Pirate rig + 4 clips (idle 0, jab 191, hit 178, KO 187) | rigging 01a20f83-e400… | 5 + 12 |
