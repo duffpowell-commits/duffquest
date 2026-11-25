@@ -122,13 +122,13 @@ Duff: "add a kick button" and "lets discuss specials and combos". He picked the 
 
 Duff wanted a dashing fire-fist special ("burn knuckle" feel; ours is original: name from his own right-hand tattoo).
 - **Meter**: +14 per landed hit, +10 per hit taken. The red **R** button (or E/V) shows it as a ring and pulses when full.
-- **R** with a full meter: .6 s wind-up with a big coil (untouchable), then a 4 m dash in .4 s with the fist frozen fully out, fire and a
+- **R** with a full meter: .9 s wind-up: crouch, big twist, the burning fist held cocked (untouchable), then a 4 m dash in .4 s with the fist frozen fully out, fire and a
   red trail coming off the right hand. Contact does 3 through any guard (even Mike's rant), big shove, red flash. A whiff
   skids to a stop in a .45 s recovery with no protection.
-- Swing: Duff's own right straight (`jab`) with a big coil baked in by `tools/bake_burn.gd` (hips -20 deg, chest -40 deg,
-  fist cocked behind the shoulder, released into the punch); `RRH_PEAK` (.684) is where the fist is fully out. Duff turned
+- Swing: Duff's own right straight (`jab`) with a big coil baked in by `tools/bake_burn.gd` (hips -32 deg, chest -62 deg, a 9 cm crouch, a .3 s hold,
+  fist cocked behind the shoulder, released into the punch); `RRH_PEAK` (.76) is where the fist is fully out. Duff turned
   down the Meshy "Kung Fu Punch" (96) cut ("doesn't look like a punch at all"); that clip is a spinning routine. Bigger
-  wind-up was his call.
+  wind-up, then even bigger, were his calls.
 - Preview: `tools/rrh_shots.gd`. Smoke is 90 checks.
 
 ## HUD and menus (Nov 25 2026)

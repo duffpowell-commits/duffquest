@@ -1,15 +1,20 @@
 extends SceneTree
 ## Bake the Red Right Hand swing (`burn`) from Duff's own right straight (`jab`, Meshy Right Jab from Guard)
 ## with a big coil added: the hips and shoulders twist back and the fist cocks before the drive.
-## Duff Nov 25: "bigger wind-up" and the Kung Fu Punch cut "doesn't look like a punch at all".
+## Duff Nov 25: "bigger wind-up", the Kung Fu Punch cut "doesn't look like a punch at all", then "even bigger wind-up":
+## deeper twist, a crouch, and the cocked fist held before the release.
 ##   godot --headless --path . --script tools/bake_burn.gd
 const SRC := "jab"
-const LENGTH := .95       ## the jab's guard -> full extension (.65 s) -> part way back
-const COIL_HIPS := -20.0  ## extra degrees the hips turn away at the top of the coil
-const COIL_CHEST := -40.0 ## extra degrees the chest turns away on top of that (right shoulder back)
-const COIL_IN := .42      ## coil is full here...
-const COIL_HOLD := .47    ## ...held to here...
-const COIL_OUT := .62     ## ...and fully released by here (fist lands at .65)
+const SRC_END := .95      ## the jab's guard -> full extension (.65 s) -> part way back
+const COCK := .42         ## jab time where the fist is furthest back: held here
+const HOLD := .3          ## seconds the cocked fist is held (the jab freezes, the coil keeps deepening)
+const LENGTH := SRC_END + HOLD
+const COIL_HIPS := -32.0  ## extra degrees the hips turn away at the top of the coil
+const COIL_CHEST := -62.0 ## extra degrees the chest turns away on top of that (right shoulder back)
+const DIP := 9.0          ## hips sink this many cm into the coil
+const COIL_IN := .42      ## coil 80% here...
+const COIL_FULL := COCK + HOLD  ## ...full at the end of the hold...
+const COIL_OUT := COCK + HOLD + .2  ## ...and fully released by here (fist lands at .95)
 const STEP := 1.0 / 30
 
 func _initialize() -> void:
@@ -27,13 +32,16 @@ func _initialize() -> void:
 		anim.track_set_interpolation_type(nt, src.track_get_interpolation_type(t))
 		var time := 0.0
 		while time <= LENGTH + .001:
-			var v = _sample(src, t, time)
+			var st := time if time < COCK else (COCK if time < COCK + HOLD else time - HOLD)
+			var v = _sample(src, t, st)
 			var w := _coil(time)
 			if type == Animation.TYPE_ROTATION_3D and bone == "Hips":
 				v = Quaternion(Vector3.UP, deg_to_rad(COIL_HIPS * w)) * v
+			elif type == Animation.TYPE_POSITION_3D and bone == "Hips":
+				v -= Vector3(0, DIP * w, 0)
 			elif type == Animation.TYPE_ROTATION_3D and bone == "Spine02":
 				# turn the chest about the world up axis, expressed in the hips' frame
-				var qh: Quaternion = src.rotation_track_interpolate(hips_rot, time)
+				var qh: Quaternion = src.rotation_track_interpolate(hips_rot, st)
 				v = qh.inverse() * Quaternion(Vector3.UP, deg_to_rad(COIL_CHEST * w)) * qh * v
 			anim.track_insert_key(nt, minf(time, LENGTH), v)
 			time += STEP
@@ -46,10 +54,10 @@ func _initialize() -> void:
 
 func _coil(time: float) -> float:
 	if time < COIL_IN:
-		return smoothstep(0, COIL_IN, time)
-	if time < COIL_HOLD:
-		return 1.0
-	return 1.0 - smoothstep(COIL_HOLD, COIL_OUT, time)
+		return .8 * smoothstep(0, COIL_IN, time)
+	if time < COIL_FULL:
+		return lerpf(.8, 1.0, (time - COIL_IN) / (COIL_FULL - COIL_IN))
+	return 1.0 - smoothstep(COIL_FULL, COIL_OUT, time)
 
 func _sample(a: Animation, t: int, time: float):
 	match a.track_get_type(t):

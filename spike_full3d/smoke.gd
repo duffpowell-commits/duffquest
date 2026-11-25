@@ -386,9 +386,9 @@ func _run() -> void:
 	sample.red_right_hand()
 	_check(sample.meter == 0 and sample.special_time > 0 and sample.invulnerable > 0, "a full meter fires Red Right Hand: meter spent, Duff untouchable in the wind-up")
 	sample.set_physics_process(true)
-	await create_timer(1.4, true, false, true).timeout  # real time: the hit-stop slows the first frames
+	await create_timer(2.0, true, false, true).timeout  # real time: the hit-stop slows the first frames
 	sample.set_physics_process(false)
-	_check(sample.special_hit and sample.pirate_hp == sample.PIRATE_HP - sample.RRH_DAMAGE and sample.player.position.z < 1.6,
+	_check(sample.special_hit and sample.pirate_hp == sample.PIRATE_HP - sample.RRH_DAMAGE and sample.player.position.z < 2.2,
 		"the dash closes the gap (3.5 m, he walks in too) and lands %d through his guard (%d HP, Duff at %s)" % [sample.RRH_DAMAGE, sample.pirate_hp, sample.player.position])
 	_check(sample.special_time == 0 and not sample.rrh_fire.emitting and not sample.rrh_trail.visible, "the fire and trail go out after the special")
 	# A whiff: nobody in the path, he skids to a stop and is open.
