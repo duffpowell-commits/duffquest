@@ -63,6 +63,7 @@ const DASH_SPEED := 9.0
 const KICK_ANIM := .55        ## K: the push kick. Slower than a punch, longer reach, shoves him back
 const KICK_LOCK := .42        ## no other swing until the kick is out
 const KICK_REACH := 2.05
+const KICK_COOL := .9          ## seconds between kicks: going through a guard has a price
 const KICK_KNOCK := 2.2       ## times a punch's shove
 const LAUNCH_KNOCK := 3.4     ## A A K: the kick ends the combo as a launcher
 const WALL_TIME := .5         ## a launched foe that hits a wall, fence or planter within this takes 1 more
@@ -134,6 +135,7 @@ var launched := {}            ## foe -> seconds left in which a wall hit hurts
 var wall_hits := 0             ## launched foes that hit a wall (for tests)
 var perfect_at := -99.0       ## clock of the last dodge that slipped a hit
 var kick_requested := false
+var kick_cool := 0.0
 var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
 var callout_time := 0.0
 
@@ -235,6 +237,7 @@ func _physics_process(delta: float) -> void:
 	pirate_recovery = maxf(0, pirate_recovery - delta)
 	mike_recovery = maxf(0, mike_recovery - delta)
 	invulnerable = maxf(0, invulnerable - delta)
+	kick_cool = maxf(0, kick_cool - delta)
 	var direction := _movement()
 	if dodge_time <= 0 and direction != Vector3.ZERO:
 		facing = direction.normalized()
@@ -333,7 +336,7 @@ func _pirate_windup(seconds: float) -> void:
 
 ## One point of damage unless Duff is in dodge / hit immunity. Returns true when it landed.
 func _hurt_duff(from: Vector3) -> bool:
-	if invulnerable > 0 and dodge_recovery > 0 and active:
+	if invulnerable > 0 and clock - last_dodge <= .3 and active:
 		perfect_at = clock  # slipped it with a roll: K now is a counter kick
 		_call("PERFECT!")
 	if invulnerable > 0 or not active:
@@ -427,11 +430,14 @@ func _kick() -> void:
 	if attack_time > 0:
 		combo_broken = true
 		return
+	var counter := clock - perfect_at <= PERFECT_WINDOW
+	if kick_cool > 0 and not counter:
+		return
 	var rhythm := combo > 0 and not combo_broken and clock - combo_at <= COMBO_GAP
 	combo_broken = false
-	var counter := clock - perfect_at <= PERFECT_WINDOW
 	var launcher := rhythm and combo >= 2
 	attack_time = KICK_LOCK
+	kick_cool = KICK_COOL
 	var offset := foe.position - player.position
 	offset.y = 0
 	if counter:
@@ -458,8 +464,9 @@ func _kick() -> void:
 		feel.push(foe, offset, feel.KNOCK_HIT * (LAUNCH_KNOCK if launcher else KICK_KNOCK))
 		if counter:
 			feel.slow_mo(.45)
-	launched[foe] = WALL_TIME
-	_damage(foe, damage, FINISHER_STUN)
+	if launcher:
+		launched[foe] = WALL_TIME
+	_damage(foe, damage, FINISHER_STUN if launcher or counter else HIT_ANIM)
 
 ## Hit damage on a foe, with the pirate's or Mike's reaction (stun = seconds he can't swing).
 func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
@@ -489,13 +496,16 @@ func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
 
 func _hit_wall(actor: CharacterBody3D) -> bool:
 	for i in actor.get_slide_collision_count():
-		var other := actor.get_slide_collision(i).get_collider()
+		var hit := actor.get_slide_collision(i)
+		if absf(hit.get_normal().y) >= .5:
+			continue  # the ground is not a wall
+		var other := hit.get_collider()
 		if other is CollisionObject3D and other.collision_layer & WORLD_LAYER and not other is CharacterBody3D:
 			return true
 	return false
 
 func _wall_splat(foe: CharacterBody3D) -> void:
-	if not active or (foe == pirate and pirate_hp <= 0) or (foe == mike and mike_hp <= 0):
+	if not active or (foe == pirate and pirate_hp <= 0) or (foe == mike and (mike_hp <= 0 or mike_state == "taunt")):
 		return
 	wall_hits += 1  # no callout (Duff, Nov 25): the thud and shake say it
 	if feel:

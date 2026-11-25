@@ -19,6 +19,7 @@ func _plain(sample) -> void:
 	sample.combo = 0
 	sample.combo_broken = false
 	sample.last_dodge = -99.0
+	sample.kick_cool = 0
 
 ## The next press in rhythm: the swing is over and it comes .4 s after the last hit.
 func _beat(sample) -> void:
@@ -293,17 +294,18 @@ func _run() -> void:
 		and sample.feel.knock_of(sample.pirate).length() > sample.feel.KNOCK_HIT * 2,
 		"K reaches past a punch, goes through the guard and shoves him back")
 	sample.pirate.position = Vector3(0, 0, 1)
-	sample.pirate_hp = sample.PIRATE_HP
+	sample.pirate_hp = sample.PIRATE_HP + 2  # so the wall hit below doesn't KO him
 	_plain(sample)
 	sample._attack()
 	_beat(sample)
 	sample._attack()
 	_beat(sample)
+	sample.kick_cool = 0
 	sample._kick()
-	_check(sample.pirate_hp == sample.PIRATE_HP - 4 and sample.callout == "LAUNCHER!" and sample.launched.has(sample.pirate),
+	_check(sample.pirate_hp == sample.PIRATE_HP - 2 and sample.callout == "LAUNCHER!" and sample.launched.has(sample.pirate),
 		"A A K is a launcher for 2")
 	sample._wall_splat(sample.pirate)
-	_check(sample.pirate_hp == sample.PIRATE_HP - 5 and sample.wall_hits == 1 and sample.callout == "LAUNCHER!",
+	_check(sample.pirate_hp == sample.PIRATE_HP - 3 and sample.wall_hits == 1 and sample.callout == "LAUNCHER!",
 		"a launched foe into a wall takes 1 more, with a thud and no callout")
 	sample.pirate_hp = sample.PIRATE_HP
 	sample.pirate.position = Vector3(1.2, 0, 1.2)
@@ -311,12 +313,46 @@ func _run() -> void:
 	_plain(sample)
 	var hp_before: int = sample.player_hp
 	sample.invulnerable = .3
-	sample.dodge_recovery = .3
+	sample.last_dodge = sample.clock - .1
 	sample._hurt_duff(sample.pirate.position)
 	sample.attack_time = 0
 	sample._kick()
 	_check(sample.player_hp == hp_before and sample.pirate_hp == sample.PIRATE_HP - 2 and sample.callout == "COUNTER KICK!",
 		"roll through a hit, then K: a homing counter kick for 2")
+	var hp_after_counter: int = sample.pirate_hp
+	sample.attack_time = 0
+	sample._kick()
+	_check(sample.pirate_hp == hp_after_counter and sample.kick_cool > 0, "kicks have a cooldown")
+	# Real physics: a plain kick in the open isn't a wall hit; a launcher into the planter is.
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.wall_hits = 0
+	sample.player.position = Vector3(-3, 0, 2.5)
+	sample.pirate.position = Vector3(-3, 0, 1.2)
+	sample.facing = Vector3.FORWARD
+	_plain(sample)
+	sample.pirate_recovery = 9.0
+	sample.launched = {}
+	sample._kick()
+	sample.set_physics_process(true)
+	await create_timer(.7, true, false, true).timeout  # real time: the hit-stop slows the first frames
+	sample.set_physics_process(false)
+	_check(sample.pirate_hp == sample.PIRATE_HP - 1 and sample.wall_hits == 0 and sample.launched.is_empty(),
+		"a plain kick in the open does 1: the ground isn't a wall (%d HP, %d walls, active %s, %s)" % [sample.pirate_hp, sample.wall_hits, sample.active, sample.callout])
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.player.position = sample.PLANTER_AT + Vector3(-.3, 0, 2.6)
+	sample.pirate.position = sample.PLANTER_AT + Vector3(-.3, 0, 1.15)
+	sample.facing = Vector3.FORWARD
+	_plain(sample)
+	sample.combo = 2
+	sample.combo_at = sample.clock
+	sample._kick()
+	sample.set_physics_process(true)
+	await create_timer(.7, true, false, true).timeout
+	sample.set_physics_process(false)
+	_check(sample.wall_hits == 1 and sample.pirate_hp == sample.PIRATE_HP - 3, "a launcher into the planter takes 1 more (%d HP, %d walls, at %s)" % [sample.pirate_hp, sample.wall_hits, sample.pirate.position])
+	sample.pirate_recovery = 0
+	sample.launched = {}
+	sample.player.position = Vector3(0, 0, 2)
 	sample.pirate.position = Vector3(0, 0, 1)
 	sample.facing = Vector3.FORWARD
 	sample.pirate_hp = 3
@@ -333,8 +369,8 @@ func _run() -> void:
 		"defeated pirate plays its KO clip, drops the visible parcel and clears actor collision")
 	_check(not sample.mike.visible and sample.mike.collision_layer == 0 and sample.mike_state == "away",
 		"Marketplace Mike waits off-screen during the pirate fight")
-	_check(sample.feel.trauma > 0 and sample.feel.knock_of(sample.player) != Vector3.ZERO,
-		"landed and taken hits shake the camera and knock fighters back")
+	_check(sample.feel.trauma > 0 and sample.feel.knock_of(sample.pirate) != Vector3.ZERO,
+		"landed hits shake the camera and knock the foe back")
 	await create_timer(1.0, true, false, true).timeout
 	_check(is_equal_approx(Engine.time_scale, 1.0), "hit-stop lets go of the world")
 	sample.player_hp = 2

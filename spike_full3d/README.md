@@ -115,7 +115,8 @@ Duff: "add a kick button" and "lets discuss specials and combos". He picked the 
 - **Roll → A** within .55 s: homing dash hook (reach 2.6). **Roll through a hit → K** within .6 s: counter kick
   in slow motion for 2.
 - Gold callouts under the strip (2 HIT, KNOCKDOWN!, LAUNCHER!, DASH HOOK!, PERFECT!, COUNTER KICK!), .75 s of real time.
-- Bot: careful wins; the masher (taps again mid-swing) is still KO'd. Preview: `tools/combo_shots.gd`.
+- Kicks have a .9 s cooldown and a plain kick only staggers (HIT_ANIM); only the launcher arms the wall +1.
+- Bot: careful wins; the masher (taps again mid-swing) and the kick spammer (`kickmash`) are KO'd. Preview: `tools/combo_shots.gd`.
 
 ## HUD and menus (Nov 25 2026)
 
