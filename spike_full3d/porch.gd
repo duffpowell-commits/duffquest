@@ -2,6 +2,7 @@ extends Node3D
 
 const Art = preload("porch_art.gd")
 const RigActor = preload("rig_actor.gd")
+const Kit = preload("porch_kit.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
@@ -482,7 +483,11 @@ func _build_street() -> void:
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.size = CAMERA_SIZE
 	camera.make_current()
-	Art.meshy_set(self, PLANTER_AT, PLANTER_SIZE)
+	if OS.get_cmdline_user_args().has("--kit"):  # our own set, to compare with the Meshy one
+		Kit.build(self, PLANTER_AT, PLANTER_SIZE)
+		Art.ground(self)
+	else:
+		Art.meshy_set(self, PLANTER_AT, PLANTER_SIZE)
 	var lamp := OmniLight3D.new()  # porch light by the door
 	lamp.position = Vector3(0, 2.6, -2.9)
 	lamp.light_color = Color("#ffb15e")

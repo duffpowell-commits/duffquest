@@ -253,6 +253,11 @@ static func meshy_set(parent: Node3D, planter_at: Vector3, planter_size: Vector3
 		place(parent, "bush", Vector3(x, 0, -2.95), Vector3(0, .8, 0), x)
 	place(parent, "planter", planter_at, planter_size)
 	place(parent, "mailbox", Vector3(6.1, 0, 2.45), Vector3(0, 1.25, 0), -PI / 2)
+	ground(parent)
+
+
+# Lawn, sidewalk and street: shared by the Meshy set and our own kit (porch_kit.gd).
+static func ground(parent: Node3D) -> void:
 	var lawn := Sculpture.new()
 	lawn.box(Vector3(0, -.146, -.5), Vector3(22, .28, 12), Color.WHITE)
 	textured(lawn.finish(parent, "Lawn"), "grass", .3, Color("#b8c4a0"))
