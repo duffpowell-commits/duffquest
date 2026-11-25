@@ -7,6 +7,7 @@ extends Node
 
 const LITE_BELOW := 50.0
 const LITE_AFTER := 3.0
+const LITE_SCALE := .75  ## lite draws the 3D at this size, nearest-scaled up (4.7)
 const OUTLINE_PX := 1.6
 const RIM_TINT := Color("#ffd29a")
 
@@ -52,6 +53,9 @@ func set_lite(on: bool) -> void:
 	lite = on
 	env.glow_enabled = not on
 	get_viewport().msaa_3d = Viewport.MSAA_DISABLED if on else Viewport.MSAA_4X
+	# 4.7: draw the 3D at 3/4 size and scale it up with nearest filtering: about 44% fewer pixels, still crisp
+	get_viewport().scaling_3d_mode = Viewport.SCALING_3D_MODE_NEAREST if on else Viewport.SCALING_3D_MODE_BILINEAR
+	get_viewport().scaling_3d_scale = LITE_SCALE if on else 1.0
 
 func _process(delta: float) -> void:
 	if lite or OS.has_feature("editor"):  # judge speed only in exported builds (the phone)

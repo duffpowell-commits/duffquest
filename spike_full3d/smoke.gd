@@ -44,7 +44,9 @@ func _run() -> void:
 		"golden hour look: every fighter has rim, ink outline and a contact shadow; vignette on")
 	_check(look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_4X, "golden hour starts with glow and MSAA")
 	look.set_lite(true)
-	_check(not look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_DISABLED, "lite drops glow and MSAA")
+	_check(not look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_DISABLED
+		and sample.get_viewport().scaling_3d_mode == Viewport.SCALING_3D_MODE_NEAREST and sample.get_viewport().scaling_3d_scale < 1.0,
+		"lite drops glow and MSAA and draws the 3D at 3/4 size, nearest-scaled")
 	look.set_lite(false)
 	sample.fight_cam.snap(sample.player.position, sample.pirate.position)
 	var cam: Camera3D = sample.camera

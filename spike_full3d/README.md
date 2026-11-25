@@ -97,6 +97,13 @@ instead of standing inside each other. `tools/play_bot.gd` plays the porch with 
 - Mike talks in a speech bubble over his head (`_say()`). When the camera keeps his head near the top, the bubble sits
   beside it. The top line keeps only the objective. Frames: `docs/renders/porch3d/16_phone_controls.jpg`.
 
+## Godot 4.7 extras (Nov 25 2026)
+
+- Physics runs on Jolt (`physics/3d/physics_engine`, stable since 4.6). Smoke (62 checks) and both bot runs give the same
+  results as Godot Physics: careful wins at 5/5, the masher is KO'd.
+- Lite (the auto fallback under 50 FPS) also draws the 3D at 3/4 size and scales it up with 4.7's nearest filter,
+  about 44% fewer pixels. Full vs lite: `docs/renders/porch3d/17_lite_nearest.jpg`.
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the
