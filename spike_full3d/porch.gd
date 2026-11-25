@@ -78,7 +78,18 @@ const RRH_HIT_RADIUS := 1.05  ## the fist connects with anyone this close along 
 const RRH_DAMAGE := 3
 const RRH_KNOCK := 4.0        ## times a punch's shove
 const RRH_PEAK := .76  ## fist fully out in the burn clip (tools/bake_burn.gd: .95 s of 1.25)
-const RRH_CLIP := "burn"       ## the lunging right Duff picked; the left hook stands in until it is baked
+const RRH_CLIP := "burn"       ## Duff's right straight with a big coil (tools/bake_burn.gd)
+## Return to Sender: R with the foe up close grabs him and throws him over Duff's shoulder (Meshy Over
+## Shoulder Throw, Duff's pick Nov 25; tools/bake_toss.gd). Times are in the toss clip's seconds.
+const RTS_CLIP := "toss"
+const RTS_RANGE := 1.45       ## the foe this close and in front: R grabs instead of dashing
+const RTS_SPEED := 1.4        ## the clip plays this much faster than Meshy's
+const RTS_GRAB := .5          ## hands close on him
+const RTS_RELEASE := 2.2      ## thrown over the shoulder
+const RTS_FLY := .42          ## real seconds in the air
+const RTS_THROW := 2.0        ## m from Duff where he lands
+const RTS_DAMAGE := 3
+const STOOP_AT := Vector3(0, .19, -2.32)  ## the bottom step: where a thrown pirate's parcel lands
 const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
 
@@ -156,6 +167,12 @@ var rrh_glow: OmniLight3D
 var rrh_trail: MeshInstance3D
 var rrh_fire: CPUParticles3D
 var rrh_points: Array[Vector3] = []
+var toss_foe: CharacterBody3D  ## held / in the air during Return to Sender
+var toss_t := 0.0             ## seconds into the toss clip
+var toss_from := Vector3.ZERO
+var toss_land := Vector3.ZERO
+var toss_fly := -1.0          ## seconds in the air (-1 = not thrown yet)
+var tosses := 0               ## landed throws (for tests)
 var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
 var callout_time := 0.0
 
@@ -291,11 +308,12 @@ func _physics_process(delta: float) -> void:
 	var speed := Vector2(player.get_real_velocity().x, player.get_real_velocity().z).length()
 	player_model.move(minf(speed / PLAYER_SPEED, 1.0))
 	if pirate_hp > 0:
-		_tick_pirate(delta)
+		if toss_foe != pirate:
+			_tick_pirate(delta)
 	elif mike_state == "away":
 		if player.position.distance_to(package.position) <= .85:
 			_mike_arrives()
-	elif mike_state != "ko":
+	elif mike_state != "ko" and toss_foe != mike:
 		_tick_mike(delta)
 	_tick_sign(delta)
 
@@ -556,6 +574,11 @@ func red_right_hand() -> void:
 	if not active or meter < 100 or special_time > 0 or foe == null:
 		return
 	meter = 0
+	var near := foe.position - player.position
+	near.y = 0
+	if near.length() <= RTS_RANGE and player_model.has_clip(RTS_CLIP):
+		_return_to_sender(foe)
+		return
 	special_time = RRH_TIME
 	special_hit = false
 	invulnerable = maxf(invulnerable, RRH_WINDUP + RRH_DASH)  # a whiff leaves him open
@@ -578,6 +601,9 @@ func red_right_hand() -> void:
 		feel.sfx("tele", 0.0, 2.0)
 
 func _tick_special(delta: float) -> void:
+	if toss_foe:
+		_tick_toss(delta)
+		return
 	special_time = maxf(0, special_time - delta)
 	var into := RRH_TIME - special_time
 	rrh_glow.light_energy = clampf(into / RRH_WINDUP, 0, 1) * 1.4 if not special_hit else maxf(0, rrh_glow.light_energy - delta * 8)
@@ -612,8 +638,141 @@ func _tick_special(delta: float) -> void:
 	if special_time <= 0:
 		_end_special()
 
+## Return to Sender: grab the foe up close and throw him over Duff's shoulder for 3, through any guard.
+## The clip moves Duff; the game carries the foe in his hands and flies him to the landing spot.
+func _return_to_sender(foe: CharacterBody3D) -> void:
+	var length := player_model.player.get_animation("rig/" + RTS_CLIP).length
+	toss_foe = foe
+	toss_t = 0
+	toss_fly = -1
+	special_time = length / RTS_SPEED
+	special_hit = true  # never a dash
+	invulnerable = maxf(invulnerable, special_time)
+	attack_time = special_time
+	combo = 0
+	var offset := foe.position - player.position
+	offset.y = 0
+	facing = offset.normalized()
+	player_model.rotation.y = atan2(-facing.x, -facing.z)
+	player_model.strike(RTS_CLIP, special_time)
+	player_model.locked = special_time
+	if foe == mike and mike_state == "taunt":
+		mike_state = "stalk"  # grabbed mid-rant
+	_tell(null)
+	_call("RETURN TO SENDER!")
+	if feel:
+		feel.sfx("tele", 0.0, 2.0)
+
+func _tick_toss(delta: float) -> void:
+	special_time = maxf(0, special_time - delta)
+	toss_t += delta * RTS_SPEED
+	var foe := toss_foe
+	var model: Node3D = pirate_model if foe == pirate else mike_model
+	var height := PIRATE_HEIGHT if foe == pirate else MIKE_HEIGHT
+	var sk := player_model.skeleton
+	var hands := sk.global_transform * ((sk.get_bone_global_pose(sk.find_bone("LeftHand")).origin
+		+ sk.get_bone_global_pose(sk.find_bone("RightHand")).origin) * .5)
+	if toss_t >= RTS_GRAB and toss_t < RTS_RELEASE:
+		if foe.collision_layer != 0:
+			foe.collision_layer = 0  # in Duff's hands: no pushing either way
+			foe.collision_mask = 0
+			model.strike("hit", (RTS_RELEASE - RTS_GRAB) / RTS_SPEED + RTS_FLY)
+			if feel:
+				feel.sfx("bonk", 0.0, -4.0)
+				feel.add_trauma(.2)
+		var lift := clampf((toss_t - RTS_GRAB) / (RTS_RELEASE - RTS_GRAB), 0, 1)
+		var look := player.global_position - foe.global_position
+		model.rotation.y = atan2(-look.x, -look.z)
+		model.rotation.x = -lift * 1.2  # tipping back over the shoulder
+		_hold_at(foe, model, height, hands - Vector3(0, height * lerpf(.12, -.1, lift), 0))
+	elif toss_t >= RTS_RELEASE and toss_fly < 0:
+		toss_fly = 0
+		toss_from = foe.global_position + Basis.from_euler(model.rotation) * Vector3(0, height * .5, 0)
+		var out := hands - player.global_position
+		out.y = 0
+		out = out.normalized() if out.length() > .05 else -facing
+		toss_land = _clear_landing(player.global_position, out)
+	if toss_fly >= 0 and toss_fly < RTS_FLY:
+		toss_fly += delta / maxf(Engine.time_scale, .05)  # real time: the landing hit-stop shouldn't stall the arc
+		var k := minf(toss_fly / RTS_FLY, 1.0)
+		model.rotation.x = lerpf(-1.2, -PI * 1.5, k)  # head over heels, down on his front
+		var centre := toss_from.lerp(toss_land + Vector3.UP * height * .18, k) + Vector3.UP * sin(k * PI) * .8
+		_hold_at(foe, model, height, centre)
+		if k >= 1.0:
+			_toss_lands()
+	if special_time <= 0:
+		_end_special()
+
+## Put the foe's middle (half his height up his body) at `centre`, whatever way he is tipped.
+func _hold_at(foe: CharacterBody3D, model: Node3D, height: float, centre: Vector3) -> void:
+	foe.global_position = centre - Basis.from_euler(model.rotation) * Vector3(0, height * .5, 0)
+
+## Where a thrown foe comes down: RTS_THROW out, short of any fence, wall or planter.
+func _clear_landing(from: Vector3, out: Vector3) -> Vector3:
+	var land := from + out * RTS_THROW
+	var space := get_world_3d().direct_space_state
+	var ray := PhysicsRayQueryParameters3D.create(from + Vector3.UP * .5, land + Vector3.UP * .5, WORLD_LAYER)
+	var hit := space.intersect_ray(ray)
+	if hit:
+		land = Vector3(hit.position.x, 0, hit.position.z) - out * .45
+	land.y = 0
+	return land
+
+func _toss_lands() -> void:
+	var foe := toss_foe
+	var model: Node3D = pirate_model if foe == pirate else mike_model
+	toss_fly = RTS_FLY
+	foe.global_position = toss_land
+	foe.collision_layer = ACTOR_LAYER
+	foe.collision_mask = WORLD_LAYER | ACTOR_LAYER
+	tosses += 1
+	if feel:
+		feel.sfx("hit")
+		feel.add_trauma(.75)
+		feel.hit_stop(feel.HIT_STOP_KO)
+		feel.sfx("sting_ko", 0.0, -2.0)
+	hud.flash(Color(0.85, 0.08, 0.06), .3)
+	var was_pirate := foe == pirate
+	_damage(foe, RTS_DAMAGE, FINISHER_STUN * 1.5)
+	var down := (foe == pirate and pirate_hp == 0) or (foe == mike and mike_hp <= 0)
+	if down:
+		model.rotation.x = 0
+		model.player.stop()  # no blend from standing (the hit-stop would stretch it): already flat, skip the KO fall
+		model.player.play("rig/ko", 0.0)
+		model.player.seek(model.player.current_animation_length * .95, true)
+	else:
+		# flat on his face, then he springs back up while still stunned
+		model.rotation.x = PI * .5  # same as -1.5 PI: tween the short way back up
+		var rise := create_tween()
+		rise.tween_interval(.35)
+		rise.tween_property(model, "rotation:x", 0.0, .4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if was_pirate and pirate_hp == 0:
+		_send_parcel_home()
+
+## The thrown pirate's parcel sails back onto the stoop: Return to Sender.
+func _send_parcel_home() -> void:
+	var from := package.position
+	var arc := func(k: float) -> void:
+		package.position = from.lerp(STOOP_AT, k) + Vector3.UP * sin(k * PI) * 1.4
+		package.rotation.y = k * TAU
+	create_tween().tween_method(arc, 0.0, 1.0, .75).set_trans(Tween.TRANS_SINE)
+
+## Put a held or flying foe back on his feet (the fight ended mid-throw, or the throw is over).
+func _end_toss() -> void:
+	if toss_foe == null:
+		return
+	if toss_fly < RTS_FLY:
+		var model: Node3D = pirate_model if toss_foe == pirate else mike_model
+		model.rotation.x = 0
+		toss_foe.global_position.y = 0
+		if toss_foe.collision_layer == 0 and not ((toss_foe == pirate and pirate_hp <= 0) or (toss_foe == mike and mike_hp <= 0)):
+			toss_foe.collision_layer = ACTOR_LAYER
+			toss_foe.collision_mask = WORLD_LAYER | ACTOR_LAYER
+	toss_foe = null
+
 ## Fire out, glow and trail off, the frozen fist let go.
 func _end_special() -> void:
+	_end_toss()
 	if player_model.player.speed_scale == 0.0:
 		player_model.player.speed_scale = 1.0
 	if rrh_glow:
