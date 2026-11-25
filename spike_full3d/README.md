@@ -1,5 +1,7 @@
 # Duff Quest 3D porch encounter
 
+**Next coder: read `BUILDING.md` first** (how the slice is wired, adding foes/moves/zones, checks, rules, phase plan).
+
 A standalone Godot 4.7.2 vertical slice, fully 3D. Duff and the Porch Pirate are Meshy models on a real
 24-bone humanoid skeleton (glTF), driven by real clips: idle, walk, run, jab, hook, dodge, hit and KO
 (the pirate has idle, walk, run, jab, hit and KO). The frontage, stoop, fence, yard and planter from the
