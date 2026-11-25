@@ -179,7 +179,9 @@ repo; their photos never go here. Not in a scene yet (phase 4: home and the bloc
   `--zone=apartment` starts at home with nobody to fight.
 - The apartment (`zone_apartment.gd`) is built free (Godot shapes + kit textures, 0 credits): cutaway room,
   exposed brick, couch under the window facing the camera, coffee table, kitchenette + fridge, table and
-  stools, floor lamp, ceiling light, door back out. `spots` (couch seats, kitchen, table, door) are where
+  stools, and the baby's things (crib + mobile, play mat + gym + toys, bouncer, high chair, stroller, bottles,
+  monitor) plus clutter (laundry, shoes, mail, diaper bag, fridge drawings, plant, jacket). Also
+  floor lamp, ceiling light, door back out. Render `docs/renders/porch3d/27_home_lived_in.jpg`. `spots` (couch seats, kitchen, table, door) are where
   Madison and Brittany will stand at home (phase 4).
 - Explore camera (`porch_camera.gd` mode `explore`): higher, wider, follows Duff; each zone sets its bounds.
   Fights keep the low brawler camera.

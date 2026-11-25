@@ -16,6 +16,9 @@ const FRONT := 2.6       ## open edge toward the camera
 const WALL_H := 2.5
 const WALL_T := .2
 const DOOR_Z := -1.0     ## the door on the left wall (centre)
+const CRIB := Vector3(1.6, 0, -2.72)   ## against the back wall, under the picture
+const MAT := Vector3(-3.0, 0, 1.45)    ## play mat, front left
+const HIGH_CHAIR := Vector3(2.98, 0, .9)
 
 static func build(zones, root: Node3D) -> void:
 	var game = zones.game
@@ -171,6 +174,8 @@ static func build(zones, root: Node3D) -> void:
 	art.form(Vector3(1.75, 1.68, BACK + .07), Vector3(.12, .12, .01), Color("#27998f"))
 	art.finish(root, "Picture")
 	_lamp(root, "CeilingLight", Vector3(.3, 2.6, -.5), 1.5, 7.0)
+	_baby(game, root)
+	_clutter(game, root, kx)
 
 	# Walls and edges keep Duff in the room; the open front stops at the floor's edge.
 	game._collider("Ground", Vector3(0, -.16, mid_z), Vector3(HALF_W * 2 + 2, .32, depth + 2), root)
@@ -191,6 +196,8 @@ static func build(zones, root: Node3D) -> void:
 		"kitchen": Vector3(kx - .7, 0, -1.2),
 		"table": Vector3(dx0 - .55, 0, dz0),
 		"door": Vector3(-HALF_W + 1.2, 0, DOOR_Z),
+		"crib": Vector3(CRIB.x, 0, CRIB.z + .7),
+		"play_mat": Vector3(MAT.x + .5, 0, MAT.z),
 	}
 
 static func _lamp(root: Node3D, label: String, at: Vector3, energy: float, reach: float) -> void:
@@ -203,3 +210,147 @@ static func _lamp(root: Node3D, label: String, at: Vector3, energy: float, reach
 	light.add_to_group("zone_lamp")
 	root.add_child(light)
 	light.position = at
+
+## The baby's things (Duff, Nov 25: "more baby props, more lived in"): crib with a mobile, play mat with a
+## baby gym and toys, bouncer, high chair at the table, stroller by the door, bottles, a monitor.
+static func _baby(game, root: Node3D) -> void:
+	var wood := Color("#e9dcc6")
+	var crib := Art.Sculpture.new()
+	var c := CRIB
+	crib.box(c + Vector3(0, .3, 0), Vector3(1.25, .06, .66), wood)                    # mattress base
+	crib.box(c + Vector3(0, .36, 0), Vector3(1.18, .08, .6), Color("#f6f1e6"))        # mattress
+	crib.box(c + Vector3(0, .4, .05), Vector3(.5, .03, .4), Color("#a9c7d8"))         # blanket
+	crib.form(c + Vector3(-.42, .43, -.05), Vector3(.13, .07, .1), Color("#c79a6a"))  # teddy bear
+	crib.form(c + Vector3(-.42, .53, -.05), Vector3(.08, .08, .07), Color("#c79a6a"))
+	for dx in [-.6, .6]:
+		crib.box(c + Vector3(dx, .45, 0), Vector3(.06, .9, .7), wood)                  # end boards
+	for dz in [-.31, .31]:
+		crib.box(c + Vector3(0, .86, dz), Vector3(1.24, .04, .04), wood)              # top rails
+		for i in 11:
+			crib.box(c + Vector3(-.52 + i * .104, .62, dz), Vector3(.025, .46, .025), wood)  # slats
+	# Mobile over the crib: arm, ring, four hanging shapes.
+	crib.box(c + Vector3(.55, 1.12, 0), Vector3(.03, .52, .03), Color("#d8d2c6"))
+	crib.box(c + Vector3(.35, 1.37, 0), Vector3(.42, .03, .03), Color("#d8d2c6"))
+	crib.band(c + Vector3(.15, 1.33, 0), .16, Color("#d8d2c6"), Vector3.ZERO, .01)
+	var shapes := [Color("#f2c14e"), Color("#7cc4b4"), Color("#e8869a"), Color("#9ab4e8")]
+	for i in 4:
+		var a := i * TAU / 4
+		crib.form(c + Vector3(.15 + cos(a) * .16, 1.2, sin(a) * .16), Vector3(.05, .05, .05), shapes[i], Vector3.ZERO, 8)
+	crib.finish(root, "Crib")
+	game._collider("CribCollider", c + Vector3(0, .45, 0), Vector3(1.3, .9, .72), root)
+
+	# Play mat with a baby gym (two arches, hanging toys), stacking blocks, a duck, a ball.
+	var m := MAT
+	var play := Art.Sculpture.new()
+	play.box(m + Vector3(0, .012, 0), Vector3(1.3, .02, 1.0), Color("#f0e2c0"))
+	for i in 4:  # quilted squares
+		play.box(m + Vector3(-.33 + (i % 2) * .66, .024, -.25 + (i / 2) * .5), Vector3(.6, .01, .46),
+			[Color("#9fd0c4"), Color("#f4b6a0"), Color("#f7d98a"), Color("#b6c4ee")][i])
+	for side in [-1.0, 1.0]:
+		play.band(m + Vector3(0, .02, side * .3), .42, Color("#e8e2d6"), Vector3(PI / 2, 0, 0), .02)
+	play.box(m + Vector3(0, .43, 0), Vector3(.03, .03, .62), Color("#e8e2d6"))
+	for i in 3:
+		play.box(m + Vector3(0, .36, -.2 + i * .2), Vector3(.01, .12, .01), Color("#8a8a8a"))
+		play.form(m + Vector3(0, .29, -.2 + i * .2), Vector3(.05, .05, .05), shapes[i], Vector3.ZERO, 8)
+	var blocks := [[Vector3(.45, .06, .32), Color("#d9534f")], [Vector3(.45, .16, .32), Color("#5b9bd5")],
+		[Vector3(.58, .06, .2), Color("#f2c14e")], [Vector3(-.5, .06, .38), Color("#6cbf84")]]
+	for b in blocks:
+		play.box(m + b[0], Vector3(.1, .1, .1), b[1], Vector3(0, b[0].x * 3, 0))
+	play.form(m + Vector3(-.4, .06, -.3), Vector3(.07, .06, .06), Color("#f5d327"))   # rubber duck
+	play.form(m + Vector3(-.34, .1, -.3), Vector3(.04, .04, .04), Color("#f5d327"))
+	play.box(m + Vector3(-.31, .1, -.3), Vector3(.03, .015, .02), Color("#f08a24"))
+	play.form(m + Vector3(.75, .08, -.45), Vector3(.08, .08, .08), Color("#e8869a"), Vector3.ZERO, 10)  # ball
+	play.finish(root, "PlayMat")
+	# Bouncer next to the mat.
+	var bounce := Art.Sculpture.new()
+	var bp := m + Vector3(.2, 0, -.95)
+	bounce.box(bp + Vector3(0, .03, 0), Vector3(.5, .04, .62), Color("#b8b8be"))
+	bounce.form(bp + Vector3(0, .2, .04), Vector3(.22, .08, .3), Color("#7cc4b4"), Vector3(-.4, 0, 0))
+	bounce.form(bp + Vector3(0, .3, -.18), Vector3(.2, .1, .1), Color("#6aaea0"), Vector3(-.9, 0, 0))
+	bounce.box(bp + Vector3(0, .42, .12), Vector3(.42, .025, .025), Color("#d8d2c6"))
+	bounce.form(bp + Vector3(.1, .36, .12), Vector3(.04, .04, .04), Color("#f2c14e"), Vector3.ZERO, 8)
+	bounce.finish(root, "Bouncer")
+	game._collider("BouncerCollider", bp + Vector3(0, .2, 0), Vector3(.5, .4, .62), root)
+
+	# High chair at the dining table, tray with a sippy cup.
+	var hc := HIGH_CHAIR
+	var chair := Art.Sculpture.new()
+	for dx in [-.17, .17]:
+		for dz in [-.17, .17]:
+			chair.box(hc + Vector3(dx, .4, dz), Vector3(.04, .8, .04), Color("#f4f1ea"), Vector3(dz * -.5, 0, dx * .5))
+	chair.box(hc + Vector3(0, .72, 0), Vector3(.36, .06, .34), Color("#f4f1ea"))        # seat
+	chair.box(hc + Vector3(.16, .96, 0), Vector3(.05, .46, .34), Color("#f4f1ea"))      # back
+	chair.box(hc + Vector3(0, .8, 0), Vector3(.3, .03, .28), Color("#e8869a"))          # cushion
+	chair.box(hc + Vector3(-.22, .9, 0), Vector3(.2, .03, .42), Color("#f4f1ea"))       # tray
+	chair.form(hc + Vector3(-.24, .97, .1), Vector3(.035, .06, .035), Color("#7cc4b4"), Vector3.ZERO, 8)
+	chair.form(hc + Vector3(-.24, .92, -.1), Vector3(.05, .012, .05), Color("#f2c14e"), Vector3.ZERO, 10)  # bowl
+	chair.finish(root, "HighChair")
+	game._collider("HighChairCollider", hc + Vector3(0, .5, 0), Vector3(.45, 1.0, .45), root)
+
+	# Stroller parked by the door.
+	var sp := Vector3(-3.45, 0, .5)
+	var pram := Art.Sculpture.new()
+	pram.form(sp + Vector3(0, .62, 0), Vector3(.28, .2, .36), Color("#3d4a5c"))         # basket
+	pram.form(sp + Vector3(0, .78, -.16), Vector3(.27, .22, .2), Color("#2f3a4a"), Vector3(-.5, 0, 0))  # hood
+	pram.box(sp + Vector3(0, .9, .42), Vector3(.46, .03, .03), Color("#222222"))        # handle
+	for dx in [-.2, .2]:
+		pram.box(sp + Vector3(dx, .62, .28), Vector3(.03, .6, .03), Color("#8a8a8a"), Vector3(-.5, 0, 0))
+		for dz in [-.25, .25]:
+			pram.band(sp + Vector3(dx * 1.1, .1, dz), .09, Color("#202022"), Vector3(0, 0, PI / 2), .025)
+	pram.box(sp + Vector3(0, .3, 0), Vector3(.36, .04, .5), Color("#555555"))
+	pram.finish(root, "Stroller")
+	game._collider("StrollerCollider", sp + Vector3(0, .5, 0), Vector3(.55, 1.0, .9), root)
+
+## Everyday clutter: laundry, shoes, mail, plant, dishes, fridge drawings, a jacket, a TV remote, a diaper bag.
+static func _clutter(game, root: Node3D, kx: float) -> void:
+	var junk := Art.Sculpture.new()
+	# Laundry basket between the couch and the crib, a shirt spilling over.
+	var lb := Vector3(.55, 0, -2.75)
+	junk.box(lb + Vector3(0, .17, 0), Vector3(.5, .34, .36), Color("#e6ddcc"))
+	junk.form(lb + Vector3(0, .36, 0), Vector3(.24, .08, .17), Color("#8fb0c8"))
+	junk.form(lb + Vector3(.06, .38, .06), Vector3(.12, .06, .1), Color("#f4b6a0"))
+	junk.box(lb + Vector3(.18, .2, .22), Vector3(.24, .02, .22), Color("#c8483c"), Vector3(.9, .2, 0))
+	game._collider("LaundryCollider", lb + Vector3(0, .17, 0), Vector3(.5, .34, .36), root)
+	# Shoes by the door, a kid's pair too.
+	for sh in [[Vector3(-3.9, .04, -.15), Color("#2a2a2a"), .3], [Vector3(-3.72, .04, -.1), Color("#2a2a2a"), .3],
+			[Vector3(-3.9, .03, .15), Color("#e86a5a"), .12], [Vector3(-3.82, .03, .2), Color("#e86a5a"), .12]]:
+		junk.form(sh[0], Vector3(sh[2] * .35, .05, sh[2] * .5), sh[1])
+	# Diaper bag on the couch, a burp cloth over the arm, the remote.
+	junk.form(Vector3(-.15, .62, -2.55), Vector3(.18, .14, .1), Color("#d9a65a"))
+	junk.box(Vector3(-.15, .78, -2.55), Vector3(.2, .03, .03), Color("#8a5a2a"))
+	junk.box(Vector3(-2.1, .73, -2.65), Vector3(.12, .02, .3), Color("#f6f1e6"))
+	junk.box(Vector3(-1.5, .63, -2.5), Vector3(.16, .025, .05), Color("#1d1d20"), Vector3(0, .4, 0))
+	# Coffee table: a baby bottle, the monitor, mail.
+	var tz := BACK + .55 + 1.45
+	junk.form(Vector3(-.65, .47, tz - .12), Vector3(.035, .07, .035), Color("#f6f6f6"), Vector3.ZERO, 8)
+	junk.form(Vector3(-.65, .55, tz - .12), Vector3(.02, .025, .02), Color("#f2c14e"), Vector3.ZERO, 8)
+	junk.box(Vector3(-1.5, .46, tz + .12), Vector3.ONE * .08, Color("#efefef"))      # monitor
+	junk.form(Vector3(-1.5, .51, tz + .12), Vector3(.025, .025, .01), Color("#38c25a"))
+	for i in 3:
+		junk.box(Vector3(-1.38 + i * .03, .42 + i * .006, tz - .14), Vector3(.22, .004, .12), [Color("#f4f0e4"), Color("#d8c8a8"), Color("#e8e2f0")][i], Vector3(0, i * .4, 0))
+	# Kitchen: bottles drying on a rack, dishes, a fruit bowl, formula tin, drawings on the fridge.
+	junk.box(Vector3(kx - .05, .99, -.9), Vector3(.36, .04, .26), Color("#c8c8c8"))
+	for i in 3:
+		junk.form(Vector3(kx - .05, 1.08, -1.0 + i * .1), Vector3(.03, .08, .03), Color("#f8f8f8"), Vector3(0, 0, .3), 8)
+	for i in 3:
+		junk.form(Vector3(kx + .05, .98 + i * .02, -2.0), Vector3(.12, .012, .12), Color("#f0ece4"), Vector3.ZERO, 12)
+	junk.form(Vector3(kx - .1, 1.0, -.25), Vector3(.14, .05, .14), Color("#7a5236"), Vector3.ZERO, 12)
+	for f in [[Vector3(-.04, .05, 0), Color("#e94b3c")], [Vector3(.05, .05, .03), Color("#f2c14e")], [Vector3(0, .07, -.05), Color("#7dbb42")]]:
+		junk.form(Vector3(kx - .1, 1.0, -.25) + f[0], Vector3.ONE * .045, f[1], Vector3.ZERO, 8)
+	junk.form(Vector3(kx - .15, 1.03, -.55), Vector3(.06, .08, .06), Color("#f0d070"), Vector3.ZERO, 10)  # formula tin
+	var front := HALF_W - .33 - .05 - .37  # fridge front face
+	for d in [[Vector3(front - .005, 1.35, -2.95), Color("#fff8e0")], [Vector3(front - .005, 1.1, -2.62), Color("#e8f4ff")]]:
+		junk.box(d[0], Vector3(.01, .22, .18), d[1])
+		junk.box(d[0] + Vector3(-.006, .02, -.03), Vector3(.005, .06, .08), Color("#e8869a"))
+		junk.box(d[0] + Vector3(-.006, -.05, .04), Vector3(.005, .04, .06), Color("#5b9bd5"))
+	# A jacket thrown over a stool, a plant in the front-right corner, a bin.
+	junk.form(Vector3(2.2, .56, .28), Vector3(.2, .06, .18), Color("#4a4a52"))
+	junk.box(Vector3(2.2, .4, .45), Vector3(.18, .3, .02), Color("#4a4a52"))
+	var pot := Vector3(3.85, 0, 2.25)
+	junk.form(pot + Vector3(0, .17, 0), Vector3(.17, .17, .17), Color("#b4683c"), Vector3.ZERO, 12)
+	for i in 7:
+		var a := i * TAU / 7
+		junk.form(pot + Vector3(cos(a) * .12, .5 + (i % 3) * .07, sin(a) * .12), Vector3(.07, .18, .04), Color("#4f8a3c"), Vector3(sin(a) * .5, a, cos(a) * .5))
+	game._collider("PlantCollider", pot + Vector3(0, .3, 0), Vector3(.4, .6, .4), root)
+	junk.form(Vector3(kx - .1, .2, .35), Vector3(.14, .2, .14), Color("#3a3a40"), Vector3.ZERO, 10)  # bin
+	junk.finish(root, "Clutter")

@@ -740,6 +740,8 @@ func _run() -> void:
 	_check(home.has("Couch") and home.has("Kitchenette") and home.has("CoffeeTable") and home.has("DiningTable")
 		and home.has("Window") and home.has("Door") and zones.root.find_children("*", "StaticBody3D", true, false).size() >= 10,
 		"the apartment is dressed: couch, kitchenette, tables, window, door, walls you can't walk through")
+	_check(home.has("Crib") and home.has("PlayMat") and home.has("HighChair") and home.has("Stroller") and home.has("Bouncer")
+		and home.has("Clutter"), "lived in: crib, play mat, bouncer, high chair, stroller, everyday clutter")
 	_check(sample.fight_cam.mode == "explore" and zones.spots.has("couch_left") and zones.spots.has("kitchen"),
 		"the explore camera follows Duff indoors; spots wait for Madison and Brittany")
 	_check(not sample.has_node("Zone_porch") and sample.find_children("PorchLamp", "", true, false).is_empty(),

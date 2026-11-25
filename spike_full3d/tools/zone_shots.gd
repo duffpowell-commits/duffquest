@@ -39,7 +39,7 @@ func _run() -> void:
 		await _walk(s)
 		quit()
 		return
-	for spot in [["porch", Vector3(-1.2, 0, 1.0)], ["home", Vector3(-.4, 0, .2)]]:
+	for spot in ([["home", Vector3(-.4, 0, .2)]] if OS.get_cmdline_user_args().has("home") else [["porch", Vector3(-1.2, 0, 1.0)], ["home", Vector3(-.4, 0, .2)]]):
 		s.zones.arrive("porch" if spot[0] == "porch" else "apartment", spot[1])
 		s.player_model.rotation.y = 0.5
 		for t in [["0800", 480], ["1200", 720], ["1730", 1050], ["2130", 1290]]:
