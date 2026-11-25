@@ -13,7 +13,7 @@ const PLANTER_SIZE := Vector3(1.06, .62, .82)
 const PLAYER_SPEED := 4.6
 const PIRATE_SPEED := 2.1
 const PLAYER_HP := 5
-const PIRATE_HP := 3
+const PIRATE_HP := 5
 const DUFF_HEIGHT := 1.7
 const PIRATE_HEIGHT := 1.4
 ## Game time each one-shot clip is squeezed into (gameplay timing stays the same as the block-model slice).
@@ -24,10 +24,10 @@ const PIRATE_ATTACK_ANIM := .55
 ## Marketplace Mike (boss "mike" in scripts/boss.gd): walks in once the parcel is back. Easy on purpose.
 ## Melee jab up close; from range he "posts" you (throws his OBO sign) or charges ("Cash only!").
 const MIKE_HEIGHT := 1.65
-const MIKE_HP := 6
+const MIKE_HP := 8
 const MIKE_SPEED := 1.9
 const MIKE_RAGE_SPEED := 2.5
-const MIKE_SPECIAL_RANGE := 2.4  ## posting / charge only from at least this far
+const MIKE_SPECIAL_RANGE := 2.2  ## posting / charge only from at least this far
 const MIKE_SPECIAL_EVERY := 2.6  ## seconds between specials (x .7 once he rages)
 const POST_TELE := .7            ## wind-up before the sign leaves his hand: dodge then
 const SIGN_SPEED := 6.5
@@ -45,6 +45,14 @@ const PIRATE_STOP := 1.0     ## the pirate stops walking in at this distance
 const PIRATE_REACH := 1.15   ## and jabs from here
 const MIKE_STOP := 1.05
 const MIKE_REACH := 1.2
+## Real fight (Duff, Nov 25: "the pirate fights back harder", "Mike uses his sign and charge up close")
+const PIRATE_TELE := .4       ## the pirate's wind-up before a jab: dodge it or hit him first
+const PIRATE_REST := .9       ## after his jab
+const MIKE_JAB_TELE := .38
+const MIKE_SHOVE := 7.5       ## m/s: Mike's jab shoves Duff out to sign / charge range
+const COUNTER_TELE := .18     ## a blocked hit gets this quick counter
+const CHAIN_WINDOW := .9      ## hits closer together than this are one flurry
+const GUARD_AFTER := 2        ## a foe blocks the hit after this many in a flurry, then counters
 
 var player: CharacterBody3D
 var pirate: CharacterBody3D
@@ -87,6 +95,12 @@ var active := true
 var dodge_requested := false
 var attack_requested := false
 var touch: Dictionary = {}
+var clock := 0.0
+var pirate_wind := 0.0        ## > 0 while the pirate winds up a jab
+var chain := {}               ## foe -> [hits landed in this flurry, clock of the last]
+var tell_ring: MeshInstance3D
+var tell_foe: CharacterBody3D ## whose wind-up the red ring marks
+var blocked := 0              ## hits a foe has blocked (for the bot and tests)
 
 func _ready() -> void:
 	_build_street()
@@ -113,6 +127,7 @@ func _ready() -> void:
 		burst.form(offset * .25, Vector3(.22, .056, .045), Color("#ffca79"), Vector3(0, 0, angle), 6)
 	impact = burst.finish(self, "Impact")
 	impact.hide()
+	tell_ring = _tell_ring()
 	fight_cam.snap(player.position, current_foe())
 	feel = Feel.make(self, camera)
 	if not OS.get_cmdline_user_args().has("--plain"):
@@ -129,12 +144,17 @@ func current_foe():
 	return null
 
 func _process(delta: float) -> void:
+	tell_ring.visible = tell_foe != null and active
+	if tell_ring.visible:
+		tell_ring.position = tell_foe.position + Vector3.UP * .04
+		tell_ring.scale = Vector3.ONE * (1.0 + .12 * sin(clock * 30.0))
 	fight_cam.follow(delta, player.position, current_foe())
 	fps_label.text = "%d FPS%s" % [Engine.get_frames_per_second(), " LITE" if look and look.lite else ""]
 
 func _physics_process(delta: float) -> void:
 	if not active:
 		return
+	clock += delta
 	attack_time = maxf(0, attack_time - delta)
 	impact_time = maxf(0, impact_time - delta)
 	impact.visible = impact_time > 0.0
@@ -160,7 +180,7 @@ func _physics_process(delta: float) -> void:
 	var speed := Vector2(player.get_real_velocity().x, player.get_real_velocity().z).length()
 	player_model.move(minf(speed / PLAYER_SPEED, 1.0))
 	if pirate_hp > 0:
-		_tick_pirate()
+		_tick_pirate(delta)
 	elif mike_state == "away":
 		if player.position.distance_to(package.position) <= .85:
 			_mike_arrives()
@@ -190,22 +210,36 @@ func _move(actor: CharacterBody3D, motion: Vector3) -> void:
 	actor.velocity = Vector3(motion.x, -2, motion.z)
 	actor.move_and_slide()
 
-func _tick_pirate() -> void:
+func _tick_pirate(delta := 1.0 / 60) -> void:
 	var offset := player.position - pirate.position
 	offset.y = 0
 	var distance := offset.length()
 	var direction := offset.normalized()
 	if direction != Vector3.ZERO:
 		pirate_model.rotation.y = atan2(-direction.x, -direction.z)
+	if pirate_wind > 0:
+		_move(pirate, Vector3.ZERO)
+		pirate_model.move(0)
+		pirate_wind -= delta
+		if pirate_wind <= 0:
+			_tell(null)
+			pirate_recovery = PIRATE_REST
+			if distance <= PIRATE_REACH + .25 and _clear_strike(pirate, player):
+				_hurt_duff(pirate.position)
+		return
 	var lane := _side_spot(pirate, PIRATE_STOP) - pirate.position
 	lane.y = 0
 	_move(pirate, lane.normalized() * PIRATE_SPEED if lane.length() > .12 else Vector3.ZERO)
 	var speed := Vector2(pirate.get_real_velocity().x, pirate.get_real_velocity().z).length()
 	pirate_model.move(minf(speed / PIRATE_SPEED, 1.0) * .55)
 	if distance <= PIRATE_REACH and pirate_recovery <= 0 and _clear_strike(pirate, player):
-		pirate_recovery = 1.15
-		pirate_model.strike("jab", PIRATE_ATTACK_ANIM)
-		_hurt_duff(pirate.position)
+		_pirate_windup(PIRATE_TELE)
+
+## The pirate draws back for a jab: the red ring and the slow start of the clip are the tell.
+func _pirate_windup(seconds: float) -> void:
+	pirate_wind = seconds
+	pirate_model.strike("jab", seconds + .3)
+	_tell(pirate)
 
 ## One point of damage unless Duff is in dodge / hit immunity. Returns true when it landed.
 func _hurt_duff(from: Vector3) -> bool:
@@ -241,6 +275,9 @@ func _attack() -> void:
 		if feel:
 			feel.sfx("swing")
 		return
+	if _guards(foe):
+		_block(foe)
+		return
 	if feel:
 		var ko := (foe == mike and mike_hp <= 1) or (foe == pirate and pirate_hp <= 1)
 		feel.landed(foe, player.position, ko)
@@ -250,8 +287,12 @@ func _attack() -> void:
 	pirate_hp -= 1
 	_show_impact(pirate.position)
 	if pirate_hp > 0:
-		pirate_model.strike("hit", HIT_ANIM)
-		pirate_recovery = maxf(pirate_recovery, HIT_ANIM)  # staggered: no jab back during the hit clip
+		pirate_recovery = maxf(pirate_recovery, HIT_ANIM)  # staggered: no new jab during the hit clip
+		if pirate_wind <= 0:
+			pirate_model.strike("hit", HIT_ANIM)
+		# a wind-up has armour: hitting into it doesn't stop the jab. Dodge it, then punish.
+	else:
+		_tell(null)
 	if pirate_hp == 0:
 		var drop := pirate.position + Vector3.UP * .22
 		package.reparent(self)
@@ -262,6 +303,35 @@ func _attack() -> void:
 		pirate.collision_mask = 0
 		message.text = "Walk over to grab the parcel."
 	_update_hud()
+
+## Mashing gets read: the hit after GUARD_AFTER in one flurry is blocked. A dizzy Mike can't guard
+## (that's the reward for dodging his charge); a taunting one blocks everything.
+func _guards(foe: CharacterBody3D) -> bool:
+	if foe == mike and mike_state in ["dizzy", "charge"]:
+		return false
+	if foe == mike and mike_state == "taunt":
+		return true  # his price-drop rant is no opening
+	var flurry: Array = chain.get(foe, [0, -99.0])
+	if clock - flurry[1] > CHAIN_WINDOW:
+		flurry = [0, clock]
+	if flurry[0] >= (GUARD_AFTER - 1 if foe == mike and mike_raged else GUARD_AFTER):  # raged, he reads you faster
+		chain.erase(foe)
+		return true
+	chain[foe] = [flurry[0] + 1, clock]
+	return false
+
+## A blocked hit: a dull bonk, a small shake, and the foe swings straight back.
+func _block(foe: CharacterBody3D) -> void:
+	blocked += 1
+	_show_impact(foe.position)
+	if feel:
+		feel.sfx("bonk")
+		feel.add_trauma(.15)
+	if foe == pirate:
+		pirate_recovery = 0
+		_pirate_windup(COUNTER_TELE)
+	else:
+		_mike_jab(COUNTER_TELE)
 
 ## Who Duff's punches can land on right now.
 func _foe() -> CharacterBody3D:
@@ -298,9 +368,8 @@ func _tick_mike(delta: float) -> void:
 			if direction != Vector3.ZERO:
 				mike_model.rotation.y = atan2(-direction.x, -direction.z)
 			if distance <= MIKE_REACH and mike_recovery <= 0 and _clear_strike(mike, player):
-				mike_recovery = .8 if mike_raged else 1.15
-				mike_model.strike("jab", PIRATE_ATTACK_ANIM)
-				_hurt_duff(mike.position)
+				_mike_jab(MIKE_JAB_TELE)
+				return
 			elif mike_cool <= 0 and distance >= MIKE_SPECIAL_RANGE and active:
 				_mike_special(direction)
 			var speed := MIKE_RAGE_SPEED if mike_raged else MIKE_SPEED
@@ -313,6 +382,19 @@ func _tick_mike(delta: float) -> void:
 			_move(mike, heading * speed if walking else Vector3.ZERO)
 			var pace := Vector2(mike.get_real_velocity().x, mike.get_real_velocity().z).length()
 			mike_model.move(minf(pace / MIKE_SPEED, 1.0) * .55)
+		"jab_tele":
+			_move(mike, Vector3.ZERO)
+			mike_model.move(0)
+			if direction != Vector3.ZERO:
+				mike_model.rotation.y = atan2(-direction.x, -direction.z)
+			if mike_timer <= 0:
+				mike_state = "stalk"
+				_tell(null)
+				mike_recovery = .8 if mike_raged else 1.15
+				if distance <= MIKE_REACH + .25 and _clear_strike(mike, player) and _hurt_duff(mike.position):
+					if feel:  # the shove sends Duff out to where the sign and the charge reach him
+						feel.push(player, player.position - mike.position, MIKE_SHOVE)
+					mike_cool = minf(mike_cool, .35)
 		"post":
 			_move(mike, Vector3.ZERO)
 			if direction != Vector3.ZERO:
@@ -321,9 +403,11 @@ func _tick_mike(delta: float) -> void:
 			if mike_timer <= 0:
 				_throw_sign()
 				mike_state = "stalk"
+				_tell(null)
 		"charge_tele":
 			_move(mike, Vector3.ZERO)
 			if mike_timer <= 0:
+				_tell(null)
 				mike_state = "charge"
 				mike_timer = CHARGE_TIME
 				mike_model.locked = 0
@@ -349,12 +433,20 @@ func _tick_mike(delta: float) -> void:
 				mike_state = "stalk"
 				mike_model.locked = 0
 
+## Mike draws back for a shove: up close he pushes Duff out, then goes to the sign or the charge.
+func _mike_jab(seconds: float) -> void:
+	mike_state = "jab_tele"
+	mike_timer = seconds
+	mike_model.strike("jab", seconds + .3)
+	_tell(mike)
+
 ## Ranged turn: alternate posting (sign throw) and the charge, each with a readable wind-up.
 func _mike_special(direction: Vector3) -> void:
 	mike_cool = MIKE_SPECIAL_EVERY * (.7 if mike_raged else 1.0)
 	charge_dir = direction
 	if feel:
 		feel.sfx("tele", 0.0)
+	_tell(mike)
 	if charge_next:
 		mike_state = "charge_tele"
 		mike_timer = CHARGE_TELE
@@ -368,6 +460,7 @@ func _mike_special(direction: Vector3) -> void:
 	charge_next = not charge_next
 
 func _mike_dizzy() -> void:
+	_tell(null)
 	mike_state = "dizzy"
 	mike_timer = MIKE_DIZZY
 	mike_model.strike("hit", MIKE_DIZZY)
@@ -377,6 +470,7 @@ func _hit_mike() -> void:
 	_show_impact(mike.position)
 	_update_hud()
 	if mike_hp <= 0:
+		_tell(null)
 		mike_state = "ko"
 		mike_model.strike("ko")
 		mike.collision_layer = 0
@@ -391,6 +485,11 @@ func _hit_mike() -> void:
 		return
 	if mike_state == "charge":
 		return  # mid-charge he shrugs it off
+	if mike_state == "jab_tele":
+		return  # his shove has armour too
+	if mike_state in ["post", "charge_tele"]:
+		mike_state = "stalk"  # hitting first knocks him out of his wind-up
+		_tell(null)
 	if not mike_raged and mike_hp <= MIKE_HP / 2:
 		mike_raged = true
 		mike_state = "taunt"
@@ -399,6 +498,7 @@ func _hit_mike() -> void:
 		message.text = "Mike: Price drop! Everything must go! Starting with YOU!"
 		return
 	if mike_state == "stalk":
+		mike_model.locked = 0
 		mike_model.strike("hit", HIT_ANIM)
 		mike_recovery = maxf(mike_recovery, HIT_ANIM)
 
@@ -488,6 +588,28 @@ func _actor(at: Vector3, radius := .34) -> CharacterBody3D:
 	add_child(actor)
 	actor.position = at
 	return actor
+
+## Red ring at a foe's feet while he winds up. null hides it.
+func _tell(foe: CharacterBody3D) -> void:
+	tell_foe = foe
+
+func _tell_ring() -> MeshInstance3D:
+	var ring := MeshInstance3D.new()
+	var torus := TorusMesh.new()
+	torus.inner_radius = .5
+	torus.outer_radius = .62
+	torus.rings = 24
+	torus.ring_segments = 4
+	ring.mesh = torus
+	ring.scale = Vector3(1, .05, 1)
+	var glow := StandardMaterial3D.new()
+	glow.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	glow.albedo_color = Color("#ff3b30")
+	ring.material_override = glow
+	ring.name = "TellRing"
+	ring.hide()
+	add_child(ring)
+	return ring
 
 func _show_impact(at: Vector3) -> void:
 	impact.position = at + Vector3.UP * 1.03

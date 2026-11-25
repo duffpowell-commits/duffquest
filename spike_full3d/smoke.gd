@@ -109,12 +109,12 @@ func _run() -> void:
 	sample.facing = Vector3.BACK
 	sample.attack_time = 0
 	sample._attack()
-	_check(sample.pirate_hp == 3, "wrong-facing attack misses")
+	_check(sample.pirate_hp == sample.PIRATE_HP, "wrong-facing attack misses")
 	sample.facing = Vector3.FORWARD
 	sample.pirate.position = Vector3(0, 0, -.1)
 	sample.attack_time = 0
 	sample._attack()
-	_check(sample.pirate_hp == 3, "out-of-range attack misses")
+	_check(sample.pirate_hp == sample.PIRATE_HP, "out-of-range attack misses")
 
 	# A short diagonal through the corner is in reach of both actors.
 	var corner: Vector3 = sample.PLANTER_AT + Vector3(sample.PLANTER_SIZE.x, 0, sample.PLANTER_SIZE.z) * .5
@@ -127,7 +127,7 @@ func _run() -> void:
 	await _frames(2)
 	sample._attack()
 	sample._tick_pirate()
-	_check(sample.pirate_hp == 3 and sample.player_hp == 5,
+	_check(sample.pirate_hp == sample.PIRATE_HP and sample.player_hp == 5,
 		"planter blocks in-range strikes from Duff and the pirate")
 
 	sample.player.position = Vector3(0, 0, 2)
@@ -139,7 +139,7 @@ func _run() -> void:
 	sample._tick_pirate()
 	sample.attack_time = 0
 	sample._attack()
-	_check(sample.player_hp == 5 and sample.pirate_hp == 3,
+	_check(sample.player_hp == 5 and sample.pirate_hp == sample.PIRATE_HP,
 		"dodge grants brief invulnerability and cancels attacking")
 
 	sample.pirate.position = Vector3(-5, 0, -2)
@@ -158,8 +158,31 @@ func _run() -> void:
 	sample.pirate_recovery = 0
 	await _frames(2)
 	sample._tick_pirate()
-	_check(sample.player_hp == 4, "unobstructed pirate attack damages Duff")
-	for expected in [2, 1, 0]:
+	_check(sample.player_hp == 5 and sample.pirate_wind > 0 and sample.tell_foe == sample.pirate,
+		"the pirate winds up first, with the red ring under him")
+	sample._tick_pirate(sample.PIRATE_TELE + .01)
+	_check(sample.player_hp == 4 and sample.tell_foe == null, "an undodged wind-up jab damages Duff")
+	sample.pirate_recovery = 0
+	sample.invulnerable = 0
+	sample._tick_pirate()
+	sample.attack_time = 0
+	sample._attack()
+	_check(sample.pirate_hp == sample.PIRATE_HP - 1 and sample.pirate_wind > 0,
+		"hitting into his wind-up lands but doesn't stop the jab")
+	sample._tick_pirate(sample.PIRATE_TELE + .01)
+	_check(sample.player_hp == 3, "trading into a wind-up costs Duff a hit")
+	sample.attack_time = 0
+	sample._attack()
+	sample.attack_time = 0
+	sample._attack()
+	_check(sample.pirate_hp == sample.PIRATE_HP - 2 and sample.blocked == 1 and sample.pirate_wind > 0,
+		"the third hit of a flurry is blocked and the pirate counters")
+	sample.invulnerable = 0
+	sample._tick_pirate(sample.COUNTER_TELE + .01)
+	_check(sample.player_hp == 2, "mashing into his guard costs Duff a hit")
+	sample.player_hp = 3
+	for expected in range(sample.PIRATE_HP - 3, -1, -1):
+		sample.chain = {}
 		sample.attack_time = 0
 		sample._attack()
 		_check(sample.pirate_hp == expected, "unobstructed Duff attack brings pirate HP to %d" % expected)
@@ -248,6 +271,21 @@ func _run() -> void:
 	_check(sample.mike_state == "dizzy" and sample.mike.position.x < 6.6 and sample.player_hp == 3,
 		"a charge into the fence stops at the fence and leaves him dizzy")
 
+	# Up close: Mike winds up a jab that shoves Duff out to sign / charge range.
+	sample.invulnerable = 0
+	sample.mike_state = "stalk"
+	sample.mike_recovery = 0
+	sample.mike_cool = 2.0
+	sample.player.position = Vector3(0, 0, 2)
+	sample.mike.position = Vector3(1, 0, 2)
+	await _frames(2)
+	sample._tick_mike(.016)
+	_check(sample.mike_state == "jab_tele" and sample.tell_foe == sample.mike, "up close Mike winds up a shove")
+	sample._tick_mike(sample.MIKE_JAB_TELE + .01)
+	_check(sample.player_hp == 2 and sample.feel.knock_of(sample.player).x < -5.0 and sample.mike_cool <= .35,
+		"the shove costs one HP, sends Duff flying and readies his next special")
+	sample.player_hp = 3
+
 	# Beat him: halfway he rages (taunt), then KO wins the encounter.
 	sample.mike_state = "dizzy"
 	sample.mike_timer = 5.0
@@ -255,13 +293,18 @@ func _run() -> void:
 	sample.mike.position = Vector3(0, 0, 1)
 	sample.facing = Vector3.FORWARD
 	await _frames(2)
-	for i in 3:
+	for i in sample.MIKE_HP / 2:
 		sample.attack_time = 0
 		sample._attack()
-	_check(sample.mike_hp == 3 and sample.mike_raged and sample.mike_state == "taunt" and mm.current == "taunt",
+	_check(sample.mike_hp == sample.MIKE_HP / 2 and sample.mike_raged and sample.mike_state == "taunt" and mm.current == "taunt",
 		"at half health Mike rages with his taunt")
+	sample.attack_time = 0
+	sample._attack()
+	_check(sample.mike_hp == sample.MIKE_HP / 2 and sample.mike_state == "jab_tele",
+		"his price-drop rant is no opening: the hit is blocked and he swings back")
+	sample.mike_state = "dizzy"
 	sample.mike_timer = 5.0
-	for i in 3:
+	for i in sample.MIKE_HP / 2:
 		sample.attack_time = 0
 		sample._attack()
 	_check(sample.mike_hp == 0 and mm.current == "ko" and not sample.active and sample.mike.collision_layer == 0,
@@ -270,7 +313,7 @@ func _run() -> void:
 	sample._reset()
 	await scene_changed
 	sample = current_scene
-	_check(sample.active and sample.player_hp == 5 and sample.pirate_hp == 3
+	_check(sample.active and sample.player_hp == 5 and sample.pirate_hp == sample.PIRATE_HP
 		and sample.pirate.visible and sample.package.visible and sample.package.get_parent() == sample.pirate_model,
 		"retry restores actors, health, and held parcel")
 	sample.set_physics_process(false)
@@ -279,6 +322,7 @@ func _run() -> void:
 	sample.player_hp = 1
 	await _frames(2)
 	sample._tick_pirate()
+	sample._tick_pirate(sample.PIRATE_TELE + .01)
 	_check(sample.player_hp == 0 and not sample.active, "last pirate hit ends the encounter in defeat")
 	sample._reset()
 	await scene_changed
