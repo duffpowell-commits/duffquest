@@ -10,7 +10,7 @@ on:
       - .github/workflows/web_template_3d.yml
 
 env:
-  GODOT_TAG: 4.5-stable
+  GODOT_TAG: 4.7.2-stable
   EM_VERSION: 4.0.11
 
 jobs:
@@ -30,6 +30,24 @@ jobs:
         with:
           version: ${{ env.EM_VERSION }}
           no-cache: true
+      - name: Patch Godot 4.7.2 gridmap build with disable_physics_3d
+        # 4.7.2 bug: grid_map.cpp reads collision_visibility_mode outside its PHYSICS_3D_DISABLED guard, so
+        # a build with 3D physics off fails to compile. Move the #endif below the debug-collision block.
+        run: |
+          python3 - <<'PY'
+          p = "godot/modules/gridmap/grid_map.cpp"
+          s = open(p).read()
+          old_end = "#endif // PHYSICS_3D_DISABLED\n\t\tbool debug_collisions = false;"
+          if old_end in s:
+              s = s.replace(old_end, "\t\tbool debug_collisions = false;", 1)
+              tail = "RS::get_singleton()->instance_set_base(g->collision_debug_instance, g->collision_debug);\n\t\t}\n"
+              assert tail in s, "gridmap patch anchor missing"
+              s = s.replace(tail, tail + "#endif // PHYSICS_3D_DISABLED\n", 1)
+              open(p, "w").write(s)
+              print("gridmap patched")
+          else:
+              print("gridmap patch not needed")
+          PY
       - name: Build template
         run: |
           pip install scons

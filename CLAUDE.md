@@ -1,7 +1,7 @@
 # Duff Quest — handoff (read this first)
 
 Comedy RPG about Duff's real life in Omaha: keep Madison happy, pay the rent, work the line at the Twisted Fork,
-fight exes and porch pirates. Godot 4.5, GDScript, 640×360 viewport (1280×720 window), 3D view by default. Owner: Duff.
+fight exes and porch pirates. Godot 4.7.2, GDScript, 640×360 viewport (1280×720 window), 3D view by default. Owner: Duff.
 
 **Read order:** this file -> `STATUS.md` -> `TRACKER.md` (Built / Next / Could improve) -> `reference.md` (how every system works).
 **Every system's details, re-import steps and gotchas: `docs/HANDOFF_LOG.md`** (moved out of this file Nov 21 to keep
@@ -16,6 +16,9 @@ This repo is public.
 - Game art, code, and design docs are fine.
 
 ## Where things stand (Nov 21)
+- Nov 24: fully 3D porch slice in `spike_full3d/` (own Godot project + APK `duffquest-porch3d.apk` on the
+  `dev` release): Meshy models of Duff and the Porch Pirate on a real skeleton with real clips, Duff's real
+  hand tattoos painted from the masters. Marketplace Mike (OBO sign throw, charge, rage) follows the pirate (Nov 24). Waits on Duff's phone check (FPS counter top right). README there.
 - The approved 3 Eyed Fox Studios publisher card appears before the title. Settings, ending credits, and itch copy credit the studio.
 - This repo is public. Secrets, prompts, private handoffs, and personal details stay out. See Public repo rules.
 - main is green and live. Every push to main ships: CI parses, runs test_daily + smoke, exports web + APK, refreshes
@@ -63,7 +66,7 @@ This repo is public.
 - Rule lock (Nov 24, 2026, from godot-game-starter): a PR that changes the rules (this file's rules, AGENTS.md, `standards/`, `.claude/`, `.githooks/`, `fresh_eyes.yml`, `rule_lock.yml`; list in `tools/rule_lock.py`) gets a failing `rule-lock` status until Duff adds the `duff-ok` label. **Agents never add, ask a tool to add, or work around that label.** Put rule changes in their own PR and tell Duff it needs his tap. Self-test `tools/test_rule_lock.sh`.
 
 ## Commands (cloud sandbox; the rest are in docs/HANDOFF_LOG.md)
-- Godot: 4.5-stable Linux zip from GitHub releases -> `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`.
+- Godot: 4.7.2-stable Linux zip from GitHub releases -> `/usr/local/bin/godot`. Fresh clone: `godot --headless --path . --import`.
 - Tests: `tools/test.sh` (test_daily; must print `ALL PASS (0 failed)` with no `SCRIPT ERROR`), then
   `git checkout -- .godot/exported`.
 - Stale imports: changed `.import` params don't re-import on their own. `rm .godot/editor/filesystem_cache10`, delete

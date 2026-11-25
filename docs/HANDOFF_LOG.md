@@ -315,3 +315,10 @@ Moved word for word out of CLAUDE.md on Nov 21 2026 (lean harness: CLAUDE.md loa
 5. **Balance re-check** after the playtest (gates 45-65, wait drain floor 40).
 History of everything built: `TRACKER.md` (newest first).
 
+
+## Web template module list is a no-op (found Nov 24, Godot 4.7.2 move)
+SCons execs `tools/web_template*/custom.py` into a throwaway globals dict, so the `globals()["module_%s_enabled"]`
+loop in both files never turned anything off: csg, gridmap, minimp3, mbedtls, jpg, svg and the rest have always been
+built in. Only plain assignments reach SCons. The 3D profile now sets `module_csg_enabled = "no"` for real (4.7.2's
+CSG fails to link with 3D physics off). Making the loop work would really drop those modules (minimp3 = mp3 audio):
+do it in its own PR with a web boot + `WEB AUDIO CHECK PASS`, never as a drive-by.

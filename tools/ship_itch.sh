@@ -15,23 +15,23 @@ for a in "$@"; do
     *) echo "unknown flag: $a"; exit 2 ;;
   esac
 done
-GV=4.5-stable
+GV=4.7.2-stable
 T=${TOOLS_DIR:-/tmp/tools}; mkdir -p "$T"
 # Per-run log dir, so parallel ships (several worktrees) don't clobber each other's logs.
 L=$(mktemp -d /tmp/ship.XXXXXX)
 echo "== logs in $L"
 
 if ! command -v godot >/dev/null; then
-  curl -sSL -o "$T/godot.zip" "https://github.com/godotengine/godot/releases/download/$GV/Godot_v${GV}_linux.x86_64.zip"
+  curl -fsSL --retry 5 --retry-all-errors -o "$T/godot.zip" "https://github.com/godotengine/godot/releases/download/$GV/Godot_v${GV}_linux.x86_64.zip"
   unzip -qo "$T/godot.zip" -d "$T" && ln -sf "$T/Godot_v${GV}_linux.x86_64" /usr/local/bin/godot
 fi
 TPL=${XDG_DATA_HOME:-$HOME/.local/share}/godot/export_templates/${GV/-/.}
 if [ ! -f "$TPL/web_nothreads_release.zip" ]; then
-  curl -sSL -o "$T/tpl.tpz" "https://github.com/godotengine/godot/releases/download/$GV/Godot_v${GV}_export_templates.tpz"
+  curl -fsSL --retry 5 --retry-all-errors -o "$T/tpl.tpz" "https://github.com/godotengine/godot/releases/download/$GV/Godot_v${GV}_export_templates.tpz"
   mkdir -p "$TPL" && unzip -qo -j "$T/tpl.tpz" 'templates/web*' -d "$TPL"
 fi
 if [ "$NO_PUSH" = 0 ] && ! command -v butler >/dev/null; then
-  curl -sSL -o "$T/butler.zip" https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+  curl -fsSL --retry 5 --retry-all-errors -o "$T/butler.zip" https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
   unzip -qo "$T/butler.zip" -d "$T/butler" && chmod +x "$T/butler/butler" && ln -sf "$T/butler/butler" /usr/local/bin/butler
 fi
 command -v xvfb-run >/dev/null || apt-get install -y -qq xvfb >/dev/null
