@@ -5,6 +5,8 @@ extends RefCounted
 ##   low   = low beat-'em-up angle, house as the backdrop (recommended, default)
 ##   frame = higher tilted 3D view
 ##   close = the old top-down orthographic view, closer, following Duff
+##   explore = walking around a zone with nobody to fight: higher and closer, follows Duff
+##             (Phase 2 step 3). Each zone sets its own bounds with set_zone().
 ## `--cam=<mode>` overrides MODE for comparing on a phone or in renders.
 
 const MODE := "low"
@@ -12,6 +14,7 @@ const MODES := {
 	#         pitch  fov   base dist  per metre apart  min   max   aim height
 	"low":   [22.0, 38.0, 4.5, .9, 5.0, 9.0, .9],
 	"frame": [42.0, 32.0, 5.0, 1.1, 6.0, 11.0, .8],
+	"explore": [34.0, 42.0, 8.6, 0.0, 8.6, 8.6, 1.0],
 }
 const CLOSE_SIZE := 4.4
 const CLOSE_OFFSET := Vector3(0, 5.76, 7.8)
@@ -23,6 +26,9 @@ const FIT_MAX := 16.0   ## farthest it will pull back to keep both in frame
 
 var camera: Camera3D
 var mode := MODE
+var fight_mode := MODE  ## the mode fights use (MODE or --cam=); zones without a fight use explore
+var x_limit := X_LIMIT
+var z_range := Z_RANGE
 
 func _init(cam: Camera3D) -> void:
 	camera = cam
@@ -31,6 +37,17 @@ func _init(cam: Camera3D) -> void:
 			mode = arg.trim_prefix("--cam=")
 	if not (mode in MODES or mode == "close"):
 		mode = MODE
+	fight_mode = mode
+	_apply_mode()
+
+## A zone loaded: its bounds, and the fight camera or the explore camera.
+func set_zone(explore: bool, limit: float, zs: Vector2) -> void:
+	x_limit = limit
+	z_range = zs
+	mode = "explore" if explore else fight_mode
+	_apply_mode()
+
+func _apply_mode() -> void:
 	if mode == "close":
 		camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 		camera.size = CLOSE_SIZE
@@ -45,10 +62,10 @@ func goal(duff: Vector3, foe = null) -> Transform3D:
 	if foe != null:
 		mid = (duff + foe) * .5
 		apart = duff.distance_to(foe)
-	mid.x = clampf(mid.x, -X_LIMIT, X_LIMIT)
-	mid.z = clampf(mid.z, Z_RANGE.x, Z_RANGE.y)
+	mid.x = clampf(mid.x, -x_limit, x_limit)
+	mid.z = clampf(mid.z, z_range.x, z_range.y)
 	if mode == "close":
-		var at := Vector3(clampf(duff.x, -X_LIMIT, X_LIMIT), 0, clampf(duff.z, Z_RANGE.x, Z_RANGE.y))
+		var at := Vector3(clampf(duff.x, -x_limit, x_limit), 0, clampf(duff.z, z_range.x, z_range.y))
 		return Transform3D.IDENTITY.translated(at + CLOSE_OFFSET).looking_at(at + Vector3(0, .55, -.54))
 	var m: Array = MODES[mode]
 	var dist := clampf(m[2] + apart * m[3], m[4], m[5])

@@ -34,7 +34,7 @@ const K_COL := Color("#c7802a")
 const R_AT := Vector2(738, 212)  ## Red Right Hand: its ring is the special meter, it glows when full
 const R_R := 44.0
 const R_COL := Color("#c0201c")
-const START_MIN := 7 * 60    ## the cold open starts 7:00 AM, like the main game
+const START_MIN := 17 * 60 + 30  ## 5:30 PM: the porch fight is the golden hour (light follows the clock, porch_daylight.gd)
 const GAME_MIN_PER_SEC := .2 ## the clock creeps: one game minute every 5 seconds
 
 var game  ## porch.gd
@@ -49,6 +49,7 @@ var flash_col := Color.TRANSPARENT
 var flash_time := 0.0
 var flash_len := 1.0
 var minutes := 0.0
+var clock_start := start_min()  ## minute of the day the clock started at
 var menu: Control        ## the open title / pause / end screen, or null
 var screen := ""         ## "", "title", "pause", "settings", "ko", "win"
 var _boxes := {}
@@ -206,8 +207,20 @@ func flash(col: Color, seconds: float) -> void:
 	flash_time = seconds
 	flash_len = seconds
 
+## Minute of the day the clock starts at: START_MIN, or `--clock=HH:MM`.
+static func start_min() -> int:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--clock="):
+			var parts := arg.trim_prefix("--clock=").split(":")
+			return (int(parts[0]) * 60 + (int(parts[1]) if parts.size() > 1 else 0)) % 1440
+	return START_MIN
+
+## Minute of the day now (fractional; the lighting follows it).
+func game_minute() -> float:
+	return clock_start + minutes
+
 func clock_text() -> String:
-	var m := START_MIN + int(minutes)
+	var m := clock_start + int(minutes)
 	var h := (m / 60) % 24
 	return "%d:%02d %s" % [12 if h % 12 == 0 else h % 12, m % 60, "AM" if h < 12 else "PM"]
 
@@ -454,7 +467,14 @@ func show_end(won: bool) -> void:
 	_title_label(box, line, Vector2(24, 16), 512, 21, CREAM, body)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 40)
-	row.position = Vector2(150, 410)
-	row.add_child(_pill("Play again" if won else "Retry", BTN_MAIN, func() -> void: game.retry()))
-	row.add_child(_pill("Quit to title", BTN_EXIT, func() -> void: game.quit_to_title()))
+	if won:  # the porch is secured: walk home through the front door (Phase 2 step 3)
+		row.add_theme_constant_override("separation", 24)
+		row.position = Vector2(96, 410)
+		row.add_child(_pill("Go inside", BTN_MAIN, func() -> void: game.go_inside(), 240))
+		row.add_child(_pill("Play again", BTN_ALT, func() -> void: game.retry(), 240))
+		row.add_child(_pill("Quit to title", BTN_EXIT, func() -> void: game.quit_to_title(), 240))
+	else:
+		row.position = Vector2(150, 410)
+		row.add_child(_pill("Retry", BTN_MAIN, func() -> void: game.retry()))
+		row.add_child(_pill("Quit to title", BTN_EXIT, func() -> void: game.quit_to_title()))
 	m.add_child(row)

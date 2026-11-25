@@ -10,6 +10,7 @@ const Hud = preload("porch_hud.gd")
 const FoeMike = preload("foe_mike.gd")
 const FoePirate = preload("foe_pirate.gd")
 const FoeSendback = preload("foe_sendback.gd")
+const Zones = preload("porch_zones.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
@@ -206,6 +207,8 @@ var result := {}              ## the win card's grade, time and best (set when M
 var meter_rang := false       ## the full-meter chime played for this fill
 var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
 var callout_time := 0.0
+var zones  ## porch_zones.gd: the porch, the apartment, the doors between
+var exploring := false        ## walking around with nobody to fight (after the porch is secured)
 
 func _ready() -> void:
 	_build_street()
@@ -231,6 +234,10 @@ func _ready() -> void:
 		look = Look.apply(self, [player_model, pirate_model, mike_model, rival.model])
 	_build_hud()
 	_update_hud()
+	if OS.get_cmdline_user_args().has("--zone=apartment"):  # start at home, nobody to fight
+		_start_exploring()
+		zones.arrive("apartment", Vector3(-1.0, 0, .4))
+		return
 	var wants_title := OS.has_feature("template") or OS.get_cmdline_user_args().has("--title")
 	if wants_title and not Engine.get_meta("porch_skip_title", false):
 		hud.show_title()
@@ -244,6 +251,8 @@ func begin() -> void:
 
 ## [name, hp, max] for the foe plate, or [] when nobody is fighting.
 func foe_status() -> Array:
+	if exploring:
+		return []
 	if pirate_hp > 0:
 		return ["Porch Pirate", pirate_hp, PIRATE_HP]
 	if rival.state != "away":
@@ -262,6 +271,8 @@ func quit_to_title() -> void:
 
 ## The foe the camera keeps in frame: the pirate until he drops, then Mike once he is in.
 func current_foe():
+	if exploring:
+		return null
 	if pirate_hp > 0:
 		return pirate.position
 	if mike.visible and mike_state != "ko":
@@ -340,6 +351,9 @@ func _physics_process(delta: float) -> void:
 	_move(player, motion)
 	var speed := Vector2(player.get_real_velocity().x, player.get_real_velocity().z).length()
 	player_model.move(minf(speed / PLAYER_SPEED, 1.0))
+	if exploring:
+		zones.tick()
+		return
 	if pirate_hp > 0:
 		if toss_foe != pirate:
 			_tick_pirate(delta)
@@ -1055,7 +1069,7 @@ func _strike_arc(parent: Node3D) -> MeshInstance3D:
 		art.form(at, Vector3(.15, .025 + .07 * weight, .04), Color("#f5be77"), Vector3(0, -angle, .11), 8)
 	return art.finish(parent, "StrikeArc")
 
-func _collider(label: String, at: Vector3, dimensions: Vector3) -> void:
+func _collider(label: String, at: Vector3, dimensions: Vector3, parent: Node3D = null) -> void:
 	var body := StaticBody3D.new()
 	body.name = label
 	body.collision_layer = WORLD_LAYER
@@ -1065,7 +1079,7 @@ func _collider(label: String, at: Vector3, dimensions: Vector3) -> void:
 	var hit := CollisionShape3D.new()
 	hit.shape = shape
 	body.add_child(hit)
-	add_child(body)
+	(parent if parent else self).add_child(body)
 	body.position = at
 
 func _build_street() -> void:
@@ -1090,29 +1104,38 @@ func _build_street() -> void:
 	add_child(camera)
 	camera.make_current()
 	fight_cam = FightCam.new(camera)
+	zones = Zones.make(self)
+	zones.load_zone("porch")
+
+## The porch set (zone "porch", porch_zones.gd): Meshy set or our kit, the porch lamp, colliders.
+func _build_porch_set(root: Node3D) -> void:
 	if OS.get_cmdline_user_args().has("--kit"):  # our own set, to compare with the Meshy one
-		Kit.build(self, PLANTER_AT, PLANTER_SIZE)
-		Art.ground(self)
+		Kit.build(root, PLANTER_AT, PLANTER_SIZE)
+		Art.ground(root)
 	else:
-		Art.meshy_set(self, PLANTER_AT, PLANTER_SIZE)
+		Art.meshy_set(root, PLANTER_AT, PLANTER_SIZE)
 	var lamp := OmniLight3D.new()  # porch light by the door
+	lamp.name = "PorchLamp"
 	lamp.position = Vector3(0, 2.6, -2.9)
 	lamp.light_color = Color("#ffb15e")
 	lamp.light_energy = 1.4
 	lamp.omni_range = 2.8
-	add_child(lamp)
-	_collider("Ground", Vector3(0, -.16, 0), Vector3(16, .32, 11))
-	_collider("FrontageCollider", Vector3(0, 1.4, -4.85), Vector3(10.6, 2.8, 1.9))
-	_collider("StoopCollider", Vector3(0, .119, -2.95), Vector3(2.84, .238, 1.03))
-	_collider("StepCollider", Vector3(0, .066, -2.35), Vector3(2.92, .132, .22))
+	lamp.set_meta("base_energy", 3.2)  # golden hour; porch_look.gd scales it with the clock
+	lamp.set_meta("look_range", 4.5)
+	lamp.add_to_group("zone_lamp")
+	root.add_child(lamp)
+	_collider("Ground", Vector3(0, -.16, 0), Vector3(16, .32, 11), root)
+	_collider("FrontageCollider", Vector3(0, 1.4, -4.85), Vector3(10.6, 2.8, 1.9), root)
+	_collider("StoopCollider", Vector3(0, .119, -2.95), Vector3(2.84, .238, 1.03), root)
+	_collider("StepCollider", Vector3(0, .066, -2.35), Vector3(2.92, .132, .22), root)
 	for x in [-6.9, 6.9]:
-		_collider("FenceCollider", Vector3(x, .65, 0), Vector3(.32, 1.3, 11))
-	_collider("StreetLimit", Vector3(0, .6, 5.39), Vector3(15, 1.2, .23))
-	_collider("RearLimit", Vector3(0, .7, -5.51), Vector3(15, 1.4, .25))
-	_collider("PlanterCollider", PLANTER_AT + Vector3.UP * PLANTER_SIZE.y * .5, PLANTER_SIZE)
+		_collider("FenceCollider", Vector3(x, .65, 0), Vector3(.32, 1.3, 11), root)
+	_collider("StreetLimit", Vector3(0, .6, 5.39), Vector3(15, 1.2, .23), root)
+	_collider("RearLimit", Vector3(0, .7, -5.51), Vector3(15, 1.4, .25), root)
+	_collider("PlanterCollider", PLANTER_AT + Vector3.UP * PLANTER_SIZE.y * .5, PLANTER_SIZE, root)
 	for x in [-6.0, 6.0]:
-		_collider("TrunkCollider", Vector3(x, .9, -4.2), Vector3(.5, 1.8, .5))
-	_collider("MailboxCollider", Vector3(6.1, .62, 2.45), Vector3(.42, 1.25, .5))
+		_collider("TrunkCollider", Vector3(x, .9, -4.2), Vector3(.5, 1.8, .5), root)
+	_collider("MailboxCollider", Vector3(6.1, .62, 2.45), Vector3(.42, 1.25, .5), root)
 
 func _build_hud() -> void:
 	var layer := CanvasLayer.new()
@@ -1351,6 +1374,34 @@ func _porch_won(line: String) -> void:
 	if feel:
 		feel.stop_music()
 		feel.sfx("win", 0.0)
+
+## "Go inside" on the win card: the fight is over, Duff walks home through the front door.
+func go_inside() -> void:
+	hud.close_menu()
+	_start_exploring()
+	zones.travel("apartment", Vector3(-2.75, 0, -.45), Vector3.RIGHT)
+
+## No more fight: foes, parcel and fight bits leave the scene; Duff walks freely.
+func _start_exploring() -> void:
+	exploring = true
+	active = true
+	end_in = 0
+	hit_marker.hide()
+	tell_foe = null
+	bubble_time = 0
+	opening = 0
+	message.text = "Porch secured. Walk home: the front door's on the stoop."
+	for body in [pirate, mike, sendback]:
+		body.hide()
+		body.process_mode = Node.PROCESS_MODE_DISABLED
+		body.collision_layer = 0
+		body.collision_mask = 0
+	package.hide()
+	if obo_sign:
+		obo_sign.hide()
+	rival.cancel()
+	if feel:
+		feel.stop_music()
 
 ## Which foe script a body belongs to, and the bits porch.gd needs from it.
 func _hp_of(foe: CharacterBody3D) -> int:

@@ -26,7 +26,10 @@ root stays live on itch until the 3D game covers everything it does. Don't touch
 | `porch_hud.gd` | HUD strip, buttons, meter ring, callouts, title / pause / settings / KO / win cards |
 | `porch_feel.gd` | Hit-stop, shake, knockback, sound pool, music |
 | `porch_camera.gd` | Low brawler camera that frames Duff and the current foe |
-| `porch_look.gd` | Golden-hour lighting, LITE mode (perf guard) |
+| `porch_look.gd` | Golden-hour look, clock-driven light (`daylight()`), LITE mode (perf guard) |
+| `porch_daylight.gd` | Light keys for every time of day; the HUD clock drives them |
+| `porch_zones.gd` | Zone loader: one root per place, doors, fade card, `--zone=` |
+| `zone_apartment.gd` | Duff's apartment, built free; `spots` for people at home |
 | `porch_art.gd`, `porch_kit.gd` | The set: Meshy hero props placed on the old layout, free walls/floors/textures |
 | `rig_actor.gd` | Loads `models/<who>.glb` + `models/<who>_clips.res`, picks idle/walk/run by speed, `strike()` one-shots, head-size fit |
 | `smoke.gd` | The test: 100+ PASS lines driving real game code. CI fails on any FAIL |
@@ -79,7 +82,10 @@ the same 24 bones.
 - Zones load one at a time behind a loading card. Keep about 6 animated people on screen at most.
 - Build walls, floors and small props free (Godot shapes + seamless textures, `porch_kit.gd` pattern).
   Meshy only for 1-2 hero props a location (60-90 credits).
-- Lighting follows the game clock. Golden hour stays the signature look.
+- Lighting follows the game clock (`porch_daylight.gd`). Golden hour stays the signature look.
+- A new zone: a `zone_<name>.gd` with `static func build(zones, root)` that adds its set under `root`,
+  colliders via `game._collider(..., root)`, lamps in group `zone_lamp` (meta `base_energy`), windows in
+  `zone_window`, doors into `zones.doors`, and named `zones.spots`. Add it to `ZONES` in `porch_zones.gd`.
 - Web: anything a zone needs loads when you walk in, not up front.
 
 ## Before every push
@@ -115,7 +121,8 @@ getters/setters so tests and tools didn't change. Next, before more foes:
 1. `fight_core.gd`: Duff's moves, meter, specials, `_damage`/`_hurt_duff`, grade.
 2. `foe_brain.gd`: one AI driven by data (HP, attacks with wind-up/damage/range, armour, taunts). Read the
    main game's `scripts/boss.gd` data so the 17 bosses don't get re-written by hand.
-3. `zone.gd`: loads a set + its foes, owns the camera mode (explore vs brawler).
+3. Done (Nov 25): `porch_zones.gd` loads one place at a time and owns the camera mode (explore vs brawler).
+   Still to do: a zone brings its own foes (today the porch's three live on `porch.gd`).
 Keep `smoke.gd` green through every step. Move code first, then change behaviour in a later PR.
 
 ## Phase plan (short)

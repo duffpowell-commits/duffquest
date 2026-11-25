@@ -39,7 +39,7 @@ func _run() -> void:
 		and root.get_camera_3d() is Camera3D, "3D actors and camera")
 	_check(sample.package.get_parent() == sample.pirate_model, "parcel starts in pirate grip")
 	var props := {}
-	for child in sample.get_children():
+	for child in sample.zones.root.get_children():
 		if child.has_meta("set_prop"):
 			var key: String = child.get_meta("set_prop")
 			props[key] = props.get(key, 0) + 1
@@ -99,8 +99,8 @@ func _run() -> void:
 	# HUD + menus in the main game's style (porch_hud.gd).
 	var hud = sample.hud
 	_check(hud != null and hud.screen == "" and sample.foe_status() == ["Porch Pirate", sample.PIRATE_HP, sample.PIRATE_HP]
-		and sample.bubble_name.text == "Duff" and hud.clock_text() == "7:00 AM",
-		"HUD up with the pirate's plate, 7:00 AM, and Duff opens the fight")
+		and sample.bubble_name.text == "Duff" and hud.clock_text() == "5:30 PM",
+		"HUD up with the pirate's plate, 5:30 PM, and Duff opens the fight")
 	_check(hud.find_child("Pause", true, false) is TouchScreenButton and Rect2(hud.PAUSE).end.x <= view.x,
 		"phone-style pause button on screen")
 	hud.open_pause()
@@ -720,6 +720,59 @@ func _run() -> void:
 		"the win card shows the grade and the best on this phone")
 	_check(sample.grade_for(100, 0, 2) == "S" and sample.grade_for(120, 2, 1) == "A" and sample.grade_for(240, 4, 0) == "D" and sample.grade_for(190, 3, 0) == "C"
 		and sample.grade_for(190, 3, 3) == "B", "grades: clean and quick is S, slow and hurt is D, specials pull it up")
+
+	# Walkable zones (Phase 2 step 3): Go inside -> the apartment, the door back out, the stoop door in.
+	var buttons := []
+	for b in sample.hud.menu.find_children("*", "Button", true, false):
+		buttons.append((b as Button).text)
+	_check(buttons == ["Go inside", "Play again", "Quit to title"], "the win card offers Go inside (%s)" % [buttons])
+	var zones = sample.zones
+	sample.go_inside()
+	_check(zones.card.visible and not sample.active, "Go inside fades to the loading card")
+	await create_timer(1.3, true, false, true).timeout
+	var home := {}
+	for child in zones.root.get_children():
+		if child.has_meta("set_prop") or child is MeshInstance3D:
+			home[String(child.name)] = true
+	_check(zones.zone == "apartment" and zones.indoor and sample.exploring and sample.active and not zones.card.visible
+		and sample.foe_status() == [] and sample.current_foe() == null and not sample.pirate.visible and not sample.sendback.visible,
+		"HOME: the apartment loads, nobody to fight, foes gone")
+	_check(home.has("Couch") and home.has("Kitchenette") and home.has("CoffeeTable") and home.has("DiningTable")
+		and home.has("Window") and home.has("Door") and zones.root.find_children("*", "StaticBody3D", true, false).size() >= 10,
+		"the apartment is dressed: couch, kitchenette, tables, window, door, walls you can't walk through")
+	_check(sample.fight_cam.mode == "explore" and zones.spots.has("couch_left") and zones.spots.has("kitchen"),
+		"the explore camera follows Duff indoors; spots wait for Madison and Brittany")
+	_check(not sample.has_node("Zone_porch") and sample.find_children("PorchLamp", "", true, false).is_empty(),
+		"the porch zone is freed while Duff is home")
+	sample.attack_requested = true
+	sample.kick_requested = true
+	sample.special_requested = true
+	await _frames(3)
+	_check(sample.active and sample.player_hp > 0, "A, K and R with nobody to fight do nothing harmful")
+	var door: Dictionary = zones.doors[0]
+	sample.player.position = Vector3(door.at.x, 0, door.at.y)
+	await create_timer(1.3, true, false, true).timeout
+	_check(zones.zone == "porch" and not zones.indoor and sample.player.position.distance_to(Vector3(0, 0, -1.2)) < .5
+		and sample.fight_cam.mode == "explore" and sample.has_node("Zone_porch"),
+		"the apartment door leads back out to the porch (Duff on the walk, still exploring)")
+	await _frames(3)
+	sample.player.position = Vector3(0, 0, -2.3)
+	await create_timer(1.3, true, false, true).timeout
+	_check(zones.zone == "apartment" and zones.trips == 3, "the front door on the stoop takes Duff back inside (%d trips)" % zones.trips)
+	# Light follows the clock.
+	var Daylight = load("res://porch_daylight.gd")
+	_check(Daylight.phase(1050) == "golden hour" and Daylight.phase(60) == "night" and Daylight.phase(720) == "afternoon"
+		and Daylight.at(720).sun_energy > Daylight.at(0).sun_energy * 3, "day phases: golden hour at 5:30 PM, bright noon, dark night")
+	var lamp: OmniLight3D = zones.root.get_node("LampLight")
+	sample.look.daylight(0)
+	var night_lamp := lamp.light_energy
+	var night_sun: float = sample.look.sun.light_energy
+	sample.look.daylight(720)
+	_check(night_lamp > lamp.light_energy * 5 and night_sun < sample.look.sun.light_energy * .3,
+		"night: lamps up, sun down; noon: lamps off, sun up")
+	sample.hud.minutes += 60
+	await _frames(3)
+	_check(absf(sample.look.minute_shown - sample.hud.game_minute()) < .1, "the light keeps up with the HUD clock")
 
 	Input.action_press("ui_right", .8)  # thumb still on the stick when Retry is tapped
 	sample._reset()

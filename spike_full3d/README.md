@@ -171,11 +171,29 @@ rig with Duff's/Mike's clips (`tools/share_clips.gd`, `tools/bake_victim.gd`). D
 repo; their photos never go here. Not in a scene yet (phase 4: home and the block). Render
 `docs/renders/porch3d/23_cast_with_madison_brittany.jpg`.
 
+## Walk home: zones, explore camera, clock light (Nov 25 2026)
+- Zones (`porch_zones.gd`): each place is one root node (set, colliders, lamps). Loading one frees the old
+  root and builds the new one behind a short fade card ("HOME", "THE PORCH"). Doors are spots on the floor;
+  a door only works once Duff has stepped off it, so arriving never bounces him back.
+- After PORCH SECURED, **Go inside** walks Duff home; the front door on the stoop works both ways after that.
+  `--zone=apartment` starts at home with nobody to fight.
+- The apartment (`zone_apartment.gd`) is built free (Godot shapes + kit textures, 0 credits): cutaway room,
+  exposed brick, couch under the window facing the camera, coffee table, kitchenette + fridge, table and
+  stools, floor lamp, ceiling light, door back out. `spots` (couch seats, kitchen, table, door) are where
+  Madison and Brittany will stand at home (phase 4).
+- Explore camera (`porch_camera.gd` mode `explore`): higher, wider, follows Duff; each zone sets its bounds.
+  Fights keep the low brawler camera.
+- Light follows the HUD clock (`porch_daylight.gd`): night, dawn, morning, noon, afternoon, golden hour, dusk.
+  The slice clock now starts 5:30 PM so the porch fight is still the golden hour; `--clock=HH:MM` starts it
+  anywhere. Lamps (group `zone_lamp`) rise at night, windows (group `zone_window`) show the sky. Indoors the
+  sky fill dims at night so the lamps carry the room.
+- Renders `docs/renders/porch3d/25_home_times_of_day.jpg`, `26_porch_times_of_day.jpg`; tool `tools/zone_shots.gd`.
+
 ## HUD and menus (Nov 25 2026)
 
 Duff: "get the slice closer to the original hud and menus ... improve them". `porch_hud.gd` draws the main game's
 look (`scripts/ui_style.gd` + `hud.gd` colours and fonts, numbers x3 for the 960-wide view):
-- Phone status strip: clock from 7:00 AM, "Wed Day 1", Duff's HP as hearts, green cash pill. Objective line under it
+- Phone status strip: clock from 5:30 PM (golden hour; the light follows it), "Wed Day 1", Duff's HP as hearts, green cash pill. Objective line under it
   with the gold "!" badge. Foe name plate + bar at the bottom (Porch Pirate, then Marketplace Mike).
 - Round A (bonk) and B (roll) buttons like the main game's; the TouchScreenButtons under them are invisible.
   The VirtualJoystick is a faint cream ring with an ink-rimmed tip.
