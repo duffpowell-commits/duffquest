@@ -69,7 +69,7 @@ const LAUNCH_KNOCK := 3.4     ## A A K: the kick ends the combo as a launcher
 const WALL_TIME := .5         ## a launched foe that hits a wall, fence or planter within this takes 1 more
 const METER_HIT := 14         ## special meter (0..100): per landed hit
 const METER_HURT := 10        ## and per hit Duff takes
-const RRH_WINDUP := .4        ## Red Right Hand: feet planted, the fist catches fire
+const RRH_WINDUP := .6        ## Red Right Hand: feet planted, the fist catches fire
 const RRH_DASH := .4          ## then he rockets forward fist first for this long
 const RRH_SPEED := 10.0       ## m/s: about 4 m of porch
 const RRH_RECOVER := .45      ## a whiff leaves him skidding, wide open
@@ -77,7 +77,7 @@ const RRH_TIME := RRH_WINDUP + RRH_DASH + RRH_RECOVER
 const RRH_HIT_RADIUS := 1.05  ## the fist connects with anyone this close along the dash
 const RRH_DAMAGE := 3
 const RRH_KNOCK := 4.0        ## times a punch's shove
-const RRH_PEAK := .84  ## fist fully out in the burn clip (tools/bake_burn.gd: 3.42 s of the 3.0-3.5 cut)
+const RRH_PEAK := .684  ## fist fully out in the burn clip (tools/bake_burn.gd: .65 s of .95)
 const RRH_CLIP := "burn"       ## the lunging right Duff picked; the left hook stands in until it is baked
 const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
@@ -576,7 +576,7 @@ func red_right_hand() -> void:
 func _tick_special(delta: float) -> void:
 	special_time = maxf(0, special_time - delta)
 	var into := RRH_TIME - special_time
-	rrh_glow.light_energy = clampf(into / RRH_WINDUP, 0, 1) * 2.5 if not special_hit else maxf(0, rrh_glow.light_energy - delta * 8)
+	rrh_glow.light_energy = clampf(into / RRH_WINDUP, 0, 1) * 1.4 if not special_hit else maxf(0, rrh_glow.light_energy - delta * 8)
 	var hand := player_model.skeleton.global_transform * player_model.skeleton.get_bone_global_pose(player_model.skeleton.find_bone("RightHand")).origin
 	rrh_points.push_front(hand)
 	if rrh_points.size() > 14:

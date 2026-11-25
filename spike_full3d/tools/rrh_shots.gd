@@ -40,5 +40,5 @@ func _run() -> void:
 	await _grab(14)
 	s.pirate.position = Vector3(.8, 0, 1.2)  # he walks in while the meter fills; show the full dash
 	s.special_requested = true
-	await _grab(50)
+	await _grab(56)
 	quit()

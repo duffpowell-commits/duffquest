@@ -388,8 +388,8 @@ func _run() -> void:
 	sample.set_physics_process(true)
 	await create_timer(1.4, true, false, true).timeout  # real time: the hit-stop slows the first frames
 	sample.set_physics_process(false)
-	_check(sample.special_hit and sample.pirate_hp == sample.PIRATE_HP - sample.RRH_DAMAGE and sample.player.position.z < 1.0,
-		"the dash closes 3.5 m and lands %d through his guard (%d HP, Duff at %s)" % [sample.RRH_DAMAGE, sample.pirate_hp, sample.player.position])
+	_check(sample.special_hit and sample.pirate_hp == sample.PIRATE_HP - sample.RRH_DAMAGE and sample.player.position.z < 1.6,
+		"the dash closes the gap (3.5 m, he walks in too) and lands %d through his guard (%d HP, Duff at %s)" % [sample.RRH_DAMAGE, sample.pirate_hp, sample.player.position])
 	_check(sample.special_time == 0 and not sample.rrh_fire.emitting and not sample.rrh_trail.visible, "the fire and trail go out after the special")
 	# A whiff: nobody in the path, he skids to a stop and is open.
 	sample.pirate.position = Vector3(3, 0, 2.5)
