@@ -94,7 +94,12 @@ var facing := Vector3.FORWARD
 var active := true
 var dodge_requested := false
 var attack_requested := false
-var touch: Dictionary = {}
+var stick: Control             ## Godot 4.7's VirtualJoystick: drives ui_left/right/up/down
+var bubble: PanelContainer     ## speech bubble over whoever is talking
+var bubble_text: Label
+var bubble_tail: Polygon2D
+var bubble_from: Node3D
+var bubble_time := 0.0
 var clock := 0.0
 var pirate_wind := 0.0        ## > 0 while the pirate winds up a jab
 var chain := {}               ## foe -> [hits landed in this flurry, clock of the last]
@@ -144,6 +149,7 @@ func current_foe():
 	return null
 
 func _process(delta: float) -> void:
+	_place_bubble(delta)
 	tell_ring.visible = tell_foe != null and active
 	if tell_ring.visible:
 		tell_ring.position = tell_foe.position + Vector3.UP * .04
@@ -166,7 +172,7 @@ func _physics_process(delta: float) -> void:
 	invulnerable = maxf(0, invulnerable - delta)
 	var direction := _movement()
 	if dodge_time <= 0 and direction != Vector3.ZERO:
-		facing = direction
+		facing = direction.normalized()
 		player_model.rotation.y = atan2(-direction.x, -direction.z)
 	if dodge_requested:
 		dodge_requested = false
@@ -199,10 +205,17 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		elif event.physical_keycode == KEY_R:
 			_reset()
 
+## Keys (WASD / arrows) or the on-screen stick, which presses the ui_* actions with analog strength.
 func _movement() -> Vector3:
-	var x := float(Input.is_physical_key_pressed(KEY_D) or Input.is_action_pressed("ui_right") or touch.has("right")) - float(Input.is_physical_key_pressed(KEY_A) or Input.is_action_pressed("ui_left") or touch.has("left"))
-	var z := float(Input.is_physical_key_pressed(KEY_S) or Input.is_action_pressed("ui_down") or touch.has("down")) - float(Input.is_physical_key_pressed(KEY_W) or Input.is_action_pressed("ui_up") or touch.has("up"))
-	return Vector3(x, 0, z).normalized()
+	var keys := Vector2(
+		float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A)),
+		float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W)))
+	# deadzone 0: the stick already applies its own (ui_* actions default to 0.5, which ate half the throw)
+	var move := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down", 0.0) + keys
+	move = move.limit_length(1.0)
+	if move.length() < .05:
+		return Vector3.ZERO
+	return Vector3(move.x, 0, move.y)
 
 func _move(actor: CharacterBody3D, motion: Vector3) -> void:
 	if feel:
@@ -256,6 +269,7 @@ func _hurt_duff(from: Vector3) -> bool:
 		hit_marker.hide()
 		player_model.strike("ko")
 		message.text = "Duff is down. Retry the encounter."
+		bubble_time = 0
 		if feel:
 			feel.stop_music()
 	else:
@@ -350,7 +364,8 @@ func _mike_arrives() -> void:
 	mike.show()
 	mike.collision_layer = ACTOR_LAYER
 	mike.collision_mask = WORLD_LAYER | ACTOR_LAYER
-	message.text = "Marketplace Mike: That pirate was my best guy. Porch box goes for twelve bucks. Or best offer."
+	_say(mike, "That pirate was my best guy. Porch box goes for twelve bucks. Or best offer.", 4.0)
+	message.text = "Marketplace Mike wants the parcel back."
 	if feel:
 		feel.sfx("pickup", 0.0)
 		feel.play_music("mus_boss")
@@ -451,12 +466,12 @@ func _mike_special(direction: Vector3) -> void:
 		mike_state = "charge_tele"
 		mike_timer = CHARGE_TELE
 		mike_model.strike("taunt", CHARGE_TELE)
-		message.text = "Mike: Cash only! No lowballers!"
+		_say(mike, "Cash only! No lowballers!")
 	else:
 		mike_state = "post"
 		mike_timer = POST_TELE
 		mike_model.strike("throw", POST_TELE + .35)
-		message.text = "Mike lists you. \"Used. Fair condition.\""
+		_say(mike, "Listed: one Duff. Used. Fair condition.")
 	charge_next = not charge_next
 
 func _mike_dizzy() -> void:
@@ -478,7 +493,8 @@ func _hit_mike() -> void:
 		obo_sign.hide()
 		active = false
 		hit_marker.hide()
-		message.text = "Mike: Okay. Mark me as sold. Parcel recovered. Porch secured."
+		_say(mike, "Okay. Mark me as sold.")
+		message.text = "Parcel recovered. Porch secured."
 		if feel:
 			feel.stop_music()
 			feel.sfx("win", 0.0)
@@ -495,7 +511,7 @@ func _hit_mike() -> void:
 		mike_state = "taunt"
 		mike_timer = 1.2
 		mike_model.strike("taunt", 1.2)
-		message.text = "Mike: Price drop! Everything must go! Starting with YOU!"
+		_say(mike, "Price drop! Everything must go! Starting with YOU!")
 		return
 	if mike_state == "stalk":
 		mike_model.locked = 0
@@ -572,6 +588,8 @@ func _dodge() -> void:
 			feel.sfx("roll")
 
 func _reset() -> void:
+	for action in ["ui_left", "ui_right", "ui_up", "ui_down"]:
+		Input.action_release(action)  # a stick held through Retry would otherwise keep Duff walking
 	get_tree().reload_current_scene()
 
 func _actor(at: Vector3, radius := .34) -> CharacterBody3D:
@@ -696,13 +714,30 @@ func _build_hud() -> void:
 	fps_label = _hud_label(layer, Vector2(800, 22), 14, Color("#eddbd0"))
 	var hint := _hud_label(layer, Vector2(22, 512), 14, Color("#eddbd0"))
 	hint.text = "WASD / arrows  ·  Space to hit  ·  Shift to dodge  ·  R to retry"
-	_button(layer, "", Vector2(84, 381), "up", 0.0)
-	_button(layer, "", Vector2(22, 439), "left", -PI / 2.0)
-	_button(layer, "", Vector2(84, 439), "down", PI)
-	_button(layer, "", Vector2(146, 439), "right", PI / 2.0)
-	_button(layer, "Hit", Vector2(884, 399), "attack")
-	_button(layer, "Dodge", Vector2(822, 457), "dodge")
-	_button(layer, "Retry", Vector2(884, 15), "reset")
+	hint.visible = not DisplayServer.is_touchscreen_available()  # no small print on a phone
+	stick = _stick(layer)
+	_button(layer, "HIT", Vector2(806, 392), "attack", 128)
+	_button(layer, "DODGE", Vector2(690, 300), "dodge", 96)
+	_button(layer, "Retry", Vector2(884, 15), "reset", 0)
+	_build_bubble(layer)
+
+## Left half of the screen: the stick appears where the thumb lands (4.7 VirtualJoystick, dynamic).
+func _stick(layer: CanvasLayer) -> Control:
+	var pad := VirtualJoystick.new()
+	pad.name = "Stick"
+	pad.position = Vector2(0, 150)
+	pad.size = Vector2(440, 390)
+	pad.joystick_mode = VirtualJoystick.JOYSTICK_DYNAMIC
+	pad.joystick_size = 150.0
+	pad.tip_size = 66.0
+	pad.deadzone_ratio = .15
+	pad.initial_offset_ratio = Vector2(.3, .6)
+	pad.action_left = &"ui_left"
+	pad.action_right = &"ui_right"
+	pad.action_up = &"ui_up"
+	pad.action_down = &"ui_down"
+	layer.add_child(pad)
+	return pad
 
 func _hud_label(layer: CanvasLayer, at: Vector2, font_size: int, tint: Color) -> Label:
 	var label := Label.new()
@@ -715,48 +750,111 @@ func _hud_label(layer: CanvasLayer, at: Vector2, font_size: int, tint: Color) ->
 	layer.add_child(label)
 	return label
 
-func _button(layer: CanvasLayer, caption: String, at: Vector2, action: String, angle := 0.0) -> void:
+## A round thumb button (size 0 = the small square Retry).
+func _button(layer: CanvasLayer, caption: String, at: Vector2, action: String, size := 0) -> void:
 	var button := TouchScreenButton.new()
 	button.name = action.capitalize()
 	button.position = at
+	var box := Vector2(54, 50) if size == 0 else Vector2(size, size)
 	var bounds := RectangleShape2D.new()
-	bounds.size = Vector2(54, 50)
+	bounds.size = box
 	button.shape = bounds
 	button.shape_centered = false
-	button.passby_press = action in ["up", "left", "down", "right"]
 	layer.add_child(button)
 	var panel := Panel.new()
-	panel.size = bounds.size
+	panel.size = box
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#211b29d9")
-	style.border_color = Color("#edb178a0")
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(10)
+	style.bg_color = Color("#211b29d9") if size == 0 else (Color("#b8432fd0") if action == "attack" else Color("#2f6f8ad0"))
+	style.border_color = Color("#edb178a0") if size == 0 else Color("#ffe5c3c0")
+	style.set_border_width_all(1 if size == 0 else 3)
+	style.set_corner_radius_all(10 if size == 0 else size / 2)
+	style.anti_aliasing = true
 	panel.add_theme_stylebox_override("panel", style)
 	button.add_child(panel)
 	var label := Label.new()
-	label.size = bounds.size
+	label.size = box
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.text = caption
+	label.add_theme_font_size_override("font_size", 16 if size == 0 else size / 5)
+	label.add_theme_color_override("font_color", Color("#fff3e2"))
 	panel.add_child(label)
-	if caption.is_empty():
-		var arrow := Polygon2D.new()
-		arrow.polygon = PackedVector2Array([Vector2(0, -10), Vector2(10, 3), Vector2(4, 3), Vector2(4, 9), Vector2(-4, 9), Vector2(-4, 3), Vector2(-10, 3)])
-		arrow.position = bounds.size * .5
-		arrow.rotation = angle
-		arrow.color = Color("#ffe5c3")
-		panel.add_child(arrow)
 	button.pressed.connect(func() -> void: panel.modulate = Color("#ffd59e"))
 	button.released.connect(func() -> void: panel.modulate = Color.WHITE)
 	match action:
 		"attack": button.pressed.connect(func() -> void: attack_requested = true)
 		"dodge": button.pressed.connect(func() -> void: dodge_requested = true)
 		"reset": button.released.connect(_reset)
-		_:
-			button.pressed.connect(func() -> void: touch[action] = true)
-			button.released.connect(func() -> void: touch.erase(action))
+
+## Comic speech bubble that floats over the speaker's head.
+func _build_bubble(layer: CanvasLayer) -> void:
+	bubble = PanelContainer.new()
+	bubble.name = "Bubble"
+	bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color("#fff8ec")
+	style.border_color = Color("#2a1d18")
+	style.set_border_width_all(3)
+	style.set_corner_radius_all(16)
+	style.content_margin_left = 14
+	style.content_margin_right = 14
+	style.content_margin_top = 8
+	style.content_margin_bottom = 8
+	bubble.add_theme_stylebox_override("panel", style)
+	bubble_text = Label.new()
+	bubble_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	bubble_text.custom_minimum_size = Vector2(300, 0)
+	bubble_text.add_theme_font_size_override("font_size", 19)
+	bubble_text.add_theme_color_override("font_color", Color("#2a1d18"))
+	bubble.add_child(bubble_text)
+	bubble_tail = Polygon2D.new()
+	bubble_tail.polygon = PackedVector2Array([Vector2(-12, -3), Vector2(12, -3), Vector2(0, 18)])
+	bubble_tail.color = Color("#2a1d18")
+	var inner := Polygon2D.new()
+	inner.polygon = PackedVector2Array([Vector2(-8, -5), Vector2(8, -5), Vector2(0, 12)])
+	inner.color = Color("#fff8ec")
+	bubble_tail.add_child(inner)
+	layer.add_child(bubble_tail)
+	layer.add_child(bubble)
+	bubble.hide()
+	bubble_tail.hide()
+
+func _say(speaker: Node3D, line: String, seconds := 2.8) -> void:
+	bubble_from = speaker
+	bubble_text.text = line
+	bubble_time = seconds
+	bubble.size = Vector2.ZERO  # shrink to the new line
+	_place_bubble(0.0)
+
+func _place_bubble(delta: float) -> void:
+	bubble_time = maxf(0, bubble_time - delta)
+	var showing := bubble_time > 0 and bubble_from != null and camera != null \
+		and not camera.is_position_behind(bubble_from.global_position)
+	bubble.visible = showing
+	bubble_tail.visible = showing
+	if not showing:
+		return
+	var head := camera.unproject_position(bubble_from.global_position + Vector3.UP * 1.95)
+	var view := get_viewport().get_visible_rect().size
+	if not Rect2(Vector2.ZERO, view).has_point(head):  # speaker off screen: wait until he walks in
+		bubble.hide()
+		bubble_tail.hide()
+		return
+	var box := bubble.get_combined_minimum_size()
+	var at := Vector2(head.x - box.x * .5, head.y - box.y - 18)
+	if at.y >= 8:  # room above the head: tail points down at him
+		at.x = clampf(at.x, 12, view.x - box.x - 12)
+		bubble.position = at
+		bubble_tail.rotation = 0
+		bubble_tail.position = Vector2(clampf(head.x, at.x + 20, at.x + box.x - 20), at.y + box.y - 2)
+		return
+	# no room (the camera keeps heads high): sit beside his head, tail pointing at it
+	var right := head.x + 40 + box.x <= view.x - 12
+	at = Vector2(head.x + 40 if right else head.x - 40 - box.x, clampf(head.y - box.y * .5, 8, view.y - box.y - 12))
+	bubble.position = at
+	bubble_tail.rotation = PI / 2 if right else -PI / 2
+	bubble_tail.position = Vector2(at.x + 2 if right else at.x + box.x - 2, clampf(head.y, at.y + 16, at.y + box.y - 16))
 
 func _update_hud() -> void:
 	if mike_state == "away":

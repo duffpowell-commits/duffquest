@@ -88,6 +88,15 @@ instead of standing inside each other. `tools/play_bot.gd` plays the porch with 
 - Bot check (`tools/play_bot.gd`, game time, 0.25 s reactions): `good` wins at 5/5 HP in 13 s; `mash` is KO'd
   with Mike on 3. Frames: `docs/renders/porch3d/15_real_fight.jpg`.
 
+## Phone controls (Nov 25 2026)
+
+- Left half of the screen: Godot 4.7's built-in `VirtualJoystick`, dynamic (it appears where the thumb lands),
+  analog, driving `ui_left/right/up/down`. `_movement()` reads `Input.get_vector` plus WASD.
+- Right thumb: round HIT (128 px, red) and DODGE (96 px, blue), 20 px apart. The four arrow buttons are gone, and so is the
+  keyboard hint on touch screens.
+- Mike talks in a speech bubble over his head (`_say()`). When the camera keeps his head near the top, the bubble sits
+  beside it. The top line keeps only the objective. Frames: `docs/renders/porch3d/16_phone_controls.jpg`.
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the
