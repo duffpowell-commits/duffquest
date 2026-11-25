@@ -86,9 +86,10 @@ const RTS_RANGE := 1.45       ## the foe this close and in front: R grabs instea
 const RTS_SPEED := 2.0        ## the clip plays this much faster than Meshy's
 const RTS_GRAB := .5          ## hands close on him
 const RTS_RELEASE := 2.2      ## thrown over the shoulder
-const RTS_FLY := .42          ## real seconds in the air
+const RTS_FLY := .55          ## real seconds in the air
 const RTS_FLYUP_LAND := .9    ## seconds into the foe's flyup clip where he hits the ground flat (tools/bake_victim.gd)
-const RTS_THROW := 2.0        ## m from Duff where he lands
+const RTS_THROW := 3.2        ## m from Duff where he lands (Duff: "Bigger throw")
+const RTS_ARC := 1.4          ## m the arc peaks above the straight line
 const RTS_DAMAGE := 3
 const STOOP_AT := Vector3(0, .19, -2.32)  ## the bottom step: where a thrown pirate's parcel lands
 const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
@@ -699,7 +700,7 @@ func _tick_toss(delta: float) -> void:
 		toss_fly += delta / maxf(Engine.time_scale, .05)  # real time: the landing hit-stop shouldn't stall the arc
 		var k := minf(toss_fly / RTS_FLY, 1.0)
 		model.rotation.x = lerpf(-1.2, 0.0, minf(k * 2.0, 1.0))  # the clip does the tumbling
-		var centre := toss_from.lerp(toss_land + Vector3.UP * height * .18, k) + Vector3.UP * sin(k * PI) * .8
+		var centre := toss_from.lerp(toss_land + Vector3.UP * height * .18, k) + Vector3.UP * sin(k * PI) * RTS_ARC
 		_hold_at(foe, model, height, centre)
 		if k >= 1.0:
 			_toss_lands()
@@ -731,7 +732,8 @@ func _toss_lands() -> void:
 	tosses += 1
 	if feel:
 		feel.sfx("hit")
-		feel.add_trauma(.75)
+		feel.add_trauma(1.0)
+		feel.sfx("bonk", .05, -2.0)  # the thud of a body on the lawn
 		feel.hit_stop(feel.HIT_STOP_KO)
 		feel.sfx("sting_ko", 0.0, -2.0)
 	hud.flash(Color(0.85, 0.08, 0.06), .3)

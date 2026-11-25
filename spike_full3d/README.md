@@ -134,7 +134,7 @@ Duff wanted a dashing fire-fist special ("burn knuckle" feel; ours is original: 
 ## Return to Sender, the grab special (Nov 25 2026)
 
 R with a full meter and a foe within 1.45 m (`RTS_RANGE`) is a grab instead of the dash. Duff's pick: the over-shoulder throw.
-- Duff grabs at .5 clip-s, carries him over the shoulder, throws him 2 m behind (short of fences and planters:
+- Duff grabs at .5 clip-s, carries him over the shoulder, throws him 3.2 m behind in a high arc (short of fences and planters:
   `_clear_landing`), 3 damage through any guard, big shake, red flash. Untouchable for the whole move.
 - The victim (Duff: the first cut "looks very badly animated"): `flail` (Meshy 503, looped) while held, `flyup`
   (Meshy 7, cut to 1.4 s) tumbles him in the air and lands him flat. Both are baked by `tools/bake_victim.gd` into
