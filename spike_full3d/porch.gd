@@ -210,9 +210,10 @@ func _movement() -> Vector3:
 	var keys := Vector2(
 		float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A)),
 		float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W)))
-	var move := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down") + keys
+	# deadzone 0: the stick already applies its own (ui_* actions default to 0.5, which ate half the throw)
+	var move := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down", 0.0) + keys
 	move = move.limit_length(1.0)
-	if move.length() < .2:
+	if move.length() < .05:
 		return Vector3.ZERO
 	return Vector3(move.x, 0, move.y)
 
@@ -268,6 +269,7 @@ func _hurt_duff(from: Vector3) -> bool:
 		hit_marker.hide()
 		player_model.strike("ko")
 		message.text = "Duff is down. Retry the encounter."
+		bubble_time = 0
 		if feel:
 			feel.stop_music()
 	else:
@@ -586,6 +588,8 @@ func _dodge() -> void:
 			feel.sfx("roll")
 
 func _reset() -> void:
+	for action in ["ui_left", "ui_right", "ui_up", "ui_down"]:
+		Input.action_release(action)  # a stick held through Retry would otherwise keep Duff walking
 	get_tree().reload_current_scene()
 
 func _actor(at: Vector3, radius := .34) -> CharacterBody3D:
@@ -833,6 +837,10 @@ func _place_bubble(delta: float) -> void:
 		return
 	var head := camera.unproject_position(bubble_from.global_position + Vector3.UP * 1.95)
 	var view := get_viewport().get_visible_rect().size
+	if not Rect2(Vector2.ZERO, view).has_point(head):  # speaker off screen: wait until he walks in
+		bubble.hide()
+		bubble_tail.hide()
+		return
 	var box := bubble.get_combined_minimum_size()
 	var at := Vector2(head.x - box.x * .5, head.y - box.y - 18)
 	if at.y >= 8:  # room above the head: tail points down at him

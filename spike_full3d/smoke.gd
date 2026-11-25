@@ -101,12 +101,20 @@ func _run() -> void:
 	drag.relative = Vector2(0, -70)
 	sample.get_viewport().push_input(drag, true)
 	await _frames(2)
-	var pushed := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	var pushed := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down", 0.0)
+	var half_drag := InputEventScreenDrag.new()
+	half_drag.index = 0
+	half_drag.position = Vector2(150, 365)
+	half_drag.relative = Vector2(0, 35)
+	sample.get_viewport().push_input(half_drag, true)
+	await _frames(1)
+	var half: Vector3 = sample._movement()
 	tap.pressed = false
 	tap.position = drag.position
 	sample.get_viewport().push_input(tap, true)
 	await _frames(2)
-	_check(pushed.y < -.5 and Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down") == Vector2.ZERO,
+	_check(half.z < -.25 and half.z > -.75, "half a thumb's throw walks Duff at part speed (%s)" % half)
+	_check(pushed.y < -.5 and Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down", 0.0) == Vector2.ZERO,
 		"a thumb dragged up on the left half walks Duff up, and letting go stops him (%s)" % pushed)
 
 	# Walk freely on both axes, then walk into and dodge against the planter.
@@ -345,9 +353,11 @@ func _run() -> void:
 	_check(sample.mike_hp == 0 and mm.current == "ko" and not sample.active and sample.mike.collision_layer == 0,
 		"Mike's KO clip plays and the porch is secured")
 
+	Input.action_press("ui_right", .8)  # thumb still on the stick when Retry is tapped
 	sample._reset()
 	await scene_changed
 	sample = current_scene
+	_check(not Input.is_action_pressed("ui_right"), "Retry with the stick held doesn't leave Duff walking")
 	_check(sample.active and sample.player_hp == 5 and sample.pirate_hp == sample.PIRATE_HP
 		and sample.pirate.visible and sample.package.visible and sample.package.get_parent() == sample.pirate_model,
 		"retry restores actors, health, and held parcel")
