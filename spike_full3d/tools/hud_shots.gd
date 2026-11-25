@@ -56,6 +56,7 @@ func _run() -> void:
 	s.hud.show_end(false)
 	await _frames(6)
 	await _snap("hud_5_ko")
+	s.result = {"grade": "A", "time": 72.0, "hits": 2, "specials": 2, "best_grade": "A", "best_time": 64.0, "new_best": false}
 	s.hud.show_end(true)
 	await _frames(6)
 	await _snap("hud_6_win")

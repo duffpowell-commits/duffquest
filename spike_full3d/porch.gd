@@ -7,50 +7,35 @@ const Look = preload("porch_look.gd")
 const FightCam = preload("porch_camera.gd")
 const Feel = preload("porch_feel.gd")
 const Hud = preload("porch_hud.gd")
+const FoeMike = preload("foe_mike.gd")
+const FoePirate = preload("foe_pirate.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
 const PLANTER_SIZE := Vector3(1.06, .62, .82)
 const PLAYER_SPEED := 4.6
-const PIRATE_SPEED := 2.1
+const PIRATE_SPEED := FoePirate.SPEED
 const PLAYER_HP := 5
-const PIRATE_HP := 5
+const PIRATE_HP := FoePirate.HP
 const DUFF_HEIGHT := 1.7
-const PIRATE_HEIGHT := 1.4
+const PIRATE_HEIGHT := FoePirate.HEIGHT
 ## Game time each one-shot clip is squeezed into (gameplay timing stays the same as the block-model slice).
 const ATTACK_ANIM := .42
 const DODGE_ANIM := .45
 const HIT_ANIM := .4
 const PIRATE_ATTACK_ANIM := .55
-## Marketplace Mike (boss "mike" in scripts/boss.gd): walks in once the parcel is back. Easy on purpose.
-## Melee jab up close; from range he "posts" you (throws his OBO sign) or charges ("Cash only!").
-const MIKE_HEIGHT := 1.65
-const MIKE_HP := 8
-const MIKE_SPEED := 1.9
-const MIKE_RAGE_SPEED := 2.5
-const MIKE_SPECIAL_RANGE := 2.2  ## posting / charge only from at least this far
-const MIKE_SPECIAL_EVERY := 2.6  ## seconds between specials (x .7 once he rages)
-const POST_TELE := .7            ## wind-up before the sign leaves his hand: dodge then
-const SIGN_SPEED := 6.5
-const SIGN_RADIUS := .55
-const CHARGE_TELE := .75
-const CHARGE_SPEED := 7.2
-const CHARGE_TIME := .85
-const MIKE_DIZZY := 1.0          ## after a charge: free hits
-const MIKE_SPAWN := Vector3(5.6, 0, 3.4)
+## Marketplace Mike lives in foe_mike.gd. These names stay for the tests and tools (old spelling).
+const MIKE_HEIGHT := FoeMike.HEIGHT
+const MIKE_HP := FoeMike.HP
+const POST_TELE := FoeMike.POST_TELE
+const CHARGE_TELE := FoeMike.CHARGE_TELE
+const MIKE_SPAWN := FoeMike.SPAWN
+const MIKE_JAB_TELE := FoeMike.JAB_TELE
 ## Body widths: fighters stay an arm's length apart instead of standing inside each other.
 const DUFF_RADIUS := .42
-const PIRATE_RADIUS := .42
-const MIKE_RADIUS := .5
-const PIRATE_STOP := 1.0     ## the pirate stops walking in at this distance
-const PIRATE_REACH := 1.15   ## and jabs from here
-const MIKE_STOP := 1.05
-const MIKE_REACH := 1.2
+const PIRATE_REACH := FoePirate.REACH
 ## Real fight (Duff, Nov 25: "the pirate fights back harder", "Mike uses his sign and charge up close")
-const PIRATE_TELE := .4       ## the pirate's wind-up before a jab: dodge it or hit him first
-const PIRATE_REST := .9       ## after his jab
-const MIKE_JAB_TELE := .38
-const MIKE_SHOVE := 7.5       ## m/s: Mike's jab shoves Duff out to sign / charge range
+const PIRATE_TELE := FoePirate.TELE
 const COUNTER_TELE := .18     ## a blocked hit gets this quick counter
 const CHAIN_WINDOW := .9      ## hits closer together than this are one flurry
 const GUARD_AFTER := 2        ## a foe blocks the hit after this many in a flurry, then counters
@@ -91,27 +76,55 @@ const RTS_FLYUP_LAND := .9    ## seconds into the foe's flyup clip where he hits
 const RTS_THROW := 3.2        ## m from Duff where he lands (Duff: "Bigger throw")
 const RTS_ARC := 1.4          ## m the arc peaks above the straight line
 const RTS_DAMAGE := 3
+## Win grade (replay hook): 100 minus hits taken and time over par, plus specials landed.
+const PAR_TIME := 90.0         ## fight seconds before the clock starts costing points
+const GRADE_HIT := 8.0         ## points per hit Duff takes
+const GRADE_SLOW := .4         ## points per second over par
+const GRADE_SPECIAL := 6.0     ## points per special landed (up to 3)
+const GRADES := [[95.0, "S"], [80.0, "A"], [65.0, "B"], [50.0, "C"], [-INF, "D"]]
+const BEST_PATH := "user://porch_best.cfg"
 const STOOP_AT := Vector3(0, .19, -2.32)  ## the bottom step: where a thrown pirate's parcel lands
 const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
 
 var player: CharacterBody3D
-var pirate: CharacterBody3D
+var thief  ## foe_pirate.gd: the Porch Pirate. The names below read and write his state (old spelling).
+var pirate: CharacterBody3D:
+	get: return thief.body
 var player_model: RigActor
-var pirate_model: RigActor
-var mike: CharacterBody3D
-var mike_model: RigActor
-var mike_hp := MIKE_HP
-var mike_state := "away"  ## away, stalk, post, charge_tele, charge, dizzy, taunt, ko
-var mike_timer := 0.0
-var mike_cool := 0.0
-var mike_recovery := 0.0
-var mike_raged := false
-var charge_next := false
-var charge_dir := Vector3.FORWARD
-var obo_sign: Node3D
-var sign_velocity := Vector3.ZERO
-var sign_life := 0.0
+var pirate_model: RigActor:
+	get: return thief.model
+var boss  ## foe_mike.gd: Marketplace Mike. The names below read and write his state (old spelling).
+var mike: CharacterBody3D:
+	get: return boss.body
+var mike_model: RigActor:
+	get: return boss.model
+var mike_hp: int:
+	get: return boss.hp
+	set(v): boss.hp = v
+var mike_state: String:
+	get: return boss.state
+	set(v): boss.state = v
+var mike_timer: float:
+	get: return boss.timer
+	set(v): boss.timer = v
+var mike_cool: float:
+	get: return boss.cool
+	set(v): boss.cool = v
+var mike_recovery: float:
+	get: return boss.recovery
+	set(v): boss.recovery = v
+var mike_raged: bool:
+	get: return boss.raged
+	set(v): boss.raged = v
+var charge_next: bool:
+	get: return boss.charge_next
+	set(v): boss.charge_next = v
+var charge_dir: Vector3:
+	get: return boss.charge_dir
+	set(v): boss.charge_dir = v
+var obo_sign: Node3D:
+	get: return boss.obo_sign
 var package: Node3D
 var hit_marker: MeshInstance3D
 var impact: MeshInstance3D
@@ -124,11 +137,15 @@ var camera: Camera3D
 var fight_cam  ## porch_camera.gd: frames Duff and his current foe
 var feel  ## porch_feel.gd: sound, hit-stop, shake, knockback
 var player_hp := PLAYER_HP
-var pirate_hp := PIRATE_HP
+var pirate_hp: int:
+	get: return thief.hp
+	set(v): thief.hp = v
 var attack_time := 0.0
 var dodge_time := 0.0
 var dodge_recovery := 0.0
-var pirate_recovery := 0.0
+var pirate_recovery: float:
+	get: return thief.recovery
+	set(v): thief.recovery = v
 var invulnerable := 0.0
 var facing := Vector3.FORWARD
 var active := true
@@ -141,7 +158,9 @@ var bubble_tail: Polygon2D
 var bubble_from: Node3D
 var bubble_time := 0.0
 var clock := 0.0
-var pirate_wind := 0.0        ## > 0 while the pirate winds up a jab
+var pirate_wind: float:
+	get: return thief.wind
+	set(v): thief.wind = v
 var chain := {}               ## foe -> [hits landed in this flurry, clock of the last]
 var tell_ring: MeshInstance3D
 var tell_foe: CharacterBody3D ## whose wind-up the red ring marks
@@ -175,25 +194,20 @@ var toss_from := Vector3.ZERO
 var toss_land := Vector3.ZERO
 var toss_fly := -1.0          ## seconds in the air (-1 = not thrown yet)
 var tosses := 0               ## landed throws (for tests)
+var hits_taken := 0
+var specials_landed := 0
+var result := {}              ## the win card's grade, time and best (set when Mike goes down)
+var meter_rang := false       ## the full-meter chime played for this fill
 var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
 var callout_time := 0.0
 
 func _ready() -> void:
 	_build_street()
 	player = _actor(Vector3(-2, 0, 3), DUFF_RADIUS)
-	pirate = _actor(Vector3(3, 0, -1), PIRATE_RADIUS)
 	player_model = RigActor.make(player, "duff", DUFF_HEIGHT)
-	pirate_model = RigActor.make(pirate, "pirate", PIRATE_HEIGHT)
-	pirate_model.fit_head_bone()  # every head matches Duff's (Duff, Nov 25)
+	thief = FoePirate.make(self)
 	package = Art.parcel(pirate_model, Vector3(0, .78, -.3))
-	mike = _actor(MIKE_SPAWN, MIKE_RADIUS)
-	mike_model = RigActor.make(mike, "mike", MIKE_HEIGHT)
-	mike_model.fit_head_bone()
-	mike.hide()
-	mike.collision_layer = 0
-	mike.collision_mask = 0
-	obo_sign = _obo_sign()
-	obo_sign.hide()
+	boss = FoeMike.make(self)
 	hit_marker = _strike_arc(player_model)
 	hit_marker.hide()
 	var burst := Art.Sculpture.new()
@@ -264,6 +278,12 @@ func _process(delta: float) -> void:
 		tell_ring.position = tell_foe.position + Vector3.UP * .04
 		tell_ring.scale = Vector3.ONE * (1.0 + .12 * sin(clock * 30.0))
 	fight_cam.follow(delta, player.position, current_foe())
+	if meter >= 100 and not meter_rang and active:
+		meter_rang = true
+		if feel:
+			feel.sfx("achievement", 0.0, -4.0)  # special ready
+	elif meter < 100:
+		meter_rang = false
 	fps_label.text = "%d FPS%s" % [Engine.get_frames_per_second(), " LITE" if look and look.lite else ""]
 
 func _physics_process(delta: float) -> void:
@@ -356,35 +376,10 @@ func _move(actor: CharacterBody3D, motion: Vector3) -> void:
 		_wall_splat(actor)
 
 func _tick_pirate(delta := 1.0 / 60) -> void:
-	var offset := player.position - pirate.position
-	offset.y = 0
-	var distance := offset.length()
-	var direction := offset.normalized()
-	if direction != Vector3.ZERO:
-		pirate_model.rotation.y = atan2(-direction.x, -direction.z)
-	if pirate_wind > 0:
-		_move(pirate, Vector3.ZERO)
-		pirate_model.move(0)
-		pirate_wind -= delta
-		if pirate_wind <= 0:
-			_tell(null)
-			pirate_recovery = PIRATE_REST
-			if distance <= PIRATE_REACH + .25 and _clear_strike(pirate, player):
-				_hurt_duff(pirate.position)
-		return
-	var lane := _side_spot(pirate, PIRATE_STOP) - pirate.position
-	lane.y = 0
-	_move(pirate, lane.normalized() * PIRATE_SPEED if lane.length() > .12 else Vector3.ZERO)
-	var speed := Vector2(pirate.get_real_velocity().x, pirate.get_real_velocity().z).length()
-	pirate_model.move(minf(speed / PIRATE_SPEED, 1.0) * .55)
-	if distance <= PIRATE_REACH and pirate_recovery <= 0 and _clear_strike(pirate, player):
-		_pirate_windup(PIRATE_TELE)
+	thief.tick(delta)
 
-## The pirate draws back for a jab: the red ring and the slow start of the clip are the tell.
 func _pirate_windup(seconds: float) -> void:
-	pirate_wind = seconds
-	pirate_model.strike("jab", seconds + .3)
-	_tell(pirate)
+	thief.windup(seconds)
 
 ## One point of damage unless Duff is in dodge / hit immunity. Returns true when it landed.
 func _hurt_duff(from: Vector3) -> bool:
@@ -394,6 +389,7 @@ func _hurt_duff(from: Vector3) -> bool:
 	if invulnerable > 0 or not active:
 		return false
 	player_hp -= 1
+	hits_taken += 1
 	meter = minf(100, meter + METER_HURT)
 	_show_impact(player.position)
 	if feel:
@@ -530,24 +526,7 @@ func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
 		if mike_state == "stalk":
 			mike_recovery = maxf(mike_recovery, stun)
 		return
-	pirate_hp = maxi(pirate_hp - damage, 0)
-	_show_impact(pirate.position)
-	if pirate_hp > 0:
-		pirate_recovery = maxf(pirate_recovery, stun)
-		if pirate_wind <= 0:
-			pirate_model.strike("hit", HIT_ANIM)
-	else:
-		_tell(null)
-	if pirate_hp == 0:
-		var drop := pirate.position + Vector3.UP * .22
-		package.reparent(self)
-		package.position = drop
-		package.rotation = Vector3(0, .25, 0)
-		pirate_model.strike("ko")
-		pirate.collision_layer = 0
-		pirate.collision_mask = 0
-		message.text = "Walk over to grab the parcel."
-	_update_hud()
+	thief.hit(damage, stun)
 
 func _hit_wall(actor: CharacterBody3D) -> bool:
 	for i in actor.get_slide_collision_count():
@@ -593,6 +572,8 @@ func red_right_hand() -> void:
 	player_model.locked = RRH_TIME  # keep locomotion off the frozen fist for the whole dash
 	attack_time = RRH_TIME
 	_call("RED RIGHT HAND!")
+	if feel:
+		feel.sfx("sting_levelup", 0.0, -4.0)
 	if rrh_glow == null:
 		_build_rrh()
 	rrh_glow.visible = true
@@ -627,6 +608,9 @@ func _tick_special(delta: float) -> void:
 			offset.y = 0
 			if offset.length() <= RRH_HIT_RADIUS + .4 and facing.dot(offset.normalized()) > .2:
 				special_hit = true
+				specials_landed += 1
+				if feel:
+					feel.sfx("explosion", .05, -8.0)
 				special_time = minf(special_time, RRH_RECOVER * .6)  # connected: stop the dash, short recovery
 				if foe == mike and mike_state == "taunt":
 					mike_state = "stalk"  # the hand goes through his rant
@@ -732,6 +716,7 @@ func _toss_lands() -> void:
 	foe.collision_layer = ACTOR_LAYER
 	foe.collision_mask = WORLD_LAYER | ACTOR_LAYER
 	tosses += 1
+	specials_landed += 1
 	if feel:
 		feel.sfx("hit")
 		feel.add_trauma(1.0)
@@ -782,7 +767,11 @@ func _send_parcel_home() -> void:
 	var arc := func(k: float) -> void:
 		package.position = from.lerp(STOOP_AT, k) + Vector3.UP * sin(k * PI) * 1.4
 		package.rotation.y = k * TAU
-	create_tween().tween_method(arc, 0.0, 1.0, .75).set_trans(Tween.TRANS_SINE)
+	var fly := create_tween()
+	fly.tween_method(arc, 0.0, 1.0, .75).set_trans(Tween.TRANS_SINE)
+	fly.tween_callback(func() -> void:
+		if feel:
+			feel.sfx("cash", 0.0, -2.0))  # delivered
 
 ## Put a held or flying foe back on his feet (the fight ended mid-throw, or the throw is over).
 func _end_toss() -> void:
@@ -941,213 +930,6 @@ func _foe() -> CharacterBody3D:
 	if mike_state not in ["away", "ko"]:
 		return mike
 	return null
-
-func _mike_arrives() -> void:
-	package.hide()  # Duff has it now
-	player_hp = maxi(player_hp, PLAYER_HP)  # fresh fight; Mike is the easy first boss
-	mike_state = "stalk"
-	mike_cool = 1.6
-	mike.position = MIKE_SPAWN
-	mike.show()
-	mike.collision_layer = ACTOR_LAYER
-	mike.collision_mask = WORLD_LAYER | ACTOR_LAYER
-	_say(mike, "That pirate was my best guy. Porch box goes for twelve bucks. Or best offer.", 4.0)
-	message.text = "Marketplace Mike wants the parcel back."
-	if feel:
-		feel.sfx("pickup", 0.0)
-		feel.play_music("mus_boss")
-	_update_hud()
-
-func _tick_mike(delta: float) -> void:
-	mike_timer = maxf(0, mike_timer - delta)
-	mike_cool = maxf(0, mike_cool - delta)
-	var offset := player.position - mike.position
-	offset.y = 0
-	var distance := offset.length()
-	var direction := offset.normalized()
-	match mike_state:
-		"stalk":
-			if direction != Vector3.ZERO:
-				mike_model.rotation.y = atan2(-direction.x, -direction.z)
-			if distance <= MIKE_REACH and mike_recovery <= 0 and _clear_strike(mike, player):
-				_mike_jab(MIKE_JAB_TELE)
-				return
-			elif mike_cool <= 0 and distance >= MIKE_SPECIAL_RANGE and active:
-				_mike_special(direction)
-			var speed := MIKE_RAGE_SPEED if mike_raged else MIKE_SPEED
-			var lane := _side_spot(mike, MIKE_STOP) - mike.position
-			lane.y = 0
-			var walking := lane.length() > .12 and mike_state == "stalk"
-			var heading := lane.normalized()
-			if not _clear_strike(mike, player):
-				heading = (direction + direction.cross(Vector3.UP)).normalized()  # step around the planter
-			_move(mike, heading * speed if walking else Vector3.ZERO)
-			var pace := Vector2(mike.get_real_velocity().x, mike.get_real_velocity().z).length()
-			mike_model.move(minf(pace / MIKE_SPEED, 1.0) * .55)
-		"jab_tele":
-			_move(mike, Vector3.ZERO)
-			mike_model.move(0)
-			if direction != Vector3.ZERO:
-				mike_model.rotation.y = atan2(-direction.x, -direction.z)
-			if mike_timer <= 0:
-				mike_state = "stalk"
-				_tell(null)
-				mike_recovery = .8 if mike_raged else 1.15
-				if distance <= MIKE_REACH + .25 and _clear_strike(mike, player) and _hurt_duff(mike.position):
-					if feel:  # the shove sends Duff out to where the sign and the charge reach him
-						feel.push(player, player.position - mike.position, MIKE_SHOVE)
-					mike_cool = minf(mike_cool, .35)
-		"post":
-			_move(mike, Vector3.ZERO)
-			if direction != Vector3.ZERO:
-				mike_model.rotation.y = atan2(-direction.x, -direction.z)
-				charge_dir = direction  # the sign flies at where Duff is when it leaves his hand
-			if mike_timer <= 0:
-				_throw_sign()
-				mike_state = "stalk"
-				_tell(null)
-		"charge_tele":
-			_move(mike, Vector3.ZERO)
-			if mike_timer <= 0:
-				_tell(null)
-				mike_state = "charge"
-				mike_timer = CHARGE_TIME
-				mike_model.locked = 0
-				mike_model.play("charge")
-				mike_model.player.speed_scale = 1.0
-		"charge":
-			if distance <= MIKE_REACH and charge_dir.dot(direction) > .2:
-				_hurt_duff(mike.position)
-				_mike_dizzy()
-				return
-			_move(mike, charge_dir * CHARGE_SPEED)
-			var bonked := false
-			for i in mike.get_slide_collision_count():
-				var hit := mike.get_slide_collision(i)
-				var body := hit.get_collider() as CollisionObject3D
-				if body and body.collision_layer & WORLD_LAYER and absf(hit.get_normal().y) < .5:
-					bonked = true
-			if bonked or mike_timer <= 0:
-				_mike_dizzy()
-		"dizzy", "taunt":
-			_move(mike, Vector3.ZERO)
-			if mike_timer <= 0:
-				mike_state = "stalk"
-				mike_model.locked = 0
-
-## Mike draws back for a shove: up close he pushes Duff out, then goes to the sign or the charge.
-func _mike_jab(seconds: float) -> void:
-	mike_state = "jab_tele"
-	mike_timer = seconds
-	mike_model.strike("jab", seconds + .3)
-	_tell(mike)
-
-## Ranged turn: alternate posting (sign throw) and the charge, each with a readable wind-up.
-func _mike_special(direction: Vector3) -> void:
-	mike_cool = MIKE_SPECIAL_EVERY * (.7 if mike_raged else 1.0)
-	charge_dir = direction
-	if feel:
-		feel.sfx("tele", 0.0)
-	_tell(mike)
-	if charge_next:
-		mike_state = "charge_tele"
-		mike_timer = CHARGE_TELE
-		mike_model.strike("taunt", CHARGE_TELE)
-		_say(mike, "Cash only! No lowballers!")
-	else:
-		mike_state = "post"
-		mike_timer = POST_TELE
-		mike_model.strike("throw", POST_TELE + .35)
-		_say(mike, "Listed: one Duff. Used. Fair condition.")
-	charge_next = not charge_next
-
-func _mike_dizzy() -> void:
-	_tell(null)
-	mike_state = "dizzy"
-	mike_timer = MIKE_DIZZY
-	mike_model.strike("hit", MIKE_DIZZY)
-
-func _hit_mike(damage := 1) -> void:
-	mike_hp -= damage
-	_show_impact(mike.position)
-	_update_hud()
-	if mike_hp <= 0:
-		_tell(null)
-		mike_state = "ko"
-		mike_model.strike("ko")
-		mike.collision_layer = 0
-		mike.collision_mask = 0
-		obo_sign.hide()
-		active = false
-		hit_marker.hide()
-		_say(mike, "Okay. Mark me as sold.")
-		message.text = "Parcel recovered. Porch secured."
-		end_in = 1.6
-		end_won = true
-		if feel:
-			feel.stop_music()
-			feel.sfx("win", 0.0)
-		return
-	if mike_state == "charge":
-		return  # mid-charge he shrugs it off
-	if mike_state == "jab_tele":
-		return  # his shove has armour too
-	if mike_state in ["post", "charge_tele"]:
-		mike_state = "stalk"  # hitting first knocks him out of his wind-up
-		_tell(null)
-	if not mike_raged and mike_hp <= MIKE_HP / 2:
-		mike_raged = true
-		mike_state = "taunt"
-		mike_timer = 1.2
-		mike_model.strike("taunt", 1.2)
-		_say(mike, "Price drop! Everything must go! Starting with YOU!")
-		return
-	if mike_state == "stalk":
-		mike_model.locked = 0
-		mike_model.strike("hit", HIT_ANIM)
-		mike_recovery = maxf(mike_recovery, HIT_ANIM)
-
-func _throw_sign() -> void:
-	obo_sign.position = mike.position + Vector3.UP * 1.05 + charge_dir * .5
-	obo_sign.rotation = Vector3(-.65, 0, 0)  # face tipped toward the camera so "OBO" reads in flight
-	sign_velocity = charge_dir * SIGN_SPEED
-	sign_life = 1.4
-	obo_sign.show()
-	if feel:
-		feel.sfx("whoosh")
-
-func _tick_sign(delta: float) -> void:
-	if not obo_sign.visible:
-		return
-	sign_life -= delta
-	var step := sign_velocity * delta
-	var ray := PhysicsRayQueryParameters3D.create(obo_sign.position, obo_sign.position + step, WORLD_LAYER)
-	if sign_life <= 0 or not get_world_3d().direct_space_state.intersect_ray(ray).is_empty():
-		obo_sign.hide()
-		return
-	obo_sign.position += step
-	obo_sign.rotation.z = sin(sign_life * 14.0) * .35  # tumbling wobble
-	var gap := obo_sign.position - player.position
-	gap.y = 0
-	if gap.length() <= SIGN_RADIUS and _hurt_duff(obo_sign.position):
-		obo_sign.hide()  # a dodged sign keeps flying past him
-
-## Mike's OBO sign, readable from both sides.
-func _obo_sign() -> Node3D:
-	var art := Art.Sculpture.new()
-	art.box(Vector3.ZERO, Vector3(.62, .3, .04), Color("#c9822f"))
-	var board: Node3D = art.finish(self, "OboSign")
-	for side in [-1.0, 1.0]:
-		var text := Label3D.new()
-		text.text = "OBO"
-		text.font_size = 72
-		text.outline_size = 0
-		text.pixel_size = .0032
-		text.modulate = Color("#3a2414")
-		text.position = Vector3(0, 0, side * .023)
-		text.rotation.y = 0.0 if side > 0 else PI
-		board.add_child(text)
-	return board
 
 ## Where a foe stands to fight: beside Duff on its own side, at arm's length, on his depth line,
 ## so the two face off left/right like a brawler and nobody hides the other from the camera.
@@ -1460,3 +1242,53 @@ func _update_hud() -> void:
 		health.text = "DUFF %d/%d   ·   PIRATE %d/%d" % [player_hp, PLAYER_HP, pirate_hp, PIRATE_HP]
 	else:
 		health.text = "DUFF %d/%d   ·   MARKETPLACE MIKE %d/%d" % [player_hp, PLAYER_HP, maxi(mike_hp, 0), MIKE_HP]
+
+## The letter for a won fight: 100, minus GRADE_HIT a hit taken and GRADE_SLOW a second past par,
+## plus GRADE_SPECIAL for each special landed (up to 3).
+static func grade_for(seconds: float, hits: int, specials: int) -> String:
+	var score := 100.0 - GRADE_HIT * hits - GRADE_SLOW * maxf(0, seconds - PAR_TIME) + GRADE_SPECIAL * mini(specials, 3)
+	for step in GRADES:
+		if score >= step[0]:
+			return step[1]
+	return "D"
+
+static func grade_rank(grade: String) -> int:
+	return "DCBAS".find(grade)
+
+## This win's grade and time against the best on this phone; saves a new best.
+func _grade_result() -> Dictionary:
+	var grade := grade_for(clock, hits_taken, specials_landed)
+	var best := ConfigFile.new()
+	best.load(BEST_PATH)  # missing on the first win: stays empty
+	var best_grade: String = best.get_value("porch", "grade", "")
+	var best_time: float = best.get_value("porch", "time", INF)
+	var new_best := best_grade == "" or grade_rank(grade) > grade_rank(best_grade) \
+		or (grade == best_grade and clock < best_time)
+	if new_best:
+		best.set_value("porch", "grade", grade)
+		best.set_value("porch", "time", clock)
+		best.save(BEST_PATH)
+		best_grade = grade
+		best_time = clock
+	return {"grade": grade, "time": clock, "hits": hits_taken, "specials": specials_landed,
+		"best_grade": best_grade, "best_time": best_time, "new_best": new_best}
+
+static func clock_label(seconds: float) -> String:
+	return "%d:%02d" % [int(seconds) / 60, int(seconds) % 60]
+
+## Mike's moves, for porch.gd's own code and the tests (foe_mike.gd does the work).
+func _mike_arrives() -> void:
+	boss.arrive()
+
+func _tick_mike(delta: float) -> void:
+	boss.tick(delta)
+
+func _tick_sign(delta: float) -> void:
+	boss.tick_sign(delta)
+
+func _mike_jab(seconds: float) -> void:
+	boss.jab(seconds)
+
+func _hit_mike(damage := 1) -> void:
+	boss.hit(damage)
+
