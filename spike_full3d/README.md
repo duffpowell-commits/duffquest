@@ -27,6 +27,12 @@ parcel, then beat Marketplace Mike. The top-right counter shows FPS: the bar is 
 
 ## Files
 
+- `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the
+  same render style as the characters, fitted by `place()` onto the old layout, plus tiling grass and
+  sidewalk textures. Collision is still the simple boxes in `porch.gd`. AgX tonemapping keeps the
+  textures and the set in one colour response. Props went through `tools/strip_pbr.py ... <max px>`
+  (2K house, 1K/512 small props) to keep phone VRAM down.
+
 - `rig_actor.gd` loads `models/<who>.glb` + `models/<who>_clips.res` and picks idle/walk/run from speed;
   one-shots (`strike`) are squeezed into the gameplay timing in `porch.gd` (`ATTACK_ANIM` etc.).
 - `models/duff.glb`, `models/pirate.glb`, `models/mike.glb`: rigged Meshy meshes (~12-14.5k triangles, one
@@ -70,7 +76,11 @@ judged on the phone.
 | Mike model, 12k tris, 2K texture | image-to-3d 01a20fc3-6c02… | 30 |
 | Mike rig + 7 clips (idle 0, jab 191, over-shoulder throw 421, head-down charge 512, chest-pound taunt 88, hit 178, KO 187) | rigging 01a20fc5-226f… | 5 + 21 |
 
-Walk and run come free with each rig. Total about 213 credits (Mike: 65).
+| Porch set references in the characters' style: house front, fence, planter, tree, bush, mailbox | image-to-image ×6, Nov 24 | 54 |
+| Grass + sidewalk tiling textures | image-to-image ×2 | 18 |
+| Set props: house 12k tris, fence 2k, planter 5k, tree 5k, bush 6k, mailbox 2k (bush took a free retry: the first try failed and was refunded) | image-to-3d ×6 | 180 |
+
+Walk and run come free with each rig. Total about 465 credits (Mike: 65, porch set: 252).
 
 ## Merge gate
 

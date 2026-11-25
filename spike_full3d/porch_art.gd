@@ -77,7 +77,6 @@ class Sculpture:
 		visual.position = at
 		return visual
 
-
 static func surface_detail(visual: MeshInstance3D, grain: float, scale: Vector3, lawn := false) -> void:
 	var material := ShaderMaterial.new()
 	material.shader = GRAIN_SHADER
@@ -86,14 +85,10 @@ static func surface_detail(visual: MeshInstance3D, grain: float, scale: Vector3,
 	material.set_shader_parameter("lawn", lawn)
 	visual.material_override = material
 
-
 const SKIN := Color("#d38a59")
 const BLACK := Color("#25242c")
 const GOLD := Color("#e3ab55")
-const WOOD := Color("#a77953")
 const TRIM := Color("#e6c393")
-const CONCRETE := Color("#ae9580")
-const LEAF := Color("#74803e")
 
 static func person(parent: Node3D, hood: bool) -> Node3D:
 	var model := Node3D.new()
@@ -168,7 +163,6 @@ static func person(parent: Node3D, hood: bool) -> Node3D:
 		arm.finish(model, tag + "Arm", Vector3(side * .27, .925, 0))
 	return model
 
-
 static func animal_ink(mesh: Sculpture, at: Vector3, ink: Color, wolf: bool, yaw := 0.0) -> void:
 	var pose := Basis(Vector3.UP, yaw)
 	mesh.form(at, Vector3(.09, .108, .018), ink, Vector3(0, yaw, 0), 8)
@@ -181,7 +175,6 @@ static func animal_ink(mesh: Sculpture, at: Vector3, ink: Color, wolf: bool, yaw
 	for eye in eyes:
 		mesh.form(at + pose * Vector3(eye.x, eye.y, -.013), Vector3(.012, .008, .008), GOLD, Vector3(0, yaw, 0), 6)
 
-
 static func parcel(parent: Node3D, at: Vector3) -> Node3D:
 	var mesh := Sculpture.new()
 	mesh.box(Vector3.ZERO, Vector3(.34, .36, .25), Color("#bc7c42"))
@@ -191,174 +184,84 @@ static func parcel(parent: Node3D, at: Vector3) -> Node3D:
 	mesh.box(Vector3(.086, .034, -.128), Vector3(.086, .07, .004), Color("#e6d7ae"))
 	return mesh.finish(parent, "Parcel", at)
 
+# --- Meshy set dressing (Nov 24): props made in the same render style as the characters. ---
+# Each GLB is normalised (largest side ~1.9) and centred, so place() fits it to a target size.
+# Collision stays the simple boxes in porch.gd.
 
-static func planter(parent: Node3D, at: Vector3, width: float, depth: float) -> void:
-	var mesh := Sculpture.new()
+## Fit a prop so its bounding box becomes `size` (axes left at 0 follow the largest given scale),
+## with its base on y=at.y and its centre at at.x/at.z.
+static func place(parent: Node3D, file: String, at: Vector3, size: Vector3, yaw := 0.0) -> Node3D:
+	var prop: Node3D = (load("res://models/set/%s.glb" % file) as PackedScene).instantiate()
+	prop.name = file.capitalize()
+	prop.set_meta("set_prop", file)
+	parent.add_child(prop, true)
+	var box := AABB()
+	var first := true
+	for mesh in prop.find_children("*", "MeshInstance3D", true, false):
+		var visual := mesh as MeshInstance3D
+		var bounds: AABB = visual.transform * visual.get_aabb()
+		box = bounds if first else box.merge(bounds)
+		first = false
+		visual.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	var turned := box.size if is_zero_approx(fmod(yaw, PI)) else Vector3(box.size.z, box.size.y, box.size.x)
+	var fit := Vector3(size.x / turned.x if size.x > 0 else 0.0, size.y / turned.y if size.y > 0 else 0.0,
+		size.z / turned.z if size.z > 0 else 0.0)
+	var largest := maxf(fit.x, maxf(fit.y, fit.z))
+	for axis in 3:
+		if fit[axis] == 0.0:
+			fit[axis] = largest
+	if not is_zero_approx(fmod(yaw, PI)):
+		fit = Vector3(fit.z, fit.y, fit.x)
+	prop.scale = fit
+	prop.rotation.y = yaw
+	var centre := box.get_center() * fit
+	prop.position = at - Basis(Vector3.UP, yaw) * Vector3(centre.x, 0, centre.z) - Vector3(0, box.position.y * fit.y, 0)
+	return prop
+
+## World z of a placed prop's front-most point.
+static func _front(prop: Node3D) -> float:
+	var front := -INF
+	for mesh in prop.find_children("*", "MeshInstance3D", true, false):
+		var visual := mesh as MeshInstance3D
+		var local := visual.get_aabb()
+		for i in 8:
+			front = maxf(front, (prop.transform * visual.transform * local.get_endpoint(i)).z)
+	return front
+
+static func textured(visual: MeshInstance3D, file: String, tiles_per_metre: float, tint := Color.WHITE) -> void:
+	var material := StandardMaterial3D.new()
+	material.albedo_texture = load("res://models/set/%s.jpg" % file)
+	material.albedo_color = tint
+	material.uv1_triplanar = true
+	material.uv1_world_triplanar = true
+	material.uv1_scale = Vector3.ONE * tiles_per_metre
+	material.roughness = .95
+	visual.material_override = material
+
+static func meshy_set(parent: Node3D, planter_at: Vector3, planter_size: Vector3) -> void:
+	# House: front wall + stoop where the old frontage stood; the roof runs back out of the way.
+	var house := place(parent, "house", Vector3(0, 0, -4.6), Vector3(10.4, 0, 0))
+	house.scale.y *= .78  # a little squat so the door and windows stay on screen under the high camera
+	house.position.y *= .78  # the squash pivots on the origin; keep the base on the ground
+	house.position.z += -2.3 - _front(house)  # stoop's front edge on the old step line
+	for x in [-6.9, 6.9]:
+		for i in 5:
+			place(parent, "fence", Vector3(x, 0, -4.4 + i * 2.2), Vector3(0, 1.4, 2.24), PI / 2)
 	for side in [-1.0, 1.0]:
-		for row in 4:
-			var y := .115 + row * .112
-			var board := WOOD.lightened(row * .055)
-			mesh.box(Vector3(0, y, side * (depth / 2 - .06)), Vector3(width - .065, .104, .08), board)
-			mesh.box(Vector3(side * (width / 2 - .055), y, 0), Vector3(.08, .104, depth - .065), board.darkened(.1))
-		for end in [-1.0, 1.0]:
-			mesh.box(Vector3(side * (width / 2 - .05), .289, end * (depth / 2 - .05)), Vector3(.10, .578, .10), WOOD.darkened(.18))
-		mesh.box(Vector3(0, .567, side * (depth / 2 - .06)), Vector3(width, .106, .12), TRIM.darkened(.17))
-		mesh.box(Vector3(side * (width / 2 - .06), .567, 0), Vector3(.12, .106, depth - .24), TRIM.darkened(.13))
-	mesh.box(Vector3(0, .515, 0), Vector3(width - .17, .06, depth - .16), Color("#503b2c"))
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 186
-	for i in 30:
-		var angle := i * 2.4
-		var spread := rng.randf_range(.1, .43)
-		mesh.form(Vector3(cos(angle) * spread, .66 + rng.randf_range(-.08, .07), sin(angle) * spread * .65), Vector3(.13, .095, .27), LEAF.lightened(rng.randf_range(-.15, .18)), Vector3(-.42, -angle, .14), 8)
-	for i in 5:
-		var angle := i * TAU / 5.0
-		var bloom := Vector3(cos(angle) * .28, .81 + .04 * (i % 2), sin(angle) * .16)
-		for petal in 9:
-			var orbit := petal * 2.4
-			mesh.form(bloom + Vector3(cos(orbit) * .056, .026 * (petal % 3), sin(orbit) * .052), Vector3(.083, .076, .081), Color("#c07669").lightened(.055 * (petal % 3)), Vector3.ZERO, 7)
-	surface_detail(mesh.finish(parent, "FlowerPlanter", at), .35, Vector3(16, 145, 16))
-
-
-static func frontage(parent: Node3D) -> void:
-	var mesh := Sculpture.new()
-	var brick := Color("#a15643")
-	mesh.box(Vector3(0, 1.4, -4.6), Vector3(10.6, 2.8, 2.4), brick.darkened(.27))
-	for row in 16:
-		var y := .085 + row * .172
-		for column in 29:
-			var x := -5.14 + column * .363 + (row % 2) * .09
-			if y > .89 and x > .8:
-				continue
-			var tint := 1.0 - float((column * 19 + row * 7) % 13) / 86.0
-			mesh.box(Vector3(x, y, -3.385), Vector3(.35, .156, .035), brick * Color(tint, tint, tint))
-	for row in 11:
-		mesh.box(Vector3(3.07, .963 + row * .172, -3.374), Vector3(4.51, .163, .064), TRIM.darkened(.19 + .032 * (row % 3)))
-	var roof := Color("#555064")
-	for side in [-1.0, 1.0]:
-		mesh.box(Vector3(0, 3.35, -4.61 + side * .84), Vector3(11.08, .16, 1.91), roof, Vector3(side * .43, 0, 0))
-		for row in 5:
-			for column in 29:
-				var x := -5.36 + column * .38 + (row % 2) * .09
-				var tint := .92 + .025 * ((row + column * 3) % 5)
-				mesh.box(Vector3(x, 3.132 + row * .145, -4.61 + side * (1.515 - row * .317)), Vector3(.367, .046, .35), roof * Color(tint, tint, tint), Vector3(side * .43, 0, 0))
-	# A narrow board at each height follows the triangular gable.
-	for row in 8:
-		var width := 4.18 - row * .50
-		mesh.box(Vector3(3.04, 2.951 + row * .105, -2.939), Vector3(width, .10, .14), TRIM.darkened(.16 + .018 * (row % 3)))
-	for side in [-1.0, 1.0]:
-		mesh.box(Vector3(3.04 + side * 1.06, 3.357, -2.88), Vector3(2.37, .114, .19), TRIM, Vector3(0, 0, -side * .402))
-		mesh.box(Vector3(3.04 + side * 1.06, 3.432, -3.17), Vector3(2.35, .095, .70), roof, Vector3(0, 0, -side * .402))
-	mesh.box(Vector3(3.04, 3.347, -2.842), Vector3(.35, .29, .05), WOOD.darkened(.23))
-	for slat in 4:
-		mesh.box(Vector3(3.04, 3.246 + slat * .065, -2.807), Vector3(.27, .03, .04), TRIM.darkened(.29))
-	mesh.box(Vector3(-1.96, 2.968, -2.965), Vector3(7.08, .13, .105), TRIM)
-	mesh.box(Vector3(0, 3.087, -3.012), Vector3(2.43, .12, .93), roof, Vector3(.14, 0, 0))
-	mesh.box(Vector3(0, 2.999, -2.59), Vector3(2.49, .12, .085), TRIM)
-	for side in [-1.0, 1.0]:
-		mesh.box(Vector3(side * 1.11, 2.83, -3.18), Vector3(.103, .34, .33), WOOD, Vector3(.55, 0, 0))
-		var x: float = side * 3.1
-		mesh.box(Vector3(x, 1.59, -3.32), Vector3(1.87, 1.28, .12), TRIM)
-		mesh.box(Vector3(x, 1.59, -3.249), Vector3(1.65, 1.06, .04), Color("#59423c"))
-		for pane in [-1.0, 1.0]:
-			mesh.box(Vector3(x + pane * .41, 1.84, -3.221), Vector3(.77, .455, .017), Color("#cf9756"))
-			mesh.box(Vector3(x + pane * .41, 1.34, -3.221), Vector3(.77, .455, .017), Color("#805e55"))
-			for slat in 5:
-				mesh.box(Vector3(x + pane * .41, 1.66 + slat * .08, -3.208), Vector3(.74, .021, .011), Color("#9d6b47"))
-		mesh.box(Vector3(x, 1.59, -3.197), Vector3(.07, 1.18, .062), TRIM.darkened(.07))
-		mesh.box(Vector3(x, 1.59, -3.192), Vector3(1.73, .065, .068), TRIM.darkened(.07))
-		mesh.box(Vector3(x, .946, -3.205), Vector3(1.99, .091, .24), TRIM)
-	mesh.box(Vector3(0, 1.23, -3.326), Vector3(1.42, 2.44, .12), TRIM)
-	mesh.box(Vector3(0, 1.202, -3.239), Vector3(1.16, 2.28, .071), Color("#263e3a"))
-	for y in [.49, 1.16, 1.88]:
-		for x in [-.284, .284]:
-			mesh.box(Vector3(x, y, -3.19), Vector3(.438, .495, .04), Color("#354a44"))
-			mesh.box(Vector3(x, y, -3.166), Vector3(.372, .429, .011), Color("#2b403c"))
-	mesh.form(Vector3(.486, 1.19, -3.151), Vector3(.074, .074, .083), GOLD)
-	mesh.form(Vector3(0, 2.63, -3.16), Vector3(.18, .25, .20), Color("#ffd487"))
-	mesh.form(Vector3(0, 2.765, -3.16), Vector3(.22, .13, .22), BLACK)
-	for i in 4:
-		var angle := (i + .5) * TAU / 4.0
-		mesh.box(Vector3(cos(angle) * .081, 2.623, -3.16 + sin(angle) * .086), Vector3(.016, .218, .016), BLACK)
-	for y in [2.532, 2.709]:
-		mesh.band(Vector3(0, y, -3.16), .089, BLACK, Vector3.ZERO, .009)
-	surface_detail(mesh.finish(parent, "BrickAndClapboardFrontage"), .39, Vector3(27, 63, 42))
-	var lamp := OmniLight3D.new()
-	lamp.position = Vector3(0, 2.58, -3.03)
-	lamp.light_color = Color("#ffb15e")
-	lamp.light_energy = 1.55
-	lamp.omni_range = 2.8
-	parent.add_child(lamp)
-
-
-static func stoop(parent: Node3D) -> void:
-	var mesh := Sculpture.new()
-	mesh.box(Vector3(0, .119, -2.95), Vector3(2.84, .238, 1.03), CONCRETE)
-	mesh.box(Vector3(0, .066, -2.35), Vector3(2.92, .132, .22), CONCRETE.darkened(.14))
-	mesh.box(Vector3(0, .248, -2.98), Vector3(.95, .02, .36), WOOD.darkened(.38))
-	for side in [-1.0, 1.0]:
-		var x: float = side * 1.31
-		for post in 5:
-			var z := -3.32 + post * .218
-			var high := .99 - .075 * post
-			mesh.box(Vector3(x, (high + .24) * .5, z), Vector3(.045, high - .24, .043), BLACK)
-		mesh.box(Vector3(x, .84, -2.88), Vector3(.075, .065, 1.01), BLACK, Vector3(.329, 0, 0))
-	for rib in 14:
-		mesh.box(Vector3(0, .259, -3.144 + rib * .024), Vector3(.87, .008, .008), WOOD.darkened(.21))
-	surface_detail(mesh.finish(parent, "StoopAndRails"), .35, Vector3(62, 62, 62))
-
-
-static func fence(parent: Node3D, x: float) -> void:
-	var mesh := Sculpture.new()
-	for i in 47:
-		var z := -5.31 + i * .229
-		var tint := float((i * 17) % 11) * .017
-		var y := .66 + (i % 3) * .013
-		mesh.box(Vector3(0, y, z), Vector3(.12, 1.23, .208), WOOD.lightened(tint))
-		mesh.box(Vector3(0, y + .614, z), Vector3(.12, .072, .146), WOOD.lightened(tint + .055))
-	for y in [.28, 1.07]:
-		mesh.box(Vector3(-signf(x) * .084, y, 0), Vector3(.095, .128, 10.84), WOOD.darkened(.17))
-	for i in 6:
-		var z := -5.35 + i * 2.14
-		mesh.box(Vector3(0, .724, z), Vector3(.29, 1.448, .30), WOOD.darkened(.18))
-		mesh.box(Vector3(0, 1.463, z), Vector3(.333, .105, .339), TRIM.darkened(.21))
-		for nail in [-1.0, 1.0]:
-			mesh.form(Vector3(-signf(x) * .155, 1.07, z + nail * .074), Vector3(.018, .033, .033), BLACK, Vector3.ZERO, 6)
-	surface_detail(mesh.finish(parent, "TimberFence", Vector3(x, 0, 0)), .34, Vector3(40, 9, 105))
-
-
-static func pavement(parent: Node3D) -> void:
-	var mesh := Sculpture.new()
-	mesh.box(Vector3(0, -.055, 5.43), Vector3(20.0, .11, 3.69), Color("#4b4146"))
+		place(parent, "tree", Vector3(side * 6.0, 0, -4.2), Vector3(0, 4.6, 0), side * .6)
+	for x in [-4.6, -2.3, 2.3, 4.6]:
+		place(parent, "bush", Vector3(x, 0, -2.95), Vector3(0, .8, 0), x)
+	place(parent, "planter", planter_at, planter_size)
+	place(parent, "mailbox", Vector3(6.1, 0, 2.45), Vector3(0, 1.25, 0), -PI / 2)
+	var lawn := Sculpture.new()
+	lawn.box(Vector3(0, -.146, -.5), Vector3(22, .28, 12), Color.WHITE)
+	textured(lawn.finish(parent, "Lawn"), "grass", .3, Color("#b8c4a0"))
+	var walk := Sculpture.new()
 	for i in 12:
 		var x := -7.25 + i * 1.32
-		mesh.box(Vector3(x, .012, 2.91), Vector3(1.306, .043, 1.45), CONCRETE.lightened(.027 * (i % 4)))
-		mesh.box(Vector3(x, .029, 3.672), Vector3(1.304, .078, .16), CONCRETE.darkened(.10))
-	surface_detail(mesh.finish(parent, "SidewalkAndCurb"), .35, Vector3(77, 77, 77))
-
-
-static func garden(parent: Node3D) -> void:
-	var mesh := Sculpture.new()
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 341
-	var ground := Sculpture.new()
-	ground.box(Vector3(0, -.146, -.5), Vector3(22, .28, 12), Color("#74814b"))
-	surface_detail(ground.finish(parent, "Lawn"), .55, Vector3(61, 12, 76), true)
-	for i in 460:
-		var x := rng.randf_range(-6.84, 6.84)
-		var z := rng.randf_range(-3.32, 2.18)
-		if i % 2 == 0:
-			z = lerpf(z, 2.12 if i % 4 == 0 else -3.19, .79)
-		var blade := LEAF.lightened(rng.randf_range(-.20, .16))
-		for leaf in 4:
-			var offset := Vector3(rng.randf_range(-.075, .075), 0, rng.randf_range(-.075, .075))
-			mesh.blade(Vector3(x, 0, z) + offset, offset * 1.3, rng.randf_range(.045, .14), blade)
-	for center in [-4.8, -2.15, 2.18, 4.85]:
-		for i in 26:
-			mesh.form(Vector3(center + rng.randf_range(-.43, .43), rng.randf_range(.08, .49), -2.96 + rng.randf_range(-.22, .21)), Vector3(.26, .17, .31), LEAF.darkened(rng.randf_range(-.12, .25)), Vector3.ZERO, 8)
-	for side in [-1.0, 1.0]:
-		var x: float = side * 6.31
-		mesh.form(Vector3(x, 1.18, -4.6), Vector3(.55, 2.66, .54), WOOD.darkened(.44), Vector3(.16, 0, side * .11))
-		for i in 17:
-			mesh.form(Vector3(x + rng.randf_range(-.91, .91), rng.randf_range(2.0, 3.85), -4.67 + rng.randf_range(-.8, .68)), Vector3(1.25, 1.28, 1.2), LEAF.lightened(rng.randf_range(-.24, .12)), Vector3.ZERO, 10)
-	mesh.finish(parent, "GrassAndPlanting")
+		walk.box(Vector3(x, .012, 2.91), Vector3(1.29, .043, 1.45), Color.WHITE)
+		walk.box(Vector3(x, .029, 3.672), Vector3(1.304, .078, .16), Color.WHITE)
+	textured(walk.finish(parent, "Sidewalk"), "sidewalk", .55, Color("#cdbfb4"))
+	var street := Sculpture.new()
+	street.box(Vector3(0, -.055, 5.43), Vector3(20.0, .11, 3.69), Color.WHITE)
+	textured(street.finish(parent, "Street"), "sidewalk", .35, Color("#55505a"))
