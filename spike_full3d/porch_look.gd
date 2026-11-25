@@ -73,7 +73,8 @@ func daylight(minute: float) -> void:
 	for pane in get_tree().get_nodes_in_group("zone_window"):
 		var mat := (pane as MeshInstance3D).material_override as StandardMaterial3D
 		mat.emission = d.sky.lerp(d.sun_color, .35)
-		mat.emission_energy_multiplier = .25 + d.sun_energy * .5
+		mat.emission_energy_multiplier = (.25 + d.sun_energy * .5) * (.15 if game.blinds_down else 1.0)
+		mat.albedo_color = Color("#8a8478") if game.blinds_down else Color("#e8e2d8")
 	minute_shown = minute
 
 func set_lite(on: bool) -> void:

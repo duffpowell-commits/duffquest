@@ -190,6 +190,13 @@ static func build(zones, root: Node3D) -> void:
 
 	zones.doors.append({"at": Vector2(-HALF_W + .45, DOOR_Z), "to": "porch", "spawn": Vector3(0, 0, -1.2),
 		"face": Vector3.BACK})
+	zones.uses = [  # USE at home (porch.gd use())
+		{"id": "couch", "label": "sit", "at": Vector2(cx + .4, cz + .8), "radius": .75},
+		{"id": "blinds", "label": "blinds", "at": Vector2(cx - 1.25, cz + .65), "radius": .5},
+		{"id": "fridge", "label": "snack", "at": Vector2(kx - .85, -2.6), "radius": .7},
+		{"id": "crib", "label": "peek", "at": Vector2(CRIB.x, CRIB.z + .75), "radius": .7},
+		{"id": "duck", "label": "squeak", "at": Vector2(MAT.x + .7, MAT.z), "radius": .7},
+	]
 	zones.spots = {
 		"couch_left": Vector3(cx - .52, 0, cz + .25),
 		"couch_right": Vector3(cx + .52, 0, cz + .25),

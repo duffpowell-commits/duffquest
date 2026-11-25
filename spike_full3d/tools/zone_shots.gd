@@ -46,6 +46,14 @@ func _run() -> void:
 			_set_time(s, t[1])
 			await _frames(30)
 			await _snap("%s_%s" % [spot[0], t[0]])
+	# USE at the fridge: the big button names what it does.
+	_set_time(s, 1050)
+	var fridge: Dictionary = s.zones.uses.filter(func(u): return u.id == "fridge")[0]
+	s.player.position = Vector3(fridge.at.x, 0, fridge.at.y)
+	s.player_model.rotation.y = -PI / 2
+	s.use("fridge")
+	await _frames(30)
+	await _snap("home_use")
 	quit()
 
 ## Porch (golden hour) -> up to the stoop door -> fade -> HOME -> over to the couch, then the kitchen.

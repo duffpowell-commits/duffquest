@@ -161,7 +161,10 @@ func _round(c: Vector2, r: float, col: Color, letter: String, down: bool) -> voi
 	draw_circle(c, r, Color(fill, a))
 	draw_circle(c - Vector2(0, r * .25), r * .62, Color(fill.lightened(.18), a * .6))
 	draw_arc(c, r, 0, TAU, 48, Color(INK, a), 3.6)
-	_label(c + Vector2(0, r * .34), letter, int(r * 1.0), Color(CREAM, a), -1, HORIZONTAL_ALIGNMENT_CENTER)
+	if letter.length() == 1:
+		_label(c + Vector2(0, r * .34), letter, int(r * 1.0), Color(CREAM, a), -1, HORIZONTAL_ALIGNMENT_CENTER)
+	else:  # a word (USE): centred across the button
+		_label(c + Vector2(-r, r * .2), letter, int(r * .55), Color(CREAM, a), r * 2, HORIZONTAL_ALIGNMENT_CENTER)
 
 func _hint(at: Vector2, text: String) -> void:
 	draw_string_outline(body, at - Vector2(60, 0), text, HORIZONTAL_ALIGNMENT_CENTER, 120, 18, 6, Color(0, 0, 0, .7))
@@ -179,7 +182,12 @@ func _draw() -> void:
 	_pause_button()
 	_foe_plate()
 	_callout()
-	if game.active:
+	if game.active and game.exploring:  # walking around: one big USE button, named for what's here
+		var spot: Dictionary = game.zones.nearest_use()
+		_round(A_AT, A_R, BTN_MAIN if spot else Color(BTN_MAIN, .4), "USE", a_down and not spot.is_empty())
+		if spot:
+			_hint(A_AT + Vector2(-A_R - 44, 26), spot.label)
+	elif game.active:
 		_round(B_AT, B_R, B_COL, "B", b_down)
 		_hint(B_AT + Vector2(-B_R - 38, 7), "roll")
 		_meter_button()

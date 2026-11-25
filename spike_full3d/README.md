@@ -183,6 +183,9 @@ repo; their photos never go here. Not in a scene yet (phase 4: home and the bloc
   monitor) plus clutter (laundry, shoes, mail, diaper bag, fridge drawings, plant, jacket). Also
   floor lamp, ceiling light, door back out. Render `docs/renders/porch3d/27_home_lived_in.jpg`. `spots` (couch seats, kitchen, table, door) are where
   Madison and Brittany will stand at home (phase 4).
+- USE at home (Duff's pick): indoors the fight buttons hide and the big button becomes USE, named for
+  what's near: sit (couch: half an hour passes, +1 heart), snack (fridge: +2 hearts), peek (crib), blinds
+  (window darkens), squeak (duck on the play mat). Spots live in `zones.uses`; `porch.gd use()` runs them.
 - Explore camera (`porch_camera.gd` mode `explore`): higher, wider, follows Duff; each zone sets its bounds.
   Fights keep the low brawler camera.
 - Light follows the HUD clock (`porch_daylight.gd`): night, dawn, morning, noon, afternoon, golden hour, dusk.

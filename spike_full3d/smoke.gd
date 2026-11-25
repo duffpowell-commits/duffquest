@@ -751,6 +751,38 @@ func _run() -> void:
 	sample.special_requested = true
 	await _frames(3)
 	_check(sample.active and sample.player_hp > 0 and sample._foe() == null, "A, K and R with nobody to fight do nothing harmful")
+	# USE at home (Duff's pick): A is USE, the other fight buttons are hidden.
+	var hidden := 0
+	for b in ["Dodge", "Kick", "Special"]:
+		hidden += int(not (sample.find_child(b, true, false) as CanvasItem).visible)
+	_check(hidden == 3, "at home only the big button shows (B, K, R hidden)")
+	var spot_of := {}
+	for u in zones.uses:
+		spot_of[u.id] = u
+	_check(spot_of.has("couch") and spot_of.has("fridge") and spot_of.has("crib") and spot_of.has("blinds") and spot_of.has("duck"),
+		"USE spots: couch, fridge, crib, blinds, duck")
+	sample.player.position = Vector3(spot_of.fridge.at.x, 0, spot_of.fridge.at.y)
+	sample.player_hp = 2
+	sample._press_a()
+	await _frames(3)
+	_check(sample.player_hp == 4 and sample.bubble_text.text.begins_with("Cold pizza") and sample.attack_time == 0,
+		"USE at the fridge: a snack, +2 hearts, no punch thrown")
+	sample.player.position = Vector3(spot_of.couch.at.x, 0, spot_of.couch.at.y)
+	var before: float = sample.hud.minutes
+	sample._press_a()
+	await _frames(3)
+	_check(sample.hud.minutes >= before + 30 and sample.player_hp == 5, "USE on the couch: half an hour passes, +1 heart")
+	sample.player.position = Vector3(spot_of.blinds.at.x, 0, spot_of.blinds.at.y)
+	sample._press_a()
+	await _frames(3)
+	var pane: MeshInstance3D = zones.root.get_node("Window")
+	_check(sample.blinds_down and (pane.material_override as StandardMaterial3D).albedo_color == Color("#8a8478"), "USE at the window: blinds down, the window darkens")
+	sample._press_a()
+	await _frames(3)
+	_check(not sample.blinds_down, "USE again: blinds up")
+	sample.player.position = Vector3(0, 0, 1.5)
+	await _frames(2)
+	_check(zones.nearest_use().is_empty(), "nothing to use in the middle of the room")
 	var door: Dictionary = zones.doors[0]
 	sample.player.position = Vector3(door.at.x, 0, door.at.y)
 	await create_timer(1.3, true, false, true).timeout

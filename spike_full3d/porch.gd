@@ -209,6 +209,8 @@ var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
 var callout_time := 0.0
 var zones  ## porch_zones.gd: the porch, the apartment, the doors between
 var exploring := false        ## walking around with nobody to fight (after the porch is secured)
+var use_requested := false    ## A while exploring: USE whatever Duff stands next to
+var blinds_down := false      ## the apartment blinds (USE at the window)
 
 func _ready() -> void:
 	_build_street()
@@ -353,6 +355,11 @@ func _physics_process(delta: float) -> void:
 	player_model.move(minf(speed / PLAYER_SPEED, 1.0))
 	if exploring:
 		zones.tick()
+		if use_requested:
+			use_requested = false
+			var spot: Dictionary = zones.nearest_use()
+			if not spot.is_empty():
+				use(spot.id)
 		return
 	if pirate_hp > 0:
 		if toss_foe != pirate:
@@ -377,7 +384,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if not event.is_pressed() or event.is_echo():
 		return
 	if event.is_action_pressed("ui_accept"):
-		attack_requested = true
+		_press_a()
 	elif event is InputEventKey:
 		if event.physical_keycode == KEY_SHIFT:
 			dodge_requested = true
@@ -1210,7 +1217,7 @@ func _button(layer: CanvasLayer, centre: Vector2, radius: float, action: String)
 	button.pressed.connect(func() -> void: hud.set(down, true))
 	button.released.connect(func() -> void: hud.set(down, false))
 	match action:
-		"attack": button.pressed.connect(func() -> void: attack_requested = true)
+		"attack": button.pressed.connect(_press_a)
 		"dodge": button.pressed.connect(func() -> void: dodge_requested = true)
 		"kick": button.pressed.connect(func() -> void: kick_requested = true)
 		"special": button.pressed.connect(func() -> void: special_requested = true)
@@ -1383,6 +1390,36 @@ func go_inside() -> void:
 	_start_exploring()
 	zones.travel("apartment", Vector3(-2.75, 0, -.45), Vector3.RIGHT)
 
+## A (the big button, or Space): a punch in a fight, USE while exploring.
+func _press_a() -> void:
+	if exploring:
+		use_requested = true
+	else:
+		attack_requested = true
+
+## USE: what each spot at home does (zone_apartment.gd lists them).
+func use(id: String) -> void:
+	match id:
+		"couch":  # five minutes: the clock jumps half an hour (watch the light move) and Duff gets a heart back
+			_say(player, "Five minutes. Just five.", 2.4)
+			hud.minutes += 30
+			player_hp = mini(PLAYER_HP, player_hp + 1)
+		"fridge":
+			_say(player, "Cold pizza. Breakfast of champions.", 2.4)
+			player_hp = mini(PLAYER_HP, player_hp + 2)
+		"crib":
+			_say(player, "Out cold. Nobody breathe.", 2.4)
+		"blinds":
+			blinds_down = not blinds_down
+			_say(player, "Blinds down." if blinds_down else "Let the light in.", 1.8)
+			if look:
+				look.daylight(look.minute_shown)
+		"duck":
+			_say(player, "Squeak.", 1.4)
+	if feel:
+		feel.sfx("pickup", .05, -6.0)
+	_update_hud()
+
 ## No more fight: foes, parcel and fight bits leave the scene; Duff walks freely.
 func _start_exploring() -> void:
 	exploring = true
@@ -1399,6 +1436,10 @@ func _start_exploring() -> void:
 		body.collision_layer = 0
 		body.collision_mask = 0
 	package.hide()
+	for button in ["Dodge", "Kick", "Special"]:  # only the big button stays: USE
+		var touch := find_child(button, true, false)
+		if touch:
+			touch.hide()
 	if obo_sign:
 		obo_sign.hide()
 	rival.cancel()

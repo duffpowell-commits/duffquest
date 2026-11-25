@@ -26,6 +26,7 @@ var zone := ""
 var indoor := false
 var doors: Array = []  ## [{at: Vector2 (x, z), to, spawn: Vector3, face: Vector3}]
 var spots := {}        ## named places in the zone (couch seats, kitchen...) for people at home
+var uses: Array = []   ## [{id, label, at: Vector2 (x, z), radius}]: what USE does near each spot
 var armed := false
 var moving := false
 var trips := 0         ## zone changes so far (tests)
@@ -49,6 +50,7 @@ func load_zone(which: String) -> void:
 	zone = which
 	doors = []
 	spots = {}
+	uses = []
 	root = Node3D.new()
 	root.name = "Zone_" + which
 	game.add_child(root)
@@ -87,6 +89,18 @@ func tick() -> void:
 		return
 	if armed:
 		travel(near.to, near.spawn, near.face)
+
+## The USE spot Duff is standing at (closest wins), or {} when there's nothing to use.
+func nearest_use() -> Dictionary:
+	var at := Vector2(game.player.position.x, game.player.position.z)
+	var best: Dictionary = {}
+	var best_d := INF
+	for spot in uses:
+		var d := at.distance_to(spot.at)
+		if d <= spot.radius and d < best_d:
+			best = spot
+			best_d = d
+	return best
 
 ## Fade out, swap zones, put Duff at `spawn` facing `face`, fade back in.
 func travel(to: String, spawn: Vector3, face := Vector3.BACK) -> void:
