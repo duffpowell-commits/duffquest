@@ -196,7 +196,7 @@ static func build(zones, root: Node3D) -> void:
 		"kitchen": Vector3(kx - .7, 0, -1.2),
 		"table": Vector3(dx0 - .55, 0, dz0),
 		"door": Vector3(-HALF_W + 1.2, 0, DOOR_Z),
-		"crib": Vector3(CRIB.x, 0, CRIB.z + .7),
+		"crib": Vector3(CRIB.x, 0, CRIB.z + .85),
 		"play_mat": Vector3(MAT.x + .5, 0, MAT.z),
 	}
 
@@ -318,8 +318,8 @@ static func _clutter(game, root: Node3D, kx: float) -> void:
 	# Diaper bag on the couch, a burp cloth over the arm, the remote.
 	junk.form(Vector3(-.15, .62, -2.55), Vector3(.18, .14, .1), Color("#d9a65a"))
 	junk.box(Vector3(-.15, .78, -2.55), Vector3(.2, .03, .03), Color("#8a5a2a"))
-	junk.box(Vector3(-2.1, .73, -2.65), Vector3(.12, .02, .3), Color("#f6f1e6"))
-	junk.box(Vector3(-1.5, .63, -2.5), Vector3(.16, .025, .05), Color("#1d1d20"), Vector3(0, .4, 0))
+	junk.box(Vector3(-2.1, .68, -2.65), Vector3(.12, .02, .3), Color("#f6f1e6"))
+	junk.box(Vector3(-1.5, .585, -2.5), Vector3(.16, .025, .05), Color("#1d1d20"), Vector3(0, .4, 0))
 	# Coffee table: a baby bottle, the monitor, mail.
 	var tz := BACK + .55 + 1.45
 	junk.form(Vector3(-.65, .47, tz - .12), Vector3(.035, .07, .035), Color("#f6f6f6"), Vector3.ZERO, 8)
@@ -327,19 +327,19 @@ static func _clutter(game, root: Node3D, kx: float) -> void:
 	junk.box(Vector3(-1.5, .46, tz + .12), Vector3.ONE * .08, Color("#efefef"))      # monitor
 	junk.form(Vector3(-1.5, .51, tz + .12), Vector3(.025, .025, .01), Color("#38c25a"))
 	for i in 3:
-		junk.box(Vector3(-1.38 + i * .03, .42 + i * .006, tz - .14), Vector3(.22, .004, .12), [Color("#f4f0e4"), Color("#d8c8a8"), Color("#e8e2f0")][i], Vector3(0, i * .4, 0))
+		junk.box(Vector3(-.75 + i * .03, .42 + i * .006, tz + .16), Vector3(.22, .004, .12), [Color("#f4f0e4"), Color("#d8c8a8"), Color("#e8e2f0")][i], Vector3(0, i * .4, 0))
 	# Kitchen: bottles drying on a rack, dishes, a fruit bowl, formula tin, drawings on the fridge.
 	junk.box(Vector3(kx - .05, .99, -.9), Vector3(.36, .04, .26), Color("#c8c8c8"))
 	for i in 3:
 		junk.form(Vector3(kx - .05, 1.08, -1.0 + i * .1), Vector3(.03, .08, .03), Color("#f8f8f8"), Vector3(0, 0, .3), 8)
 	for i in 3:
 		junk.form(Vector3(kx + .05, .98 + i * .02, -2.0), Vector3(.12, .012, .12), Color("#f0ece4"), Vector3.ZERO, 12)
-	junk.form(Vector3(kx - .1, 1.0, -.25), Vector3(.14, .05, .14), Color("#7a5236"), Vector3.ZERO, 12)
+	junk.form(Vector3(kx - .1, 1.0, -.12), Vector3(.14, .05, .14), Color("#7a5236"), Vector3.ZERO, 12)
 	for f in [[Vector3(-.04, .05, 0), Color("#e94b3c")], [Vector3(.05, .05, .03), Color("#f2c14e")], [Vector3(0, .07, -.05), Color("#7dbb42")]]:
-		junk.form(Vector3(kx - .1, 1.0, -.25) + f[0], Vector3.ONE * .045, f[1], Vector3.ZERO, 8)
+		junk.form(Vector3(kx - .1, 1.0, -.12) + f[0], Vector3.ONE * .045, f[1], Vector3.ZERO, 8)
 	junk.form(Vector3(kx - .15, 1.03, -.55), Vector3(.06, .08, .06), Color("#f0d070"), Vector3.ZERO, 10)  # formula tin
 	var front := HALF_W - .33 - .05 - .37  # fridge front face
-	for d in [[Vector3(front - .005, 1.35, -2.95), Color("#fff8e0")], [Vector3(front - .005, 1.1, -2.62), Color("#e8f4ff")]]:
+	for d in [[Vector3(front - .005, 1.35, -2.95), Color("#fff8e0")], [Vector3(front - .005, .7, -2.95), Color("#e8f4ff")]]:
 		junk.box(d[0], Vector3(.01, .22, .18), d[1])
 		junk.box(d[0] + Vector3(-.006, .02, -.03), Vector3(.005, .06, .08), Color("#e8869a"))
 		junk.box(d[0] + Vector3(-.006, -.05, .04), Vector3(.005, .04, .06), Color("#5b9bd5"))
@@ -353,4 +353,5 @@ static func _clutter(game, root: Node3D, kx: float) -> void:
 		junk.form(pot + Vector3(cos(a) * .12, .5 + (i % 3) * .07, sin(a) * .12), Vector3(.07, .18, .04), Color("#4f8a3c"), Vector3(sin(a) * .5, a, cos(a) * .5))
 	game._collider("PlantCollider", pot + Vector3(0, .3, 0), Vector3(.4, .6, .4), root)
 	junk.form(Vector3(kx - .1, .2, .35), Vector3(.14, .2, .14), Color("#3a3a40"), Vector3.ZERO, 10)  # bin
+	game._collider("BinCollider", Vector3(kx - .1, .2, .35), Vector3(.3, .4, .3), root)
 	junk.finish(root, "Clutter")
