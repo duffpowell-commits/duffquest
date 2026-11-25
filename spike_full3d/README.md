@@ -66,6 +66,15 @@ Head size (Duff, Nov 25: "resize the models to match one head size"): every body
 is the other option (whole body scaled; small heads make tall bodies). Compare:
 `docs/renders/porch3d/13_head_size_options.jpg`.
 
+## Feel: hits that land (Nov 25 2026)
+
+`porch_feel.gd`: hit sound, a 0.07 s hit-stop (0.16 s on a KO), camera shake (trauma squared, on the camera's
+h/v offset so it never fights the fight camera), knockback on both sides, swing/whoosh/dodge/tell/KO sounds,
+and music (neighbourhood, then the boss track when Mike walks in). Fighters are wider (`*_RADIUS`) and foes
+fight from beside Duff on his depth line (`_side_spot()`), so they face off left/right at arm's length
+instead of standing inside each other. `tools/play_bot.gd` plays the porch with real key presses
+(`good` or `mash`) and saves frames + a log. Before/after: `docs/renders/porch3d/14_hits_before_after.jpg`.
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the

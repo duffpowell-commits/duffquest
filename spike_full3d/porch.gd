@@ -5,6 +5,7 @@ const RigActor = preload("rig_actor.gd")
 const Kit = preload("porch_kit.gd")
 const Look = preload("porch_look.gd")
 const FightCam = preload("porch_camera.gd")
+const Feel = preload("porch_feel.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
@@ -36,6 +37,14 @@ const CHARGE_SPEED := 7.2
 const CHARGE_TIME := .85
 const MIKE_DIZZY := 1.0          ## after a charge: free hits
 const MIKE_SPAWN := Vector3(5.6, 0, 3.4)
+## Body widths: fighters stay an arm's length apart instead of standing inside each other.
+const DUFF_RADIUS := .42
+const PIRATE_RADIUS := .42
+const MIKE_RADIUS := .5
+const PIRATE_STOP := 1.0     ## the pirate stops walking in at this distance
+const PIRATE_REACH := 1.15   ## and jabs from here
+const MIKE_STOP := 1.05
+const MIKE_REACH := 1.2
 
 var player: CharacterBody3D
 var pirate: CharacterBody3D
@@ -65,6 +74,7 @@ var fps_label: Label
 var look: Node  ## porch_look.gd (golden hour); null with --plain
 var camera: Camera3D
 var fight_cam  ## porch_camera.gd: frames Duff and his current foe
+var feel  ## porch_feel.gd: sound, hit-stop, shake, knockback
 var player_hp := PLAYER_HP
 var pirate_hp := PIRATE_HP
 var attack_time := 0.0
@@ -80,13 +90,13 @@ var touch: Dictionary = {}
 
 func _ready() -> void:
 	_build_street()
-	player = _actor(Vector3(-2, 0, 3))
-	pirate = _actor(Vector3(3, 0, -1))
+	player = _actor(Vector3(-2, 0, 3), DUFF_RADIUS)
+	pirate = _actor(Vector3(3, 0, -1), PIRATE_RADIUS)
 	player_model = RigActor.make(player, "duff", DUFF_HEIGHT)
 	pirate_model = RigActor.make(pirate, "pirate", PIRATE_HEIGHT)
 	pirate_model.fit_head_bone()  # every head matches Duff's (Duff, Nov 25)
 	package = Art.parcel(pirate_model, Vector3(0, .78, -.3))
-	mike = _actor(MIKE_SPAWN)
+	mike = _actor(MIKE_SPAWN, MIKE_RADIUS)
 	mike_model = RigActor.make(mike, "mike", MIKE_HEIGHT)
 	mike_model.fit_head_bone()
 	mike.hide()
@@ -104,6 +114,7 @@ func _ready() -> void:
 	impact = burst.finish(self, "Impact")
 	impact.hide()
 	fight_cam.snap(player.position, current_foe())
+	feel = Feel.make(self, camera)
 	if not OS.get_cmdline_user_args().has("--plain"):
 		look = Look.apply(self, [player_model, pirate_model, mike_model])
 	_build_hud()
@@ -174,6 +185,8 @@ func _movement() -> Vector3:
 	return Vector3(x, 0, z).normalized()
 
 func _move(actor: CharacterBody3D, motion: Vector3) -> void:
+	if feel:
+		motion += feel.knock_of(actor)
 	actor.velocity = Vector3(motion.x, -2, motion.z)
 	actor.move_and_slide()
 
@@ -184,20 +197,24 @@ func _tick_pirate() -> void:
 	var direction := offset.normalized()
 	if direction != Vector3.ZERO:
 		pirate_model.rotation.y = atan2(-direction.x, -direction.z)
-	_move(pirate, direction * PIRATE_SPEED if distance > .85 else Vector3.ZERO)
+	var lane := _side_spot(pirate, PIRATE_STOP) - pirate.position
+	lane.y = 0
+	_move(pirate, lane.normalized() * PIRATE_SPEED if lane.length() > .12 else Vector3.ZERO)
 	var speed := Vector2(pirate.get_real_velocity().x, pirate.get_real_velocity().z).length()
 	pirate_model.move(minf(speed / PIRATE_SPEED, 1.0) * .55)
-	if distance <= 1.04 and pirate_recovery <= 0 and _clear_strike(pirate, player):
+	if distance <= PIRATE_REACH and pirate_recovery <= 0 and _clear_strike(pirate, player):
 		pirate_recovery = 1.15
 		pirate_model.strike("jab", PIRATE_ATTACK_ANIM)
-		_hurt_duff()
+		_hurt_duff(pirate.position)
 
 ## One point of damage unless Duff is in dodge / hit immunity. Returns true when it landed.
-func _hurt_duff() -> bool:
+func _hurt_duff(from: Vector3) -> bool:
 	if invulnerable > 0 or not active:
 		return false
 	player_hp -= 1
 	_show_impact(player.position)
+	if feel:
+		feel.hurt(player, from)
 	invulnerable = .45
 	_update_hud()
 	if player_hp <= 0:
@@ -205,6 +222,8 @@ func _hurt_duff() -> bool:
 		hit_marker.hide()
 		player_model.strike("ko")
 		message.text = "Duff is down. Retry the encounter."
+		if feel:
+			feel.stop_music()
 	else:
 		player_model.strike("hit", HIT_ANIM)
 	return true
@@ -218,10 +237,13 @@ func _attack() -> void:
 	jab_next = not jab_next
 	var offset := foe.position - player.position
 	offset.y = 0
-	if offset.length() > 1.75 or facing.dot(offset.normalized()) < .38:
+	if offset.length() > 1.75 or facing.dot(offset.normalized()) < .38 or not _clear_strike(player, foe):
+		if feel:
+			feel.sfx("swing")
 		return
-	if not _clear_strike(player, foe):
-		return
+	if feel:
+		var ko := (foe == mike and mike_hp <= 1) or (foe == pirate and pirate_hp <= 1)
+		feel.landed(foe, player.position, ko)
 	if foe == mike:
 		_hit_mike()
 		return
@@ -259,6 +281,9 @@ func _mike_arrives() -> void:
 	mike.collision_layer = ACTOR_LAYER
 	mike.collision_mask = WORLD_LAYER | ACTOR_LAYER
 	message.text = "Marketplace Mike: That pirate was my best guy. Porch box goes for twelve bucks. Or best offer."
+	if feel:
+		feel.sfx("pickup", 0.0)
+		feel.play_music("mus_boss")
 	_update_hud()
 
 func _tick_mike(delta: float) -> void:
@@ -272,15 +297,17 @@ func _tick_mike(delta: float) -> void:
 		"stalk":
 			if direction != Vector3.ZERO:
 				mike_model.rotation.y = atan2(-direction.x, -direction.z)
-			if distance <= 1.05 and mike_recovery <= 0 and _clear_strike(mike, player):
+			if distance <= MIKE_REACH and mike_recovery <= 0 and _clear_strike(mike, player):
 				mike_recovery = .8 if mike_raged else 1.15
 				mike_model.strike("jab", PIRATE_ATTACK_ANIM)
-				_hurt_duff()
+				_hurt_duff(mike.position)
 			elif mike_cool <= 0 and distance >= MIKE_SPECIAL_RANGE and active:
 				_mike_special(direction)
 			var speed := MIKE_RAGE_SPEED if mike_raged else MIKE_SPEED
-			var walking := distance > .9 and mike_state == "stalk"
-			var heading := direction
+			var lane := _side_spot(mike, MIKE_STOP) - mike.position
+			lane.y = 0
+			var walking := lane.length() > .12 and mike_state == "stalk"
+			var heading := lane.normalized()
 			if not _clear_strike(mike, player):
 				heading = (direction + direction.cross(Vector3.UP)).normalized()  # step around the planter
 			_move(mike, heading * speed if walking else Vector3.ZERO)
@@ -303,8 +330,8 @@ func _tick_mike(delta: float) -> void:
 				mike_model.play("charge")
 				mike_model.player.speed_scale = 1.0
 		"charge":
-			if distance <= .95 and charge_dir.dot(direction) > .2:
-				_hurt_duff()
+			if distance <= MIKE_REACH and charge_dir.dot(direction) > .2:
+				_hurt_duff(mike.position)
 				_mike_dizzy()
 				return
 			_move(mike, charge_dir * CHARGE_SPEED)
@@ -326,6 +353,8 @@ func _tick_mike(delta: float) -> void:
 func _mike_special(direction: Vector3) -> void:
 	mike_cool = MIKE_SPECIAL_EVERY * (.7 if mike_raged else 1.0)
 	charge_dir = direction
+	if feel:
+		feel.sfx("tele", 0.0)
 	if charge_next:
 		mike_state = "charge_tele"
 		mike_timer = CHARGE_TELE
@@ -356,6 +385,9 @@ func _hit_mike() -> void:
 		active = false
 		hit_marker.hide()
 		message.text = "Mike: Okay. Mark me as sold. Parcel recovered. Porch secured."
+		if feel:
+			feel.stop_music()
+			feel.sfx("win", 0.0)
 		return
 	if mike_state == "charge":
 		return  # mid-charge he shrugs it off
@@ -376,6 +408,8 @@ func _throw_sign() -> void:
 	sign_velocity = charge_dir * SIGN_SPEED
 	sign_life = 1.4
 	obo_sign.show()
+	if feel:
+		feel.sfx("whoosh")
 
 func _tick_sign(delta: float) -> void:
 	if not obo_sign.visible:
@@ -390,7 +424,7 @@ func _tick_sign(delta: float) -> void:
 	obo_sign.rotation.z = sin(sign_life * 14.0) * .35  # tumbling wobble
 	var gap := obo_sign.position - player.position
 	gap.y = 0
-	if gap.length() <= SIGN_RADIUS and _hurt_duff():
+	if gap.length() <= SIGN_RADIUS and _hurt_duff(obo_sign.position):
 		obo_sign.hide()  # a dodged sign keeps flying past him
 
 ## Mike's OBO sign, readable from both sides.
@@ -410,6 +444,17 @@ func _obo_sign() -> Node3D:
 		board.add_child(text)
 	return board
 
+## Where a foe stands to fight: beside Duff on its own side, at arm's length, on his depth line,
+## so the two face off left/right like a brawler and nobody hides the other from the camera.
+func _side_spot(foe: CharacterBody3D, gap: float) -> Vector3:
+	var side := signf(foe.position.x - player.position.x)
+	if side == 0:
+		side = 1.0
+	var spot := player.position + Vector3(side * gap, 0, 0)
+	if absf(spot.x) > 5.0:  # no room at the fence: take the other side
+		spot = player.position - Vector3(side * gap, 0, 0)
+	return spot
+
 func _clear_strike(attacker: CharacterBody3D, target: CharacterBody3D) -> bool:
 	var height := Vector3.UP * .50
 	var ray := PhysicsRayQueryParameters3D.create(
@@ -423,17 +468,19 @@ func _dodge() -> void:
 		player_model.strike("dodge", DODGE_ANIM)
 		dodge_recovery = .65
 		invulnerable = maxf(invulnerable, .27)
+		if feel:
+			feel.sfx("roll")
 
 func _reset() -> void:
 	get_tree().reload_current_scene()
 
-func _actor(at: Vector3) -> CharacterBody3D:
+func _actor(at: Vector3, radius := .34) -> CharacterBody3D:
 	var actor := CharacterBody3D.new()
 	actor.collision_layer = ACTOR_LAYER
 	actor.collision_mask = WORLD_LAYER | ACTOR_LAYER
 	var collision := CollisionShape3D.new()
 	var shape := CapsuleShape3D.new()
-	shape.radius = .34
+	shape.radius = radius
 	shape.height = 1.4
 	collision.shape = shape
 	collision.position.y = .7
