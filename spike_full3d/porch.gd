@@ -127,6 +127,7 @@ var charge_dir: Vector3:
 var obo_sign: Node3D:
 	get: return boss.obo_sign
 var rival  ## foe_sendback.gd: Sir Sends-It-Back, the third fight (after Mike)
+var special_strike := false  ## true only while Red Right Hand / Return to Sender deal their hit
 var rival_in := -1.0  ## seconds until he walks in once Mike is sold
 var sendback: CharacterBody3D:
 	get: return rival.body
@@ -546,7 +547,7 @@ func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
 			mike_recovery = maxf(mike_recovery, stun)
 		return
 	if foe == sendback:
-		rival.hit(damage, stun, special_time > 0)  # a special goes through his cloche
+		rival.hit(damage, stun, special_strike)  # a special goes through his cloche (a wall bounce after one doesn't)
 		return
 	thief.hit(damage, stun)
 
@@ -642,7 +643,9 @@ func _tick_special(delta: float) -> void:
 					feel.add_trauma(.7)
 					feel.sfx("sting_ko", 0.0, -2.0)
 				hud.flash(Color(0.85, 0.08, 0.06), .35)
+				special_strike = true
 				_damage(foe, RRH_DAMAGE, FINISHER_STUN * 1.5)
+				special_strike = false
 	if special_time <= 0:
 		_end_special()
 
@@ -749,7 +752,9 @@ func _toss_lands() -> void:
 		feel.sfx("sting_ko", 0.0, -2.0)
 	hud.flash(Color(0.85, 0.08, 0.06), .3)
 	var was_pirate := foe == pirate
+	special_strike = true
 	_damage(foe, RTS_DAMAGE, FINISHER_STUN * 1.5)
+	special_strike = false
 	model.rotation.x = 0
 	var down := _hp_of(foe) <= 0
 	# _damage just started a KO fall or a hit stagger from standing: he is already flat, so hold the flyup's last frame

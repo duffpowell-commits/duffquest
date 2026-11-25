@@ -648,9 +648,9 @@ func _run() -> void:
 		"punches and kicks bounce off the cloche: SENT BACK, Duff is shoved away")
 	sample.player.position = Vector3(0, 0, 1)
 	sample.sendback.position = Vector3(1.2, 0, 1)
-	sample.special_time = 1.0  # what Red Right Hand's and Return to Sender's hits carry
+	sample.special_strike = true  # what Red Right Hand's and Return to Sender's hits carry
 	sample._damage(sample.sendback, sample.RRH_DAMAGE, 1.0)
-	sample.special_time = 0
+	sample.special_strike = false
 	sb.raged = true  # his rage line is Mike's tested pattern; here the free hit is the point
 	_check(sb.hp == sb_hp - sample.RRH_DAMAGE - 1 and not sb.cloche.visible and sb.state == "dizzy" and sample.callout == "CLOCHE SMASHED!",
 		"a special smashes the cloche: +1 damage and he's dizzy")
