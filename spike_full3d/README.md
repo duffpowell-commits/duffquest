@@ -75,6 +75,19 @@ fight from beside Duff on his depth line (`_side_spot()`), so they face off left
 instead of standing inside each other. `tools/play_bot.gd` plays the porch with real key presses
 (`good` or `mash`) and saves frames + a log. Before/after: `docs/renders/porch3d/14_hits_before_after.jpg`.
 
+## Real fight: skill matters (Nov 25 2026)
+
+- Every melee swing has a wind-up with a red ring under the foe (pirate 0.4 s, Mike 0.38 s). Wind-ups have
+  armour: hitting into one still lands, but so does his jab. Dodge it, then punish while he recovers.
+- Flurries get read: the hit after two in a row (0.9 s apart or less) is blocked (bonk) and he counters in 0.18 s,
+  too fast to dodge. Raged Mike blocks after one. A dizzy Mike (after a dodged charge) can't block; a taunting one
+  blocks everything.
+- Up close, Mike's jab is a shove (7.5 m/s) that throws Duff out to sign/charge range, and his next special
+  comes 0.35 s later. Specials fire from 2.2 m.
+- HP: pirate 5, Mike 8 (rages at 4). Duff 5, refilled when Mike walks in.
+- Bot check (`tools/play_bot.gd`, game time, 0.25 s reactions): `good` wins at 5/5 HP in 13 s; `mash` is KO'd
+  with Mike on 3. Frames: `docs/renders/porch3d/15_real_fight.jpg`.
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the

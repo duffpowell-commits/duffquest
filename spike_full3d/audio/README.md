@@ -1,1 +1,1 @@
-Copies of the main game's clips (assets/audio, same sources as listed there): hit, hurt, swing, whoosh, roll, tele, sting_ko, pickup, win, mus_edm_neighborhood, mus_boss. Played by porch_feel.gd.
+Copies of the main game's clips (assets/audio, same sources as listed there): hit, hurt, swing, whoosh, roll, tele, sting_ko, pickup, win, bonk (blocked hit), mus_edm_neighborhood, mus_boss. Played by porch_feel.gd.
