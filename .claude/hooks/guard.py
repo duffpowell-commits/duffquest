@@ -11,6 +11,8 @@ Rules live here, not in prose, because a hook can't drift (Reddit r/ClaudeCode t
   4. Signing keys: never written, generated or committed in plain form (one keystone for all
      games; Lethemoor keeps its own; a lost or changed key breaks in-app updates forever).
   5. No secrets in commits (.env, tokens, unencrypted keystores).
+  6. Never add the `duff-ok` label: it is Duff's tap that approves a rule change (rule-lock,
+     Nov 24, 2026). Checked on Bash (gh/curl) and on MCP tool calls that set labels.
 Exit 2 + a reason on stderr = the call is blocked and the reason goes back to Claude.
 """
 import json, os, re, subprocess, sys
@@ -168,6 +170,23 @@ def check_write(path):
         deny("writing a signing key file (%s). Keys are made once by make_keystone.yml and never "
              "change; Lethemoor's key never goes into another repo." % path)
 
+def check_label(tool, inp):
+    """Rule 6: agents never add Duff's duff-ok label (rule-lock approval)."""
+    if tool == "Bash":
+        cmd = inp.get("command", "")
+        # Writes only (reading label history stays allowed); GitHub matches label names any case.
+        if "duff-ok" in cmd.lower() and re.search(
+                r"--add-label|--label\b|labels?\s*=|labels\[\]|-X\s*(POST|PUT|PATCH)|--method\s*(POST|PUT|PATCH)",
+                cmd, re.I):
+            deny("the duff-ok label is Duff's approval of a rule change; only he adds it (rule-lock).")
+    elif tool.startswith("mcp__"):
+        labels = inp.get("labels")
+        if isinstance(labels, str):
+            labels = labels.split(",")
+        if isinstance(labels, list) and any(str(l).strip().lower() == "duff-ok" for l in labels):
+            deny("the duff-ok label is Duff's approval of a rule change; only he adds it (rule-lock).")
+
+
 def main():
     if len(sys.argv) > 2 and sys.argv[1] == "--hash":   # used by tools/test.sh
         print(code_hash(sys.argv[2], False))
@@ -177,6 +196,7 @@ def main():
     except Exception:
         return
     tool, inp, cwd = e.get("tool_name", ""), e.get("tool_input", {}) or {}, e.get("cwd") or os.getcwd()
+    check_label(tool, inp)
     if tool == "Bash":
         check_bash(inp.get("command", ""), cwd)
     elif tool in ("Write", "Edit", "MultiEdit", "NotebookEdit"):
