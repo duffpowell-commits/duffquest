@@ -28,6 +28,9 @@ const A_AT := Vector2(870, 456)
 const A_R := 64.0
 const B_AT := Vector2(738, 348)
 const B_R := 48.0
+const K_AT := Vector2(870, 300)  ## the push kick, above A
+const K_R := 48.0
+const K_COL := Color("#c7802a")
 const START_MIN := 7 * 60    ## the cold open starts 7:00 AM, like the main game
 const GAME_MIN_PER_SEC := .2 ## the clock creeps: one game minute every 5 seconds
 
@@ -37,6 +40,7 @@ var body: Font
 var heart: Texture2D
 var a_down := false
 var b_down := false
+var k_down := false
 var minutes := 0.0
 var menu: Control        ## the open title / pause / end screen, or null
 var screen := ""         ## "", "title", "pause", "settings", "ko", "win"
@@ -163,9 +167,12 @@ func _draw() -> void:
 	_goal()
 	_pause_button()
 	_foe_plate()
+	_callout()
 	if game.active:
 		_round(B_AT, B_R, B_COL, "B", b_down)
 		_hint(B_AT + Vector2(-B_R - 38, 7), "roll")
+		_round(K_AT, K_R, K_COL, "K", k_down)
+		_hint(K_AT + Vector2(-K_R - 38, 7), "kick")
 		_round(A_AT, A_R, A_COL, "A", a_down)
 		_hint(A_AT + Vector2(-A_R - 44, 26), "bonk")
 
@@ -218,6 +225,16 @@ func _pause_button() -> void:
 	draw_rect(Rect2(c + Vector2(3, -11), Vector2(6, 22)), CREAM)
 	_text(Vector2(PAUSE.position.x - 96, PAUSE.end.y + 22), "%d FPS%s" % [Engine.get_frames_per_second(),
 		" LITE" if game.look and game.look.lite else ""], 15, DIM, 150, HORIZONTAL_ALIGNMENT_RIGHT)
+
+## Combo callout under the strip, right side: gold "2 HIT", "KNOCKDOWN!", "DASH HOOK!" that pops and fades.
+func _callout() -> void:
+	if game.callout_time <= 0 or game.callout == "":
+		return
+	var t: float = game.callout_time
+	var pop := 1.0 + .35 * clampf((t - (game.CALLOUT_TIME - .12)) / .12, 0, 1)  # starts big, settles
+	var a := clampf(t / .25, 0, 1)
+	var size := int(44 * pop)
+	_label(Vector2(600, 150 + size * .3), game.callout, size, Color(GOLD, a), 340, HORIZONTAL_ALIGNMENT_RIGHT, display, 9)
 
 ## Bottom centre: the foe's name plate and health bar (the main game's boss bar).
 func _foe_plate() -> void:
@@ -331,7 +348,7 @@ func show_title() -> void:
 	row.add_child(_pill("Settings", BTN_ALT, show_settings))
 	m.add_child(row)
 	if not DisplayServer.is_touchscreen_available():
-		_title_label(m, "Keys: WASD to move, Space to bonk, Shift to roll, Esc for the menu", Vector2(0, 490), 960, 17, DIM, body)
+		_title_label(m, "Keys: WASD move, Space bonk, K kick, Shift roll, Esc menu", Vector2(0, 490), 960, 17, DIM, body)
 
 ## Pause / settings: a phone glass sheet rising from the bottom with a grabber.
 func open_pause() -> void:

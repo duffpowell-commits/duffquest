@@ -104,6 +104,20 @@ instead of standing inside each other. `tools/play_bot.gd` plays the porch with 
 - Lite (the auto fallback under 50 FPS) also draws the 3D at 3/4 size and scales it up with 4.7's nearest filter,
   about 44% fewer pixels. Full vs lite: `docs/renders/porch3d/17_lite_nearest.jpg`.
 
+## Kick, combos (Nov 25 2026)
+
+Duff: "add a kick button" and "lets discuss specials and combos". He picked the push kick from four Meshy clips.
+- **K** (round orange button above A, or K/C): push kick. Longer reach (2.05) than a punch, goes through a guard
+  (not Mike's rant), shoves the foe back.
+- **Rhythm combos**: press again after the swing and within `COMBO_GAP` (.7 s). A press mid-swing is mashing and
+  drops the combo (mashed hits still get guarded). A A A = knockdown (2 damage, big shove, stun). A A K = launcher
+  (2 damage, bigger shove); a launched foe that hits the fence, planter or a wall within .5 s takes 1 more (a thud and shake, no callout: Duff's call).
+- **Roll → A** within .55 s: homing dash hook (reach 2.6). **Roll through a hit → K** within .6 s: counter kick
+  in slow motion for 2.
+- Gold callouts under the strip (2 HIT, KNOCKDOWN!, LAUNCHER!, DASH HOOK!, PERFECT!, COUNTER KICK!), .75 s of real time.
+- Kicks have a .9 s cooldown and a plain kick only staggers (HIT_ANIM); only the launcher arms the wall +1.
+- Bot: careful wins; the masher (taps again mid-swing) and the kick spammer (`kickmash`) are KO'd. Preview: `tools/combo_shots.gd`.
+
 ## HUD and menus (Nov 25 2026)
 
 Duff: "get the slice closer to the original hud and menus ... improve them". `porch_hud.gd` draws the main game's
@@ -162,6 +176,8 @@ judged on the phone.
 | Duff concept from his photos (not used; superseded by his turnaround) | image-to-image 01a20f83-096d… | 9 |
 | Duff from his turnaround (front, left, back), A-pose, 14k tris, 2K texture | multi-image-to-3d 01a20f83-8061… | 30 |
 | Duff rig + 6 clips (idle 0, jab 192, hook 193, dodge 156, hit 178, KO 187) | rigging 01a20f85… | 5 + 18 |
+| Duff re-rig (Nov 25; the first rig's full id wasn't recorded and Meshy can't list rigs) | rigging 01a2139a-2c8e-704b-b2e6-af6cb09b81f3 | 5 |
+| Duff push kick (Spartan Kick, 206), on that rig; baked into `duff_clips.res` as `kick` | animate 01a2139a-82d8-72a3-b49b-0f65e56136a8 | 3 |
 | Pirate A-pose reference from the approved render | image-to-image 01a20f81-9222… | 9 |
 | Pirate model, 12k tris, 2K texture | image-to-3d 01a20f81-fc3a… | 30 |
 | Pirate rig + 4 clips (idle 0, jab 191, hit 178, KO 187) | rigging 01a20f83-e400… | 5 + 12 |

@@ -13,6 +13,19 @@ func _check(result: bool, title: String) -> void:
 		failures += 1
 		push_error("FAIL: " + title)
 
+## A press that isn't part of a combo: the swing is over, no rhythm going, no roll just before.
+func _plain(sample) -> void:
+	sample.attack_time = 0
+	sample.combo = 0
+	sample.combo_broken = false
+	sample.last_dodge = -99.0
+	sample.kick_cool = 0
+
+## The next press in rhythm: the swing is over and it comes .4 s after the last hit.
+func _beat(sample) -> void:
+	sample.clock += .4
+	sample.attack_time = 0
+
 func _frames(count: int) -> void:
 	for i in count:
 		await physics_frame
@@ -158,12 +171,12 @@ func _run() -> void:
 	sample.pirate.position = Vector3(0, 0, 1)
 	await _frames(2)
 	sample.facing = Vector3.BACK
-	sample.attack_time = 0
+	_plain(sample)
 	sample._attack()
 	_check(sample.pirate_hp == sample.PIRATE_HP, "wrong-facing attack misses")
 	sample.facing = Vector3.FORWARD
 	sample.pirate.position = Vector3(0, 0, -.1)
-	sample.attack_time = 0
+	_plain(sample)
 	sample._attack()
 	_check(sample.pirate_hp == sample.PIRATE_HP, "out-of-range attack misses")
 
@@ -172,7 +185,7 @@ func _run() -> void:
 	sample.player.position = corner + Vector3(.3, 0, -.5)  # 1.13 apart, inside both reaches,
 	sample.pirate.position = corner + Vector3(-.5, 0, .3)  # the line between crosses the planter
 	sample.facing = (sample.pirate.position - sample.player.position).normalized()
-	sample.attack_time = 0
+	_plain(sample)
 	sample.pirate_recovery = 0
 	sample.invulnerable = 0
 	await _frames(2)
@@ -188,7 +201,7 @@ func _run() -> void:
 	sample._dodge()
 	await _frames(2)
 	sample._tick_pirate()
-	sample.attack_time = 0
+	_plain(sample)
 	sample._attack()
 	_check(sample.player_hp == 5 and sample.pirate_hp == sample.PIRATE_HP,
 		"dodge grants brief invulnerability and cancels attacking")
@@ -216,25 +229,138 @@ func _run() -> void:
 	sample.pirate_recovery = 0
 	sample.invulnerable = 0
 	sample._tick_pirate()
-	sample.attack_time = 0
+	_plain(sample)
 	sample._attack()
 	_check(sample.pirate_hp == sample.PIRATE_HP - 1 and sample.pirate_wind > 0,
 		"hitting into his wind-up lands but doesn't stop the jab")
 	sample._tick_pirate(sample.PIRATE_TELE + .01)
 	_check(sample.player_hp == 3, "trading into a wind-up costs Duff a hit")
-	sample.attack_time = 0
+	_plain(sample)
 	sample._attack()
-	sample.attack_time = 0
+	_plain(sample)
 	sample._attack()
 	_check(sample.pirate_hp == sample.PIRATE_HP - 2 and sample.blocked == 1 and sample.pirate_wind > 0,
 		"the third hit of a flurry is blocked and the pirate counters")
 	sample.invulnerable = 0
 	sample._tick_pirate(sample.COUNTER_TELE + .01)
 	_check(sample.player_hp == 2, "mashing into his guard costs Duff a hit")
+	# Combos: A in rhythm can't be guarded and the third is a knockdown; a mashed press starts over.
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.chain = {}
+	sample.pirate_wind = 0
+	sample._tell(null)
+	var blocks_before: int = sample.blocked
+	_plain(sample)
+	sample._attack()
+	_beat(sample)
+	sample._attack()
+	_check(sample.combo == 2 and sample.callout == "2 HIT", "A again in rhythm is a 2-hit combo")
+	_beat(sample)
+	sample._attack()
+	_check(sample.pirate_hp == sample.PIRATE_HP - 4 and sample.blocked == blocks_before and sample.callout == "KNOCKDOWN!"
+		and sample.pirate_recovery >= sample.FINISHER_STUN, "third hit in rhythm is an unguardable knockdown for 2")
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.chain = {}
+	_plain(sample)
+	sample._attack()
+	sample._attack()  # pressed mid-swing: mashing
+	_beat(sample)
+	sample._attack()
+	_check(sample.combo == 1 and not sample.combo_broken, "a press mid-swing drops the combo: the next hit starts over")
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.chain = {}
+	sample.pirate_wind = 0
+	sample._tell(null)
+	_plain(sample)
+	sample.pirate.position = Vector3(1.6, 0, 0)  # 2.3 away, off to the side
+	sample.facing = Vector3.FORWARD
+	sample.last_dodge = sample.clock - .3
+	sample._attack()
+	_check(sample.pirate_hp == sample.PIRATE_HP - 1 and sample.callout == "DASH HOOK!" and sample.facing.x > .5,
+		"A right after a roll is a homing dash hook")
+	# K: the push kick.
+	_check(sample.player_model.has_clip("kick"), "Duff has the real push-kick clip")
+	var k_btn: TouchScreenButton = sample.find_child("Kick", true, false)
+	var k_box := Rect2(k_btn.position, k_btn.shape.size)
+	_check(not k_box.grow(8).intersects(hit_box) and not k_box.grow(8).intersects(dodge_box) and k_box.end.x <= view.x,
+		"K is its own thumb button, 8+ clear of A and B")
+	sample.pirate.position = Vector3(0, 0, .2)  # 1.8 away: past a punch, inside a kick
+	sample.facing = Vector3.FORWARD
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.chain = {sample.pirate: [5, sample.clock]}  # mid-flurry: a punch would be guarded
+	_plain(sample)
+	sample._kick()
+	_check(sample.pirate_hp == sample.PIRATE_HP - 1 and sample.callout == "KICK!" and sample.player_model.current == "kick"
+		and sample.feel.knock_of(sample.pirate).length() > sample.feel.KNOCK_HIT * 2,
+		"K reaches past a punch, goes through the guard and shoves him back")
+	sample.pirate.position = Vector3(0, 0, 1)
+	sample.pirate_hp = sample.PIRATE_HP + 2  # so the wall hit below doesn't KO him
+	_plain(sample)
+	sample._attack()
+	_beat(sample)
+	sample._attack()
+	_beat(sample)
+	sample.kick_cool = 0
+	sample._kick()
+	_check(sample.pirate_hp == sample.PIRATE_HP - 2 and sample.callout == "LAUNCHER!" and sample.launched.has(sample.pirate),
+		"A A K is a launcher for 2")
+	sample._wall_splat(sample.pirate)
+	_check(sample.pirate_hp == sample.PIRATE_HP - 3 and sample.wall_hits == 1 and sample.callout == "LAUNCHER!",
+		"a launched foe into a wall takes 1 more, with a thud and no callout")
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.pirate.position = Vector3(1.2, 0, 1.2)
+	sample.facing = Vector3.FORWARD
+	_plain(sample)
+	var hp_before: int = sample.player_hp
+	sample.invulnerable = .3
+	sample.last_dodge = sample.clock - .1
+	sample._hurt_duff(sample.pirate.position)
+	sample.attack_time = 0
+	sample._kick()
+	_check(sample.player_hp == hp_before and sample.pirate_hp == sample.PIRATE_HP - 2 and sample.callout == "COUNTER KICK!",
+		"roll through a hit, then K: a homing counter kick for 2")
+	var hp_after_counter: int = sample.pirate_hp
+	sample.attack_time = 0
+	sample._kick()
+	_check(sample.pirate_hp == hp_after_counter and sample.kick_cool > 0, "kicks have a cooldown")
+	# Real physics: a plain kick in the open isn't a wall hit; a launcher into the planter is.
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.wall_hits = 0
+	sample.player.position = Vector3(-3, 0, 2.5)
+	sample.pirate.position = Vector3(-3, 0, 1.2)
+	sample.facing = Vector3.FORWARD
+	_plain(sample)
+	sample.pirate_recovery = 9.0
+	sample.launched = {}
+	sample._kick()
+	sample.set_physics_process(true)
+	await create_timer(.7, true, false, true).timeout  # real time: the hit-stop slows the first frames
+	sample.set_physics_process(false)
+	_check(sample.pirate_hp == sample.PIRATE_HP - 1 and sample.wall_hits == 0 and sample.launched.is_empty(),
+		"a plain kick in the open does 1: the ground isn't a wall (%d HP, %d walls, active %s, %s)" % [sample.pirate_hp, sample.wall_hits, sample.active, sample.callout])
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.player.position = sample.PLANTER_AT + Vector3(-.3, 0, 2.6)
+	sample.pirate.position = sample.PLANTER_AT + Vector3(-.3, 0, 1.15)
+	sample.facing = Vector3.FORWARD
+	_plain(sample)
+	sample.combo = 2
+	sample.combo_at = sample.clock
+	sample._kick()
+	sample.set_physics_process(true)
+	await create_timer(.7, true, false, true).timeout
+	sample.set_physics_process(false)
+	_check(sample.wall_hits == 1 and sample.pirate_hp == sample.PIRATE_HP - 3, "a launcher into the planter takes 1 more (%d HP, %d walls, at %s)" % [sample.pirate_hp, sample.wall_hits, sample.pirate.position])
+	sample.pirate_recovery = 0
+	sample.launched = {}
+	sample.player.position = Vector3(0, 0, 2)
+	sample.pirate.position = Vector3(0, 0, 1)
+	sample.facing = Vector3.FORWARD
+	sample.pirate_hp = 3
+	sample.pirate_recovery = 0
 	sample.player_hp = 3
 	for expected in range(sample.PIRATE_HP - 3, -1, -1):
 		sample.chain = {}
-		sample.attack_time = 0
+		_plain(sample)
 		sample._attack()
 		_check(sample.pirate_hp == expected, "unobstructed Duff attack brings pirate HP to %d" % expected)
 	_check(sample.player_model.current in ["jab", "hook"], "Duff's attack plays a jab or hook clip")
@@ -243,9 +369,9 @@ func _run() -> void:
 		"defeated pirate plays its KO clip, drops the visible parcel and clears actor collision")
 	_check(not sample.mike.visible and sample.mike.collision_layer == 0 and sample.mike_state == "away",
 		"Marketplace Mike waits off-screen during the pirate fight")
-	_check(sample.feel.trauma > 0 and sample.feel.knock_of(sample.player) != Vector3.ZERO,
-		"landed and taken hits shake the camera and knock fighters back")
-	await create_timer(.4, true, false, true).timeout
+	_check(sample.feel.trauma > 0 and sample.feel.knock_of(sample.pirate) != Vector3.ZERO,
+		"landed hits shake the camera and knock the foe back")
+	await create_timer(1.0, true, false, true).timeout
 	_check(is_equal_approx(Engine.time_scale, 1.0), "hit-stop lets go of the world")
 	sample.player_hp = 2
 	sample.player.position = sample.package.position
@@ -352,18 +478,18 @@ func _run() -> void:
 	sample.facing = Vector3.FORWARD
 	await _frames(2)
 	for i in sample.MIKE_HP / 2:
-		sample.attack_time = 0
+		_plain(sample)
 		sample._attack()
 	_check(sample.mike_hp == sample.MIKE_HP / 2 and sample.mike_raged and sample.mike_state == "taunt" and mm.current == "taunt",
 		"at half health Mike rages with his taunt")
-	sample.attack_time = 0
+	_plain(sample)
 	sample._attack()
 	_check(sample.mike_hp == sample.MIKE_HP / 2 and sample.mike_state == "jab_tele",
 		"his price-drop rant is no opening: the hit is blocked and he swings back")
 	sample.mike_state = "dizzy"
 	sample.mike_timer = 5.0
 	for i in sample.MIKE_HP / 2:
-		sample.attack_time = 0
+		_plain(sample)
 		sample._attack()
 	_check(sample.mike_hp == 0 and mm.current == "ko" and not sample.active and sample.mike.collision_layer == 0,
 		"Mike's KO clip plays and the porch is secured")

@@ -4,6 +4,7 @@ extends SceneTree
 ## Logs what happened and saves a frame every half second for review.
 ##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/play_bot.gd -- <outdir> [skill]
 ## skill: good (dodges the red-ring tells, two hits then waits for the next swing) | mash (walks in and mashes hit)
+##   | kickmash (walks in and spams the kick)
 
 var out := "/tmp/play"
 var skill := "good"
@@ -128,7 +129,9 @@ func _run() -> void:
 				_steer(to.normalized())
 				await physics_frame
 				_steer(Vector3.ZERO)
-				await _tap(KEY_SPACE)
+				await _tap(KEY_K if skill == "kickmash" else KEY_SPACE)
+				if skill == "mash":
+					await _tap(KEY_SPACE)  # a thumb mashing taps again mid-swing (at sandbox FPS one tap a frame would look like rhythm)
 				swing_cd = .45 if skill == "good" else .2
 		if phase == "pirate" and s.pirate_hp != _pirate_last:
 			_note("pirate hit -> %d" % s.pirate_hp)

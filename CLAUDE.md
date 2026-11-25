@@ -21,7 +21,7 @@ This repo is public.
   hand tattoos painted from the masters. Marketplace Mike (OBO sign throw, charge, rage) follows the pirate (Nov 24).
   Nov 25: hits land (hit-stop, shake, knockback, sound, music), real fight (red-ring wind-ups, guard + counter,
   Mike's shove), phone controls (4.7 VirtualJoystick, big HIT/DODGE, speech bubbles), main-game HUD + menus (title,
-  pause, KO/win cards; `porch_hud.gd`), Jolt + lite nearest scaling. Waits on Duff's phone check. README there.
+  pause, KO/win cards; `porch_hud.gd`), Jolt + lite nearest scaling, K push kick + rhythm combos. Waits on Duff's phone check. README there.
 - The approved 3 Eyed Fox Studios publisher card appears before the title. Settings, ending credits, and itch copy credit the studio.
 - This repo is public. Secrets, prompts, private handoffs, and personal details stay out. See Public repo rules.
 - main is green and live. Every push to main ships: CI parses, runs test_daily + smoke, exports web + APK, refreshes
