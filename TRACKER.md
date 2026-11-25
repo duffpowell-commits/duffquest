@@ -5,6 +5,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-25** **3D porch: hits land, real fight** (`spike_full3d/`, Duff picked "All three, in that order"). Hit-stop, shake, knockback, sounds and music; fighters face off at arm's length. Foes wind up with a red ring under them (armoured: dodge, then punish), block the third hit of a flurry and counter, and Mike's up-close jab shoves Duff out into his sign or charge. Pirate 5 HP, Mike 8. Bot: careful wins at 5/5, masher is KO'd. Renders `docs/renders/porch3d/14_hits_before_after.jpg`, `15_real_fight.jpg`.
 - **2026-11-23** Added the approved 3 Eyed Fox Studios splash and publisher attribution in Settings, end credits, and the itch page source.
 - **2026-11-21** **Public-repo guardrails.** Gitleaks on PRs and main (`gitleaks.yml`). `.gitignore` covers `.env`, keystores, `*.jks`, `*.pem`, `secrets/`, and local handoff/prompt files. `CLAUDE.md` has the public repo rules. Vault locators, private chat handoffs, and image prompts are out of the tree. `STATUS.md` is the short status page. Place's DuffQuest art work has moved to the bot Quase (Art Team).
 - **2026-11-19** **IGN review v7 (game 8.9, launch 3/10) + stats retry.** First Reddit launch: 3 posts (2 crossposts, name-only title, logo first) -> itch views 25 -> 27. Relaunch plan in `docs/reviews/ign_review_2026-11-19_v7.md`. `play_stats.yml` now retries the itch API 3 times (a 20:45 run failed on a blip; the rerun read 27 views).

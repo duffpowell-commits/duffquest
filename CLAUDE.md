@@ -18,7 +18,9 @@ This repo is public.
 ## Where things stand (Nov 21)
 - Nov 24: fully 3D porch slice in `spike_full3d/` (own Godot project + APK `duffquest-porch3d.apk` on the
   `dev` release): Meshy models of Duff and the Porch Pirate on a real skeleton with real clips, Duff's real
-  hand tattoos painted from the masters. Marketplace Mike (OBO sign throw, charge, rage) follows the pirate (Nov 24). Waits on Duff's phone check (FPS counter top right). README there.
+  hand tattoos painted from the masters. Marketplace Mike (OBO sign throw, charge, rage) follows the pirate (Nov 24).
+  Nov 25: hits land (hit-stop, shake, knockback, sound, music), real fight (red-ring wind-ups, guard + counter,
+  Mike's shove); next is phone controls (4.7 VirtualJoystick). README there.
 - The approved 3 Eyed Fox Studios publisher card appears before the title. Settings, ending credits, and itch copy credit the studio.
 - This repo is public. Secrets, prompts, private handoffs, and personal details stay out. See Public repo rules.
 - main is green and live. Every push to main ships: CI parses, runs test_daily + smoke, exports web + APK, refreshes
