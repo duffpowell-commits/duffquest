@@ -66,6 +66,7 @@ const KICK_REACH := 2.05
 const KICK_KNOCK := 2.2       ## times a punch's shove
 const LAUNCH_KNOCK := 3.4     ## A A K: the kick ends the combo as a launcher
 const WALL_TIME := .5         ## a launched foe that hits a wall, fence or planter within this takes 1 more
+const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
 
 var player: CharacterBody3D
@@ -208,7 +209,7 @@ func _process(delta: float) -> void:
 		opening -= delta
 		if opening <= 0 and active and pirate_hp > 0 and bubble_from == player:
 			_say(pirate, "Just browsing your porch, boss.")
-	callout_time = maxf(0, callout_time - delta)
+	callout_time = maxf(0, callout_time - delta / maxf(Engine.time_scale, .05))  # real time: hit-stop and slow-mo mustn't pin it on screen
 	if end_in > 0:
 		end_in -= delta
 		if end_in <= 0:
@@ -504,7 +505,7 @@ func _wall_splat(foe: CharacterBody3D) -> void:
 
 func _call(text: String) -> void:
 	callout = text
-	callout_time = 1.1
+	callout_time = CALLOUT_TIME
 
 ## Mashing gets read: the hit after GUARD_AFTER in one flurry is blocked. A dizzy Mike can't guard
 ## (that's the reward for dodging his charge); a taunting one blocks everything.

@@ -231,8 +231,8 @@ func _callout() -> void:
 	if game.callout_time <= 0 or game.callout == "":
 		return
 	var t: float = game.callout_time
-	var pop := 1.0 + .35 * clampf((t - .95) / .15, 0, 1)  # starts big, settles
-	var a := clampf(t / .35, 0, 1)
+	var pop := 1.0 + .35 * clampf((t - (game.CALLOUT_TIME - .12)) / .12, 0, 1)  # starts big, settles
+	var a := clampf(t / .25, 0, 1)
 	var size := int(44 * pop)
 	_label(Vector2(600, 150 + size * .3), game.callout, size, Color(GOLD, a), 340, HORIZONTAL_ALIGNMENT_RIGHT, display, 9)
 
