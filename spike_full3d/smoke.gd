@@ -434,13 +434,13 @@ func _run() -> void:
 	await create_timer(1.0, true, false, true).timeout
 	_check(sample.pirate.collision_layer == 0 and sample.pirate_model.current == "flail" and sample.pirate.position.y > .3,
 		"held over Duff's shoulder he flails, off the ground, no collision (y %.2f)" % sample.pirate.position.y)
-	await create_timer(2.2, true, false, true).timeout
-	sample.set_physics_process(false)
+	await create_timer(1.0, true, false, true).timeout  # landed a moment ago
 	var thrown := Vector2(sample.toss_land.x - sample.player.position.x, sample.toss_land.z - sample.player.position.z).length()
 	_check(sample.toss_foe == null and sample.special_time == 0 and sample.pirate_hp == sample.PIRATE_HP - sample.RTS_DAMAGE
-		and sample.pirate.collision_layer == sample.ACTOR_LAYER and absf(sample.pirate.position.y) < .05 and thrown > 1.2,
-		"the throw lands %d through his guard %.1f m away and gives him his collision back (%d HP)" % [sample.RTS_DAMAGE, thrown, sample.pirate_hp])
+		and sample.pirate.collision_layer == sample.ACTOR_LAYER and absf(sample.pirate.position.y) < .05 and thrown > 1.2 and sample.pirate_model.current == "flyup",
+		"the throw lands %d through his guard %.1f m away, flat on the lawn, collision back (%d HP, %s)" % [sample.RTS_DAMAGE, thrown, sample.pirate_hp, sample.pirate_model.current])
 	await create_timer(1.6, true, false, true).timeout
+	sample.set_physics_process(false)
 	_check(sample.pirate_model.current != "flyup" and sample.pirate_model.locked <= 0,
 		"a thrown pirate who isn't KO'd gets back up (%s)" % sample.pirate_model.current)
 	# Out of reach it is the Red Right Hand dash, not a grab.

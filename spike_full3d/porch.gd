@@ -82,7 +82,7 @@ const RRH_CLIP := "burn"       ## Duff's right straight with a big coil (tools/b
 ## Return to Sender: R with the foe up close grabs him and throws him over Duff's shoulder (Meshy Over
 ## Shoulder Throw, Duff's pick Nov 25; tools/bake_toss.gd). Times are in the toss clip's seconds.
 const RTS_CLIP := "toss"
-const RTS_RANGE := 1.45       ## the foe this close and in front: R grabs instead of dashing
+const RTS_RANGE := 1.45       ## the foe this close: R grabs instead of dashing
 const RTS_SPEED := 2.0        ## the clip plays this much faster than Meshy's
 const RTS_GRAB := .5          ## hands close on him
 const RTS_RELEASE := 2.2      ## thrown over the shoulder
@@ -658,8 +658,10 @@ func _return_to_sender(foe: CharacterBody3D) -> void:
 	player_model.rotation.y = atan2(-facing.x, -facing.z)
 	player_model.strike(RTS_CLIP, length / RTS_SPEED)
 	player_model.locked = special_time
-	if foe == mike and mike_state == "taunt":
-		mike_state = "stalk"  # grabbed mid-rant
+	if foe == mike and mike_state in ["taunt", "post", "charge_tele", "charge", "jab_tele"]:
+		mike_state = "stalk"  # grabbed mid-move: whatever he was doing is cancelled
+	if foe == pirate:
+		pirate_wind = 0  # a jab he was winding up is cancelled
 	_tell(null)
 	_call("RETURN TO SENDER!")
 	if feel:
@@ -741,15 +743,16 @@ func _toss_lands() -> void:
 	_damage(foe, RTS_DAMAGE, FINISHER_STUN * 1.5)
 	model.rotation.x = 0
 	var down := (foe == pirate and pirate_hp == 0) or (foe == mike and mike_hp <= 0)
+	# _damage just started a KO fall or a hit stagger from standing: he is already flat, so hold the flyup's last frame
+	model.player.stop()
+	model.player.speed_scale = 1.0
+	model.player.play("rig/flyup", 0.0)
+	model.player.seek(model.player.current_animation_length, true)
 	if down:
-		# _damage just started the KO fall from standing: he is already flat, so hold the flyup's last frame
-		model.player.stop()
-		model.player.speed_scale = 1.0
-		model.player.play("rig/flyup", 0.0)
-		model.player.seek(model.player.current_animation_length, true)
 		model.current = "ko"  # stays down: locomotion and the KO clip leave him alone
 		model.locked = 0
 	else:
+		model.current = "flyup"
 		# lies there a beat, then gets up (a slow blend into idle) while still stunned
 		model.locked = 1.3
 		var rise := create_tween()
