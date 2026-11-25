@@ -34,7 +34,7 @@ const CHARGE_TIME := .85
 const MIKE_DIZZY := 1.0          ## after a charge: free hits
 const MIKE_SPAWN := Vector3(5.6, 0, 3.4)
 ## Closer than the block-model slice (9.25) so the real models read on a phone; follows Duff sideways.
-const CAMERA_SIZE := 6.6
+const CAMERA_SIZE := 7.0
 const CAMERA_OFFSET := Vector3(0, 9.6, 13)
 const CAMERA_X_LIMIT := 2.6
 
@@ -465,6 +465,9 @@ func _build_street() -> void:
 	world.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	world.environment.ambient_light_color = Color("#e9cbc0")
 	world.environment.ambient_light_energy = .69
+	# AgX keeps the Meshy textures' colour and the set's highlights from clipping (Compatibility supports it).
+	world.environment.tonemap_mode = Environment.TONE_MAPPER_AGX
+	world.environment.tonemap_exposure = 1.0
 	add_child(world)
 	var sun := DirectionalLight3D.new()
 	sun.rotation_degrees = Vector3(-41, -36, 0)
@@ -475,21 +478,22 @@ func _build_street() -> void:
 	camera = Camera3D.new()
 	add_child(camera)
 	camera.position = CAMERA_OFFSET
-	camera.look_at(Vector3(0, .55, -.35))
+	camera.look_at(Vector3(0, .55, -.9))
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.size = CAMERA_SIZE
 	camera.make_current()
-	Art.garden(self)
-	Art.pavement(self)
-	Art.frontage(self)
-	Art.stoop(self)
-	Art.planter(self, PLANTER_AT, PLANTER_SIZE.x, PLANTER_SIZE.z)
+	Art.meshy_set(self, PLANTER_AT, PLANTER_SIZE)
+	var lamp := OmniLight3D.new()  # porch light by the door
+	lamp.position = Vector3(0, 2.6, -2.9)
+	lamp.light_color = Color("#ffb15e")
+	lamp.light_energy = 1.4
+	lamp.omni_range = 2.8
+	add_child(lamp)
 	_collider("Ground", Vector3(0, -.16, 0), Vector3(16, .32, 11))
 	_collider("FrontageCollider", Vector3(0, 1.4, -4.6), Vector3(10.6, 2.8, 2.4))
 	_collider("StoopCollider", Vector3(0, .119, -2.95), Vector3(2.84, .238, 1.03))
 	_collider("StepCollider", Vector3(0, .066, -2.35), Vector3(2.92, .132, .22))
 	for x in [-6.9, 6.9]:
-		Art.fence(self, x)
 		_collider("FenceCollider", Vector3(x, .65, 0), Vector3(.32, 1.3, 11))
 	_collider("StreetLimit", Vector3(0, .6, 5.39), Vector3(15, 1.2, .23))
 	_collider("RearLimit", Vector3(0, .7, -5.51), Vector3(15, 1.4, .25))

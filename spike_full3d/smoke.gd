@@ -25,6 +25,14 @@ func _run() -> void:
 	_check(sample.player is CharacterBody3D and sample.pirate is CharacterBody3D
 		and root.get_camera_3d() is Camera3D, "3D actors and camera")
 	_check(sample.package.get_parent() == sample.pirate_model, "parcel starts in pirate grip")
+	var props := {}
+	for child in sample.get_children():
+		if child.has_meta("set_prop"):
+			var key: String = child.get_meta("set_prop")
+			props[key] = props.get(key, 0) + 1
+	_check(props.get("house", 0) == 1 and props.get("fence", 0) == 10 and props.get("tree", 0) == 2
+		and props.get("bush", 0) == 4 and props.get("planter", 0) == 1 and props.get("mailbox", 0) == 1,
+		"the Meshy set is dressed: house, 10 fence panels, 2 trees, 4 bushes, planter, mailbox (%s)" % props)
 	for actor in [sample.player_model, sample.pirate_model]:
 		_check(actor.skeleton.get_bone_count() == 24 and actor.skeleton.find_bone("RightHand") >= 0,
 			"%s is a skinned mesh on the 24-bone humanoid skeleton" % actor.name)
