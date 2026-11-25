@@ -7,7 +7,7 @@ const BLEND := .12
 ## Crown-to-chin of each unit-scale model in metres (hair, hood and bun included), measured from
 ## front renders (tools/cast_shot.gd --heads). Duff's head is the yardstick for the whole cast.
 const HEAD := {"duff": .344, "mike": .402, "pirate": .452, "sendback": .322, "camper": .418,
-	"coupon": .512, "allergy": .312}
+	"coupon": .512, "allergy": .312, "madison": .271, "brittany": .251}
 ## Duff's head in the game world (his model is fitted to DUFF height in porch.gd).
 const DUFF_HEAD := .365
 

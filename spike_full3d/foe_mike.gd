@@ -193,16 +193,8 @@ func hit(damage := 1) -> void:
 		body.collision_layer = 0
 		body.collision_mask = 0
 		obo_sign.hide()
-		game.active = false
-		game.hit_marker.hide()
 		game._say(body, "Okay. Mark me as sold.")
-		game.message.text = "Parcel recovered. Porch secured."
-		game.end_in = 1.6
-		game.end_won = true
-		game.result = game._grade_result()
-		if game.feel:
-			game.feel.stop_music()
-			game.feel.sfx("win", 0.0)
+		game._mike_sold()
 		return
 	if state == "charge":
 		return  # mid-charge he shrugs it off

@@ -613,11 +613,103 @@ func _run() -> void:
 	for i in sample.MIKE_HP / 2:
 		_plain(sample)
 		sample._attack()
-	_check(sample.mike_hp == 0 and mm.current == "ko" and not sample.active and sample.mike.collision_layer == 0,
-		"Mike's KO clip plays and the porch is secured")
+	_check(sample.mike_hp == 0 and mm.current == "ko" and sample.active and sample.mike.collision_layer == 0
+		and sample._foe() == null and sample.rival.state == "away",
+		"Mike's KO clip plays and the fight goes on: somebody else is coming")
 
-	await _frames(120)  # the win card follows Mike's last line
-	_check(sample.hud.screen == "win" and paused, "PORCH SECURED card after Mike goes down")
+	# Sir Sends-It-Back: the third fight. Only a special gets through his cloche.
+	var sb = sample.rival
+	var sm = sb.model
+	sample.rival_in = .05
+	sample.set_physics_process(true)
+	await _frames(6)
+	_check(sb.state == "stalk" and sample.sendback.visible and sample.sendback.collision_layer != 0
+		and sample._foe() == sample.sendback and sample.player_hp == sample.PLAYER_HP and sample.foe_status()[0] == "Sir Sends-It-Back",
+		"Sir Sends-It-Back walks in after Mike; Duff starts fresh")
+	sample.set_physics_process(false)
+	sample.player.position = Vector3(0, 0, 1)
+	sample.sendback.position = Vector3(1.2, 0, 1)
+	sample.facing = Vector3.RIGHT
+	sb.state = "stalk"
+	sb.plate_rest = 0
+	sb.streak = 0
+	for i in sb.PLATE_AFTER:
+		_plain(sample)
+		sample.chain.clear()  # paced hits, not a mashed flurry (that's the normal guard)
+		sample._attack()
+	_check(sb.hp == sb.HP - sb.PLATE_AFTER and sb.state == "plate" and sb.cloche.visible,
+		"two clean hits and up comes the cloche")
+	var sb_hp: int = sb.hp
+	_plain(sample)
+	sample._attack()
+	_plain(sample)
+	sample._kick()
+	_check(sb.hp == sb_hp and sb.state == "plate" and sample.callout == "SENT BACK!" and sample.feel.knock_of(sample.player).x < -3.0,
+		"punches and kicks bounce off the cloche: SENT BACK, Duff is shoved away")
+	sample.player.position = Vector3(0, 0, 1)
+	sample.sendback.position = Vector3(1.2, 0, 1)
+	sample.special_strike = true  # what Red Right Hand's and Return to Sender's hits carry
+	sample._damage(sample.sendback, sample.RRH_DAMAGE, 1.0)
+	sample.special_strike = false
+	sb.raged = true  # his rage line is Mike's tested pattern; here the free hit is the point
+	_check(sb.hp == sb_hp - sample.RRH_DAMAGE - 1 and not sb.cloche.visible and sb.state == "dizzy" and sample.callout == "CLOCHE SMASHED!",
+		"a special smashes the cloche: +1 damage and he's dizzy")
+	_plain(sample)
+	sample._attack()
+	_check(sb.state == "dizzy" and sb.hp == sb_hp - sample.RRH_DAMAGE - 2, "dizzy, he takes free hits")
+	sb.state = "stalk"
+	sb.cool = 0
+	sb.charge_next = false
+	sample.sendback.position = Vector3(4, 0, 1)
+	sample.player.position = Vector3(0, 0, 1)
+	sample.player_hp = sample.PLAYER_HP
+	sample.invulnerable = 0
+	sb.tick(.016)
+	_check(sb.state == "cards_tele" and sm.current == "throw" and sample.tell_foe == sample.sendback, "he winds up a 1-star card throw (red ring)")
+	sb.tick(sb.CARD_TELE + .01)
+	_check(sb.cards.size() == (5 if sb.raged else 3), "the cards fly out in a spread")
+	for i in 120:
+		sb.tick_cards(1.0 / 60)
+		if sample.player_hp < sample.PLAYER_HP:
+			break
+	_check(sample.player_hp == sample.PLAYER_HP - 1, "a card in the spread hits Duff")
+	for card in sb.cards:
+		card[0].queue_free()
+	sb.cards.clear()
+	sb.state = "stalk"
+	sb.cool = 0
+	sb.tick(.016)
+	_check(sb.state == "charge_tele", "then he telegraphs a charge")
+	sb.state = "plate"
+	sb.cloche.show()
+	sample.toss_foe = null
+	sample.player.position = Vector3(0, 0, 1)
+	sample.sendback.position = Vector3(1.0, 0, 1)
+	sample.meter = 100
+	sample.set_physics_process(true)
+	sample.red_right_hand()
+	_check(sample.toss_foe == sample.sendback and sb.cloche.visible, "Return to Sender grabs him straight through the cloche")
+	await _frames(160)
+	_check(not sb.cloche.visible and (sb.state == "dizzy" or sb.hp == 0) and sample.sendback.collision_layer != 0 or sb.hp == 0,
+		"the throw lands, the cloche is smashed and he's dizzy")
+	sample.set_physics_process(false)
+	sb.state = "dizzy"
+	sb.timer = 5.0
+	sample.player.position = Vector3(0, 0, 1)
+	sample.sendback.position = Vector3(1.2, 0, 1)
+	sample.facing = Vector3.RIGHT
+	for i in 12:
+		if sb.hp <= 0:
+			break
+		sb.state = "dizzy"
+		_plain(sample)
+		sample._attack()
+	_check(sb.hp == 0 and sm.current == "ko" and not sample.active and sample.sendback.collision_layer == 0,
+		"Sir Sends-It-Back goes down and the porch is secured")
+	sample.set_physics_process(true)
+
+	await _frames(120)  # the win card follows his last line
+	_check(sample.hud.screen == "win" and paused, "PORCH SECURED card after the last foe goes down")
 	var r: Dictionary = sample.result
 	_check(r.get("grade", "") in ["S", "A", "B", "C", "D"] and r.time > 0 and r.best_grade != "" and r.hits == sample.hits_taken,
 		"the win card grades the fight (%s in %s, %d hits, %d specials)" % [r.get("grade"), sample.clock_label(r.get("time", 0.0)), r.get("hits", -1), r.get("specials", -1)])
@@ -626,8 +718,8 @@ func _run() -> void:
 		card_text += (label as Label).text + " "
 	_check(("GRADE " + r.get("grade", "?")) in card_text and ("NEW BEST" in card_text or "Best:" in card_text),
 		"the win card shows the grade and the best on this phone")
-	_check(sample.grade_for(60, 0, 2) == "S" and sample.grade_for(80, 2, 1) == "A" and sample.grade_for(200, 4, 0) == "D" and sample.grade_for(150, 3, 0) == "C"
-		and sample.grade_for(150, 3, 3) == "B", "grades: clean and quick is S, slow and hurt is D, specials pull it up")
+	_check(sample.grade_for(100, 0, 2) == "S" and sample.grade_for(120, 2, 1) == "A" and sample.grade_for(240, 4, 0) == "D" and sample.grade_for(190, 3, 0) == "C"
+		and sample.grade_for(190, 3, 3) == "B", "grades: clean and quick is S, slow and hurt is D, specials pull it up")
 
 	Input.action_press("ui_right", .8)  # thumb still on the stick when Retry is tapped
 	sample._reset()

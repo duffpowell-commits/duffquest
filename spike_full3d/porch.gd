@@ -9,6 +9,7 @@ const Feel = preload("porch_feel.gd")
 const Hud = preload("porch_hud.gd")
 const FoeMike = preload("foe_mike.gd")
 const FoePirate = preload("foe_pirate.gd")
+const FoeSendback = preload("foe_sendback.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
@@ -77,7 +78,7 @@ const RTS_THROW := 3.2        ## m from Duff where he lands (Duff: "Bigger throw
 const RTS_ARC := 1.4          ## m the arc peaks above the straight line
 const RTS_DAMAGE := 3
 ## Win grade (replay hook): 100 minus hits taken and time over par, plus specials landed.
-const PAR_TIME := 90.0         ## fight seconds before the clock starts costing points
+const PAR_TIME := 130.0        ## fight seconds before the clock starts costing points
 const GRADE_HIT := 8.0         ## points per hit Duff takes
 const GRADE_SLOW := .4         ## points per second over par
 const GRADE_SPECIAL := 6.0     ## points per special landed (up to 3)
@@ -125,6 +126,11 @@ var charge_dir: Vector3:
 	set(v): boss.charge_dir = v
 var obo_sign: Node3D:
 	get: return boss.obo_sign
+var rival  ## foe_sendback.gd: Sir Sends-It-Back, the third fight (after Mike)
+var special_strike := false  ## true only while Red Right Hand / Return to Sender deal their hit
+var rival_in := -1.0  ## seconds until he walks in once Mike is sold
+var sendback: CharacterBody3D:
+	get: return rival.body
 var package: Node3D
 var hit_marker: MeshInstance3D
 var impact: MeshInstance3D
@@ -208,6 +214,7 @@ func _ready() -> void:
 	thief = FoePirate.make(self)
 	package = Art.parcel(pirate_model, Vector3(0, .78, -.3))
 	boss = FoeMike.make(self)
+	rival = FoeSendback.make(self)
 	hit_marker = _strike_arc(player_model)
 	hit_marker.hide()
 	var burst := Art.Sculpture.new()
@@ -221,7 +228,7 @@ func _ready() -> void:
 	fight_cam.snap(player.position, current_foe())
 	feel = Feel.make(self, camera)
 	if not OS.get_cmdline_user_args().has("--plain"):
-		look = Look.apply(self, [player_model, pirate_model, mike_model])
+		look = Look.apply(self, [player_model, pirate_model, mike_model, rival.model])
 	_build_hud()
 	_update_hud()
 	var wants_title := OS.has_feature("template") or OS.get_cmdline_user_args().has("--title")
@@ -239,6 +246,8 @@ func begin() -> void:
 func foe_status() -> Array:
 	if pirate_hp > 0:
 		return ["Porch Pirate", pirate_hp, PIRATE_HP]
+	if rival.state != "away":
+		return ["Sir Sends-It-Back", rival.hp, FoeSendback.HP]
 	if mike.visible and mike_state != "away":
 		return ["Marketplace Mike", maxi(mike_hp, 0), MIKE_HP]
 	return []
@@ -257,6 +266,8 @@ func current_foe():
 		return pirate.position
 	if mike.visible and mike_state != "ko":
 		return mike.position
+	if rival.state not in ["away", "ko"]:
+		return rival.body.position
 	return null
 
 func _process(delta: float) -> void:
@@ -335,9 +346,18 @@ func _physics_process(delta: float) -> void:
 	elif mike_state == "away":
 		if player.position.distance_to(package.position) <= .85:
 			_mike_arrives()
-	elif mike_state != "ko" and toss_foe != mike:
-		_tick_mike(delta)
+	elif mike_state != "ko":
+		if toss_foe != mike:
+			_tick_mike(delta)
+	elif rival.state == "away":
+		if rival_in > 0:
+			rival_in -= delta
+			if rival_in <= 0:
+				rival.arrive()
+	elif rival.state != "ko" and toss_foe != sendback:
+		rival.tick(delta)
 	_tick_sign(delta)
+	rival.tick_cards(delta)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event.is_pressed() or event.is_echo():
@@ -445,7 +465,7 @@ func _attack() -> void:
 		if feel:
 			feel.sfx("swing")
 		return
-	var taunting := foe == mike and mike_state == "taunt"
+	var taunting := _armoured(foe)
 	if taunting or (not rhythm and not dash and _guards(foe)):
 		combo = 0
 		_block(foe)
@@ -462,7 +482,7 @@ func _attack() -> void:
 	elif step == 2:
 		_call("2 HIT")
 	if feel:
-		var ko := (foe == mike and mike_hp <= damage) or (foe == pirate and pirate_hp <= damage)
+		var ko := _hp_of(foe) <= damage
 		feel.landed(foe, player.position, ko)
 		if finisher:
 			feel.push(foe, offset, feel.KNOCK_HIT * FINISHER_KNOCK)
@@ -498,7 +518,7 @@ func _kick() -> void:
 		if feel:
 			feel.sfx("swing")
 		return
-	if foe == mike and mike_state == "taunt":
+	if _armoured(foe):
 		combo = 0
 		_block(foe)
 		return
@@ -508,7 +528,7 @@ func _kick() -> void:
 	var damage := 2 if launcher or counter else 1
 	_call("COUNTER KICK!" if counter else ("LAUNCHER!" if launcher else "KICK!"))
 	if feel:
-		var ko := (foe == mike and mike_hp <= damage) or (foe == pirate and pirate_hp <= damage)
+		var ko := _hp_of(foe) <= damage
 		feel.landed(foe, player.position, ko)
 		feel.push(foe, offset, feel.KNOCK_HIT * (LAUNCH_KNOCK if launcher else KICK_KNOCK))
 		if counter:
@@ -526,6 +546,9 @@ func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
 		if mike_state == "stalk":
 			mike_recovery = maxf(mike_recovery, stun)
 		return
+	if foe == sendback:
+		rival.hit(damage, stun, special_strike)  # a special goes through his cloche (a wall bounce after one doesn't)
+		return
 	thief.hit(damage, stun)
 
 func _hit_wall(actor: CharacterBody3D) -> bool:
@@ -539,7 +562,7 @@ func _hit_wall(actor: CharacterBody3D) -> bool:
 	return false
 
 func _wall_splat(foe: CharacterBody3D) -> void:
-	if not active or (foe == pirate and pirate_hp <= 0) or (foe == mike and (mike_hp <= 0 or mike_state == "taunt")):
+	if not active or _hp_of(foe) <= 0 or _armoured(foe):
 		return
 	wall_hits += 1  # no callout (Duff, Nov 25): the thud and shake say it
 	if feel:
@@ -620,7 +643,9 @@ func _tick_special(delta: float) -> void:
 					feel.add_trauma(.7)
 					feel.sfx("sting_ko", 0.0, -2.0)
 				hud.flash(Color(0.85, 0.08, 0.06), .35)
+				special_strike = true
 				_damage(foe, RRH_DAMAGE, FINISHER_STUN * 1.5)
+				special_strike = false
 	if special_time <= 0:
 		_end_special()
 
@@ -646,6 +671,8 @@ func _return_to_sender(foe: CharacterBody3D) -> void:
 		mike_state = "stalk"  # grabbed mid-move: whatever he was doing is cancelled
 	if foe == pirate:
 		pirate_wind = 0  # a jab he was winding up is cancelled
+	if foe == sendback:
+		rival.cancel()
 	_tell(null)
 	_call("RETURN TO SENDER!")
 	if feel:
@@ -655,8 +682,8 @@ func _tick_toss(delta: float) -> void:
 	special_time = maxf(0, special_time - delta)
 	toss_t += delta * RTS_SPEED
 	var foe := toss_foe
-	var model: Node3D = pirate_model if foe == pirate else mike_model
-	var height := PIRATE_HEIGHT if foe == pirate else MIKE_HEIGHT
+	var model: Node3D = _model_of(foe)
+	var height := _height_of(foe)
 	var sk := player_model.skeleton
 	var hands := sk.global_transform * ((sk.get_bone_global_pose(sk.find_bone("LeftHand")).origin
 		+ sk.get_bone_global_pose(sk.find_bone("RightHand")).origin) * .5)
@@ -710,7 +737,7 @@ func _clear_landing(from: Vector3, out: Vector3) -> Vector3:
 
 func _toss_lands() -> void:
 	var foe := toss_foe
-	var model: Node3D = pirate_model if foe == pirate else mike_model
+	var model: Node3D = _model_of(foe)
 	toss_fly = RTS_FLY
 	foe.global_position = toss_land
 	foe.collision_layer = ACTOR_LAYER
@@ -725,9 +752,11 @@ func _toss_lands() -> void:
 		feel.sfx("sting_ko", 0.0, -2.0)
 	hud.flash(Color(0.85, 0.08, 0.06), .3)
 	var was_pirate := foe == pirate
+	special_strike = true
 	_damage(foe, RTS_DAMAGE, FINISHER_STUN * 1.5)
+	special_strike = false
 	model.rotation.x = 0
-	var down := (foe == pirate and pirate_hp == 0) or (foe == mike and mike_hp <= 0)
+	var down := _hp_of(foe) <= 0
 	# _damage just started a KO fall or a hit stagger from standing: he is already flat, so hold the flyup's last frame
 	model.player.stop()
 	model.player.speed_scale = 1.0
@@ -778,13 +807,13 @@ func _end_toss() -> void:
 	if toss_foe == null:
 		return
 	if toss_fly < RTS_FLY:
-		var model: Node3D = pirate_model if toss_foe == pirate else mike_model
+		var model: Node3D = _model_of(toss_foe)
 		model.rotation.x = 0
 		model.locked = 0  # let go mid-carry: back to his own clips
 		if model.current in ["flail", "flyup"]:
 			model.play("idle")
 		toss_foe.global_position.y = 0
-		if toss_foe.collision_layer == 0 and not ((toss_foe == pirate and pirate_hp <= 0) or (toss_foe == mike and mike_hp <= 0)):
+		if toss_foe.collision_layer == 0 and _hp_of(toss_foe) > 0:
 			toss_foe.collision_layer = ACTOR_LAYER
 			toss_foe.collision_mask = WORLD_LAYER | ACTOR_LAYER
 	toss_foe = null
@@ -899,12 +928,14 @@ func _call(text: String) -> void:
 func _guards(foe: CharacterBody3D) -> bool:
 	if foe == mike and mike_state in ["dizzy", "charge"]:
 		return false
+	if foe == sendback and rival.state in ["dizzy", "charge"]:
+		return false
 	if foe == mike and mike_state == "taunt":
 		return true  # his price-drop rant is no opening
 	var flurry: Array = chain.get(foe, [0, -99.0])
 	if clock - flurry[1] > CHAIN_WINDOW:
 		flurry = [0, clock]
-	if flurry[0] >= (GUARD_AFTER - 1 if foe == mike and mike_raged else GUARD_AFTER):  # raged, he reads you faster
+	if flurry[0] >= (GUARD_AFTER - 1 if (foe == mike and mike_raged) or (foe == sendback and rival.raged) else GUARD_AFTER):  # raged, he reads you faster
 		chain.erase(foe)
 		return true
 	chain[foe] = [flurry[0] + 1, clock]
@@ -920,6 +951,11 @@ func _block(foe: CharacterBody3D) -> void:
 	if foe == pirate:
 		pirate_recovery = 0
 		_pirate_windup(COUNTER_TELE)
+	elif foe == sendback:
+		if rival.state == "plate":
+			rival.deflect()  # the cloche sends it back
+		elif rival.state != "taunt":
+			rival.jab(COUNTER_TELE)
 	else:
 		_mike_jab(COUNTER_TELE)
 
@@ -929,6 +965,8 @@ func _foe() -> CharacterBody3D:
 		return pirate
 	if mike_state not in ["away", "ko"]:
 		return mike
+	if rival.state not in ["away", "ko"]:
+		return sendback
 	return null
 
 ## Where a foe stands to fight: beside Duff on its own side, at arm's length, on his depth line,
@@ -1201,7 +1239,7 @@ func _build_bubble(layer: CanvasLayer) -> void:
 
 func _say(speaker: Node3D, line: String, seconds := 2.8) -> void:
 	bubble_from = speaker
-	bubble_name.text = "Duff" if speaker == player else ("Marketplace Mike" if speaker == mike else "Porch Pirate")
+	bubble_name.text = {player: "Duff", mike: "Marketplace Mike", sendback: "Sir Sends-It-Back"}.get(speaker, "Porch Pirate")
 	bubble_text.text = line
 	bubble_time = seconds
 	bubble.size = Vector2.ZERO  # shrink to the new line
@@ -1238,7 +1276,9 @@ func _place_bubble(delta: float) -> void:
 	bubble_tail.position = Vector2(at.x + 2 if right else at.x + box.x - 2, clampf(head.y, at.y + 16, at.y + box.y - 16))
 
 func _update_hud() -> void:
-	if mike_state == "away":
+	if rival.state != "away":
+		health.text = "DUFF %d/%d   ·   SIR SENDS-IT-BACK %d/%d" % [player_hp, PLAYER_HP, rival.hp, FoeSendback.HP]
+	elif mike_state == "away":
 		health.text = "DUFF %d/%d   ·   PIRATE %d/%d" % [player_hp, PLAYER_HP, pirate_hp, PIRATE_HP]
 	else:
 		health.text = "DUFF %d/%d   ·   MARKETPLACE MIKE %d/%d" % [player_hp, PLAYER_HP, maxi(mike_hp, 0), MIKE_HP]
@@ -1292,3 +1332,52 @@ func _mike_jab(seconds: float) -> void:
 func _hit_mike(damage := 1) -> void:
 	boss.hit(damage)
 
+
+## Mike is sold: Sir Sends-It-Back walks up the path after a beat (the third fight).
+func _mike_sold() -> void:
+	hit_marker.hide()
+	message.text = "Parcel recovered. Somebody else is coming up the walk..."
+	rival_in = 2.2
+	chain.clear()
+
+## The last foe is down: the porch is secured, the fight is graded.
+func _porch_won(line: String) -> void:
+	active = false
+	hit_marker.hide()
+	message.text = line
+	end_in = 1.6
+	end_won = true
+	result = _grade_result()
+	if feel:
+		feel.stop_music()
+		feel.sfx("win", 0.0)
+
+## Which foe script a body belongs to, and the bits porch.gd needs from it.
+func _hp_of(foe: CharacterBody3D) -> int:
+	if foe == pirate:
+		return pirate_hp
+	if foe == mike:
+		return mike_hp
+	return rival.hp
+
+func _model_of(foe: CharacterBody3D) -> Node3D:
+	if foe == pirate:
+		return pirate_model
+	if foe == mike:
+		return mike_model
+	return rival.model
+
+func _height_of(foe: CharacterBody3D) -> float:
+	if foe == pirate:
+		return PIRATE_HEIGHT
+	if foe == mike:
+		return MIKE_HEIGHT
+	return FoeSendback.HEIGHT
+
+## Blocks every punch and kick (specials still go through): Mike's rant, Sends-It-Back's cloche.
+func _armoured(foe: CharacterBody3D) -> bool:
+	if foe == mike:
+		return mike_state == "taunt"
+	if foe == sendback:
+		return rival.guarding()
+	return false

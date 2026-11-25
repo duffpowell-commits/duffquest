@@ -7,7 +7,7 @@ credit budget live in the full 3D plan doc. The short version is at the bottom o
 ## What this is
 
 `spike_full3d/` is a standalone Godot 4.7.2 project: one porch, Duff vs the Porch Pirate, then Marketplace
-Mike. It is the seed of the full 3D game, which replaces the 2D game zone by zone. The 2D game at the repo
+Mike, then Sir Sends-It-Back. It is the seed of the full 3D game, which replaces the 2D game zone by zone. The 2D game at the repo
 root stays live on itch until the 3D game covers everything it does. Don't touch the 2D game from here.
 
 - Renderer: Compatibility (`gl_compatibility`, also on mobile). Physics: Jolt.
@@ -21,6 +21,7 @@ root stays live on itch until the 3D game covers everything it does. Don't touch
 |---|---|
 | `porch.gd` | The game: input, Duff, combat rules, specials, meter, grade, win/lose (see "Next refactor") |
 | `foe_pirate.gd` | The Porch Pirate: approach, jab wind-up, guard, KO drops the parcel. Same pattern as `foe_mike.gd` |
+| `foe_sendback.gd` | Sir Sends-It-Back, the third fight: cloche guard only specials break, 1-star card spread, charge |
 | `foe_mike.gd` | Marketplace Mike: his state, AI, sign throw and charge. The pattern for every new foe (made by `porch.gd`, ticked from its physics loop, `game` = porch.gd's shared services) |
 | `porch_hud.gd` | HUD strip, buttons, meter ring, callouts, title / pause / settings / KO / win cards |
 | `porch_feel.gd` | Hit-stop, shake, knockback, sound pool, music |
@@ -33,7 +34,8 @@ root stays live on itch until the 3D game covers everything it does. Don't touch
 
 ## How a fight works
 
-- `_physics_process` ticks Duff, then each foe (`_tick_pirate`, `_tick_mike`), then specials.
+- `_physics_process` ticks Duff, then the current foe (`_tick_pirate`, `_tick_mike`, `rival.tick`), then specials.
+  A new foe also needs a line in `_hp_of` / `_model_of` / `_height_of` / `_armoured` (bottom of `porch.gd`).
 - A foe's attack is always: red ring (`_tell`) + wind-up clip, then the hit lands unless Duff rolled.
   Unreadable damage is a bug.
 - `_damage(foe, amount, stun)` is the single entry for hurting a foe; `_hurt_duff(from)` for Duff.

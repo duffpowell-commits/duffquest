@@ -2,7 +2,7 @@ extends SceneTree
 ## Plays the porch like a person: real key events only (WASD, Space, Shift), ~0.25 s reaction time,
 ## no cheats. Time is game time, so a slow sandbox render plays like a phone at 60.
 ## Logs what happened and saves a frame every half second for review.
-##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/play_bot.gd -- <outdir> [skill]
+##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1280x720 --script tools/play_bot.gd -- <outdir> [skill] [seconds between frames, default .5]
 ## skill: good (dodges the red-ring tells, two hits then waits for the next swing) | mash (walks in and mashes hit)
 ##   | kickmash (walks in and spams the kick)
 
@@ -18,6 +18,8 @@ func _initialize() -> void:
 		out = args[0]
 	if args.size() > 1:
 		skill = args[1]
+	if args.size() > 2:
+		shot_every = float(args[2])  # seconds between saved frames (GIFs want ~.1)
 	DirAccess.make_dir_recursive_absolute(out)
 	call_deferred("_run")
 
@@ -57,7 +59,7 @@ func _run() -> void:
 	var seen_tell := false
 	var swing_cd := 0.0
 	var phase := "pirate"
-	while t < 90.0:
+	while t < 150.0:
 		await physics_frame
 		var dt: float = current_scene.clock - _clock  # game time: slow renders don't make it slower
 		_clock = current_scene.clock
@@ -65,7 +67,7 @@ func _run() -> void:
 		swing_cd -= dt
 		shot -= dt
 		if shot <= 0:
-			shot = .5
+			shot = shot_every
 			await RenderingServer.frame_post_draw
 			root.get_viewport().get_texture().get_image().save_jpg("%s/f%04d.jpg" % [out, int(t * 10)], .8)
 		s = current_scene
@@ -79,9 +81,10 @@ func _run() -> void:
 		if not s.active:
 			_note("encounter over: %s" % s.message.text)
 			break
-		if s.mike_state != last_state:
-			_note("mike state %s" % s.mike_state)
-			last_state = s.mike_state
+		var boss_state: String = s.rival.state if s.mike_state == "ko" else s.mike_state
+		if boss_state != last_state:
+			_note("%s state %s" % ["sendback" if s.mike_state == "ko" else "mike", boss_state])
+			last_state = boss_state
 		var to: Vector3
 		if s.pirate_hp > 0:
 			phase = "pirate"
@@ -89,12 +92,15 @@ func _run() -> void:
 		elif s.mike_state == "away":
 			phase = "parcel"
 			to = s.package.global_position - s.player.position
-		elif s.mike_state == "ko":
-			_note("Mike KO")
+		elif s.mike_state == "ko" and s.rival.state == "away":
+			if phase == "mike":
+				_note("Mike KO; waiting for the next one")
+			phase = "walkup"
 			_steer(Vector3.ZERO)
-			for i in 90:
-				await physics_frame
-			break
+			continue
+		elif s.mike_state == "ko":
+			phase = "sendback"
+			to = s.sendback.position - s.player.position
 		else:
 			phase = "mike"
 			to = s.mike.position - s.player.position
@@ -110,20 +116,30 @@ func _run() -> void:
 		if skill == "good" and react > 0:
 			react -= dt
 			if react <= 0:
-				var jab: bool = phase == "pirate" or s.mike_state == "jab_tele"
-				_note("dodge the %s" % ("jab" if jab else s.mike_state))
+				var jab: bool = phase == "pirate" or boss_state == "jab_tele"
+				_note("dodge the %s" % ("jab" if jab else boss_state))
 				_steer(-to.normalized() if jab else Vector3(-to.z, 0, to.x).normalized())  # back out / sidestep
 				await _tap(KEY_SHIFT)
 				continue
 		var reach := .3 if phase == "parcel" else 1.0
+		if phase == "sendback" and skill == "good" and s.meter >= 100 and dist < 3.0 and boss_state in ["plate", "stalk"]:
+			_note("special into %s" % boss_state)
+			_steer(to.normalized())
+			await physics_frame
+			await _tap(KEY_R)
+			continue
+		if phase == "sendback" and skill == "good" and boss_state == "plate" and s.meter < 100:
+			_steer(-to.normalized())  # no use punching a cloche: wait it out
+			continue
 		if dist > reach:
 			_steer(to.normalized())
 		else:
 			_steer(Vector3.ZERO)
 			if t - _hit_t > .9:
 				row = 0  # a new flurry
-			var most := 1 if phase == "mike" and s.mike_raged else 2
-			var waiting: bool = skill == "good" and (row >= most or s.mike_state == "taunt")  # then wait for his swing
+			var raged: bool = s.rival.raged if phase == "sendback" else s.mike_raged
+			var most := 1 if phase != "pirate" and raged else 2
+			var waiting: bool = skill == "good" and (row >= most or boss_state == "taunt")  # then wait for his swing
 			if swing_cd <= 0 and not waiting:
 				# face the foe with a tap of the key towards it, then swing
 				_steer(to.normalized())
@@ -143,17 +159,24 @@ func _run() -> void:
 			row += 1 if s.mike_state != "dizzy" else 0
 			_hit_t = t
 			_mike_last = s.mike_hp
+		if phase == "sendback" and s.rival.hp != _rival_last:
+			_note("Sends-It-Back hit -> %d" % s.rival.hp)
+			row += 1 if boss_state != "dizzy" else 0
+			_hit_t = t
+			_rival_last = s.rival.hp
 	_steer(Vector3.ZERO)
 	_note("game time %.1fs, %d FPS" % [s.clock, Engine.get_frames_per_second()])
-	_note("end: Duff %d HP, pirate %d, Mike %d (%s)" % [s.player_hp, s.pirate_hp, s.mike_hp, s.mike_state])
+	_note("end: Duff %d HP, pirate %d, Mike %d (%s), Sends-It-Back %d (%s)" % [s.player_hp, s.pirate_hp, s.mike_hp, s.mike_state, s.rival.hp, s.rival.state])
 	var f := FileAccess.open(out + "/log.txt", FileAccess.WRITE)
 	f.store_string("\n".join(lines))
 	print("\n".join(lines))
 	print("PLAY BOT DONE")
 	quit()
 
+var shot_every := .5
 var _pirate_last := 5
 var _mike_last := 8
+var _rival_last := 10
 var _blocked_last := 0
 var _clock := 0.0
 var _hit_t := -9.0

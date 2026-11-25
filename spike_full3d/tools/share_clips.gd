@@ -16,6 +16,12 @@ const CAST := {
 		["mike", "taunt"]],
 	"allergy": [["duff", "idle"], ["duff", "jab"], ["duff", "dodge"], ["duff", "hit"], ["duff", "ko"],
 		["mike", "taunt"], ["mike", "throw"]],
+	# Madison and Brittany (Nov 25, from their approved art; Duff OK'd the public repo): the moves a
+	# home / block scene needs, plus fight reactions.
+	"madison": [["duff", "idle"], ["duff", "jab"], ["duff", "dodge"], ["duff", "hit"], ["duff", "ko"],
+		["mike", "taunt"], ["mike", "throw"]],
+	"brittany": [["duff", "idle"], ["duff", "jab"], ["duff", "dodge"], ["duff", "hit"], ["duff", "ko"],
+		["mike", "taunt"], ["mike", "throw"]],
 }
 const LOOPS := ["idle", "walking", "running", "charge"]
 
