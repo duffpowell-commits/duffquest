@@ -129,7 +129,20 @@ Duff wanted a dashing fire-fist special ("burn knuckle" feel; ours is original: 
   fist cocked behind the shoulder, released into the punch); `RRH_PEAK` (.76) is where the fist is fully out. Duff turned
   down the Meshy "Kung Fu Punch" (96) cut ("doesn't look like a punch at all"); that clip is a spinning routine. Bigger
   wind-up, then even bigger, were his calls.
-- Preview: `tools/rrh_shots.gd`, render `docs/renders/porch3d/20_red_right_hand.jpg`. Smoke is 92 checks.
+- Preview: `tools/rrh_shots.gd`, render `docs/renders/porch3d/20_red_right_hand.jpg`. Smoke was 92 checks.
+
+## Return to Sender, the grab special (Nov 25 2026)
+
+R with a full meter and a foe within 1.45 m (`RTS_RANGE`) is a grab instead of the dash. Duff's pick: the over-shoulder throw.
+- Duff grabs at .5 clip-s, carries him over the shoulder, throws him 3.2 m behind in a high arc (short of fences and planters:
+  `_clear_landing`), 3 damage through any guard, big shake, red flash. Untouchable for the whole move.
+- The victim (Duff: the first cut "looks very badly animated"): `flail` (Meshy 503, looped) while held, `flyup`
+  (Meshy 7, cut to 1.4 s) tumbles him in the air and lands him flat. Both are baked by `tools/bake_victim.gd` into
+  every foe's `_clips.res` (shared 24-bone skeleton, hips scaled per body), so any enemy can be thrown: one purchase.
+- KO'd by the throw: he stays down and the pirate's parcel sails back onto the stoop (`STOOP_AT`). Not KO'd: he
+  lies a beat, then gets up. A fight that ends mid-carry puts him back on his feet with his collision.
+- Swing: Meshy "Over Shoulder Throw" (421) cut and turned by `tools/bake_toss.gd` into `toss`.
+- Preview: `tools/rts_shots.gd <outdir> [pirate hp]`, render `docs/renders/porch3d/21_return_to_sender.jpg`. Smoke is 99 checks.
 
 ## HUD and menus (Nov 25 2026)
 
@@ -192,6 +205,8 @@ judged on the phone.
 | Duff re-rig (Nov 25; the first rig's full id wasn't recorded and Meshy can't list rigs) | rigging 01a2139a-2c8e-704b-b2e6-af6cb09b81f3 | 5 |
 | Duff push kick (Spartan Kick, 206), on that rig; baked into `duff_clips.res` as `kick` | animate 01a2139a-82d8-72a3-b49b-0f65e56136a8 | 3 |
 | Duff Red Right Hand swing (Kung Fu Punch, 96), cut by `tools/bake_burn.gd` into `burn` | animate 01a213c7-dde8-76e2-aa4d-ed471a567610 | 3 |
+| Duff Return to Sender throw (Over Shoulder Throw, 421), cut by `tools/bake_toss.gd` into `toss` | animate 01a213fa-9aed-7367-b54d-1eeb7404ec32 | 3 |
+| Victim flail (503) + fly-up (7) on Duff's rig, shared to every foe by `tools/bake_victim.gd` | animate 01a2140d-c0b1… + 01a2140d-c4b9… | 6 |
 | Pirate A-pose reference from the approved render | image-to-image 01a20f81-9222… | 9 |
 | Pirate model, 12k tris, 2K texture | image-to-3d 01a20f81-fc3a… | 30 |
 | Pirate rig + 4 clips (idle 0, jab 191, hit 178, KO 187) | rigging 01a20f83-e400… | 5 + 12 |
