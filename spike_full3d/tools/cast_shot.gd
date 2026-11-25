@@ -6,7 +6,7 @@ extends SceneTree
 ## to Duff's head size) | off (fitted by height only)
 
 const CAST := [["duff", 1.7], ["mike", 1.65], ["pirate", 1.4], ["sendback", 1.75], ["camper", 1.68],
-	["coupon", 1.5], ["allergy", 1.65]]
+	["coupon", 1.5], ["allergy", 1.65], ["madison", 1.63], ["brittany", 1.63]]
 
 func _initialize() -> void:
 	call_deferred("_run")

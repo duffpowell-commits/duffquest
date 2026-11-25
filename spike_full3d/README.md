@@ -149,11 +149,27 @@ R with a full meter and a foe within 1.45 m (`RTS_RANGE`) is a grab instead of t
 ## Grade and best time (Nov 25 2026)
 
 From the mock review ("no reason to replay"). Winning grades the fight S-D: 100, minus 8 per hit Duff took and .4 per
-second past a 90 s par, plus 6 per special landed (up to 3). The win card shows the grade, time, hits and specials, and
+second past a 130 s par (three fights), plus 6 per special landed (up to 3). The win card shows the grade, time, hits and specials, and
 the best on this phone (`user://porch_best.cfg`; a better grade, or the same grade faster, is a new best).
 Numbers are the `PAR_TIME`/`GRADE_*` constants in `porch.gd`. Sound cues: a chime when the meter fills, a sting on the
 Red Right Hand wind-up, a boom when it lands, a cash register when the parcel lands on the stoop. Render
 `docs/renders/porch3d/22_win_grade.jpg`.
+
+## Sir Sends-It-Back, the third fight (Nov 25 2026)
+
+Duff's pick from the kitchen 4, after the mock review asked for "a fight that makes you use the specials". He walks up
+once Mike is sold (`foe_sendback.gd`, same pattern as `foe_mike.gd`). Two clean hits in a row and he raises a silver
+cloche: punches and kicks bounce off ("SENT BACK!", Duff is shoved away) until it comes down (2.6 s) or a special
+(Red Right Hand / Return to Sender) smashes it for +1 and leaves him dizzy for free hits. From range he throws a fan of
+"1 STAR" review cards (3, raged 5) or charges ("I'm coming BACK there"); up close he swats. At half health he rages
+(he waits until he's not dizzy). HP 10; Duff starts the fight fresh. Render `docs/renders/porch3d/24_sendback_cloche.jpg`.
+
+## Madison and Brittany (Nov 25 2026)
+
+Built from their approved portraits + sprites (Duff: no photos needed; slim build on his ask), on the shared 24-bone
+rig with Duff's/Mike's clips (`tools/share_clips.gd`, `tools/bake_victim.gd`). Duff OK'd these models in this public
+repo; their photos never go here. Not in a scene yet (phase 4: home and the block). Render
+`docs/renders/porch3d/23_cast_with_madison_brittany.jpg`.
 
 ## HUD and menus (Nov 25 2026)
 
@@ -229,6 +245,9 @@ judged on the phone.
 | Porch set references in the characters' style: house front, fence, planter, tree, bush, mailbox | image-to-image ×6, Nov 24 | 54 |
 | Grass + sidewalk tiling textures | image-to-image ×2 | 18 |
 | Set props: house 12k tris, fence 2k, planter 5k, tree 5k, bush 6k, mailbox 2k (bush took a free retry: the first try failed and was refunded) | image-to-3d ×6 | 180 |
+
+| Madison + Brittany 3D turnarounds from approved art (style pass, tattoo fix, slim redraw) | image-to-image ×8 | 78 |
+| Madison + Brittany models 14k / 2K + rigs | multi-image-to-3d ×2 + rigging ×2 | 70 |
 
 Walk and run come free with each rig. Total about 641 credits (Mike: 65, porch set: 252, kitchen 4: 176).
 

@@ -6,7 +6,7 @@ extends SceneTree
 ##   flyup: Meshy "BeHit FlyUp" (7), cut to the tumble and the flat landing; the game flies the arc,
 ##          so the clip's own jump is flattened.
 ##   godot --headless --path . --script tools/bake_victim.gd   (needs models/clips/duff_flail.glb, duff_flyup.glb)
-const FOES := ["pirate", "mike", "sendback", "camper", "coupon", "allergy"]
+const FOES := ["pirate", "mike", "sendback", "camper", "coupon", "allergy", "madison", "brittany"]
 const FLYUP_END := 1.4    ## landed flat by ~.9 s; keep a beat of lying there
 const FLYUP_TOP := 107.0  ## hips height (cm) at the start: the clip's jump above this is cut
 

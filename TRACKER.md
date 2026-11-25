@@ -5,6 +5,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-25** **3D porch: third fight, Sir Sends-It-Back.** After Mike: a silver cloche deflects punches and kicks until a special smashes it (dizzy, free hits); 1-star card spread, charge, rage. Madison and Brittany rigged in 3D from their approved art (slim, Duff OK'd). Renders `docs/renders/porch3d/23_*.jpg`, `24_*.jpg`.
 - **2026-11-25** **3D porch: grade + best time.** Win card grades the fight S-D (hits taken, time, specials) and keeps the best on the phone; chimes for a full meter, special stings, a cash register when the parcel lands home.
 - **2026-11-25** **3D porch: Return to Sender grab special.** R next to a foe grabs him: over-shoulder throw, 3 through any guard; he flails in the carry and tumbles on the throw (shared clips, any enemy). A KO sends the parcel back to the stoop. Render `docs/renders/porch3d/21_return_to_sender.jpg`.
 - **2026-11-25** **3D porch: Red Right Hand special.** Meter from hits landed and taken, red R button, wind-up then a 4 m fire-fist dash that lands 3 through any guard; a whiff leaves Duff open. Swing is Duff's right straight with a big coil, approved by Duff (v3). Render `docs/renders/porch3d/20_red_right_hand.jpg`.
