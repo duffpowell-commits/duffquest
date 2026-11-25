@@ -901,7 +901,7 @@ func _place_bubble(delta: float) -> void:
 		return
 	# no room (the camera keeps heads high): sit beside his head, tail pointing at it
 	var right := head.x + 40 + box.x <= view.x - 12
-	at = Vector2(head.x + 40 if right else head.x - 40 - box.x, clampf(head.y - box.y * .5, top, view.y - box.y - 12))
+	at = Vector2(head.x + 40 if right else head.x - 40 - box.x, clampf(head.y - box.y * .5, top, maxf(top, view.y - box.y - 12)))
 	bubble.position = at
 	bubble_tail.rotation = PI / 2 if right else -PI / 2
 	bubble_tail.position = Vector2(at.x + 2 if right else at.x + box.x - 2, clampf(head.y, at.y + 16, at.y + box.y - 16))
