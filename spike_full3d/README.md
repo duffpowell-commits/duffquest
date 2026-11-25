@@ -111,10 +111,10 @@ Duff: "add a kick button" and "lets discuss specials and combos". He picked the 
   (not Mike's rant), shoves the foe back.
 - **Rhythm combos**: press again after the swing and within `COMBO_GAP` (.7 s). A press mid-swing is mashing and
   drops the combo (mashed hits still get guarded). A A A = knockdown (2 damage, big shove, stun). A A K = launcher
-  (2 damage, bigger shove); a launched foe that hits the fence, planter or a wall within .5 s takes 1 more (WALL SPLAT).
+  (2 damage, bigger shove); a launched foe that hits the fence, planter or a wall within .5 s takes 1 more (a thud and shake, no callout: Duff's call).
 - **Roll → A** within .55 s: homing dash hook (reach 2.6). **Roll through a hit → K** within .6 s: counter kick
   in slow motion for 2.
-- Gold callouts under the strip (2 HIT, KNOCKDOWN!, LAUNCHER!, WALL SPLAT!, DASH HOOK!, PERFECT!, COUNTER KICK!).
+- Gold callouts under the strip (2 HIT, KNOCKDOWN!, LAUNCHER!, DASH HOOK!, PERFECT!, COUNTER KICK!), .75 s of real time.
 - Bot: careful wins; the masher (taps again mid-swing) is still KO'd. Preview: `tools/combo_shots.gd`.
 
 ## HUD and menus (Nov 25 2026)

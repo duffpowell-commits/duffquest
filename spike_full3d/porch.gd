@@ -131,6 +131,7 @@ var combo_at := -99.0         ## clock of the last combo hit
 var combo_broken := false     ## A was pressed mid-swing: that's mashing, the next hit starts over
 var last_dodge := -99.0
 var launched := {}            ## foe -> seconds left in which a wall hit hurts
+var wall_hits := 0             ## launched foes that hit a wall (for tests)
 var perfect_at := -99.0       ## clock of the last dodge that slipped a hit
 var kick_requested := false
 var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
@@ -496,7 +497,7 @@ func _hit_wall(actor: CharacterBody3D) -> bool:
 func _wall_splat(foe: CharacterBody3D) -> void:
 	if not active or (foe == pirate and pirate_hp <= 0) or (foe == mike and mike_hp <= 0):
 		return
-	_call("WALL SPLAT!")
+	wall_hits += 1  # no callout (Duff, Nov 25): the thud and shake say it
 	if feel:
 		feel.sfx("bonk")
 		feel.add_trauma(.4)

@@ -303,7 +303,8 @@ func _run() -> void:
 	_check(sample.pirate_hp == sample.PIRATE_HP - 4 and sample.callout == "LAUNCHER!" and sample.launched.has(sample.pirate),
 		"A A K is a launcher for 2")
 	sample._wall_splat(sample.pirate)
-	_check(sample.pirate_hp == sample.PIRATE_HP - 5 and sample.callout == "WALL SPLAT!", "a launched foe into a wall takes 1 more")
+	_check(sample.pirate_hp == sample.PIRATE_HP - 5 and sample.wall_hits == 1 and sample.callout == "LAUNCHER!",
+		"a launched foe into a wall takes 1 more, with a thud and no callout")
 	sample.pirate_hp = sample.PIRATE_HP
 	sample.pirate.position = Vector3(1.2, 0, 1.2)
 	sample.facing = Vector3.FORWARD
