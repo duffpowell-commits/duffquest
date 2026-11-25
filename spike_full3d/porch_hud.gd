@@ -64,7 +64,7 @@ func _ready() -> void:
 	pause.shape = shape
 	pause.shape_centered = false
 	pause.position = PAUSE.position
-	pause.released.connect(func() -> void: open_pause() if screen == "" else null)
+	pause.released.connect(func() -> void: open_pause() if screen == "" and game.active else null)
 	add_child(pause)
 
 ## Esc / P pauses and resumes; Space or Enter takes the main button on the title and end screens.
@@ -80,19 +80,22 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			close_menu()
 		elif screen == "settings":
 			show_title()
-	elif event.is_action_pressed("ui_accept"):
-		match screen:
-			"title": start()
-			"ko", "win": game.retry()
-		if screen != "":
-			get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("ui_accept") and screen in ["title", "ko", "win"]:
+		get_viewport().set_input_as_handled()  # first, or the fight would also swing on this key
+		if screen == "title":
+			start()
+		else:
+			game.retry()
 
 ## Android back and losing focus (a call, the home button) pause the fight, like the main game.
 func _notification(what: int) -> void:
 	if game == null or not is_inside_tree():
 		return
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST and screen == "pause":
-		close_menu()
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST and screen != "":
+		match screen:
+			"pause": close_menu()
+			"settings": show_title()
+			_: get_tree().quit()  # back on the title or an end card leaves the game
 	elif what in [NOTIFICATION_WM_GO_BACK_REQUEST, NOTIFICATION_APPLICATION_FOCUS_OUT] and screen == "" and game.active:
 		open_pause()
 
