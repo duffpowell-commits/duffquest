@@ -54,6 +54,19 @@ const MIKE_SHOVE := 7.5       ## m/s: Mike's jab shoves Duff out to sign / charg
 const COUNTER_TELE := .18     ## a blocked hit gets this quick counter
 const CHAIN_WINDOW := .9      ## hits closer together than this are one flurry
 const GUARD_AFTER := 2        ## a foe blocks the hit after this many in a flurry, then counters
+const COMBO_GAP := .7         ## combos: press again within this after a hit lands, never mid-swing
+const FINISHER_KNOCK := 2.4   ## the third hit in rhythm knocks the foe this many times further
+const FINISHER_STUN := .9     ## and leaves him unable to swing for this long
+const DASH_WINDOW := .55      ## roll, then A within this: a dash hook
+const DASH_REACH := 2.6
+const DASH_SPEED := 9.0
+const KICK_ANIM := .55        ## K: the push kick. Slower than a punch, longer reach, shoves him back
+const KICK_LOCK := .42        ## no other swing until the kick is out
+const KICK_REACH := 2.05
+const KICK_KNOCK := 2.2       ## times a punch's shove
+const LAUNCH_KNOCK := 3.4     ## A A K: the kick ends the combo as a launcher
+const WALL_TIME := .5         ## a launched foe that hits a wall, fence or planter within this takes 1 more
+const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
 
 var player: CharacterBody3D
 var pirate: CharacterBody3D
@@ -72,7 +85,6 @@ var charge_dir := Vector3.FORWARD
 var obo_sign: Node3D
 var sign_velocity := Vector3.ZERO
 var sign_life := 0.0
-var jab_next := true
 var package: Node3D
 var hit_marker: MeshInstance3D
 var impact: MeshInstance3D
@@ -113,6 +125,15 @@ var bubble_name: Label        ## pink name tag on the speech bubble
 var end_in := 0.0             ## counts down to the KO / win screen
 var end_won := false
 var opening := 0.0            ## the pirate answers Duff this long after the fight starts
+var combo := 0                ## hits landed in rhythm (resets on a miss, a block, or a mashed press)
+var combo_at := -99.0         ## clock of the last combo hit
+var combo_broken := false     ## A was pressed mid-swing: that's mashing, the next hit starts over
+var last_dodge := -99.0
+var launched := {}            ## foe -> seconds left in which a wall hit hurts
+var perfect_at := -99.0       ## clock of the last dodge that slipped a hit
+var kick_requested := false
+var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
+var callout_time := 0.0
 
 func _ready() -> void:
 	_build_street()
@@ -187,6 +208,7 @@ func _process(delta: float) -> void:
 		opening -= delta
 		if opening <= 0 and active and pirate_hp > 0 and bubble_from == player:
 			_say(pirate, "Just browsing your porch, boss.")
+	callout_time = maxf(0, callout_time - delta)
 	if end_in > 0:
 		end_in -= delta
 		if end_in <= 0:
@@ -221,6 +243,13 @@ func _physics_process(delta: float) -> void:
 	if attack_requested:
 		attack_requested = false
 		_attack()
+	if kick_requested:
+		kick_requested = false
+		_kick()
+	for foe in launched.keys():
+		launched[foe] -= delta
+		if launched[foe] <= 0:
+			launched.erase(foe)
 	hit_marker.visible = attack_time > .14
 	var motion := facing * 8.8 if dodge_time > 0 else direction * PLAYER_SPEED
 	_move(player, motion)
@@ -243,6 +272,8 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	elif event is InputEventKey:
 		if event.physical_keycode == KEY_SHIFT:
 			dodge_requested = true
+		elif event.physical_keycode in [KEY_K, KEY_C]:
+			kick_requested = true
 		elif event.physical_keycode == KEY_R:
 			retry()
 
@@ -263,6 +294,9 @@ func _move(actor: CharacterBody3D, motion: Vector3) -> void:
 		motion += feel.knock_of(actor)
 	actor.velocity = Vector3(motion.x, -2, motion.z)
 	actor.move_and_slide()
+	if launched.has(actor) and _hit_wall(actor):
+		launched.erase(actor)
+		_wall_splat(actor)
 
 func _tick_pirate(delta := 1.0 / 60) -> void:
 	var offset := player.position - pirate.position
@@ -297,6 +331,9 @@ func _pirate_windup(seconds: float) -> void:
 
 ## One point of damage unless Duff is in dodge / hit immunity. Returns true when it landed.
 func _hurt_duff(from: Vector3) -> bool:
+	if invulnerable > 0 and dodge_recovery > 0 and active:
+		perfect_at = clock  # slipped it with a roll: K now is a counter kick
+		_call("PERFECT!")
 	if invulnerable > 0 or not active:
 		return false
 	player_hp -= 1
@@ -319,35 +356,122 @@ func _hurt_duff(from: Vector3) -> bool:
 		player_model.strike("hit", HIT_ANIM)
 	return true
 
+## A: jab, then hook. Press again in rhythm (after the swing, within COMBO_GAP) and it's a combo:
+## the foe can't guard it, and the third hit is a knockdown. Pressing mid-swing (mashing) drops it,
+## and mashed hits get guarded like before. A right after a roll is a dash hook.
 func _attack() -> void:
 	var foe := _foe()
-	if not active or attack_time > 0 or foe == null or dodge_time > 0:
+	if not active or foe == null or dodge_time > 0:
 		return
+	if attack_time > 0:
+		combo_broken = true
+		return
+	var since_roll := clock - last_dodge
+	var dash := since_roll >= .18 and since_roll <= DASH_WINDOW
+	var rhythm := combo > 0 and not combo_broken and clock - combo_at <= COMBO_GAP
+	combo_broken = false
+	var step := combo + 1 if rhythm else 1
+	var finisher := step >= 3 and not dash
 	attack_time = .27
-	player_model.strike("jab" if jab_next else "hook", ATTACK_ANIM)
-	jab_next = not jab_next
 	var offset := foe.position - player.position
 	offset.y = 0
-	if offset.length() > 1.75 or facing.dot(offset.normalized()) < .38 or not _clear_strike(player, foe):
+	if dash:
+		facing = offset.normalized()  # the dash homes in on him
+		player_model.rotation.y = atan2(-facing.x, -facing.z)
+		player_model.strike("hook", ATTACK_ANIM)
+		if feel:
+			feel.push(player, facing, DASH_SPEED)
+	elif finisher:
+		player_model.strike("hook", ATTACK_ANIM * 1.25)
+	else:
+		player_model.strike("jab" if step == 1 else "hook", ATTACK_ANIM)
+	var reach := DASH_REACH if dash else 1.75
+	if offset.length() > reach or facing.dot(offset.normalized()) < .38 or not _clear_strike(player, foe):
+		combo = 0
 		if feel:
 			feel.sfx("swing")
 		return
-	if _guards(foe):
+	var taunting := foe == mike and mike_state == "taunt"
+	if taunting or (not rhythm and not dash and _guards(foe)):
+		combo = 0
 		_block(foe)
 		return
+	if rhythm or dash:
+		chain.erase(foe)  # a clean combo hit isn't part of a mashed flurry
+	combo = 0 if finisher else step
+	combo_at = clock
+	var damage := 2 if finisher else 1
+	if finisher:
+		_call("KNOCKDOWN!")
+	elif dash:
+		_call("DASH HOOK!")
+	elif step == 2:
+		_call("2 HIT")
 	if feel:
-		var ko := (foe == mike and mike_hp <= 1) or (foe == pirate and pirate_hp <= 1)
+		var ko := (foe == mike and mike_hp <= damage) or (foe == pirate and pirate_hp <= damage)
 		feel.landed(foe, player.position, ko)
-	if foe == mike:
-		_hit_mike()
+		if finisher:
+			feel.push(foe, offset, feel.KNOCK_HIT * FINISHER_KNOCK)
+			feel.add_trauma(.25)
+	_damage(foe, damage, FINISHER_STUN if finisher else HIT_ANIM)
+
+## K: the push kick. Longer reach than a punch and it goes through a guard (not Mike's rant).
+## As the third hit of a combo (A A K) it's a launcher; into a wall it hurts once more.
+## Right after a roll slips a hit it's a counter kick: slow motion, can't miss in reach.
+func _kick() -> void:
+	var foe := _foe()
+	if not active or foe == null or dodge_time > 0:
 		return
-	pirate_hp -= 1
+	if attack_time > 0:
+		combo_broken = true
+		return
+	var rhythm := combo > 0 and not combo_broken and clock - combo_at <= COMBO_GAP
+	combo_broken = false
+	var counter := clock - perfect_at <= PERFECT_WINDOW
+	var launcher := rhythm and combo >= 2
+	attack_time = KICK_LOCK
+	var offset := foe.position - player.position
+	offset.y = 0
+	if counter:
+		facing = offset.normalized()
+		player_model.rotation.y = atan2(-facing.x, -facing.z)
+	player_model.strike("kick", KICK_ANIM)
+	if offset.length() > KICK_REACH or facing.dot(offset.normalized()) < .38 or not _clear_strike(player, foe):
+		combo = 0
+		if feel:
+			feel.sfx("swing")
+		return
+	if foe == mike and mike_state == "taunt":
+		combo = 0
+		_block(foe)
+		return
+	chain.erase(foe)  # a kick breaks the guard
+	combo = 0
+	perfect_at = -99.0
+	var damage := 2 if launcher or counter else 1
+	_call("COUNTER KICK!" if counter else ("LAUNCHER!" if launcher else "KICK!"))
+	if feel:
+		var ko := (foe == mike and mike_hp <= damage) or (foe == pirate and pirate_hp <= damage)
+		feel.landed(foe, player.position, ko)
+		feel.push(foe, offset, feel.KNOCK_HIT * (LAUNCH_KNOCK if launcher else KICK_KNOCK))
+		if counter:
+			feel.slow_mo(.45)
+	launched[foe] = WALL_TIME
+	_damage(foe, damage, FINISHER_STUN)
+
+## Hit damage on a foe, with the pirate's or Mike's reaction (stun = seconds he can't swing).
+func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
+	if foe == mike:
+		_hit_mike(damage)
+		if mike_state == "stalk":
+			mike_recovery = maxf(mike_recovery, stun)
+		return
+	pirate_hp = maxi(pirate_hp - damage, 0)
 	_show_impact(pirate.position)
 	if pirate_hp > 0:
-		pirate_recovery = maxf(pirate_recovery, HIT_ANIM)  # staggered: no new jab during the hit clip
+		pirate_recovery = maxf(pirate_recovery, stun)
 		if pirate_wind <= 0:
 			pirate_model.strike("hit", HIT_ANIM)
-		# a wind-up has armour: hitting into it doesn't stop the jab. Dodge it, then punish.
 	else:
 		_tell(null)
 	if pirate_hp == 0:
@@ -360,6 +484,27 @@ func _attack() -> void:
 		pirate.collision_mask = 0
 		message.text = "Walk over to grab the parcel."
 	_update_hud()
+
+func _hit_wall(actor: CharacterBody3D) -> bool:
+	for i in actor.get_slide_collision_count():
+		var other := actor.get_slide_collision(i).get_collider()
+		if other is CollisionObject3D and other.collision_layer & WORLD_LAYER and not other is CharacterBody3D:
+			return true
+	return false
+
+func _wall_splat(foe: CharacterBody3D) -> void:
+	if not active or (foe == pirate and pirate_hp <= 0) or (foe == mike and mike_hp <= 0):
+		return
+	_call("WALL SPLAT!")
+	if feel:
+		feel.sfx("bonk")
+		feel.add_trauma(.4)
+		feel.hit_stop(feel.HIT_STOP)
+	_damage(foe, 1, FINISHER_STUN)
+
+func _call(text: String) -> void:
+	callout = text
+	callout_time = 1.1
 
 ## Mashing gets read: the hit after GUARD_AFTER in one flurry is blocked. A dizzy Mike can't guard
 ## (that's the reward for dodging his charge); a taunting one blocks everything.
@@ -523,8 +668,8 @@ func _mike_dizzy() -> void:
 	mike_timer = MIKE_DIZZY
 	mike_model.strike("hit", MIKE_DIZZY)
 
-func _hit_mike() -> void:
-	mike_hp -= 1
+func _hit_mike(damage := 1) -> void:
+	mike_hp -= damage
 	_show_impact(mike.position)
 	_update_hud()
 	if mike_hp <= 0:
@@ -628,6 +773,7 @@ func _dodge() -> void:
 		dodge_time = .23
 		player_model.strike("dodge", DODGE_ANIM)
 		dodge_recovery = .65
+		last_dodge = clock
 		invulnerable = maxf(invulnerable, .27)
 		if feel:
 			feel.sfx("roll")
@@ -762,6 +908,7 @@ func _build_hud() -> void:
 	stick = _stick(layer)
 	_button(layer, Hud.A_AT, Hud.A_R, "attack")
 	_button(layer, Hud.B_AT, Hud.B_R, "dodge")
+	_button(layer, Hud.K_AT, Hud.K_R, "kick")
 	_build_bubble(layer)
 	hud = Hud.make(self, layer)  # last: its menus cover everything else
 
@@ -814,12 +961,13 @@ func _button(layer: CanvasLayer, centre: Vector2, radius: float, action: String)
 	button.shape = bounds
 	button.shape_centered = false
 	layer.add_child(button)
-	var down := "a_down" if action == "attack" else "b_down"
+	var down: String = {"attack": "a_down", "dodge": "b_down", "kick": "k_down"}[action]
 	button.pressed.connect(func() -> void: hud.set(down, true))
 	button.released.connect(func() -> void: hud.set(down, false))
 	match action:
 		"attack": button.pressed.connect(func() -> void: attack_requested = true)
 		"dodge": button.pressed.connect(func() -> void: dodge_requested = true)
+		"kick": button.pressed.connect(func() -> void: kick_requested = true)
 
 ## Speech bubble over whoever talks, in the main game's dialogue look: plum glass, cream text, pink name tag.
 func _build_bubble(layer: CanvasLayer) -> void:

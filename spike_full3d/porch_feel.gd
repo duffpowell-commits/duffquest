@@ -109,6 +109,16 @@ func hit_stop(seconds: float) -> void:
 	Engine.time_scale = 1.0
 	stopping = false
 
+## Slow motion for a counter (real seconds), after any hit-stop already running.
+func slow_mo(seconds: float, scale := .35) -> void:
+	while stopping:
+		await get_tree().process_frame
+	stopping = true
+	Engine.time_scale = scale
+	await get_tree().create_timer(seconds, true, false, true).timeout
+	Engine.time_scale = 1.0
+	stopping = false
+
 func _process(delta: float) -> void:
 	var real := delta / maxf(Engine.time_scale, .001)
 	for body in knock.keys():

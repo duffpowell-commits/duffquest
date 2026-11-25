@@ -129,6 +129,8 @@ func _run() -> void:
 				await physics_frame
 				_steer(Vector3.ZERO)
 				await _tap(KEY_SPACE)
+				if skill == "mash":
+					await _tap(KEY_SPACE)  # a thumb mashing taps again mid-swing (at sandbox FPS one tap a frame would look like rhythm)
 				swing_cd = .45 if skill == "good" else .2
 		if phase == "pirate" and s.pirate_hp != _pirate_last:
 			_note("pirate hit -> %d" % s.pirate_hp)
