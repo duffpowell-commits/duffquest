@@ -66,7 +66,7 @@ func _run() -> void:
 	s.mike_state = "stalk"
 	s.mike_cool = 9.0
 	s._tick_mike(.016)
-	s.message.text = "Marketplace Mike: That pirate was my best guy. Porch box goes for twelve bucks. Or best offer."
+	s._say(s.mike, "That pirate was my best guy. Porch box goes for twelve bucks. Or best offer.", 30.0)
 	await _frames(12)
 	await _snap("07_mike_arrives")
 	s.charge_next = false

@@ -6,6 +6,7 @@ const Kit = preload("porch_kit.gd")
 const Look = preload("porch_look.gd")
 const FightCam = preload("porch_camera.gd")
 const Feel = preload("porch_feel.gd")
+const Hud = preload("porch_hud.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
@@ -106,6 +107,12 @@ var chain := {}               ## foe -> [hits landed in this flurry, clock of th
 var tell_ring: MeshInstance3D
 var tell_foe: CharacterBody3D ## whose wind-up the red ring marks
 var blocked := 0              ## hits a foe has blocked (for the bot and tests)
+var hud: Control              ## porch_hud.gd: the main game's HUD and menus
+var cash := 40                ## Duff's cash pill on the status strip
+var bubble_name: Label        ## pink name tag on the speech bubble
+var end_in := 0.0             ## counts down to the KO / win screen
+var end_won := false
+var opening := 0.0            ## the pirate answers Duff this long after the fight starts
 
 func _ready() -> void:
 	_build_street()
@@ -139,6 +146,32 @@ func _ready() -> void:
 		look = Look.apply(self, [player_model, pirate_model, mike_model])
 	_build_hud()
 	_update_hud()
+	var wants_title := OS.has_feature("template") or OS.get_cmdline_user_args().has("--title")
+	if wants_title and not Engine.get_meta("porch_skip_title", false):
+		hud.show_title()
+	else:
+		begin()
+
+## The fight starts: Duff calls the pirate out and the pirate answers.
+func begin() -> void:
+	_say(player, "Hey! That's my package.", 2.2)
+	opening = 2.4
+
+## [name, hp, max] for the foe plate, or [] when nobody is fighting.
+func foe_status() -> Array:
+	if pirate_hp > 0:
+		return ["Porch Pirate", pirate_hp, PIRATE_HP]
+	if mike.visible and mike_state != "away":
+		return ["Marketplace Mike", maxi(mike_hp, 0), MIKE_HP]
+	return []
+
+func retry() -> void:
+	Engine.set_meta("porch_skip_title", true)
+	_reset()
+
+func quit_to_title() -> void:
+	Engine.set_meta("porch_skip_title", false)
+	_reset()
 
 ## The foe the camera keeps in frame: the pirate until he drops, then Mike once he is in.
 func current_foe():
@@ -150,6 +183,14 @@ func current_foe():
 
 func _process(delta: float) -> void:
 	_place_bubble(delta)
+	if opening > 0:
+		opening -= delta
+		if opening <= 0 and active and pirate_hp > 0 and bubble_from == player:
+			_say(pirate, "Just browsing your porch, boss.")
+	if end_in > 0:
+		end_in -= delta
+		if end_in <= 0:
+			hud.show_end(end_won)
 	tell_ring.visible = tell_foe != null and active
 	if tell_ring.visible:
 		tell_ring.position = tell_foe.position + Vector3.UP * .04
@@ -203,7 +244,7 @@ func _unhandled_key_input(event: InputEvent) -> void:
 		if event.physical_keycode == KEY_SHIFT:
 			dodge_requested = true
 		elif event.physical_keycode == KEY_R:
-			_reset()
+			retry()
 
 ## Keys (WASD / arrows) or the on-screen stick, which presses the ui_* actions with analog strength.
 func _movement() -> Vector3:
@@ -269,6 +310,8 @@ func _hurt_duff(from: Vector3) -> bool:
 		hit_marker.hide()
 		player_model.strike("ko")
 		message.text = "Duff is down. Retry the encounter."
+		end_in = 1.2
+		end_won = false
 		bubble_time = 0
 		if feel:
 			feel.stop_music()
@@ -495,6 +538,8 @@ func _hit_mike() -> void:
 		hit_marker.hide()
 		_say(mike, "Okay. Mark me as sold.")
 		message.text = "Parcel recovered. Porch secured."
+		end_in = 1.6
+		end_won = true
 		if feel:
 			feel.stop_music()
 			feel.sfx("win", 0.0)
@@ -590,6 +635,7 @@ func _dodge() -> void:
 func _reset() -> void:
 	for action in ["ui_left", "ui_right", "ui_up", "ui_down"]:
 		Input.action_release(action)  # a stick held through Retry would otherwise keep Duff walking
+	get_tree().paused = false  # a menu pauses the tree; the new porch must run
 	get_tree().reload_current_scene()
 
 func _actor(at: Vector3, radius := .34) -> CharacterBody3D:
@@ -706,20 +752,18 @@ func _build_street() -> void:
 func _build_hud() -> void:
 	var layer := CanvasLayer.new()
 	add_child(layer)
-	var title := _hud_label(layer, Vector2(22, 13), 23, Color("#ffcf97"))
-	title.text = "DUFF QUEST"
+	# The fight still writes these; the HUD draws them in the main game's style (porch_hud.gd).
 	health = _hud_label(layer, Vector2(22, 47), 16, Color.WHITE)
 	message = _hud_label(layer, Vector2(22, 73), 16, Color("#ffe7ca"))
 	message.text = "Stop the Porch Pirate and recover the parcel."
 	fps_label = _hud_label(layer, Vector2(800, 22), 14, Color("#eddbd0"))
-	var hint := _hud_label(layer, Vector2(22, 512), 14, Color("#eddbd0"))
-	hint.text = "WASD / arrows  ·  Space to hit  ·  Shift to dodge  ·  R to retry"
-	hint.visible = not DisplayServer.is_touchscreen_available()  # no small print on a phone
+	for label in [health, message, fps_label]:
+		label.hide()
 	stick = _stick(layer)
-	_button(layer, "HIT", Vector2(806, 392), "attack", 128)
-	_button(layer, "DODGE", Vector2(690, 300), "dodge", 96)
-	_button(layer, "Retry", Vector2(884, 15), "reset", 0)
+	_button(layer, Hud.A_AT, Hud.A_R, "attack")
+	_button(layer, Hud.B_AT, Hud.B_R, "dodge")
 	_build_bubble(layer)
+	hud = Hud.make(self, layer)  # last: its menus cover everything else
 
 ## Left half of the screen: the stick appears where the thumb lands (4.7 VirtualJoystick, dynamic).
 func _stick(layer: CanvasLayer) -> Control:
@@ -736,6 +780,16 @@ func _stick(layer: CanvasLayer) -> Control:
 	pad.action_right = &"ui_right"
 	pad.action_up = &"ui_up"
 	pad.action_down = &"ui_down"
+	for part in ["normal_joystick", "pressed_joystick", "normal_tip", "pressed_tip"]:
+		var ring := StyleBoxFlat.new()  # faint cream ring + ink tip, like the main game's pad
+		var tip: bool = part.ends_with("tip")
+		var down: bool = part.begins_with("pressed")
+		ring.bg_color = Color(Hud.CREAM, .9 if down else .7) if tip else Color(Hud.INK, .32 if down else .22)
+		ring.border_color = Color(Hud.INK, .8) if tip else Color(Hud.CREAM, .55 if down else .35)
+		ring.set_border_width_all(3)
+		ring.set_corner_radius_all(200)
+		ring.anti_aliasing = true
+		pad.add_theme_stylebox_override(part, ring)
 	layer.add_child(pad)
 	return pad
 
@@ -750,70 +804,64 @@ func _hud_label(layer: CanvasLayer, at: Vector2, font_size: int, tint: Color) ->
 	layer.add_child(label)
 	return label
 
-## A round thumb button (size 0 = the small square Retry).
-func _button(layer: CanvasLayer, caption: String, at: Vector2, action: String, size := 0) -> void:
+## An invisible round-ish thumb zone over the HUD's drawn A / B button.
+func _button(layer: CanvasLayer, centre: Vector2, radius: float, action: String) -> void:
 	var button := TouchScreenButton.new()
 	button.name = action.capitalize()
-	button.position = at
-	var box := Vector2(54, 50) if size == 0 else Vector2(size, size)
+	button.position = centre - Vector2.ONE * radius
 	var bounds := RectangleShape2D.new()
-	bounds.size = box
+	bounds.size = Vector2.ONE * radius * 2
 	button.shape = bounds
 	button.shape_centered = false
 	layer.add_child(button)
-	var panel := Panel.new()
-	panel.size = box
-	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#211b29d9") if size == 0 else (Color("#b8432fd0") if action == "attack" else Color("#2f6f8ad0"))
-	style.border_color = Color("#edb178a0") if size == 0 else Color("#ffe5c3c0")
-	style.set_border_width_all(1 if size == 0 else 3)
-	style.set_corner_radius_all(10 if size == 0 else size / 2)
-	style.anti_aliasing = true
-	panel.add_theme_stylebox_override("panel", style)
-	button.add_child(panel)
-	var label := Label.new()
-	label.size = box
-	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	label.text = caption
-	label.add_theme_font_size_override("font_size", 16 if size == 0 else size / 5)
-	label.add_theme_color_override("font_color", Color("#fff3e2"))
-	panel.add_child(label)
-	button.pressed.connect(func() -> void: panel.modulate = Color("#ffd59e"))
-	button.released.connect(func() -> void: panel.modulate = Color.WHITE)
+	var down := "a_down" if action == "attack" else "b_down"
+	button.pressed.connect(func() -> void: hud.set(down, true))
+	button.released.connect(func() -> void: hud.set(down, false))
 	match action:
 		"attack": button.pressed.connect(func() -> void: attack_requested = true)
 		"dodge": button.pressed.connect(func() -> void: dodge_requested = true)
-		"reset": button.released.connect(_reset)
 
-## Comic speech bubble that floats over the speaker's head.
+## Speech bubble over whoever talks, in the main game's dialogue look: plum glass, cream text, pink name tag.
 func _build_bubble(layer: CanvasLayer) -> void:
+	var body: Font = load("res://fonts/Nunito-ExtraBold.ttf")
+	var display: Font = load("res://fonts/Baloo2-ExtraBold.ttf")
 	bubble = PanelContainer.new()
 	bubble.name = "Bubble"
 	bubble.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color("#fff8ec")
-	style.border_color = Color("#2a1d18")
-	style.set_border_width_all(3)
-	style.set_corner_radius_all(16)
-	style.content_margin_left = 14
-	style.content_margin_right = 14
-	style.content_margin_top = 8
-	style.content_margin_bottom = 8
+	style.bg_color = Hud.PANEL
+	style.border_color = Hud.INK
+	style.set_border_width_all(4)
+	style.set_corner_radius_all(18)
+	style.content_margin_left = 16
+	style.content_margin_right = 16
+	style.content_margin_top = 6
+	style.content_margin_bottom = 10
+	style.shadow_color = Color(0, 0, 0, .35)
+	style.shadow_offset = Vector2(3, 4)
+	style.shadow_size = 2
 	bubble.add_theme_stylebox_override("panel", style)
+	var lines := VBoxContainer.new()
+	lines.add_theme_constant_override("separation", 0)
+	bubble.add_child(lines)
+	bubble_name = Label.new()
+	bubble_name.add_theme_font_override("font", display)
+	bubble_name.add_theme_font_size_override("font_size", 19)
+	bubble_name.add_theme_color_override("font_color", Hud.PINK)
+	lines.add_child(bubble_name)
 	bubble_text = Label.new()
 	bubble_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	bubble_text.custom_minimum_size = Vector2(300, 0)
+	bubble_text.add_theme_font_override("font", body)
 	bubble_text.add_theme_font_size_override("font_size", 19)
-	bubble_text.add_theme_color_override("font_color", Color("#2a1d18"))
-	bubble.add_child(bubble_text)
+	bubble_text.add_theme_color_override("font_color", Hud.CREAM)
+	lines.add_child(bubble_text)
 	bubble_tail = Polygon2D.new()
-	bubble_tail.polygon = PackedVector2Array([Vector2(-12, -3), Vector2(12, -3), Vector2(0, 18)])
-	bubble_tail.color = Color("#2a1d18")
+	bubble_tail.polygon = PackedVector2Array([Vector2(-13, -4), Vector2(13, -4), Vector2(0, 19)])
+	bubble_tail.color = Hud.INK
 	var inner := Polygon2D.new()
-	inner.polygon = PackedVector2Array([Vector2(-8, -5), Vector2(8, -5), Vector2(0, 12)])
-	inner.color = Color("#fff8ec")
+	inner.polygon = PackedVector2Array([Vector2(-8, -6), Vector2(8, -6), Vector2(0, 12)])
+	inner.color = Hud.PANEL
 	bubble_tail.add_child(inner)
 	layer.add_child(bubble_tail)
 	layer.add_child(bubble)
@@ -822,6 +870,7 @@ func _build_bubble(layer: CanvasLayer) -> void:
 
 func _say(speaker: Node3D, line: String, seconds := 2.8) -> void:
 	bubble_from = speaker
+	bubble_name.text = "Duff" if speaker == player else ("Marketplace Mike" if speaker == mike else "Porch Pirate")
 	bubble_text.text = line
 	bubble_time = seconds
 	bubble.size = Vector2.ZERO  # shrink to the new line
@@ -843,7 +892,8 @@ func _place_bubble(delta: float) -> void:
 		return
 	var box := bubble.get_combined_minimum_size()
 	var at := Vector2(head.x - box.x * .5, head.y - box.y - 18)
-	if at.y >= 8:  # room above the head: tail points down at him
+	var top := Hud.GOAL.end.y + 6  # stay clear of the status strip and objective line
+	if at.y >= top:  # room above the head: tail points down at him
 		at.x = clampf(at.x, 12, view.x - box.x - 12)
 		bubble.position = at
 		bubble_tail.rotation = 0
@@ -851,7 +901,7 @@ func _place_bubble(delta: float) -> void:
 		return
 	# no room (the camera keeps heads high): sit beside his head, tail pointing at it
 	var right := head.x + 40 + box.x <= view.x - 12
-	at = Vector2(head.x + 40 if right else head.x - 40 - box.x, clampf(head.y - box.y * .5, 8, view.y - box.y - 12))
+	at = Vector2(head.x + 40 if right else head.x - 40 - box.x, clampf(head.y - box.y * .5, top, maxf(top, view.y - box.y - 12)))
 	bubble.position = at
 	bubble_tail.rotation = PI / 2 if right else -PI / 2
 	bubble_tail.position = Vector2(at.x + 2 if right else at.x + box.x - 2, clampf(head.y, at.y + 16, at.y + box.y - 16))

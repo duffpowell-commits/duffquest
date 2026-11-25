@@ -5,6 +5,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-25** **3D porch: main-game HUD and menus.** Phone status strip (clock, hearts, cash), objective line, foe plate, round A/B, dialogue-style speech bubbles with name tags, title card, pause sheet with Graphics/Sound, KNOCKED OUT and PORCH SECURED cards. Also Jolt physics and lite nearest scaling (4.7). Render `docs/renders/porch3d/18_hud_menus.jpg`.
 - **2026-11-25** **3D porch: phone controls.** Godot 4.7's built-in VirtualJoystick (dynamic, analog) on the left half, round HIT (128) and DODGE (96) on the right, no arrow buttons, and Mike's lines in a speech bubble over his head. Render `docs/renders/porch3d/16_phone_controls.jpg`.
 - **2026-11-25** **3D porch: hits land, real fight** (`spike_full3d/`, Duff picked "All three, in that order"). Hit-stop, shake, knockback, sounds and music; fighters face off at arm's length. Foes wind up with a red ring under them (armoured: dodge, then punish), block the third hit of a flurry and counter, and Mike's up-close jab shoves Duff out into his sign or charge. Pirate 5 HP, Mike 8. Bot: careful wins at 5/5, masher is KO'd. Renders `docs/renders/porch3d/14_hits_before_after.jpg`, `15_real_fight.jpg`.
 - **2026-11-23** Added the approved 3 Eyed Fox Studios splash and publisher attribution in Settings, end credits, and the itch page source.
