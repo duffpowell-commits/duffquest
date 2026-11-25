@@ -25,6 +25,15 @@ next to the real game). Desktop: open this folder as a Godot project. Arrows/WAS
 then hook), Shift dodges, R retries; the on-screen buttons do the same. Beat the pirate, walk over the
 parcel, then beat Marketplace Mike. The top-right counter shows FPS: the bar is 60 on Duff's phone.
 
+## Look: golden hour (Duff's pick, Nov 25 2026)
+
+`porch_look.gd` restyles the scene after it is built: low warm sun with long shadows, cool sky fill,
+a brighter porch lamp, glow, a soft vignette, MSAA, a deeper lawn, and fighters that pop (thin ink outline
+from `ink_outline.gdshader`, soft warm rim, a contact shadow under the feet). On the phone, if FPS stays
+under 50 for 3 s it drops glow and MSAA ("LITE" shows next to the FPS counter). `--lite` starts lite,
+`--plain` keeps the old daylight look. Picked from three looks on one frame: `docs/renders/porch3d/look_compare.jpg`.
+Don't use `Environment.adjustment_*` here: in Compatibility it washes the whole frame milky.
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the

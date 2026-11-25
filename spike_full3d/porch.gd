@@ -3,6 +3,7 @@ extends Node3D
 const Art = preload("porch_art.gd")
 const RigActor = preload("rig_actor.gd")
 const Kit = preload("porch_kit.gd")
+const Look = preload("porch_look.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
@@ -64,6 +65,7 @@ var impact_time := 0.0
 var health: Label
 var message: Label
 var fps_label: Label
+var look: Node  ## porch_look.gd (golden hour); null with --plain
 var camera: Camera3D
 var player_hp := PLAYER_HP
 var pirate_hp := PIRATE_HP
@@ -101,13 +103,15 @@ func _ready() -> void:
 		burst.form(offset * .25, Vector3(.22, .056, .045), Color("#ffca79"), Vector3(0, 0, angle), 6)
 	impact = burst.finish(self, "Impact")
 	impact.hide()
+	if not OS.get_cmdline_user_args().has("--plain"):
+		look = Look.apply(self, [player_model, pirate_model, mike_model])
 	_build_hud()
 	_update_hud()
 
 func _process(delta: float) -> void:
 	var target_x := clampf(player.position.x, -CAMERA_X_LIMIT, CAMERA_X_LIMIT)
 	camera.position.x = lerpf(camera.position.x, target_x, minf(1.0, delta * 4.0))
-	fps_label.text = "%d FPS" % Engine.get_frames_per_second()
+	fps_label.text = "%d FPS%s" % [Engine.get_frames_per_second(), " LITE" if look and look.lite else ""]
 
 func _physics_process(delta: float) -> void:
 	if not active:

@@ -33,6 +33,19 @@ func _run() -> void:
 	_check(props.get("house", 0) == 1 and props.get("fence", 0) == 10 and props.get("tree", 0) == 2
 		and props.get("bush", 0) == 4 and props.get("planter", 0) == 1 and props.get("mailbox", 0) == 1,
 		"the Meshy set is dressed: house, 10 fence panels, 2 trees, 4 bushes, planter, mailbox (%s)" % props)
+	var look = sample.look
+	var outlined := 0
+	for actor in [sample.player_model, sample.pirate_model, sample.mike_model]:
+		var mesh: MeshInstance3D = actor.find_children("*", "MeshInstance3D", true, false)[0]
+		var mat := mesh.get_active_material(0) as StandardMaterial3D
+		if mat and mat.rim_enabled and mat.next_pass is ShaderMaterial and actor.get_parent().has_node("ContactShadow"):
+			outlined += 1
+	_check(look != null and outlined == 3 and sample.has_node("Vignette"),
+		"golden hour look: every fighter has rim, ink outline and a contact shadow; vignette on")
+	_check(look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_4X, "golden hour starts with glow and MSAA")
+	look.set_lite(true)
+	_check(not look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_DISABLED, "lite drops glow and MSAA")
+	look.set_lite(false)
 	for actor in [sample.player_model, sample.pirate_model]:
 		_check(actor.skeleton.get_bone_count() == 24 and actor.skeleton.find_bone("RightHand") >= 0,
 			"%s is a skinned mesh on the 24-bone humanoid skeleton" % actor.name)
