@@ -6,7 +6,7 @@ extends SceneTree
 ##   godot --headless --path . --import && godot --headless --path . --script tools/share_clips.gd
 ## Writes models/<who>_clips.res, the same thing rig_actor.gd loads for Duff, Mike and the Pirate.
 
-## who -> [[source, clip, name in the new library], ...]
+## who -> [[source character, clip], ...]; the clip keeps its name.
 const CAST := {
 	"sendback": [["duff", "idle"], ["duff", "jab"], ["duff", "hook"], ["duff", "dodge"], ["duff", "hit"],
 		["duff", "ko"], ["mike", "charge"], ["mike", "taunt"], ["mike", "throw"]],
@@ -26,14 +26,21 @@ func _initialize() -> void:
 			print("skip %s: no models/%s.glb yet" % [who, who])
 			continue
 		var hips := _hips_height(who)
+		var cache := {}
 		var lib := AnimationLibrary.new()
 		for pick in CAST[who]:
-			var src: AnimationLibrary = load("res://models/%s_clips.res" % pick[0])
+			var src_path := "res://models/%s_clips.res" % pick[0]
+			if not ResourceLoader.exists(src_path):
+				push_error("missing %s: bake it first (tools/bake_clips.gd)" % src_path)
+				continue
+			var src: AnimationLibrary = load(src_path)
 			if not src.has_animation(pick[1]):
 				push_error("%s has no clip %s" % [pick[0], pick[1]])
 				continue
 			var anim := src.get_animation(pick[1]).duplicate(true) as Animation
-			_scale_hips(anim, hips / _hips_height(pick[0]))
+			if not cache.has(pick[0]):
+				cache[pick[0]] = _hips_height(pick[0])
+			_scale_hips(anim, hips / cache[pick[0]])
 			lib.add_animation(pick[1], anim)
 		for own in ["walking", "running"]:
 			var path := "res://models/clips/%s_%s.glb" % [who, own]

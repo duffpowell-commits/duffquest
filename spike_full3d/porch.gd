@@ -84,9 +84,11 @@ func _ready() -> void:
 	pirate = _actor(Vector3(3, 0, -1))
 	player_model = RigActor.make(player, "duff", DUFF_HEIGHT)
 	pirate_model = RigActor.make(pirate, "pirate", PIRATE_HEIGHT)
+	pirate_model.fit_head_bone()  # every head matches Duff's (Duff, Nov 25)
 	package = Art.parcel(pirate_model, Vector3(0, .78, -.3))
 	mike = _actor(MIKE_SPAWN)
 	mike_model = RigActor.make(mike, "mike", MIKE_HEIGHT)
+	mike_model.fit_head_bone()
 	mike.hide()
 	mike.collision_layer = 0
 	mike.collision_mask = 0

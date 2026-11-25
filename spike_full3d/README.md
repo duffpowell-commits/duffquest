@@ -60,6 +60,12 @@ A-pose reference from the sprite sheet + portrait with Mike's reference as the s
 12k tris 2K (30), rig (5). Total 176. Line-up: `docs/renders/porch3d/12_kitchen4_cast.jpg` (`tools/cast_shot.gd`).
 Not in the porch yet, so the export presets leave them out of the porch APK until the kitchen uses them.
 
+Head size (Duff, Nov 25: "resize the models to match one head size"): every body keeps its height and
+`rig_actor.gd` `fit_head_bone()` scales its Head bone so the head (crown to chin, measured per model in
+`HEAD`) is Duff's size. Meshy clips have no scale tracks, so it holds while clips play. `fit_body_to_head()`
+is the other option (whole body scaled; small heads make tall bodies). Compare:
+`docs/renders/porch3d/13_head_size_options.jpg`.
+
 ## Files
 
 - `porch_art.gd` `meshy_set()`: the porch set is Meshy props (`models/set/*.glb`) made from references in the
@@ -115,8 +121,10 @@ judged on the phone.
 | Grass + sidewalk tiling textures | image-to-image ×2 | 18 |
 | Set props: house 12k tris, fence 2k, planter 5k, tree 5k, bush 6k, mailbox 2k (bush took a free retry: the first try failed and was refunded) | image-to-3d ×6 | 180 |
 
-Walk and run come free with each rig. Total about 465 credits (Mike: 65, porch set: 252).
+Walk and run come free with each rig. Total about 641 credits (Mike: 65, porch set: 252, kitchen 4: 176).
 
+| What | Task | Credits |
+|---|---|---|
 | Kitchen 4 A-pose references (Sends-It-Back, Camper, Carol, Allergy Liar), Nov 25 | image-to-image ×4 | 36 |
 | Kitchen 4 models, 12k tris, 2K | image-to-3d ×4 | 120 |
 | Kitchen 4 rigs (walk + run free) | rigging ×4 | 20 |

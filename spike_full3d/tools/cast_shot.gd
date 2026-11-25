@@ -1,7 +1,9 @@
 extends SceneTree
 ## Cast line-up: every rigged body side by side, all playing the same clip at the same moment.
 ## Proves new bodies share the cast's clips and sit in the same style as Duff and Mike.
-##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x640 --script tools/cast_shot.gd -- <out.png> <clip> [0..1]
+##   xvfb-run -a godot --path . --rendering-driver opengl3 --resolution 1600x640 --script tools/cast_shot.gd -- <out.png> <clip> [0..1] [heads]
+## heads: bone (default, as in the game: height kept, head bone scaled to Duff's) | body (whole body scaled
+## to Duff's head size) | off (fitted by height only)
 
 const CAST := [["duff", 1.7], ["mike", 1.65], ["pirate", 1.4], ["sendback", 1.75], ["camper", 1.68],
 	["coupon", 1.5], ["allergy", 1.65]]
@@ -14,6 +16,7 @@ func _run() -> void:
 	var out: String = args[0] if args.size() > 0 else "/tmp/cast.png"
 	var clip: String = args[1] if args.size() > 1 else "idle"
 	var at: float = float(args[2]) if args.size() > 2 else .4
+	var heads: String = args[3] if args.size() > 3 else "bone"
 	root.msaa_3d = Viewport.MSAA_4X
 	var w := Node3D.new()
 	root.add_child(w)
@@ -48,6 +51,10 @@ func _run() -> void:
 	for i in shown.size():
 		var a = RA.make(w, shown[i][0], shown[i][1])
 		a.position = Vector3((i - (shown.size() - 1) * .5) * gap, 0, 0)
+		if heads == "body":
+			a.fit_body_to_head()
+		elif heads == "bone":
+			a.fit_head_bone()
 		a.rotation.y = PI + deg_to_rad(-10)  # face the camera, a touch side-on
 		var name := clip if a.has_clip(clip) else "idle"
 		a.current = name
