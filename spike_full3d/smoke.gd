@@ -95,7 +95,7 @@ func _run() -> void:
 	sample.player.position = sample.PLANTER_AT + Vector3(0, 0, 1.8)
 	Input.action_press("ui_up")
 	await _frames(34)
-	var edge: float = sample.PLANTER_AT.z + sample.PLANTER_SIZE.z * .5 + .34
+	var edge: float = sample.PLANTER_AT.z + sample.PLANTER_SIZE.z * .5 + sample.DUFF_RADIUS
 	_check(absf(sample.player.position.z - edge) < .035, "walking stops at the planter")
 	sample._dodge()
 	await _frames(16)
@@ -118,8 +118,8 @@ func _run() -> void:
 
 	# A short diagonal through the corner is in reach of both actors.
 	var corner: Vector3 = sample.PLANTER_AT + Vector3(sample.PLANTER_SIZE.x, 0, sample.PLANTER_SIZE.z) * .5
-	sample.player.position = corner + Vector3(.34, 0, -.36)
-	sample.pirate.position = corner + Vector3(-.36, 0, .34)
+	sample.player.position = corner + Vector3(.3, 0, -.5)  # 1.13 apart, inside both reaches,
+	sample.pirate.position = corner + Vector3(-.5, 0, .3)  # the line between crosses the planter
 	sample.facing = (sample.pirate.position - sample.player.position).normalized()
 	sample.attack_time = 0
 	sample.pirate_recovery = 0
@@ -169,6 +169,10 @@ func _run() -> void:
 		"defeated pirate plays its KO clip, drops the visible parcel and clears actor collision")
 	_check(not sample.mike.visible and sample.mike.collision_layer == 0 and sample.mike_state == "away",
 		"Marketplace Mike waits off-screen during the pirate fight")
+	_check(sample.feel.trauma > 0 and sample.feel.knock_of(sample.player) != Vector3.ZERO,
+		"landed and taken hits shake the camera and knock fighters back")
+	await create_timer(.4, true, false, true).timeout
+	_check(is_equal_approx(Engine.time_scale, 1.0), "hit-stop lets go of the world")
 	sample.player_hp = 2
 	sample.player.position = sample.package.position
 	sample.set_physics_process(true)
