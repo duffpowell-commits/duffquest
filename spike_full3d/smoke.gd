@@ -618,6 +618,16 @@ func _run() -> void:
 
 	await _frames(120)  # the win card follows Mike's last line
 	_check(sample.hud.screen == "win" and paused, "PORCH SECURED card after Mike goes down")
+	var r: Dictionary = sample.result
+	_check(r.get("grade", "") in ["S", "A", "B", "C", "D"] and r.time > 0 and r.best_grade != "" and r.hits == sample.hits_taken,
+		"the win card grades the fight (%s in %s, %d hits, %d specials)" % [r.get("grade"), sample.clock_label(r.get("time", 0.0)), r.get("hits", -1), r.get("specials", -1)])
+	var card_text := ""
+	for label in sample.hud.find_children("*", "Label", true, false):
+		card_text += (label as Label).text + " "
+	_check(("GRADE " + r.get("grade", "?")) in card_text and ("NEW BEST" in card_text or "Best:" in card_text),
+		"the win card shows the grade and the best on this phone")
+	_check(sample.grade_for(60, 0, 2) == "S" and sample.grade_for(80, 2, 1) == "A" and sample.grade_for(200, 4, 0) == "D" and sample.grade_for(150, 3, 0) == "C"
+		and sample.grade_for(150, 3, 3) == "B", "grades: clean and quick is S, slow and hurt is D, specials pull it up")
 
 	Input.action_press("ui_right", .8)  # thumb still on the stick when Retry is tapped
 	sample._reset()

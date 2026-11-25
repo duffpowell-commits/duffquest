@@ -439,12 +439,19 @@ func _sheet(kind: String, title: String, rows: Array) -> void:
 func show_end(won: bool) -> void:
 	var m := _new_menu("win" if won else "ko", .82)
 	_title_label(m, "PORCH SECURED" if won else "KNOCKED OUT", Vector2(0, 96), 960, 84)
-	_title_label(m, "PACKAGE RECOVERED" if won else "GAME OVER", Vector2(0, 206), 960, 28, CREAM)
+	var r: Dictionary = game.result if won else {}
+	_title_label(m, ("GRADE %s" % r.grade) if r else ("PACKAGE RECOVERED" if won else "GAME OVER"),
+		Vector2(0, 196), 960, 40 if r else 28, GOLD if r else CREAM)
 	var box := _glass_panel(Rect2(200, 268, 560, 96), 18)
 	m.add_child(box)
-	_title_label(box, "Mike: \"Okay. Mark me as sold.\" Duff walks the package back up the steps." if won
-		else "I get knocked out. Me and the sidewalk get acquainted. Retry starts the fight over.",
-		Vector2(24, 16), 512, 21, CREAM, body)
+	var line := "I get knocked out. Me and the sidewalk get acquainted. Retry starts the fight over."
+	if r:
+		line = "%s  ·  %d hit%s taken  ·  %d special%s\n%s" % [game.clock_label(r.time), r.hits, "" if r.hits == 1 else "s",
+			r.specials, "" if r.specials == 1 else "s",
+			"NEW BEST!" if r.new_best else "Best: %s in %s" % [r.best_grade, game.clock_label(r.best_time)]]
+	elif won:
+		line = "Mike: \"Okay. Mark me as sold.\" Duff walks the package back up the steps."
+	_title_label(box, line, Vector2(24, 16), 512, 21, CREAM, body)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 40)
 	row.position = Vector2(150, 410)

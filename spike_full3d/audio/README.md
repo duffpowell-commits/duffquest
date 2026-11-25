@@ -1,1 +1,1 @@
-Copies of the main game's clips (assets/audio, same sources as listed there): hit, hurt, swing, whoosh, roll, tele, sting_ko, pickup, win, bonk (blocked hit), mus_edm_neighborhood, mus_boss. Played by porch_feel.gd.
+Copies of the main game's clips (assets/audio, same sources as listed there): hit, hurt, swing, whoosh, roll, tele, sting_ko, pickup, win, bonk (blocked hit), achievement (meter full), sting_levelup (Red Right Hand wind-up), explosion (Red Right Hand lands), cash (parcel back on the stoop), mus_edm_neighborhood, mus_boss. Played by porch_feel.gd.

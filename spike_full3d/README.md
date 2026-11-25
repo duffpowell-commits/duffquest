@@ -142,7 +142,16 @@ R with a full meter and a foe within 1.45 m (`RTS_RANGE`) is a grab instead of t
 - KO'd by the throw: he stays down and the pirate's parcel sails back onto the stoop (`STOOP_AT`). Not KO'd: he
   lies a beat, then gets up. A fight that ends mid-carry puts him back on his feet with his collision.
 - Swing: Meshy "Over Shoulder Throw" (421) cut and turned by `tools/bake_toss.gd` into `toss`.
-- Preview: `tools/rts_shots.gd <outdir> [pirate hp]`, render `docs/renders/porch3d/21_return_to_sender.jpg`. Smoke is 99 checks.
+- Preview: `tools/rts_shots.gd <outdir> [pirate hp]`, render `docs/renders/porch3d/21_return_to_sender.jpg`. Smoke was 99 checks (102 with the grade).
+
+## Grade and best time (Nov 25 2026)
+
+From the mock review ("no reason to replay"). Winning grades the fight S-D: 100, minus 8 per hit Duff took and .4 per
+second past a 90 s par, plus 6 per special landed (up to 3). The win card shows the grade, time, hits and specials, and
+the best on this phone (`user://porch_best.cfg`; a better grade, or the same grade faster, is a new best).
+Numbers are the `PAR_TIME`/`GRADE_*` constants in `porch.gd`. Sound cues: a chime when the meter fills, a sting on the
+Red Right Hand wind-up, a boom when it lands, a cash register when the parcel lands on the stoop. Render
+`docs/renders/porch3d/22_win_grade.jpg`.
 
 ## HUD and menus (Nov 25 2026)
 

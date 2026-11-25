@@ -91,6 +91,13 @@ const RTS_FLYUP_LAND := .9    ## seconds into the foe's flyup clip where he hits
 const RTS_THROW := 3.2        ## m from Duff where he lands (Duff: "Bigger throw")
 const RTS_ARC := 1.4          ## m the arc peaks above the straight line
 const RTS_DAMAGE := 3
+## Win grade (replay hook): 100 minus hits taken and time over par, plus specials landed.
+const PAR_TIME := 90.0         ## fight seconds before the clock starts costing points
+const GRADE_HIT := 8.0         ## points per hit Duff takes
+const GRADE_SLOW := .4         ## points per second over par
+const GRADE_SPECIAL := 6.0     ## points per special landed (up to 3)
+const GRADES := [[95.0, "S"], [80.0, "A"], [65.0, "B"], [50.0, "C"], [-INF, "D"]]
+const BEST_PATH := "user://porch_best.cfg"
 const STOOP_AT := Vector3(0, .19, -2.32)  ## the bottom step: where a thrown pirate's parcel lands
 const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
@@ -175,6 +182,10 @@ var toss_from := Vector3.ZERO
 var toss_land := Vector3.ZERO
 var toss_fly := -1.0          ## seconds in the air (-1 = not thrown yet)
 var tosses := 0               ## landed throws (for tests)
+var hits_taken := 0
+var specials_landed := 0
+var result := {}              ## the win card's grade, time and best (set when Mike goes down)
+var meter_rang := false       ## the full-meter chime played for this fill
 var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
 var callout_time := 0.0
 
@@ -264,6 +275,12 @@ func _process(delta: float) -> void:
 		tell_ring.position = tell_foe.position + Vector3.UP * .04
 		tell_ring.scale = Vector3.ONE * (1.0 + .12 * sin(clock * 30.0))
 	fight_cam.follow(delta, player.position, current_foe())
+	if meter >= 100 and not meter_rang and active:
+		meter_rang = true
+		if feel:
+			feel.sfx("achievement", 0.0, -4.0)  # special ready
+	elif meter < 100:
+		meter_rang = false
 	fps_label.text = "%d FPS%s" % [Engine.get_frames_per_second(), " LITE" if look and look.lite else ""]
 
 func _physics_process(delta: float) -> void:
@@ -394,6 +411,7 @@ func _hurt_duff(from: Vector3) -> bool:
 	if invulnerable > 0 or not active:
 		return false
 	player_hp -= 1
+	hits_taken += 1
 	meter = minf(100, meter + METER_HURT)
 	_show_impact(player.position)
 	if feel:
@@ -593,6 +611,8 @@ func red_right_hand() -> void:
 	player_model.locked = RRH_TIME  # keep locomotion off the frozen fist for the whole dash
 	attack_time = RRH_TIME
 	_call("RED RIGHT HAND!")
+	if feel:
+		feel.sfx("sting_levelup", 0.0, -4.0)
 	if rrh_glow == null:
 		_build_rrh()
 	rrh_glow.visible = true
@@ -627,6 +647,9 @@ func _tick_special(delta: float) -> void:
 			offset.y = 0
 			if offset.length() <= RRH_HIT_RADIUS + .4 and facing.dot(offset.normalized()) > .2:
 				special_hit = true
+				specials_landed += 1
+				if feel:
+					feel.sfx("explosion", .05, -8.0)
 				special_time = minf(special_time, RRH_RECOVER * .6)  # connected: stop the dash, short recovery
 				if foe == mike and mike_state == "taunt":
 					mike_state = "stalk"  # the hand goes through his rant
@@ -732,6 +755,7 @@ func _toss_lands() -> void:
 	foe.collision_layer = ACTOR_LAYER
 	foe.collision_mask = WORLD_LAYER | ACTOR_LAYER
 	tosses += 1
+	specials_landed += 1
 	if feel:
 		feel.sfx("hit")
 		feel.add_trauma(1.0)
@@ -782,7 +806,11 @@ func _send_parcel_home() -> void:
 	var arc := func(k: float) -> void:
 		package.position = from.lerp(STOOP_AT, k) + Vector3.UP * sin(k * PI) * 1.4
 		package.rotation.y = k * TAU
-	create_tween().tween_method(arc, 0.0, 1.0, .75).set_trans(Tween.TRANS_SINE)
+	var fly := create_tween()
+	fly.tween_method(arc, 0.0, 1.0, .75).set_trans(Tween.TRANS_SINE)
+	fly.tween_callback(func() -> void:
+		if feel:
+			feel.sfx("cash", 0.0, -2.0))  # delivered
 
 ## Put a held or flying foe back on his feet (the fight ended mid-throw, or the throw is over).
 func _end_toss() -> void:
@@ -1084,6 +1112,7 @@ func _hit_mike(damage := 1) -> void:
 		message.text = "Parcel recovered. Porch secured."
 		end_in = 1.6
 		end_won = true
+		result = _grade_result()
 		if feel:
 			feel.stop_music()
 			feel.sfx("win", 0.0)
@@ -1460,3 +1489,36 @@ func _update_hud() -> void:
 		health.text = "DUFF %d/%d   ·   PIRATE %d/%d" % [player_hp, PLAYER_HP, pirate_hp, PIRATE_HP]
 	else:
 		health.text = "DUFF %d/%d   ·   MARKETPLACE MIKE %d/%d" % [player_hp, PLAYER_HP, maxi(mike_hp, 0), MIKE_HP]
+
+## The letter for a won fight: 100, minus GRADE_HIT a hit taken and GRADE_SLOW a second past par,
+## plus GRADE_SPECIAL for each special landed (up to 3).
+static func grade_for(seconds: float, hits: int, specials: int) -> String:
+	var score := 100.0 - GRADE_HIT * hits - GRADE_SLOW * maxf(0, seconds - PAR_TIME) + GRADE_SPECIAL * mini(specials, 3)
+	for step in GRADES:
+		if score >= step[0]:
+			return step[1]
+	return "D"
+
+static func grade_rank(grade: String) -> int:
+	return "DCBAS".find(grade)
+
+## This win's grade and time against the best on this phone; saves a new best.
+func _grade_result() -> Dictionary:
+	var grade := grade_for(clock, hits_taken, specials_landed)
+	var best := ConfigFile.new()
+	best.load(BEST_PATH)  # missing on the first win: stays empty
+	var best_grade: String = best.get_value("porch", "grade", "")
+	var best_time: float = best.get_value("porch", "time", INF)
+	var new_best := best_grade == "" or grade_rank(grade) > grade_rank(best_grade) \
+		or (grade == best_grade and clock < best_time)
+	if new_best:
+		best.set_value("porch", "grade", grade)
+		best.set_value("porch", "time", clock)
+		best.save(BEST_PATH)
+		best_grade = grade
+		best_time = clock
+	return {"grade": grade, "time": clock, "hits": hits_taken, "specials": specials_landed,
+		"best_grade": best_grade, "best_time": best_time, "new_best": new_best}
+
+static func clock_label(seconds: float) -> String:
+	return "%d:%02d" % [int(seconds) / 60, int(seconds) % 60]
