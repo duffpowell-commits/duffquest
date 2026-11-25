@@ -86,7 +86,8 @@ const RTS_RANGE := 1.45       ## the foe this close and in front: R grabs instea
 const RTS_SPEED := 1.4        ## the clip plays this much faster than Meshy's
 const RTS_GRAB := .5          ## hands close on him
 const RTS_RELEASE := 2.2      ## thrown over the shoulder
-const RTS_FLY := .42          ## real seconds in the air
+const RTS_FLY := .5           ## real seconds in the air
+const RTS_FLYUP_LAND := .9    ## seconds into the foe's flyup clip where he hits the ground flat (tools/bake_victim.gd)
 const RTS_THROW := 2.0        ## m from Duff where he lands
 const RTS_DAMAGE := 3
 const STOOP_AT := Vector3(0, .19, -2.32)  ## the bottom step: where a thrown pirate's parcel lands
@@ -676,7 +677,7 @@ func _tick_toss(delta: float) -> void:
 		if foe.collision_layer != 0:
 			foe.collision_layer = 0  # in Duff's hands: no pushing either way
 			foe.collision_mask = 0
-			model.strike("hit", (RTS_RELEASE - RTS_GRAB) / RTS_SPEED + RTS_FLY)
+			_foe_clip(model, "flail", 0.0)  # kicking and waving in Duff's hands (loops)
 			if feel:
 				feel.sfx("bonk", 0.0, -4.0)
 				feel.add_trauma(.2)
@@ -688,6 +689,8 @@ func _tick_toss(delta: float) -> void:
 	elif toss_t >= RTS_RELEASE and toss_fly < 0:
 		toss_fly = 0
 		toss_from = foe.global_position + Basis.from_euler(model.rotation) * Vector3(0, height * .5, 0)
+		# the flyup clip tumbles him and lands him flat right as the arc comes down
+		_foe_clip(model, "flyup", model.player.get_animation("rig/flyup").length * RTS_FLY / RTS_FLYUP_LAND)
 		var out := hands - player.global_position
 		out.y = 0
 		out = out.normalized() if out.length() > .05 else -facing
@@ -695,7 +698,7 @@ func _tick_toss(delta: float) -> void:
 	if toss_fly >= 0 and toss_fly < RTS_FLY:
 		toss_fly += delta / maxf(Engine.time_scale, .05)  # real time: the landing hit-stop shouldn't stall the arc
 		var k := minf(toss_fly / RTS_FLY, 1.0)
-		model.rotation.x = lerpf(-1.2, -PI * 1.5, k)  # head over heels, down on his front
+		model.rotation.x = lerpf(-1.2, 0.0, minf(k * 2.0, 1.0))  # the clip does the tumbling
 		var centre := toss_from.lerp(toss_land + Vector3.UP * height * .18, k) + Vector3.UP * sin(k * PI) * .8
 		_hold_at(foe, model, height, centre)
 		if k >= 1.0:
@@ -734,20 +737,39 @@ func _toss_lands() -> void:
 	hud.flash(Color(0.85, 0.08, 0.06), .3)
 	var was_pirate := foe == pirate
 	_damage(foe, RTS_DAMAGE, FINISHER_STUN * 1.5)
+	model.rotation.x = 0
 	var down := (foe == pirate and pirate_hp == 0) or (foe == mike and mike_hp <= 0)
 	if down:
-		model.rotation.x = 0
-		model.player.stop()  # no blend from standing (the hit-stop would stretch it): already flat, skip the KO fall
-		model.player.play("rig/ko", 0.0)
-		model.player.seek(model.player.current_animation_length * .95, true)
+		# _damage just started the KO fall from standing: he is already flat, so hold the flyup's last frame
+		model.player.stop()
+		model.player.speed_scale = 1.0
+		model.player.play("rig/flyup", 0.0)
+		model.player.seek(model.player.current_animation_length, true)
+		model.current = "ko"  # stays down: locomotion and the KO clip leave him alone
+		model.locked = 0
 	else:
-		# flat on his face, then he springs back up while still stunned
-		model.rotation.x = PI * .5  # same as -1.5 PI: tween the short way back up
+		# lies there a beat, then gets up (a slow blend into idle) while still stunned
+		model.locked = 1.3
 		var rise := create_tween()
-		rise.tween_interval(.35)
-		rise.tween_property(model, "rotation:x", 0.0, .4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		rise.tween_interval(.75)
+		rise.tween_callback(func() -> void:
+			if model.current == "flyup":
+				model.current = "idle"
+				model.player.speed_scale = 1.0
+				model.player.play("rig/idle", .5))
 	if was_pirate and pirate_hp == 0:
 		_send_parcel_home()
+
+## A foe's clip that doesn't fit `strike` (a loop, or one stretched to the throw's timing).
+func _foe_clip(model, clip: String, seconds: float) -> void:
+	if not model.has_clip(clip):
+		return
+	if seconds > 0:
+		model.strike(clip, seconds)
+	else:
+		model.player.speed_scale = 1.0
+		model.locked = 99.0  # held: the AI is off anyway; _end_toss / the landing unlocks
+		model.play(clip, true)
 
 ## The thrown pirate's parcel sails back onto the stoop: Return to Sender.
 func _send_parcel_home() -> void:
@@ -764,6 +786,9 @@ func _end_toss() -> void:
 	if toss_fly < RTS_FLY:
 		var model: Node3D = pirate_model if toss_foe == pirate else mike_model
 		model.rotation.x = 0
+		model.locked = 0  # let go mid-carry: back to his own clips
+		if model.current in ["flail", "flyup"]:
+			model.play("idle")
 		toss_foe.global_position.y = 0
 		if toss_foe.collision_layer == 0 and not ((toss_foe == pirate and pirate_hp <= 0) or (toss_foe == mike and mike_hp <= 0)):
 			toss_foe.collision_layer = ACTOR_LAYER
