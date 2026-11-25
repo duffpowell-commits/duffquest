@@ -33,6 +33,45 @@ func _run() -> void:
 	_check(props.get("house", 0) == 1 and props.get("fence", 0) == 10 and props.get("tree", 0) == 2
 		and props.get("bush", 0) == 4 and props.get("planter", 0) == 1 and props.get("mailbox", 0) == 1,
 		"the Meshy set is dressed: house, 10 fence panels, 2 trees, 4 bushes, planter, mailbox (%s)" % props)
+	var look = sample.look
+	var outlined := 0
+	for actor in [sample.player_model, sample.pirate_model, sample.mike_model]:
+		var mesh: MeshInstance3D = actor.find_children("*", "MeshInstance3D", true, false)[0]
+		var mat := mesh.get_active_material(0) as StandardMaterial3D
+		if mat and mat.rim_enabled and mat.next_pass is ShaderMaterial and actor.get_parent().has_node("ContactShadow"):
+			outlined += 1
+	_check(look != null and outlined == 3 and sample.has_node("Vignette"),
+		"golden hour look: every fighter has rim, ink outline and a contact shadow; vignette on")
+	_check(look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_4X, "golden hour starts with glow and MSAA")
+	look.set_lite(true)
+	_check(not look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_DISABLED, "lite drops glow and MSAA")
+	look.set_lite(false)
+	sample.fight_cam.snap(sample.player.position, sample.pirate.position)
+	var cam: Camera3D = sample.camera
+	var view := sample.get_viewport().get_visible_rect().size
+	var framed := true
+	for body in [sample.player, sample.pirate]:
+		var p := cam.unproject_position(body.position + Vector3.UP * .8)
+		framed = framed and p.x > view.x * .08 and p.x < view.x * .92 and p.y > view.y * .1 and p.y < view.y * .9
+	var feet := cam.unproject_position(sample.player.position)
+	var head := cam.unproject_position(sample.player.position + Vector3.UP * sample.DUFF_HEIGHT)
+	_check(framed and feet.y - head.y > view.y * .25,
+		"fight camera frames Duff and the pirate; Duff stands %d%% of the screen tall" % int((feet.y - head.y) / view.y * 100))
+	sample.mike.position = sample.player.position + Vector3(4.5, 0, -1)
+	var near_tf: Transform3D = sample.fight_cam.goal(sample.player.position, sample.player.position + Vector3(1, 0, 0))
+	var far_tf: Transform3D = sample.fight_cam.goal(sample.player.position, sample.mike.position)
+	_check(far_tf.origin.distance_to(sample.player.position) > near_tf.origin.distance_to(sample.player.position),
+		"fight camera pulls back when the foe is far")
+	sample.mike.position = sample.MIKE_SPAWN
+	var corners_ok := true
+	for spot in [[Vector3(-6.4, 0, 4.9), null], [Vector3(6.4, 0, 0), null], [Vector3(0, 0, 4.9), null],
+			[Vector3(-6.4, 0, 3), sample.MIKE_SPAWN], [Vector3(6.4, 0, -2.2), Vector3(-6.4, 0, 4.9)]]:
+		cam.global_transform = sample.fight_cam.goal(spot[0], spot[1])
+		for body in ([spot[0]] if spot[1] == null else [spot[0], spot[1]]):
+			for y in [0.0, 1.8]:
+				var q := cam.unproject_position(body + Vector3.UP * y)
+				corners_ok = corners_ok and q.x >= 0 and q.x <= view.x and q.y >= 0 and q.y <= view.y
+	_check(corners_ok, "fight camera keeps Duff (and his foe) fully on screen at the fences and the street edge")
 	for actor in [sample.player_model, sample.pirate_model]:
 		_check(actor.skeleton.get_bone_count() == 24 and actor.skeleton.find_bone("RightHand") >= 0,
 			"%s is a skinned mesh on the 24-bone humanoid skeleton" % actor.name)
