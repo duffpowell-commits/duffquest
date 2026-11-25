@@ -5,6 +5,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-25** **3D porch: Red Right Hand special.** Meter from hits landed and taken, red R button, wind-up then a 4 m fire-fist dash that lands 3 through any guard; a whiff leaves Duff open. Swing cut from Meshy Kung Fu Punch (3 credits).
 - **2026-11-25** **3D porch: kick + combos.** K push kick (Duff's pick; Duff re-rigged on Meshy, 8 credits), rhythm combos (A A A knockdown, A A K launcher, +1 into a wall), roll->A dash hook, perfect roll->K counter kick in slow-mo, gold callouts. Mashing mid-swing drops a combo. Render `docs/renders/porch3d/19_kick_launcher.jpg`.
 - **2026-11-25** **3D porch: main-game HUD and menus.** Phone status strip (clock, hearts, cash), objective line, foe plate, round A/B, dialogue-style speech bubbles with name tags, title card, pause sheet with Graphics/Sound, KNOCKED OUT and PORCH SECURED cards. Also Jolt physics and lite nearest scaling (4.7). Render `docs/renders/porch3d/18_hud_menus.jpg`.
 - **2026-11-25** **3D porch: phone controls.** Godot 4.7's built-in VirtualJoystick (dynamic, analog) on the left half, round HIT (128) and DODGE (96) on the right, no arrow buttons, and Mike's lines in a speech bubble over his head. Render `docs/renders/porch3d/16_phone_controls.jpg`.

@@ -350,6 +350,63 @@ func _run() -> void:
 	await create_timer(.7, true, false, true).timeout
 	sample.set_physics_process(false)
 	_check(sample.wall_hits == 1 and sample.pirate_hp == sample.PIRATE_HP - 3, "a launcher into the planter takes 1 more (%d HP, %d walls, at %s)" % [sample.pirate_hp, sample.wall_hits, sample.pirate.position])
+	# R: Red Right Hand, the special.
+	_check(sample.player_model.has_clip(sample.RRH_CLIP), "Duff has the real Red Right Hand swing clip")
+	var r_btn: TouchScreenButton = sample.find_child("Special", true, false)
+	var r_box := Rect2(r_btn.position, r_btn.shape.size)
+	_check(not r_box.grow(8).intersects(hit_box) and not r_box.grow(8).intersects(dodge_box)
+		and not r_box.grow(8).intersects(k_box) and r_box.end.x <= view.x and r_box.position.y >= 0,
+		"R is its own thumb button, 8+ clear of A, B and K")
+	sample.launched = {}
+	sample.pirate_recovery = 0
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.player.position = Vector3(-3, 0, 2.5)
+	sample.pirate.position = Vector3(-3, 0, 1.2)
+	sample.facing = Vector3.FORWARD
+	sample.meter = 50
+	sample.red_right_hand()
+	_check(sample.special_time == 0 and sample.meter == 50, "no Red Right Hand until the meter is full")
+	_plain(sample)
+	sample.chain = {}
+	sample._attack()
+	_check(sample.meter == 50 + sample.METER_HIT, "a landed hit fills the meter")
+	var hp_meter: int = sample.player_hp
+	sample.invulnerable = 0
+	sample._hurt_duff(sample.pirate.position)
+	_check(sample.meter == 50 + sample.METER_HIT + sample.METER_HURT, "taking a hit fills the meter too")
+	sample.player_hp = hp_meter
+	# A hit: from 3.5 m away the dash closes the gap and lands 3 through his guard.
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.player.position = Vector3(-3, 0, 2.5)
+	sample.pirate.position = Vector3(-3, 0, -1)
+	sample.pirate_recovery = 9.0
+	sample.chain = {sample.pirate: [5, sample.clock]}  # mid-flurry: a punch would be guarded
+	sample.meter = 100
+	_plain(sample)
+	sample.red_right_hand()
+	_check(sample.meter == 0 and sample.special_time > 0 and sample.invulnerable > 0, "a full meter fires Red Right Hand: meter spent, Duff untouchable in the wind-up")
+	sample.set_physics_process(true)
+	await create_timer(1.4, true, false, true).timeout  # real time: the hit-stop slows the first frames
+	sample.set_physics_process(false)
+	_check(sample.special_hit and sample.pirate_hp == sample.PIRATE_HP - sample.RRH_DAMAGE and sample.player.position.z < 1.0,
+		"the dash closes 3.5 m and lands %d through his guard (%d HP, Duff at %s)" % [sample.RRH_DAMAGE, sample.pirate_hp, sample.player.position])
+	_check(sample.special_time == 0 and not sample.rrh_fire.emitting and not sample.rrh_trail.visible, "the fire and trail go out after the special")
+	# A whiff: nobody in the path, he skids to a stop and is open.
+	sample.pirate.position = Vector3(3, 0, 2.5)
+	sample.player.position = Vector3(-3, 0, 2.5)
+	sample.facing = Vector3.FORWARD
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.meter = 100
+	sample.red_right_hand()
+	sample.facing = Vector3.FORWARD  # aim away from him
+	sample.player_model.rotation.y = 0
+	sample.set_physics_process(true)
+	await create_timer(sample.RRH_WINDUP + sample.RRH_DASH + .05, true, false, true).timeout
+	sample.set_physics_process(false)
+	_check(not sample.special_hit and sample.pirate_hp == sample.PIRATE_HP and sample.special_time > 0 and sample.invulnerable == 0,
+		"a whiffed Red Right Hand leaves Duff open in the recovery")
+	sample.special_time = 0
+	sample.attack_time = 0
 	sample.pirate_recovery = 0
 	sample.launched = {}
 	sample.player.position = Vector3(0, 0, 2)
