@@ -9,9 +9,8 @@ const BRICK_TOP := 1.25
 const EAVE := 3.3
 
 
-static func _mat(file: String, tiles_per_metre: float, tint := Color.WHITE) -> StandardMaterial3D:
+static func _mat(file: String, tiles_per_metre: float, tint := Color.WHITE, folder := "kit") -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
-	var folder := "set" if file == "sidewalk" else "kit"  # concrete is shared with the Meshy set's sidewalk
 	material.albedo_texture = load("res://models/%s/%s.jpg" % [folder, file])
 	material.albedo_color = tint
 	material.uv1_triplanar = true
@@ -92,7 +91,7 @@ static func build(parent: Node3D, planter_at: Vector3, planter_size: Vector3) ->
 	stoop.box(Vector3(0, .25, -3.3), Vector3(2.84, .5, 1.16), Color.WHITE)
 	stoop.box(Vector3(0, .17, -2.58), Vector3(2.9, .34, .28), Color.WHITE)
 	stoop.box(Vector3(0, .085, -2.35), Vector3(2.96, .17, .22), Color.WHITE)
-	_part(parent, "Stoop", stoop, _mat("sidewalk", .8, Color("#d8d2cb")))
+	_part(parent, "Stoop", stoop, _mat("sidewalk", .8, Color("#d8d2cb"), "set"))  # concrete shared with the sidewalk
 	var rails := Art.Sculpture.new()
 	for x in [-1.38, 1.38]:
 		rails.box(Vector3(x, .95, -3.2), Vector3(.05, .9, .05), Color.WHITE)
@@ -135,10 +134,10 @@ static func build(parent: Node3D, planter_at: Vector3, planter_size: Vector3) ->
 	var cedar := _mat("cedar", 1.5)
 	for x in [-6.9, 6.9]:
 		var fence := Art.Sculpture.new()
-		fence.box(Vector3(x, .7, 0), Vector3(.08, 1.4, 11.0), Color.WHITE)
+		fence.box(Vector3(x, .7, -.5), Vector3(.08, 1.4, 10.0), Color.WHITE)  # stops at the sidewalk
 		for i in 6:
-			fence.box(Vector3(x, .74, -5.5 + i * 2.2), Vector3(.16, 1.48, .16), Color.WHITE)
-		fence.box(Vector3(x, 1.43, 0), Vector3(.14, .06, 11.0), Color.WHITE)
+			fence.box(Vector3(x, .74, -5.5 + i * 2.0), Vector3(.16, 1.48, .16), Color.WHITE)
+		fence.box(Vector3(x, 1.43, -.5), Vector3(.14, .06, 10.0), Color.WHITE)
 		_part(parent, "Fence", fence, cedar)
 
 	# Planter box with flowers.
@@ -160,5 +159,5 @@ static func build(parent: Node3D, planter_at: Vector3, planter_size: Vector3) ->
 	_part(parent, "MailboxPost", post, cedar)
 	var box := Art.Sculpture.new()
 	box.box(Vector3(6.1, 1.1, 2.45), Vector3(.26, .24, .52), Color.WHITE)
-	box.form(Vector3(6.1, 1.22, 2.45), Vector3(.13, .1, .26), Color.WHITE, Vector3(0, 0, 0), 10)
+	box.form(Vector3(6.1, 1.22, 2.45), Vector3(.13, .1, .26), Color.WHITE, Vector3.ZERO, 10)
 	_part(parent, "Mailbox", box, _flat(Color("#33404c")))

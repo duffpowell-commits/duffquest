@@ -101,4 +101,4 @@ that. The conversion order below is unchanged.
 `porch_kit.gd` builds the same porch from plain Godot shapes dressed in free seamless textures
 (`models/kit/*.jpg`, made with Foxboard Forge, toned in PIL). Same footprint as the Meshy set, so the
 colliders fit both. Off by default; run with `-- --kit` (e.g. `tools/shots.gd -- /tmp/out --kit`).
-Comparison: `docs/renders/porch3d/set_meshy_vs_kit.png` (top Meshy, bottom ours).
+Comparison: `docs/renders/porch3d/set_meshy_vs_kit.jpg` (top Meshy, bottom ours).
