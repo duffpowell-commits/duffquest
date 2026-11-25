@@ -975,6 +975,8 @@ func _block(foe: CharacterBody3D) -> void:
 
 ## Who Duff's punches can land on right now.
 func _foe() -> CharacterBody3D:
+	if exploring:
+		return null
 	if pirate_hp > 0:
 		return pirate
 	if mike_state not in ["away", "ko"]:

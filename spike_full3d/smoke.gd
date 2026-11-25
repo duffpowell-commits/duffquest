@@ -748,7 +748,7 @@ func _run() -> void:
 	sample.kick_requested = true
 	sample.special_requested = true
 	await _frames(3)
-	_check(sample.active and sample.player_hp > 0, "A, K and R with nobody to fight do nothing harmful")
+	_check(sample.active and sample.player_hp > 0 and sample._foe() == null, "A, K and R with nobody to fight do nothing harmful")
 	var door: Dictionary = zones.doors[0]
 	sample.player.position = Vector3(door.at.x, 0, door.at.y)
 	await create_timer(1.3, true, false, true).timeout

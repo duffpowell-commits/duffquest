@@ -185,7 +185,8 @@ repo; their photos never go here. Not in a scene yet (phase 4: home and the bloc
   Fights keep the low brawler camera.
 - Light follows the HUD clock (`porch_daylight.gd`): night, dawn, morning, noon, afternoon, golden hour, dusk.
   The slice clock now starts 5:30 PM so the porch fight is still the golden hour; `--clock=HH:MM` starts it
-  anywhere. Lamps (group `zone_lamp`) rise at night, windows (group `zone_window`) show the sky. Indoors the
+  anywhere. The light holds still during the fight (it stays golden hour) and follows the clock once
+  Duff is walking around. Lamps (group `zone_lamp`) rise at night, windows (group `zone_window`) show the sky. Indoors the
   sky fill dims at night so the lamps carry the room.
 - Renders `docs/renders/porch3d/25_home_times_of_day.jpg`, `26_porch_times_of_day.jpg`; tool `tools/zone_shots.gd`.
 

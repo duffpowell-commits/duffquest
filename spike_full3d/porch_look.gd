@@ -85,8 +85,10 @@ func set_lite(on: bool) -> void:
 	get_viewport().scaling_3d_scale = LITE_SCALE if on else 1.0
 
 func _process(delta: float) -> void:
-	if game.hud and absf(game.hud.game_minute() - minute_shown) >= .05:
-		daylight(game.hud.game_minute())
+	# The light holds still through a fight (the porch stays golden hour) and follows the clock after.
+	var minute: float = (game.hud.game_minute() if game.exploring else float(game.hud.clock_start)) if game.hud else minute_shown
+	if absf(minute - minute_shown) >= .05:
+		daylight(minute)
 	if lite or OS.has_feature("editor"):  # judge speed only in exported builds (the phone)
 		return
 	warmup -= delta
