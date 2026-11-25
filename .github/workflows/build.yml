@@ -46,7 +46,7 @@ jobs:
       - name: Smoke test (boot, new game, walk, phone)
         run: |
           set -o pipefail
-          sudo apt-get install -y -qq xvfb >/dev/null
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb >/dev/null   # update first: a stale runner index 404s (Nov 25)
           xvfb-run -a godot --path . --rendering-driver opengl3 res://tools/smoke.tscn --fixed-fps 30 --quit-after 600 2>&1 | tee smoke.log
           ! grep -E "SCRIPT ERROR|Parse Error" smoke.log
 
