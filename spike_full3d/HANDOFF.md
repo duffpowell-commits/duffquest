@@ -30,7 +30,10 @@ and merge on green CI. Don't run the blind first-timer or fresh-eyes reviews unl
   #218 (pass 1 + 1b: teach by doing, fill the phone, `fight_core.gd` split, fair Mike, checkpoint at Mike, no void,
   clear screen, damage numbers, Controls card), #219 (this log).
 
-**Open:** PR #221, the frying pan (above). It merges itself on green CI.
+- #221 (the frying pan, above) merged Nov 26.
+
+**Open:** #222, a draft that renames the game to "Fork Around and Find Out". Names are brainstorming until
+Duff confirms one, so it waits on his naming call. Don't merge it without his yes.
 
 ## The 8.5 gate (Duff's rule, Nov 26)
 
