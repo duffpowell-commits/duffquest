@@ -7,45 +7,30 @@ Update this file as you go, not just at the end. Newest entry first. How the cod
 - **The three-eyed fox is in every game as a rare cameo, not a pal**: a small event
   that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `/docs/MASCOT.md`.
 
-## Newest (Nov 26, 2026, 1:30 PM CT)
+## Newest (Nov 26, 2026, 1:40 PM CT)
 
-- **New name: "Hand Wash Only"** (Duff, Nov 26; was Duff Quest). The 3D slice's title card, window title and
-  APK label use it. The 2D game, itch and store pages are NOT renamed yet: cover art is in progress, and
-  store pages wait for Duff's yes. The package id is unchanged, so updates still install over the old APK.
+- **Name:** still Duff Quest. "Hand Wash Only" came up on Nov 26 but was only brainstorming, so nothing is renamed.
 - **Frying pan:** Duff fights with a cast-iron skillet in his LEFT hand (`porch_art.gd` `skillet()`, built
   free from primitives, 0 Meshy credits; held via `rig_actor.attach("LeftHand")`, `SKILLET_GRIP` in
   `fight_core.gd`). The right hand stays free for the Red Right Hand special. A quiet "bonk" rings under every
   landed punch. It's put away while exploring. Render: `docs/renders/porch3d/skillet.jpg`.
 
-## Where it stands (Nov 26, 2026, 7 AM CT)
-
-**Resumed (Duff, Nov 26, 7:12 AM CT): "We'll build all of the fixes, cancel the reviews."** The blind
-first-timer and fresh-eyes reviews for PR 218 are cancelled by Duff, and PR 218 merges once CI's tests are green.
-From here, build the fixes reviews have named without re-running the reviews unless Duff asks for one.
+## Where it stands (Nov 26, 2026, 1:40 PM CT)
 
 **Goal (Duff):** remake DuffQuest fully in 3D, zone by zone. `spike_full3d/` is the seed: the porch fight
 (Porch Pirate, Marketplace Mike, Sir Sends-It-Back), then the walk home to the apartment.
 
+**Reviews are off (Duff, Nov 26, 7:12 AM CT: "We'll build all of the fixes, cancel the reviews").** Build fixes
+and merge on green CI. Don't run the blind first-timer or fresh-eyes reviews unless Duff asks for them.
+
 **Live on main** (every push to main ships it):
 - Browser: https://duffpowell-commits.github.io/duffquest/porch3d/ (works on iPhone; drawn sideways in a portrait window).
 - APK: `duffquest-porch3d.apk` on the `dev` release.
-- Last merged PRs: #215 (browser build), #216 (fairer pirate fight + walking fix), #217 (sideways in a
-  portrait window + thumb buttons work in the browser).
-- #218 merged Nov 26 (squash `6976c6f`, live 7:29 AM CT): pass 1 + 1b below. Reviews waived by Duff.
+- Merged: #215 (browser build), #216 (fairer pirate + walking fix), #217 (sideways + browser touch buttons),
+  #218 (pass 1 + 1b: teach by doing, fill the phone, `fight_core.gd` split, fair Mike, checkpoint at Mike, no void,
+  clear screen, damage numbers, Controls card), #219 (this log).
 
-**Open: PR #218**, branch `claude/project-thread-g0ssf3`, head `e929b6b`. CI is green and smoke has 158 PASS. NOT merged:
-- Pass 1 (`64e99eb`, `e746e57`) covers:
-  - teach by doing: a ringed button plus one line per new move, and the pirate waits for the first punch;
-  - fighters framed clear of the thumb buttons;
-  - `expand` aspect so the game fills any phone;
-  - `fight_core.gd` split out of `porch.gd`.
-  - Fresh-eyes PASS was posted on `e746e57`.
-- Pass 1b (`e929b6b`) fixes the five things the blind first-timer named (details in BUILDING.md, "8.5 gate").
-- **Needs before merge:**
-  1. a fresh-eyes review of `e746e57..e929b6b`, posted as a PR review starting `FRESH-EYES REVIEW: PASS <sha>`;
-  2. a blind first-timer re-review scoring 8.5/10 or more (see "The 8.5 gate" below).
-  - Both were started on Nov 26 and stopped when the Claude usage limit ran out (resets Mon Nov 30, ~4 PM CT).
-  - Any coding AI can run them. Fresh-eyes must come from a session that did not write the code.
+**Open:** PR #221, the frying pan (above). It merges itself on green CI.
 
 ## The 8.5 gate (Duff's rule, Nov 26)
 
@@ -61,7 +46,7 @@ Scores so far:
 | Date | Build | First-timer score | Main complaints |
 |---|---|---|---|
 | Nov 26 | PR 218 pass 1 (`64e99eb`) | **5/10** | Mike too hard, losing replays the pirate, knocked into a void, stick/bubbles/boss bar over the action, no hit feedback, R unexplained |
-| (next) | PR 218 pass 1b (`e929b6b`) | not run yet | |
+| Nov 26 | PR 218 pass 1b (`e929b6b`) | not run (Duff waived reviews) | |
 
 How the blind review is run:
 - Export the web pack: `godot --headless --path spike_full3d --export-pack Web <dir>/index.pck` into a copy of a web export.
