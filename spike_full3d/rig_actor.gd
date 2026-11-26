@@ -4,6 +4,8 @@ extends Node3D
 ## Faces -Z like the rest of the porch code; set rotation.y to turn it.
 
 const BLEND := .12
+const TURN_RATE := 16.0  ## rad/s: a half turn takes about a fifth of a second (no more one-frame snaps)
+const RUN_FROM := 1.25   ## run once ground speed passes this x the walk clip's own speed (walk again under .85 of it)
 ## Crown-to-chin of each unit-scale model in metres (hair, hood and bun included), measured from
 ## front renders (tools/cast_shot.gd --heads). Duff's head is the yardstick for the whole cast.
 const HEAD := {"duff": .344, "mike": .402, "pirate": .452, "sendback": .322, "camper": .418,
@@ -16,6 +18,9 @@ var player: AnimationPlayer
 var current := ""
 var locked := 0.0  ## seconds a one-shot keeps priority over locomotion
 var who := ""
+var ground := {}       ## clip -> metres a second its planted feet cover at speed 1 (measured from the clip)
+var turn_target := 0.0
+var turn_hold := 0.0   ## > 0 while turn_to steers the body
 
 ## No class_name: the main project parse-checks every .gd from its own root, where this folder is
 ## .gdignored, so a global class here would not resolve. porch.gd preloads this script instead.
@@ -35,11 +40,79 @@ static func make(parent: Node3D, who: String, height := 1.6) -> Node3D:
 	actor.player.playback_default_blend_time = BLEND
 	for mesh in body.find_children("*", "MeshInstance3D", true, false):
 		(mesh as MeshInstance3D).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+	for clip in ["walking", "running"]:
+		actor.ground[clip] = actor._ground_speed(clip)
 	actor.play("idle")
 	return actor
 
 func _process(delta: float) -> void:
 	locked = maxf(0, locked - delta)
+	if turn_hold > 0:
+		turn_hold -= delta
+		var gap := wrapf(turn_target - rotation.y, -PI, PI)
+		rotation.y += clampf(gap, -TURN_RATE * delta, TURN_RATE * delta)
+
+## Turn (not snap) to face `yaw`. Call it every frame while the body should be steering; a direct
+## rotation.y set (a homing punch, a throw) still snaps, and wins once the calls stop.
+## Face `yaw` at once (aim, dash, a door): also drops any turn still in progress, so it doesn't swing back.
+func face(yaw: float) -> void:
+	rotation.y = yaw
+	turn_target = yaw
+	turn_hold = 0.0
+
+func turn_to(yaw: float) -> void:
+	turn_target = yaw
+	turn_hold = .2
+
+## Walk / run at `speed` m/s of real ground movement: the clip runs exactly as fast as the body moves,
+## so the planted foot stays put (no skating). Walk or run is picked by speed, with a little hysteresis.
+func move_at(speed: float) -> void:
+	if locked > 0 or current == "ko":
+		return
+	var walk: float = ground.get("walking", 1.3)
+	var clip := "idle"
+	if speed > walk * RUN_FROM or (current == "running" and speed > walk * RUN_FROM * .85):
+		clip = "running"
+	elif speed > .12:
+		clip = "walking"
+	play(clip)
+	player.speed_scale = clampf(speed / ground.get(clip, 1.0), .45, 1.8) if clip != "idle" else 1.0
+
+## How fast a clip's planted foot slides back under the body (m/s at speed 1, world units): the
+## ground speed the clip was animated for. Measured once from the real clip, so any new body is right.
+func _ground_speed(clip: String) -> float:
+	if not has_clip(clip):
+		return 1.0
+	var anim := player.get_animation("rig/" + clip)
+	var feet := [skeleton.find_bone("LeftFoot"), skeleton.find_bone("RightFoot")]
+	var steps := 48
+	var at := []
+	var to_actor := Transform3D.IDENTITY  # skeleton space -> this actor's space (works before it is in the tree)
+	var node: Node = skeleton
+	while node != self:
+		to_actor = (node as Node3D).transform * to_actor
+		node = node.get_parent()
+	player.play("rig/" + clip, 0)
+	for i in steps + 1:
+		player.seek(anim.length * i / steps, true)
+		var pair := []
+		for foot in feet:
+			pair.append(to_actor * skeleton.get_bone_global_pose(foot).origin)
+		at.append(pair)
+	var low := INF
+	for pair in at:
+		low = minf(low, minf(pair[0].y, pair[1].y))
+	var total := 0.0
+	var count := 0
+	for i in steps:
+		for f in 2:
+			var a: Vector3 = at[i][f]
+			var b: Vector3 = at[i + 1][f]
+			if a.y < low + .03 and b.y < low + .03:  # this foot is planted: it slides back at ground speed
+				total += Vector2(b.x - a.x, b.z - a.z).length()
+				count += 1
+	player.stop()
+	return total / (count * anim.length / steps) if count > 0 else 1.0
 
 ## Locomotion picks idle / walk / run from 0..1 pace unless a one-shot is still playing.
 func move(pace: float) -> void:

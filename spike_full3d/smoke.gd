@@ -113,7 +113,30 @@ func _run() -> void:
 		if actor == sample.player_model:
 			clips += ["hook", "dodge"]
 		_check(clips.all(func(c): return actor.has_clip(c)), "%s has real clips %s" % [actor.name, clips])
-		_check(actor.current in ["idle", "walking"] and actor.player.is_playing(), "%s starts in an idle or walk clip" % actor.name)
+		_check(actor.current in ["idle", "walking", "running"] and actor.player.is_playing(), "%s starts in a real idle, walk or run clip" % actor.name)
+	# Walking and running (Duff, Nov 26: "the motion looks bad"): legs play at the body's real ground
+	# speed, so feet don't skate, and bodies turn instead of snapping.
+	for foe in sample.foes:
+		var m = foe.model
+		_check(m.ground.walking > .5 and m.ground.walking < 2.0 and m.ground.running > m.ground.walking * 1.5,
+			"%s's clips know their own ground speed (walk %.2f, run %.2f m/s)" % [foe.d.name, m.ground.walking, m.ground.running])
+	var legs = sample.mike_model
+	var skate := 0.0
+	for speed in [.6, 1.0, 1.9, 2.5, 4.0]:
+		legs.locked = 0
+		legs.move_at(speed)
+		skate = maxf(skate, absf(legs.player.speed_scale * legs.ground[legs.current] - speed) / speed)
+	_check(skate < .05, "from a stroll to a sprint the feet keep pace with the ground (worst slip %d%%)" % int(skate * 100))
+	legs.move_at(0)
+	legs = sample.player_model  # Duff: the one turning under the player's thumb
+	var yaw_before: float = legs.rotation.y
+	legs.turn_to(yaw_before + PI * .9)
+	legs._process(1.0 / 60)  # one frame on the phone
+	var turned: float = absf(wrapf(legs.rotation.y - yaw_before, -PI, PI))
+	for i in 15:
+		legs._process(1.0 / 60)
+	_check(turned > 0 and turned < 1.0 and absf(wrapf(legs.rotation.y - yaw_before - PI * .9, -PI, PI)) < .05,
+		"a turn takes a few frames, never one (%.2f rad in the first frame)" % turned)
 
 	# HUD + menus in the main game's style (porch_hud.gd).
 	var hud = sample.hud
@@ -192,7 +215,15 @@ func _run() -> void:
 	sample.facing = Vector3.BACK
 	_plain(sample)
 	sample._attack()
-	_check(sample.pirate_hp == sample.PIRATE_HP, "wrong-facing attack misses")
+	_check(sample.pirate_hp == sample.PIRATE_HP - 1 and sample.facing.z < -.9,
+		"A with his back to a close foe turns Duff to him and lands (soft lock-on)")
+	sample.pirate_hp = sample.PIRATE_HP
+	sample.pirate.position = Vector3(0, 0, 4.6)  # 2.6 away, behind him: out of lock-on range
+	sample.facing = Vector3.FORWARD
+	_plain(sample)
+	sample._attack()
+	_check(sample.pirate_hp == sample.PIRATE_HP and sample.facing.z < -.9, "out of lock-on range, the swing stays where he faces")
+	sample.pirate.position = Vector3(0, 0, 1)
 	sample.facing = Vector3.FORWARD
 	sample.pirate.position = Vector3(0, 0, -.1)
 	_plain(sample)
@@ -258,11 +289,18 @@ func _run() -> void:
 	sample._attack()
 	_plain(sample)
 	sample._attack()
-	_check(sample.pirate_hp == sample.PIRATE_HP - 2 and sample.blocked == 1 and sample.pirate_wind > 0,
-		"the third hit of a flurry is blocked and the pirate counters")
-	sample.invulnerable = 0
-	sample._tick_pirate(sample.COUNTER_TELE + .01)
-	_check(sample.player_hp == 2, "mashing into his guard costs Duff a hit")
+	_check(sample.pirate_hp == sample.PIRATE_HP - 3 and sample.blocked == 0,
+		"the pirate (the first fight) never blocks a mashed flurry: a first-timer's A always lands")
+	# The bosses still read mashing: the hit after GUARD_AFTER in one flurry is blocked.
+	sample.chain = {}
+	sample.boss.state = "stalk"
+	var reads := []
+	for i in sample.GUARD_AFTER + 1:
+		reads.append(sample._guards(sample.mike))
+	sample.boss.state = "away"
+	sample.chain = {}
+	_check(reads == [false, false, true], "Mike blocks the third mashed hit in a flurry (%s)" % [reads])
+	sample.player_hp = 2
 	# Combos: A in rhythm can't be guarded and the third is a knockdown; a mashed press starts over.
 	sample.pirate_hp = sample.PIRATE_HP
 	sample.chain = {}

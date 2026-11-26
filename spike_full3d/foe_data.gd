@@ -20,6 +20,7 @@ extends RefCounted
 ##   smash_line       what he says when the shield breaks
 ##   dizzy_free       while dizzy: no rage, no shield (he rages when he stands back up instead)
 ##   armoured         states that block every punch and kick (specials still go through)
+##   reads_mashing    false = never blocks a mashed flurry (the tutorial foe). Default true
 ##   counter_from_taunt  a blocked hit during his taunt still gets an instant counter jab
 ##   arrive           {line, line_time, message, music}: walking in (not for the foe who starts the fight)
 ##   ko               {line, line_time, message}: going down
@@ -29,7 +30,8 @@ const FOES := {
 		"name": "Porch Pirate", "model": "pirate", "height": 1.4, "hp": 5, "speed": 2.1, "radius": .42,
 		"stop": 1.0, "reach": 1.15, "spawn": Vector3(3, 0, -1),
 		"opening": "Just browsing your porch, boss.",
-		"jab": {"tele": .4, "clip": "jab", "rest": .9},
+		"jab": {"tele": .55, "clip": "jab", "rest": 1.25},  # the tutorial foe: slow, readable (Nov 26 tune)
+		"reads_mashing": false,  # never blocks a mashed flurry, so a first-timer's A always lands
 		"ko": {"message": "Walk over to grab the parcel."},
 	},
 	"mike": {

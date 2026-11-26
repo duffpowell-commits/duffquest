@@ -141,8 +141,9 @@ func arrive(to: String, spawn: Vector3, face := Vector3.BACK) -> void:
 	load_zone(to)
 	game.player.position = spawn
 	game.player.velocity = Vector3.ZERO
+	game.player.reset_physics_interpolation()  # a door is a jump, not a slide
 	game.facing = face
-	game.player_model.rotation.y = atan2(-face.x, -face.z)
+	game.player_model.face(atan2(-face.x, -face.z))
 	game.fight_cam.snap(game.player.position, null)
 	trips += 1
 
