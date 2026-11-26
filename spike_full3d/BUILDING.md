@@ -13,7 +13,7 @@ Mike, then Sir Sends-It-Back. It is the seed of the full 3D game, which replaces
 root stays live on itch until the 3D game covers everything it does. Don't touch the 2D game from here.
 
 - Renderer: Compatibility (`gl_compatibility`, also on mobile). Physics: Jolt.
-- 1280x720 landscape. Phone is the target; the APK `duffquest-porch3d.apk` ships on the `dev` release
+- 960x540 landscape viewport, stretch "expand" (fills any phone shape). Phone is the target; the APK `duffquest-porch3d.apk` ships on the `dev` release
   from every push to main (`.github/workflows/build.yml`, its own package id, the shared keystone key).
 - GDScript only. The owner works from a phone: no desktop-only steps in any workflow.
 

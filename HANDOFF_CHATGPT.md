@@ -33,7 +33,7 @@ Duff picked the name on Nov 26, 2026 (PR #222, merged).
 ## 3. Stack
 
 - Godot **4.7.2-stable**, GDScript only. No C#, no plugins that need a desktop.
-- The 2D game runs at a 640x360 viewport. The 3D project runs at 1280x720 with the Compatibility renderer and Jolt physics.
+- The 2D game runs at a 640x360 viewport. The 3D project uses a 960x540 landscape viewport (stretch "expand"), the Compatibility renderer and Jolt physics.
 - Phones are the target platform (Android APK plus the web build on iPhone).
 - CI is GitHub Actions (`.github/workflows/build.yml`). Every push to `main` tests, exports web + APK, updates
   the `dev` release and the github.io pages, and uploads the web build to itch with butler.
