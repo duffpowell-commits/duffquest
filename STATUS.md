@@ -8,7 +8,16 @@ Short page. Read this first. Details live in `TRACKER.md` and `reference.md`.
 - APKs on the `dev` release: `duffquest-public.apk` (itch edition) and `duffquest.apk` (family edition, never posted in public).
 - Eleven side quests. IGN review v7: game 8.9/10, launch 3/10 (`docs/reviews/ign_review_2026-11-19_v7.md`).
 
-## In progress
+## 3D remake (the current work, Nov 26)
+- Goal (Duff): remake the whole game in 3D, zone by zone. Seed: `spike_full3d/` (own Godot project).
+- Handoff for any AI: **`spike_full3d/HANDOFF.md`** (state, open PRs, 8.5 scores, next steps, gotchas). Code map: `spike_full3d/BUILDING.md`.
+- Live: browser https://duffpowell-commits.github.io/duffquest/porch3d/ and `duffquest-porch3d.apk` on the `dev` release.
+- On main: porch fight (Porch Pirate, Marketplace Mike, Sir Sends-It-Back), walk home, pass 1 + 1b of the 8.5 plan (PR #218), mascot rule (#220).
+- Open Nov 26: #221 (cast-iron skillet in Duff's left hand). **Name stays DuffQuest**: "Hand Wash Only" and other new names are brainstorming until Duff confirms one, so don't merge a rename.
+- Next: Duff's phone check, then pass 2 (kitchen shift) with its own 8.5 plan card and Meshy budget card. Reviews are off unless Duff asks.
+- Mascot: rare three-eyed fox cameo, plus one among the overworld animals (`docs/MASCOT.md`).
+
+## In progress (2D game)
 - Preparing this repo to stay public: secret scan, private handoffs and image prompts removed from the tree, gitleaks on PRs and main. History rewrite is waiting on Duff. Do not change the GitHub visibility from a session.
 
 ## Blockers

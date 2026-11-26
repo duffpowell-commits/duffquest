@@ -1,5 +1,9 @@
 # Handoff: design review fixes (Nov 15, 2026, evening)
 
+> **STALE (kept for history).** This file is from an old session and is out of date. Start at
+> `CLAUDE.md` -> `STATUS.md`, then `spike_full3d/HANDOFF.md` for the 3D remake (the current work).
+> Checked Nov 26, 2026.
+
 ## Start here (state at handoff)
 - **PR #101** (branch `claude/project-thread-osd9kf`, draft): Blackhead Patrol painted back with Duff's REAL fox neck
   tattoo (from his photo): pale blue rose third eye, blue geometric shards, left side of the neck below the ear, nape
