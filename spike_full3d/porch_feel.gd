@@ -17,6 +17,7 @@ var camera: Camera3D
 var trauma := 0.0
 var knock := {}               ## CharacterBody3D -> Vector3 push velocity
 var music: AudioStreamPlayer
+var bed: AudioStreamPlayer  ## ambience loop (play_bed)
 var pool: Array[AudioStreamPlayer] = []
 var streams := {}
 var stopping := false
@@ -61,7 +62,7 @@ func sfx(clip: String, pitch_jitter := .08, db := 0.0) -> void:
 
 func play_music(clip: String) -> void:
 	var stream := _stream(clip)
-	if stream == null or music.stream == stream:
+	if stream == null or (music.stream == stream and music.playing):
 		return
 	if stream is AudioStreamOggVorbis:
 		(stream as AudioStreamOggVorbis).loop = true
@@ -70,6 +71,21 @@ func play_music(clip: String) -> void:
 
 func stop_music() -> void:
 	music.stop()
+
+## A looping ambience under the music (home: fridge hum, room tone, the TV next door). "" stops it.
+func play_bed(clip: String, db := -14.0) -> void:
+	if bed == null:
+		bed = AudioStreamPlayer.new()
+		add_child(bed)
+	if clip == "":
+		bed.stop()
+		return
+	var stream := _stream(clip)
+	if stream is AudioStreamOggVorbis:
+		(stream as AudioStreamOggVorbis).loop = true
+	bed.stream = stream
+	bed.volume_db = db
+	bed.play()
 
 ## A landed punch: freeze a beat, shake, shove the foe away from Duff.
 func landed(foe: CharacterBody3D, from: Vector3, ko := false) -> void:

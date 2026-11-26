@@ -26,6 +26,7 @@ var zone := ""
 var indoor := false
 var doors: Array = []  ## [{at: Vector2 (x, z), to, spawn: Vector3, face: Vector3}]
 var spots := {}        ## named places in the zone (couch seats, kitchen...) for people at home
+var people := {}       ## who's in this zone (rig actors by name), e.g. Madison and Brittany at home
 var uses: Array = []   ## [{id, label, at: Vector2 (x, z), radius}]: what USE does near each spot
 var armed := false
 var moving := false
@@ -51,6 +52,7 @@ func load_zone(which: String) -> void:
 	doors = []
 	spots = {}
 	uses = []
+	people = {}
 	root = Node3D.new()
 	root.name = "Zone_" + which
 	game.add_child(root)
@@ -65,6 +67,9 @@ func load_zone(which: String) -> void:
 	var z: Array = ZONES[which]
 	game.fight_cam.set_zone(z[1] or game.exploring, z[2], z[3])
 	armed = false
+	if game.exploring and game.feel:  # home has its own music and room sound; the porch gets its street theme back
+		game.feel.play_music("mus_edm_home" if which == "apartment" else "mus_edm_neighborhood")
+		game.feel.play_bed("home_bed" if which == "apartment" else "")
 	if game.exploring:
 		game.message.text = "Home. The door on the left goes back out." if which == "apartment" \
 			else "Porch secured. The front door's on the stoop."

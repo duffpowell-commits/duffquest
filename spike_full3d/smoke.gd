@@ -26,6 +26,14 @@ func _beat(sample) -> void:
 	sample.clock += .4
 	sample.attack_time = 0
 
+## Wait out a zone trip: until the fade card is gone (a first load of the home models can take a while).
+func _trip(sample) -> void:
+	await create_timer(.2, true, false, true).timeout
+	for i in 200:
+		if not sample.zones.moving:
+			return
+		await create_timer(.05, true, false, true).timeout
+
 func _frames(count: int) -> void:
 	for i in count:
 		await physics_frame
@@ -729,7 +737,7 @@ func _run() -> void:
 	var zones = sample.zones
 	sample.go_inside()
 	_check(zones.card.visible and not sample.active, "Go inside fades to the loading card")
-	await create_timer(1.3, true, false, true).timeout
+	await _trip(sample)
 	var home := {}
 	for child in zones.root.get_children():
 		if child.has_meta("set_prop") or child is MeshInstance3D:
@@ -751,6 +759,9 @@ func _run() -> void:
 	sample.special_requested = true
 	await _frames(3)
 	_check(sample.active and sample.player_hp > 0 and sample._foe() == null, "A, K and R with nobody to fight do nothing harmful")
+	_check(zones.people.has("madison") and zones.people.has("brittany") and zones.people.madison.current == "idle"
+		and sample.feel.music.stream.resource_path.ends_with("mus_edm_home.ogg") and sample.feel.bed.stream != null,
+		"home: Madison and Brittany idle in the room; home music and the room sound play")
 	# USE at home (Duff's pick): A is USE, the other fight buttons are hidden.
 	var hidden := 0
 	for b in ["Dodge", "Kick", "Special"]:
@@ -785,13 +796,13 @@ func _run() -> void:
 	_check(zones.nearest_use().is_empty(), "nothing to use in the middle of the room")
 	var door: Dictionary = zones.doors[0]
 	sample.player.position = Vector3(door.at.x, 0, door.at.y)
-	await create_timer(1.3, true, false, true).timeout
+	await _trip(sample)
 	_check(zones.zone == "porch" and not zones.indoor and sample.player.position.distance_to(Vector3(0, 0, -1.2)) < .5
 		and sample.fight_cam.mode == "explore" and sample.has_node("Zone_porch"),
 		"the apartment door leads back out to the porch (Duff on the walk, still exploring)")
 	await _frames(3)
 	sample.player.position = Vector3(0, 0, -2.3)
-	await create_timer(1.3, true, false, true).timeout
+	await _trip(sample)
 	_check(zones.zone == "apartment" and zones.trips == 3, "the front door on the stoop takes Duff back inside (%d trips)" % zones.trips)
 	# Light follows the clock.
 	var Daylight = load("res://porch_daylight.gd")

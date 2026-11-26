@@ -9,6 +9,11 @@ extends RefCounted
 
 const Art = preload("porch_art.gd")
 const Kit = preload("porch_kit.gd")
+const RigActor = preload("rig_actor.gd")
+
+## Who's home, where, facing which way (yaw), standing idle. No lines yet: Duff approves every line first.
+const FAMILY := [["madison", Vector3(2.62, 0, -2.15), 2.5], ["brittany", Vector3(1.6, 0, .9), 1.77]]
+const FAMILY_HEIGHT := 1.63
 
 const HALF_W := 4.2      ## floor runs x -4.2..4.2
 const BACK := -3.2       ## back wall's inside face
@@ -206,6 +211,7 @@ static func build(zones, root: Node3D) -> void:
 		"crib": Vector3(CRIB.x, 0, CRIB.z + .85),
 		"play_mat": Vector3(MAT.x + .5, 0, MAT.z),
 	}
+	_family(zones, root)
 
 static func _lamp(root: Node3D, label: String, at: Vector3, energy: float, reach: float) -> void:
 	var light := OmniLight3D.new()
@@ -362,3 +368,21 @@ static func _clutter(game, root: Node3D, kx: float) -> void:
 	junk.form(Vector3(kx - .1, .2, .35), Vector3(.14, .2, .14), Color("#3a3a40"), Vector3.ZERO, 10)  # bin
 	game._collider("BinCollider", Vector3(kx - .1, .2, .35), Vector3(.3, .4, .3), root)
 	junk.finish(root, "Clutter")
+
+## Madison and Brittany at home: rigged models on their spots, idling, solid to walk into.
+static func _family(zones, root: Node3D) -> void:
+	var game = zones.game
+	for f in FAMILY:
+		var holder := Node3D.new()
+		holder.name = String(f[0]).capitalize() + "Spot"
+		root.add_child(holder)
+		holder.position = f[1]
+		var actor = RigActor.make(holder, f[0], FAMILY_HEIGHT)
+		actor.rotation.y = f[2]
+		actor.fit_head_bone()
+		actor.player.seek(randf() * 2.0, true)  # not in step with each other
+		if game.look:
+			game.look._pop(actor)
+			game.look._contact_shadow(holder)
+		game._collider(String(f[0]).capitalize() + "Collider", holder.position + Vector3(0, .8, 0), Vector3(.5, 1.6, .5), root)
+		zones.people[f[0]] = actor
