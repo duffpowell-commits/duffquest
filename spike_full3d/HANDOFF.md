@@ -17,6 +17,7 @@ From here, build the fixes reviews have named without re-running the reviews unl
 - APK: `duffquest-porch3d.apk` on the `dev` release.
 - Last merged PRs: #215 (browser build), #216 (fairer pirate fight + walking fix), #217 (sideways in a
   portrait window + thumb buttons work in the browser).
+- #218 merged Nov 26 (squash `6976c6f`, live 7:29 AM CT): pass 1 + 1b below. Reviews waived by Duff.
 
 **Open: PR #218**, branch `claude/project-thread-g0ssf3`, head `e929b6b`. CI is green and smoke has 158 PASS. NOT merged:
 - Pass 1 (`64e99eb`, `e746e57`) covers:
@@ -58,7 +59,7 @@ How the blind review is run:
 
 ## Next steps, in order
 
-1. PR 218: merge once CI tests are green (Duff waived its reviews, Nov 26). Check the browser link updates.
+1. Done: PR 218 merged and live (Nov 26).
 2. Reviews are off for now (Duff's call). Run one only if Duff asks.
 3. Pass 2 = the kitchen shift (four kitchen bosses, PR 202 planned them). Before building it:
    - write its 8.5 plan and get Duff's OK on one card;
