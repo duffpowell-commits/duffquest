@@ -186,7 +186,7 @@ repo; their photos never go here. Not in a scene yet (phase 4: home and the bloc
 - USE at home (Duff's pick): indoors the fight buttons hide and the big button becomes USE, named for
   what's near: sit (couch: half an hour passes, +1 heart), snack (fridge: +2 hearts), peek (crib), blinds
   (window darkens), squeak (duck on the play mat). Spots live in `zones.uses`; `porch.gd use()` runs them.
-- Who's home: Madison (by the crib) and Brittany (at the table) idle on their spots, solid to walk into
+- Who's home: Madison (by the crib) and Brittany (by the table) idle on their spots, solid to walk into
   (`zone_apartment.gd` FAMILY). No lines yet: Duff approves every line first. Render `29_home_family.jpg`.
 - Home sound: the main game's `mus_edm_home` plus `audio/home_bed.ogg` (fridge hum, room tone, a TV through
   the wall), made from numbers by `tools/gen_home_bed.py`, so it's ours. The porch gets its street theme back.

@@ -12,7 +12,7 @@ const Kit = preload("porch_kit.gd")
 const RigActor = preload("rig_actor.gd")
 
 ## Who's home, where, facing which way (yaw), standing idle. No lines yet: Duff approves every line first.
-const FAMILY := [["madison", Vector3(2.62, 0, -2.15), 2.5], ["brittany", Vector3(1.6, 0, .9), 1.77]]
+const FAMILY := [["madison", Vector3(.78, 0, -1.6), -2.5], ["brittany", Vector3(1.6, 0, .9), 1.77]]
 const FAMILY_HEIGHT := 1.63
 
 const HALF_W := 4.2      ## floor runs x -4.2..4.2
@@ -124,7 +124,7 @@ static func build(zones, root: Node3D) -> void:
 	rug.box(Vector3(cx, .015, cz + 1.55), Vector3(2.3, .02, 1.4), Color("#b06a4a"))
 	rug.finish(root, "Rug")
 	var table := Art.Sculpture.new()
-	var tz := cz + 1.45
+	var tz := cz + 1.65
 	table.box(Vector3(cx, .38, tz), Vector3(1.2, .07, .6), Color("#6b4630"))
 	for dx in [-.52, .52]:
 		for dz in [-.24, .24]:
@@ -334,7 +334,7 @@ static func _clutter(game, root: Node3D, kx: float) -> void:
 	junk.box(Vector3(-2.1, .68, -2.65), Vector3(.12, .02, .3), Color("#f6f1e6"))
 	junk.box(Vector3(-1.5, .585, -2.5), Vector3(.16, .025, .05), Color("#1d1d20"), Vector3(0, .4, 0))
 	# Coffee table: a baby bottle, the monitor, mail.
-	var tz := BACK + .55 + 1.45
+	var tz := BACK + .55 + 1.65
 	junk.form(Vector3(-.65, .47, tz - .12), Vector3(.035, .07, .035), Color("#f6f6f6"), Vector3.ZERO, 8)
 	junk.form(Vector3(-.65, .55, tz - .12), Vector3(.02, .025, .02), Color("#f2c14e"), Vector3.ZERO, 8)
 	junk.box(Vector3(-1.5, .46, tz + .12), Vector3.ONE * .08, Color("#efefef"))      # monitor

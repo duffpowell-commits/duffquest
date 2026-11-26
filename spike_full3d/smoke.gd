@@ -772,6 +772,27 @@ func _run() -> void:
 		spot_of[u.id] = u
 	_check(spot_of.has("couch") and spot_of.has("fridge") and spot_of.has("crib") and spot_of.has("blinds") and spot_of.has("duck"),
 		"USE spots: couch, fridge, crib, blinds, duck")
+	# Every USE spot can be walked to: a Duff-sized capsule fits somewhere inside each spot's radius.
+	var space: PhysicsDirectSpaceState3D = sample.player.get_world_3d().direct_space_state
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = sample.DUFF_RADIUS
+	capsule.height = 1.4
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = capsule
+	query.collision_mask = sample.WORLD_LAYER
+	var reachable := 0
+	for u in zones.uses:
+		var fits := false
+		for ring in [0.0, .33, .66, .95]:
+			for k in 16:
+				var p: Vector2 = u.at + Vector2.from_angle(k * TAU / 16) * ring * u.radius
+				query.transform = Transform3D(Basis(), Vector3(p.x, .75, p.y))
+				if space.intersect_shape(query, 1).is_empty():
+					fits = true
+		reachable += int(fits)
+		if not fits:
+			print("no room at USE spot ", u.id)
+	_check(reachable == zones.uses.size(), "every USE spot has room for Duff to stand (%d/%d)" % [reachable, zones.uses.size()])
 	sample.player.position = Vector3(spot_of.fridge.at.x, 0, spot_of.fridge.at.y)
 	sample.player_hp = 2
 	sample._press_a()
