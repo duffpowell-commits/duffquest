@@ -1,5 +1,9 @@
 # DuffQuest — FULL HANDOFF (Nov 9, 2026, 14:45 CT)
 
+> **STALE (kept for history).** This file is from an old session and is out of date. Start at
+> `CLAUDE.md` -> `STATUS.md`, then `spike_full3d/HANDOFF.md` for the 3D remake (the current work).
+> Checked Nov 26, 2026.
+
 Standalone: a cold session needs only this file to pick up. Last commit at writing: see `git log -1`.
 Deeper references: `CLAUDE_REFERENCE.md` (stable facts), `CLAUDE.md` (history log, top bullets newest),
 `QUEUE.md` (NOW / NEXT / DONE), `tasks/todo.md`, `tasks/lessons.md`, `docs/HANDOFF_NOV9_PM.md` (same-day detail).
