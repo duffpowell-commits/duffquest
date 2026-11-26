@@ -54,6 +54,12 @@ func _process(delta: float) -> void:
 
 ## Turn (not snap) to face `yaw`. Call it every frame while the body should be steering; a direct
 ## rotation.y set (a homing punch, a throw) still snaps, and wins once the calls stop.
+## Face `yaw` at once (aim, dash, a door): also drops any turn still in progress, so it doesn't swing back.
+func face(yaw: float) -> void:
+	rotation.y = yaw
+	turn_target = yaw
+	turn_hold = 0.0
+
 func turn_to(yaw: float) -> void:
 	turn_target = yaw
 	turn_hold = .2

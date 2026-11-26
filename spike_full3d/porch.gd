@@ -489,7 +489,7 @@ func _attack() -> void:
 	offset.y = 0
 	if dash:
 		facing = offset.normalized()  # the dash homes in on him
-		player_model.rotation.y = atan2(-facing.x, -facing.z)
+		player_model.face(atan2(-facing.x, -facing.z))
 		player_model.strike("hook", ATTACK_ANIM)
 		if feel:
 			feel.push(player, facing, DASH_SPEED)
@@ -550,7 +550,7 @@ func _kick() -> void:
 	offset.y = 0
 	if counter:
 		facing = offset.normalized()
-		player_model.rotation.y = atan2(-facing.x, -facing.z)
+		player_model.face(atan2(-facing.x, -facing.z))
 	player_model.strike("kick", KICK_ANIM)
 	if offset.length() > KICK_REACH or facing.dot(offset.normalized()) < .38 or not _clear_strike(player, foe):
 		combo = 0
@@ -621,7 +621,7 @@ func red_right_hand() -> void:
 	var offset := foe.position - player.position
 	offset.y = 0
 	facing = offset.normalized()
-	player_model.rotation.y = atan2(-facing.x, -facing.z)
+	player_model.face(atan2(-facing.x, -facing.z))
 	player_model.strike(RRH_CLIP if player_model.has_clip(RRH_CLIP) else "hook", RRH_WINDUP / RRH_PEAK)  # reaches full extension as the dash starts
 	player_model.locked = RRH_TIME  # keep locomotion off the frozen fist for the whole dash
 	attack_time = RRH_TIME
@@ -695,7 +695,7 @@ func _return_to_sender(foe: CharacterBody3D) -> void:
 	var offset := foe.position - player.position
 	offset.y = 0
 	facing = offset.normalized()
-	player_model.rotation.y = atan2(-facing.x, -facing.z)
+	player_model.face(atan2(-facing.x, -facing.z))
 	player_model.strike(RTS_CLIP, length / RTS_SPEED)
 	player_model.locked = special_time
 	_brain(foe).cancel()  # grabbed mid-move: whatever he was doing is cancelled
@@ -981,7 +981,7 @@ func _aim_at(foe: CharacterBody3D) -> void:
 	if offset.length() > AIM_RANGE or offset.length() < .05:
 		return
 	facing = offset.normalized()
-	player_model.rotation.y = atan2(-facing.x, -facing.z)
+	player_model.face(atan2(-facing.x, -facing.z))
 
 ## Who Duff's punches can land on right now.
 func _foe() -> CharacterBody3D:
@@ -1108,6 +1108,7 @@ func _build_street() -> void:
 	sun.shadow_enabled = true
 	add_child(sun)
 	camera = Camera3D.new()
+	camera.physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF  # moved in _process; the bodies it follows are interpolated
 	add_child(camera)
 	camera.make_current()
 	fight_cam = FightCam.new(camera)
