@@ -125,6 +125,12 @@ func _run() -> void:
 	_check(tall.y > 540 and sample.hud.spare.y == tall.y - 540 and is_equal_approx(a_btn.position.y + a_btn.shape.size.y, tall.y - 20)
 		and sample.stick.position.y == 150 + sample.hud.spare.y,
 		"on a screen that isn't 16:9 the view fills it and the thumb buttons and stick slide to its edges")
+	sample.hud.spare = Vector2.ZERO  # as at _ready, before any frame has measured the screen
+	sample.hud.show_title()
+	var title_frame: Control = sample.hud.menu.get_node("Frame")
+	_check(title_frame.position == sample.hud.spare * .5 and sample.hud.spare.y > 0,
+		"a menu opened before the first frame is still centred on a screen that isn't 16:9")
+	sample.hud.close_menu()
 	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
 	await _frames(2)
 	sample.hud._fit_to_screen()

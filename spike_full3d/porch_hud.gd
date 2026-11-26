@@ -153,6 +153,8 @@ func _fit_to_screen() -> void:
 		pause_button.position = PAUSE.position + Vector2(spare.x, 0)
 	if game.stick:
 		game.stick.position.y = 150 + spare.y
+	if menu and menu.has_node("Frame"):
+		menu.get_node("Frame").position = spare * .5  # stays centred if the screen turns or resizes
 
 ## ---------------------------------------------------------------- drawing helpers (ui_style.gd, x3)
 
@@ -411,6 +413,7 @@ func _title_label(parent: Control, text: String, at: Vector2, width: float, size
 
 func _new_menu(kind: String, wash: float) -> Control:
 	close_menu()
+	_fit_to_screen()  # the title opens from _ready, before the first frame has measured the screen
 	screen = kind
 	menu = Control.new()
 	menu.name = "Menu_" + kind

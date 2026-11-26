@@ -21,9 +21,7 @@ extends RefCounted
 ##   dizzy_free       while dizzy: no rage, no shield (he rages when he stands back up instead)
 ##   armoured         states that block every punch and kick (specials still go through)
 ##   teach            [button, line]: the button his fight teaches (ringed until used) and the one line about it
-##   waits            the tutorial foe: won't swing until Duff has thrown a punch
-##   teach            [button, line]: the button his fight teaches (ringed until used) and the one line about it
-##   waits            the tutorial foe: won't swing until Duff has thrown a punch
+##   waits            the tutorial foe: won't swing until Duff has thrown a punch (or a kick or the special)
 ##   reads_mashing    false = never blocks a mashed flurry (the tutorial foe). Default true
 ##   counter_from_taunt  a blocked hit during his taunt still gets an instant counter jab
 ##   arrive           {line, line_time, message, music}: walking in (not for the foe who starts the fight)

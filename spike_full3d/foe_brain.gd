@@ -109,7 +109,7 @@ func _teach() -> void:
 
 ## The tutorial foe ("waits"): squares up but won't swing until Duff has thrown his first punch.
 func waiting() -> bool:
-	return d.get("waits", false) and not game.learned.has("a")
+	return d.get("waits", false) and not (game.learned.has("a") or game.learned.has("k") or game.learned.has("r"))
 
 func tick(delta := 1.0 / 60) -> void:
 	timer = maxf(0, timer - delta)
