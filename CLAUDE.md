@@ -16,6 +16,8 @@ This repo is public.
 - Game art, code, and design docs are fine.
 
 ## Where things stand (Nov 21)
+- **Studio mascot (Duff, Nov 26): the three-eyed fox is in every game as a rare cameo, not a pal**: a small event
+  that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `docs/MASCOT.md`.
 - Nov 24: fully 3D porch slice in `spike_full3d/` (own Godot project + APK `duffquest-porch3d.apk` on the
   `dev` release): Meshy models of Duff and the Porch Pirate on a real skeleton with real clips, Duff's real
   hand tattoos painted from the masters. Marketplace Mike (OBO sign throw, charge, rage) follows the pirate (Nov 24).
