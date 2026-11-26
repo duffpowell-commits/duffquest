@@ -178,6 +178,9 @@ var tell_ring: MeshInstance3D
 var tell_foe: CharacterBody3D ## whose wind-up the red ring marks
 var blocked := 0              ## hits a foe has blocked (for the bot and tests)
 var hud: Control              ## porch_hud.gd: the main game's HUD and menus
+var thumb_buttons: Array[TouchScreenButton] = []  ## A, B, K, R
+var _thumb_taps := {}         ## touch index -> the thumb button that touch pressed through _input
+var _touch_serial := 0         ## counts touches through _input, so a button's own press on the same touch is seen
 var cash := 40                ## Duff's cash pill on the status strip
 var bubble_name: Label        ## pink name tag on the speech bubble
 var end_in := 0.0             ## counts down to the KO / win screen
@@ -395,6 +398,27 @@ func _physics_process(delta: float) -> void:
 		now.tick(delta)
 	for foe in foes:
 		foe.tick_shots(delta)
+
+## Backstop for the thumb buttons. In the browser (iPhone Safari, Messenger) TouchScreenButton ignored touches
+## that landed square on it (Nov 26: a whole grid of taps over A/B/K/R pressed nothing), while the touches
+## themselves arrived at the right spot. So a touch inside a button's box presses it here, unless the button
+## already took it itself on the same touch.
+func _input(event: InputEvent) -> void:
+	var touch := event as InputEventScreenTouch
+	if touch == null:
+		return
+	if touch.pressed:
+		for button in thumb_buttons:
+			if button.is_visible_in_tree() and Rect2(button.position, button.shape.size).has_point(touch.position):
+				if button.get_meta("touch", -1) != _touch_serial:  # the button didn't take this touch itself
+					_thumb_taps[touch.index] = button
+					button.pressed.emit()
+				break
+	elif _thumb_taps.has(touch.index):
+		var button: TouchScreenButton = _thumb_taps[touch.index]
+		_thumb_taps.erase(touch.index)
+		button.released.emit()
+	_touch_serial += 1
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event.is_pressed() or event.is_echo():
@@ -1212,6 +1236,8 @@ func _button(layer: CanvasLayer, centre: Vector2, radius: float, action: String)
 	button.shape = bounds
 	button.shape_centered = false
 	layer.add_child(button)
+	thumb_buttons.append(button)
+	button.pressed.connect(func() -> void: button.set_meta("touch", _touch_serial))
 	var down: String = {"attack": "a_down", "dodge": "b_down", "kick": "k_down", "special": "r_down"}[action]
 	button.pressed.connect(func() -> void: hud.set(down, true))
 	button.released.connect(func() -> void: hud.set(down, false))

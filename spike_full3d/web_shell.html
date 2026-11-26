@@ -21,14 +21,16 @@
     button:focus-visible { outline: 2px solid white; outline-offset: 4px; }
     progress { justify-self: center; width: min(16rem, 90vw); accent-color: #efb277; }
     #error { max-width: 36rem; }
-    #turn { display: none; position: fixed; left: 0; right: 0; top: max(1rem, env(safe-area-inset-top));
-            text-align: center; color: #ffcc90; font: 700 1.1rem system-ui, sans-serif; pointer-events: none; }
-    @media (orientation: portrait) { body.playing #turn { display: block; } }
+    /* Held upright (or rotation lock on, or an in-app browser that won't rotate): the game turns itself
+       sideways, so you just turn the phone. The script below feeds the engine landscape sizes and
+       touch points to match. */
+    @media (orientation: portrait) {
+      canvas { position: fixed; top: 0; left: 0; transform-origin: 0 0; transform: translateX(100vw) rotate(90deg); }
+    }
   </style>
 </head>
 <body>
   <canvas id="canvas" aria-label="Duff Quest 3D porch encounter"></canvas>
-  <p id="turn">Turn your phone sideways to play</p>
   <main id="start">
     <h1>Duff Quest</h1>
     <p>Porch Pirate encounter</p>
@@ -40,6 +42,34 @@
   <script src="$GODOT_URL"></script>
   <script>
     const config = $GODOT_CONFIG;
+
+    // Sideways play in a portrait window (matches the CSS above). The engine sizes its canvas from
+    // innerWidth/innerHeight and maps touches through getBoundingClientRect + clientX/Y, so in portrait
+    // we hand it the landscape size and turn each point into the rotated canvas's own coordinates.
+    (() => {
+      const find = (o, k) => { for (let p = o; p; p = Object.getPrototypeOf(p)) {
+        const d = Object.getOwnPropertyDescriptor(p, k); if (d && d.get) return d.get; } };
+      const iw = find(window, 'innerWidth'), ih = find(window, 'innerHeight');
+      if (!iw || !ih) return;
+      const realW = () => iw.call(window), realH = () => ih.call(window);
+      const sideways = () => realH() >= realW();
+      try {
+        Object.defineProperty(window, 'innerWidth', { configurable: true, get: () => sideways() ? realH() : realW() });
+        Object.defineProperty(window, 'innerHeight', { configurable: true, get: () => sideways() ? realW() : realH() });
+      } catch (_) { return; }
+      const canvas = document.querySelector('#canvas');
+      const rect = canvas.getBoundingClientRect.bind(canvas);
+      canvas.getBoundingClientRect = () => sideways() ? new DOMRect(0, 0, realH(), realW()) : rect();
+      for (const type of [window.Touch, window.MouseEvent]) {
+        if (!type) continue;
+        const gx = find(type.prototype, 'clientX'), gy = find(type.prototype, 'clientY');
+        if (!gx || !gy) continue;
+        Object.defineProperty(type.prototype, 'clientX', { configurable: true,
+          get() { return sideways() ? gy.call(this) : gx.call(this); } });
+        Object.defineProperty(type.prototype, 'clientY', { configurable: true,
+          get() { return sideways() ? realW() - gx.call(this) : gy.call(this); } });
+      }
+    })();
 
     // Static hosts can serve the compressed engine as a regular file.
     const wasm = config.executable + '.wasm';
