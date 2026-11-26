@@ -1,5 +1,7 @@
 # Building the 3D DuffQuest: guide for the next coder
 
+**Picking up the build? Start with `HANDOFF.md` in this folder (current state, open PR, next steps).**
+
 Read this before changing `spike_full3d/`. It covers how the slice is wired, how to add a foe, a move or a
 zone, what must pass before a push, and the rules that came from real mistakes. The phase plan and the
 credit budget live in the full 3D plan doc. The short version is at the bottom of this file.
