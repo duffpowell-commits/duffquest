@@ -13,6 +13,8 @@ func _ready() -> void:
 	rival = foes[2]
 	package = Art.parcel(pirate_model, Vector3(0, .78, -.3))
 	foes[0].arrive(false)  # the first foe is already on the porch
+	_skip_to(Engine.get_meta("porch_checkpoint", 0))
+	Engine.set_meta("porch_checkpoint", 0)
 	hit_marker = _strike_arc(player_model)
 	hit_marker.hide()
 	var burst := Art.Sculpture.new()
@@ -39,17 +41,38 @@ func _ready() -> void:
 	else:
 		begin()
 
-## The fight starts: Duff calls the pirate out and the pirate answers.
+## Retry after losing to a later foe: whoever came before is already beaten and Duff has the parcel.
+func _skip_to(at: int) -> void:
+	if at <= 0 or at >= foes.size():
+		return
+	checkpoint = at
+	for i in at:
+		foes[i].hp = 0
+		foes[i].state = "ko"
+		foes[i].body.hide()
+		foes[i].body.collision_layer = 0
+		foes[i].body.collision_mask = 0
+	package.reparent(self)
+	package.hide()
+	player.position = Vector3(-.6, 0, 2.2)
+
+## The fight starts: Duff calls the pirate out and the pirate answers (or, from a checkpoint, the
+## foe he lost to walks straight back in).
 func begin() -> void:
+	if checkpoint > 0:
+		foes[checkpoint].arrive()
+		return
 	_say(player, "Hey! That's my package.", 2.2)
 	opening = 2.4
 
 func retry() -> void:
 	Engine.set_meta("porch_skip_title", true)
+	Engine.set_meta("porch_checkpoint", checkpoint)
 	_reset()
 
 func quit_to_title() -> void:
 	Engine.set_meta("porch_skip_title", false)
+	Engine.set_meta("porch_checkpoint", 0)
 	_reset()
 
 func _process(delta: float) -> void:
@@ -463,13 +486,26 @@ func _place_bubble(delta: float) -> void:
 		bubble.position = at
 		bubble_tail.rotation = 0
 		bubble_tail.position = Vector2(clampf(head.x, at.x + 20, at.x + box.x - 20), at.y + box.y - 2)
-		return
-	# no room (the camera keeps heads high): sit beside his head, tail pointing at it
-	var right := head.x + 40 + box.x <= edge - 12
+		if not _bubble_hides_duff():
+			return
+	# no room (the camera keeps heads high), or it would cover Duff: sit beside his head, on the side
+	# away from Duff, tail pointing at it
+	var duff_x := camera.unproject_position(player.global_position).x
+	var fits_right := head.x + 40 + box.x <= edge - 12
+	var right := fits_right and (duff_x <= head.x or bubble_from == player or head.x - 40 - box.x < 12)
 	at = Vector2(head.x + 40 if right else head.x - 40 - box.x, clampf(head.y - box.y * .5, top, maxf(top, view.y - box.y - 12)))
 	bubble.position = at
 	bubble_tail.rotation = PI / 2 if right else -PI / 2
 	bubble_tail.position = Vector2(at.x + 2 if right else at.x + box.x - 2, clampf(head.y, at.y + 16, at.y + box.y - 16))
+
+## True when someone else's speech bubble sits on Duff (Nov 26 first-timer: Mike's line hid him mid-fight).
+func _bubble_hides_duff() -> bool:
+	if bubble_from == player:
+		return false
+	var feet := camera.unproject_position(player.global_position)
+	var crown := camera.unproject_position(player.global_position + Vector3.UP * DUFF_HEIGHT)
+	var duff := Rect2(crown, Vector2.ZERO).expand(feet).grow(24)
+	return Rect2(bubble.position, bubble.get_combined_minimum_size()).intersects(duff)
 
 func _update_hud() -> void:
 	var shown = _shown_foe()
@@ -551,6 +587,7 @@ func _foe_down(foe) -> void:
 
 ## The last foe is down: the porch is secured, the fight is graded.
 func _porch_won(line: String) -> void:
+	checkpoint = 0  # Play again starts from the pirate
 	active = false
 	hit_marker.hide()
 	message.text = line

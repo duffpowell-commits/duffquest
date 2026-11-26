@@ -174,8 +174,8 @@ func _run() -> void:
 	_check(hud.find_child("Pause", true, false) is TouchScreenButton and Rect2(hud.PAUSE).end.x <= view.x,
 		"phone-style pause button on screen")
 	hud.open_pause()
-	_check(paused and hud.screen == "pause" and hud.menu.find_children("*", "Button", true, false).size() == 5,
-		"pause sheet: Resume, Retry, Graphics, Sound, Quit to title; the fight stops")
+	_check(paused and hud.screen == "pause" and hud.menu.find_children("*", "Button", true, false).size() == 6,
+		"pause sheet: Resume, Retry, Controls, Graphics, Sound, Quit to title; the fight stops")
 	hud.close_menu()
 	_check(not paused and hud.screen == "", "Resume closes the sheet and the fight runs again")
 
@@ -691,7 +691,7 @@ func _run() -> void:
 	sample._tick_mike(.016)
 	_check(sample.mike_state == "jab_tele" and sample.tell_foe == sample.mike, "up close Mike winds up a shove")
 	sample._tick_mike(sample.MIKE_JAB_TELE + .01)
-	_check(sample.player_hp == 2 and sample.feel.knock_of(sample.player).x < -5.0 and sample.mike_cool <= .35,
+	_check(sample.player_hp == 2 and sample.feel.knock_of(sample.player).x < -5.0 and sample.mike_cool <= sample.FoeData.FOES["mike"]["jab"]["cool_after"],
 		"the shove costs one HP, sends Duff flying and readies his next special")
 	sample.player_hp = 3
 
@@ -979,4 +979,38 @@ func _run() -> void:
 	_check(sample.pirate_hp == 0 and sample.pirate_model.current == "ko" and sample.pirate.collision_layer == 0
 		and sample.package.get_parent() == sample and sample.package.position.distance_to(sample.STOOP_AT) < .05,
 		"a Return to Sender KO leaves him down and lands the parcel on the stoop (%s)" % sample.package.position)
+	_check(sample.pops > 0, "a landed hit pops a damage number over him")
+
+	# Nov 26 first-timer fixes (scored 5/10): the yard, the checkpoint, the controls card.
+	sample.set_physics_process(false)
+	sample.player.position = Vector3(-9.0, 0, 7.0)
+	sample._move(sample.player, Vector3.ZERO)
+	_check(absf(sample.player.position.x) <= sample.YARD_X + .01 and sample.player.position.z <= sample.YARD_Z.y + .01,
+		"a knock past the fence puts Duff back in the yard (Mike knocked him into the void)")
+	sample.player.position = Vector3(1, -3, 1)
+	sample._move(sample.player, Vector3.ZERO)
+	_check(sample.player.position.y > -.5, "Duff falling under the ground is put back on it")
+	sample.hud.show_controls(sample.hud.open_pause)
+	var says := ""
+	for label in sample.hud.menu.find_children("*", "Label", true, false):
+		says += (label as Label).text + " "
+	_check(sample.hud.screen == "controls" and "Up close: a throw" in says and "red ring" in says,
+		"Controls: one screen for A, B, K, R and the stick")
+	sample.hud.close_menu()
+	sample.checkpoint = 1  # Duff lost to Mike
+	sample.retry()
+	await scene_changed
+	sample = current_scene
+	_check(sample.checkpoint == 1 and sample._brain(sample.pirate).state == "ko" and not sample.pirate.visible
+		and not sample.package.visible and sample._brain(sample.mike).state != "away" and sample.hud.screen == "",
+		"Retry after losing to Mike starts at Mike: the pirate stays beaten and Duff has the parcel")
+	var pops_before: int = sample.pops
+	sample.invulnerable = 0
+	sample._hurt_duff(sample.mike.position)
+	_check(sample.invulnerable == sample.HURT_GRACE and sample.pops == pops_before + 1,
+		"a hit on Duff pops -1 and gives him %.1f s before the next one can land" % sample.HURT_GRACE)
+	sample.quit_to_title()
+	await scene_changed
+	_check(current_scene.checkpoint == 0 and current_scene._brain(current_scene.pirate).state != "ko",
+		"Quit to title starts over from the pirate")
 	quit(1 if failures else 0)

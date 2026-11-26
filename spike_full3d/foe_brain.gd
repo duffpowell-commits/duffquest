@@ -80,7 +80,13 @@ func fighting() -> bool:
 ## He walks in (or, for the first foe, is just there) and the fight is his.
 func arrive(fresh := true) -> void:
 	if fresh:
+		if game.player_hp < game.PLAYER_HP:
+			game._call("HEALTH REFILLED")  # say it: a first-timer only worked it out by counting hearts
 		game.player_hp = maxi(game.player_hp, game.PLAYER_HP)  # each fight starts Duff full
+		game.checkpoint = game.foes.find(self)  # lose to him and Retry starts here
+		for other in game.foes:  # whoever's already down clears off (a KO'd pirate sat under the B button)
+			if other != self and other.state == "ko":
+				other.body.hide()
 	state = "stalk"
 	cool = d.ranged.first if d.has("ranged") else 0.0
 	streak = 0
@@ -164,8 +170,7 @@ func tick(delta := 1.0 / 60) -> void:
 		"charge_tele":
 			game._move(body, Vector3.ZERO)
 			if timer <= 0:
-				game._tell(null)
-				state = "charge"
+				state = "charge"  # the red ring stays under him until the charge ends: it's still coming
 				timer = d.charge.time
 				model.locked = 0
 				model.play("charge")

@@ -18,7 +18,7 @@ const MODES := {
 }
 const CLOSE_SIZE := 4.4
 const CLOSE_OFFSET := Vector3(0, 5.76, 7.8)
-const FOLLOW := 5.0     ## how fast it catches up (per second)
+const FOLLOW := 3.5     ## how fast it catches up (per second); 5 swung hard when a new foe walked in (Nov 26)
 const X_LIMIT := 5.2    ## aim stops short of the fences; FIT pulls back for the rest
 const Z_RANGE := Vector2(-1.2, 4.6)
 const FIT_MARGIN := .86 ## every fighter's head and feet stay inside this share of the frame
@@ -27,6 +27,7 @@ const FIT_MARGIN := .86 ## every fighter's head and feet stay inside this share 
 const SHIFT := .22      ## the aim point sits this share of the half-width left of centre
 const RIGHT_EDGE := .40 ## fighters stay left of this (share of the half-width right of centre)
 const TOP_EDGE := .62   ## and below this (share of the half-height above centre)
+const BOTTOM_EDGE := -.6 ## and above this: the stick and the foe's health bar fill the bottom quarter (Nov 26 first-timer)
 const FIT_MAX := 22.0   ## farthest it will pull back to keep both in frame
 
 var camera: Camera3D
@@ -108,7 +109,7 @@ func _fits(tf: Transform3D, points: Array) -> bool:
 			return false
 		var x := local.x / -local.z / half.x
 		var y := local.y / -local.z / half.y
-		if x < -FIT_MARGIN or x > RIGHT_EDGE or y > TOP_EDGE or y < -FIT_MARGIN:
+		if x < -FIT_MARGIN or x > RIGHT_EDGE or y > TOP_EDGE or y < BOTTOM_EDGE:
 			return false
 	return true
 

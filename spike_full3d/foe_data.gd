@@ -40,11 +40,11 @@ const FOES := {
 	"mike": {
 		"name": "Marketplace Mike", "model": "mike", "height": 1.65, "hp": 8, "speed": 1.9, "rage_speed": 2.5,
 		"radius": .5, "stop": 1.05, "reach": 1.2, "spawn": Vector3(5.6, 0, 3.4), "step_around": true,
-		"jab": {"tele": .38, "clip": "jab", "rest": 1.15, "rage_rest": .8, "shove": 7.5, "cool_after": .35},
-		"ranged": {"range": 2.2, "every": 2.6, "rage_every": .7, "first": 1.6},
-		"throw": {"state": "post", "tele": .7, "line": "Listed: one Duff. Used. Fair condition.", "prop": "obo_sign",
+		"jab": {"tele": .5, "clip": "jab", "rest": 1.35, "rage_rest": 1.0, "shove": 6.0, "cool_after": .6},
+		"ranged": {"range": 2.2, "every": 3.0, "rage_every": .85, "first": 2.2},  # Nov 26 first-timer (5/10): fairer Mike
+		"throw": {"state": "post", "tele": .8, "line": "Listed: one Duff. Used. Fair condition.", "prop": "obo_sign",
 			"count": 1, "speed": 6.5, "radius": .55, "up": 1.05, "yaw": false, "wobble": [14.0, .35]},
-		"charge": {"tele": .75, "line": "Cash only! No lowballers!", "speed": 7.2, "time": .85, "dizzy": 1.0},
+		"charge": {"tele": .9, "line": "Cash only! No lowballers!", "speed": 7.2, "time": .85, "dizzy": 1.2},
 		"rage": {"line": "Price drop! Everything must go! Starting with YOU!", "time": 1.2},
 		"armoured": ["taunt"],
 		"counter_from_taunt": true,
@@ -56,8 +56,8 @@ const FOES := {
 	"sendback": {
 		"name": "Sir Sends-It-Back", "model": "sendback", "height": 1.75, "hp": 10, "speed": 1.7, "rage_speed": 2.2,
 		"radius": .5, "stop": 1.05, "reach": 1.2, "spawn": Vector3(-5.6, 0, 3.4), "step_around": true,
-		"jab": {"tele": .4, "clip": "hook", "rest": 1.1, "rage_rest": .8},
-		"ranged": {"range": 2.2, "every": 2.8, "rage_every": .75, "first": 1.8},
+		"jab": {"tele": .48, "clip": "hook", "rest": 1.25, "rage_rest": .95},
+		"ranged": {"range": 2.2, "every": 3.0, "rage_every": .85, "first": 2.2},
 		"throw": {"state": "cards_tele", "tele": .75, "line": "This is TOO medium. One star.", "prop": "review_card",
 			"count": 3, "rage_count": 5, "fan": .36, "rage_fan": .8, "speed": 6.0, "radius": .45, "up": 1.1, "yaw": true,
 			"wobble": [16.0, .4]},

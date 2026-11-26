@@ -148,3 +148,11 @@ one line per new move), fighters framed left of the thumb buttons (`porch_camera
 bubbles left of the buttons, `expand` aspect with right-hand controls sliding to the real edge (`porch_hud.gd`
 `spare`). The web shell turns the game sideways in a portrait window, and `_input` backs up the
 TouchScreenButtons (they missed touches in the browser).
+
+Pass 1 scored 5/10 with the first-timer (Nov 26: Mike too hard, knocked into the void, HUD over the action).
+Pass 1b rules, for every fight: nobody leaves the yard (`fight_core.gd` `_keep_in_yard`, YARD_X/YARD_Z per
+fight), Retry starts at the foe you lost to (`checkpoint`), every hit and block pops a number or word
+(`_pop`), a strike the planter stops says "IN THE WAY!", Duff gets HURT_GRACE after a hit, counters wind up
+COUNTER_TELE, a charge keeps its red ring until it ends, the camera keeps fighters above the bottom quarter
+(BOTTOM_EDGE: stick + foe bar), other people's bubbles never sit on Duff, and the title and pause have a
+one-screen Controls card.

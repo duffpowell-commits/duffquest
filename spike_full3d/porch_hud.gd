@@ -451,9 +451,11 @@ func show_title() -> void:
 		Vector2(40, 74), 800, 21, CREAM, body)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 40)
-	row.position = Vector2(150, 400)
-	row.add_child(_pill("Fight", BTN_MAIN, start))
-	row.add_child(_pill("Settings", BTN_ALT, show_settings))
+	row.add_theme_constant_override("separation", 24)
+	row.position = Vector2(66, 400)
+	row.add_child(_pill("Fight", BTN_MAIN, start, 260))
+	row.add_child(_pill("Controls", BTN_ALT, func() -> void: show_controls(show_title), 260))
+	row.add_child(_pill("Settings", BTN_ALT, show_settings, 260))
 	m.add_child(row)
 	if not DisplayServer.is_touchscreen_available():
 		_title_label(m, "Keys: WASD move, Space bonk, K kick, Shift roll, Esc menu", Vector2(0, 490), 960, 17, DIM, body)
@@ -463,7 +465,36 @@ func open_pause() -> void:
 	_sheet("pause", "Paused", [
 		["Resume", BTN_MAIN, close_menu],
 		["Retry", BTN_ALT, func() -> void: game.retry()],
+		["Controls", BTN_ALT, func() -> void: show_controls(open_pause)],
 	] + _settings_rows() + [["Quit to title", BTN_EXIT, func() -> void: game.quit_to_title()]])
+
+## One screen: what every button does (Nov 26 first-timer: "R only made sense once it glowed").
+func show_controls(back: Callable) -> void:
+	var m := _new_menu("controls", .82)
+	_title_label(m, "CONTROLS", Vector2(0, 26), 960, 44, GOLD)
+	var rows := [
+		[A_COL, "A", "Bonk. Tap again as each punch lands for a combo. Mashing gets blocked."],
+		[B_COL, "B", "Roll. A red ring under a foe means he's about to swing: roll out of it."],
+		[K_COL, "K", "Kick. Goes through a guard and shoves him back."],
+		[R_COL, "R", "Special. The ring fills as you land hits. Far off: a fire dash. Up close: a throw."],
+		[DIM, "", "Left thumb: the stick moves Duff."],
+	]
+	for i in rows.size():
+		var y := 96 + i * 66
+		var dot := Panel.new()
+		var look := StyleBoxFlat.new()
+		look.bg_color = rows[i][0]
+		look.set_corner_radius_all(26)
+		dot.add_theme_stylebox_override("panel", look)
+		dot.position = Vector2(110, y)
+		dot.size = Vector2(52, 52)
+		m.add_child(dot)
+		_title_label(dot, rows[i][1], Vector2(0, 6), 52, 30, CREAM)
+		_title_label(m, rows[i][2], Vector2(186, y + 12), 680, 21, CREAM, body).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	var row := HBoxContainer.new()
+	row.position = Vector2(330, 444)
+	row.add_child(_pill("Back", BTN_EXIT, back))
+	m.add_child(row)
 
 func show_settings() -> void:
 	_sheet("settings", "Settings", _settings_rows() + [["Done", BTN_EXIT, show_title]])
@@ -523,6 +554,8 @@ func show_end(won: bool) -> void:
 	var box := _glass_panel(Rect2(200, 268, 560, 96), 18)
 	m.add_child(box)
 	var line := "I get knocked out. Me and the sidewalk get acquainted. Retry starts the fight over."
+	if not won and game.checkpoint > 0:
+		line = "I get knocked out. Me and the sidewalk get acquainted. Retry starts at %s." % game.foes[game.checkpoint].d.name
 	if r:
 		line = "%s  ·  %d hit%s taken  ·  %d special%s\n%s" % [game.clock_label(r.time), r.hits, "" if r.hits == 1 else "s",
 			r.specials, "" if r.specials == 1 else "s",

@@ -41,7 +41,11 @@ const DUFF_RADIUS := .42
 const PIRATE_REACH: float = FoeData.FOES["pirate"]["reach"]
 ## Real fight (Duff, Nov 25: "the pirate fights back harder", "Mike uses his sign and charge up close")
 const PIRATE_TELE: float = FoeData.FOES["pirate"]["jab"]["tele"]
-const COUNTER_TELE := .18     ## a blocked hit gets this quick counter
+const COUNTER_TELE := .3      ## a blocked hit gets this quick counter (.18 was too fast to see: Nov 26 first-timer, 5/10)
+const HURT_GRACE := .9        ## seconds Duff can't be hit again after a hit (.45 let 5 hearts go in 2 s)
+## The fenced yard: during a fight nobody leaves it (Nov 26: Mike knocked Duff out into the void).
+const YARD_X := 6.4
+const YARD_Z := Vector2(-3.8, 5.0)
 const CHAIN_WINDOW := .9      ## hits closer together than this are one flurry
 const GUARD_AFTER := 2        ## a foe blocks the hit after this many in a flurry, then counters
 const COMBO_GAP := .7         ## combos: press again within this after a hit lands, never mid-swing
@@ -220,8 +224,10 @@ var meter_rang := false       ## the full-meter chime played for this fill
 var lesson := ""              ## the button being taught ("a", "b", "k", "r"): the HUD rings it until it's used
 var lesson_line := ""         ## what the lesson says (kept for the HUD built after the first foe arrives)
 static var learned := {}      ## buttons Duff has used this session (static: Retry doesn't teach again or make the pirate wait)
+var checkpoint := 0           ## the foe Retry starts at: losing to Mike doesn't replay the pirate (Nov 26 first-timer)
 var callout := ""             ## "2 HIT", "KNOCKDOWN!", "DASH HOOK!" for the HUD
 var callout_time := 0.0
+var pops := 0                 ## damage numbers and BLOCK pops shown (for tests)
 var zones  ## porch_zones.gd: the porch, the apartment, the doors between
 var exploring := false        ## walking around with nobody to fight (after the porch is secured)
 var use_requested := false    ## A while exploring: USE whatever Duff stands next to
@@ -262,9 +268,21 @@ func _move(actor: CharacterBody3D, motion: Vector3) -> void:
 		motion += feel.knock_of(actor)
 	actor.velocity = Vector3(motion.x, -2, motion.z)
 	actor.move_and_slide()
+	if not exploring:
+		_keep_in_yard(actor)
 	if launched.has(actor) and _hit_wall(actor):
 		launched.erase(actor)
 		_wall_splat(actor)
+
+## Nobody leaves the fenced yard in a fight, and nobody falls through the world: a hard knock that
+## slips past a fence (or under the ground) puts him back inside.
+func _keep_in_yard(actor: CharacterBody3D) -> void:
+	var at := actor.position
+	var inside := Vector3(clampf(at.x, -YARD_X, YARD_X), at.y if at.y > -.5 else 0.0, clampf(at.z, YARD_Z.x, YARD_Z.y))
+	if inside.distance_to(at) > .001:
+		actor.position = inside
+		if at.y <= -.5:
+			actor.velocity = Vector3.ZERO
 
 ## One point of damage unless Duff is in dodge / hit immunity. Returns true when it landed.
 func _hurt_duff(from: Vector3) -> bool:
@@ -275,11 +293,12 @@ func _hurt_duff(from: Vector3) -> bool:
 		return false
 	player_hp -= 1
 	hits_taken += 1
+	_pop(player.position + Vector3.UP * (DUFF_HEIGHT + .25), "-1", Color("#ff5a4f"))
 	meter = minf(100, meter + METER_HURT)
 	_show_impact(player.position)
 	if feel:
 		feel.hurt(player, from)
-	invulnerable = .45
+	invulnerable = HURT_GRACE
 	_update_hud()
 	if player_hp <= 0:
 		active = false
@@ -346,6 +365,8 @@ func _attack() -> void:
 		combo = 0
 		if feel:
 			feel.sfx("swing")
+		if offset.length() <= reach and not _clear_strike(player, foe):
+			_call("IN THE WAY!")  # the planter (or a wall) is between them: say so, don't just whiff
 		return
 	var taunting := _armoured(foe)
 	if taunting or (not rhythm and not dash and _guards(foe)):
@@ -426,6 +447,27 @@ func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
 	if special_time <= 0:
 		meter = minf(100, meter + METER_HIT)
 	_brain(foe).hit(damage, stun, special_strike)  # a special goes through a shield (a wall bounce after one doesn't)
+	_pop(foe.position + Vector3.UP * (_height_of(foe) + .25), "-%d" % damage, Color("#ffd166"))
+
+## A number or word that pops up over someone and floats away: every landed hit and every block shows.
+func _pop(at: Vector3, text: String, colour: Color) -> void:
+	var label := Label3D.new()
+	label.text = text
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	label.no_depth_test = true
+	label.fixed_size = true
+	label.pixel_size = .0016
+	label.font_size = 64
+	label.outline_size = 18
+	label.modulate = colour
+	label.outline_modulate = Color("#2b1a1e")
+	add_child(label)
+	label.position = at
+	pops += 1
+	var rise := create_tween().set_ignore_time_scale(true)  # hit-stop mustn't freeze it
+	rise.tween_property(label, "position", at + Vector3.UP * .55, .7)
+	rise.parallel().tween_property(label, "modulate:a", 0.0, .7).set_delay(.25)
+	rise.tween_callback(label.queue_free)
 
 func _hit_wall(actor: CharacterBody3D) -> bool:
 	for i in actor.get_slide_collision_count():
@@ -802,6 +844,8 @@ func _guards(foe: CharacterBody3D) -> bool:
 func _block(foe: CharacterBody3D) -> void:
 	blocked += 1
 	_show_impact(foe.position)
+	_call("BLOCKED!")
+	_pop(foe.position + Vector3.UP * (_height_of(foe) + .25), "BLOCK", Color("#9fd3ff"))
 	if feel:
 		feel.sfx("bonk")
 		feel.add_trauma(.15)
