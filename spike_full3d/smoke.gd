@@ -4,6 +4,9 @@ const PORCH := "res://porch.tscn"
 var failures := 0
 
 func _initialize() -> void:
+	# Headless windows are 64x64 (square): with the game's "expand" aspect that would be a 960x960 view.
+	# The checks are written for a 16:9 phone, so keep 960x540 here; one check below turns expand back on.
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
 	call_deferred("_run")
 
 func _check(result: bool, title: String) -> void:
@@ -77,8 +80,8 @@ func _run() -> void:
 	_check(look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_4X, "golden hour starts with glow and MSAA")
 	look.set_lite(true)
 	_check(not look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_DISABLED
-		and sample.get_viewport().scaling_3d_mode == Viewport.SCALING_3D_MODE_NEAREST and sample.get_viewport().scaling_3d_scale < 1.0,
-		"lite drops glow and MSAA and draws the 3D at 3/4 size, nearest-scaled")
+		and sample.get_viewport().scaling_3d_mode == Viewport.SCALING_3D_MODE_BILINEAR and sample.get_viewport().scaling_3d_scale < 1.0,
+		"lite drops glow and MSAA and draws the 3D at 3/4 size, scaled up smooth")
 	look.set_lite(false)
 	sample.fight_cam.snap(sample.player.position, sample.pirate.position)
 	var cam: Camera3D = sample.camera
@@ -106,6 +109,25 @@ func _run() -> void:
 				var q := cam.unproject_position(body + Vector3.UP * y)
 				corners_ok = corners_ok and q.x >= 0 and q.x <= view.x and q.y >= 0 and q.y <= view.y
 	_check(corners_ok, "fight camera keeps Duff (and his foe) fully on screen at the fences and the street edge")
+	var clear := true
+	for spot in [[Vector3(0, 0, 2), Vector3(1.2, 0, 2)], [Vector3(-3, 0, 3), Vector3(-1.8, 0, 2.6)], [Vector3(4, 0, 1), Vector3(5.2, 0, 1.4)]]:
+		cam.global_transform = sample.fight_cam.goal(spot[0], spot[1])
+		for body in spot:
+			for y in [0.0, 1.8]:
+				var q := cam.unproject_position(body + Vector3.UP * y)
+				clear = clear and q.x < view.x * .72 and q.y > view.y * .18
+	_check(clear, "fight camera keeps both fighters out of the right thumb buttons and under the status strip")
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND  # a screen taller than 16:9 (the square headless window)
+	await _frames(2)
+	sample.hud._fit_to_screen()  # (the HUD runs it every frame; this check's porch has its processing parked)
+	var tall := sample.get_viewport().get_visible_rect().size
+	var a_btn: TouchScreenButton = sample.find_child("Attack", true, false)
+	_check(tall.y > 540 and sample.hud.spare.y == tall.y - 540 and is_equal_approx(a_btn.position.y + a_btn.shape.size.y, tall.y - 20)
+		and sample.stick.position.y == 150 + sample.hud.spare.y,
+		"on a screen that isn't 16:9 the view fills it and the thumb buttons and stick slide to its edges")
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+	await _frames(2)
+	sample.hud._fit_to_screen()
 	for actor in [sample.player_model, sample.pirate_model]:
 		_check(actor.skeleton.get_bone_count() == 24 and actor.skeleton.find_bone("RightHand") >= 0,
 			"%s is a skinned mesh on the 24-bone humanoid skeleton" % actor.name)
@@ -916,6 +938,15 @@ func _run() -> void:
 	sample.set_physics_process(false)
 	sample.player.position = Vector3(0, 0, 2)
 	sample.pirate.position = Vector3(0, 0, 1)
+	sample.learned.clear()
+	sample._brain(sample.pirate).arrive(false)
+	sample.player.position = Vector3(0, 0, 2)
+	sample.pirate.position = Vector3(0, 0, 1)
+	sample._tick_pirate()
+	_check(sample._brain(sample.pirate).state == "stalk" and sample.lesson == "a",
+		"the tutorial pirate squares up but won't swing before Duff's first punch, and A is ringed")
+	sample.learned["a"] = true
+	sample.lesson = ""
 	sample.player_hp = 1
 	await _frames(2)
 	sample._tick_pirate()

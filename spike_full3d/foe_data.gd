@@ -20,6 +20,10 @@ extends RefCounted
 ##   smash_line       what he says when the shield breaks
 ##   dizzy_free       while dizzy: no rage, no shield (he rages when he stands back up instead)
 ##   armoured         states that block every punch and kick (specials still go through)
+##   teach            [button, line]: the button his fight teaches (ringed until used) and the one line about it
+##   waits            the tutorial foe: won't swing until Duff has thrown a punch
+##   teach            [button, line]: the button his fight teaches (ringed until used) and the one line about it
+##   waits            the tutorial foe: won't swing until Duff has thrown a punch
 ##   reads_mashing    false = never blocks a mashed flurry (the tutorial foe). Default true
 ##   counter_from_taunt  a blocked hit during his taunt still gets an instant counter jab
 ##   arrive           {line, line_time, message, music}: walking in (not for the foe who starts the fight)
@@ -32,6 +36,7 @@ const FOES := {
 		"opening": "Just browsing your porch, boss.",
 		"jab": {"tele": .55, "clip": "jab", "rest": 1.25},  # the tutorial foe: slow, readable (Nov 26 tune)
 		"reads_mashing": false,  # never blocks a mashed flurry, so a first-timer's A always lands
+		"teach": ["a", "Tap A to punch."], "waits": true,
 		"ko": {"message": "Walk over to grab the parcel."},
 	},
 	"mike": {
@@ -45,6 +50,7 @@ const FOES := {
 		"rage": {"line": "Price drop! Everything must go! Starting with YOU!", "time": 1.2},
 		"armoured": ["taunt"],
 		"counter_from_taunt": true,
+		"teach": ["k", "He blocks a flurry. K kicks through his guard."],
 		"arrive": {"line": "That pirate was my best guy. Porch box goes for twelve bucks. Or best offer.", "line_time": 4.0,
 			"message": "Marketplace Mike wants the parcel back.", "music": "mus_boss"},
 		"ko": {"line": "Okay. Mark me as sold.", "message": "Parcel recovered. Somebody else is coming up the walk..."},
@@ -62,6 +68,7 @@ const FOES := {
 		"guard": {"after": 2, "time": 2.6, "rage_time": 1.4, "rest": 3.0, "shove": 6.0, "line": "Sent BACK.",
 			"prop": "cloche", "smash_bonus": 1},
 		"special_dizzy": 1.8,
+		"teach": ["r", "Only R breaks his cloche. Land hits to fill the R ring."],
 		"smash_line": "My CLOCHE!",
 		"dizzy_free": true,
 		"armoured": ["plate", "taunt"],
