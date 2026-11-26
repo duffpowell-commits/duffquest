@@ -98,7 +98,7 @@ https://github.com/duffpowell-commits/duffquest/blob/main/docs/legal/PRIVACY.md
 
 Published by 3 Eyed Fox Studios.
 
-Duff Quest is a comedy and a work of parody and fiction. Stores, restaurants, brands and products in the game are
+Fork Around and Find Out is a comedy and a work of parody and fiction. Stores, restaurants, brands and products in the game are
 made-up parodies or used only for jokes; none of them made, sponsored or endorsed this game. The family and friends
 in it appear with their permission. Every other character is invented, and every event is made up or exaggerated
 for laughs. Any resemblance to other real people is a coincidence.

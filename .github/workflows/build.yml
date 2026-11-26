@@ -167,7 +167,7 @@ jobs:
             cp $src/street.pck $src/world.pck $src/extra.pck $src/packs.json $d/
             gzip -9 -k -n $d/index.wasm
             # iOS reads these from the page, not only the manifest
-            title="Duff Quest"; [ "$d" = build/pages/family ] && title="Duff Quest Family"
+            title="Fork Around"; [ "$d" = build/pages/family ] && title="Fork Around Family"
             sed -i "s#<head>#<head><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\"><meta name=\"apple-mobile-web-app-title\" content=\"$title\">#" $d/index.html
             sed -i 's#<meta name="viewport" content="#<meta name="viewport" content="viewport-fit=cover, #' $d/index.html
             # New builds reach home-screen players on their next launch (see the snippet for why)
@@ -320,7 +320,7 @@ jobs:
           gh release upload web3d-preview build/web3d/* --clobber
           gh release edit web3d-preview --notes "Not for players. ${GITHUB_REF_NAME} @ ${GITHUB_SHA::7}"
       - name: Upload web build to itch.io (main only)
-        # Finds the itch project by title ("duff"), so no URL has to live in this file.
+        # Finds the itch project by title ("duff" or "fork around"), so no URL has to live in this file.
         # The project must exist on itch first (kind HTML). Needs repo secret BUTLER_API_KEY.
         if: github.ref == 'refs/heads/main'
         env:
@@ -329,8 +329,8 @@ jobs:
           if [ -z "$BUTLER_API_KEY" ]; then echo "::warning::BUTLER_API_KEY secret not set, skipping itch upload"; exit 0; fi
           games=$(curl -sf "https://itch.io/api/1/$BUTLER_API_KEY/my-games") || { echo "::error::itch API rejected the key"; exit 1; }
           echo "$games" | jq -r '.games[] | "itch project: \(.title) -> \(.url)"'
-          url=$(echo "$games" | jq -r '[.games[] | select(.title | test("duff"; "i"))][0].url // empty')
-          if [ -z "$url" ]; then echo "::error::No itch project with 'duff' in the title. Create it on itch (kind: HTML) first."; exit 1; fi
+          url=$(echo "$games" | jq -r '[.games[] | select(.title | test("duff|fork around"; "i"))][0].url // empty')
+          if [ -z "$url" ]; then echo "::error::No itch project with duff or fork around in the title. Create it on itch (kind: HTML) first."; exit 1; fi
           target=$(echo "$url" | sed -E 's#https?://([^.]+)\.itch\.io/([^/]+).*#\1/\2#')
           echo "Pushing to $target:html"
           curl -sSL -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
