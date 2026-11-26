@@ -5,6 +5,7 @@ One page: what's built, what's next, what could be better. Updated at every mile
 
 ## Built
 
+- **2026-11-26** **3D porch: one foe brain.** The pirate, Mike and Sends-It-Back now run on one data-driven AI (`spike_full3d/foe_brain.gd` + `foe_data.gd`) instead of three hand-written scripts, and each zone lists who you fight (`porch_zones.gd` FIGHTS). Same fights, same smoke (136 PASS). The kitchen bosses become data entries, not new code.
 - **2026-11-25** **3D porch: walk home (zones).** After PORCH SECURED, Go inside loads Duff's apartment (built free, 0 credits) behind a fade card; the door and the stoop link both ways. Explore camera indoors, fight camera on the porch. Light follows the clock (night to golden hour); the slice clock starts 5:30 PM. Renders `docs/renders/porch3d/25_*.jpg`, `26_*.jpg`.
 - **2026-11-25** **3D porch: third fight, Sir Sends-It-Back.** After Mike: a silver cloche deflects punches and kicks until a special smashes it (dizzy, free hits); 1-star card spread, charge, rage. Madison and Brittany rigged in 3D from their approved art (slim, Duff OK'd). Renders `docs/renders/porch3d/23_*.jpg`, `24_*.jpg`.
 - **2026-11-25** **3D porch: grade + best time.** Win card grades the fight S-D (hits taken, time, specials) and keeps the best on the phone; chimes for a full meter, special stings, a cash register when the parcel lands home.

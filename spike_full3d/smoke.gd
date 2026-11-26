@@ -681,9 +681,7 @@ func _run() -> void:
 		if sample.player_hp < sample.PLAYER_HP:
 			break
 	_check(sample.player_hp == sample.PLAYER_HP - 1, "a card in the spread hits Duff")
-	for card in sb.cards:
-		card[0].queue_free()
-	sb.cards.clear()
+	sb.clear_shots()
 	sb.state = "stalk"
 	sb.cool = 0
 	sb.tick(.016)

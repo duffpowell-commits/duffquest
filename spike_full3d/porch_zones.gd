@@ -20,6 +20,13 @@ const ZONES := {
 	"apartment": ["HOME", true, 1.0, Vector2(-1.4, .6)],
 }
 
+## Who you fight in a zone, in order: [foe id (foe_data.gd), when he comes in]. "start" = already
+## there; "parcel" = once Duff picks up the dropped parcel; a number = that many seconds after the one
+## before goes down. `won` = the line when the last one drops.
+const FIGHTS := {
+	"porch": {"foes": [["pirate", "start"], ["mike", "parcel"], ["sendback", 2.2]], "won": "Refund denied. Porch secured."},
+}
+
 var game  ## porch.gd
 var root: Node3D
 var zone := ""

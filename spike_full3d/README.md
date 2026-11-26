@@ -158,7 +158,7 @@ Red Right Hand wind-up, a boom when it lands, a cash register when the parcel la
 ## Sir Sends-It-Back, the third fight (Nov 25 2026)
 
 Duff's pick from the kitchen 4, after the mock review asked for "a fight that makes you use the specials". He walks up
-once Mike is sold (`foe_sendback.gd`, same pattern as `foe_mike.gd`). Two clean hits in a row and he raises a silver
+once Mike is sold (all three foes run on `foe_brain.gd` from `foe_data.gd`). Two clean hits in a row and he raises a silver
 cloche: punches and kicks bounce off ("SENT BACK!", Duff is shoved away) until it comes down (2.6 s) or a special
 (Red Right Hand / Return to Sender) smashes it for +1 and leaves him dizzy for free hits. From range he throws a fan of
 "1 STAR" review cards (3, raged 5) or charges ("I'm coming BACK there"); up close he swats. At half health he rages
