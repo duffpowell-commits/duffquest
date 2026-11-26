@@ -53,6 +53,8 @@ var clock_start := start_min()  ## minute of the day the clock started at
 var menu: Control        ## the open title / pause / end screen, or null
 var screen := ""         ## "", "title", "pause", "settings", "ko", "win"
 var _boxes := {}
+var pause_button: TouchScreenButton
+var _pause_touch := -1  ## touch index holding the pause button through _input (see porch.gd _input)
 
 static func make(scene: Node, layer: CanvasLayer) -> Control:
 	var hud = (load("res://porch_hud.gd") as GDScript).new()
@@ -78,8 +80,21 @@ func _ready() -> void:
 	pause.position = PAUSE.position
 	pause.released.connect(func() -> void: open_pause() if screen == "" and game.active else null)
 	add_child(pause)
+	pause_button = pause
 
 ## Esc / P pauses and resumes; Space or Enter takes the main button on the title and end screens.
+## Same backstop as porch.gd's thumb buttons: the browser's TouchScreenButton can miss a touch on it.
+func _input(event: InputEvent) -> void:
+	var touch := event as InputEventScreenTouch
+	if touch == null or pause_button == null:
+		return
+	if touch.pressed:
+		if PAUSE.has_point(touch.position):  # a second open_pause from the button itself is a no-op
+			_pause_touch = touch.index
+	elif touch.index == _pause_touch:
+		_pause_touch = -1
+		pause_button.released.emit()
+
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event.is_pressed() or event.is_echo() or not event is InputEventKey:
 		return
@@ -116,6 +131,8 @@ func start() -> void:
 	game.begin()
 
 func _process(delta: float) -> void:
+	if game.stick:
+		game.stick.visible = screen == ""  # no stick over the title, pause or end cards (it sat on the Fight button)
 	if screen == "" and game.active:
 		minutes += delta * GAME_MIN_PER_SEC
 	flash_time = maxf(0, flash_time - delta / maxf(Engine.time_scale, .05))

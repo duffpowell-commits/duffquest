@@ -160,6 +160,24 @@ func _run() -> void:
 	var dodge_box := Rect2(dodge_btn.position, dodge_btn.shape.size)
 	_check(hit_box.size.x >= 120 and dodge_box.size.x >= 90 and not hit_box.grow(8).intersects(dodge_box)
 		and hit_box.end.x <= view.x and hit_box.end.y <= view.y, "HIT and DODGE are big thumb buttons, 8+ apart, on screen")
+	for pair in [["Attack", "a_down"], ["Dodge", "b_down"], ["Kick", "k_down"], ["Special", "r_down"]]:
+		var btn: TouchScreenButton = sample.find_child(pair[0], true, false)
+		var centre_tap := InputEventScreenTouch.new()
+		centre_tap.index = 5
+		centre_tap.position = btn.position + btn.shape.size / 2
+		centre_tap.pressed = true
+		btn.set_process_input(false)  # play the browser, where the button itself ignored the touch
+		sample.get_viewport().push_input(centre_tap, true)
+		var landed: bool = sample.hud.get(pair[1])
+		centre_tap.pressed = false
+		sample.get_viewport().push_input(centre_tap, true)
+		var let_go: bool = not sample.hud.get(pair[1])
+		btn.set_process_input(true)
+		_check(landed and let_go, "a tap on the middle of %s presses and releases it even when the button ignores touches (the browser)" % pair[0])
+	sample.attack_requested = false
+	sample.dodge_requested = false
+	sample.kick_requested = false
+	sample.special_requested = false
 	var tap := InputEventScreenTouch.new()
 	tap.index = 0
 	tap.position = Vector2(150, 400)
