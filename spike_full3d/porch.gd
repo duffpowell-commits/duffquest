@@ -86,6 +86,7 @@ const GRADES := [[95.0, "S"], [80.0, "A"], [65.0, "B"], [50.0, "C"], [-INF, "D"]
 const BEST_PATH := "user://porch_best.cfg"
 const STOOP_AT := Vector3(0, .19, -2.32)  ## the bottom step: where a thrown pirate's parcel lands
 const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
+const AIM_RANGE := 2.4         ## A or K with the foe this close: Duff turns to him before swinging
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
 
 var player: CharacterBody3D
@@ -316,7 +317,10 @@ func _process(delta: float) -> void:
 	if tell_ring.visible:
 		tell_ring.position = tell_foe.position + Vector3.UP * .04
 		tell_ring.scale = Vector3.ONE * (1.0 + .12 * sin(clock * 30.0))
-	fight_cam.follow(delta, player.position, current_foe())
+	var foe_at = current_foe()
+	if foe_at != null and _foe():
+		foe_at = _foe().get_global_transform_interpolated().origin
+	fight_cam.follow(delta, player.get_global_transform_interpolated().origin, foe_at)  # where they're drawn, between physics ticks
 	if meter >= 100 and not meter_rang and active:
 		meter_rang = true
 		if feel:
@@ -342,7 +346,7 @@ func _physics_process(delta: float) -> void:
 	var direction := _movement()
 	if dodge_time <= 0 and special_time <= 0 and direction != Vector3.ZERO:
 		facing = direction.normalized()
-		player_model.rotation.y = atan2(-direction.x, -direction.z)
+		player_model.turn_to(atan2(-direction.x, -direction.z))  # turns, never snaps
 	if special_requested:
 		special_requested = false
 		red_right_hand()
@@ -367,7 +371,7 @@ func _physics_process(delta: float) -> void:
 		motion = facing * RRH_SPEED if _dashing() else Vector3.ZERO
 	_move(player, motion)
 	var speed := Vector2(player.get_real_velocity().x, player.get_real_velocity().z).length()
-	player_model.move(minf(speed / PLAYER_SPEED, 1.0))
+	player_model.move_at(speed)  # legs match the ground speed: no skating
 	if exploring:
 		zones.tick()
 		if use_requested:
@@ -473,6 +477,7 @@ func _attack() -> void:
 	if attack_time > 0:
 		combo_broken = true
 		return
+	_aim_at(foe)
 	var since_roll := clock - last_dodge
 	var dash := since_roll >= .18 and since_roll <= DASH_WINDOW
 	var rhythm := combo > 0 and not combo_broken and clock - combo_at <= COMBO_GAP
@@ -535,6 +540,7 @@ func _kick() -> void:
 	var counter := clock - perfect_at <= PERFECT_WINDOW
 	if kick_cool > 0 and not counter:
 		return
+	_aim_at(foe)
 	var rhythm := combo > 0 and not combo_broken and clock - combo_at <= COMBO_GAP
 	combo_broken = false
 	var launcher := rhythm and combo >= 2
@@ -967,6 +973,16 @@ func _block(foe: CharacterBody3D) -> void:
 		feel.add_trauma(.15)
 	_brain(foe).block()  # a counter jab, or the shield sends it back
 
+## Soft lock-on: a punch or kick thrown with the foe close by turns Duff to him first, so a thumb on A
+## never swings at the air with his back to the fight (Nov 26 first-timer review).
+func _aim_at(foe: CharacterBody3D) -> void:
+	var offset := foe.position - player.position
+	offset.y = 0
+	if offset.length() > AIM_RANGE or offset.length() < .05:
+		return
+	facing = offset.normalized()
+	player_model.rotation.y = atan2(-facing.x, -facing.z)
+
 ## Who Duff's punches can land on right now.
 func _foe() -> CharacterBody3D:
 	if exploring:
@@ -1134,7 +1150,7 @@ func _build_hud() -> void:
 	# The fight still writes these; the HUD draws them in the main game's style (porch_hud.gd).
 	health = _hud_label(layer, Vector2(22, 47), 16, Color.WHITE)
 	message = _hud_label(layer, Vector2(22, 73), 16, Color("#ffe7ca"))
-	message.text = "Stop the Porch Pirate and recover the parcel."
+	message.text = "Tap A to punch. Red ring under him? Tap B to roll."  # the first fight teaches (Nov 26 first-timer review)
 	fps_label = _hud_label(layer, Vector2(800, 22), 14, Color("#eddbd0"))
 	for label in [health, message, fps_label]:
 		label.hide()

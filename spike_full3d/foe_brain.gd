@@ -126,7 +126,7 @@ func tick(delta := 1.0 / 60) -> void:
 				lower_plate()
 		"jab_tele":
 			game._move(body, Vector3.ZERO)
-			model.move(0)
+			model.move_at(0)
 			_face(direction)
 			if timer <= 0:
 				state = "stalk"
@@ -179,7 +179,7 @@ func tick(delta := 1.0 / 60) -> void:
 
 func _face(direction: Vector3) -> void:
 	if direction != Vector3.ZERO:
-		model.rotation.y = atan2(-direction.x, -direction.z)
+		model.turn_to(atan2(-direction.x, -direction.z))
 
 ## Walk to his spot beside Duff (around the planter if he steps around things).
 func _walk(direction: Vector3, speed: float) -> void:
@@ -193,7 +193,7 @@ func _walk(direction: Vector3, speed: float) -> void:
 	if state == "plate":
 		return  # the held pose stays; no walk clip behind the shield
 	var pace := Vector2(body.get_real_velocity().x, body.get_real_velocity().z).length()
-	model.move(minf(pace / d.speed, 1.0) * .55)
+	model.move_at(pace)  # legs match the ground speed: no skating
 
 ## Up close: he draws back for a jab, red ring first.
 func jab(seconds: float) -> void:
@@ -264,7 +264,7 @@ func block() -> void:
 
 ## Can he read a mashed flurry right now? Not while dizzy or mid-charge (that's the opening).
 func can_guard() -> bool:
-	return state not in ["dizzy", "charge"]
+	return d.get("reads_mashing", true) and state not in ["dizzy", "charge"]
 
 ## Grabbed by Return to Sender mid-move: whatever he was doing stops (a shield stays in his hand
 ## until the landing smashes it).
