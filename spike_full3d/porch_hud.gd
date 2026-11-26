@@ -446,7 +446,7 @@ func show_title() -> void:
 	var m := _new_menu("title", 0.0)
 	var card := _glass_panel(Rect2(40, 18, 880, 128))
 	m.add_child(card)
-	_title_label(card, "DUFF QUEST", Vector2(0, 4), 880, 52)
+	_title_label(card, "HAND WASH ONLY", Vector2(0, 4), 880, 52)  # the game's new name (Duff, Nov 26; was Duff Quest)
 	_title_label(card, "A porch pirate has the package. A big guy with a sign wants it more. Get it back.",
 		Vector2(40, 74), 800, 21, CREAM, body)
 	var row := HBoxContainer.new()

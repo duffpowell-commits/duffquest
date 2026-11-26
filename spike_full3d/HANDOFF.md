@@ -7,6 +7,16 @@ Update this file as you go, not just at the end. Newest entry first. How the cod
 - **The three-eyed fox is in every game as a rare cameo, not a pal**: a small event
   that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `/docs/MASCOT.md`.
 
+## Newest (Nov 26, 2026, 1:30 PM CT)
+
+- **New name: "Hand Wash Only"** (Duff, Nov 26; was Duff Quest). The 3D slice's title card, window title and
+  APK label use it. The 2D game, itch and store pages are NOT renamed yet: cover art is in progress, and
+  store pages wait for Duff's yes. The package id is unchanged, so updates still install over the old APK.
+- **Frying pan:** Duff fights with a cast-iron skillet in his LEFT hand (`porch_art.gd` `skillet()`, built
+  free from primitives, 0 Meshy credits; held via `rig_actor.attach("LeftHand")`, `SKILLET_GRIP` in
+  `fight_core.gd`). The right hand stays free for the Red Right Hand special. A quiet "bonk" rings under every
+  landed punch. It's put away while exploring. Render: `docs/renders/porch3d/skillet.jpg`.
+
 ## Where it stands (Nov 26, 2026, 7 AM CT)
 
 **Resumed (Duff, Nov 26, 7:12 AM CT): "We'll build all of the fixes, cancel the reviews."** The blind
