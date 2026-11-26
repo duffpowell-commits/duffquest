@@ -46,6 +46,17 @@ func _run() -> void:
 	_check(sample.player is CharacterBody3D and sample.pirate is CharacterBody3D
 		and root.get_camera_3d() is Camera3D, "3D actors and camera")
 	_check(sample.package.get_parent() == sample.pirate_model, "parcel starts in pirate grip")
+	# The APK must ship every model a fight loads by path (Nov 26: the sendback model was excluded, so the
+	# phone build had no third foe). Every foe in every zone's FIGHTS, against the export excludes.
+	var presets := FileAccess.get_file_as_string("res://export_presets.cfg")
+	var shipped := true
+	for zone in sample.Zones.FIGHTS.values():
+		for entry in zone.foes:
+			var model: String = sample.FoeData.FOES[entry[0]].model
+			for line in presets.split("\n"):
+				if line.begins_with("exclude_filter=") and ("models/%s" % model) in line:
+					shipped = false
+	_check(shipped, "the phone export ships every fighting foe's model")
 	var props := {}
 	for child in sample.zones.root.get_children():
 		if child.has_meta("set_prop"):
