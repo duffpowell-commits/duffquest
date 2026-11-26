@@ -15,7 +15,7 @@ For any coding AI (Claude, Grok, Codex, ChatGPT...) or person working on a 3 Eye
 - The example Duff gave (Rush): on a quiet service a fox gets loose in the kitchen and costs a turn.
 
 ## Exceptions (Duff's calls)
-- **The Devil You Owe (Hunter):** the fox is **Cain's pet**, not a cameo (Duff, Nov 26).
+- **Hunter:** the fox is the **main character's pet**, not a cameo (Duff, Nov 26).
 - **DuffQuest:** besides its cameo, the fox also joins the overworld animals, with the raccoons.
 
 ## How to build one
