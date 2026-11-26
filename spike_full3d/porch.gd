@@ -5,6 +5,8 @@ func _ready() -> void:
 	_build_street()
 	player = _actor(Vector3(-2, 0, 3), DUFF_RADIUS)
 	player_model = RigActor.make(player, "duff", DUFF_HEIGHT)
+	skillet = Art.skillet(self)
+	player_model.attach("LeftHand", skillet, SKILLET_GRIP)
 	fight = Zones.FIGHTS["porch"]
 	for entry in fight.foes:
 		foes.append(FoeBrain.make(self, entry[0]))
@@ -637,6 +639,7 @@ func use(id: String) -> void:
 ## No more fight: foes, parcel and fight bits leave the scene; Duff walks freely.
 func _start_exploring() -> void:
 	exploring = true
+	skillet.hide()  # the skillet is for fights; walking home his hands are free
 	active = true
 	end_in = 0
 	hit_marker.hide()

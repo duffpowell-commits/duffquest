@@ -836,8 +836,9 @@ func _run() -> void:
 		if child.has_meta("set_prop") or child is MeshInstance3D:
 			home[String(child.name)] = true
 	_check(zones.zone == "apartment" and zones.indoor and sample.exploring and sample.active and not zones.card.visible
-		and sample.foe_status() == [] and sample.current_foe() == null and not sample.pirate.visible and not sample.sendback.visible,
-		"HOME: the apartment loads, nobody to fight, foes gone")
+		and sample.foe_status() == [] and sample.current_foe() == null and not sample.pirate.visible and not sample.sendback.visible
+		and not sample.skillet.visible,
+		"HOME: the apartment loads, nobody to fight, foes gone, skillet put away")
 	_check(home.has("Couch") and home.has("Kitchenette") and home.has("CoffeeTable") and home.has("DiningTable")
 		and home.has("Window") and home.has("Door") and zones.root.find_children("*", "StaticBody3D", true, false).size() >= 10,
 		"the apartment is dressed: couch, kitchenette, tables, window, door, walls you can't walk through")
@@ -980,6 +981,9 @@ func _run() -> void:
 		and sample.package.get_parent() == sample and sample.package.position.distance_to(sample.STOOP_AT) < .05,
 		"a Return to Sender KO leaves him down and lands the parcel on the stoop (%s)" % sample.package.position)
 	_check(sample.pops > 0, "a landed hit pops a damage number over him")
+	var grip := sample.skillet.get_parent().get_parent() as BoneAttachment3D
+	_check(sample.skillet.visible and grip != null and grip.bone_name == "LeftHand",
+		"Duff fights with the cast-iron skillet in his left hand (the right stays the Red Right Hand)")
 
 	# Nov 26 first-timer fixes (scored 5/10): the yard, the checkpoint, the controls card.
 	sample.set_physics_process(false)

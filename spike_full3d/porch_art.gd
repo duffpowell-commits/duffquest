@@ -188,6 +188,33 @@ static func parcel(parent: Node3D, at: Vector3) -> Node3D:
 # Each GLB is normalised (largest side ~1.9) and centred, so place() fits it to a target size.
 # Collision stays the simple boxes in porch.gd.
 
+## Duff's cast-iron skillet (the 2D game's Cast Iron Skillet: BONK), built free from primitives.
+## Grip at the origin; the handle runs along +Y and the pan sits past its end, cooking side facing +Z.
+static func skillet(parent: Node3D) -> Node3D:
+	var iron := Color("#4a4642")  # a shade lighter than real cast iron so it reads at phone size
+	var mesh := Sculpture.new()
+	var bowl := CylinderMesh.new()
+	bowl.top_radius = .15
+	bowl.bottom_radius = .13
+	bowl.height = .045
+	bowl.radial_segments = 24
+	mesh.add(bowl, Vector3(0, .36, 0), iron, Vector3(PI / 2, 0, 0))
+	var face := CylinderMesh.new()  # the seasoned cooking face
+	face.top_radius = .132
+	face.bottom_radius = .132
+	face.height = .004
+	face.radial_segments = 24
+	mesh.add(face, Vector3(0, .36, .024), Color("#6a625b"), Vector3(PI / 2, 0, 0))
+	mesh.band(Vector3(0, .36, .022), .147, Color("#57524d"), Vector3(PI / 2, 0, 0), .008)
+	mesh.box(Vector3(0, .09, 0), Vector3(.032, .3, .024), iron)  # handle, from the fist to the pan
+	mesh.box(Vector3(0, -.075, 0), Vector3(.036, .04, .026), iron)  # butt of the handle below the fist
+	mesh.band(Vector3(0, .52, 0), .022, iron, Vector3(PI / 2, 0, 0), .007)  # helper loop on the far side
+	var pan := mesh.finish(parent, "Skillet")
+	var look := pan.material_override as StandardMaterial3D
+	look.metallic = .55  # cast iron: a dull sheen that catches the porch light
+	look.roughness = .5
+	return pan
+
 ## Fit a prop so its bounding box becomes `size` (axes left at 0 follow the largest given scale),
 ## with its base on y=at.y and its centre at at.x/at.z.
 static func place(parent: Node3D, file: String, at: Vector3, size: Vector3, yaw := 0.0) -> Node3D:
