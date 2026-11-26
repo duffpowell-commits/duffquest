@@ -20,9 +20,8 @@ root stays live on itch until the 3D game covers everything it does. Don't touch
 | File | Job |
 |---|---|
 | `porch.gd` | The game: input, Duff, combat rules, specials, meter, grade, win/lose (see "Next refactor") |
-| `foe_pirate.gd` | The Porch Pirate: approach, jab wind-up, guard, KO drops the parcel. Same pattern as `foe_mike.gd` |
-| `foe_sendback.gd` | Sir Sends-It-Back, the third fight: cloche guard only specials break, 1-star card spread, charge |
-| `foe_mike.gd` | Marketplace Mike: his state, AI, sign throw and charge. The pattern for every new foe (made by `porch.gd`, ticked from its physics loop, `game` = porch.gd's shared services) |
+| `foe_data.gd` | Every foe as data: HP, speed, reach, jab, throw (one prop or a fan), charge, rage, shield, armour, lines. A new foe is an entry here |
+| `foe_brain.gd` | The one AI that runs any `foe_data.gd` entry (walk in, red-ring jab, alternate throw / charge, rage, shield only specials break). Made by `porch.gd`, ticked from its physics loop, `game` = porch.gd's shared services |
 | `porch_hud.gd` | HUD strip, buttons, meter ring, callouts, title / pause / settings / KO / win cards |
 | `porch_feel.gd` | Hit-stop, shake, knockback, sound pool, music |
 | `porch_camera.gd` | Low brawler camera that frames Duff and the current foe |
@@ -37,8 +36,12 @@ root stays live on itch until the 3D game covers everything it does. Don't touch
 
 ## How a fight works
 
-- `_physics_process` ticks Duff, then the current foe (`_tick_pirate`, `_tick_mike`, `rival.tick`), then specials.
-  A new foe also needs a line in `_hp_of` / `_model_of` / `_height_of` / `_armoured` (bottom of `porch.gd`).
+- `_physics_process` ticks Duff, then the current foe (`_now()`: the first one in the zone's `FIGHTS` order
+  who isn't down), then every foe's thrown props. Each foe body carries its brain (`_brain(body)`).
+- Who you fight and when they come in: `porch_zones.gd` `FIGHTS` (`"start"`, `"parcel"`, or seconds after
+  the one before drops). Whoever holds the parcel drops it on KO; the last KO wins the zone.
+- A new foe: an entry in `foe_data.gd` (copy the closest one), a line in a zone's `FIGHTS`, and a model
+  (below). Only a new kind of move needs code in `foe_brain.gd`.
 - A foe's attack is always: red ring (`_tell`) + wind-up clip, then the hit lands unless Duff rolled.
   Unreadable damage is a bug.
 - `_damage(foe, amount, stun)` is the single entry for hurting a foe; `_hurt_duff(from)` for Duff.
@@ -116,13 +119,13 @@ Visual changes also need a real engine render saved in `docs/renders/porch3d/`
 
 ## Next refactor (do this before adding a third zone)
 
-Step 1 is done (Nov 25): Mike moved to `foe_mike.gd`, the pirate to `foe_pirate.gd`; `porch.gd` keeps their old variable names as
+Step 1 is done (Nov 25): the foes moved out of `porch.gd`; it keeps their old variable names as
 getters/setters so tests and tools didn't change. Next, before more foes:
 1. `fight_core.gd`: Duff's moves, meter, specials, `_damage`/`_hurt_duff`, grade.
-2. `foe_brain.gd`: one AI driven by data (HP, attacks with wind-up/damage/range, armour, taunts). Read the
-   main game's `scripts/boss.gd` data so the 17 bosses don't get re-written by hand.
-3. Done (Nov 25): `porch_zones.gd` loads one place at a time and owns the camera mode (explore vs brawler).
-   Still to do: a zone brings its own foes (today the porch's three live on `porch.gd`).
+2. Done (Nov 26): `foe_brain.gd` runs every foe from `foe_data.gd` (the three porch foes were three copies of
+   one fight). For the kitchen bosses, start each entry from the main game's `scripts/boss.gd` (name, lines).
+3. Done (Nov 25-26): `porch_zones.gd` loads one place at a time, owns the camera mode (explore vs brawler)
+   and says who you fight there (`FIGHTS`).
 Keep `smoke.gd` green through every step. Move code first, then change behaviour in a later PR.
 
 ## Phase plan (short)

@@ -7,37 +7,36 @@ const Look = preload("porch_look.gd")
 const FightCam = preload("porch_camera.gd")
 const Feel = preload("porch_feel.gd")
 const Hud = preload("porch_hud.gd")
-const FoeMike = preload("foe_mike.gd")
-const FoePirate = preload("foe_pirate.gd")
-const FoeSendback = preload("foe_sendback.gd")
+const FoeBrain = preload("foe_brain.gd")
+const FoeData = preload("foe_data.gd")
 const Zones = preload("porch_zones.gd")
 const WORLD_LAYER := 1
 const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
 const PLANTER_SIZE := Vector3(1.06, .62, .82)
 const PLAYER_SPEED := 4.6
-const PIRATE_SPEED := FoePirate.SPEED
+const PIRATE_SPEED: float = FoeData.FOES["pirate"]["speed"]
 const PLAYER_HP := 5
-const PIRATE_HP := FoePirate.HP
+const PIRATE_HP: int = FoeData.FOES["pirate"]["hp"]
 const DUFF_HEIGHT := 1.7
-const PIRATE_HEIGHT := FoePirate.HEIGHT
+const PIRATE_HEIGHT: float = FoeData.FOES["pirate"]["height"]
 ## Game time each one-shot clip is squeezed into (gameplay timing stays the same as the block-model slice).
 const ATTACK_ANIM := .42
 const DODGE_ANIM := .45
 const HIT_ANIM := .4
 const PIRATE_ATTACK_ANIM := .55
-## Marketplace Mike lives in foe_mike.gd. These names stay for the tests and tools (old spelling).
-const MIKE_HEIGHT := FoeMike.HEIGHT
-const MIKE_HP := FoeMike.HP
-const POST_TELE := FoeMike.POST_TELE
-const CHARGE_TELE := FoeMike.CHARGE_TELE
-const MIKE_SPAWN := FoeMike.SPAWN
-const MIKE_JAB_TELE := FoeMike.JAB_TELE
+## Marketplace Mike runs on foe_brain.gd (data in foe_data.gd). These names stay for the tests and tools (old spelling).
+const MIKE_HEIGHT: float = FoeData.FOES["mike"]["height"]
+const MIKE_HP: int = FoeData.FOES["mike"]["hp"]
+const POST_TELE: float = FoeData.FOES["mike"]["throw"]["tele"]
+const CHARGE_TELE: float = FoeData.FOES["mike"]["charge"]["tele"]
+const MIKE_SPAWN: Vector3 = FoeData.FOES["mike"]["spawn"]
+const MIKE_JAB_TELE: float = FoeData.FOES["mike"]["jab"]["tele"]
 ## Body widths: fighters stay an arm's length apart instead of standing inside each other.
 const DUFF_RADIUS := .42
-const PIRATE_REACH := FoePirate.REACH
+const PIRATE_REACH: float = FoeData.FOES["pirate"]["reach"]
 ## Real fight (Duff, Nov 25: "the pirate fights back harder", "Mike uses his sign and charge up close")
-const PIRATE_TELE := FoePirate.TELE
+const PIRATE_TELE: float = FoeData.FOES["pirate"]["jab"]["tele"]
 const COUNTER_TELE := .18     ## a blocked hit gets this quick counter
 const CHAIN_WINDOW := .9      ## hits closer together than this are one flurry
 const GUARD_AFTER := 2        ## a foe blocks the hit after this many in a flurry, then counters
@@ -90,13 +89,16 @@ const CALLOUT_TIME := .75     ## real seconds a combo callout stays up
 const PERFECT_WINDOW := .6    ## dodge through a hit, then K within this: counter kick in slow motion
 
 var player: CharacterBody3D
-var thief  ## foe_pirate.gd: the Porch Pirate. The names below read and write his state (old spelling).
+var foes: Array = []  ## foe_brain.gd per foe in this fight, in the order they come (porch_zones.gd FIGHTS)
+var fight: Dictionary = {}  ## this zone's FIGHTS entry: who comes, when, and the win line
+var next_in := -1.0   ## seconds until the next foe walks in (a foe whose entry is a delay)
+var thief  ## foes[0], the Porch Pirate. The names below read and write the porch foes' state (old spelling).
 var pirate: CharacterBody3D:
 	get: return thief.body
 var player_model: RigActor
 var pirate_model: RigActor:
 	get: return thief.model
-var boss  ## foe_mike.gd: Marketplace Mike. The names below read and write his state (old spelling).
+var boss  ## foes[1], Marketplace Mike
 var mike: CharacterBody3D:
 	get: return boss.body
 var mike_model: RigActor:
@@ -126,10 +128,12 @@ var charge_dir: Vector3:
 	get: return boss.charge_dir
 	set(v): boss.charge_dir = v
 var obo_sign: Node3D:
-	get: return boss.obo_sign
-var rival  ## foe_sendback.gd: Sir Sends-It-Back, the third fight (after Mike)
+	get: return boss.pool[0] if boss.pool else null
+var rival  ## foes[2], Sir Sends-It-Back, the third fight (after Mike)
 var special_strike := false  ## true only while Red Right Hand / Return to Sender deal their hit
-var rival_in := -1.0  ## seconds until he walks in once Mike is sold
+var rival_in: float:  ## old name for next_in (he walks in this long after Mike is sold)
+	get: return next_in
+	set(v): next_in = v
 var sendback: CharacterBody3D:
 	get: return rival.body
 var package: Node3D
@@ -216,10 +220,14 @@ func _ready() -> void:
 	_build_street()
 	player = _actor(Vector3(-2, 0, 3), DUFF_RADIUS)
 	player_model = RigActor.make(player, "duff", DUFF_HEIGHT)
-	thief = FoePirate.make(self)
+	fight = Zones.FIGHTS["porch"]
+	for entry in fight.foes:
+		foes.append(FoeBrain.make(self, entry[0]))
+	thief = foes[0]
+	boss = foes[1]
+	rival = foes[2]
 	package = Art.parcel(pirate_model, Vector3(0, .78, -.3))
-	boss = FoeMike.make(self)
-	rival = FoeSendback.make(self)
+	foes[0].arrive(false)  # the first foe is already on the porch
 	hit_marker = _strike_arc(player_model)
 	hit_marker.hide()
 	var burst := Art.Sculpture.new()
@@ -233,7 +241,7 @@ func _ready() -> void:
 	fight_cam.snap(player.position, current_foe())
 	feel = Feel.make(self, camera)
 	if not OS.get_cmdline_user_args().has("--plain"):
-		look = Look.apply(self, [player_model, pirate_model, mike_model, rival.model])
+		look = Look.apply(self, [player_model] + foes.map(func(f): return f.model))
 	_build_hud()
 	_update_hud()
 	if OS.get_cmdline_user_args().has("--zone=apartment"):  # start at home, nobody to fight
@@ -255,13 +263,26 @@ func begin() -> void:
 func foe_status() -> Array:
 	if exploring:
 		return []
-	if pirate_hp > 0:
-		return ["Porch Pirate", pirate_hp, PIRATE_HP]
-	if rival.state != "away":
-		return ["Sir Sends-It-Back", rival.hp, FoeSendback.HP]
-	if mike.visible and mike_state != "away":
-		return ["Marketplace Mike", maxi(mike_hp, 0), MIKE_HP]
-	return []
+	var shown = _shown_foe()
+	return [shown.d.name, shown.hp, shown.d.hp] if shown else []
+
+## The foe whose plate is up: the last one to walk in (he stays on it, at 0, until the next arrives).
+func _shown_foe():
+	for i in range(foes.size() - 1, -1, -1):
+		if foes[i].state != "away":
+			return foes[i]
+	return null
+
+## The foe the fight is on: the first one in the order who isn't down yet (he may not be in yet).
+func _now():
+	for foe in foes:
+		if foe.state != "ko" and foe.hp > 0:
+			return foe
+	return null
+
+## The brain (foe_brain.gd) behind a foe's body.
+func _brain(foe: CharacterBody3D):
+	return foe.get_meta("brain")
 
 func retry() -> void:
 	Engine.set_meta("porch_skip_title", true)
@@ -271,17 +292,10 @@ func quit_to_title() -> void:
 	Engine.set_meta("porch_skip_title", false)
 	_reset()
 
-## The foe the camera keeps in frame: the pirate until he drops, then Mike once he is in.
+## The foe the camera keeps in frame: whoever Duff is fighting.
 func current_foe():
-	if exploring:
-		return null
-	if pirate_hp > 0:
-		return pirate.position
-	if mike.visible and mike_state != "ko":
-		return mike.position
-	if rival.state not in ["away", "ko"]:
-		return rival.body.position
-	return null
+	var foe := _foe()
+	return foe.position if foe else null
 
 func _process(delta: float) -> void:
 	_place_bubble(delta)
@@ -290,8 +304,9 @@ func _process(delta: float) -> void:
 		_end_special()
 	if opening > 0:
 		opening -= delta
-		if opening <= 0 and active and pirate_hp > 0 and bubble_from == player:
-			_say(pirate, "Just browsing your porch, boss.")
+		var first = foes[0]
+		if opening <= 0 and active and first.fighting() and first.hp > 0 and bubble_from == player and first.d.has("opening"):
+			_say(first.body, first.d.opening)
 	callout_time = maxf(0, callout_time - delta / maxf(Engine.time_scale, .05))  # real time: hit-stop and slow-mo mustn't pin it on screen
 	if end_in > 0:
 		end_in -= delta
@@ -320,8 +335,8 @@ func _physics_process(delta: float) -> void:
 	impact.scale = Vector3.ONE * (1.15 - impact_time * 2.0)
 	dodge_time = maxf(0, dodge_time - delta)
 	dodge_recovery = maxf(0, dodge_recovery - delta)
-	pirate_recovery = maxf(0, pirate_recovery - delta)
-	mike_recovery = maxf(0, mike_recovery - delta)
+	for foe in foes:
+		foe.recovery = maxf(0, foe.recovery - delta)
 	invulnerable = maxf(0, invulnerable - delta)
 	kick_cool = maxf(0, kick_cool - delta)
 	var direction := _movement()
@@ -361,24 +376,21 @@ func _physics_process(delta: float) -> void:
 			if not spot.is_empty():
 				use(spot.id)
 		return
-	if pirate_hp > 0:
-		if toss_foe != pirate:
-			_tick_pirate(delta)
-	elif mike_state == "away":
-		if player.position.distance_to(package.position) <= .85:
-			_mike_arrives()
-	elif mike_state != "ko":
-		if toss_foe != mike:
-			_tick_mike(delta)
-	elif rival.state == "away":
-		if rival_in > 0:
-			rival_in -= delta
-			if rival_in <= 0:
-				rival.arrive()
-	elif rival.state != "ko" and toss_foe != sendback:
-		rival.tick(delta)
-	_tick_sign(delta)
-	rival.tick_cards(delta)
+	var now = _now()
+	if now and now.state == "away":
+		var enter = fight.foes[foes.find(now)][1]
+		if enter is String and enter == "parcel":  # he comes for the parcel once Duff has it
+			if player.position.distance_to(package.position) <= .85:
+				package.hide()
+				now.arrive()
+		elif next_in > 0:
+			next_in -= delta
+			if next_in <= 0:
+				now.arrive()
+	elif now and toss_foe != now.body:
+		now.tick(delta)
+	for foe in foes:
+		foe.tick_shots(delta)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if not event.is_pressed() or event.is_echo():
@@ -420,7 +432,7 @@ func _tick_pirate(delta := 1.0 / 60) -> void:
 	thief.tick(delta)
 
 func _pirate_windup(seconds: float) -> void:
-	thief.windup(seconds)
+	thief.jab(seconds)
 
 ## One point of damage unless Duff is in dodge / hit immunity. Returns true when it landed.
 func _hurt_duff(from: Vector3) -> bool:
@@ -562,15 +574,7 @@ func _kick() -> void:
 func _damage(foe: CharacterBody3D, damage: int, stun: float) -> void:
 	if special_time <= 0:
 		meter = minf(100, meter + METER_HIT)
-	if foe == mike:
-		_hit_mike(damage)
-		if mike_state == "stalk":
-			mike_recovery = maxf(mike_recovery, stun)
-		return
-	if foe == sendback:
-		rival.hit(damage, stun, special_strike)  # a special goes through his cloche (a wall bounce after one doesn't)
-		return
-	thief.hit(damage, stun)
+	_brain(foe).hit(damage, stun, special_strike)  # a special goes through a shield (a wall bounce after one doesn't)
 
 func _hit_wall(actor: CharacterBody3D) -> bool:
 	for i in actor.get_slide_collision_count():
@@ -656,8 +660,8 @@ func _tick_special(delta: float) -> void:
 				if feel:
 					feel.sfx("explosion", .05, -8.0)
 				special_time = minf(special_time, RRH_RECOVER * .6)  # connected: stop the dash, short recovery
-				if foe == mike and mike_state == "taunt":
-					mike_state = "stalk"  # the hand goes through his rant
+				if _brain(foe).state == "taunt":
+					_brain(foe).state = "stalk"  # the hand goes through his rant
 				if feel:
 					feel.landed(foe, player.position, true)
 					feel.push(foe, facing, feel.KNOCK_HIT * RRH_KNOCK)
@@ -688,12 +692,7 @@ func _return_to_sender(foe: CharacterBody3D) -> void:
 	player_model.rotation.y = atan2(-facing.x, -facing.z)
 	player_model.strike(RTS_CLIP, length / RTS_SPEED)
 	player_model.locked = special_time
-	if foe == mike and mike_state in ["taunt", "post", "charge_tele", "charge", "jab_tele"]:
-		mike_state = "stalk"  # grabbed mid-move: whatever he was doing is cancelled
-	if foe == pirate:
-		pirate_wind = 0  # a jab he was winding up is cancelled
-	if foe == sendback:
-		rival.cancel()
+	_brain(foe).cancel()  # grabbed mid-move: whatever he was doing is cancelled
 	_tell(null)
 	_call("RETURN TO SENDER!")
 	if feel:
@@ -772,7 +771,7 @@ func _toss_lands() -> void:
 		feel.hit_stop(feel.HIT_STOP_KO)
 		feel.sfx("sting_ko", 0.0, -2.0)
 	hud.flash(Color(0.85, 0.08, 0.06), .3)
-	var was_pirate := foe == pirate
+	var had_parcel := package.get_parent() == model
 	special_strike = true
 	_damage(foe, RTS_DAMAGE, FINISHER_STUN * 1.5)
 	special_strike = false
@@ -797,7 +796,7 @@ func _toss_lands() -> void:
 				model.current = "idle"
 				model.player.speed_scale = 1.0
 				model.player.play("rig/idle", .5))
-	if was_pirate and pirate_hp == 0:
+	if had_parcel and _hp_of(foe) == 0:
 		_send_parcel_home()
 
 ## A foe's clip that doesn't fit `strike` (a loop, or one stretched to the throw's timing).
@@ -947,16 +946,13 @@ func _call(text: String) -> void:
 ## Mashing gets read: the hit after GUARD_AFTER in one flurry is blocked. A dizzy Mike can't guard
 ## (that's the reward for dodging his charge); a taunting one blocks everything.
 func _guards(foe: CharacterBody3D) -> bool:
-	if foe == mike and mike_state in ["dizzy", "charge"]:
+	var brain = _brain(foe)
+	if not brain.can_guard():
 		return false
-	if foe == sendback and rival.state in ["dizzy", "charge"]:
-		return false
-	if foe == mike and mike_state == "taunt":
-		return true  # his price-drop rant is no opening
 	var flurry: Array = chain.get(foe, [0, -99.0])
 	if clock - flurry[1] > CHAIN_WINDOW:
 		flurry = [0, clock]
-	if flurry[0] >= (GUARD_AFTER - 1 if (foe == mike and mike_raged) or (foe == sendback and rival.raged) else GUARD_AFTER):  # raged, he reads you faster
+	if flurry[0] >= (GUARD_AFTER - 1 if brain.raged else GUARD_AFTER):  # raged, he reads you faster
 		chain.erase(foe)
 		return true
 	chain[foe] = [flurry[0] + 1, clock]
@@ -969,28 +965,14 @@ func _block(foe: CharacterBody3D) -> void:
 	if feel:
 		feel.sfx("bonk")
 		feel.add_trauma(.15)
-	if foe == pirate:
-		pirate_recovery = 0
-		_pirate_windup(COUNTER_TELE)
-	elif foe == sendback:
-		if rival.state == "plate":
-			rival.deflect()  # the cloche sends it back
-		elif rival.state != "taunt":
-			rival.jab(COUNTER_TELE)
-	else:
-		_mike_jab(COUNTER_TELE)
+	_brain(foe).block()  # a counter jab, or the shield sends it back
 
 ## Who Duff's punches can land on right now.
 func _foe() -> CharacterBody3D:
 	if exploring:
 		return null
-	if pirate_hp > 0:
-		return pirate
-	if mike_state not in ["away", "ko"]:
-		return mike
-	if rival.state not in ["away", "ko"]:
-		return sendback
-	return null
+	var now = _now()
+	return now.body if now and now.fighting() else null
 
 ## Where a foe stands to fight: beside Duff on its own side, at arm's length, on his depth line,
 ## so the two face off left/right like a brawler and nobody hides the other from the camera.
@@ -1271,7 +1253,7 @@ func _build_bubble(layer: CanvasLayer) -> void:
 
 func _say(speaker: Node3D, line: String, seconds := 2.8) -> void:
 	bubble_from = speaker
-	bubble_name.text = {player: "Duff", mike: "Marketplace Mike", sendback: "Sir Sends-It-Back"}.get(speaker, "Porch Pirate")
+	bubble_name.text = "Duff" if speaker == player else (speaker.get_meta("brain").d.name if speaker.has_meta("brain") else "")
 	bubble_text.text = line
 	bubble_time = seconds
 	bubble.size = Vector2.ZERO  # shrink to the new line
@@ -1308,12 +1290,11 @@ func _place_bubble(delta: float) -> void:
 	bubble_tail.position = Vector2(at.x + 2 if right else at.x + box.x - 2, clampf(head.y, at.y + 16, at.y + box.y - 16))
 
 func _update_hud() -> void:
-	if rival.state != "away":
-		health.text = "DUFF %d/%d   ·   SIR SENDS-IT-BACK %d/%d" % [player_hp, PLAYER_HP, rival.hp, FoeSendback.HP]
-	elif mike_state == "away":
-		health.text = "DUFF %d/%d   ·   PIRATE %d/%d" % [player_hp, PLAYER_HP, pirate_hp, PIRATE_HP]
+	var shown = _shown_foe()
+	if shown:
+		health.text = "DUFF %d/%d   ·   %s %d/%d" % [player_hp, PLAYER_HP, shown.d.name.to_upper(), shown.hp, shown.d.hp]
 	else:
-		health.text = "DUFF %d/%d   ·   MARKETPLACE MIKE %d/%d" % [player_hp, PLAYER_HP, maxi(mike_hp, 0), MIKE_HP]
+		health.text = "DUFF %d/%d" % [player_hp, PLAYER_HP]
 
 ## The letter for a won fight: 100, minus GRADE_HIT a hit taken and GRADE_SLOW a second past par,
 ## plus GRADE_SPECIAL for each special landed (up to 3).
@@ -1348,29 +1329,43 @@ func _grade_result() -> Dictionary:
 static func clock_label(seconds: float) -> String:
 	return "%d:%02d" % [int(seconds) / 60, int(seconds) % 60]
 
-## Mike's moves, for porch.gd's own code and the tests (foe_mike.gd does the work).
+## Mike's moves, for the tests and tools (foe_brain.gd does the work).
 func _mike_arrives() -> void:
+	package.hide()
 	boss.arrive()
 
 func _tick_mike(delta: float) -> void:
 	boss.tick(delta)
 
 func _tick_sign(delta: float) -> void:
-	boss.tick_sign(delta)
+	boss.tick_shots(delta)
 
 func _mike_jab(seconds: float) -> void:
 	boss.jab(seconds)
 
 func _hit_mike(damage := 1) -> void:
-	boss.hit(damage)
+	boss.hit(damage, HIT_ANIM)
 
-
-## Mike is sold: Sir Sends-It-Back walks up the path after a beat (the third fight).
-func _mike_sold() -> void:
+## A foe is down (foe_brain.gd calls this). Whoever holds the parcel drops it; the next foe in the
+## fight walks in after his delay (or once Duff has the parcel); the last one wins the porch.
+func _foe_down(foe) -> void:
 	hit_marker.hide()
-	message.text = "Parcel recovered. Somebody else is coming up the walk..."
-	rival_in = 2.2
 	chain.clear()
+	if package.get_parent() == foe.model:
+		var drop: Vector3 = foe.body.position + Vector3.UP * .22
+		package.reparent(self)
+		package.position = drop
+		package.rotation = Vector3(0, .25, 0)
+	var down: Dictionary = foe.d.get("ko", {})
+	if down.has("message"):
+		message.text = down.message
+	var at := foes.find(foe)
+	if at == foes.size() - 1:
+		_porch_won(fight.won)
+		return
+	var enter = fight.foes[at + 1][1]
+	if not enter is String:
+		next_in = float(enter)
 
 ## The last foe is down: the porch is secured, the fight is graded.
 func _porch_won(line: String) -> void:
@@ -1430,7 +1425,10 @@ func _start_exploring() -> void:
 	bubble_time = 0
 	opening = 0
 	message.text = "Porch secured. Walk home: the front door's on the stoop."
-	for body in [pirate, mike, sendback]:
+	for foe in foes:
+		foe.cancel()
+		foe.clear_shots()
+		var body: CharacterBody3D = foe.body
 		body.hide()
 		body.process_mode = Node.PROCESS_MODE_DISABLED
 		body.collision_layer = 0
@@ -1440,38 +1438,19 @@ func _start_exploring() -> void:
 		var touch := find_child(button, true, false)
 		if touch:
 			touch.hide()
-	if obo_sign:
-		obo_sign.hide()
-	rival.cancel()
 	if feel:
 		feel.stop_music()
 
-## Which foe script a body belongs to, and the bits porch.gd needs from it.
+## The bits porch.gd needs from a foe's brain.
 func _hp_of(foe: CharacterBody3D) -> int:
-	if foe == pirate:
-		return pirate_hp
-	if foe == mike:
-		return mike_hp
-	return rival.hp
+	return _brain(foe).hp
 
 func _model_of(foe: CharacterBody3D) -> Node3D:
-	if foe == pirate:
-		return pirate_model
-	if foe == mike:
-		return mike_model
-	return rival.model
+	return _brain(foe).model
 
 func _height_of(foe: CharacterBody3D) -> float:
-	if foe == pirate:
-		return PIRATE_HEIGHT
-	if foe == mike:
-		return MIKE_HEIGHT
-	return FoeSendback.HEIGHT
+	return _brain(foe).d.height
 
 ## Blocks every punch and kick (specials still go through): Mike's rant, Sends-It-Back's cloche.
 func _armoured(foe: CharacterBody3D) -> bool:
-	if foe == mike:
-		return mike_state == "taunt"
-	if foe == sendback:
-		return rival.guarding()
-	return false
+	return _brain(foe).guarding()
