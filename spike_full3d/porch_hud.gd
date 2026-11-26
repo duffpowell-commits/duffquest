@@ -54,6 +54,10 @@ var menu: Control        ## the open title / pause / end screen, or null
 var screen := ""         ## "", "title", "pause", "settings", "ko", "win"
 var _boxes := {}
 var pause_button: TouchScreenButton
+## Fill the phone (8.5 pass): the window stretches with aspect "expand", so a wide phone gets a wider view
+## (no black bars). The HUD is laid out for 960x540; `spare` is the extra width/height, and right-hand
+## controls slide by it, centred ones by half of it.
+var spare := Vector2.ZERO
 var _pause_touch := -1  ## touch index holding the pause button through _input (see porch.gd _input)
 
 static func make(scene: Node, layer: CanvasLayer) -> Control:
@@ -89,7 +93,7 @@ func _input(event: InputEvent) -> void:
 	if touch == null or pause_button == null:
 		return
 	if touch.pressed:
-		if PAUSE.has_point(touch.position):  # a second open_pause from the button itself is a no-op
+		if Rect2(PAUSE.position + Vector2(spare.x, 0), PAUSE.size).has_point(touch.position):  # a second open_pause from the button itself is a no-op
 			_pause_touch = touch.index
 	elif touch.index == _pause_touch:
 		_pause_touch = -1
@@ -131,12 +135,26 @@ func start() -> void:
 	game.begin()
 
 func _process(delta: float) -> void:
+	_fit_to_screen()
 	if game.stick:
 		game.stick.visible = screen == ""  # no stick over the title, pause or end cards (it sat on the Fight button)
 	if screen == "" and game.active:
 		minutes += delta * GAME_MIN_PER_SEC
 	flash_time = maxf(0, flash_time - delta / maxf(Engine.time_scale, .05))
 	queue_redraw()
+
+## Slide the right-hand touch buttons, the pause button and the stick's zone onto the real screen edges.
+func _fit_to_screen() -> void:
+	var view := get_viewport_rect().size
+	spare = Vector2(maxf(0, view.x - 960), maxf(0, view.y - 540))
+	for button in game.thumb_buttons:
+		button.position = button.get_meta("base") + spare
+	if pause_button:
+		pause_button.position = PAUSE.position + Vector2(spare.x, 0)
+	if game.stick:
+		game.stick.position.y = 150 + spare.y
+	if menu and menu.has_node("Frame"):
+		menu.get_node("Frame").position = spare * .5  # stays centred if the screen turns or resizes
 
 ## ---------------------------------------------------------------- drawing helpers (ui_style.gd, x3)
 
@@ -196,9 +214,13 @@ func _draw() -> void:
 		return  # the title card stands alone over the porch, like the main game's
 	_strip()
 	_goal()
+	draw_set_transform(Vector2(spare.x, 0))
 	_pause_button()
+	draw_set_transform(Vector2(spare.x * .5, spare.y))
 	_foe_plate()
+	draw_set_transform(Vector2(spare.x * .5, 0))
 	_callout()
+	draw_set_transform(spare)
 	if game.active and game.exploring:  # walking around: one big USE button, named for what's here
 		var spot: Dictionary = game.zones.nearest_use()
 		_round(A_AT, A_R, BTN_MAIN if spot else Color(BTN_MAIN, .4), "USE", a_down and not spot.is_empty())
@@ -212,6 +234,17 @@ func _draw() -> void:
 		_hint(K_AT + Vector2(-K_R - 38, 7), "kick")
 		_round(A_AT, A_R, A_COL, "A", a_down)
 		_hint(A_AT + Vector2(-A_R - 44, 26), "bonk")
+		_lesson_ring()
+	draw_set_transform(Vector2.ZERO)
+
+## Teach by doing: a pulsing cream ring around the one button the fight is teaching (porch.gd teach()).
+func _lesson_ring() -> void:
+	if game.lesson == "":
+		return
+	var at: Vector2 = {"a": A_AT, "b": B_AT, "k": K_AT, "r": R_AT}[game.lesson]
+	var radius: float = {"a": A_R, "b": B_R, "k": K_R, "r": R_R}[game.lesson]
+	var pulse := .5 + .5 * sin(Time.get_ticks_msec() / 140.0)
+	draw_arc(at, radius + 9 + 7 * pulse, 0, TAU, 64, Color(CREAM, .45 + .45 * pulse), 5, true)
 
 ## The special: a dark button whose red ring fills with the meter; full, it lights up and pulses.
 func _meter_button() -> void:
@@ -380,6 +413,7 @@ func _title_label(parent: Control, text: String, at: Vector2, width: float, size
 
 func _new_menu(kind: String, wash: float) -> Control:
 	close_menu()
+	_fit_to_screen()  # the title opens from _ready, before the first frame has measured the screen
 	screen = kind
 	menu = Control.new()
 	menu.name = "Menu_" + kind
@@ -390,8 +424,14 @@ func _new_menu(kind: String, wash: float) -> Control:
 		dim.color = Color(.07, .05, .09, wash)
 		dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		menu.add_child(dim)
+	var frame := Control.new()  # the 960x540 layout, centred on a wider (or taller) screen
+	frame.name = "Frame"
+	frame.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.size = Vector2(960, 540)
+	frame.position = spare * .5
+	menu.add_child(frame)
 	get_tree().paused = true
-	return menu
+	return frame
 
 func close_menu() -> void:
 	if menu:
@@ -411,9 +451,11 @@ func show_title() -> void:
 		Vector2(40, 74), 800, 21, CREAM, body)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 40)
-	row.position = Vector2(150, 400)
-	row.add_child(_pill("Fight", BTN_MAIN, start))
-	row.add_child(_pill("Settings", BTN_ALT, show_settings))
+	row.add_theme_constant_override("separation", 24)
+	row.position = Vector2(66, 400)
+	row.add_child(_pill("Fight", BTN_MAIN, start, 260))
+	row.add_child(_pill("Controls", BTN_ALT, func() -> void: show_controls(show_title), 260))
+	row.add_child(_pill("Settings", BTN_ALT, show_settings, 260))
 	m.add_child(row)
 	if not DisplayServer.is_touchscreen_available():
 		_title_label(m, "Keys: WASD move, Space bonk, K kick, Shift roll, Esc menu", Vector2(0, 490), 960, 17, DIM, body)
@@ -423,7 +465,36 @@ func open_pause() -> void:
 	_sheet("pause", "Paused", [
 		["Resume", BTN_MAIN, close_menu],
 		["Retry", BTN_ALT, func() -> void: game.retry()],
+		["Controls", BTN_ALT, func() -> void: show_controls(open_pause)],
 	] + _settings_rows() + [["Quit to title", BTN_EXIT, func() -> void: game.quit_to_title()]])
+
+## One screen: what every button does (Nov 26 first-timer: "R only made sense once it glowed").
+func show_controls(back: Callable) -> void:
+	var m := _new_menu("controls", .82)
+	_title_label(m, "CONTROLS", Vector2(0, 26), 960, 44, GOLD)
+	var rows := [
+		[A_COL, "A", "Bonk. Tap again as each punch lands for a combo. Mashing gets blocked."],
+		[B_COL, "B", "Roll. A red ring under a foe means he's about to swing: roll out of it."],
+		[K_COL, "K", "Kick. Goes through a guard and shoves him back."],
+		[R_COL, "R", "Special. The ring fills as you land hits. Far off: a fire dash. Up close: a throw."],
+		[DIM, "", "Left thumb: the stick moves Duff."],
+	]
+	for i in rows.size():
+		var y := 96 + i * 66
+		var dot := Panel.new()
+		var look := StyleBoxFlat.new()
+		look.bg_color = rows[i][0]
+		look.set_corner_radius_all(26)
+		dot.add_theme_stylebox_override("panel", look)
+		dot.position = Vector2(110, y)
+		dot.size = Vector2(52, 52)
+		m.add_child(dot)
+		_title_label(dot, rows[i][1], Vector2(0, 6), 52, 30, CREAM)
+		_title_label(m, rows[i][2], Vector2(186, y + 12), 680, 21, CREAM, body).horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	var row := HBoxContainer.new()
+	row.position = Vector2(330, 444)
+	row.add_child(_pill("Back", BTN_EXIT, back))
+	m.add_child(row)
 
 func show_settings() -> void:
 	_sheet("settings", "Settings", _settings_rows() + [["Done", BTN_EXIT, show_title]])
@@ -483,6 +554,8 @@ func show_end(won: bool) -> void:
 	var box := _glass_panel(Rect2(200, 268, 560, 96), 18)
 	m.add_child(box)
 	var line := "I get knocked out. Me and the sidewalk get acquainted. Retry starts the fight over."
+	if not won and game.checkpoint > 0:
+		line = "I get knocked out. Me and the sidewalk get acquainted. Retry starts at %s." % game.foes[game.checkpoint].d.name
 	if r:
 		line = "%s  ·  %d hit%s taken  ·  %d special%s\n%s" % [game.clock_label(r.time), r.hits, "" if r.hits == 1 else "s",
 			r.specials, "" if r.specials == 1 else "s",

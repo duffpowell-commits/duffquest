@@ -20,6 +20,8 @@ extends RefCounted
 ##   smash_line       what he says when the shield breaks
 ##   dizzy_free       while dizzy: no rage, no shield (he rages when he stands back up instead)
 ##   armoured         states that block every punch and kick (specials still go through)
+##   teach            [button, line]: the button his fight teaches (ringed until used) and the one line about it
+##   waits            the tutorial foe: won't swing until Duff has thrown a punch (or a kick or the special)
 ##   reads_mashing    false = never blocks a mashed flurry (the tutorial foe). Default true
 ##   counter_from_taunt  a blocked hit during his taunt still gets an instant counter jab
 ##   arrive           {line, line_time, message, music}: walking in (not for the foe who starts the fight)
@@ -32,19 +34,21 @@ const FOES := {
 		"opening": "Just browsing your porch, boss.",
 		"jab": {"tele": .55, "clip": "jab", "rest": 1.25},  # the tutorial foe: slow, readable (Nov 26 tune)
 		"reads_mashing": false,  # never blocks a mashed flurry, so a first-timer's A always lands
+		"teach": ["a", "Tap A to punch."], "waits": true,
 		"ko": {"message": "Walk over to grab the parcel."},
 	},
 	"mike": {
 		"name": "Marketplace Mike", "model": "mike", "height": 1.65, "hp": 8, "speed": 1.9, "rage_speed": 2.5,
 		"radius": .5, "stop": 1.05, "reach": 1.2, "spawn": Vector3(5.6, 0, 3.4), "step_around": true,
-		"jab": {"tele": .38, "clip": "jab", "rest": 1.15, "rage_rest": .8, "shove": 7.5, "cool_after": .35},
-		"ranged": {"range": 2.2, "every": 2.6, "rage_every": .7, "first": 1.6},
-		"throw": {"state": "post", "tele": .7, "line": "Listed: one Duff. Used. Fair condition.", "prop": "obo_sign",
+		"jab": {"tele": .5, "clip": "jab", "rest": 1.35, "rage_rest": 1.0, "shove": 6.0, "cool_after": .6},
+		"ranged": {"range": 2.2, "every": 3.0, "rage_every": .85, "first": 2.2},  # Nov 26 first-timer (5/10): fairer Mike
+		"throw": {"state": "post", "tele": .8, "line": "Listed: one Duff. Used. Fair condition.", "prop": "obo_sign",
 			"count": 1, "speed": 6.5, "radius": .55, "up": 1.05, "yaw": false, "wobble": [14.0, .35]},
-		"charge": {"tele": .75, "line": "Cash only! No lowballers!", "speed": 7.2, "time": .85, "dizzy": 1.0},
+		"charge": {"tele": .9, "line": "Cash only! No lowballers!", "speed": 7.2, "time": .85, "dizzy": 1.2},
 		"rage": {"line": "Price drop! Everything must go! Starting with YOU!", "time": 1.2},
 		"armoured": ["taunt"],
 		"counter_from_taunt": true,
+		"teach": ["k", "He blocks a flurry. K kicks through his guard."],
 		"arrive": {"line": "That pirate was my best guy. Porch box goes for twelve bucks. Or best offer.", "line_time": 4.0,
 			"message": "Marketplace Mike wants the parcel back.", "music": "mus_boss"},
 		"ko": {"line": "Okay. Mark me as sold.", "message": "Parcel recovered. Somebody else is coming up the walk..."},
@@ -52,8 +56,8 @@ const FOES := {
 	"sendback": {
 		"name": "Sir Sends-It-Back", "model": "sendback", "height": 1.75, "hp": 10, "speed": 1.7, "rage_speed": 2.2,
 		"radius": .5, "stop": 1.05, "reach": 1.2, "spawn": Vector3(-5.6, 0, 3.4), "step_around": true,
-		"jab": {"tele": .4, "clip": "hook", "rest": 1.1, "rage_rest": .8},
-		"ranged": {"range": 2.2, "every": 2.8, "rage_every": .75, "first": 1.8},
+		"jab": {"tele": .48, "clip": "hook", "rest": 1.25, "rage_rest": .95},
+		"ranged": {"range": 2.2, "every": 3.0, "rage_every": .85, "first": 2.2},
 		"throw": {"state": "cards_tele", "tele": .75, "line": "This is TOO medium. One star.", "prop": "review_card",
 			"count": 3, "rage_count": 5, "fan": .36, "rage_fan": .8, "speed": 6.0, "radius": .45, "up": 1.1, "yaw": true,
 			"wobble": [16.0, .4]},
@@ -62,6 +66,7 @@ const FOES := {
 		"guard": {"after": 2, "time": 2.6, "rage_time": 1.4, "rest": 3.0, "shove": 6.0, "line": "Sent BACK.",
 			"prop": "cloche", "smash_bonus": 1},
 		"special_dizzy": 1.8,
+		"teach": ["r", "Only R breaks his cloche. Land hits to fill the R ring."],
 		"smash_line": "My CLOCHE!",
 		"dizzy_free": true,
 		"armoured": ["plate", "taunt"],

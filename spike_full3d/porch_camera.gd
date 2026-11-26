@@ -18,11 +18,17 @@ const MODES := {
 }
 const CLOSE_SIZE := 4.4
 const CLOSE_OFFSET := Vector3(0, 5.76, 7.8)
-const FOLLOW := 5.0     ## how fast it catches up (per second)
+const FOLLOW := 3.5     ## how fast it catches up (per second); 5 swung hard when a new foe walked in (Nov 26)
 const X_LIMIT := 5.2    ## aim stops short of the fences; FIT pulls back for the rest
 const Z_RANGE := Vector2(-1.2, 4.6)
 const FIT_MARGIN := .86 ## every fighter's head and feet stay inside this share of the frame
-const FIT_MAX := 16.0   ## farthest it will pull back to keep both in frame
+## Clear screen (Nov 26, 8.5 pass): the right thumb buttons cover about the right 30% of the screen and the
+## status strip the top 20%, so fighters are framed left of centre and kept out of both.
+const SHIFT := .22      ## the aim point sits this share of the half-width left of centre
+const RIGHT_EDGE := .40 ## fighters stay left of this (share of the half-width right of centre)
+const TOP_EDGE := .62   ## and below this (share of the half-height above centre)
+const BOTTOM_EDGE := -.6 ## and above this: the stick and the foe's health bar fill the bottom quarter (Nov 26 first-timer)
+const FIT_MAX := 22.0   ## farthest it will pull back to keep both in frame
 
 var camera: Camera3D
 var mode := MODE
@@ -75,23 +81,35 @@ func goal(duff: Vector3, foe = null) -> Transform3D:
 	var points := [duff, duff + Vector3.UP * 1.8]
 	if foe != null:
 		points += [foe, foe + Vector3.UP * 1.8]
-	var tf := Transform3D.IDENTITY.translated(aim + dir * dist).looking_at(aim)
-	while dist < FIT_MAX and not _fits(tf, points):  # never lose a fighter off the edge
+	var tf := _framed(aim, dir, dist)
+	while dist < FIT_MAX and not _fits(tf, points):  # never lose a fighter off the edge or under a thumb
 		dist += .25
-		tf = Transform3D.IDENTITY.translated(aim + dir * dist).looking_at(aim)
+		tf = _framed(aim, dir, dist)
 	return tf
 
-## True when every point lands inside FIT_MARGIN of the frame seen from `tf` (perspective modes).
-func _fits(tf: Transform3D, points: Array) -> bool:
+## Looking at `aim` from `dist` away, slid sideways so the aim lands SHIFT left of centre.
+func _framed(aim: Vector3, dir: Vector3, dist: float) -> Transform3D:
+	var tf := Transform3D.IDENTITY.translated(aim + dir * dist).looking_at(aim)
+	tf.origin += tf.basis.x * dist * _half().x * SHIFT
+	return tf
+
+## tan of the half field of view, across and up.
+func _half() -> Vector2:
 	var size := camera.get_viewport().get_visible_rect().size if camera.is_inside_tree() else Vector2(16, 9)
 	var half_y := tan(deg_to_rad(camera.fov) * .5)
-	var half_x := half_y * size.x / size.y
+	return Vector2(half_y * size.x / size.y, half_y)
+
+## True when every point lands in the clear part of the frame seen from `tf` (perspective modes).
+func _fits(tf: Transform3D, points: Array) -> bool:
+	var half := _half()
 	var inv := tf.affine_inverse()
 	for p in points:
 		var local: Vector3 = inv * p
 		if local.z > -.1:
 			return false
-		if absf(local.x / -local.z) > half_x * FIT_MARGIN or absf(local.y / -local.z) > half_y * FIT_MARGIN:
+		var x := local.x / -local.z / half.x
+		var y := local.y / -local.z / half.y
+		if x < -FIT_MARGIN or x > RIGHT_EDGE or y > TOP_EDGE or y < BOTTOM_EDGE:
 			return false
 	return true
 

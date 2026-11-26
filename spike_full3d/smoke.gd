@@ -4,6 +4,9 @@ const PORCH := "res://porch.tscn"
 var failures := 0
 
 func _initialize() -> void:
+	# Headless windows are 64x64 (square): with the game's "expand" aspect that would be a 960x960 view.
+	# The checks are written for a 16:9 phone, so keep 960x540 here; one check below turns expand back on.
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
 	call_deferred("_run")
 
 func _check(result: bool, title: String) -> void:
@@ -77,8 +80,8 @@ func _run() -> void:
 	_check(look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_4X, "golden hour starts with glow and MSAA")
 	look.set_lite(true)
 	_check(not look.env.glow_enabled and sample.get_viewport().msaa_3d == Viewport.MSAA_DISABLED
-		and sample.get_viewport().scaling_3d_mode == Viewport.SCALING_3D_MODE_NEAREST and sample.get_viewport().scaling_3d_scale < 1.0,
-		"lite drops glow and MSAA and draws the 3D at 3/4 size, nearest-scaled")
+		and sample.get_viewport().scaling_3d_mode == Viewport.SCALING_3D_MODE_BILINEAR and sample.get_viewport().scaling_3d_scale < 1.0,
+		"lite drops glow and MSAA and draws the 3D at 3/4 size, scaled up smooth")
 	look.set_lite(false)
 	sample.fight_cam.snap(sample.player.position, sample.pirate.position)
 	var cam: Camera3D = sample.camera
@@ -106,6 +109,31 @@ func _run() -> void:
 				var q := cam.unproject_position(body + Vector3.UP * y)
 				corners_ok = corners_ok and q.x >= 0 and q.x <= view.x and q.y >= 0 and q.y <= view.y
 	_check(corners_ok, "fight camera keeps Duff (and his foe) fully on screen at the fences and the street edge")
+	var clear := true
+	for spot in [[Vector3(0, 0, 2), Vector3(1.2, 0, 2)], [Vector3(-3, 0, 3), Vector3(-1.8, 0, 2.6)], [Vector3(4, 0, 1), Vector3(5.2, 0, 1.4)]]:
+		cam.global_transform = sample.fight_cam.goal(spot[0], spot[1])
+		for body in spot:
+			for y in [0.0, 1.8]:
+				var q := cam.unproject_position(body + Vector3.UP * y)
+				clear = clear and q.x < view.x * .72 and q.y > view.y * .18
+	_check(clear, "fight camera keeps both fighters out of the right thumb buttons and under the status strip")
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_EXPAND  # a screen taller than 16:9 (the square headless window)
+	await _frames(2)
+	sample.hud._fit_to_screen()  # (the HUD runs it every frame; this check's porch has its processing parked)
+	var tall := sample.get_viewport().get_visible_rect().size
+	var a_btn: TouchScreenButton = sample.find_child("Attack", true, false)
+	_check(tall.y > 540 and sample.hud.spare.y == tall.y - 540 and is_equal_approx(a_btn.position.y + a_btn.shape.size.y, tall.y - 20)
+		and sample.stick.position.y == 150 + sample.hud.spare.y,
+		"on a screen that isn't 16:9 the view fills it and the thumb buttons and stick slide to its edges")
+	sample.hud.spare = Vector2.ZERO  # as at _ready, before any frame has measured the screen
+	sample.hud.show_title()
+	var title_frame: Control = sample.hud.menu.get_node("Frame")
+	_check(title_frame.position == sample.hud.spare * .5 and sample.hud.spare.y > 0,
+		"a menu opened before the first frame is still centred on a screen that isn't 16:9")
+	sample.hud.close_menu()
+	root.content_scale_aspect = Window.CONTENT_SCALE_ASPECT_KEEP
+	await _frames(2)
+	sample.hud._fit_to_screen()
 	for actor in [sample.player_model, sample.pirate_model]:
 		_check(actor.skeleton.get_bone_count() == 24 and actor.skeleton.find_bone("RightHand") >= 0,
 			"%s is a skinned mesh on the 24-bone humanoid skeleton" % actor.name)
@@ -146,8 +174,8 @@ func _run() -> void:
 	_check(hud.find_child("Pause", true, false) is TouchScreenButton and Rect2(hud.PAUSE).end.x <= view.x,
 		"phone-style pause button on screen")
 	hud.open_pause()
-	_check(paused and hud.screen == "pause" and hud.menu.find_children("*", "Button", true, false).size() == 5,
-		"pause sheet: Resume, Retry, Graphics, Sound, Quit to title; the fight stops")
+	_check(paused and hud.screen == "pause" and hud.menu.find_children("*", "Button", true, false).size() == 6,
+		"pause sheet: Resume, Retry, Controls, Graphics, Sound, Quit to title; the fight stops")
 	hud.close_menu()
 	_check(not paused and hud.screen == "", "Resume closes the sheet and the fight runs again")
 
@@ -663,7 +691,7 @@ func _run() -> void:
 	sample._tick_mike(.016)
 	_check(sample.mike_state == "jab_tele" and sample.tell_foe == sample.mike, "up close Mike winds up a shove")
 	sample._tick_mike(sample.MIKE_JAB_TELE + .01)
-	_check(sample.player_hp == 2 and sample.feel.knock_of(sample.player).x < -5.0 and sample.mike_cool <= .35,
+	_check(sample.player_hp == 2 and sample.feel.knock_of(sample.player).x < -5.0 and sample.mike_cool <= sample.FoeData.FOES["mike"]["jab"]["cool_after"],
 		"the shove costs one HP, sends Duff flying and readies his next special")
 	sample.player_hp = 3
 
@@ -916,6 +944,15 @@ func _run() -> void:
 	sample.set_physics_process(false)
 	sample.player.position = Vector3(0, 0, 2)
 	sample.pirate.position = Vector3(0, 0, 1)
+	sample.learned.clear()
+	sample._brain(sample.pirate).arrive(false)
+	sample.player.position = Vector3(0, 0, 2)
+	sample.pirate.position = Vector3(0, 0, 1)
+	sample._tick_pirate()
+	_check(sample._brain(sample.pirate).state == "stalk" and sample.lesson == "a",
+		"the tutorial pirate squares up but won't swing before Duff's first punch, and A is ringed")
+	sample.learned["a"] = true
+	sample.lesson = ""
 	sample.player_hp = 1
 	await _frames(2)
 	sample._tick_pirate()
@@ -942,4 +979,38 @@ func _run() -> void:
 	_check(sample.pirate_hp == 0 and sample.pirate_model.current == "ko" and sample.pirate.collision_layer == 0
 		and sample.package.get_parent() == sample and sample.package.position.distance_to(sample.STOOP_AT) < .05,
 		"a Return to Sender KO leaves him down and lands the parcel on the stoop (%s)" % sample.package.position)
+	_check(sample.pops > 0, "a landed hit pops a damage number over him")
+
+	# Nov 26 first-timer fixes (scored 5/10): the yard, the checkpoint, the controls card.
+	sample.set_physics_process(false)
+	sample.player.position = Vector3(-9.0, 0, 7.0)
+	sample._move(sample.player, Vector3.ZERO)
+	_check(absf(sample.player.position.x) <= sample.YARD_X + .01 and sample.player.position.z <= sample.YARD_Z.y + .01,
+		"a knock past the fence puts Duff back in the yard (Mike knocked him into the void)")
+	sample.player.position = Vector3(1, -3, 1)
+	sample._move(sample.player, Vector3.ZERO)
+	_check(sample.player.position.y > -.5, "Duff falling under the ground is put back on it")
+	sample.hud.show_controls(sample.hud.open_pause)
+	var says := ""
+	for label in sample.hud.menu.find_children("*", "Label", true, false):
+		says += (label as Label).text + " "
+	_check(sample.hud.screen == "controls" and "Up close: a throw" in says and "red ring" in says,
+		"Controls: one screen for A, B, K, R and the stick")
+	sample.hud.close_menu()
+	sample.checkpoint = 1  # Duff lost to Mike
+	sample.retry()
+	await scene_changed
+	sample = current_scene
+	_check(sample.checkpoint == 1 and sample._brain(sample.pirate).state == "ko" and not sample.pirate.visible
+		and not sample.package.visible and sample._brain(sample.mike).state != "away" and sample.hud.screen == "",
+		"Retry after losing to Mike starts at Mike: the pirate stays beaten and Duff has the parcel")
+	var pops_before: int = sample.pops
+	sample.invulnerable = 0
+	sample._hurt_duff(sample.mike.position)
+	_check(sample.invulnerable == sample.HURT_GRACE and sample.pops == pops_before + 1,
+		"a hit on Duff pops -1 and gives him %.1f s before the next one can land" % sample.HURT_GRACE)
+	sample.quit_to_title()
+	await scene_changed
+	_check(current_scene.checkpoint == 0 and current_scene._brain(current_scene.pirate).state != "ko",
+		"Quit to title starts over from the pirate")
 	quit(1 if failures else 0)

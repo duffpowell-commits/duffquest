@@ -80,7 +80,13 @@ func fighting() -> bool:
 ## He walks in (or, for the first foe, is just there) and the fight is his.
 func arrive(fresh := true) -> void:
 	if fresh:
+		if game.player_hp < game.PLAYER_HP:
+			game._call("HEALTH REFILLED")  # say it: a first-timer only worked it out by counting hearts
 		game.player_hp = maxi(game.player_hp, game.PLAYER_HP)  # each fight starts Duff full
+		game.checkpoint = game.foes.find(self)  # lose to him and Retry starts here
+		for other in game.foes:  # whoever's already down clears off (a KO'd pirate sat under the B button)
+			if other != self and other.state == "ko":
+				other.body.hide()
 	state = "stalk"
 	cool = d.ranged.first if d.has("ranged") else 0.0
 	streak = 0
@@ -91,14 +97,25 @@ func arrive(fresh := true) -> void:
 	body.collision_mask = game.WORLD_LAYER | game.ACTOR_LAYER
 	var walk_in: Dictionary = d.get("arrive", {})
 	if walk_in.is_empty():
+		_teach()
 		return
 	game._say(body, walk_in.line, walk_in.get("line_time", 2.8))
 	game.message.text = walk_in.message
+	_teach()
 	if game.feel:
 		game.feel.sfx("pickup", 0.0)
 		if walk_in.has("music"):
 			game.feel.play_music(walk_in.music)
 	game._update_hud()
+
+## His lesson: one button and one line (foe_data "teach"), shown as he steps in.
+func _teach() -> void:
+	if d.has("teach"):
+		game.teach(d.teach[0], d.teach[1])
+
+## The tutorial foe ("waits"): squares up but won't swing until Duff has thrown his first punch.
+func waiting() -> bool:
+	return d.get("waits", false) and not (game.learned.has("a") or game.learned.has("k") or game.learned.has("r"))
 
 func tick(delta := 1.0 / 60) -> void:
 	timer = maxf(0, timer - delta)
@@ -112,6 +129,10 @@ func tick(delta := 1.0 / 60) -> void:
 	match state:
 		"stalk":
 			_face(direction)
+			if waiting():
+				game._move(body, Vector3.ZERO)
+				model.move_at(0)
+				return
 			if distance <= d.reach and recovery <= 0 and game._clear_strike(body, game.player):
 				jab(d.jab.tele)
 				return
@@ -149,8 +170,7 @@ func tick(delta := 1.0 / 60) -> void:
 		"charge_tele":
 			game._move(body, Vector3.ZERO)
 			if timer <= 0:
-				game._tell(null)
-				state = "charge"
+				state = "charge"  # the red ring stays under him until the charge ends: it's still coming
 				timer = d.charge.time
 				model.locked = 0
 				model.play("charge")
@@ -197,6 +217,7 @@ func _walk(direction: Vector3, speed: float) -> void:
 
 ## Up close: he draws back for a jab, red ring first.
 func jab(seconds: float) -> void:
+	game.teach("b", "Red ring under him? Tap B to roll out of it.")
 	state = "jab_tele"
 	timer = seconds
 	model.strike(d.jab.clip, seconds + .3)

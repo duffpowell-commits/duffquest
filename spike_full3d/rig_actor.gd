@@ -43,6 +43,7 @@ static func make(parent: Node3D, who: String, height := 1.6) -> Node3D:
 	for clip in ["walking", "running"]:
 		actor.ground[clip] = actor._ground_speed(clip)
 	actor.play("idle")
+	actor.player.seek(0, true)  # pose him now: the title pauses the tree before the first frame (it showed a T-pose)
 	return actor
 
 func _process(delta: float) -> void:
