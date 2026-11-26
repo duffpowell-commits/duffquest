@@ -26,6 +26,14 @@ func _beat(sample) -> void:
 	sample.clock += .4
 	sample.attack_time = 0
 
+## Wait out a zone trip: until the fade card is gone (a first load of the home models can take a while).
+func _trip(sample) -> void:
+	await create_timer(.2, true, false, true).timeout
+	for i in 200:
+		if not sample.zones.moving:
+			return
+		await create_timer(.05, true, false, true).timeout
+
 func _frames(count: int) -> void:
 	for i in count:
 		await physics_frame
@@ -39,7 +47,7 @@ func _run() -> void:
 		and root.get_camera_3d() is Camera3D, "3D actors and camera")
 	_check(sample.package.get_parent() == sample.pirate_model, "parcel starts in pirate grip")
 	var props := {}
-	for child in sample.get_children():
+	for child in sample.zones.root.get_children():
 		if child.has_meta("set_prop"):
 			var key: String = child.get_meta("set_prop")
 			props[key] = props.get(key, 0) + 1
@@ -99,8 +107,8 @@ func _run() -> void:
 	# HUD + menus in the main game's style (porch_hud.gd).
 	var hud = sample.hud
 	_check(hud != null and hud.screen == "" and sample.foe_status() == ["Porch Pirate", sample.PIRATE_HP, sample.PIRATE_HP]
-		and sample.bubble_name.text == "Duff" and hud.clock_text() == "7:00 AM",
-		"HUD up with the pirate's plate, 7:00 AM, and Duff opens the fight")
+		and sample.bubble_name.text == "Duff" and hud.clock_text() == "5:30 PM",
+		"HUD up with the pirate's plate, 5:30 PM, and Duff opens the fight")
 	_check(hud.find_child("Pause", true, false) is TouchScreenButton and Rect2(hud.PAUSE).end.x <= view.x,
 		"phone-style pause button on screen")
 	hud.open_pause()
@@ -720,6 +728,117 @@ func _run() -> void:
 		"the win card shows the grade and the best on this phone")
 	_check(sample.grade_for(100, 0, 2) == "S" and sample.grade_for(120, 2, 1) == "A" and sample.grade_for(240, 4, 0) == "D" and sample.grade_for(190, 3, 0) == "C"
 		and sample.grade_for(190, 3, 3) == "B", "grades: clean and quick is S, slow and hurt is D, specials pull it up")
+
+	# Walkable zones (Phase 2 step 3): Go inside -> the apartment, the door back out, the stoop door in.
+	var buttons := []
+	for b in sample.hud.menu.find_children("*", "Button", true, false):
+		buttons.append((b as Button).text)
+	_check(buttons == ["Go inside", "Play again", "Quit to title"], "the win card offers Go inside (%s)" % [buttons])
+	var zones = sample.zones
+	sample.go_inside()
+	_check(zones.card.visible and not sample.active, "Go inside fades to the loading card")
+	await _trip(sample)
+	var home := {}
+	for child in zones.root.get_children():
+		if child.has_meta("set_prop") or child is MeshInstance3D:
+			home[String(child.name)] = true
+	_check(zones.zone == "apartment" and zones.indoor and sample.exploring and sample.active and not zones.card.visible
+		and sample.foe_status() == [] and sample.current_foe() == null and not sample.pirate.visible and not sample.sendback.visible,
+		"HOME: the apartment loads, nobody to fight, foes gone")
+	_check(home.has("Couch") and home.has("Kitchenette") and home.has("CoffeeTable") and home.has("DiningTable")
+		and home.has("Window") and home.has("Door") and zones.root.find_children("*", "StaticBody3D", true, false).size() >= 10,
+		"the apartment is dressed: couch, kitchenette, tables, window, door, walls you can't walk through")
+	_check(home.has("Crib") and home.has("PlayMat") and home.has("HighChair") and home.has("Stroller") and home.has("Bouncer")
+		and home.has("Clutter"), "lived in: crib, play mat, bouncer, high chair, stroller, everyday clutter")
+	_check(sample.fight_cam.mode == "explore" and zones.spots.has("couch_left") and zones.spots.has("kitchen"),
+		"the explore camera follows Duff indoors; spots wait for Madison and Brittany")
+	_check(not sample.has_node("Zone_porch") and sample.find_children("PorchLamp", "", true, false).is_empty(),
+		"the porch zone is freed while Duff is home")
+	sample.attack_requested = true
+	sample.kick_requested = true
+	sample.special_requested = true
+	await _frames(3)
+	_check(sample.active and sample.player_hp > 0 and sample._foe() == null, "A, K and R with nobody to fight do nothing harmful")
+	_check(zones.people.has("madison") and zones.people.has("brittany") and zones.people.madison.current == "idle"
+		and sample.feel.music.stream.resource_path.ends_with("mus_edm_home.ogg") and sample.feel.bed.stream != null,
+		"home: Madison and Brittany idle in the room; home music and the room sound play")
+	# USE at home (Duff's pick): A is USE, the other fight buttons are hidden.
+	var hidden := 0
+	for b in ["Dodge", "Kick", "Special"]:
+		hidden += int(not (sample.find_child(b, true, false) as CanvasItem).visible)
+	_check(hidden == 3, "at home only the big button shows (B, K, R hidden)")
+	var spot_of := {}
+	for u in zones.uses:
+		spot_of[u.id] = u
+	_check(spot_of.has("couch") and spot_of.has("fridge") and spot_of.has("crib") and spot_of.has("blinds") and spot_of.has("duck"),
+		"USE spots: couch, fridge, crib, blinds, duck")
+	# Every USE spot can be walked to: a Duff-sized capsule fits somewhere inside each spot's radius.
+	var space: PhysicsDirectSpaceState3D = sample.player.get_world_3d().direct_space_state
+	var capsule := CapsuleShape3D.new()
+	capsule.radius = sample.DUFF_RADIUS
+	capsule.height = 1.4
+	var query := PhysicsShapeQueryParameters3D.new()
+	query.shape = capsule
+	query.collision_mask = sample.WORLD_LAYER
+	var reachable := 0
+	for u in zones.uses:
+		var fits := false
+		for ring in [0.0, .33, .66, .95]:
+			for k in 16:
+				var p: Vector2 = u.at + Vector2.from_angle(k * TAU / 16) * ring * u.radius
+				query.transform = Transform3D(Basis(), Vector3(p.x, .75, p.y))
+				if space.intersect_shape(query, 1).is_empty():
+					fits = true
+		reachable += int(fits)
+		if not fits:
+			print("no room at USE spot ", u.id)
+	_check(reachable == zones.uses.size(), "every USE spot has room for Duff to stand (%d/%d)" % [reachable, zones.uses.size()])
+	sample.player.position = Vector3(spot_of.fridge.at.x, 0, spot_of.fridge.at.y)
+	sample.player_hp = 2
+	sample._press_a()
+	await _frames(3)
+	_check(sample.player_hp == 4 and sample.bubble_text.text.begins_with("Cold pizza") and sample.attack_time == 0,
+		"USE at the fridge: a snack, +2 hearts, no punch thrown")
+	sample.player.position = Vector3(spot_of.couch.at.x, 0, spot_of.couch.at.y)
+	var before: float = sample.hud.minutes
+	sample._press_a()
+	await _frames(3)
+	_check(sample.hud.minutes >= before + 30 and sample.player_hp == 5, "USE on the couch: half an hour passes, +1 heart")
+	sample.player.position = Vector3(spot_of.blinds.at.x, 0, spot_of.blinds.at.y)
+	sample._press_a()
+	await _frames(3)
+	var pane: MeshInstance3D = zones.root.get_node("Window")
+	_check(sample.blinds_down and (pane.material_override as StandardMaterial3D).albedo_color == Color("#8a8478"), "USE at the window: blinds down, the window darkens")
+	sample._press_a()
+	await _frames(3)
+	_check(not sample.blinds_down, "USE again: blinds up")
+	sample.player.position = Vector3(0, 0, 1.5)
+	await _frames(2)
+	_check(zones.nearest_use().is_empty(), "nothing to use in the middle of the room")
+	var door: Dictionary = zones.doors[0]
+	sample.player.position = Vector3(door.at.x, 0, door.at.y)
+	await _trip(sample)
+	_check(zones.zone == "porch" and not zones.indoor and sample.player.position.distance_to(Vector3(0, 0, -1.2)) < .5
+		and sample.fight_cam.mode == "explore" and sample.has_node("Zone_porch"),
+		"the apartment door leads back out to the porch (Duff on the walk, still exploring)")
+	await _frames(3)
+	sample.player.position = Vector3(0, 0, -2.3)
+	await _trip(sample)
+	_check(zones.zone == "apartment" and zones.trips == 3, "the front door on the stoop takes Duff back inside (%d trips)" % zones.trips)
+	# Light follows the clock.
+	var Daylight = load("res://porch_daylight.gd")
+	_check(Daylight.phase(1050) == "golden hour" and Daylight.phase(60) == "night" and Daylight.phase(720) == "afternoon"
+		and Daylight.at(720).sun_energy > Daylight.at(0).sun_energy * 3, "day phases: golden hour at 5:30 PM, bright noon, dark night")
+	var lamp: OmniLight3D = zones.root.get_node("LampLight")
+	sample.look.daylight(0)
+	var night_lamp := lamp.light_energy
+	var night_sun: float = sample.look.sun.light_energy
+	sample.look.daylight(720)
+	_check(night_lamp > lamp.light_energy * 5 and night_sun < sample.look.sun.light_energy * .3,
+		"night: lamps up, sun down; noon: lamps off, sun up")
+	sample.hud.minutes += 60
+	await _frames(3)
+	_check(absf(sample.look.minute_shown - sample.hud.game_minute()) < .1, "the light keeps up with the HUD clock")
 
 	Input.action_press("ui_right", .8)  # thumb still on the stick when Retry is tapped
 	sample._reset()

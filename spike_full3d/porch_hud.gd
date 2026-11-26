@@ -34,7 +34,7 @@ const K_COL := Color("#c7802a")
 const R_AT := Vector2(738, 212)  ## Red Right Hand: its ring is the special meter, it glows when full
 const R_R := 44.0
 const R_COL := Color("#c0201c")
-const START_MIN := 7 * 60    ## the cold open starts 7:00 AM, like the main game
+const START_MIN := 17 * 60 + 30  ## 5:30 PM: the porch fight is the golden hour (light follows the clock, porch_daylight.gd)
 const GAME_MIN_PER_SEC := .2 ## the clock creeps: one game minute every 5 seconds
 
 var game  ## porch.gd
@@ -49,6 +49,7 @@ var flash_col := Color.TRANSPARENT
 var flash_time := 0.0
 var flash_len := 1.0
 var minutes := 0.0
+var clock_start := start_min()  ## minute of the day the clock started at
 var menu: Control        ## the open title / pause / end screen, or null
 var screen := ""         ## "", "title", "pause", "settings", "ko", "win"
 var _boxes := {}
@@ -160,7 +161,10 @@ func _round(c: Vector2, r: float, col: Color, letter: String, down: bool) -> voi
 	draw_circle(c, r, Color(fill, a))
 	draw_circle(c - Vector2(0, r * .25), r * .62, Color(fill.lightened(.18), a * .6))
 	draw_arc(c, r, 0, TAU, 48, Color(INK, a), 3.6)
-	_label(c + Vector2(0, r * .34), letter, int(r * 1.0), Color(CREAM, a), -1, HORIZONTAL_ALIGNMENT_CENTER)
+	if letter.length() == 1:
+		_label(c + Vector2(0, r * .34), letter, int(r * 1.0), Color(CREAM, a), -1, HORIZONTAL_ALIGNMENT_CENTER)
+	else:  # a word (USE): centred across the button
+		_label(c + Vector2(-r, r * .2), letter, int(r * .55), Color(CREAM, a), r * 2, HORIZONTAL_ALIGNMENT_CENTER)
 
 func _hint(at: Vector2, text: String) -> void:
 	draw_string_outline(body, at - Vector2(60, 0), text, HORIZONTAL_ALIGNMENT_CENTER, 120, 18, 6, Color(0, 0, 0, .7))
@@ -178,7 +182,12 @@ func _draw() -> void:
 	_pause_button()
 	_foe_plate()
 	_callout()
-	if game.active:
+	if game.active and game.exploring:  # walking around: one big USE button, named for what's here
+		var spot: Dictionary = game.zones.nearest_use()
+		_round(A_AT, A_R, BTN_MAIN if spot else Color(BTN_MAIN, .4), "USE", a_down and not spot.is_empty())
+		if spot:
+			_hint(A_AT + Vector2(-A_R - 44, 26), spot.label)
+	elif game.active:
 		_round(B_AT, B_R, B_COL, "B", b_down)
 		_hint(B_AT + Vector2(-B_R - 38, 7), "roll")
 		_meter_button()
@@ -206,8 +215,20 @@ func flash(col: Color, seconds: float) -> void:
 	flash_time = seconds
 	flash_len = seconds
 
+## Minute of the day the clock starts at: START_MIN, or `--clock=HH:MM`.
+static func start_min() -> int:
+	for arg in OS.get_cmdline_user_args():
+		if arg.begins_with("--clock="):
+			var parts := arg.trim_prefix("--clock=").split(":")
+			return (int(parts[0]) * 60 + (int(parts[1]) if parts.size() > 1 else 0)) % 1440
+	return START_MIN
+
+## Minute of the day now (fractional; the lighting follows it).
+func game_minute() -> float:
+	return clock_start + minutes
+
 func clock_text() -> String:
-	var m := START_MIN + int(minutes)
+	var m := clock_start + int(minutes)
 	var h := (m / 60) % 24
 	return "%d:%02d %s" % [12 if h % 12 == 0 else h % 12, m % 60, "AM" if h < 12 else "PM"]
 
@@ -454,7 +475,14 @@ func show_end(won: bool) -> void:
 	_title_label(box, line, Vector2(24, 16), 512, 21, CREAM, body)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 40)
-	row.position = Vector2(150, 410)
-	row.add_child(_pill("Play again" if won else "Retry", BTN_MAIN, func() -> void: game.retry()))
-	row.add_child(_pill("Quit to title", BTN_EXIT, func() -> void: game.quit_to_title()))
+	if won:  # the porch is secured: walk home through the front door (Phase 2 step 3)
+		row.add_theme_constant_override("separation", 24)
+		row.position = Vector2(96, 410)
+		row.add_child(_pill("Go inside", BTN_MAIN, func() -> void: game.go_inside(), 240))
+		row.add_child(_pill("Play again", BTN_ALT, func() -> void: game.retry(), 240))
+		row.add_child(_pill("Quit to title", BTN_EXIT, func() -> void: game.quit_to_title(), 240))
+	else:
+		row.position = Vector2(150, 410)
+		row.add_child(_pill("Retry", BTN_MAIN, func() -> void: game.retry()))
+		row.add_child(_pill("Quit to title", BTN_EXIT, func() -> void: game.quit_to_title()))
 	m.add_child(row)
