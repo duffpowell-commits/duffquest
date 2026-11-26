@@ -5,9 +5,9 @@ Update this file as you go, not just at the end. Newest entry first. How the cod
 
 ## Where it stands (Nov 26, 2026, 7 AM CT)
 
-**PAUSED (Duff, Nov 26, 7:11 AM CT):** work moved to Rush. Do nothing here until Duff says to continue.
-When he does, start at "Next steps" step 1 below. PR 218 head is now `4970743`: `e929b6b` plus two
-commits that only add docs.
+**Resumed (Duff, Nov 26, 7:12 AM CT): "We'll build all of the fixes, cancel the reviews."** The blind
+first-timer and fresh-eyes reviews for PR 218 are cancelled by Duff, and PR 218 merges once CI's tests are green.
+From here, build the fixes reviews have named without re-running the reviews unless Duff asks for one.
 
 **Goal (Duff):** remake DuffQuest fully in 3D, zone by zone. `spike_full3d/` is the seed: the porch fight
 (Porch Pirate, Marketplace Mike, Sir Sends-It-Back), then the walk home to the apartment.
@@ -58,8 +58,8 @@ How the blind review is run:
 
 ## Next steps, in order
 
-1. Run both reviews on PR 218. At 8.5+ and with CI green: merge, check the browser link updates, tell Duff.
-2. Under 8.5: fix what the review names in one pass on the same branch, push, re-review.
+1. PR 218: merge once CI tests are green (Duff waived its reviews, Nov 26). Check the browser link updates.
+2. Reviews are off for now (Duff's call). Run one only if Duff asks.
 3. Pass 2 = the kitchen shift (four kitchen bosses, PR 202 planned them). Before building it:
    - write its 8.5 plan and get Duff's OK on one card;
    - state a Meshy credit budget first (about 165 credits estimated). Any single job over 50 credits needs Duff's yes, and you must check existing models in project files first.
