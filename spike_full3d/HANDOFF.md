@@ -9,7 +9,7 @@ Update this file as you go, not just at the end. Newest entry first. How the cod
 
 ## Newest (Nov 26, 2026, 1:40 PM CT)
 
-- **Name:** still Duff Quest. "Hand Wash Only" came up on Nov 26 but was only brainstorming, so nothing is renamed.
+- **Name:** Fork Around and Find Out (Duff, Nov 26, PR #222 merged). The title card says it; ids and paths keep `duffquest`.
 - **Frying pan:** Duff fights with a cast-iron skillet in his LEFT hand (`porch_art.gd` `skillet()`, built
   free from primitives, 0 Meshy credits; held via `rig_actor.attach("LeftHand")`, `SKILLET_GRIP` in
   `fight_core.gd`). The right hand stays free for the Red Right Hand special. A quiet "bonk" rings under every
@@ -32,8 +32,7 @@ and merge on green CI. Don't run the blind first-timer or fresh-eyes reviews unl
 
 - #221 (the frying pan, above) merged Nov 26.
 
-**Open:** #222, a draft that renames the game to "Fork Around and Find Out". Names are brainstorming until
-Duff confirms one, so it waits on his naming call. Don't merge it without his yes.
+**Merged:** #222, the rename to "Fork Around and Find Out" (Duff picked it Nov 26).
 
 ## The 8.5 gate (Duff's rule, Nov 26)
 

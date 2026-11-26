@@ -16,8 +16,8 @@ This repo is public.
 - Game art, code, and design docs are fine.
 
 ## Where things stand (Nov 21)
-- **Nov 26: current work is the 3D remake. Any AI resumes from `spike_full3d/HANDOFF.md`.** Name stays DuffQuest
-  (new names are brainstorming until Duff confirms). Root `HANDOFF.md` and `docs/HANDOFF.md` are old and marked stale.
+- **Nov 26: current work is the 3D remake. Any AI resumes from `spike_full3d/HANDOFF.md`.** Game renamed **Fork Around and Find Out**
+  (Duff, Nov 26, PR #222; repo/package id/slug keep `duffquest`). ChatGPT/any-AI cold start: `HANDOFF_CHATGPT.md`. Root `HANDOFF.md` and `docs/HANDOFF.md` are old and marked stale.
 - **Studio mascot (Duff, Nov 26): the three-eyed fox is in every game as a rare cameo, not a pal**: a small event
   that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `docs/MASCOT.md`.
 - Nov 24: fully 3D porch slice in `spike_full3d/` (own Godot project + APK `duffquest-porch3d.apk` on the

@@ -13,7 +13,7 @@ Short page. Read this first. Details live in `TRACKER.md` and `reference.md`.
 - Handoff for any AI: **`spike_full3d/HANDOFF.md`** (state, 8.5 scores, next steps, gotchas). Code map: `spike_full3d/BUILDING.md`.
 - Live: browser https://duffpowell-commits.github.io/duffquest/porch3d/ and `duffquest-porch3d.apk` on the `dev` release.
 - On main: porch fight (Porch Pirate, Marketplace Mike, Sir Sends-It-Back), walk home, pass 1 + 1b of the 8.5 plan (PR #218), mascot rule (#220), cast-iron skillet in Duff's left hand (#221).
-- **Name stays DuffQuest.** "Hand Wash Only" and other new names are brainstorming until Duff confirms one. Open draft #222 ("Fork Around and Find Out" rename) waits on Duff's naming call: don't merge it without his yes.
+- **Name: Fork Around and Find Out** (Duff picked it Nov 26; PR #222 merged). Repo, package id, itch slug and save keys still say `duffquest` on purpose. Cold-start doc for ChatGPT or any AI: `HANDOFF_CHATGPT.md`.
 - Next: Duff's phone check, then pass 2 (kitchen shift) with its own 8.5 plan card and Meshy budget card. Reviews are off unless Duff asks.
 - Mascot: rare three-eyed fox cameo, plus one among the overworld animals (`docs/MASCOT.md`).
 
