@@ -5,6 +5,10 @@ Update this file as you go, not just at the end. Newest entry first. How the cod
 
 ## Where it stands (Nov 26, 2026, 7 AM CT)
 
+**PAUSED (Duff, Nov 26, 7:11 AM CT):** work moved to Rush. Do nothing here until Duff says to continue.
+When he does, start at "Next steps" step 1 below. PR 218 head is now `4970743`: `e929b6b` plus two
+commits that only add docs.
+
 **Goal (Duff):** remake DuffQuest fully in 3D, zone by zone. `spike_full3d/` is the seed: the porch fight
 (Porch Pirate, Marketplace Mike, Sir Sends-It-Back), then the walk home to the apartment.
 
