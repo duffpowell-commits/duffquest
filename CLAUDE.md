@@ -65,6 +65,10 @@ This repo is public.
   update this file + `TRACKER.md` after each. Real engine renders for visual calls, saved in `docs/renders/`.
 
 ## Guards (enforced)
+- **First step of every session, once per clone: `git config core.hooksPath .githooks`.** That turns on
+  `.githooks/pre-push`, which runs the same `guard.py` rules on `git push` for every agent (Grok, Codex, people),
+  not just Claude Code. Any push that rewrites the remote branch counts as a force push there. `--no-verify`
+  skips it: don't. Self-test `tools/test_push_guard.sh` -> `PUSH GUARD PASS`. (From godot-game-starter, Nov 26.)
 - `.claude/hooks/guard.py` blocks force push, direct push to main, pushing code the tests didn't pass on, writing or
   generating signing keys and committing secret files (.env, keystores, secrets.*; names only, not contents). Run `tools/test.sh` before a push.
 - PRs: the `fresh-eyes` status stays pending until a fresh-context review posts `FRESH-EYES REVIEW: PASS` on the head

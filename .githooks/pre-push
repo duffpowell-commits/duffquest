@@ -1,0 +1,22 @@
+#!/bin/sh
+# Git pre-push hook for EVERY agent (Grok, Claude, Codex, Copilot, people), not just Claude Code.
+# One-time setup per clone (first step of every session, see AGENTS.md):
+#   git config core.hooksPath .githooks
+# Blocks: force pushes (any push that rewrites the remote branch), pushes to main/master,
+# secret or plain signing-key files in the pushed commits, and code the tests didn't pass on
+# (test_cmd in .claude/hooks/guard.cfg; empty = no test gate). The rules live in one place:
+# .claude/hooks/guard.py, the same script Claude Code's PreToolUse hook runs.
+# `git push --no-verify` skips this hook. CI and the fresh-eyes gate stay the backstop.
+# Why (Nov 21, 2026): Claude Code hooks only fire inside Claude Code, so Grok and other agents
+# could push past every rule without noticing. A Git hook binds everyone. See docs/DECISIONS.md.
+ROOT=$(git rev-parse --show-toplevel) || exit 1
+G="$ROOT/.claude/hooks/guard.py"
+if [ ! -f "$G" ]; then
+  echo "pre-push: $G is missing, so nothing is checked. Copy .claude/ from godot-game-starter." >&2
+  exit 0
+fi
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "BLOCKED by .githooks/pre-push: python3 not found, so the push guard can't run." >&2
+  exit 1
+fi
+exec python3 "$G" --pre-push "$@"
