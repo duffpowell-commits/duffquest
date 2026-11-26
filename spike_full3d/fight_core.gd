@@ -19,6 +19,8 @@ const ACTOR_LAYER := 2
 const PLANTER_AT := Vector3(1.66, 0, -.74)
 const PLANTER_SIZE := Vector3(1.06, .62, .82)
 const PLAYER_SPEED := 4.6
+## Where the skillet sits in Duff's left fist (LeftHand bone space): grip in the palm, pan past the knuckles.
+const SKILLET_GRIP := Transform3D(Basis.IDENTITY, Vector3(0, .08, -.03))
 const PIRATE_SPEED: float = FoeData.FOES["pirate"]["speed"]
 const PLAYER_HP := 5
 const PIRATE_HP: int = FoeData.FOES["pirate"]["hp"]
@@ -146,6 +148,7 @@ var rival_in: float:  ## old name for next_in (he walks in this long after Mike 
 var sendback: CharacterBody3D:
 	get: return rival.body
 var package: Node3D
+var skillet: Node3D            ## Duff's cast-iron skillet, in his left hand for the fight (the right is the Red Right Hand)
 var hit_marker: MeshInstance3D
 var impact: MeshInstance3D
 var impact_time := 0.0
@@ -387,6 +390,7 @@ func _attack() -> void:
 	if feel:
 		var ko := _hp_of(foe) <= damage
 		feel.landed(foe, player.position, ko)
+		feel.sfx("bonk", .12, -5.0)  # the skillet's ring under the punch: A is "bonk"
 		if finisher:
 			feel.push(foe, offset, feel.KNOCK_HIT * FINISHER_KNOCK)
 			feel.add_trauma(.25)
@@ -435,6 +439,7 @@ func _kick() -> void:
 	if feel:
 		var ko := _hp_of(foe) <= damage
 		feel.landed(foe, player.position, ko)
+		feel.sfx("bonk", .12, -5.0)  # the skillet's ring under the punch: A is "bonk"
 		feel.push(foe, offset, feel.KNOCK_HIT * (LAUNCH_KNOCK if launcher else KICK_KNOCK))
 		if counter:
 			feel.slow_mo(.45)
