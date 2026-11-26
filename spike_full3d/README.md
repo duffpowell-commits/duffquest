@@ -1,5 +1,7 @@
 # Duff Quest 3D porch encounter
 
+**Play in a browser (iPhone too):** https://duffpowell-commits.github.io/duffquest/porch3d/ (CI publishes it from main; turn the phone sideways). APK: Releases -> `dev` -> `duffquest-porch3d.apk`.
+
 **Next coder: read `BUILDING.md` first** (how the slice is wired, adding foes/moves/zones, checks, rules, phase plan).
 
 A standalone Godot 4.7.2 vertical slice, fully 3D. Duff and the Porch Pirate are Meshy models on a real
