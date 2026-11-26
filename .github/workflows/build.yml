@@ -72,6 +72,8 @@ jobs:
           mkdir -p ~/.local/share/godot/export_templates
           unzip -q tpl.tpz -d /tmp/tpl
           mv /tmp/tpl/templates ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          # the stock web template, kept for the 3D porch slice (the trimmed one below is cut for the main game)
+          cp ~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}/web_nothreads_release.zip /tmp/web_stock.zip
       - name: Use the trimmed 3D web template (web_template_3d.yml; 3D view is the default since Nov 16)
         env:
           GH_TOKEN: ${{ github.token }}
@@ -181,6 +183,22 @@ jobs:
           ls -la build/pages
           grep -o '<head>.\{0,400\}' build/pages/index.html | head -c 600; echo
           test -s build/pages/index.manifest.json
+      - name: Export the 3D porch slice for browsers (/porch3d/)
+        # Nov 26 (Duff: a link Brittany can play on her iPhone): spike_full3d/ as a web build at
+        # https://duffpowell-commits.github.io/duffquest/porch3d/ . Stock web template (the trimmed one is cut
+        # for the main game and may drop what the slice uses); Compatibility renderer, so iPhone Safari runs it.
+        run: |
+          T=~/.local/share/godot/export_templates/${GODOT_VERSION/-/.}
+          cp $T/web_nothreads_release.zip /tmp/web_trimmed.zip
+          cp /tmp/web_stock.zip $T/web_nothreads_release.zip
+          godot --headless --path spike_full3d --import >/dev/null 2>&1 || true
+          mkdir -p build/pages/porch3d
+          godot --headless --path spike_full3d --export-release "Web" "$PWD/build/pages/porch3d/index.html" 2>&1 | tee porch3d_web.log
+          cp /tmp/web_trimmed.zip $T/web_nothreads_release.zip
+          gzip -9 -k -n build/pages/porch3d/index.wasm
+          test -s build/pages/porch3d/index.pck
+          test -s build/pages/porch3d/index.wasm.gz
+          ls -la build/pages/porch3d
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/pages
