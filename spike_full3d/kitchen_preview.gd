@@ -10,30 +10,25 @@ var green: StandardMaterial3D
 var camera: Camera3D
 
 func _ready() -> void:
-	steel = material(Color("#b8bec0"), .35, .48)
-	# Deterministic brushed, mottled steel; no external asset purchase.
-	var noise := FastNoiseLite.new()
-	noise.seed = 63
-	noise.frequency = .12
-	var img := Image.create(256, 256, false, Image.FORMAT_RGB8)
-	for y in 256:
-		for x in 256:
-			var v := .85 + .035 * noise.get_noise_2d(x * .12, y * 3.0) + .04 * noise.get_noise_2d(x, y)
-			img.set_pixel(x, y, Color(v, v, v))
-	steel.albedo_texture = ImageTexture.create_from_image(img)
+	steel = material(Color("#c4c8c5"), .48, .52)
+	weather(steel, 63, true)
 	dark = material(Color("#25292c"), .1, .84)
 	ivory = material(Color("#e9dfc6"), 0, .86)
 	red = material(Color("#943b2e"), 0, .8)
 	wood = material(Color("#94643c"), 0, .9)
 	green = material(Color("#71933d"), 0, .8)
+	weather(ivory, 19, false)
 	room()
 	grill()
 	fryer()
 	saute()
 	cold_prep()
 	pass_station()
+	details()
+	batch_static()
 	lighting()
 	cast()
+	atmosphere()
 	camera = Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.size = 10.1
@@ -51,9 +46,12 @@ func material(color: Color, metal: float, rough: float) -> StandardMaterial3D:
 
 func box(parent: Node3D, at: Vector3, size: Vector3, mat: Material) -> MeshInstance3D:
 	var item := MeshInstance3D.new()
-	var mesh := BoxMesh.new()
-	mesh.size = size
-	item.mesh = mesh
+	if mat == steel and minf(size.x, minf(size.y, size.z)) >= .085 and maxf(size.x, maxf(size.y, size.z)) >= .35:
+		item.mesh = bevel_mesh(size, minf(.035, minf(size.x, minf(size.y, size.z)) * .22))
+	else:
+		var mesh := BoxMesh.new()
+		mesh.size = size
+		item.mesh = mesh
 	item.material_override = mat
 	parent.add_child(item)
 	item.position = at
@@ -65,7 +63,7 @@ func cylinder(parent: Node3D, at: Vector3, radius: float, height: float, mat: Ma
 	mesh.top_radius = radius
 	mesh.bottom_radius = radius
 	mesh.height = height
-	mesh.radial_segments = 20
+	mesh.radial_segments = 16
 	item.mesh = mesh
 	item.material_override = mat
 	parent.add_child(item)
@@ -93,12 +91,16 @@ func station(title: String, at: Vector3) -> Node3D:
 func room() -> void:
 	var base := material(Color("#473631"), 0, .9)
 	box(self, Vector3(0, -.14, 0), Vector3(11.2, .25, 7.2), base)
-	var tiles := [material(Color("#e2d5bb"), 0, .9), material(Color("#454948"), 0, .92)]
+	var tiles := [material(Color("#c5bba5"), 0, .72), material(Color("#42494a"), 0, .79)]
+	for i in 2:
+		weather(tiles[i], 40 + i, false)
+		tiles[i].set_meta("no_shadow", true)
 	for x in 22:
 		for z in 14:
-			box(self, Vector3(-5.25 + x * .5, .005, -3.25 + z * .5), Vector3(.486, .035, .486), tiles[(x + z) % 2])
-	box(self, Vector3(0, 1.55, -3.58), Vector3(11.2, 3.1, .18), ivory)
-	box(self, Vector3(-5.58, 1.55, -2.35), Vector3(.18, 3.1, 2.4), ivory)
+			box(self, Vector3(-5.25 + x * .5, .005, -3.25 + z * .5), Vector3(.486, .035, .486), tiles[(x + z) % 2]).rotation.y = ((x*17+z*13)%4) * PI/2
+	var plaster := material(Color("#adab9d"), 0, .93)
+	box(self, Vector3(0, 1.55, -3.58), Vector3(11.2, 3.1, .18), plaster)
+	box(self, Vector3(-5.58, 1.55, -2.35), Vector3(.18, 3.1, 2.4), plaster)
 	box(self, Vector3(0, .12, -3.45), Vector3(11, .24, .08), red)
 	box(self, Vector3(-5.45, .12, -2.35), Vector3(.08, .24, 2.4), red)
 	# Grouted subway tile backsplash, short side wall for clear cutaway.
@@ -194,7 +196,7 @@ func pass_station() -> void:
 		cylinder(s, Vector3(x, 1.87, -.20), .19, .18, red)
 		var glow := OmniLight3D.new()
 		glow.light_color = Color("#ffb86e")
-		glow.light_energy = .4
+		glow.light_energy = .32
 		glow.omni_range = 2.0
 		s.add_child(glow)
 		glow.position = Vector3(x, 1.72, -.18)
@@ -210,21 +212,23 @@ func lighting() -> void:
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = Color("#292a30")
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color("#e4e5e4")
-	env.ambient_light_energy = .42
+	env.ambient_light_color = Color("#d2d6d8")
+	env.ambient_light_energy = .50
 	world.environment = env
 	add_child(world)
 	var sun := DirectionalLight3D.new()
-	sun.light_color = Color("#fff0dc")
-	sun.light_energy = .8
+	sun.light_color = Color("#fff0da")
+	sun.light_energy = .55
 	sun.shadow_enabled = true
+	sun.shadow_blur = 1.8
+	sun.directional_shadow_max_distance = 24.0
 	add_child(sun)
 	sun.rotation_degrees = Vector3(-58, -32, 0)
 	for x in [-4.0, -.5, 3.4]:
 		var lamp := OmniLight3D.new()
 		lamp.light_color = Color("#ffc381")
-		lamp.light_energy = .65
-		lamp.omni_range = 5.0
+		lamp.light_energy = .55
+		lamp.omni_range = 4.2
 		add_child(lamp)
 		lamp.position = Vector3(x, 3.5, -.4)
 
@@ -235,3 +239,241 @@ func cast() -> void:
 		actor.position = entry[1]
 		actor.fit_head_bone()
 		actor.rotation.y = -2.65
+		ground_shadow(actor.position)
+
+## Compact, mipmapped procedural albedo + roughness maps shared by the static batches.
+func weather(mat: StandardMaterial3D, seed_value: int, brushed: bool) -> void:
+	var noise := FastNoiseLite.new()
+	noise.seed = seed_value
+	noise.frequency = .035
+	var rng := RandomNumberGenerator.new()
+	rng.seed = seed_value
+	var albedo := Image.create(256, 256, false, Image.FORMAT_RGB8)
+	var rough := Image.create(256, 256, false, Image.FORMAT_L8)
+	for y in 256:
+		for x in 256:
+			var cloud := noise.get_noise_2d(x * .8, y * .8)
+			var scuff := noise.get_noise_2d(x * .14, y * 16.0) if brushed else noise.get_noise_2d(x * 5.0, y * 5.0)
+			var stain := smoothstep(.12, .52, cloud)
+			var v := clampf(.91 + scuff * (.12 if brushed else .055) + rng.randf_range(-.018, .018) - stain * (.15 if brushed else .075), .45, 1.0)
+			albedo.set_pixel(x, y, Color(v, v * (1.0 - stain * .035), v * (1.0 - stain * .075)))
+			var r := clampf(.63 + stain * .24 + scuff * .13, .3, .98)
+			rough.set_pixel(x, y, Color(r, r, r))
+	if brushed:
+		for i in 60:
+			var y := rng.randi_range(1, 254)
+			var x := rng.randi_range(1, 220)
+			for dx in rng.randi_range(5, 30):
+				albedo.set_pixel(x + dx, y, Color(.53, .55, .55) if i % 3 == 0 else Color(.96, .97, .97))
+	albedo.generate_mipmaps()
+	rough.generate_mipmaps()
+	mat.albedo_texture = ImageTexture.create_from_image(albedo)
+	mat.roughness_texture = ImageTexture.create_from_image(rough)
+	mat.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
+	mat.roughness = 1.0
+
+## Rounded cube with a single bevel band per face edge; preserves the original bounds.
+func bevel_mesh(size: Vector3, radius: float) -> ArrayMesh:
+	var half := size * .5
+	var inner := half - Vector3.ONE * radius
+	var st := SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	for axis in 3:
+		var u := (axis + 1) % 3
+		var v := (axis + 2) % 3
+		for sign_value in [-1.0, 1.0]:
+			var us := [-half[u], -inner[u], inner[u], half[u]]
+			var vs := [-half[v], -inner[v], inner[v], half[v]]
+			for i in 3:
+				for j in 3:
+					var corners := [[i,j], [i+1,j], [i+1,j+1], [i,j+1]]
+					var order := [0,2,1,0,3,2] if sign_value > 0 else [0,1,2,0,2,3]
+					for k in order:
+						var p := Vector3.ZERO
+						p[axis] = half[axis] * sign_value
+						p[u] = us[corners[k][0]]
+						p[v] = vs[corners[k][1]]
+						var core := p.clamp(-inner, inner)
+						var n := (p - core).normalized()
+						st.set_normal(n)
+						st.set_uv(Vector2(p[u]/size[u]+.5, p[v]/size[v]+.5))
+						st.add_vertex(core + n * radius)
+	st.index()
+	return st.commit()
+
+## Combine repeated static geometry by material, leaving actors and translucent effects unbatched.
+func batch_static() -> void:
+	var batches := {}
+	for child in find_children("*", "MeshInstance3D", true, false):
+		var mesh_node := child as MeshInstance3D
+		var mat := mesh_node.material_override
+		if not batches.has(mat):
+			var surface := SurfaceTool.new()
+			surface.begin(Mesh.PRIMITIVE_TRIANGLES)
+			batches[mat] = surface
+		var surface: SurfaceTool = batches[mat]
+		for index in mesh_node.mesh.get_surface_count():
+			surface.append_from(mesh_node.mesh, index, global_transform.affine_inverse() * mesh_node.global_transform)
+		mesh_node.free()
+	var group := Node3D.new()
+	group.name = "StaticVisualBatches"
+	add_child(group)
+	for mat in batches:
+		var item := MeshInstance3D.new()
+		item.mesh = batches[mat].commit()
+		item.material_override = mat
+		if mat.has_meta("no_shadow"):
+			item.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		group.add_child(item)
+
+func details() -> void:
+	var chrome := material(Color("#c5c7bd"), .55, .38)
+	var rubber := material(Color("#252b2a"), 0, .95)
+	var brass := material(Color("#b58b47"), .35, .55)
+	var amber := material(Color("#d28a37"), 0, .5)
+	var toast := material(Color("#b6793d"), 0, .82)
+	var patty := material(Color("#593929"), 0, .88)
+	var paper := material(Color("#eee2bf"), 0, .9)
+	var towel := material(Color("#a65945"), 0, .95)
+	var lamp_mat := material(Color("#fff0c4"), 0, .5)
+	lamp_mat.emission_enabled = true
+	lamp_mat.emission = Color("#ffcd83")
+	lamp_mat.emission_energy_multiplier = .65
+	# Control fascia, dial markings, raised handles and indicator lamps.
+	for station_name in ["Grill", "Fryer", "Saute", "ColdPrep", "Pass"]:
+		var s := get_node(station_name) as Node3D
+		var width := 3.3 if station_name == "Pass" else (2.4 if station_name == "ColdPrep" else 1.65)
+		for x in [-.3, .3]:
+			for dx in [-.17, .17]:
+				box(s, Vector3(width*x+dx, .58, .505), Vector3(.04,.05,.075), chrome)
+			box(s, Vector3(width*x,.58,.55), Vector3(.38,.045,.045), chrome)
+		if station_name in ["Grill", "Fryer", "Saute"]:
+			box(s, Vector3(0,.87,.477), Vector3(width-.12,.13,.045), dark)
+			for i in 4:
+				var xx := -.52+i*.34
+				cylinder(s, Vector3(xx,.87,.52), .044,.05, chrome).rotation.x = PI/2
+				box(s, Vector3(xx,.887,.55), Vector3(.012,.03,.008), dark)
+				box(s, Vector3(xx+.09,.87,.505), Vector3(.025,.018,.012), amber)
+	# Hood baffles and under-hood lights, kept above the cooking surface.
+	for x in 22:
+		box(self, Vector3(-5.18+x*.24,2.125,-2.9), Vector3(.18,.045,.8), chrome).rotation.x = .14
+	for x in [-4.35,-2.55,-.7]:
+		box(self,Vector3(x,2.13,-2.32),Vector3(1.36,.04,.09),lamp_mat)
+	# Wall-mounted utensil rail and tools between cold prep and service shelving.
+	box(self,Vector3(1.5,1.8,-3.35),Vector3(1.35,.043,.08),chrome)
+	for i in 5:
+		var x := .96+i*.24
+		box(self,Vector3(x,1.58,-3.28),Vector3(.035,.34,.04),chrome)
+		if i % 2 == 0:
+			cylinder(self,Vector3(x,1.38,-3.27),.09,.035,chrome).rotation.x = PI/2
+		else:
+			box(self,Vector3(x,1.36,-3.27),Vector3(.12,.18,.025),chrome)
+	# Floor mats are visual, flat, and remain within existing station footprints/aisle clearance.
+	for x in [-4.35,-2.55,-.7,1.8]:
+		var z := -1.65 if x < 1 else -.98
+		box(self,Vector3(x,.026,z),Vector3(1.42,.018,.56),rubber)
+		for i in 12:
+			box(self,Vector3(x-.61+i*.11,.038,z),Vector3(.055,.008,.46),dark)
+	# Basket mesh crossbars, handles and contents.
+	var fryer_node := get_node("Fryer") as Node3D
+	for x in [-.39,.39]:
+		for i in 7:
+			box(fryer_node,Vector3(x,1.23,-.34+i*.09),Vector3(.54,.018,.018),chrome)
+		for dx in [-.28,.28]:
+			for y in [1.12,1.19]:
+				box(fryer_node,Vector3(x+dx,y,-.08),Vector3(.018,.016,.55),chrome)
+		for i in 6:
+			box(fryer_node,Vector3(x-.19+i*.07,1.13,-.05),Vector3(.038,.032,.24),amber).rotation.y = .15 * (i%3)
+	# Prep containers, squeeze bottles and towel.
+	var prep := get_node("ColdPrep") as Node3D
+	for i in 5:
+		var x := -.86+i*.43
+		for dx in [-.19,.19]:
+			box(prep,Vector3(x+dx,1.22,-.27),Vector3(.025,.065,.34),chrome)
+		for z in [-.44,-.10]:
+			box(prep,Vector3(x,1.22,z),Vector3(.38,.065,.025),chrome)
+		for j in 4:
+			cylinder(prep,Vector3(x-.11+j*.07,1.23,-.25+(.03 if j%2==0 else -.06)),.035,.045,[green,red,ivory,green,wood][i])
+	for i in 3:
+		var x := .72+i*.14
+		cylinder(prep,Vector3(x,1.2,.26),.055,.27,[red,amber,ivory][i])
+		cylinder(prep,Vector3(x,1.36,.26),.027,.07,ivory)
+	box(prep,Vector3(-1.05,.64,.54),Vector3(.25,.34,.045),towel)
+	for i in 4:
+		box(prep,Vector3(-1.16+i*.07,.64,.57),Vector3(.025,.31,.008),red)
+	# Pass: stacked rimmed plates, marked ticket strips, condiment caddy, heat-lamp bulbs.
+	var pass_node := get_node("Pass") as Node3D
+	for i in 5:
+		cylinder(pass_node,Vector3(1.40,1.07+i*.033,-.1),.17,.025,ivory)
+	for x in [-.95,0,.95]:
+		cylinder(pass_node,Vector3(x,1.775,-.2),.13,.025,lamp_mat)
+		cylinder(pass_node,Vector3(x,1.14,.18),.132,.035,patty)
+		cylinder(pass_node,Vector3(x,1.16,.18),.138,.018,green)
+		cylinder(pass_node,Vector3(x,1.179,.18),.127,.022,amber)
+		cylinder(pass_node,Vector3(x,1.21,.18),.123,.045,toast)
+	for i in 4:
+		var x := -1.15+i*.23
+		box(pass_node,Vector3(x,1.76,.01),Vector3(.15,.22,.015),paper).rotation.x = -.08
+		for j in 4:
+			box(pass_node,Vector3(x,1.82-j*.035,.023),Vector3(.10 if j!=2 else .065,.009,.003),dark)
+	for i in 3:
+		cylinder(pass_node,Vector3(-1.40+i*.13,1.17,-.02),.045,.22,[red,amber,green][i])
+		cylinder(pass_node,Vector3(-1.40+i*.13,1.30,-.02),.02,.045,ivory)
+	# Overhead fixtures float beneath the absent cutaway ceiling, behind station signage.
+	label(self, "ORDER UP", Vector3(3.8,2.68,-3.37), 1.22)
+	for x in [-3.7, .6, 3.6]:
+		box(self,Vector3(x,2.92,-3.22),Vector3(1.15,.10,.27),dark)
+		box(self,Vector3(x,2.86,-3.13),Vector3(1.05,.04,.22),lamp_mat)
+
+var shadow_material: StandardMaterial3D
+func ground_shadow(at: Vector3) -> void:
+	if shadow_material == null:
+		var img := Image.create(64,64,false,Image.FORMAT_RGBA8)
+		for y in 64:
+			for x in 64:
+				var r := Vector2(x-31.5,y-31.5).length()/31.5
+				img.set_pixel(x,y,Color(.10,.07,.05,.55*pow(maxf(0,1-r),1.5)))
+		shadow_material = StandardMaterial3D.new()
+		shadow_material.albedo_texture = ImageTexture.create_from_image(img)
+		shadow_material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		shadow_material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	var quad := MeshInstance3D.new()
+	var plane := PlaneMesh.new()
+	plane.size = Vector2(.85,.70)
+	quad.mesh = plane
+	quad.material_override = shadow_material
+	quad.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	add_child(quad)
+	quad.position = at + Vector3(0,.05,0)
+
+var wisps: Array[MeshInstance3D] = []
+var wisp_time := 0.0
+func atmosphere() -> void:
+	var tex := Image.create(64,64,false,Image.FORMAT_RGBA8)
+	for y in 64:
+		for x in 64:
+			var r := Vector2((x-31.5)/17.0,(y-31.5)/30.0).length()
+			tex.set_pixel(x,y,Color(.94,.91,.83,.34*pow(maxf(0,1-r),1.7)))
+	var mat := StandardMaterial3D.new()
+	mat.albedo_texture = ImageTexture.create_from_image(tex)
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+	for i in 6:
+		var q := MeshInstance3D.new()
+		var mesh := QuadMesh.new()
+		mesh.size = Vector2(.34,.68)
+		q.mesh = mesh
+		q.material_override = mat
+		q.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		add_child(q)
+		wisps.append(q)
+	_process(0)
+
+func _process(delta: float) -> void:
+	wisp_time += delta
+	for i in wisps.size():
+		var phase := fposmod(wisp_time * .28 + i * .33, 1.0)
+		var x: float = [-4.35,-2.55,-.7][i >> 1]
+		wisps[i].position = Vector3(x + sin(phase*TAU+i)*.10, 1.35+phase*.67, -2.58)
+		wisps[i].scale = Vector3.ONE * (.55+phase*.7)
