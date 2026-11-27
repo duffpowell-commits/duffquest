@@ -3,6 +3,9 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Nov 27 — First integrated playable day
+- [Survive Tuesday plan](../docs/PLAYABLE_DAY.md): proposed integrated milestone after existing previews and grill acceptance; no runtime changes.
+
 ## Nov 27 — Character performance direction
 - [Approved animation plan](../docs/PROJECT_ALIGNMENT.md#approved-character-performance-direction-nov-27): shared emotional states, seven kitchen clips, reuse rigs and show real engine animation previews. Planning only.
 
