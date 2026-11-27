@@ -3,6 +3,14 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Kitchen visual polish (Nov 27, 2026; visual approval pending)
+
+- Dedicated stacked branch `preview/kitchen-visual-polish` from PR #229 (`167e67e`). Preserves all five station transforms, the original five approved character models/textures/rigs/scales/positions and existing collision state (no collision objects in this visual-only preview). Zero paid assets; no gameplay, 2D, zone registration or publication changes.
+- Weathered brushed steel and aged ceramic with compact mipmapped albedo/roughness maps; bevel bands, appliance handles/dials/indicators, hood baffles, improved fryer baskets, utensils, plate stacks, tickets, squeeze bottles, prep ingredients, towels, floor mats, subtle steam and warm task lamps/contact shadows. Static kitchen geometry batched into 25 materials; no new model files.
+- Actual Godot 4.7.2 Compatibility paired screenshots and details (elevated and lower views, grill, pass, character), plus lower angle and mobile-safe HUD footprint diagnostics: `docs/renders/porch3d/kitchen-polish/README.md`. All paired camera transforms and idle poses match. Lower whole-room overlaps controls; the pulled-back candidate clears the marked controls at 16:9, at the cost of smaller characters. No live HUD added.
+- Cloud llvmpipe, 1280×720, MSAA off, 60 frames: before 15.02 FPS / 66.58 ms / 1,171 draws / 139,552 primitives; after 11.95 FPS / 83.66 ms / 75 draws / 166,132 primitives. Draw calls down 93.6%; software frame time increased. No actual Galaxy S26 Ultra available, so 60 FPS phone target is unverified. Remaining: stylized repetitive wear, primitive food/utensils, subtle steam, shadow/lighting limitations and mobile performance/actual touch validation.
+- Verification: preview smoke checks 5 unchanged station transforms, 5 approved idle rigs/positions, zero new collision objects and 25 material batches. Porch smoke 159 PASS, no FAIL or SCRIPT ERROR; root `tools/test.sh` 609 PASS, zero failures (existing shutdown resource warnings). Keep the porch acceptance gate in PR #228: no blind score claimed, no approval inferred and no kitchen gameplay integration/merge before phone acceptance and owner approval.
+
 ## Kitchen environment preview (Nov 27, 2026; approval pending)
 
 - Branch `preview/kitchen-environment`: isolated, visual-only cutaway of the kitchen. No gameplay, zone registration, combat, move, animation, model, texture or 2D changes; no asset purchases (0 credits). The existing porch main scene remains the entry point.
