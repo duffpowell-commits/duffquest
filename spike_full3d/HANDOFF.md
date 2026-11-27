@@ -7,6 +7,12 @@ Update this file as you go, not just at the end. Newest entry first. How the cod
 - **The three-eyed fox is in every game as a rare cameo, not a pal**: a small event
   that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `/docs/MASCOT.md`.
 
+## Nov 27 — neighborhood foundation (draft only)
+
+- Separate branch `preview/neighborhood-foundation` from main. `neighborhood/preview.tscn` is an explicitly launched visual prototype; the live porch, root 2D game and kitchen branches are untouched. No zone registration or gameplay integration.
+- 13 canonical map footprints and 8 markers, compact walkable block, repeatable modular kit, four clock-light samples, approved character rigs and porch textures. 0 paid credits. [Design, future schedules and transition contract](neighborhood/README.md). [Actual engine captures / performance](../docs/renders/porch3d/neighborhood/README.md).
+- Hold on production integration: owner porch acceptance (#228), kitchen milestones (#229/#230), then environment approval and Android 60 FPS measurement. No review score or phone approval inferred. This branch must not be merged or released ahead of those gates.
+
 ## Newest (Nov 26, 2026, 1:40 PM CT)
 
 - **Name:** Fork Around and Find Out (Duff, Nov 26, PR #222 merged). The title card says it; ids and paths keep `duffquest`.
