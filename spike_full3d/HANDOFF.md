@@ -3,6 +3,14 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Kitchen environment preview (Nov 27, 2026; approval pending)
+
+- Branch `preview/kitchen-environment`: isolated, visual-only cutaway of the kitchen. No gameplay, zone registration, combat, move, animation, model, texture or 2D changes; no asset purchases (0 credits). The existing porch main scene remains the entry point.
+- Five marked stations: grill, fryer, sauté, cold prep and pass; brushed/scuffed stainless, checkered floor, warm task lighting and a fixed three-quarter view. Existing `rig_actor.gd` loads the canonical `duff`, `sendback`, `camper`, `coupon`, `allergy` GLBs, embedded textures and idle animation libraries; no modifications to character assets.
+- Preview explicitly: `godot --path spike_full3d res://kitchen_preview.tscn`. Render both angles: `xvfb-run -a godot --path spike_full3d --rendering-driver opengl3 --audio-driver Dummy --resolution 1280x720 --script tools/kitchen_preview_shot.gd -- /absolute/path/to/duffquest/docs/renders/porch3d`. The actual captures are `docs/renders/porch3d/kitchen-overview.png` and `kitchen-reverse.png` (1280×720).
+- Verification: Godot 4.7.2 import and preview smoke (all five stations and five existing idle rigs); porch smoke 159 PASS, no FAIL or SCRIPT ERROR; root `tools/test.sh` passed (609 PASS, zero failures). Existing smoke shutdown resource warnings do not change the pass result. Renders use desktop software OpenGL, not a phone performance benchmark.
+- **Gate remains open:** [PR #228](https://github.com/duffpowell-commits/duffquest/pull/228) requires exact-build human phone acceptance, reliable controls and measured 60 FPS before kitchen expansion. No new blind score, no gate approval inferred, no gameplay integration or merge. Review these renders only; save the 8.5 plan and kitchen gameplay for after the porch gate and owner approval.
+
 ## Studio mascot (Duff, Nov 26)
 - **The three-eyed fox is in every game as a rare cameo, not a pal**: a small event
   that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `/docs/MASCOT.md`.
