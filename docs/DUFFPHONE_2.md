@@ -8,6 +8,8 @@ An original Android-inspired in-game phone, with an authentic working-class come
 Use existing Duffphone design and established button roles, with a distinct home screen, status bar, app grid, notifications, and clear back/home navigation. Do not copy a proprietary phone UI exactly. Landscape gameplay opens a readable phone panel with large touch targets, scalable text, and existing accessibility settings.
 Apps: Messages, Banking, Calendar, Marketplace, Maps, Jobs, Contacts, 86 List, Skills. Adapt existing systems first; avoid duplicate economies or quest trackers. Show in-game clock and upcoming obligations; notifications should be dismissible. Start with Messages, Calendar, Banking and Glitch, expand later.
 
+Approved visual treatment: [interface board, panel C](art/wrr-concepts/interface-options.jpg). Use original phone styling, shared colors and legible app icons; preserve approved Glitch design.
+
 ## Glitch
 Glitch is a fictional offline helper with handcrafted contextual dialogue based only on game state. No network calls, subscriptions, real financial advice, external accounts, real device data or API usage. Zero operating cost. The helper's visual identity may draw on the approved three-eyed fox imagery, subject to owner art approval; it remains inside the phone. The physical mascot is a separate rare neighborhood cameo, not a companion.
 

@@ -22,6 +22,9 @@ Material priorities: brushed stainless steel, aged ceramic tile, red/cream check
 - [Materials](art/wrr-concepts/outdoor-materials.jpg): siding, brick, shingles, concrete, asphalt, grass, red painted wood, steel and ceramic. Swatches are visual targets, not validated tiling textures or PBR maps; author individual maps and verify seams in-engine before shipping.
 - All three are concept reference boards, not engine renders or production-ready meshes. First art pass is limited to one residential block; no paid assets or expansion.
 
+## Approved contextual interface (Nov 27)
+[Three-panel interface art board](art/wrr-concepts/interface-options.jpg). Use all three treatments with a shared visual system: A diner ticket for cooking, B graphic-novel speech and choice panels for dramatic encounters, C original Duffphone app panels for daily life. Palette: cream, charcoal, worn teal, amber and burgundy/plum. Keep established UI button roles, clear icons and readable typography; reduce distress behind text and controls, maintain contrast, generous touch targets and contextual actions. Preserve approved character and mascot designs; illustrations in the board are placeholders. Concept only, not an engine screenshot or final branding asset. Implementation follows current milestones.
+
 ## Sequencing and dependencies
 1. Existing porch acceptance and presentation polish.
 2. Isolated kitchen visual prototype and immersive environment pass; actual engine comparison before gameplay expansion.
