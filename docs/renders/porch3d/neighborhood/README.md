@@ -25,6 +25,7 @@ The Android target remains **60 FPS / 16.67 ms**, unverified; this cloud CPU-ren
 
 ## Verification
 
+- Root-project CI-style `--check-only --script` on all four new GDScript files: no parse errors after switching to relative preloads; both neighborhood smoke suites repeated.
 - Root `tools/test.sh`: 609 PASS, zero failed, `ALL PASS (0 failed)` and `TESTS PASS`, no SCRIPT ERROR; existing ObjectDB shutdown warning.
 - Existing porch `smoke.gd`: 159 PASS, no FAIL or SCRIPT ERROR; shutdown warnings for leaked objects/two resources.
 - Neighborhood geography smoke: 13 entrances, 8 markers, connected walkable network, bounds and building footprint blocking passed.

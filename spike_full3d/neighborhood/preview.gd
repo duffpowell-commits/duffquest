@@ -1,7 +1,7 @@
 extends Node3D
-const Geo = preload("res://neighborhood/geography.gd")
-const Daylight = preload("res://porch_daylight.gd")
-const Kit = preload("res://neighborhood/kit.gd")
+const Geo = preload("geography.gd")
+const Daylight = preload("../porch_daylight.gd")
+const Kit = preload("kit.gd")
 var kit: Node3D
 var camera: Camera3D
 var sun: DirectionalLight3D

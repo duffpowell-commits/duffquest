@@ -1,5 +1,5 @@
 extends SceneTree
-const Geo=preload("res://neighborhood/geography.gd")
+const Geo=preload("geography.gd")
 func _initialize() -> void:
  assert(Geo.PLACES.size()==13)
  for place in Geo.PLACES:
