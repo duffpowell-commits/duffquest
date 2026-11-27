@@ -28,6 +28,9 @@ Material priorities: brushed stainless steel, aged ceramic tile, red/cream check
 ## Approved character performance direction (Nov 27)
 Preserve canonical models, rigs, outfits and likeness references. Five shared emotional states (neutral, happy, annoyed, exhausted, surprised) interpreted through each character's distinctive body language. Duff is competent, confident and occasionally cocky; relaxed at home, visibly tired after work. First kitchen animation batch: ready stance, efficient grill work, playful pan toss, precise plating, order-up acknowledgment, exasperated reaction, and satisfied shift completion. Reuse existing real clips where suitable; avoid sliding feet, prop clipping, abrupt transitions and excessive gestures. New clips and character-specific performances require actual in-engine previews and existing owner approvals before shipping. No unapproved likeness changes or paid assets. Design only, not implemented.
 
+## Integrated playable-day milestone
+[Survive Tuesday](PLAYABLE_DAY.md): first coherent 10–15 minute day, proposed scope and acceptance criteria. Existing porch, kitchen and neighborhood gates remain.
+
 ## Sequencing and dependencies
 1. Existing porch acceptance and presentation polish.
 2. Isolated kitchen visual prototype and immersive environment pass; actual engine comparison before gameplay expansion.
