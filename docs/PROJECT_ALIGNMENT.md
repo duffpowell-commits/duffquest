@@ -25,6 +25,9 @@ Material priorities: brushed stainless steel, aged ceramic tile, red/cream check
 ## Approved contextual interface (Nov 27)
 [Three-panel interface art board](art/wrr-concepts/interface-options.jpg). Use all three treatments with a shared visual system: A diner ticket for cooking, B graphic-novel speech and choice panels for dramatic encounters, C original Duffphone app panels for daily life. Palette: cream, charcoal, worn teal, amber and burgundy/plum. Keep established UI button roles, clear icons and readable typography; reduce distress behind text and controls, maintain contrast, generous touch targets and contextual actions. Preserve approved character and mascot designs; illustrations in the board are placeholders. Concept only, not an engine screenshot or final branding asset. Implementation follows current milestones.
 
+## Approved character performance direction (Nov 27)
+Preserve canonical models, rigs, outfits and likeness references. Five shared emotional states (neutral, happy, annoyed, exhausted, surprised) interpreted through each character's distinctive body language. Duff is competent, confident and occasionally cocky; relaxed at home, visibly tired after work. First kitchen animation batch: ready stance, efficient grill work, playful pan toss, precise plating, order-up acknowledgment, exasperated reaction, and satisfied shift completion. Reuse existing real clips where suitable; avoid sliding feet, prop clipping, abrupt transitions and excessive gestures. New clips and character-specific performances require actual in-engine previews and existing owner approvals before shipping. No unapproved likeness changes or paid assets. Design only, not implemented.
+
 ## Sequencing and dependencies
 1. Existing porch acceptance and presentation polish.
 2. Isolated kitchen visual prototype and immersive environment pass; actual engine comparison before gameplay expansion.
