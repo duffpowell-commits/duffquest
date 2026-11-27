@@ -3,6 +3,9 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Nov 27 — Narrative and dynamic comedy
+- [Find Out Engine and branding screening](../docs/FIND_OUT_ENGINE.md): approved creative direction and tagline, provisional title due to exact-name trademark application; no rename or gameplay changes.
+
 ## Nov 27 — Duffphone 2.0 planning
 - Approved design: [Duffphone 2.0 and Glitch](../docs/DUFFPHONE_2.md). Queued only; no gameplay changes. Glitch is an offline fictional phone assistant, distinct from the physical mascot.
 
