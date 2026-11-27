@@ -32,6 +32,7 @@ Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into
 - M1 (Nov 8): Grok outfit sheets for Duff outdoors (10 sheets) + redrawn shades overlay.
 
 ## IDEAS
+- (Nov 27) [Survive Tuesday](docs/PLAYABLE_DAY.md): first integrated playable day; planning only until dependencies are accepted.
 - (Nov 27) Preferred title Wash, Rinse, Regret; [project alignment](docs/PROJECT_ALIGNMENT.md). Clearance and release rename pending.
 - (Nov 27) Approved narrative identity, tagline and dynamic comedy: [Regret Engine](docs/FIND_OUT_ENGINE.md). Title clearance unresolved; plan only.
 - (Nov 27) Approved Duffphone 2.0 and offline Glitch assistant: [design](docs/DUFFPHONE_2.md). Plan only; keep current milestones first.
