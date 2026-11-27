@@ -99,3 +99,9 @@ How the blind review is run:
 - `learned` (moves taught) is static, so it survives Retry. The checkpoint survives Retry through
   `Engine.set_meta("porch_checkpoint")`, which is cleared after it is read.
 - Duff's hand tattoos, the partner lines and real names have hard rules in `/CLAUDE.md`. Read them before touching art or dialogue.
+
+## Nov 27 — kitchen immersive visual-only preview
+
+Dedicated `preview/kitchen-immersive` work based on `preview/kitchen-visual-polish`. Launch `godot --path spike_full3d res://kitchen_preview.tscn`; no production zone or main scene change. Original five station origins, five character origins and rig assets preserved. The preview now includes a continuous restaurant floor, enclosed kitchen/dining room, selectable ceiling and walls, perspective camera, red booths, pass opening, task lighting, and added appliance/food details. No paid assets.
+
+Visual evidence and candid quality assessment: `docs/renders/porch3d/kitchen-immersive/README.md` (five Godot captures, before/after). The old `kitchen_polish_shot.gd` is historical; use `tools/kitchen_immersive_shot.gd` for the interior camera. Focused regression: `godot --headless --path spike_full3d --script tools/kitchen_immersive_smoke.gd`. Existing porch smoke emitted 159 PASS lines and no FAIL or SCRIPT ERROR; shutdown emitted ObjectDB/resource leakage diagnostics (not investigated). Root `tools/test.sh`: ALL PASS (0 failed), TESTS PASS. Android 60 FPS remains unverified. This is **not** milestone completion: finish material/food/lighting fidelity, mobile profiling and concept review before any production integration.

@@ -1,5 +1,5 @@
 extends Node3D
-## Visual-only kitchen diorama. Never registered as a gameplay zone.
+## Visual-only restaurant interior. Never registered as a gameplay zone.
 
 var steel: StandardMaterial3D
 var dark: StandardMaterial3D
@@ -10,7 +10,7 @@ var green: StandardMaterial3D
 var camera: Camera3D
 
 func _ready() -> void:
-	steel = material(Color("#c4c8c5"), .48, .52)
+	steel = material(Color("#b1a9a2"), .12, .54)
 	weather(steel, 63, true)
 	dark = material(Color("#25292c"), .1, .84)
 	ivory = material(Color("#e9dfc6"), 0, .86)
@@ -25,16 +25,17 @@ func _ready() -> void:
 	cold_prep()
 	pass_station()
 	details()
+	restaurant()
 	batch_static()
+	build_occluders()
 	lighting()
 	cast()
 	atmosphere()
 	camera = Camera3D.new()
-	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
-	camera.size = 10.1
+	camera.projection = Camera3D.PROJECTION_PERSPECTIVE
+	camera.fov = 67
 	add_child(camera)
-	camera.position = Vector3(8, 9, 12)
-	camera.look_at(Vector3(0, 1.05, -.25))
+	set_view(Vector3(-4.95, 2.98, 2.55), Vector3(-.15, .62, -.95), 80)
 	camera.current = true
 
 func material(color: Color, metal: float, rough: float) -> StandardMaterial3D:
@@ -90,17 +91,17 @@ func station(title: String, at: Vector3) -> Node3D:
 
 func room() -> void:
 	var base := material(Color("#473631"), 0, .9)
-	box(self, Vector3(0, -.14, 0), Vector3(11.2, .25, 7.2), base)
-	var tiles := [material(Color("#c5bba5"), 0, .72), material(Color("#42494a"), 0, .79)]
+	box(self, Vector3(0, -.14, 2.4), Vector3(11.2, .25, 12.0), base)
+	var tiles := [material(Color("#c9ab83"), 0, .72), material(Color("#803e35"), 0, .79)]
 	for i in 2:
 		weather(tiles[i], 40 + i, false)
 		tiles[i].set_meta("no_shadow", true)
 	for x in 22:
-		for z in 14:
+		for z in 24:
 			box(self, Vector3(-5.25 + x * .5, .005, -3.25 + z * .5), Vector3(.486, .035, .486), tiles[(x + z) % 2]).rotation.y = ((x*17+z*13)%4) * PI/2
-	var plaster := material(Color("#adab9d"), 0, .93)
+	var plaster := material(Color("#807267"), 0, .93)
 	box(self, Vector3(0, 1.55, -3.58), Vector3(11.2, 3.1, .18), plaster)
-	box(self, Vector3(-5.58, 1.55, -2.35), Vector3(.18, 3.1, 2.4), plaster)
+	box(self, Vector3(-5.58, 1.55, 2.4), Vector3(.18, 3.1, 12.0), plaster)
 	box(self, Vector3(0, .12, -3.45), Vector3(11, .24, .08), red)
 	box(self, Vector3(-5.45, .12, -2.35), Vector3(.08, .24, 2.4), red)
 	# Grouted subway tile backsplash, short side wall for clear cutaway.
@@ -139,12 +140,16 @@ func grill() -> void:
 	base_unit(s, 1.65)
 	box(s, Vector3(0, 1.055, 0), Vector3(1.53, .09, .86), dark)
 	for i in 12:
-		box(s, Vector3(-.7 + i * .127, 1.12, 0), Vector3(.035, .035, .77), steel)
-	var food := material(Color("#9a5636"), 0, .9)
+		box(s, Vector3(-.7 + i * .127, 1.12, 0), Vector3(.025, .025, .77), dark)
+	var food := material(Color("#70462e"), 0, .77)
+	weather(food, 57, false)
 	for x in [-.36, .24]:
-		cylinder(s, Vector3(x, 1.16, -.1), .19, .09, food)
+		var patty := cylinder(s, Vector3(x, 1.16, -.1), .19, .09, food)
+		var patty_mesh := patty.mesh as CylinderMesh
+		patty_mesh.top_radius = .175
+		patty_mesh.bottom_radius = .18
 		for i in 3:
-			box(s, Vector3(x - .1 + i * .1, 1.21, -.1), Vector3(.025, .008, .28), dark)
+			box(s, Vector3(x - .1 + i * .1, 1.21, -.1), Vector3(.019, .008, .28), dark)
 	label(s, "GRILL", Vector3(0, 2.43, .30), 1.5)
 
 func fryer() -> void:
@@ -212,13 +217,13 @@ func lighting() -> void:
 	env.background_mode = Environment.BG_COLOR
 	env.background_color = Color("#292a30")
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	env.ambient_light_color = Color("#d2d6d8")
-	env.ambient_light_energy = .50
+	env.ambient_light_color = Color("#a9bfd8")
+	env.ambient_light_energy = .47
 	world.environment = env
 	add_child(world)
 	var sun := DirectionalLight3D.new()
 	sun.light_color = Color("#fff0da")
-	sun.light_energy = .55
+	sun.light_energy = .65
 	sun.shadow_enabled = true
 	sun.shadow_blur = 1.8
 	sun.directional_shadow_max_distance = 24.0
@@ -227,10 +232,10 @@ func lighting() -> void:
 	for x in [-4.0, -.5, 3.4]:
 		var lamp := OmniLight3D.new()
 		lamp.light_color = Color("#ffc381")
-		lamp.light_energy = .55
+		lamp.light_energy = 1.5
 		lamp.omni_range = 4.2
 		add_child(lamp)
-		lamp.position = Vector3(x, 3.5, -.4)
+		lamp.position = Vector3(x, 2.85, -.55)
 
 func cast() -> void:
 	var rig = load("res://rig_actor.gd")
@@ -254,8 +259,8 @@ func weather(mat: StandardMaterial3D, seed_value: int, brushed: bool) -> void:
 		for x in 256:
 			var cloud := noise.get_noise_2d(x * .8, y * .8)
 			var scuff := noise.get_noise_2d(x * .14, y * 16.0) if brushed else noise.get_noise_2d(x * 5.0, y * 5.0)
-			var stain := smoothstep(.12, .52, cloud)
-			var v := clampf(.91 + scuff * (.12 if brushed else .055) + rng.randf_range(-.018, .018) - stain * (.15 if brushed else .075), .45, 1.0)
+			var stain := smoothstep(.03, .48, cloud)
+			var v := clampf(.91 + scuff * (.045 if brushed else .021) + rng.randf_range(-.018, .018) - stain * (.085 if brushed else .045), .45, 1.0)
 			albedo.set_pixel(x, y, Color(v, v * (1.0 - stain * .035), v * (1.0 - stain * .075)))
 			var r := clampf(.63 + stain * .24 + scuff * .13, .3, .98)
 			rough.set_pixel(x, y, Color(r, r, r))
@@ -264,13 +269,16 @@ func weather(mat: StandardMaterial3D, seed_value: int, brushed: bool) -> void:
 			var y := rng.randi_range(1, 254)
 			var x := rng.randi_range(1, 220)
 			for dx in rng.randi_range(5, 30):
-				albedo.set_pixel(x + dx, y, Color(.53, .55, .55) if i % 3 == 0 else Color(.96, .97, .97))
+				albedo.set_pixel(x + dx, y, Color(.78, .79, .79) if i % 3 == 0 else Color(.96, .97, .97))
 	albedo.generate_mipmaps()
 	rough.generate_mipmaps()
 	mat.albedo_texture = ImageTexture.create_from_image(albedo)
 	mat.roughness_texture = ImageTexture.create_from_image(rough)
 	mat.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_RED
-	mat.roughness = 1.0
+	mat.roughness = .74
+	if brushed:
+		mat.uv1_triplanar = true
+		mat.uv1_scale = Vector3(.65,.65,.65)
 
 ## Rounded cube with a single bevel band per face edge; preserves the original bounds.
 func bevel_mesh(size: Vector3, radius: float) -> ArrayMesh:
@@ -302,9 +310,9 @@ func bevel_mesh(size: Vector3, radius: float) -> ArrayMesh:
 	return st.commit()
 
 ## Combine repeated static geometry by material, leaving actors and translucent effects unbatched.
-func batch_static() -> void:
+func batch_static(parent: Node3D = self) -> void:
 	var batches := {}
-	for child in find_children("*", "MeshInstance3D", true, false):
+	for child in parent.find_children("*", "MeshInstance3D", true, false):
 		var mesh_node := child as MeshInstance3D
 		var mat := mesh_node.material_override
 		if not batches.has(mat):
@@ -313,16 +321,16 @@ func batch_static() -> void:
 			batches[mat] = surface
 		var surface: SurfaceTool = batches[mat]
 		for index in mesh_node.mesh.get_surface_count():
-			surface.append_from(mesh_node.mesh, index, global_transform.affine_inverse() * mesh_node.global_transform)
+			surface.append_from(mesh_node.mesh, index, parent.global_transform.affine_inverse() * mesh_node.global_transform)
 		mesh_node.free()
 	var group := Node3D.new()
 	group.name = "StaticVisualBatches"
-	add_child(group)
+	parent.add_child(group)
 	for mat in batches:
 		var item := MeshInstance3D.new()
 		item.mesh = batches[mat].commit()
 		item.material_override = mat
-		if mat.has_meta("no_shadow"):
+		if mat.has_meta("no_shadow") or parent == roof:
 			item.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		group.add_child(item)
 
@@ -410,7 +418,16 @@ func details() -> void:
 		cylinder(pass_node,Vector3(x,1.14,.18),.132,.035,patty)
 		cylinder(pass_node,Vector3(x,1.16,.18),.138,.018,green)
 		cylinder(pass_node,Vector3(x,1.179,.18),.127,.022,amber)
-		cylinder(pass_node,Vector3(x,1.21,.18),.123,.045,toast)
+		var bun := MeshInstance3D.new()
+		var bun_mesh := SphereMesh.new()
+		bun_mesh.radius = .125
+		bun_mesh.height = .105
+		bun_mesh.radial_segments = 16
+		bun_mesh.rings = 8
+		bun.mesh = bun_mesh
+		bun.material_override = toast
+		pass_node.add_child(bun)
+		bun.position = Vector3(x,1.222,.18)
 	for i in 4:
 		var x := -1.15+i*.23
 		box(pass_node,Vector3(x,1.76,.01),Vector3(.15,.22,.015),paper).rotation.x = -.08
@@ -477,3 +494,146 @@ func _process(delta: float) -> void:
 		var x: float = [-4.35,-2.55,-.7][i >> 1]
 		wisps[i].position = Vector3(x + sin(phase*TAU+i)*.10, 1.35+phase*.67, -2.58)
 		wisps[i].scale = Vector3.ONE * (.55+phase*.7)
+
+
+var roof: Node3D
+var east_wall: Node3D
+var south_wall: Node3D
+
+func set_view(at: Vector3, target: Vector3, fov: float) -> void:
+	camera.position = at
+	camera.look_at(target)
+	camera.fov = fov
+	roof.visible = at.y < 3.05
+	east_wall.visible = at.x < 5.45
+	south_wall.visible = at.z < 8.25
+
+func restaurant() -> void:
+	var paint := material(Color("#836b54"), 0, .92)
+	weather(paint, 102, false)
+	var burgundy := material(Color("#702c28"), 0, .63)
+	var piping := material(Color("#a55342"), 0, .8)
+	var trim := material(Color("#392c29"), 0, .83)
+	var brass := material(Color("#b1844c"), .18, .5)
+	var glass := material(Color("#607c8b"), .1, .28)
+	var light := material(Color("#ffe0a1"), 0, .5)
+	light.emission_enabled = true
+	light.emission = Color("#ffbe67")
+	light.emission_energy_multiplier = .85
+	# Continuous baseboards and tiled west wall, with dining wainscoting.
+	box(self, Vector3(-5.45,.55,2.4), Vector3(.09,1.1,11.8), burgundy)
+	box(self, Vector3(-5.39,1.12,2.4), Vector3(.12,.12,11.8), trim)
+	for z in 14:
+		for y in 4:
+			box(self,Vector3(-5.38,1.27+y*.25,-3.25+z*.5),Vector3(.035,.235,.485),ivory)
+	# Kitchen/service partition, real opening over pass and aisle at left.
+	box(self,Vector3(3.0,2.87,2.64),Vector3(4.95,.56,.17),paint)
+	for x in [.58,5.43]:
+		box(self,Vector3(x,1.45,2.64),Vector3(.19,2.9,.19),trim)
+	box(self,Vector3(3.0,2.53,2.64),Vector3(4.95,.13,.23),steel)
+	# Dinette booths: upholstered separate backs, padded seat ribs, pedestal tables.
+	for z in [4.0,6.25]:
+		for x in [-3.9,3.9]:
+			for dz in [-.73,.73]:
+				box(self,Vector3(x,.27,z+dz),Vector3(1.65,.51,.52),trim)
+				box(self,Vector3(x,.56,z+dz),Vector3(1.72,.18,.58),burgundy)
+				var back_z: float = z+dz+signf(dz)*.25
+				box(self,Vector3(x,.96,back_z),Vector3(1.72,.85,.20),burgundy)
+				for i in 6:
+					box(self,Vector3(x-.69+i*.275,.97,back_z-signf(dz)*.115),Vector3(.025,.71,.025),piping)
+			box(self,Vector3(x,.86,z),Vector3(1.35,.10,.98),wood)
+			cylinder(self,Vector3(x,.43,z),.10,.79,steel)
+			cylinder(self,Vector3(x,.06,z),.30,.07,trim)
+			for i in 2:
+				cylinder(self,Vector3(x-.12+i*.15,.99,z-.1),.05,.18,[red,brass][i])
+				cylinder(self,Vector3(x-.12+i*.15,1.10,z-.1),.025,.06,ivory)
+			cylinder(self,Vector3(x+.35,.945,z+.15),.14,.03,ivory)
+			# Pendant with warm inner disc; small non-shadowed local fill.
+			cylinder(self,Vector3(x,2.92,z),.025,.62,trim)
+			var shade := cylinder(self,Vector3(x,2.60,z),.28,.22,brass)
+			var cone := shade.mesh as CylinderMesh
+			cone.top_radius = .13
+			cylinder(self,Vector3(x,2.48,z),.23,.035,light)
+			var glow := OmniLight3D.new()
+			glow.light_color = Color("#ffb76d")
+			glow.light_energy = 1.2
+			glow.omni_range = 2.5
+			add_child(glow)
+			glow.position = Vector3(x,2.35,z)
+	# Wall menu boards and windows with mullions and blinds.
+	for z in [4.0,6.25]:
+		box(self,Vector3(-5.43,2.1,z),Vector3(.10,1.45,1.90),trim)
+		box(self,Vector3(-5.36,2.1,z),Vector3(.055,1.30,1.72),glass)
+		for dz in [-.57,0,.57]:
+			box(self,Vector3(-5.31,2.1,z+dz),Vector3(.08,1.32,.04),trim)
+		for i in 5:
+			box(self,Vector3(-5.27,2.69-i*.09,z),Vector3(.08,.035,1.66),wood)
+	# Service door, push plate and inset window in the rear wall corner.
+	box(self,Vector3(-5.34,1.23,-.85),Vector3(.09,2.42,.94),trim)
+	box(self,Vector3(-5.27,1.23,-.85),Vector3(.07,2.32,.84),steel)
+	box(self,Vector3(-5.22,1.78,-.85),Vector3(.04,.40,.45),dark)
+	box(self,Vector3(-5.19,1.78,-.85),Vector3(.02,.31,.36),glass)
+	box(self,Vector3(-5.18,1.04,-.55),Vector3(.06,.32,.12),brass)
+	# Extra kitchen detail: pot stack, prep bowls, spatula and backsplash shelf brackets.
+	for i in 6:
+		cylinder(self,Vector3(2.2,1.83+i*.035,-3.07),.20,.03,ivory)
+	for x in [2.8,3.35]:
+		cylinder(self,Vector3(x,2.56,-3.08),.21,.23,steel)
+		cylinder(self,Vector3(x,2.69,-3.08),.21,.028,dark)
+		for dx in [-.25,.25]:
+			box(self,Vector3(x+dx,2.58,-3.08),Vector3(.11,.045,.10),dark)
+	var grill_node := get_node("Grill") as Node3D
+	box(grill_node,Vector3(.64,1.15,.20),Vector3(.19,.025,.24),steel)
+	box(grill_node,Vector3(.64,1.17,.42),Vector3(.06,.04,.23),dark)
+	for i in 3:
+		cylinder(grill_node,Vector3(-.54+i*.16,1.18,.28),.08,.035,wood)
+	# Larger raised backsplash behind hot equipment; warm under-hood task lighting.
+	for x in [-4.35,-2.55,-.7]:
+		box(self,Vector3(x,1.63,-3.40),Vector3(1.63,.91,.035),steel)
+		var task := SpotLight3D.new()
+		task.light_color = Color("#ffb573")
+		task.light_energy = 1.6
+		task.spot_range = 3.1
+		task.spot_angle = 55
+		add_child(task)
+		task.position = Vector3(x,2.10,-2.48)
+		task.rotation_degrees.x = -90
+	# A duct joining hood to the ceiling and narrow overhead framing.
+	box(self,Vector3(-2.65,3.03,-3.24),Vector3(1.70,.40,.55),steel)
+	box(self,Vector3(0,3.13,-3.39),Vector3(10.8,.18,.20),trim)
+
+func build_occluders() -> void:
+	var paint := material(Color("#807267"),0,.92)
+	var trim := material(Color("#48372c"),0,.9)
+	var ceiling := material(Color("#a49277"),0,.9)
+	roof = Node3D.new()
+	add_child(roof)
+	box(roof,Vector3(0,3.29,2.4),Vector3(11.2,.2,12.0),ceiling).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for z in [-2.8,-.4,2.64,5.2,7.8]:
+		box(roof,Vector3(0,3.13,z),Vector3(11.0,.13,.12),trim).cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	east_wall = Node3D.new()
+	add_child(east_wall)
+	box(east_wall,Vector3(5.58,1.55,2.4),Vector3(.18,3.1,12),paint)
+	box(east_wall,Vector3(5.45,.55,2.4),Vector3(.09,1.10,11.8),red)
+	south_wall = Node3D.new()
+	add_child(south_wall)
+	box(south_wall,Vector3(0,1.55,8.38),Vector3(11.2,3.1,.18),paint)
+	box(south_wall,Vector3(0,.55,8.24),Vector3(11,.95,.09),red)
+	var glass := material(Color("#83a6b6"),.05,.4)
+	for x in [-3.6,0,3.6]:
+		box(south_wall,Vector3(x,2.02,8.24),Vector3(2.65,1.46,.12),trim)
+		box(south_wall,Vector3(x,2.02,8.16),Vector3(2.47,1.28,.06),glass)
+		for dx in [-.8,0,.8]:
+			box(south_wall,Vector3(x+dx,2.02,8.11),Vector3(.045,1.29,.06),trim)
+		for i in 6:
+			box(south_wall,Vector3(x,2.62-i*.09,8.10),Vector3(2.48,.035,.07),wood)
+	for z in [4.0,6.25]:
+		box(east_wall,Vector3(5.43,2.1,z),Vector3(.10,1.45,1.9),trim)
+		box(east_wall,Vector3(5.36,2.1,z),Vector3(.055,1.30,1.72),glass)
+		for dz in [-.57,0,.57]:
+			box(east_wall,Vector3(5.31,2.1,z+dz),Vector3(.08,1.32,.04),trim)
+		for i in 5:
+			box(east_wall,Vector3(5.27,2.69-i*.09,z),Vector3(.08,.035,1.66),wood)
+
+	for section in [roof, east_wall, south_wall]:
+		batch_static(section)
