@@ -32,6 +32,7 @@ Work only on NOW. New asks go under IDEAS with a date until Duff swaps them into
 - M1 (Nov 8): Grok outfit sheets for Duff outdoors (10 sheets) + redrawn shades overlay.
 
 ## IDEAS
+- (Nov 27) Approved narrative identity, tagline and dynamic comedy: [Find Out Engine](docs/FIND_OUT_ENGINE.md). Title clearance unresolved; plan only.
 - (Nov 27) Approved Duffphone 2.0 and offline Glitch assistant: [design](docs/DUFFPHONE_2.md). Plan only; keep current milestones first.
 - (Nov 8) Place agent is redrawing: Waffle Haus sign, bus-stop sign, cats, extra lawn props, the outfit sheets. Import when handed over.
 - (Nov 8) Screen-shake on/off in settings (accessibility).
