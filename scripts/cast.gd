@@ -8,7 +8,7 @@ const PATH: = "res://data/cast.json"
 const PUBLIC_PATH: = "res://data/cast_public.json"
 static var family: bool = OS.has_feature("family") or "--family" in OS.get_cmdline_user_args()
 const DEFAULTS: = {
-	"game_title": "Fork Around and Find Out", "hero": "Duff", "partner": "Madison", "baby": "Octavia", "sister": "Jen",
+	"game_title": "Wash, Rinse, Regret", "hero": "Duff", "partner": "Madison", "baby": "Octavia", "sister": "Jen",
 	"sister_full": "Jennifer", "cat1": "Alastor", "cat2": "Lucifer", "cat3": "Freya", "city": "Omaha",
 	"nearby_town": "Council Bluffs", "phone": "Duffphone",
 	"ex_1": "The Ghoster", "ex_2": "Gym Bro Supreme", "ex_3": "DJ Vape Lord", "ex_4": "Mr. Crypto",

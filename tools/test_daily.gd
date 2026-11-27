@@ -648,7 +648,7 @@ func _edition_checks() -> void:
 	check("public edition: {FORK} and {wordle} renamed, Brittany kept (her OK, Nov 16)", C.T("{FORK} / {wordle} / {coworker}") == "THE BUSTED SPATULA / Word Brawl / Brittany")
 	check("public edition: {COWORKER}'S BETS reads BRITTANY'S BETS, no Mazikeen left", C.T("{COWORKER}'S BETS") == "BRITTANY'S BETS" and not "Maz" in shown)
 	check("public edition: snack + chain brands renamed (Nov 19)", C.T("{chad} / {hot_chips} / {chain_grill}") == "Chip Dust Chad / Blaze Puffs / Grillbee's")
-	check("public edition: title is the deliberate pun, restaurant still renamed (Duff, Nov 26)", C.T("{game_title}") == "Fork Around and Find Out" and not "Twisted" in C.T("{game_title}"))
+	check("public edition: approved title, restaurant still renamed (Nov 27)", C.T("{game_title}") == "Wash, Rinse, Regret" and not "Twisted" in C.T("{game_title}"))
 	check("public edition: the Fork nickname and club sandwich follow the rename", C.T("{fork_nick} / {club_sandwich}") == "Spatula / Club Spatula")
 	var bare: = _bare_fork_lines()
 	check("public edition: no bare 'Fork' left in player-facing strings (%s)" % ", ".join(bare), bare.is_empty())

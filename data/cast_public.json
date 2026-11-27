@@ -1,6 +1,6 @@
 {
   "_readme": "Public edition overrides (itch, GitHub Pages, advertised builds). Loaded on top of cast.json unless the build has the 'family' feature tag. See docs/legal/RISK_AUDIT.md for why each one exists.",
-  "game_title": "Fork Around and Find Out",
+  "game_title": "Wash, Rinse, Regret",
   "_game_title_note": "Deliberate (Duff, Nov 26 2026): the title is a generic pun. It never names or shows the real restaurant; the public restaurant stays The Busted Spatula.",
   "fork": "The Busted Spatula",
   "fork_nick": "Spatula",

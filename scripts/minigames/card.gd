@@ -146,17 +146,18 @@ func _draw_game() -> void:
 
 ## Title screen: logo-style title and the tagline on a glass plate at the top; the porch stays in view.
 func _draw_title_plate(fs: int, _hh: float) -> void:
-	var w1: = W - 40.0
+	# Keep the portrait below the branding plate and the established button grid unobstructed.
+	var w1: = 164.0
 	var rows: = 0
 	for l in lines:
 		rows += _wrap(str(l), w1, fs).size()
-	var plate: = Rect2(14, 4, W - 28, 21.0 + rows * fs * 1.3)
+	var plate: = Rect2(14, 4, W - 28, 70)
 	UiStyle.glass(self, plate, 7.0, 0.82, 1.0 / 1.5)
-	UiStyle.label(self, Vector2(0, 18), Cast.T(heading), 14, UiStyle.GOLD, W, HORIZONTAL_ALIGNMENT_CENTER, 4)
-	var y: = 22.0 + fs
+	draw_texture_rect(preload("res://assets/art/wrr_logo.png"), Rect2(20, 7, 102, 64), false)
+	var y: = 39.0 - rows * fs * 1.3 * 0.5 + fs
 	for l in lines:
 		for ln in _wrap(str(l), w1, fs):
-			draw_string(font, Vector2(20, y), ln, HORIZONTAL_ALIGNMENT_CENTER, w1, fs, Color(1, 1, 1, 0.92))
+			draw_string(font, Vector2(133, y), ln, HORIZONTAL_ALIGNMENT_CENTER, w1, fs, Color(1, 1, 1, 0.92))
 			y += fs * 1.3
 
 func grade_col(g: String) -> Color:

@@ -444,12 +444,19 @@ func close_menu() -> void:
 ## Title: the main game's glass card up top, the porch behind it, pill buttons below.
 func show_title() -> void:
 	var m := _new_menu("title", 0.0)
-	var card := _glass_panel(Rect2(40, 18, 880, 128))
+	var card := _glass_panel(Rect2(40, 18, 880, 194))
 	m.add_child(card)
-	# Game title (Duff, Nov 26 2026): a deliberate pun; never name the real restaurant here.
-	_title_label(card, "FORK AROUND AND FIND OUT", Vector2(0, 4), 880, 46)
+	# Approved chapter ticket. Keep the existing HUD and controls.
+	var ticket := TextureRect.new()
+	ticket.texture = preload("res://art/wrr_chapter_ticket.png")
+	ticket.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	ticket.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	ticket.position = Vector2(315, 6)
+	ticket.size = Vector2(250, 156)
+	ticket.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	card.add_child(ticket)
 	_title_label(card, "A porch pirate has the package. A big guy with a sign wants it more. Get it back.",
-		Vector2(40, 74), 800, 21, CREAM, body)
+		Vector2(40, 166), 800, 21, CREAM, body)
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 40)
 	row.add_theme_constant_override("separation", 24)

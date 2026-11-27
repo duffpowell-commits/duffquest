@@ -1,6 +1,6 @@
 {
   "_readme": "Every person-specific name and real place in the game lives here, plus parody names (story bosses, the pharmacy, the grocery store, the porch pirates, the cologne, the sitter app) and the date venues, the Gala's old-money snob (gala_baron), and the four exes of {partner} who 'made it' and show up at the charity gala (gala_ex_1..gala_ex_4; boss ids husk, bozos, fences, donald stay as internal ids). To make a public fork, edit only this file. Code uses {key} tokens (and {KEY} for UPPERCASE).",
-  "game_title": "Fork Around and Find Out",
+  "game_title": "Wash, Rinse, Regret",
   "hero": "Duff",
   "partner": "Madison",
   "baby": "Octavia",

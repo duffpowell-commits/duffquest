@@ -30,11 +30,15 @@ func _on_button(id: String) -> void :
 	chosen.emit(id)
 
 func _draw_game() -> void :
-	draw_rect(Rect2(0, 0, W, 16), Color("#a43a2c"))
-	txt(Vector2(0, 12), heading, 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
+	var branded := heading == Cast.N("{GAME_TITLE}")
+	if branded:
+		draw_texture_rect(preload("res://assets/art/wrr_logo.png"), Rect2(115, 2, 90, 57), false)
+	else:
+		draw_rect(Rect2(0, 0, W, 16), Color("#a43a2c"))
+		txt(Vector2(0, 12), heading, 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)
 	var x2: = 168.0 if not lines2.is_empty() else 0.0
 	var w1: = (x2 - 12.0) if x2 > 0.0 else (W - 12.0 - (60.0 if big != "" else 0.0))
-	var y: = 28.0
+	var y: = 69.0 if branded else 28.0
 	if backdrop != "":
 
 		var hh: = 0.0
