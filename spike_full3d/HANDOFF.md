@@ -3,6 +3,9 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Nov 27 — Approved environment art boards
+- [Visual reference decisions](../docs/PROJECT_ALIGNMENT.md#approved-visual-reference-boards-nov-27): exterior A with C color accents; apartment B furnishings with C night lighting. Kitchen benchmark boards also saved with the design. Concept art only; no production integration or runtime changes.
+
 ## Nov 27 — Narrative and dynamic comedy
 - [Regret Engine and branding screening](../docs/FIND_OUT_ENGINE.md): approved creative direction and tagline; preferred new title Wash, Rinse, Regret, pending clearance; no rename or gameplay changes.
 - [Project alignment](../docs/PROJECT_ALIGNMENT.md) consolidates visual direction, milestones and coordination.
