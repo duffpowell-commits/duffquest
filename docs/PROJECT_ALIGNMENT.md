@@ -16,6 +16,12 @@ Material priorities: brushed stainless steel, aged ceramic tile, red/cream check
 - Kitchen: [atmosphere benchmark](art/wrr-concepts/kitchen-atmosphere.jpg) and [gameplay benchmark](art/wrr-concepts/kitchen-gameplay.jpg). Match the warm, distressed materials and immersive room; existing approved character assets remain canonical.
 - All four are generated concept boards, not Godot screenshots or production assets. JPEG copies retain full concept composition; originals are preserved separately. No celebrity or unapproved character likeness reference is implied.
 
+## Storefront and residential asset reference batch (Nov 27)
+- [Storefronts](art/wrr-concepts/storefronts.jpg): Busted Spatula weathered brick/teal restaurant; Waffle Haus retro red/cream diner; KWIK-N-GO red/yellow convenience store canopy. Preserve established fictional names and geography; use public-edition tokens where required.
+- [Outdoor props](art/wrr-concepts/outdoor-props.jpg): maple/oak/ash, hedge/lilac, fences and gate, porch furniture and parcel, bins, sedan, utilities and surface modules. Model or reuse assets; keep routes clear.
+- [Materials](art/wrr-concepts/outdoor-materials.jpg): siding, brick, shingles, concrete, asphalt, grass, red painted wood, steel and ceramic. Swatches are visual targets, not validated tiling textures or PBR maps; author individual maps and verify seams in-engine before shipping.
+- All three are concept reference boards, not engine renders or production-ready meshes. First art pass is limited to one residential block; no paid assets or expansion.
+
 ## Sequencing and dependencies
 1. Existing porch acceptance and presentation polish.
 2. Isolated kitchen visual prototype and immersive environment pass; actual engine comparison before gameplay expansion.

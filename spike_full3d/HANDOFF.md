@@ -3,6 +3,9 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Nov 27 — Storefront and outdoor asset reference batch
+- [Art direction and reference sheets](../docs/PROJECT_ALIGNMENT.md#storefront-and-residential-asset-reference-batch-nov-27) added for the three storefronts, props and materials. Concept references only; no integration.
+
 ## Nov 27 — Approved environment art boards
 - [Visual reference decisions](../docs/PROJECT_ALIGNMENT.md#approved-visual-reference-boards-nov-27): exterior A with C color accents; apartment B furnishings with C night lighting. Kitchen benchmark boards also saved with the design. Concept art only; no production integration or runtime changes.
 
