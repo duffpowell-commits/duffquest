@@ -3,6 +3,9 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Nov 27 — Duffphone 2.0 planning
+- Approved design: [Duffphone 2.0 and Glitch](../docs/DUFFPHONE_2.md). Queued only; no gameplay changes. Glitch is an offline fictional phone assistant, distinct from the physical mascot.
+
 ## Studio mascot (Duff, Nov 26)
 - **The three-eyed fox is in every game as a rare cameo, not a pal**: a small event
   that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `/docs/MASCOT.md`.
