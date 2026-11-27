@@ -3,6 +3,28 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Nov 27 — First integrated playable day
+- [Survive Tuesday plan](../docs/PLAYABLE_DAY.md): proposed integrated milestone after existing previews and grill acceptance; no runtime changes.
+
+## Nov 27 — Character performance direction
+- [Approved animation plan](../docs/PROJECT_ALIGNMENT.md#approved-character-performance-direction-nov-27): shared emotional states, seven kitchen clips, reuse rigs and show real engine animation previews. Planning only.
+
+## Nov 27 — Contextual interface approval
+- [Interface art board](../docs/art/wrr-concepts/interface-options.jpg): diner tickets at work, comic panels for encounters, original Duffphone for daily life. Design-only; no UI code changed.
+
+## Nov 27 — Storefront and outdoor asset reference batch
+- [Art direction and reference sheets](../docs/PROJECT_ALIGNMENT.md#storefront-and-residential-asset-reference-batch-nov-27) added for the three storefronts, props and materials. Concept references only; no integration.
+
+## Nov 27 — Approved environment art boards
+- [Visual reference decisions](../docs/PROJECT_ALIGNMENT.md#approved-visual-reference-boards-nov-27): exterior A with C color accents; apartment B furnishings with C night lighting. Kitchen benchmark boards also saved with the design. Concept art only; no production integration or runtime changes.
+
+## Nov 27 — Narrative and dynamic comedy
+- [Regret Engine and branding screening](../docs/FIND_OUT_ENGINE.md): approved creative direction and tagline; preferred new title Wash, Rinse, Regret, pending clearance; no rename or gameplay changes.
+- [Project alignment](../docs/PROJECT_ALIGNMENT.md) consolidates visual direction, milestones and coordination.
+
+## Nov 27 — Duffphone 2.0 planning
+- Approved design: [Duffphone 2.0 and Glitch](../docs/DUFFPHONE_2.md). Queued only; no gameplay changes. Glitch is an offline fictional phone assistant, distinct from the physical mascot.
+
 ## Studio mascot (Duff, Nov 26)
 - **The three-eyed fox is in every game as a rare cameo, not a pal**: a small event
   that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `/docs/MASCOT.md`.
