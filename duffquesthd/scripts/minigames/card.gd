@@ -16,6 +16,16 @@ func _setup() -> void :
 	space_is_pen = false
 	var n: = opts.size()
 	var branded := heading == Cast.N("{GAME_TITLE}")
+	if branded:
+		var logo := TextureRect.new()
+		logo.texture = preload("res://assets/art/wrr_logo.png")
+		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		logo.position = Vector2(101, 0)
+		logo.size = Vector2(118, 74.3)
+		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(logo)
 	var cols: = 2 if branded else (n if n <= 3 else 2)
 	var rows: = int(ceil(float(n) / cols))
 	var bw: = 128.0 if branded else 308.0 / cols
@@ -23,9 +33,9 @@ func _setup() -> void :
 		var o: Array = opts[i]
 		var r: = i / cols
 		var c: = i % cols
-		var y: = 177.0 - (rows - r) * 28.0
+		var y: = (177.0 - (rows - r) * 28.0) if branded else (176.0 - (rows - r) * 24.0)
 		var x := (6.0 + c * (W - 12.0 - bw + 8.0)) if branded else 6.0 + c * bw
-		add_button(o[0], Rect2(x, y, bw - 8, 22), o[1], o[2], Color("#493827") if i == 0 else Color("#292421"))
+		add_button(o[0], Rect2(x, y, bw - (8 if branded else 4), 22 if branded else 21), o[1], o[2], Color("#493827") if i == 0 else Color("#292421"))
 
 func _on_button(id: String) -> void :
 	done = true
@@ -37,7 +47,6 @@ func _draw_game() -> void :
 		draw_texture_rect(preload("res://assets/art/bg_title.png"), Rect2(0, 0, W, H), false)
 		for i in 24:
 			draw_rect(Rect2(0, i * 3.0, W, 3.0), Color(0.10, 0.07, 0.04, 0.48 * (1.0 - i / 24.0)))
-		draw_texture_rect(preload("res://assets/art/wrr_logo.png"), Rect2(101, 0, 118, 74.3), false)
 		for l in lines:
 			draw_string_outline(font, Vector2(5, 78), Cast.T(str(l)), HORIZONTAL_ALIGNMENT_CENTER, W - 10, 7, 3, Color("#292421"))
 			txt(Vector2(5, 78), str(l), 7, Color("#fff1d6"), HORIZONTAL_ALIGNMENT_CENTER, W - 10)

@@ -2161,7 +2161,7 @@ func open_settings() -> void:
 ## real Copy button (iPhone Safari only lets a tap on the page itself write the clipboard).
 func bug_report() -> String:
 	var pg: Node = get_tree().root.find_child("PerfGuard", true, false)
-	var lines: Array = ["DuffQuest bug report " + Time.get_datetime_string_from_system(),
+	var lines: Array = ["Wash, Rinse, Regret bug report " + Time.get_datetime_string_from_system(),
 		"engine %s | %s | %s" % [Engine.get_version_info().get("string", ""), OS.get_name(),
 			str(JavaScriptBridge.eval("navigator.userAgent", true)) if OS.has_feature("web") else OS.get_model_name()],
 		"screen %s window %s" % [DisplayServer.screen_get_size(), get_window().size],

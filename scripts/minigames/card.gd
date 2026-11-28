@@ -13,6 +13,16 @@ func _setup() -> void:
 	time_limit = 0.0
 	show_header = false
 	brand_menu_buttons = true
+	if backdrop == "title" and heading == Cast.N("{GAME_TITLE}"):
+		var logo := TextureRect.new()
+		logo.texture = preload("res://assets/art/wrr_logo.png")
+		logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+		logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		logo.position = Vector2(101, 0)
+		logo.size = Vector2(118, 74.3)
+		logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(logo)
 	space_is_pen = false
 	var n: = opts.size()
 	var cols: = n if n <= 3 else (3 if n >= 7 else 2)   # 7+ choices in 3 columns, so the text above keeps room
@@ -152,7 +162,6 @@ func _draw_title_plate(_fs: int, _hh: float) -> void:
 		return
 	for i in 24:
 		draw_rect(Rect2(0, i * 3.0, W, 3.0), Color(0.10, 0.07, 0.04, 0.48 * (1.0 - i / 24.0)))
-	draw_texture_rect(preload("res://assets/art/wrr_logo.png"), Rect2(101, 0, 118, 74.3), false)
 	var y := 78.0
 	for l in lines:
 		for ln in _wrap(str(l), W - 18, 7):

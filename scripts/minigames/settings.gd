@@ -7,8 +7,8 @@ const JuiceScript: = preload("res://scripts/juice.gd")
 const LEFT: = 6.0
 const RIGHT: = 164.0
 const COL_W: = 150.0
-const ROW_H: = 17.0
-const TOP: = 33.0
+const ROW_H: = 22.0
+const TOP: = 36.0
 const MUSIC_BAR: = Rect2(LEFT + 10, TOP + 15, 104, 3)
 const SFX_BAR: = Rect2(LEFT + 10, TOP + 37, 104, 3)
 const OFF: = Rect2(-40, -40, 1, 1)   # key-only buttons (volume - / +)
@@ -44,11 +44,11 @@ func _setup() -> void:
 		var key: int = {"clean": KEY_C, "gore": KEY_G, "shake": KEY_K, "edm": KEY_E, "view3d": KEY_B, "gfx": KEY_V}[id]
 		_row(id, Rect2(RIGHT, y, COL_W, ROW_H), lbl, key)
 		y += ROW_H
-	_row("credits", Rect2(LEFT, TOP + 79, COL_W, ROW_H), "Credits & legal", KEY_L)
-	_row("report", Rect2(LEFT, TOP + 79 + ROW_H, COL_W, ROW_H), "Send a bug report", KEY_R)
+	_row("credits", Rect2(LEFT, TOP + 76, COL_W, ROW_H), "Credits & legal", KEY_L)
+	_row("report", Rect2(LEFT, TOP + 76 + ROW_H, COL_W, ROW_H), "Send a bug report", KEY_R)
 	if dev:
-		_row("dev_quests", Rect2(LEFT, TOP + 79 + ROW_H * 2, COL_W, ROW_H), "Dev: quests", KEY_Q)
-	add_button("back", Rect2(4, 3, 46, 13), "Back", KEY_ESCAPE, Color("#a43a2c"))
+		_row("dev_quests", Rect2(LEFT, TOP + 76 + ROW_H * 2, COL_W, ROW_H), "Dev: quests", KEY_Q)
+	add_button("back", Rect2(4, 1, 46, 22), "Back", KEY_ESCAPE, Color("#a43a2c"))
 
 func _row(id: String, r: Rect2, label: String, key: int) -> void:
 	add_button(id, r, label, key)["hide"] = true
@@ -211,15 +211,15 @@ func _slider(bar_r: Rect2, v: float, col: Color, label: String) -> void:
 
 func _draw_game() -> void:
 	draw_rect(Rect2(0, 0, W, H), Color(0.09, 0.07, 0.05, 0.72))
-	UiStyle.box(self, Rect2(0, 0, W, 19), Color("#292421", 0.96), 0.0)
-	draw_rect(Rect2(0, 19, W, 0.6), Color(1, 1, 1, 0.12))
-	draw_string(UiStyle.display, Vector2(0, 13.5), "Settings", HORIZONTAL_ALIGNMENT_CENTER, W, 10, Color.WHITE)
+	UiStyle.box(self, Rect2(0, 0, W, 25), Color("#292421", 0.96), 0.0)
+	draw_rect(Rect2(0, 25, W, 0.6), Color(1, 1, 1, 0.12))
+	draw_string(UiStyle.display, Vector2(0, 16), "Settings", HORIZONTAL_ALIGNMENT_CENTER, W, 10, Color.WHITE)
 	# left: sound card (two sliders + mute), more card; right: game card (switch rows)
 	_card(Rect2(LEFT, TOP - 4, COL_W, 48 + ROW_H + 4), "SOUND")
 	_slider(MUSIC_BAR, music_vol(), Color("#bd9255"), "Music")
 	_slider(SFX_BAR, sfx_vol(), Color("#f2c66a"), "Sound FX")
 	var more: = 2 + (1 if dev else 0)
-	_card(Rect2(LEFT, TOP + 77, COL_W, ROW_H * more + 4), "MORE")
+	_card(Rect2(LEFT, TOP + 74, COL_W, ROW_H * more + 4), "MORE")
 	var toggles: = buttons.filter(func(b): return TOGGLES.has(str(b["id"])))
 	if not toggles.is_empty():
 		_card(Rect2(RIGHT, TOP - 4, COL_W, ROW_H * toggles.size() + 4), "GAME")
@@ -238,4 +238,4 @@ func _draw_game() -> void:
 			_switch(Vector2(r.end.x - 16, cy), _on(id))
 		if b != buttons.back() and id != "credits" and id != "report" and r.position.x == RIGHT and r.end.y < TOP + ROW_H * toggles.size():
 			draw_rect(Rect2(r.position.x + 10, r.end.y - 0.3, r.size.x - 14, 0.5), Color(1, 1, 1, 0.08))
-	txt(Vector2(LEFT + 4, H - 6), "Saved automatically.", 6, Color(1, 1, 1, 0.45))
+	txt(Vector2(RIGHT + 4, H - 5), "Saved automatically.", 6, Color(1, 1, 1, 0.75))

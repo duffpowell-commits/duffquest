@@ -17,7 +17,7 @@ config/description="Keep Madison happy. Fetch the honey buns. Avoid the raccoons
 run/main_scene="res://branding/studio_boot.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.png"
-boot_splash/bg_color=Color(0.105882, 0.0745098, 0.12549, 1)
+boot_splash/bg_color=Color(0.160784, 0.141176, 0.129412, 1)
 boot_splash/image="res://splash.png"
 boot_splash/fullsize=false
 

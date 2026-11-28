@@ -450,12 +450,22 @@ func close_menu() -> void:
 
 ## Title: the approved gold logo and compact chapter stamp directly over the porch.
 func show_title() -> void:
-	var m := _new_menu("title", 0.14)
+	var m := _new_menu("title", 0.0)
+	# Same owner-approved dusk portrait as root/HD; the actual 3D porch and rig return as soon as Fight starts.
+	var art := TextureRect.new()
+	art.texture = load("res://art/bg_title.png")
+	art.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	art.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	art.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	menu.add_child(art)
+	menu.move_child(art, 0)
 	if game.bubble:
 		game.bubble.hide()
 		game.bubble_tail.hide()
 	var logo := TextureRect.new()
-	logo.texture = preload("res://art/wrr_logo.png")
+	logo.texture = load("res://art/wrr_logo.png")
+	logo.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	logo.position = Vector2(344, 5)
@@ -463,23 +473,27 @@ func show_title() -> void:
 	logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	m.add_child(logo)
 	var ticket := TextureRect.new()
-	ticket.texture = preload("res://art/wrr_chapter_ticket.png")
+	ticket.texture = load("res://art/wrr_chapter_ticket.png")
+	ticket.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
 	ticket.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	ticket.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	ticket.position = Vector2(775, 16)
 	ticket.size = Vector2(145, 90)
 	ticket.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	m.add_child(ticket)
-	_title_label(m, "Porch encounter  •  Get the package back.", Vector2(220, 174), 520, 22, CREAM, body)
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 24)
-	row.position = Vector2(66, 420)
-	row.add_child(_pill("Fight", BTN_MAIN, start, 260))
-	row.add_child(_pill("Controls", BTN_ALT, func() -> void: show_controls(show_title), 260))
-	row.add_child(_pill("Settings", BTN_ALT, show_settings, 260))
-	m.add_child(row)
+	_title_label(m, "PORCH ENCOUNTER", Vector2(735, 112), 220, 17, CREAM, body)
+	_title_label(m, "Get the package back.", Vector2(220, 174), 520, 22, CREAM, body)
+	var fight := _pill("Fight", BTN_MAIN, start, 260)
+	fight.position = Vector2(30, 410)
+	m.add_child(fight)
+	var controls := _pill("Controls", BTN_ALT, func() -> void: show_controls(show_title), 260)
+	controls.position = Vector2(670, 376)
+	m.add_child(controls)
+	var settings := _pill("Settings", BTN_ALT, show_settings, 260)
+	settings.position = Vector2(670, 454)
+	m.add_child(settings)
 	if not DisplayServer.is_touchscreen_available():
-		_title_label(m, "Keys: WASD move, Space bonk, K kick, Shift roll, Esc menu", Vector2(0, 501), 960, 17, CREAM, body)
+		_title_label(m, "Keys: WASD move, Space bonk, K kick, Shift roll, Esc menu", Vector2(0, 520), 960, 15, CREAM, body)
 
 ## Pause / settings: a phone glass sheet rising from the bottom with a grabber.
 func open_pause() -> void:

@@ -14,10 +14,10 @@ func _setup() -> void :
 	space_is_pen = false
 	if audio == null:
 		audio = AudioScript.inst
-	add_button("music_down", Rect2(148, 39, 24, 20), "-", KEY_1)
-	add_button("music_up", Rect2(288, 39, 24, 20), "+", KEY_2)
-	add_button("sfx_down", Rect2(148, 69, 24, 20), "-", KEY_3)
-	add_button("sfx_up", Rect2(288, 69, 24, 20), "+", KEY_4)
+	add_button("music_down", Rect2(148, 38, 24, 22), "-", KEY_1)
+	add_button("music_up", Rect2(288, 38, 24, 22), "+", KEY_2)
+	add_button("sfx_down", Rect2(148, 68, 24, 22), "-", KEY_3)
+	add_button("sfx_up", Rect2(288, 68, 24, 22), "+", KEY_4)
 	add_button("mute", Rect2(148, 94, 164, 22), _mute_label(), KEY_M, Color("#493827"))
 	add_button("clean", Rect2(148, 120, 164, 22), _clean_label(), KEY_C, Color("#292421"))
 	add_button("back", Rect2(110, 150, 100, 22), "Back", KEY_ESCAPE, Color("#292421"))
