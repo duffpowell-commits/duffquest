@@ -15,15 +15,17 @@ func _setup() -> void :
 	show_header = false
 	space_is_pen = false
 	var n: = opts.size()
-	var cols: = n if n <= 3 else 2
+	var branded := heading == Cast.N("{GAME_TITLE}")
+	var cols: = 2 if branded else (n if n <= 3 else 2)
 	var rows: = int(ceil(float(n) / cols))
-	var bw: = 308.0 / cols
+	var bw: = 128.0 if branded else 308.0 / cols
 	for i in n:
 		var o: Array = opts[i]
 		var r: = i / cols
 		var c: = i % cols
-		var y: = 176.0 - (rows - r) * 24.0
-		add_button(o[0], Rect2(6 + c * bw, y, bw - 4, 21), o[1], o[2], Color("#a43a2c") if i == 0 else Color("#57504e"))
+		var y: = 177.0 - (rows - r) * 28.0
+		var x := (6.0 + c * (W - 12.0 - bw + 8.0)) if branded else 6.0 + c * bw
+		add_button(o[0], Rect2(x, y, bw - 8, 22), o[1], o[2], Color("#493827") if i == 0 else Color("#292421"))
 
 func _on_button(id: String) -> void :
 	done = true
@@ -32,7 +34,14 @@ func _on_button(id: String) -> void :
 func _draw_game() -> void :
 	var branded := heading == Cast.N("{GAME_TITLE}")
 	if branded:
-		draw_texture_rect(preload("res://assets/art/wrr_logo.png"), Rect2(115, 2, 90, 57), false)
+		draw_texture_rect(preload("res://assets/art/bg_title.png"), Rect2(0, 0, W, H), false)
+		for i in 24:
+			draw_rect(Rect2(0, i * 3.0, W, 3.0), Color(0.10, 0.07, 0.04, 0.48 * (1.0 - i / 24.0)))
+		draw_texture_rect(preload("res://assets/art/wrr_logo.png"), Rect2(101, 0, 118, 74.3), false)
+		for l in lines:
+			draw_string_outline(font, Vector2(5, 78), Cast.T(str(l)), HORIZONTAL_ALIGNMENT_CENTER, W - 10, 7, 3, Color("#292421"))
+			txt(Vector2(5, 78), str(l), 7, Color("#fff1d6"), HORIZONTAL_ALIGNMENT_CENTER, W - 10)
+		return
 	else:
 		draw_rect(Rect2(0, 0, W, 16), Color("#a43a2c"))
 		txt(Vector2(0, 12), heading, 8, Color.WHITE, HORIZONTAL_ALIGNMENT_CENTER, W)

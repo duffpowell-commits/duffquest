@@ -25,7 +25,7 @@ func _setup() -> void:
 	time_limit = 0.0
 	space_is_pen = false
 	show_header = false
-	pill_buttons = true
+	brand_menu_buttons = true
 	if audio == null:
 		audio = AudioScript.inst
 	add_button("music_down", OFF, "-", KEY_1)
@@ -191,11 +191,11 @@ const ROW_TEXT: = {"mute": "Mute all", "clean": "Clean language", "gore": "Carto
 
 func _card(r: Rect2, head: String) -> void:
 	draw_string(UiStyle.display, r.position + Vector2(4, -3), head, HORIZONTAL_ALIGNMENT_LEFT, -1, 6, Color(1, 1, 1, 0.5))
-	UiStyle.box(self, r, Color(UiStyle.GLASS.lightened(0.06), 0.93), 5.0)
+	UiStyle.box(self, r, Color("#302820", 0.96), 5.0)
 
 func _switch(c: Vector2, on: bool) -> void:   # iOS-style: pill track, white knob
 	var tr: = Rect2(c - Vector2(9, 5), Vector2(18, 10))
-	UiStyle.box(self, tr, Color("#34c759") if on else Color(1, 1, 1, 0.2), 5.0)
+	UiStyle.box(self, tr, Color("#b28a50") if on else Color(1, 1, 1, 0.2), 5.0)
 	var k: = Vector2(tr.end.x - 5.0 if on else tr.position.x + 5.0, c.y)
 	draw_circle(k + Vector2(0, 0.6), 4.2, Color(0, 0, 0, 0.25))
 	draw_circle(k, 4.0, Color.WHITE)
@@ -210,13 +210,13 @@ func _slider(bar_r: Rect2, v: float, col: Color, label: String) -> void:
 	draw_circle(k, 4.6, Color.WHITE)
 
 func _draw_game() -> void:
-	draw_rect(Rect2(0, 0, W, H), Color(0.03, 0.02, 0.06, 0.55))
-	UiStyle.box(self, Rect2(0, 0, W, 19), Color(UiStyle.GLASS, 0.96), 0.0)
+	draw_rect(Rect2(0, 0, W, H), Color(0.09, 0.07, 0.05, 0.72))
+	UiStyle.box(self, Rect2(0, 0, W, 19), Color("#292421", 0.96), 0.0)
 	draw_rect(Rect2(0, 19, W, 0.6), Color(1, 1, 1, 0.12))
 	draw_string(UiStyle.display, Vector2(0, 13.5), "Settings", HORIZONTAL_ALIGNMENT_CENTER, W, 10, Color.WHITE)
 	# left: sound card (two sliders + mute), more card; right: game card (switch rows)
 	_card(Rect2(LEFT, TOP - 4, COL_W, 48 + ROW_H + 4), "SOUND")
-	_slider(MUSIC_BAR, music_vol(), Color("#ff6aa8"), "Music")
+	_slider(MUSIC_BAR, music_vol(), Color("#bd9255"), "Music")
 	_slider(SFX_BAR, sfx_vol(), Color("#f2c66a"), "Sound FX")
 	var more: = 2 + (1 if dev else 0)
 	_card(Rect2(LEFT, TOP + 77, COL_W, ROW_H * more + 4), "MORE")

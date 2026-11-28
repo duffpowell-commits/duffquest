@@ -3,6 +3,12 @@
 Update this file as you go, not just at the end. Newest entry first. How the code is wired:
 `BUILDING.md` (same folder). Repo rules: `/CLAUDE.md` (public repo, no secrets or personal info).
 
+## Nov 28 — draft branding isolation (PR #234)
+
+- Working title **Wash, Rinse, Regret**; this draft is not live. Preserve the old custom user directory, package IDs, signing, URLs and filenames. Main remains unchanged; no merge/publication or kitchen/neighborhood integration until owner accepts branding and physical device persistence.
+- Transparent approved tattoo logo, compact receipt stamp, charcoal/gold menus, no gameplay HUD clutter on modal screens. Canonical Duff rig and tattoo mapping untouched. Root/HD share existing dusk artwork; no substitute character art.
+- [ART_LOG](../ART_LOG.md) and [review evidence](../docs/renders/wash-rinse-regret/review/README.md) contain actual engine captures, before/after and exact counts: root 609, porch 159, synthetic Linux legacy checks 3. Android existing-install upgrade and iPhone PWA persistence remain outstanding. 8.5/10 not yet independently accepted.
+
 ## Studio mascot (Duff, Nov 26)
 - **The three-eyed fox is in every game as a rare cameo, not a pal**: a small event
   that matters but never ruins a run. Duff OKs the fox art on a card before it's built. Rule + this game's idea: `/docs/MASCOT.md`.

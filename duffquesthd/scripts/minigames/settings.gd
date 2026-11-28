@@ -18,9 +18,9 @@ func _setup() -> void :
 	add_button("music_up", Rect2(288, 39, 24, 20), "+", KEY_2)
 	add_button("sfx_down", Rect2(148, 69, 24, 20), "-", KEY_3)
 	add_button("sfx_up", Rect2(288, 69, 24, 20), "+", KEY_4)
-	add_button("mute", Rect2(148, 96, 164, 18), _mute_label(), KEY_M, Color("#6a4a96"))
-	add_button("clean", Rect2(148, 118, 164, 18), _clean_label(), KEY_C, Color("#3a6a5a"))
-	add_button("back", Rect2(110, 150, 100, 22), "Back", KEY_ESCAPE, Color("#a43a2c"))
+	add_button("mute", Rect2(148, 94, 164, 22), _mute_label(), KEY_M, Color("#493827"))
+	add_button("clean", Rect2(148, 120, 164, 22), _clean_label(), KEY_C, Color("#292421"))
+	add_button("back", Rect2(110, 150, 100, 22), "Back", KEY_ESCAPE, Color("#292421"))
 
 func _mute_label() -> String:
 	return "Sound: MUTED (tap to unmute)" if audio and audio.muted else "Sound: ON (tap to mute)"
@@ -88,7 +88,7 @@ func _draw_game() -> void :
 	draw_rect(Rect2(8, 20, 304, 124), Color(0, 0, 0, 0.35))
 	Art.image(self, "ic_heart", Vector2(14, 44))
 	txt(Vector2(26, 52), "Music", 8)
-	bar(MUSIC_BAR, music_vol(), Color("#ff6aa8"))
+	bar(MUSIC_BAR, music_vol(), Color("#bd9255"))
 	txt(Vector2(108, 52), "%d%%" % roundi(music_vol() * 100.0), 8, Color("#f2c66a"))
 	Art.image(self, "ic_bolt", Vector2(14, 74))
 	txt(Vector2(26, 82), "Sound FX", 8)
@@ -96,4 +96,4 @@ func _draw_game() -> void :
 	txt(Vector2(108, 82), "%d%%" % roundi(sfx_vol() * 100.0), 8, Color("#f2c66a"))
 	txt(Vector2(26, 108), "Mute all", 8)
 	txt(Vector2(26, 130), "Clean language", 8)
-	txt(Vector2(0, 141), "Saved automatically. Music + SFX are original chiptune (see README).", 6, Color(1, 1, 1, 0.55), HORIZONTAL_ALIGNMENT_CENTER, W)
+	txt(Vector2(0, 147), "Saved automatically.", 6, Color(1, 1, 1, 0.55), HORIZONTAL_ALIGNMENT_CENTER, W)

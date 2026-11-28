@@ -38,6 +38,7 @@ var flash_t: = 0.0
 var flash_col: = Color.WHITE
 var font: Font
 const SQUISH_T: = 0.14
+var brand_menu_buttons := false
 var pill_buttons: = false   # phone-style pill buttons (menu sheets, phone apps) instead of chunky key caps
 
 ## --- First-time coach (how-to card, easy first go, replay with "?") ---------------------------------
@@ -425,7 +426,9 @@ func _draw() -> void:
 			UiStyle.card_button(self, r, Cast.T(str(b["label"])), str(b.get("badge", "")), b.get("badge_col", UiStyle.TEAL),
 				b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8, ic, bool(b.get("stack", false)))
 			continue
-		if pill_buttons:
+		if brand_menu_buttons:
+			UiStyle.brand_button(self, r, Cast.T(str(b["label"])), b["col"] == UiStyle.BTN_MAIN, bool(b["enabled"]), bool(b.get("down", false)))
+		elif pill_buttons:
 			UiStyle.pill_button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)
 		else:
 			UiStyle.button(self, r, Cast.T(str(b["label"])), b["col"], bool(b["enabled"]), bool(b.get("down", false)), 1.0 / 1.5, 8)

@@ -506,7 +506,8 @@ func _spawn_raccoons() -> void :
 func show_title() -> void :
 	in_title = true
 	var opts: Array = []
-	var lines: Array = ["Keep {partner} happy. Pay the rent. Survive 3 AM. Don't let the landlord win.", " ", "Move: WASD / arrows / joystick.  Use: E or A.  Bonk: Space (or A), mash for a 3-hit combo.  Dodge roll: Shift or B.  Gear: I or G.  Phone: P or the phone icon.", "Special: F or S (hold to charge).  Swap special: Q or <>.  Demon Time: R or D.  Spend stat points: T."]
+	var help_lines: Array = ["Keep {partner} happy. Pay the rent. Survive 3 AM. Don't let the landlord win.", " ", "Move: WASD / arrows / joystick.  Use: E or A.  Bonk: Space (or A), mash for a 3-hit combo.  Dodge roll: Shift or B.  Gear: I or G.  Phone: P or the phone icon.", "Special: F or S (hold to charge).  Swap special: Q or <>.  Demon Time: R or D.  Spend stat points: T."]
+	var lines: Array = [help_lines[0]]
 	var d: = SaveGame.read(save_path)
 	if not d.is_empty():
 		opts.append(["continue", "Continue: Day %d (%s), $%d" % [int(d.get("day_count", 1)), DAY_NAMES[int(d.get("day_i", 4)) % 7].substr(0, 3), int(d.get("money", 0))], KEY_1])
@@ -514,9 +515,12 @@ func show_title() -> void :
 	else:
 		opts.append(["new", "New Game", KEY_1])
 	opts.append(["settings", "Settings (sound)", KEY_3 if opts.size() > 1 else KEY_2])
+	opts.append(["help", "How to play", KEY_4 if opts.size() > 2 else KEY_3])
 	_menu("{GAME_TITLE}", lines, opts, func(id: String) -> void :
 		if id == "settings":
 			open_settings()
+		elif id == "help":
+			_menu("How to play", help_lines.slice(2), [["back", "Back", KEY_1]], func(_id: String) -> void: show_title())
 		elif id == "continue":
 			in_title = false
 			load_game()

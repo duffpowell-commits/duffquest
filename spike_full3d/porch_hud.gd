@@ -210,8 +210,8 @@ func _hint(at: Vector2, text: String) -> void:
 func _draw() -> void:
 	if flash_time > 0:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(flash_col, .45 * flash_time / flash_len))
-	if screen == "title":
-		return  # the title card stands alone over the porch, like the main game's
+	if screen != "":
+		return  # menus stand alone; gameplay HUD returns on resume
 	_strip()
 	_goal()
 	draw_set_transform(Vector2(spare.x, 0))
@@ -360,14 +360,15 @@ func _pill(text: String, col: Color, on_press: Callable, width := 300.0) -> Butt
 	var b := Button.new()
 	b.text = text
 	b.custom_minimum_size = Vector2(width, 64)
-	b.focus_mode = Control.FOCUS_NONE
+	b.focus_mode = Control.FOCUS_ALL
 	b.add_theme_font_override("font", display)
 	b.add_theme_font_size_override("font_size", 24)
 	for state in ["normal", "hover", "pressed", "disabled"]:
 		var sb := StyleBoxFlat.new()
-		sb.bg_color = col.lightened(.12) if state == "pressed" else col
-		sb.set_corner_radius_all(32)
-		sb.border_color = INK
+		var base := Color("#493827") if col == BTN_MAIN else Color("#292421")
+		sb.bg_color = base.lightened(.16) if state in ["pressed", "hover"] else base
+		sb.set_corner_radius_all(7)
+		sb.border_color = Color("#bd9255") if col == BTN_MAIN else Color("#856c49")
 		sb.set_border_width_all(3)
 		sb.shadow_color = Color(0, 0, 0, .35)
 		sb.shadow_size = 0
@@ -377,7 +378,13 @@ func _pill(text: String, col: Color, on_press: Callable, width := 300.0) -> Butt
 	for state in ["font_color", "font_hover_color", "font_pressed_color"]:
 		b.add_theme_color_override(state, CREAM)
 	b.add_theme_color_override("font_outline_color", INK)
-	b.add_theme_constant_override("outline_size", 6)
+	b.add_theme_constant_override("outline_size", 2)
+	var focus := StyleBoxFlat.new()
+	focus.bg_color = Color.TRANSPARENT
+	focus.border_color = CREAM
+	focus.set_border_width_all(3)
+	focus.set_corner_radius_all(7)
+	b.add_theme_stylebox_override("focus", focus)
 	b.pressed.connect(on_press)
 	return b
 
@@ -386,9 +393,9 @@ func _glass_panel(r: Rect2, rad := 28.0) -> Panel:
 	p.position = r.position
 	p.size = r.size
 	var sb := StyleBoxFlat.new()
-	sb.bg_color = Color(GLASS, .94)
+	sb.bg_color = Color("#292421", .94)
 	sb.set_corner_radius_all(int(rad))
-	sb.border_color = BEZEL
+	sb.border_color = Color("#856c49")
 	sb.set_border_width_all(4)
 	sb.shadow_color = Color(0, 0, 0, .4)
 	sb.shadow_size = 10
@@ -407,7 +414,7 @@ func _title_label(parent: Control, text: String, at: Vector2, width: float, size
 	l.add_theme_font_size_override("font_size", size)
 	l.add_theme_color_override("font_color", col)
 	l.add_theme_color_override("font_outline_color", INK)
-	l.add_theme_constant_override("outline_size", 8 if size > 30 else 0)
+	l.add_theme_constant_override("outline_size", 8 if size > 30 else 3)
 	parent.add_child(l)
 	return l
 
@@ -441,32 +448,38 @@ func close_menu() -> void:
 	screen = ""
 	get_tree().paused = false
 
-## Title: the main game's glass card up top, the porch behind it, pill buttons below.
+## Title: the approved gold logo and compact chapter stamp directly over the porch.
 func show_title() -> void:
-	var m := _new_menu("title", 0.0)
-	var card := _glass_panel(Rect2(40, 18, 880, 194))
-	m.add_child(card)
-	# Approved chapter ticket. Keep the existing HUD and controls.
+	var m := _new_menu("title", 0.14)
+	if game.bubble:
+		game.bubble.hide()
+		game.bubble_tail.hide()
+	var logo := TextureRect.new()
+	logo.texture = preload("res://art/wrr_logo.png")
+	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	logo.position = Vector2(344, 5)
+	logo.size = Vector2(272, 171)
+	logo.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	m.add_child(logo)
 	var ticket := TextureRect.new()
 	ticket.texture = preload("res://art/wrr_chapter_ticket.png")
 	ticket.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	ticket.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	ticket.position = Vector2(315, 6)
-	ticket.size = Vector2(250, 156)
+	ticket.position = Vector2(775, 16)
+	ticket.size = Vector2(145, 90)
 	ticket.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	card.add_child(ticket)
-	_title_label(card, "A porch pirate has the package. A big guy with a sign wants it more. Get it back.",
-		Vector2(40, 166), 800, 21, CREAM, body)
+	m.add_child(ticket)
+	_title_label(m, "Porch encounter  •  Get the package back.", Vector2(220, 174), 520, 22, CREAM, body)
 	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 40)
 	row.add_theme_constant_override("separation", 24)
-	row.position = Vector2(66, 400)
+	row.position = Vector2(66, 420)
 	row.add_child(_pill("Fight", BTN_MAIN, start, 260))
 	row.add_child(_pill("Controls", BTN_ALT, func() -> void: show_controls(show_title), 260))
 	row.add_child(_pill("Settings", BTN_ALT, show_settings, 260))
 	m.add_child(row)
 	if not DisplayServer.is_touchscreen_available():
-		_title_label(m, "Keys: WASD move, Space bonk, K kick, Shift roll, Esc menu", Vector2(0, 490), 960, 17, DIM, body)
+		_title_label(m, "Keys: WASD move, Space bonk, K kick, Shift roll, Esc menu", Vector2(0, 501), 960, 17, CREAM, body)
 
 ## Pause / settings: a phone glass sheet rising from the bottom with a grabber.
 func open_pause() -> void:

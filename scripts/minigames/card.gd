@@ -12,7 +12,7 @@ var opts: Array = []
 func _setup() -> void:
 	time_limit = 0.0
 	show_header = false
-	pill_buttons = true
+	brand_menu_buttons = true
 	space_is_pen = false
 	var n: = opts.size()
 	var cols: = n if n <= 3 else (3 if n >= 7 else 2)   # 7+ choices in 3 columns, so the text above keeps room
@@ -111,7 +111,7 @@ func _draw_game() -> void:
 	var btop: = H
 	for b in buttons:
 		btop = minf(btop, (b["rect"] as Rect2).position.y)
-	if backdrop == "title":
+	if backdrop == "title" and heading == Cast.N("{GAME_TITLE}"):
 		_draw_title_plate(fs, hh)
 		return
 	var top: = maxf(2.0, btop - 5.0 - hh - (19.0 if hh > 0.0 else 15.0))
@@ -119,7 +119,8 @@ func _draw_game() -> void:
 	if top > 40.0:   # a soft dark fade above the sheet so it reads as lifted off the scene
 		for i in 6:
 			draw_rect(Rect2(0, top - 12.0 + i * 2.0, W, 2.0), Color(0, 0, 0, 0.04 * (i + 1)))
-	UiStyle.glass(self, sheet, 8.0, 0.94, 1.0 / 1.5)
+	UiStyle.box(self, sheet, Color("#b69359"), 5.0)
+	UiStyle.box(self, sheet.grow(-0.7), Color(0.13, 0.11, 0.10, 0.96), 4.0)
 	draw_rect(Rect2(W * 0.5 - 10.0, top + 2.5, 20.0, 1.4), Color(1, 1, 1, 0.3))   # grabber
 	draw_string(UiStyle.display, Vector2(11, top + 14.5), Cast.T(heading), HORIZONTAL_ALIGNMENT_LEFT, W - 22.0, 11, UiStyle.CREAM)
 	draw_rect(Rect2(10, top + 17.5, W - 20.0, 0.6), Color(1, 1, 1, 0.12))
@@ -144,21 +145,19 @@ func _draw_game() -> void:
 	elif big != "":
 		UiStyle.label(self, Vector2(W - 68, top + 19.0 + hh * 0.5 + 14.0), big, 44, big_col, 60, HORIZONTAL_ALIGNMENT_CENTER, 8)
 
-## Title screen: logo-style title and the tagline on a glass plate at the top; the porch stays in view.
-func _draw_title_plate(fs: int, _hh: float) -> void:
-	# Keep the portrait below the branding plate and the established button grid unobstructed.
-	var w1: = 164.0
-	var rows: = 0
+## Title artwork remains the hero; a transparent logo sits directly over the sky.
+func _draw_title_plate(_fs: int, _hh: float) -> void:
+	if heading != Cast.N("{GAME_TITLE}"):
+		UiStyle.label(self, Vector2(0, 22), Cast.T(heading), 12, UiStyle.CREAM, W, HORIZONTAL_ALIGNMENT_CENTER, 4)
+		return
+	for i in 24:
+		draw_rect(Rect2(0, i * 3.0, W, 3.0), Color(0.10, 0.07, 0.04, 0.48 * (1.0 - i / 24.0)))
+	draw_texture_rect(preload("res://assets/art/wrr_logo.png"), Rect2(101, 0, 118, 74.3), false)
+	var y := 78.0
 	for l in lines:
-		rows += _wrap(str(l), w1, fs).size()
-	var plate: = Rect2(14, 4, W - 28, 70)
-	UiStyle.glass(self, plate, 7.0, 0.82, 1.0 / 1.5)
-	draw_texture_rect(preload("res://assets/art/wrr_logo.png"), Rect2(20, 7, 102, 64), false)
-	var y: = 39.0 - rows * fs * 1.3 * 0.5 + fs
-	for l in lines:
-		for ln in _wrap(str(l), w1, fs):
-			draw_string(font, Vector2(133, y), ln, HORIZONTAL_ALIGNMENT_CENTER, w1, fs, Color(1, 1, 1, 0.92))
-			y += fs * 1.3
+		for ln in _wrap(str(l), W - 18, 7):
+			UiStyle.label(self, Vector2(9, y), ln, 7, UiStyle.CREAM, W - 18, HORIZONTAL_ALIGNMENT_CENTER, 3)
+			y += 9.0
 
 func grade_col(g: String) -> Color:
 	return {"S": Color("#e6a640"), "A": Color("#c0d890"), "B": Color("#8ad0ff"), "C": Color("#e6a640"), "F": Color("#e06a4a") }.get(g, Color.WHITE)
