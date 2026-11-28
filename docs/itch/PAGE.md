@@ -1,4 +1,6 @@
-# Duff Quest: itch page copy (Nov 9, 2026)
+# Wash, Rinse, Regret: itch page copy (archived Nov 9, 2026)
+
+**Nov 27: approved branding assets and provenance are in [wrr-brand-art.md](wrr-brand-art.md). Live publication is intentionally pending.**
 
 **Nov 19: the live description is `docs/itch/page.html` (HTML). Edit that file; paste it into itch from https://duffpowell-commits.github.io/duffquest/itch/ (the bot is disabled). Footage lives in `docs/itch/slots/`. The copy below is the older source.**
 

@@ -182,6 +182,25 @@ static func pill_button(ci: CanvasItem, r: Rect2, text: String, col: Color, enab
 		ci.draw_string(display, Vector2(rr.position.x, y0 + i * sz * LINE_H + w * 0.6), lines[i], HORIZONTAL_ALIGNMENT_CENTER, rr.size.x, sz, Color(0, 0, 0, 0.35 * tc.a))
 		ci.draw_string(display, Vector2(rr.position.x, y0 + i * sz * LINE_H), lines[i], HORIZONTAL_ALIGNMENT_CENTER, rr.size.x, sz, tc)
 
+## Branding-specific menu controls. Keep the gameplay HUD and role palette unchanged.
+static func brand_button(ci: CanvasItem, r: Rect2, text: String, primary: bool, enabled: bool, pressed: bool) -> void:
+	var rim := Color("#bd9255") if primary else Color("#856c49")
+	var fill := Color("#493827") if primary else Color("#292421")
+	if pressed:
+		fill = fill.lightened(0.19)
+	if not enabled:
+		rim = rim.darkened(0.5)
+		fill = fill.darkened(0.3)
+	box(ci, Rect2(r.position + Vector2(0, 1.2), r.size), Color(0, 0, 0, 0.6), 3)
+	box(ci, r, rim, 3)
+	box(ci, r.grow(-0.75), fill, 2)
+	var fit := fit_text(text, r.size.x - 12, r.size.y - 2, 8)
+	var ls: PackedStringArray = fit[0]
+	var sz: int = fit[1]
+	var y := r.get_center().y + sz * 0.36 - (ls.size() - 1) * sz * 0.55
+	for i in ls.size():
+		ci.draw_string(display, Vector2(r.position.x, y + i * sz * LINE_H), ls[i], HORIZONTAL_ALIGNMENT_CENTER, r.size.x, sz, CREAM if enabled else Color(CREAM, 0.55))
+
 ## Phone glass sheet (menu cards, phone apps): soft shadow, black bezel, dark glass, faint top sheen.
 const GLASS: = Color("#17141f")
 static func glass(ci: CanvasItem, r: Rect2, rad: float, a: float = 0.92, w: float = 1.0) -> void:

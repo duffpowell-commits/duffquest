@@ -4,6 +4,8 @@
 > `CLAUDE.md` -> `STATUS.md`, then `spike_full3d/HANDOFF.md` for the 3D remake (the current work).
 > Checked Nov 26, 2026.
 
+**Nov 28 draft PR #234 checkpoint:** current branding work is **Wash, Rinse, Regret**. For the active draft use [3D HANDOFF](spike_full3d/HANDOFF.md), [ART_LOG](ART_LOG.md), and [review evidence](docs/renders/wash-rinse-regret/review/README.md). The branch is held: no publication, merge, or kitchen/neighborhood integration. Physical Android and iPhone PWA upgrade gates remain outstanding.
+
 Standalone: a cold session needs only this file to pick up. Last commit at writing: see `git log -1`.
 Deeper references: `CLAUDE_REFERENCE.md` (stable facts), `CLAUDE.md` (history log, top bullets newest),
 `QUEUE.md` (NOW / NEXT / DONE), `tasks/todo.md`, `tasks/lessons.md`, `docs/HANDOFF_NOV9_PM.md` (same-day detail).

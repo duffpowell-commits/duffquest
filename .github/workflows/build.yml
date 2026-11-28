@@ -167,7 +167,7 @@ jobs:
             cp $src/street.pck $src/world.pck $src/extra.pck $src/packs.json $d/
             gzip -9 -k -n $d/index.wasm
             # iOS reads these from the page, not only the manifest
-            title="Fork Around"; [ "$d" = build/pages/family ] && title="Fork Around Family"
+            title="Wash, Rinse, Regret"
             sed -i "s#<head>#<head><meta name=\"apple-mobile-web-app-capable\" content=\"yes\"><meta name=\"mobile-web-app-capable\" content=\"yes\"><meta name=\"apple-mobile-web-app-status-bar-style\" content=\"black-translucent\"><meta name=\"apple-mobile-web-app-title\" content=\"$title\">#" $d/index.html
             sed -i 's#<meta name="viewport" content="#<meta name="viewport" content="viewport-fit=cover, #' $d/index.html
             # New builds reach home-screen players on their next launch (see the snippet for why)
@@ -290,7 +290,7 @@ jobs:
           gh release edit dev --notes "Rebuilt on every push to main. Last: ${GITHUB_SHA::7}"
       - name: Publish a branch preview of the web build (pushes off main)
         # So a session can boot-test a branch on throttled 4G (artifact storage is not reachable from sessions).
-        if: github.event_name == 'push' && github.ref != 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main' && github.ref != 'refs/heads/brand/wash-rinse-regret'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -302,7 +302,7 @@ jobs:
         # Same game exported on the 3D web engine (release web-template-3d-preview), each file a separate asset of
         # release web3d-preview so a static host can pull them by URL (a phone test link; 3D stays a setting, the
         # URL hash #3d turns it on). Never runs on main.
-        if: github.event_name == 'push' && github.ref != 'refs/heads/main' && hashFiles('scripts/view3d/view3d.gd') != ''
+        if: github.event_name == 'push' && github.ref != 'refs/heads/main' && github.ref != 'refs/heads/brand/wash-rinse-regret' && hashFiles('scripts/view3d/view3d.gd') != ''
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
